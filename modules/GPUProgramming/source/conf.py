@@ -164,7 +164,7 @@ html_show_sourcelink = False
 #html_file_suffix = None
 
 # Output file base name for HTML help builder.
-htmlhelp_basename = 'sampleprojectdoc'
+htmlhelp_basename = 'GPUProgramming'
 
 
 # -- Options for LaTeX output --------------------------------------------------
@@ -228,7 +228,7 @@ man_pages = [
 #  dir menu entry, description, category)
 texinfo_documents = [
   ('index', 'GPUProgramming', u'GPU Programming',
-   u'Yu Zhao', 'sampleproject', 'One line description of project.',
+   u'Yu Zhao', 'GPUProgramming', 'One line description of project.',
    'Miscellaneous'),
 ]
 
