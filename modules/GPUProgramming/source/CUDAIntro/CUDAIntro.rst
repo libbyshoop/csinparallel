@@ -7,6 +7,8 @@ Before you proceed to the next example, please download the following files and 
 An Example of Vector Addition
 #############################
 
+We will start our CUDA journy by learning a very simple example, the vector addition example. What this program does is basically take two vectors that have same dimensions, add them together and then return it back. 
+
 Vector Addition source file:
 :download:`VA-GPU-11.cu <VA-GPU-11.cu>`
 
@@ -20,6 +22,14 @@ As you may notice in your background reading about CUDA programming, the program
     :lines: 26-33
 
 As shown in the code block above, we need to add a **__global__** qualifier to the function name of the original C code in order to let function add() execute on a device.
+
+You might notice that this code is much like standard C code except for the **__global__** qualifier. We are seeing this because this version of vector addition device code is utilizing only one core of the GPU. We can see this from the line
+
+.. literalinclude:: VA-GPU-11.cu	
+    :language: c
+    :lines: 31
+
+where we only add 1 to the *tid*. In the later examples, where we will be using more cores of the GPU, you will see difference of CUDA C programming language and Standard C programming language.
 
 The Host Code
 *************
