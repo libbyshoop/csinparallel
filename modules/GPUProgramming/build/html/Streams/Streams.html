@@ -1,0 +1,126 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Streams &mdash; GPU Programming</title>
+    
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="top" title="GPU Programming" href="../index.html" />
+    <link rel="prev" title="Ray Tracing and Constant Memory" href="../RTACM/RTACM.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../RTACM/RTACM.html" title="Ray Tracing and Constant Memory"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../index.html">GPU Programming</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="streams">
+<h1>Streams<a class="headerlink" href="#streams" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="virtual-memory-and-paging">
+<h2>Virtual Memory and Paging<a class="headerlink" href="#virtual-memory-and-paging" title="Permalink to this headline">¶</a></h2>
+<p>Before we entered the world of CUDA, we have learned something about virtual memory in computer systems. If you do not remember much, lets jog your memory a little bit. When you launch multiple programs in you computer, you are taking the risk of running out of memory. Although modern customer end computers usually have 4GB even more memory, it is still not enough for running many programs at the same time. Through virtual memory, or to be more specific, through the process of paging, a computer can store and retrieve data from secondary storage for use in main memory. Simply put, the operating system would transfer some of the data stored in memory that are not currently at use to secondary storage so that the system can free physical memory and proceed to other programs.</p>
+</div>
+<div class="section" id="pageable-host-memory-and-page-locked-host-memory">
+<h2>Pageable Host Memory and Page-locked Host Memory<a class="headerlink" href="#pageable-host-memory-and-page-locked-host-memory" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="the-cudahostalloc-function">
+<h3>The cudaHostAlloc() Function<a class="headerlink" href="#the-cudahostalloc-function" title="Permalink to this headline">¶</a></h3>
+<p>In previous examples, we have been using the function malloc() in standard C libraries to allocate memory on host memory. The malloc() function would allocate standard pageable host memory for our program. In this chapter, we introduce the cudaHostAlloc() function in CUDA library. Different from malloc() function, cudaHostAlloc() function would allocate page-locked host memory for our program. When you allocate pageable memory, you are taking the risk of operating system might page this memory out to secondary storage if it feels that the system is running out of physical memory. However, when you allocate page-locked memory, the operating system guarantees that it will never page this memory to secondary storage and ensure that this memory will always reside on physical memory.</p>
+<p>Knowing the difference, you may want to ask the question? Why do we need page-locked memory? Well, the answer to this question lies in how CUDA driver move data between different kind of memories. When you call cudaMemcpy() function from the host code, CUDA driver will start to transfer data from host memory to GPU memory, or vice versa. What happens is the driver will first move the data from a pageable system buffer to a page-locked system buffer. Then it will move the data from page-locked memory to the GPU. However, if we instruct the system to store the data on the page-locked system buffer in the first place, we can skip the first step and start from the second step.</p>
+<p>Therefore, if we allocate memory on pageable host memory, our data transfer speed is limited by the lower of the system front-side bus speed (first step) and PCI Express speed (second step). However, if we are using page-locked memory, we are limited only by PCI Express speed. The machine we are using is equipped with Intel Core 2 Quad processor with front-side bus speed between 8512MB/s to 10656MB/s, which is roughly 8GB/s to 10GB/s. The graphics card is installed on PCI Express x16 2.0 slot, which also has 8GB/s transfer speed. Therefore, if we are using page-locked memory instead of pageable memory, we can see the transfer time reduce to at most 50% of the original time.</p>
+</div>
+</div>
+<div class="section" id="cuda-streams">
+<h2>CUDA Streams<a class="headerlink" href="#cuda-streams" title="Permalink to this headline">¶</a></h2>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Streams</a><ul>
+<li><a class="reference internal" href="#virtual-memory-and-paging">Virtual Memory and Paging</a></li>
+<li><a class="reference internal" href="#pageable-host-memory-and-page-locked-host-memory">Pageable Host Memory and Page-locked Host Memory</a><ul>
+<li><a class="reference internal" href="#the-cudahostalloc-function">The cudaHostAlloc() Function</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#cuda-streams">CUDA Streams</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="../RTACM/RTACM.html"
+                        title="previous chapter">Ray Tracing and Constant Memory</a></p>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../RTACM/RTACM.html" title="Ray Tracing and Constant Memory"
+             >previous</a> |</li>
+        <li><a href="../index.html">GPU Programming</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright This work is licensed under a Creative Commons Attribution-ShareAlike 3.0 Unported License.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>

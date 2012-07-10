@@ -1,0 +1,422 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Ray Tracing and Constant Memory &mdash; GPU Programming</title>
+    
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="top" title="GPU Programming" href="../index.html" />
+    <link rel="next" title="Streams" href="../Streams/Streams.html" />
+    <link rel="prev" title="CUDA in Two-dimension" href="../CUDA2D/CUDA2D.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../Streams/Streams.html" title="Streams"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="../CUDA2D/CUDA2D.html" title="CUDA in Two-dimension"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../index.html">GPU Programming</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="ray-tracing-and-constant-memory">
+<h1>Ray Tracing and Constant Memory<a class="headerlink" href="#ray-tracing-and-constant-memory" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="basics-of-ray-tracing">
+<h2>Basics of Ray Tracing<a class="headerlink" href="#basics-of-ray-tracing" title="Permalink to this headline">¶</a></h2>
+<p>First of all, what is ray tracing. Well, ray tracing is how you reflect a scene consisting three-dimensional objects on a two dimensional image. This is similar to the games you play on your computer, except your games might use a different method. However, the basic idea behind is the same.</p>
+<p>How does ray tracing work? It is actually pretty simple. In the two-dimensional image, you place a imaginary camera in there. Just like most real cameras, this imaginary camera contains light sensor as well. To produce a image, all we have to do is determine what light would hit our camera. The camera, on the other hand, would automatically record the color and light intensity of the ray hit it and produce exact same color and light intensity on the corresponding pixel.</p>
+<p>Furthermore, deciding which ray would hit the camera is painstaking. So our clever computer scientist came up with an idea. Rather than deciding which ray would hit our camera, we can imagine shooting out a ray from our camera into the scene consisting three-dimensional objects. In other words, our imaginary camera is acting as an eye and we are now trying to find out what the eye is looking at. To seen what the eye is seeing, all we need to do is trace the ray shot out from the camera until it hits an object in our three-dimensional scene. We then record the color of the object and assign the color to the pixel. As you can see, most of the work in ray tracing is just deciding how the rays shot out and the objects in the scene would interact.</p>
+</div>
+<div class="section" id="notes-for-compile">
+<h2>Notes for Compile<a class="headerlink" href="#notes-for-compile" title="Permalink to this headline">¶</a></h2>
+<p>Before this chapter, we use the following code to compile CUDA code.</p>
+<p><strong>&gt; nvcc -o example_name example_name.cu</strong></p>
+<p>However, since we are using CUDA to produce images in this chapter, we need to use different code for compiling. Shown as follow</p>
+<p><strong>&gt; nvcc -lglut -o example_name example_name.c</strong></p>
+</div>
+<div class="section" id="ray-tracing-without-constant-memory">
+<h2>Ray Tracing Without Constant Memory<a class="headerlink" href="#ray-tracing-without-constant-memory" title="Permalink to this headline">¶</a></h2>
+<p>In our example, we will create a scene with 20 random spheres. They are placed in a cube with dimension 1000 x 1000 x 1000. The center of the cube is at the origin. All the spheres are random in size, position as well as color. We then place the camera on a random place on z-axis and fix it facing origin. Later on, all we need to do is to fire a ray from each pixel and keep tracing it until it hits one of the objects. We also need to keep track of the depth of the ray. Since one ray can hit more than one objects, we only need to record the nearest object and its color.</p>
+<p>Ray Tracing Without Constant Memory source file:
+<a class="reference download internal" href="../_downloads/ray_noconst.cu"><tt class="xref download docutils literal"><span class="pre">ray_noconst.cu</span></tt></a></p>
+<div class="section" id="structure-code">
+<h3>Structure Code<a class="headerlink" href="#structure-code" title="Permalink to this headline">¶</a></h3>
+<p>We first create a data structure Sphere. Just like standard C, you can also create data structures in CUDA C.</p>
+<div class="highlight-c"><div class="highlight"><pre><span class="k">struct</span> <span class="n">Sphere</span> <span class="p">{</span>
+
+    <span class="kt">float</span>   <span class="n">r</span><span class="p">,</span><span class="n">b</span><span class="p">,</span><span class="n">g</span><span class="p">;</span><span class="c1">// color of the sphere</span>
+    <span class="kt">float</span>   <span class="n">radius</span><span class="p">;</span> 
+    <span class="kt">float</span>   <span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">,</span><span class="n">z</span><span class="p">;</span><span class="c1">// coordinate of the center</span>
+    
+    <span class="c1">// will return the distance between imaginary camera and hit</span>
+    <span class="n">__device__</span> <span class="kt">float</span> <span class="nf">hit</span><span class="p">(</span> <span class="kt">float</span> <span class="n">ox</span><span class="p">,</span> <span class="kt">float</span> <span class="n">oy</span><span class="p">,</span> <span class="kt">float</span> <span class="o">*</span><span class="n">n</span> <span class="p">)</span> <span class="p">{</span>
+        <span class="kt">float</span> <span class="n">dx</span> <span class="o">=</span> <span class="n">ox</span> <span class="o">-</span> <span class="n">x</span><span class="p">;</span> <span class="c1">// distance on x-axis</span>
+        <span class="kt">float</span> <span class="n">dy</span> <span class="o">=</span> <span class="n">oy</span> <span class="o">-</span> <span class="n">y</span><span class="p">;</span> <span class="c1">// distance on y-axis</span>
+        <span class="c1">// if (dx*dx + dy*dy &gt; radius*radius), ray will not hit sphere</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">dx</span><span class="o">*</span><span class="n">dx</span> <span class="o">+</span> <span class="n">dy</span><span class="o">*</span><span class="n">dy</span> <span class="o">&lt;</span> <span class="n">radius</span><span class="o">*</span><span class="n">radius</span><span class="p">)</span> <span class="p">{</span>
+            <span class="kt">float</span> <span class="n">dz</span> <span class="o">=</span> <span class="n">sqrtf</span><span class="p">(</span> <span class="n">radius</span><span class="o">*</span><span class="n">radius</span> <span class="o">-</span> <span class="n">dx</span><span class="o">*</span><span class="n">dx</span> <span class="o">-</span> <span class="n">dy</span><span class="o">*</span><span class="n">dy</span> <span class="p">);</span>
+            <span class="c1">// n is used in visual effect</span>
+            <span class="o">*</span><span class="n">n</span> <span class="o">=</span> <span class="n">dz</span> <span class="o">/</span> <span class="n">sqrtf</span><span class="p">(</span> <span class="n">radius</span> <span class="o">*</span> <span class="n">radius</span> <span class="p">);</span>
+            <span class="k">return</span> <span class="n">dz</span> <span class="o">+</span> <span class="n">z</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="k">return</span> <span class="o">-</span><span class="n">INF</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<p>Inside the data structure, we stores the coordinate of the center of the Sphere as <em>(x, y, z)</em> and its color as <em>(r, g, b)</em>. You can see we also defined a method called hit. This method will decide whether the ray shot out from point <em>(ox, oy)</em> can hit the Sphere defined in the structure or not. The basic idea is simple, you can think of we project the sphere on our two-dimensional image. We first find out the distance between center of the Sphere and point <em>(ox, oy)</em> on the x-axis. We then do the same thing on the y-axis. Using Pythagorean theorem, we can find out the distance between center of the sphere and point <em>(ox, oy)</em>. If this distance is less than radius, then we are sure about the ray hitting the sphere. We then use this distance and the sphere&#8217;s coordinate on z-axis to find out the distance between point <em>(ox, oy)</em> and sphere. On the other hand, it they don&#8217;t intersect, we will assign negative infinity as the distance.</p>
+<p>You may also noticed two other things left unexplained here. First, you can see that we add a qualifier <strong>__device__</strong> before the method definition.</p>
+<div class="highlight-c"><div class="highlight"><pre>    <span class="n">__device__</span> <span class="kt">float</span> <span class="nf">hit</span><span class="p">(</span> <span class="kt">float</span> <span class="n">ox</span><span class="p">,</span> <span class="kt">float</span> <span class="n">oy</span><span class="p">,</span> <span class="kt">float</span> <span class="o">*</span><span class="n">n</span> <span class="p">)</span> <span class="p">{</span>
+</pre></div>
+</div>
+<p>Well, the purpose of this qualifier is to tell the kernel that this method should executes on the device (our GPU) instead of on the host (our CPU).</p>
+<p>Second, you may also find the following line intrigued.</p>
+<div class="highlight-c"><div class="highlight"><pre>            <span class="o">*</span><span class="n">n</span> <span class="o">=</span> <span class="n">dz</span> <span class="o">/</span> <span class="n">sqrtf</span><span class="p">(</span> <span class="n">radius</span> <span class="o">*</span> <span class="n">radius</span> <span class="p">);</span>
+</pre></div>
+</div>
+<p>The value <em>n</em> is used to provide a better visual effect. You can see that we defined it as the percentage of distance between point <em>(ox, oy)</em> and center of sphere out of the radius. We will add this value to later code so that you can see center of the circle clearer while the edge of the sphere dimmer.</p>
+</div>
+<div class="section" id="device-code">
+<h3>Device Code<a class="headerlink" href="#device-code" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-c"><div class="highlight"><pre><span class="n">__global__</span> <span class="kt">void</span> <span class="nf">kernel</span><span class="p">(</span> <span class="n">Sphere</span> <span class="o">*</span><span class="n">s</span><span class="p">,</span> <span class="kt">unsigned</span> <span class="kt">char</span> <span class="o">*</span><span class="n">ptr</span> <span class="p">)</span> <span class="p">{</span>
+
+    <span class="c1">// map from threadIdx/BlockIdx to pixel position</span>
+    <span class="kt">int</span> <span class="n">x</span> <span class="o">=</span> <span class="n">threadIdx</span><span class="p">.</span><span class="n">x</span> <span class="o">+</span> <span class="n">blockIdx</span><span class="p">.</span><span class="n">x</span> <span class="o">*</span> <span class="n">blockDim</span><span class="p">.</span><span class="n">x</span><span class="p">;</span>
+    <span class="kt">int</span> <span class="n">y</span> <span class="o">=</span> <span class="n">threadIdx</span><span class="p">.</span><span class="n">y</span> <span class="o">+</span> <span class="n">blockIdx</span><span class="p">.</span><span class="n">y</span> <span class="o">*</span> <span class="n">blockDim</span><span class="p">.</span><span class="n">y</span><span class="p">;</span>
+    <span class="c1">// this is a linear offset into output buffer</span>
+    <span class="kt">int</span> <span class="n">offset</span> <span class="o">=</span> <span class="n">x</span> <span class="o">+</span> <span class="n">y</span> <span class="o">*</span> <span class="n">blockDim</span><span class="p">.</span><span class="n">x</span> <span class="o">*</span> <span class="n">gridDim</span><span class="p">.</span><span class="n">x</span><span class="p">;</span>
+
+    <span class="c1">// shift the (x,y) image coordinate so that z-axis go through center</span>
+    <span class="kt">float</span>   <span class="n">ox</span> <span class="o">=</span> <span class="p">(</span><span class="n">x</span> <span class="o">-</span> <span class="n">DIM</span><span class="o">/</span><span class="mi">2</span><span class="p">);</span>
+    <span class="kt">float</span>   <span class="n">oy</span> <span class="o">=</span> <span class="p">(</span><span class="n">y</span> <span class="o">-</span> <span class="n">DIM</span><span class="o">/</span><span class="mi">2</span><span class="p">);</span>
+
+    <span class="kt">float</span>   <span class="n">r</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">g</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="c1">// set the background to black</span>
+    <span class="kt">float</span>   <span class="n">maxz</span> <span class="o">=</span> <span class="o">-</span><span class="n">INF</span><span class="p">;</span>
+    <span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="n">SPHERES</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+        <span class="kt">float</span>   <span class="n">n</span><span class="p">;</span>
+        <span class="kt">float</span>   <span class="n">t</span> <span class="o">=</span> <span class="n">s</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">hit</span><span class="p">(</span> <span class="n">ox</span><span class="p">,</span> <span class="n">oy</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">n</span> <span class="p">);</span> <span class="c1">// return the distance</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">t</span> <span class="o">&gt;</span> <span class="n">maxz</span><span class="p">)</span> <span class="p">{</span> 
+            <span class="kt">float</span> <span class="n">fscale</span> <span class="o">=</span> <span class="n">n</span><span class="p">;</span><span class="c1">// improve visual effect</span>
+            <span class="n">r</span> <span class="o">=</span> <span class="n">s</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">r</span> <span class="o">*</span> <span class="n">fscale</span><span class="p">;</span>
+            <span class="n">g</span> <span class="o">=</span> <span class="n">s</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">g</span> <span class="o">*</span> <span class="n">fscale</span><span class="p">;</span>
+            <span class="n">b</span> <span class="o">=</span> <span class="n">s</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">b</span> <span class="o">*</span> <span class="n">fscale</span><span class="p">;</span>
+            <span class="n">maxz</span> <span class="o">=</span> <span class="n">t</span><span class="p">;</span> <span class="c1">// update maxz everytime a smaller distance is found</span>
+        <span class="p">}</span>
+    <span class="p">}</span> 
+
+    <span class="c1">// color the bitmap according to what the ray has &#39;seen&#39;</span>
+    <span class="n">ptr</span><span class="p">[</span><span class="n">offset</span><span class="o">*</span><span class="mi">4</span> <span class="o">+</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="kt">int</span><span class="p">)(</span><span class="n">r</span> <span class="o">*</span> <span class="mi">255</span><span class="p">);</span>
+    <span class="n">ptr</span><span class="p">[</span><span class="n">offset</span><span class="o">*</span><span class="mi">4</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="kt">int</span><span class="p">)(</span><span class="n">g</span> <span class="o">*</span> <span class="mi">255</span><span class="p">);</span>
+    <span class="n">ptr</span><span class="p">[</span><span class="n">offset</span><span class="o">*</span><span class="mi">4</span> <span class="o">+</span> <span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="kt">int</span><span class="p">)(</span><span class="n">b</span> <span class="o">*</span> <span class="mi">255</span><span class="p">);</span>
+    <span class="n">ptr</span><span class="p">[</span><span class="n">offset</span><span class="o">*</span><span class="mi">4</span> <span class="o">+</span> <span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="mi">255</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>On the GPU, we will assign each pixel a thread which is used for ray tracing computation. Therefore, in the first several lines of code,</p>
+<div class="highlight-c"><div class="highlight"><pre>    <span class="c1">// map from threadIdx/BlockIdx to pixel position</span>
+    <span class="kt">int</span> <span class="n">x</span> <span class="o">=</span> <span class="n">threadIdx</span><span class="p">.</span><span class="n">x</span> <span class="o">+</span> <span class="n">blockIdx</span><span class="p">.</span><span class="n">x</span> <span class="o">*</span> <span class="n">blockDim</span><span class="p">.</span><span class="n">x</span><span class="p">;</span>
+    <span class="kt">int</span> <span class="n">y</span> <span class="o">=</span> <span class="n">threadIdx</span><span class="p">.</span><span class="n">y</span> <span class="o">+</span> <span class="n">blockIdx</span><span class="p">.</span><span class="n">y</span> <span class="o">*</span> <span class="n">blockDim</span><span class="p">.</span><span class="n">y</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>we first need to map each thread&#8217;s threadIdx and blockIdx to the pixel position on the bitmap, which is represented by <em>(x, y)</em>. Then, we need to create a linear offset so that when the kernel is coloring the pixel, the kernel need to know exactly which pixel it will color.</p>
+<p>Then we shift image coordinate by <em>DIM/2</em> on the x-axis and <em>DIM/2</em> on the y-axis as well. We need to do this because the center of the bitmap is not the origin. We need the center of the bitmap to match origin&#8217;s position so that the z-axis can go through the center of image.</p>
+<div class="highlight-c"><div class="highlight"><pre>    <span class="c1">// shift the (x,y) image coordinate so that z-axis go through center</span>
+    <span class="kt">float</span>   <span class="n">ox</span> <span class="o">=</span> <span class="p">(</span><span class="n">x</span> <span class="o">-</span> <span class="n">DIM</span><span class="o">/</span><span class="mi">2</span><span class="p">);</span>
+    <span class="kt">float</span>   <span class="n">oy</span> <span class="o">=</span> <span class="p">(</span><span class="n">y</span> <span class="o">-</span> <span class="n">DIM</span><span class="o">/</span><span class="mi">2</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>After the preparations, we can start our ray tracing program. We first set the <em>(r, g, b)</em> values for each pixel to be 0. We would have black background if the ray does not hit any object. Then we declare and initialize the variable <em>maxz</em>, which would hold the nearest distance between the pixel and one of the objects. Later on, each thread will call the method defined in the Sphere data structure. The method would use the <em>(ox, oy)</em> parameter passed by the thread to first decide whether one object will intersect the ray or not and second decide the distance if they intersect. The method will loop over all 20 spheres.</p>
+<div class="highlight-c"><div class="highlight"><pre>            <span class="kt">float</span> <span class="n">fscale</span> <span class="o">=</span> <span class="n">n</span><span class="p">;</span><span class="c1">// improve visual effect</span>
+            <span class="n">r</span> <span class="o">=</span> <span class="n">s</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">r</span> <span class="o">*</span> <span class="n">fscale</span><span class="p">;</span>
+            <span class="n">g</span> <span class="o">=</span> <span class="n">s</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">g</span> <span class="o">*</span> <span class="n">fscale</span><span class="p">;</span>
+            <span class="n">b</span> <span class="o">=</span> <span class="n">s</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">b</span> <span class="o">*</span> <span class="n">fscale</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>In the several lines of code above, you can see that we assign the actual <em>(r, g, b)</em> value according to the <em>(r, g, b)</em> value in the structure. We also multiplied a constant <em>fscale</em> to it. When we see a sphere from above, the nearest point aligned with your eye and the sphere center will be closer to you. On the other hand, the edge of the sphere will appear to be a little bit far away. When we multiply <em>fscale</em> to the <em>(r, g, b)</em> values, what we are trying to do is to create this effect.</p>
+<div class="highlight-c"><div class="highlight"><pre>    <span class="c1">// color the bitmap according to what the ray has &#39;seen&#39;</span>
+    <span class="n">ptr</span><span class="p">[</span><span class="n">offset</span><span class="o">*</span><span class="mi">4</span> <span class="o">+</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="kt">int</span><span class="p">)(</span><span class="n">r</span> <span class="o">*</span> <span class="mi">255</span><span class="p">);</span>
+    <span class="n">ptr</span><span class="p">[</span><span class="n">offset</span><span class="o">*</span><span class="mi">4</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="kt">int</span><span class="p">)(</span><span class="n">g</span> <span class="o">*</span> <span class="mi">255</span><span class="p">);</span>
+    <span class="n">ptr</span><span class="p">[</span><span class="n">offset</span><span class="o">*</span><span class="mi">4</span> <span class="o">+</span> <span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="kt">int</span><span class="p">)(</span><span class="n">b</span> <span class="o">*</span> <span class="mi">255</span><span class="p">);</span>
+    <span class="n">ptr</span><span class="p">[</span><span class="n">offset</span><span class="o">*</span><span class="mi">4</span> <span class="o">+</span> <span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="mi">255</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>The last few line would be just color the the bitmap. Nothing needs to be clarified in these lines of code.</p>
+</div>
+<div class="section" id="host-code">
+<h3>Host Code<a class="headerlink" href="#host-code" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-c"><div class="highlight"><pre><span class="kt">int</span> <span class="nf">main</span><span class="p">(</span> <span class="kt">void</span> <span class="p">)</span> <span class="p">{</span>
+
+    <span class="c1">// declare the data block and other needed variables</span>
+    <span class="n">DataBlock</span>   <span class="n">data</span><span class="p">;</span>
+    <span class="n">CPUBitmap</span> <span class="n">bitmap</span><span class="p">(</span> <span class="n">DIM</span><span class="p">,</span> <span class="n">DIM</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">data</span> <span class="p">);</span>
+    <span class="kt">unsigned</span> <span class="kt">char</span>   <span class="o">*</span><span class="n">dev_bitmap</span><span class="p">;</span>
+    <span class="n">Sphere</span>          <span class="o">*</span><span class="n">s</span><span class="p">;</span>
+
+    <span class="c1">// allocate temp memory for the Sphere dataset on CPU</span>
+    <span class="n">Sphere</span> <span class="o">*</span><span class="n">temp_s</span> <span class="o">=</span> <span class="p">(</span><span class="n">Sphere</span><span class="o">*</span><span class="p">)</span><span class="n">malloc</span><span class="p">(</span> <span class="k">sizeof</span><span class="p">(</span><span class="n">Sphere</span><span class="p">)</span> <span class="o">*</span> <span class="n">SPHERES</span> <span class="p">);</span>
+
+    <span class="c1">// initialize the Sphere dataset</span>
+    <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="n">SPHERES</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">temp_s</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">r</span> <span class="o">=</span> <span class="n">rnd</span><span class="p">(</span> <span class="mf">1.0f</span> <span class="p">);</span>
+        <span class="n">temp_s</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">g</span> <span class="o">=</span> <span class="n">rnd</span><span class="p">(</span> <span class="mf">1.0f</span> <span class="p">);</span>
+        <span class="n">temp_s</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">b</span> <span class="o">=</span> <span class="n">rnd</span><span class="p">(</span> <span class="mf">1.0f</span> <span class="p">);</span>
+        <span class="n">temp_s</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">x</span> <span class="o">=</span> <span class="n">rnd</span><span class="p">(</span> <span class="mf">1000.0f</span> <span class="p">)</span> <span class="o">-</span> <span class="mi">500</span><span class="p">;</span>
+        <span class="n">temp_s</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">y</span> <span class="o">=</span> <span class="n">rnd</span><span class="p">(</span> <span class="mf">1000.0f</span> <span class="p">)</span> <span class="o">-</span> <span class="mi">500</span><span class="p">;</span>
+        <span class="n">temp_s</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">z</span> <span class="o">=</span> <span class="n">rnd</span><span class="p">(</span> <span class="mf">1000.0f</span> <span class="p">)</span> <span class="o">-</span> <span class="mi">500</span><span class="p">;</span>
+        <span class="n">temp_s</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">radius</span> <span class="o">=</span> <span class="n">rnd</span><span class="p">(</span> <span class="mf">100.0f</span> <span class="p">)</span> <span class="o">+</span> <span class="mi">20</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="c1">// capture the start time</span>
+    <span class="n">cudaEvent_t</span>     <span class="n">start</span><span class="p">,</span> <span class="n">stop</span><span class="p">;</span>
+    <span class="n">HANDLE_ERROR</span><span class="p">(</span> <span class="n">cudaEventCreate</span><span class="p">(</span> <span class="o">&amp;</span><span class="n">start</span> <span class="p">)</span> <span class="p">);</span>
+    <span class="n">HANDLE_ERROR</span><span class="p">(</span> <span class="n">cudaEventCreate</span><span class="p">(</span> <span class="o">&amp;</span><span class="n">stop</span> <span class="p">)</span> <span class="p">);</span>
+    <span class="n">HANDLE_ERROR</span><span class="p">(</span> <span class="n">cudaEventRecord</span><span class="p">(</span> <span class="n">start</span><span class="p">,</span> <span class="mi">0</span> <span class="p">)</span> <span class="p">);</span>
+
+    <span class="c1">// allocate memory on the GPU for the output bitmap</span>
+    <span class="n">HANDLE_ERROR</span><span class="p">(</span> <span class="n">cudaMalloc</span><span class="p">(</span> <span class="p">(</span><span class="kt">void</span><span class="o">**</span><span class="p">)</span><span class="o">&amp;</span><span class="n">dev_bitmap</span><span class="p">,</span> <span class="n">bitmap</span><span class="p">.</span><span class="n">image_size</span><span class="p">()</span> <span class="p">)</span> <span class="p">);</span>
+
+    <span class="c1">// allocate memory for the Sphere dataset on GPU</span>
+    <span class="n">HANDLE_ERROR</span><span class="p">(</span> <span class="n">cudaMalloc</span><span class="p">(</span> <span class="p">(</span><span class="kt">void</span><span class="o">**</span><span class="p">)</span><span class="o">&amp;</span><span class="n">s</span><span class="p">,</span> <span class="k">sizeof</span><span class="p">(</span><span class="n">Sphere</span><span class="p">)</span> <span class="o">*</span> <span class="n">SPHERES</span> <span class="p">)</span> <span class="p">);</span>
+
+    <span class="c1">// transfer the initialized Sphere dataset from CPU memory to GPU memory</span>
+    <span class="n">HANDLE_ERROR</span><span class="p">(</span> <span class="n">cudaMemcpy</span><span class="p">(</span> <span class="n">s</span><span class="p">,</span> <span class="n">temp_s</span><span class="p">,</span> <span class="k">sizeof</span><span class="p">(</span><span class="n">Sphere</span><span class="p">)</span> <span class="o">*</span> <span class="n">SPHERES</span><span class="p">,</span>
+                                <span class="n">cudaMemcpyHostToDevice</span> <span class="p">)</span> <span class="p">);</span>
+
+    <span class="c1">// generate a bitmap from our sphere data</span>
+    <span class="n">dim3</span>    <span class="n">grids</span><span class="p">(</span><span class="n">DIM</span><span class="o">/</span><span class="mi">32</span><span class="p">,</span><span class="n">DIM</span><span class="o">/</span><span class="mi">32</span><span class="p">);</span>
+    <span class="n">dim3</span>    <span class="n">threads</span><span class="p">(</span><span class="mi">32</span><span class="p">,</span><span class="mi">32</span><span class="p">);</span>
+    <span class="n">kernel</span><span class="o">&lt;&lt;&lt;</span><span class="n">grids</span><span class="p">,</span><span class="n">threads</span><span class="o">&gt;&gt;&gt;</span><span class="p">(</span> <span class="n">s</span><span class="p">,</span> <span class="n">dev_bitmap</span> <span class="p">);</span>
+
+    <span class="c1">// copy our bitmap back from the GPU for display</span>
+    <span class="n">HANDLE_ERROR</span><span class="p">(</span> <span class="n">cudaMemcpy</span><span class="p">(</span> <span class="n">bitmap</span><span class="p">.</span><span class="n">get_ptr</span><span class="p">(),</span> <span class="n">dev_bitmap</span><span class="p">,</span>
+                              <span class="n">bitmap</span><span class="p">.</span><span class="n">image_size</span><span class="p">(),</span>
+                              <span class="n">cudaMemcpyDeviceToHost</span> <span class="p">)</span> <span class="p">);</span>
+
+    <span class="c1">// get stop time, and display the timing results</span>
+    <span class="n">HANDLE_ERROR</span><span class="p">(</span> <span class="n">cudaEventRecord</span><span class="p">(</span> <span class="n">stop</span><span class="p">,</span> <span class="mi">0</span> <span class="p">)</span> <span class="p">);</span>
+    <span class="n">HANDLE_ERROR</span><span class="p">(</span> <span class="n">cudaEventSynchronize</span><span class="p">(</span> <span class="n">stop</span> <span class="p">)</span> <span class="p">);</span>
+    <span class="kt">float</span>   <span class="n">elapsedTime</span><span class="p">;</span>
+    <span class="n">HANDLE_ERROR</span><span class="p">(</span> <span class="n">cudaEventElapsedTime</span><span class="p">(</span> <span class="o">&amp;</span><span class="n">elapsedTime</span><span class="p">,</span>
+                                        <span class="n">start</span><span class="p">,</span> <span class="n">stop</span> <span class="p">)</span> <span class="p">);</span>
+    <span class="n">printf</span><span class="p">(</span> <span class="s">&quot;Time to generate:  %3.1f ms</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">elapsedTime</span> <span class="p">);</span>
+
+    <span class="c1">// free CPU memory</span>
+    <span class="n">free</span><span class="p">(</span> <span class="n">temp_s</span> <span class="p">);</span>
+
+    <span class="c1">// free GPU memory</span>
+    <span class="n">HANDLE_ERROR</span><span class="p">(</span> <span class="n">cudaEventDestroy</span><span class="p">(</span> <span class="n">start</span> <span class="p">)</span> <span class="p">);</span>
+    <span class="n">HANDLE_ERROR</span><span class="p">(</span> <span class="n">cudaEventDestroy</span><span class="p">(</span> <span class="n">stop</span> <span class="p">)</span> <span class="p">);</span>
+
+    <span class="n">HANDLE_ERROR</span><span class="p">(</span> <span class="n">cudaFree</span><span class="p">(</span> <span class="n">dev_bitmap</span> <span class="p">)</span> <span class="p">);</span>
+    <span class="n">HANDLE_ERROR</span><span class="p">(</span> <span class="n">cudaFree</span><span class="p">(</span> <span class="n">s</span> <span class="p">)</span> <span class="p">);</span>
+
+    <span class="c1">// display</span>
+    <span class="n">bitmap</span><span class="p">.</span><span class="n">display_and_exit</span><span class="p">();</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>There is nothing worth mentioning about the host code. You first declare the data block and the variables. Then you allocate memory on both CPU and GPU for those variables. Then you can initialize some variables, the 20 spheres in this case on the CPU and then transfer them to the GPU memory. Later on you can call the kernel invocation code and let GPU finish the hard work. Finally, you transfer the bitmap back to CPU and display the bitmap.</p>
+<img alt="alternate text" class="align-center" src="../_images/RayTracing.png" style="width: 500px; height: 500px;" />
+<p>A screenshot from the ray tracing example</p>
+</div>
+<div class="section" id="performance">
+<h3>Performance<a class="headerlink" href="#performance" title="Permalink to this headline">¶</a></h3>
+<dl class="docutils">
+<dt>We conducted 5 tests and the results are below.</dt>
+<dd><ul class="first last simple">
+<li><ol class="first arabic">
+<li>6.7 ms</li>
+</ol>
+</li>
+<li><ol class="first arabic" start="2">
+<li>6.8 ms</li>
+</ol>
+</li>
+<li><ol class="first arabic" start="3">
+<li>6.8 ms</li>
+</ol>
+</li>
+<li><ol class="first arabic" start="4">
+<li>6.7 ms</li>
+</ol>
+</li>
+<li><ol class="first arabic" start="5">
+<li>6.8 ms</li>
+</ol>
+</li>
+<li>Average: 6.76 ms</li>
+</ul>
+</dd>
+</dl>
+</div>
+</div>
+<div class="section" id="constant-memory">
+<h2>Constant Memory<a class="headerlink" href="#constant-memory" title="Permalink to this headline">¶</a></h2>
+<p>We have mentioned that there are several types of memory in CUDA architecture. Till now, we have seen global memory and shared memory. This time, we will explore the characteristics of constant memory.</p>
+<p>By its name, constant memory is designed to store variables that will not change when the kernel is executing commands. Constant memory is located in global memory, which means constant variables are stored in the global memory as well. However, constant variables are cached for higher access efficiency. Just like shared memory, there is always price come with faster access speed. The CUDA architecture provides only 64KB of space for global memory. Therefore, constant memory is not designed to store large dataset.</p>
+</div>
+<div class="section" id="ray-tracing-with-constant-memory">
+<h2>Ray Tracing With Constant Memory<a class="headerlink" href="#ray-tracing-with-constant-memory" title="Permalink to this headline">¶</a></h2>
+<p>In the example of ray tracing, we will see how to improve program efficiency by using constant memory. We do this by store 20 sphere object in the constant memory for faster access. In our example, every pixel of the image needs to access 20 sphere objects over the course of kernel execution. If we have a bitmap of the size <em>1024x1024</em>, we are looking at over one million times of access for each of the sphere.</p>
+<p>Ray Tracing With Constant Memory source file:
+<a class="reference download internal" href="../_downloads/ray.cu"><tt class="xref download docutils literal"><span class="pre">ray.cu</span></tt></a></p>
+<div class="section" id="constant-memory-declaration">
+<h3>Constant Memory Declaration<a class="headerlink" href="#constant-memory-declaration" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-c"><div class="highlight"><pre><span class="n">__constant__</span> <span class="n">Sphere</span> <span class="n">s</span><span class="p">[</span><span class="n">SPHERES</span><span class="p">];</span> <span class="c1">// declare spheres in constant memory</span>
+</pre></div>
+</div>
+<p>This line of code shows you how to declare variables in constant memory. The only difference is that you have to add <strong>__constant__</strong> qualifier before the declaration.</p>
+</div>
+<div class="section" id="structure-device-code">
+<h3>Structure &amp; Device Code<a class="headerlink" href="#structure-device-code" title="Permalink to this headline">¶</a></h3>
+<p>The device code and the code to create structure are exactly the same as the version not using constant memory.</p>
+</div>
+<div class="section" id="id1">
+<h3>Host Code<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h3>
+<p>Most of the host code is the same as the version not using constant memory. There are only two different places. First, since we have already prepared spaces in constant memory for Sphere dataset, we do not use the command <em>cudaMalloc()</em> and <em>cudaMemcpy()</em> anymore to allocate it in global memory anymore. Second, we use the following code to copy initialized Sphere dataset to the constant memory.</p>
+<div class="highlight-c"><div class="highlight"><pre>    <span class="c1">// transfer the initialized Sphere dataset to constant memory</span>
+    <span class="n">HANDLE_ERROR</span><span class="p">(</span> <span class="n">cudaMemcpyToSymbol</span><span class="p">(</span> <span class="n">s</span><span class="p">,</span> <span class="n">temp_s</span><span class="p">,</span> 
+                                <span class="k">sizeof</span><span class="p">(</span><span class="n">Sphere</span><span class="p">)</span> <span class="o">*</span> <span class="n">SPHERES</span><span class="p">)</span> <span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="id2">
+<h3>Performance<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h3>
+<dl class="docutils">
+<dt>We conducted 5 tests and the results are below.</dt>
+<dd><ul class="first last simple">
+<li><ol class="first arabic">
+<li>6.2 ms</li>
+</ol>
+</li>
+<li><ol class="first arabic" start="2">
+<li>6.1 ms</li>
+</ol>
+</li>
+<li><ol class="first arabic" start="3">
+<li>6.3 ms</li>
+</ol>
+</li>
+<li><ol class="first arabic" start="4">
+<li>6.4 ms</li>
+</ol>
+</li>
+<li><ol class="first arabic" start="5">
+<li>6.4 ms</li>
+</ol>
+</li>
+<li>Average: 6.28 ms</li>
+</ul>
+</dd>
+</dl>
+<p>Due to the small bitmap size we are using, the improvement is not significant.</p>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Ray Tracing and Constant Memory</a><ul>
+<li><a class="reference internal" href="#basics-of-ray-tracing">Basics of Ray Tracing</a></li>
+<li><a class="reference internal" href="#notes-for-compile">Notes for Compile</a></li>
+<li><a class="reference internal" href="#ray-tracing-without-constant-memory">Ray Tracing Without Constant Memory</a><ul>
+<li><a class="reference internal" href="#structure-code">Structure Code</a></li>
+<li><a class="reference internal" href="#device-code">Device Code</a></li>
+<li><a class="reference internal" href="#host-code">Host Code</a></li>
+<li><a class="reference internal" href="#performance">Performance</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#constant-memory">Constant Memory</a></li>
+<li><a class="reference internal" href="#ray-tracing-with-constant-memory">Ray Tracing With Constant Memory</a><ul>
+<li><a class="reference internal" href="#constant-memory-declaration">Constant Memory Declaration</a></li>
+<li><a class="reference internal" href="#structure-device-code">Structure &amp; Device Code</a></li>
+<li><a class="reference internal" href="#id1">Host Code</a></li>
+<li><a class="reference internal" href="#id2">Performance</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="../CUDA2D/CUDA2D.html"
+                        title="previous chapter">CUDA in Two-dimension</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="../Streams/Streams.html"
+                        title="next chapter">Streams</a></p>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../Streams/Streams.html" title="Streams"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="../CUDA2D/CUDA2D.html" title="CUDA in Two-dimension"
+             >previous</a> |</li>
+        <li><a href="../index.html">GPU Programming</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright This work is licensed under a Creative Commons Attribution-ShareAlike 3.0 Unported License.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>

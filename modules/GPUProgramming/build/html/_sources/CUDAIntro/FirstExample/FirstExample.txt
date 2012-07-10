@@ -1,0 +1,83 @@
+*****************************
+An Example of Vector Addition
+*****************************
+
+The Device Code
+###############
+
+As you may notice in your background reading about CUDA programming, the program executes in two separated places. One is called host, another is called device. In our example, the add() function executes on the device (our GPU) and the rest of the C program executes on our CPU.
+
+.. literalinclude:: VA-GPU-11.cu	
+    :language: c
+    :lines: 26-33
+
+As shown in the code block above, we need to add a __global__ qualifier to the function name of the original C code in order to let function add() execute on a device.
+
+The Host Code
+#############
+
+.. literalinclude:: VA-GPU-11.cu	
+    :language: c
+    :lines: 35-49
+
+As shown in the code block above, we first need to declare pointers. Notice that we declared two sets of pointers, one set is used to store data on host memory, another is used to store data on the device memory.
+
+The Event API
+*************
+
+Before we go any further, we need to first learn ways of measuring performance in CUDA runtime. The tool we use to measure the time GPU spends on a task is CUDA event API. If you are C programming language veteran you may ask the question: why don't we use the the timing functions in standard C, such as *clock()* or *timeval* structure, to perform this task? Well, this is a really good question.
+
+The fundamental motivation of using Event API instead of timing functions in standard C lies on the difference between CPU and GPU computation. To be more specific, GPU is a companion computation device, which means every time CPU has to call GPU to do computations. However, when GPU is doing computation, CPU does not wait for it to finish its task, instead CPU will continue to execute next line of code while GPU is still working on previous call. This *asynchronous* feature of GPU computation structure leads to possible inaccuracy in standard C timing functions. Therefore, Event API become needed.
+
+.. literalinclude:: VA-GPU-11.cu	
+    :language: c
+    :lines: 51-57
+
+The first step of using event is declaring the event. In this example. we declared two events, one called start, which will record the start event and another called stop, which will record the stop event. After declaring the events, we can use the command cudaEventRecord() to record a event. You can think of record a event as initializing it. You may noticed that we pass this command a second argument (0 in this case). In our example, this argument is actually useless. However, if you are really interested in this, you can read more about CUDA stream.
+
+The `cudaMalloc()`_ Function
+****************************
+
+.. literalinclude:: VA-GPU-11.cu	
+    :language: c
+    :lines: 59-62
+
+Just like standard C programming language, you need to allocate memory for variables before you start to use them. The command `cudaMalloc()`_, similar to malloc() command in standard C, tells the CUDA runtime to allocate the memory on the device(Memory of GPU), instead of on the host(Memory of CPU). The first argument is a pointer points to where you want to hold the address of the newly allocated memory. 
+
+For some reasons, you are not allowed to modify memory allocated on the device(GPU) from host directly in CUDA C programming language. Instead, you need to use two other method to access device memory. You can do it by either using device pointers in the device code, or you can use the `cudaMemcpy()`_ method.
+
+The way to use pointers in the device code is exactly the same as we did in the host code. In other words, pointer in CUDA C is exactly the same as Standard C. However, there is one thing you need to pay attention to, host pointers can only access memory(usually CPU memory) from host code, you cannot access device memory directly. On the other hand, device pointers can only access memory(usually GPU memory) from device code as well.
+
+The `cudaMemcpy()`_ Function
+****************************
+
+.. literalinclude:: VA-GPU-11.cu	
+    :language: c
+    :lines: 64-68
+
+As mentioned in last section, We can also use `cudaMemcpy()`_ from host code to access memory on a device. **This command is the typical way of transferring data between host and device.** Again this call is similar to standard C call memcpy(), but requires more parameters. The first argument identifies the destination pointer; the second identifies the source pointer. The last parameter to the call is cudaMemcpyHostToDevice, telling the runtime that the source pointer is a host pointer and the destination pointer is a device pointer.
+
+The Kernel Invocation
+*********************
+
+.. literalinclude:: VA-GPU-11.cu	
+    :language: c
+    :lines: 70-71
+
+The following line is the call for device code from host code. You may notice that this call is similar to a normal function call but has additional code in it. We will talk about what they represent in later examples. At this point all you need to know is that they are they are telling the GPU to use only one thread to execute the program.
+
+More `cudaMemcpy()`_ Function
+*****************************
+
+.. literalinclude:: VA-GPU-11.cu	
+    :language: c
+    :lines: 73-75
+
+In previous section we have seen how CUDA runtime transfer data from Host to Device, this time we will see how to transfer data back to host. Notice that this time device memory is source and host memory is destination. Therefore, we are using argument **cudaMemcpyDeviceToHost**.
+
+.. _cudaFree(): http://developer.download.nvidia.com/compute/cuda/4_2/rel/toolkit/docs/online/group__CUDART__MEMORY_gb17fef862d4d1fefb9dba35bd62a187e.html#gb17fef862d4d1fefb9dba35bd62a187e
+
+.. _cudaMalloc(): http://developer.download.nvidia.com/compute/cuda/4_2/rel/toolkit/docs/online/group__CUDART__MEMORY_gc63ffd93e344b939d6399199d8b12fef.html#gc63ffd93e344b939d6399199d8b12fef
+
+.. _cudaMemcpy(): http://developer.download.nvidia.com/compute/cuda/4_2/rel/toolkit/docs/online/group__CUDART__MEMORY_g48efa06b81cc031b2aa6fdc2e9930741.html#g48efa06b81cc031b2aa6fdc2e9930741
+

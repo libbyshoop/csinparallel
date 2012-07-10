@@ -1,0 +1,65 @@
+\select@language {english}
+\contentsline {chapter}{\numberline {1}Introduction}{3}{chapter.1}
+\contentsline {section}{\numberline {1.1}What is GPU?}{3}{section.1.1}
+\contentsline {section}{\numberline {1.2}What is the difference between GPU and CPU?}{3}{section.1.2}
+\contentsline {section}{\numberline {1.3}What is the advantage of using GPU for computation?}{4}{section.1.3}
+\contentsline {section}{\numberline {1.4}What are the important parts inside a GPU?}{4}{section.1.4}
+\contentsline {section}{\numberline {1.5}How does CUDA connect with hardware?}{5}{section.1.5}
+\contentsline {section}{\numberline {1.6}Is CUDA the only GPU programming language available?}{6}{section.1.6}
+\contentsline {chapter}{\numberline {2}CUDA Intro}{7}{chapter.2}
+\contentsline {section}{\numberline {2.1}An Example of Vector Addition}{7}{section.2.1}
+\contentsline {subsection}{\numberline {2.1.1}The Device Code}{7}{subsection.2.1.1}
+\contentsline {subsection}{\numberline {2.1.2}The Host Code}{7}{subsection.2.1.2}
+\contentsline {subsubsection}{The Event API}{8}{section*.3}
+\contentsline {subsubsection}{The cudaMalloc() Function}{8}{section*.4}
+\contentsline {subsubsection}{The cudaMemcpy() Function}{9}{section*.5}
+\contentsline {subsubsection}{The Kernel Invocation}{9}{section*.6}
+\contentsline {subsubsection}{More cudaMemcpy() Function}{9}{section*.7}
+\contentsline {subsubsection}{Timing using Event API}{9}{section*.8}
+\contentsline {subsubsection}{The cudaFree() Function}{10}{section*.9}
+\contentsline {section}{\numberline {2.2}Vector Addition with Blocks}{10}{section.2.2}
+\contentsline {subsection}{\numberline {2.2.1}Block}{10}{subsection.2.2.1}
+\contentsline {subsection}{\numberline {2.2.2}The Device Code}{11}{subsection.2.2.2}
+\contentsline {subsection}{\numberline {2.2.3}The Host Code}{12}{subsection.2.2.3}
+\contentsline {section}{\numberline {2.3}Vector Addition with Blocks and Threads}{12}{section.2.3}
+\contentsline {subsection}{\numberline {2.3.1}Threads}{12}{subsection.2.3.1}
+\contentsline {subsection}{\numberline {2.3.2}The Device Code}{12}{subsection.2.3.2}
+\contentsline {subsection}{\numberline {2.3.3}The Host Code}{13}{subsection.2.3.3}
+\contentsline {chapter}{\numberline {3}Thread Advance}{15}{chapter.3}
+\contentsline {section}{\numberline {3.1}Vector Dot Product}{15}{section.3.1}
+\contentsline {subsection}{\numberline {3.1.1}The Device Code}{15}{subsection.3.1.1}
+\contentsline {subsection}{\numberline {3.1.2}The Host Code}{15}{subsection.3.1.2}
+\contentsline {section}{\numberline {3.2}Vector Dot Product with Reduction}{17}{section.3.2}
+\contentsline {subsection}{\numberline {3.2.1}The Device Code}{18}{subsection.3.2.1}
+\contentsline {subsection}{\numberline {3.2.2}The Host Code}{19}{subsection.3.2.2}
+\contentsline {chapter}{\numberline {4}CUDA in Two-dimension}{21}{chapter.4}
+\contentsline {section}{\numberline {4.1}An Example of Matrix Multiplication}{21}{section.4.1}
+\contentsline {subsection}{\numberline {4.1.1}Performance}{21}{subsection.4.1.1}
+\contentsline {section}{\numberline {4.2}Global Memory Version}{21}{section.4.2}
+\contentsline {subsection}{\numberline {4.2.1}The Device Code}{22}{subsection.4.2.1}
+\contentsline {subsection}{\numberline {4.2.2}The Host Code}{22}{subsection.4.2.2}
+\contentsline {subsection}{\numberline {4.2.3}Performance}{24}{subsection.4.2.3}
+\contentsline {section}{\numberline {4.3}CUDA Memory Types}{24}{section.4.3}
+\contentsline {section}{\numberline {4.4}Shared Memory Version}{25}{section.4.4}
+\contentsline {subsection}{\numberline {4.4.1}The Device Code}{28}{subsection.4.4.1}
+\contentsline {subsection}{\numberline {4.4.2}The Host Code}{28}{subsection.4.4.2}
+\contentsline {subsection}{\numberline {4.4.3}Performance}{30}{subsection.4.4.3}
+\contentsline {chapter}{\numberline {5}Ray Tracing and Constant Memory}{33}{chapter.5}
+\contentsline {section}{\numberline {5.1}Basics of Ray Tracing}{33}{section.5.1}
+\contentsline {section}{\numberline {5.2}Notes for Compile}{33}{section.5.2}
+\contentsline {section}{\numberline {5.3}Ray Tracing Without Constant Memory}{33}{section.5.3}
+\contentsline {subsection}{\numberline {5.3.1}Structure Code}{34}{subsection.5.3.1}
+\contentsline {subsection}{\numberline {5.3.2}Device Code}{35}{subsection.5.3.2}
+\contentsline {subsection}{\numberline {5.3.3}Host Code}{36}{subsection.5.3.3}
+\contentsline {subsection}{\numberline {5.3.4}Performance}{38}{subsection.5.3.4}
+\contentsline {section}{\numberline {5.4}Constant Memory}{39}{section.5.4}
+\contentsline {section}{\numberline {5.5}Ray Tracing With Constant Memory}{39}{section.5.5}
+\contentsline {subsection}{\numberline {5.5.1}Constant Memory Declaration}{39}{subsection.5.5.1}
+\contentsline {subsection}{\numberline {5.5.2}Structure \& Device Code}{39}{subsection.5.5.2}
+\contentsline {subsection}{\numberline {5.5.3}Host Code}{39}{subsection.5.5.3}
+\contentsline {subsection}{\numberline {5.5.4}Performance}{39}{subsection.5.5.4}
+\contentsline {chapter}{\numberline {6}Streams}{41}{chapter.6}
+\contentsline {section}{\numberline {6.1}Virtual Memory and Paging}{41}{section.6.1}
+\contentsline {section}{\numberline {6.2}Pageable Host Memory and Page-locked Host Memory}{41}{section.6.2}
+\contentsline {subsection}{\numberline {6.2.1}The cudaHostAlloc() Function}{41}{subsection.6.2.1}
+\contentsline {section}{\numberline {6.3}CUDA Streams}{42}{section.6.3}

@@ -1,0 +1,351 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Thread Advance &mdash; GPU Programming</title>
+    
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="top" title="GPU Programming" href="../index.html" />
+    <link rel="next" title="CUDA in Two-dimension" href="../CUDA2D/CUDA2D.html" />
+    <link rel="prev" title="CUDA Intro" href="../CUDAIntro/CUDAIntro.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../CUDA2D/CUDA2D.html" title="CUDA in Two-dimension"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="../CUDAIntro/CUDAIntro.html" title="CUDA Intro"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../index.html">GPU Programming</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="thread-advance">
+<h1>Thread Advance<a class="headerlink" href="#thread-advance" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="vector-dot-product">
+<h2>Vector Dot Product<a class="headerlink" href="#vector-dot-product" title="Permalink to this headline">¶</a></h2>
+<p>In this example we will see how to perform a dot product using GPU computation. We know that the result of vector addition is a vector, but the result of vector dot product is a number. However, we can divide the vector dot product process into two steps. We first use CUDA to the multiplication process. After this step, the device will return a vector with all its elements as multiplication results to the host code. Then the CPU can do all the adding up process.</p>
+<p>Vector Dot Product source file:
+<a class="reference download internal" href="../_downloads/Dot-GM.cu"><tt class="xref download docutils literal"><span class="pre">Dot-GM.cu</span></tt></a></p>
+<div class="section" id="the-device-code">
+<h3>The Device Code<a class="headerlink" href="#the-device-code" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-c"><div class="highlight"><pre><span class="n">__global__</span> <span class="kt">void</span> <span class="nf">dot</span><span class="p">(</span> <span class="kt">float</span> <span class="o">*</span><span class="n">a</span><span class="p">,</span> <span class="kt">float</span> <span class="o">*</span><span class="n">b</span><span class="p">,</span> <span class="kt">float</span> <span class="o">*</span><span class="n">c</span> <span class="p">)</span> <span class="p">{</span>
+
+    <span class="c1">// keep track of the index</span>
+    <span class="kt">int</span> <span class="n">tid</span> <span class="o">=</span> <span class="n">threadIdx</span><span class="p">.</span><span class="n">x</span> <span class="o">+</span> <span class="n">blockIdx</span><span class="p">.</span><span class="n">x</span> <span class="o">*</span> <span class="n">numThread</span><span class="p">;</span>
+
+    <span class="k">while</span> <span class="p">(</span><span class="n">tid</span> <span class="o">&lt;</span> <span class="n">N</span><span class="p">)</span> <span class="p">{</span>
+         <span class="n">c</span><span class="p">[</span><span class="n">tid</span><span class="p">]</span> <span class="o">=</span> <span class="n">a</span><span class="p">[</span><span class="n">tid</span><span class="p">]</span> <span class="o">*</span> <span class="n">b</span><span class="p">[</span><span class="n">tid</span><span class="p">];</span>
+         <span class="n">tid</span> <span class="o">+=</span> <span class="n">numThread</span> <span class="o">*</span> <span class="n">numBlock</span><span class="p">;</span> <span class="c1">// shift by the total number of thread in a grid</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>The device code is pretty straight forward. Each thread multiplies a pair of corresponding elements in two vectors. After each thread done their job for the first time, if there are still elements left unprocessed, they runtime will instruct the threads to do another round of computation until all the elements are processed.</p>
+</div>
+<div class="section" id="the-host-code">
+<h3>The Host Code<a class="headerlink" href="#the-host-code" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-c"><div class="highlight"><pre><span class="kt">int</span> <span class="nf">main</span><span class="p">(</span> <span class="kt">void</span> <span class="p">)</span> <span class="p">{</span>
+
+    <span class="kt">float</span>   <span class="o">*</span><span class="n">a</span><span class="p">,</span> <span class="o">*</span><span class="n">b</span><span class="p">,</span> <span class="n">sum</span><span class="p">,</span> <span class="o">*</span><span class="n">c</span><span class="p">;</span>
+    <span class="kt">float</span>   <span class="o">*</span><span class="n">dev_a</span><span class="p">,</span> <span class="o">*</span><span class="n">dev_b</span><span class="p">,</span> <span class="o">*</span><span class="n">dev_c</span><span class="p">;</span>
+
+    <span class="c1">// allocate memory on the cpu side</span>
+    <span class="n">a</span> <span class="o">=</span> <span class="p">(</span><span class="kt">float</span><span class="o">*</span><span class="p">)</span><span class="n">malloc</span><span class="p">(</span> <span class="n">N</span><span class="o">*</span><span class="k">sizeof</span><span class="p">(</span><span class="kt">float</span><span class="p">)</span> <span class="p">);</span>
+    <span class="n">b</span> <span class="o">=</span> <span class="p">(</span><span class="kt">float</span><span class="o">*</span><span class="p">)</span><span class="n">malloc</span><span class="p">(</span> <span class="n">N</span><span class="o">*</span><span class="k">sizeof</span><span class="p">(</span><span class="kt">float</span><span class="p">)</span> <span class="p">);</span>
+    <span class="n">c</span> <span class="o">=</span> <span class="p">(</span><span class="kt">float</span><span class="o">*</span><span class="p">)</span><span class="n">malloc</span><span class="p">(</span> <span class="n">N</span><span class="o">*</span><span class="k">sizeof</span><span class="p">(</span><span class="kt">float</span><span class="p">)</span> <span class="p">);</span>
+
+    <span class="c1">// fill in the host memory with data</span>
+    <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="n">N</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">a</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">i</span><span class="p">;</span>
+        <span class="n">b</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">i</span><span class="o">*</span><span class="mi">2</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="c1">// start the timer </span>
+    <span class="n">cudaEvent_t</span>     <span class="n">start</span><span class="p">,</span> <span class="n">stop</span><span class="p">;</span>
+    <span class="n">HANDLE_ERROR</span><span class="p">(</span> <span class="n">cudaEventCreate</span><span class="p">(</span> <span class="o">&amp;</span><span class="n">start</span> <span class="p">)</span> <span class="p">);</span>
+    <span class="n">HANDLE_ERROR</span><span class="p">(</span> <span class="n">cudaEventCreate</span><span class="p">(</span> <span class="o">&amp;</span><span class="n">stop</span> <span class="p">)</span> <span class="p">);</span>
+    <span class="n">HANDLE_ERROR</span><span class="p">(</span> <span class="n">cudaEventRecord</span><span class="p">(</span> <span class="n">start</span><span class="p">,</span> <span class="mi">0</span> <span class="p">)</span> <span class="p">);</span>
+
+    <span class="c1">// allocate the memory on the GPU</span>
+    <span class="n">HANDLE_ERROR</span><span class="p">(</span> <span class="n">cudaMalloc</span><span class="p">(</span> <span class="p">(</span><span class="kt">void</span><span class="o">**</span><span class="p">)</span><span class="o">&amp;</span><span class="n">dev_a</span><span class="p">,</span> <span class="n">N</span><span class="o">*</span><span class="k">sizeof</span><span class="p">(</span><span class="kt">float</span><span class="p">)</span> <span class="p">)</span> <span class="p">);</span>
+    <span class="n">HANDLE_ERROR</span><span class="p">(</span> <span class="n">cudaMalloc</span><span class="p">(</span> <span class="p">(</span><span class="kt">void</span><span class="o">**</span><span class="p">)</span><span class="o">&amp;</span><span class="n">dev_b</span><span class="p">,</span> <span class="n">N</span><span class="o">*</span><span class="k">sizeof</span><span class="p">(</span><span class="kt">float</span><span class="p">)</span> <span class="p">)</span> <span class="p">);</span>
+    <span class="n">HANDLE_ERROR</span><span class="p">(</span> <span class="n">cudaMalloc</span><span class="p">(</span> <span class="p">(</span><span class="kt">void</span><span class="o">**</span><span class="p">)</span><span class="o">&amp;</span><span class="n">dev_c</span><span class="p">,</span> <span class="n">N</span><span class="o">*</span><span class="k">sizeof</span><span class="p">(</span><span class="kt">float</span><span class="p">)</span> <span class="p">)</span> <span class="p">);</span>
+
+    <span class="c1">// copy the arrays &#39;a&#39; and &#39;b&#39; to the GPU</span>
+    <span class="n">HANDLE_ERROR</span><span class="p">(</span> <span class="n">cudaMemcpy</span><span class="p">(</span> <span class="n">dev_a</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">N</span><span class="o">*</span><span class="k">sizeof</span><span class="p">(</span><span class="kt">float</span><span class="p">),</span> <span class="n">cudaMemcpyHostToDevice</span> <span class="p">)</span> <span class="p">);</span>
+    <span class="n">HANDLE_ERROR</span><span class="p">(</span> <span class="n">cudaMemcpy</span><span class="p">(</span> <span class="n">dev_b</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">N</span><span class="o">*</span><span class="k">sizeof</span><span class="p">(</span><span class="kt">float</span><span class="p">),</span> <span class="n">cudaMemcpyHostToDevice</span> <span class="p">)</span> <span class="p">);</span> 
+
+    <span class="n">dot</span><span class="o">&lt;&lt;&lt;</span><span class="n">numBlock</span><span class="p">,</span><span class="n">numThread</span><span class="o">&gt;&gt;&gt;</span><span class="p">(</span> <span class="n">dev_a</span><span class="p">,</span> <span class="n">dev_b</span><span class="p">,</span> <span class="n">dev_c</span> <span class="p">);</span>
+
+    <span class="c1">// copy the array &#39;c&#39; back from the GPU to the CPU</span>
+    <span class="n">HANDLE_ERROR</span><span class="p">(</span> <span class="n">cudaMemcpy</span><span class="p">(</span> <span class="n">c</span><span class="p">,</span> <span class="n">dev_c</span><span class="p">,</span> <span class="n">N</span><span class="o">*</span><span class="k">sizeof</span><span class="p">(</span><span class="kt">float</span><span class="p">),</span> <span class="n">cudaMemcpyDeviceToHost</span> <span class="p">)</span> <span class="p">);</span>
+
+    <span class="c1">// get stop time, and display the timing results</span>
+    <span class="n">HANDLE_ERROR</span><span class="p">(</span> <span class="n">cudaEventRecord</span><span class="p">(</span> <span class="n">stop</span><span class="p">,</span> <span class="mi">0</span> <span class="p">)</span> <span class="p">);</span>
+    <span class="n">HANDLE_ERROR</span><span class="p">(</span> <span class="n">cudaEventSynchronize</span><span class="p">(</span> <span class="n">stop</span> <span class="p">)</span> <span class="p">);</span>
+    <span class="kt">float</span>   <span class="n">elapsedTime</span><span class="p">;</span>
+    <span class="n">HANDLE_ERROR</span><span class="p">(</span> <span class="n">cudaEventElapsedTime</span><span class="p">(</span> <span class="o">&amp;</span><span class="n">elapsedTime</span><span class="p">,</span>
+                                        <span class="n">start</span><span class="p">,</span> <span class="n">stop</span> <span class="p">)</span> <span class="p">);</span>
+    <span class="n">printf</span><span class="p">(</span> <span class="s">&quot;Time to generate:  %3.1f ms</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">elapsedTime</span> <span class="p">);</span>
+
+    <span class="c1">// finish up on the CPU side</span>
+    <span class="n">sum</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="n">N</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">sum</span> <span class="o">+=</span> <span class="n">c</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+    <span class="p">}</span>
+
+<span class="cp">    #define sum_squares(x)  (x*(x+1)*(2*x+1)/6)</span>
+    <span class="n">printf</span><span class="p">(</span> <span class="s">&quot;Does GPU value %.6g = %.6g?</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">sum</span><span class="p">,</span>
+             <span class="mi">2</span> <span class="o">*</span> <span class="n">sum_squares</span><span class="p">(</span> <span class="p">(</span><span class="kt">float</span><span class="p">)(</span><span class="n">N</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="p">)</span> <span class="p">);</span>
+
+    <span class="c1">// free memory on the gpu side</span>
+    <span class="n">HANDLE_ERROR</span><span class="p">(</span> <span class="n">cudaFree</span><span class="p">(</span> <span class="n">dev_a</span> <span class="p">)</span> <span class="p">);</span>
+    <span class="n">HANDLE_ERROR</span><span class="p">(</span> <span class="n">cudaFree</span><span class="p">(</span> <span class="n">dev_b</span> <span class="p">)</span> <span class="p">);</span>
+    <span class="n">HANDLE_ERROR</span><span class="p">(</span> <span class="n">cudaFree</span><span class="p">(</span> <span class="n">dev_c</span> <span class="p">)</span> <span class="p">);</span>
+
+    <span class="c1">// free memory on the cpu side</span>
+    <span class="n">free</span><span class="p">(</span> <span class="n">a</span> <span class="p">);</span>
+    <span class="n">free</span><span class="p">(</span> <span class="n">b</span> <span class="p">);</span>
+    <span class="n">free</span><span class="p">(</span> <span class="n">c</span> <span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>The host code the much like the vector addition example. We first allocate the memory on host memory and device memory. Then we initialize the matrices and fill them with data. After that we copy the data from host to device and execute the kernel code. Finally we transfer the data back from device memory to host memory. Do not forget to use Event API to measure the performance.</p>
+<p>However, we need to point out two differences.</p>
+<div class="highlight-c"><div class="highlight"><pre>    <span class="kt">float</span>   <span class="o">*</span><span class="n">a</span><span class="p">,</span> <span class="o">*</span><span class="n">b</span><span class="p">,</span> <span class="n">sum</span><span class="p">,</span> <span class="o">*</span><span class="n">c</span><span class="p">;</span>
+    <span class="kt">float</span>   <span class="o">*</span><span class="n">dev_a</span><span class="p">,</span> <span class="o">*</span><span class="n">dev_b</span><span class="p">,</span> <span class="o">*</span><span class="n">dev_c</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>First is that we need to declare one more pointer for the host code. In the vector addition example, two sets of array pointers are enough. However, in this example, we are returning a number. Therefore, a pointer which pointing to that number is essential.</p>
+<div class="highlight-c"><div class="highlight"><pre>    <span class="c1">// finish up on the CPU side</span>
+    <span class="n">sum</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="n">N</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">sum</span> <span class="o">+=</span> <span class="n">c</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+    <span class="p">}</span>
+</pre></div>
+</div>
+<p>Another difference is that we need to add up all the elements in the returned vector. This can simply be done by adding a for loop in the host code. Notice that we put this loop outside of the Event API so that it will not interfere our timing result.</p>
+<p>You can verify the result by adding the following code into the host code.</p>
+<div class="highlight-c"><div class="highlight"><pre><span class="cp">    #define sum_squares(x)  (x*(x+1)*(2*x+1)/6)</span>
+    <span class="n">printf</span><span class="p">(</span> <span class="s">&quot;Does GPU value %.6g = %.6g?</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">sum</span><span class="p">,</span>
+             <span class="mi">2</span> <span class="o">*</span> <span class="n">sum_squares</span><span class="p">(</span> <span class="p">(</span><span class="kt">float</span><span class="p">)(</span><span class="n">N</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="p">)</span> <span class="p">);</span>
+</pre></div>
+</div>
+<p>For people who are familiar with discrete math, the code above should be simple to apprehend. This function will give the result through a more <em>clever</em> way.</p>
+</div>
+</div>
+<hr class="docutils" />
+<div class="section" id="vector-dot-product-with-reduction">
+<h2>Vector Dot Product with Reduction<a class="headerlink" href="#vector-dot-product-with-reduction" title="Permalink to this headline">¶</a></h2>
+<p>In the previous example, you might have the question: why do we need to return the whole array back to the CPU? Is is possible for use to first reduce them a little bit and then return it to the CPU?</p>
+<p>Well, we can do reduction in CUDA. In this chapter, we will see how to use reduction in CUDA. But before we proceed, we first need to know something about shared memory in CUDA. In each of the blocks we create, CUDA runtime will assign a region memory to this block. This type of memory is called shared memory. When you are declaring your variables, you can add the CUDA C keyword <strong>__shared__</strong> to make this variable reside in shared memory. Why do we need shared memory?</p>
+<p>When we are learning Block and Thread, we had the question why would we need two hierarchy to organize threads question in mind. Well, part of the reason is that we can benefit from shared memory by organize threads in blocks. When we declare a variable and make it reside in shared memory, CUDA runtime creates a copy of this variable in each block you launched in host code. Every threads in one block shares this memory, which means they can see and modify their shared memory. However, they cannot see or modify shared memory assigned in other blocks. What does this mean to us? Well, if you can have one region of memory that is private to threads in one block, you can explore ways to facilitate communication and collaboration between threads within this block.</p>
+<p>Another reason we like to use shared memory is that it is faster than global memory we used to use. As the latency of shared memory tends to be far lower than global memory, it is the ideal choice to serve as cache in each block.</p>
+<p>In this example, we will see how we use shared memory to serve as a cache-per-block and how we can perform reduction on it.</p>
+<p>Vector Dot Product with Reduction source file:
+<a class="reference download internal" href="../_downloads/Dot-SM.cu"><tt class="xref download docutils literal"><span class="pre">Dot-SM.cu</span></tt></a></p>
+<div class="section" id="id1">
+<h3>The Device Code<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-c"><div class="highlight"><pre><span class="n">__global__</span> <span class="kt">void</span> <span class="nf">dot</span><span class="p">(</span> <span class="kt">float</span> <span class="o">*</span><span class="n">a</span><span class="p">,</span> <span class="kt">float</span> <span class="o">*</span><span class="n">b</span><span class="p">,</span> <span class="kt">float</span> <span class="o">*</span><span class="n">c</span> <span class="p">)</span> <span class="p">{</span>
+
+    <span class="c1">// declare cache in the shared memory</span>
+    <span class="n">__shared__</span> <span class="kt">float</span> <span class="n">cache</span><span class="p">[</span><span class="n">numThread</span><span class="p">];</span>
+
+    <span class="c1">// keep track of thread index</span>
+    <span class="kt">int</span> <span class="n">tid</span> <span class="o">=</span> <span class="n">threadIdx</span><span class="p">.</span><span class="n">x</span> <span class="o">+</span> <span class="n">blockIdx</span><span class="p">.</span><span class="n">x</span> <span class="o">*</span> <span class="n">numThread</span><span class="p">;</span>
+    <span class="c1">// connect thread index and cache index</span>
+    <span class="kt">int</span> <span class="n">cacheIndex</span> <span class="o">=</span> <span class="n">threadIdx</span><span class="p">.</span><span class="n">x</span><span class="p">;</span>
+
+    <span class="kt">float</span>   <span class="n">temp</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="k">while</span> <span class="p">(</span><span class="n">tid</span> <span class="o">&lt;</span> <span class="n">N</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">temp</span> <span class="o">+=</span> <span class="n">a</span><span class="p">[</span><span class="n">tid</span><span class="p">]</span> <span class="o">*</span> <span class="n">b</span><span class="p">[</span><span class="n">tid</span><span class="p">];</span>
+        <span class="n">tid</span> <span class="o">+=</span> <span class="n">numThread</span> <span class="o">*</span> <span class="n">numBlock</span><span class="p">;</span><span class="c1">// increase by the total number of thread in a grid</span>
+    <span class="p">}</span>
+    
+    <span class="c1">// set the cache values</span>
+    <span class="n">cache</span><span class="p">[</span><span class="n">cacheIndex</span><span class="p">]</span> <span class="o">=</span> <span class="n">temp</span><span class="p">;</span>
+    
+    <span class="c1">// synchronize threads in this block</span>
+    <span class="n">__syncthreads</span><span class="p">();</span>
+
+    <span class="c1">// for reductions, numThread must be a power of 2 because of the following code</span>
+    <span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="n">numThread</span><span class="o">/</span><span class="mi">2</span><span class="p">;</span>
+    <span class="k">while</span> <span class="p">(</span><span class="n">i</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">cacheIndex</span> <span class="o">&lt;</span> <span class="n">i</span><span class="p">)</span>
+            <span class="n">cache</span><span class="p">[</span><span class="n">cacheIndex</span><span class="p">]</span> <span class="o">+=</span> <span class="n">cache</span><span class="p">[</span><span class="n">cacheIndex</span> <span class="o">+</span> <span class="n">i</span><span class="p">];</span>
+        <span class="n">__syncthreads</span><span class="p">();</span>
+        <span class="n">i</span> <span class="o">/=</span> <span class="mi">2</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="c1">// write back to the global memory</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">cacheIndex</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="n">c</span><span class="p">[</span><span class="n">blockIdx</span><span class="p">.</span><span class="n">x</span><span class="p">]</span> <span class="o">=</span> <span class="n">cache</span><span class="p">[</span><span class="mi">0</span><span class="p">];</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<div class="highlight-c"><div class="highlight"><pre>    <span class="c1">// declare cache in the shared memory</span>
+    <span class="n">__shared__</span> <span class="kt">float</span> <span class="n">cache</span><span class="p">[</span><span class="n">numThread</span><span class="p">];</span>
+</pre></div>
+</div>
+<p>In the two lines of code above, we declared a cache in shared memory for this block. We will then use this cache to store each thread&#8217;s running sum. You can also see that we set the size of the cache same as numThread so that each thread in the block can have its own place to store its running sum. Notice we only create one copy of cache instead of creating numBlock copies. The compiler will automatically create a copy of cache in each block&#8217;s shared memory, meaning we only have to declare one copy.</p>
+<div class="highlight-c"><div class="highlight"><pre>    <span class="kt">float</span>   <span class="n">temp</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="k">while</span> <span class="p">(</span><span class="n">tid</span> <span class="o">&lt;</span> <span class="n">N</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">temp</span> <span class="o">+=</span> <span class="n">a</span><span class="p">[</span><span class="n">tid</span><span class="p">]</span> <span class="o">*</span> <span class="n">b</span><span class="p">[</span><span class="n">tid</span><span class="p">];</span>
+        <span class="n">tid</span> <span class="o">+=</span> <span class="n">numThread</span> <span class="o">*</span> <span class="n">numBlock</span><span class="p">;</span><span class="c1">// increase by the total number of thread in a grid</span>
+</pre></div>
+</div>
+<p>The actual vector dot product computation is the similar to what we seen in the global memory version. However, there is little difference. You can see from the code above, instead of using</p>
+<div class="highlight-c"><div class="highlight"><pre>         <span class="n">c</span><span class="p">[</span><span class="n">tid</span><span class="p">]</span> <span class="o">=</span> <span class="n">a</span><span class="p">[</span><span class="n">tid</span><span class="p">]</span> <span class="o">*</span> <span class="n">b</span><span class="p">[</span><span class="n">tid</span><span class="p">];</span>
+</pre></div>
+</div>
+<p>we use</p>
+<div class="highlight-c"><div class="highlight"><pre>        <span class="n">temp</span> <span class="o">+=</span> <span class="n">a</span><span class="p">[</span><span class="n">tid</span><span class="p">]</span> <span class="o">*</span> <span class="n">b</span><span class="p">[</span><span class="n">tid</span><span class="p">];</span>
+</pre></div>
+</div>
+<p>The reason causes this difference is that we are finding a running sum in this example. In the previous example, as we are returning a vector exactly the same size as the input, we have enough space to store each multiplication results. Even we have less threads than vector dimension so that each thread will compute more than one value, they can store each value in different places. However, in this example, we have exactly the same amount of place for storage as number of threads in each block. If any thread compute more than once, they still have only one place to store values. This bring us to why we need to use running sum of each thread.</p>
+<p>You may notice we add a line of code you have never seen before.</p>
+<div class="highlight-c"><div class="highlight"><pre>    <span class="c1">// synchronize threads in this block</span>
+    <span class="n">__syncthreads</span><span class="p">();</span>
+</pre></div>
+</div>
+<p>We have seen code similar to this before. When we are learning how to use CUDA Event API to measure performance, we used command <strong>cudaEventSynchronize()</strong> to synchronize the stop event. The purpose of <strong>__syncthreads()</strong> is somehow similar to the command <strong>cudaEventSynchronize()</strong>.
+When we are using shared memory to facilitate communication and collaboration between threads, we need to create a way to synchronize them as well. For example, if one thread is writing a number to the shared memory and another thread need to use that number for further computation, we want the first thread to finish its work before the second thread executes its command. What the command __syncthread() will do, is essentially create a barrier for all the threads and block them from executing further command. After all threads have finished executing commands before __syncthread(), then they can all proceed to the next command.</p>
+<p>After we make sure all the elements in cache is filled, we can proceed to the reduction process.</p>
+<div class="highlight-c"><div class="highlight"><pre>    <span class="c1">// for reductions, numThread must be a power of 2 because of the following code</span>
+    <span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="n">numThread</span><span class="o">/</span><span class="mi">2</span><span class="p">;</span>
+    <span class="k">while</span> <span class="p">(</span><span class="n">i</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">cacheIndex</span> <span class="o">&lt;</span> <span class="n">i</span><span class="p">)</span>
+            <span class="n">cache</span><span class="p">[</span><span class="n">cacheIndex</span><span class="p">]</span> <span class="o">+=</span> <span class="n">cache</span><span class="p">[</span><span class="n">cacheIndex</span> <span class="o">+</span> <span class="n">i</span><span class="p">];</span>
+        <span class="n">__syncthreads</span><span class="p">();</span>
+        <span class="n">i</span> <span class="o">/=</span> <span class="mi">2</span><span class="p">;</span>
+    <span class="p">}</span>
+</pre></div>
+</div>
+<p>Suppose we have a cache with 256 entries. What the code above would do is that it first take 128 thread in the block and each thread will add two of the values in cache[a] and cache[a+128] and store the value back to cache[a]. Then in the second iteration it will take 64 thread in the block and each thread will add values in cache[a] and cache[a+64] and store the value back to cache[a]. After log2(numThread) times of operation, we would have the sum of all 256 values stored in the first element of the cache. Be really careful that we need to synchronize threads every time after we perform one reduction.</p>
+<p>Finally, we choose the thread with index 0 to write the result back to the global memory.</p>
+<div class="highlight-c"><div class="highlight"><pre>    <span class="c1">// write back to the global memory</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">cacheIndex</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="n">c</span><span class="p">[</span><span class="n">blockIdx</span><span class="p">.</span><span class="n">x</span><span class="p">]</span> <span class="o">=</span> <span class="n">cache</span><span class="p">[</span><span class="mi">0</span><span class="p">];</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="id2">
+<h3>The Host Code<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h3>
+<p>In general, the host code of the shared memory version is very similar to that of the global memory version. However, there are several difference we need to point out.</p>
+<div class="highlight-c"><div class="highlight"><pre>    <span class="n">partial_c</span> <span class="o">=</span> <span class="p">(</span><span class="kt">float</span><span class="o">*</span><span class="p">)</span><span class="n">malloc</span><span class="p">(</span> <span class="n">numBlock</span><span class="o">*</span><span class="k">sizeof</span><span class="p">(</span><span class="kt">float</span><span class="p">)</span> <span class="p">);</span>
+    <span class="n">HANDLE_ERROR</span><span class="p">(</span> <span class="n">cudaMalloc</span><span class="p">(</span> <span class="p">(</span><span class="kt">void</span><span class="o">**</span><span class="p">)</span><span class="o">&amp;</span><span class="n">dev_partial_c</span><span class="p">,</span>
+                              <span class="n">numBlock</span><span class="o">*</span><span class="k">sizeof</span><span class="p">(</span><span class="kt">float</span><span class="p">)</span> <span class="p">)</span> <span class="p">);</span>
+</pre></div>
+</div>
+<p>In the above two lines of code, in the previous example, we declared two sets of pointers with each pointer pointing to array having the same size. This time, however, we need the output array to be smaller than the vector size. Since every block&#8217;s will write only one number back to the global memory, the size of output array should be numBlock.</p>
+<p>Another point worth mentioning is that we define the numBlock in the following way instead of assign a number to it.</p>
+<div class="highlight-c"><div class="highlight"><pre><span class="cp">#define imin(a,b) (a&lt;b?a:b)</span>
+<span class="k">const</span> <span class="kt">int</span> <span class="n">numBlock</span> <span class="o">=</span> <span class="n">imin</span><span class="p">(</span> <span class="mi">32</span><span class="p">,</span> <span class="p">(</span><span class="n">N</span><span class="o">+</span><span class="n">numThread</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="o">/</span> <span class="n">numThread</span> <span class="p">);</span>
+</pre></div>
+</div>
+<p>When we are choosing the number of blocks to launch in this problem, we faces to requirements. First is that we should not create too many blocks. In the final step where all the results returned by all the blocks are summed up, we are using CPU to compute. This means if we create too many blocks, we would leave CPU too much workload. Another requirements is that we cannot assign too less blocks either. As we can only fit 256 threads in each block, if we assign not enough blocks, we would end up having each thread doing many times of computation. Facing this two requirements, we came up with the solution above. We use the smaller number between 32 and (N+numThread-1) / numThread. The function (N+numThread-1) / numThread gives the smallest multiple of numThread that is equal or larger than the vector size. Calculating this number will ensure we have just enough blocks so that each element in a small vector has its own thread. If we are facing a small vector, we can us the later to assign not too many blocks. If we are facing a gigantic vector, 32 blocks is somehow enough to keep the GPU busy.</p>
+<p>Be aware the number 32 was given by a CUDA programming book that is several years old. We decide to use it because we think its safe and yet sufficient for our problem size. If you are dealing with much larger problem size and have much more powerful GPU cards in hand, feel free to stretch this number to thousands even hundreds of thousand.</p>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Thread Advance</a><ul>
+<li><a class="reference internal" href="#vector-dot-product">Vector Dot Product</a><ul>
+<li><a class="reference internal" href="#the-device-code">The Device Code</a></li>
+<li><a class="reference internal" href="#the-host-code">The Host Code</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#vector-dot-product-with-reduction">Vector Dot Product with Reduction</a><ul>
+<li><a class="reference internal" href="#id1">The Device Code</a></li>
+<li><a class="reference internal" href="#id2">The Host Code</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="../CUDAIntro/CUDAIntro.html"
+                        title="previous chapter">CUDA Intro</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="../CUDA2D/CUDA2D.html"
+                        title="next chapter">CUDA in Two-dimension</a></p>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../CUDA2D/CUDA2D.html" title="CUDA in Two-dimension"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="../CUDAIntro/CUDAIntro.html" title="CUDA Intro"
+             >previous</a> |</li>
+        <li><a href="../index.html">GPU Programming</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright This work is licensed under a Creative Commons Attribution-ShareAlike 3.0 Unported License.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>

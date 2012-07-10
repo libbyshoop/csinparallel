@@ -1,0 +1,55 @@
+
+***************************************
+Vector Addition with Blocks and Threads
+***************************************
+
+Threads
+#######
+
+In the last example, we learned how to launch multiple blocks in CUDA C programs. This time, we will see how to split parallel blocks. CUDA runtime allow us to split block into threads. Recall that in the previous example, we use the code 
+
+.. literalinclude:: VA-GPU-N1.cu	
+    :language: c
+    :lines: 71
+
+to call for device kernels where numBlock is 128 and numThread remain as 1, the second number represents how many threads we want in each block. 
+
+Here comes the question, why do we need two sets of parallel organization system? Why do we need not only blocks in grid, but also threads in blocks? Is there any advantages in one over the other? Well, there are advantages that we will cover in later examples, so for now, please bear with us.
+
+Just like blocks is organized in up to three-dimensional grid, threads can also be organized in one, two or three-dimensional blocks. Just like there is a limit on number of blocks in a grid, there is also a limit on number of threads in a block. Right now, for most of the high-end nVidia GPUs, this limit is 1024. Be really careful here, 1024 is the total number of threads in a block, not the limit **per dimension** like in the grid. Most of the nVidia GPUs that is two or three year old, the limit might be 512. You can query the maxThreadsPerBlock field of the device properties structure to find out which number you have.
+
+The Device Code
+###############
+
+.. literalinclude:: VA-GPU-NN.cu	
+    :language: c
+    :lines: 28-37 
+
+This is the complete device code.
+
+Just like we use CUDA built-in variables to index blocks in a grid, we use variable threadIdx to index threads in a block. threadIdx is also a three-component vector and you can access each of its element using threadIdx.x, threadIdx,y and threadIdx.z.
+
+.. literalinclude:: VA-GPU-NN.cu	
+    :language: c
+    :lines: 30-31
+
+The thread handles the data at its thread id. Recall that earlier we are using tid = blockIdx.x only. Now, as we are using multiple threads per block, we have to keep track of not only blockId, but also the threadId as well.
+
+.. literalinclude:: VA-GPU-NN.cu	
+    :language: c
+    :lines: 35
+
+Since we have multiple threads in multiple blocks working simultaneously, after one thread in one block finish one computation, we want it to shift to the next data point by the total number of threads in the system. in this example, total number of threads is number of blocks times threads per block.
+
+The Host Code
+#############
+
+.. literalinclude:: VA-GPU-NN.cu	
+    :language: c
+    :lines: 72
+
+Except kernel invocation part of the host code, everything else is the same. However, as we are calling **numBlock** and **numThread** in the code, we need to define them at the very beginning of the source code file.
+
+.. literalinclude:: VA-GPU-NN.cu	
+    :language: c
+    :lines: 25-26
