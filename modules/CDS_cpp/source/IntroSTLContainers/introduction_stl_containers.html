@@ -1,0 +1,1715 @@
+<html xmlns:v="urn:schemas-microsoft-com:vml"
+xmlns:o="urn:schemas-microsoft-com:office:office"
+xmlns:w="urn:schemas-microsoft-com:office:word"
+xmlns:m="http://schemas.microsoft.com/office/2004/12/omml"
+xmlns:css="http://macVmlSchemaUri" xmlns="http://www.w3.org/TR/REC-html40">
+
+<head>
+<meta name=Title content="">
+<meta name=Keywords content="">
+<meta http-equiv=Content-Type content="text/html; charset=macintosh">
+<meta name=ProgId content=Word.Document>
+<meta name=Generator content="Microsoft Word 14">
+<meta name=Originator content="Microsoft Word 14">
+<link rel=File-List href="introduction_stl_containers_files/filelist.xml">
+<!--[if gte mso 9]><xml>
+ <o:DocumentProperties>
+  <o:Author>Libby Shoop</o:Author>
+  <o:LastAuthor>Libby Shoop</o:LastAuthor>
+  <o:Revision>2</o:Revision>
+  <o:TotalTime>2</o:TotalTime>
+  <o:LastPrinted>1901-01-01T06:00:00Z</o:LastPrinted>
+  <o:Created>2012-07-03T20:28:00Z</o:Created>
+  <o:LastSaved>2012-07-03T20:28:00Z</o:LastSaved>
+  <o:Pages>2</o:Pages>
+  <o:Words>1621</o:Words>
+  <o:Characters>9244</o:Characters>
+  <o:Lines>77</o:Lines>
+  <o:Paragraphs>21</o:Paragraphs>
+  <o:CharactersWithSpaces>10844</o:CharactersWithSpaces>
+  <o:Version>14.0</o:Version>
+ </o:DocumentProperties>
+ <o:OfficeDocumentSettings>
+  <o:PixelsPerInch>96</o:PixelsPerInch>
+ </o:OfficeDocumentSettings>
+</xml><![endif]-->
+<link rel=themeData href="introduction_stl_containers_files/themedata.xml">
+<!--[if gte mso 9]><xml>
+ <w:WordDocument>
+  <w:SpellingState>Clean</w:SpellingState>
+  <w:GrammarState>Clean</w:GrammarState>
+  <w:TrackMoves/>
+  <w:TrackFormatting/>
+  <w:ValidateAgainstSchemas/>
+  <w:SaveIfXMLInvalid>false</w:SaveIfXMLInvalid>
+  <w:IgnoreMixedContent>false</w:IgnoreMixedContent>
+  <w:AlwaysShowPlaceholderText>false</w:AlwaysShowPlaceholderText>
+  <w:DoNotPromoteQF/>
+  <w:LidThemeOther>EN-US</w:LidThemeOther>
+  <w:LidThemeAsian>JA</w:LidThemeAsian>
+  <w:LidThemeComplexScript>X-NONE</w:LidThemeComplexScript>
+  <w:Compatibility>
+   <w:BreakWrappedTables/>
+   <w:SnapToGridInCell/>
+   <w:WrapTextWithPunct/>
+   <w:UseAsianBreakRules/>
+   <w:DontGrowAutofit/>
+   <w:SplitPgBreakAndParaMark/>
+   <w:EnableOpenTypeKerning/>
+   <w:DontFlipMirrorIndents/>
+   <w:OverrideTableStyleHps/>
+  </w:Compatibility>
+  <m:mathPr>
+   <m:mathFont m:val="Cambria Math"/>
+   <m:brkBin m:val="before"/>
+   <m:brkBinSub m:val="&#45;-"/>
+   <m:smallFrac m:val="off"/>
+   <m:dispDef/>
+   <m:lMargin m:val="0"/>
+   <m:rMargin m:val="0"/>
+   <m:defJc m:val="centerGroup"/>
+   <m:wrapIndent m:val="1440"/>
+   <m:intLim m:val="subSup"/>
+   <m:naryLim m:val="undOvr"/>
+  </m:mathPr></w:WordDocument>
+</xml><![endif]--><!--[if gte mso 9]><xml>
+ <w:LatentStyles DefLockedState="false" DefUnhideWhenUsed="false"
+  DefSemiHidden="false" DefQFormat="false" LatentStyleCount="276">
+  <w:LsdException Locked="false" QFormat="true" Name="Normal"/>
+  <w:LsdException Locked="false" QFormat="true" Name="heading 1"/>
+  <w:LsdException Locked="false" QFormat="true" Name="heading 2"/>
+  <w:LsdException Locked="false" QFormat="true" Name="heading 3"/>
+  <w:LsdException Locked="false" QFormat="true" Name="heading 4"/>
+  <w:LsdException Locked="false" QFormat="true" Name="heading 5"/>
+  <w:LsdException Locked="false" QFormat="true" Name="heading 6"/>
+  <w:LsdException Locked="false" SemiHidden="true" UnhideWhenUsed="true"
+   QFormat="true" Name="heading 7"/>
+  <w:LsdException Locked="false" SemiHidden="true" UnhideWhenUsed="true"
+   QFormat="true" Name="heading 8"/>
+  <w:LsdException Locked="false" SemiHidden="true" UnhideWhenUsed="true"
+   QFormat="true" Name="heading 9"/>
+  <w:LsdException Locked="false" SemiHidden="true" UnhideWhenUsed="true"
+   QFormat="true" Name="caption"/>
+  <w:LsdException Locked="false" QFormat="true" Name="Title"/>
+  <w:LsdException Locked="false" Priority="1" Name="Default Paragraph Font"/>
+  <w:LsdException Locked="false" QFormat="true" Name="Subtitle"/>
+  <w:LsdException Locked="false" QFormat="true" Name="Strong"/>
+  <w:LsdException Locked="false" QFormat="true" Name="Emphasis"/>
+  <w:LsdException Locked="false" Priority="99" Name="No List"/>
+  <w:LsdException Locked="false" Priority="99" SemiHidden="true"
+   Name="Note Level 1"/>
+  <w:LsdException Locked="false" Priority="1" QFormat="true" Name="Note Level 2"/>
+  <w:LsdException Locked="false" Priority="60" Name="Note Level 3"/>
+  <w:LsdException Locked="false" Priority="61" Name="Note Level 4"/>
+  <w:LsdException Locked="false" Priority="62" Name="Note Level 5"/>
+  <w:LsdException Locked="false" Priority="63" Name="Note Level 6"/>
+  <w:LsdException Locked="false" Priority="64" Name="Note Level 7"/>
+  <w:LsdException Locked="false" Priority="65" Name="Note Level 8"/>
+  <w:LsdException Locked="false" Priority="66" Name="Note Level 9"/>
+  <w:LsdException Locked="false" Priority="67" Name="Placeholder Text"/>
+  <w:LsdException Locked="false" Priority="68" QFormat="true" Name="No Spacing"/>
+  <w:LsdException Locked="false" Priority="69" Name="Light Shading"/>
+  <w:LsdException Locked="false" Priority="70" Name="Light List"/>
+  <w:LsdException Locked="false" Priority="71" Name="Light Grid"/>
+  <w:LsdException Locked="false" Priority="72" Name="Medium Shading 1"/>
+  <w:LsdException Locked="false" Priority="73" Name="Medium Shading 2"/>
+  <w:LsdException Locked="false" Priority="60" Name="Medium List 1"/>
+  <w:LsdException Locked="false" Priority="61" Name="Medium List 2"/>
+  <w:LsdException Locked="false" Priority="62" Name="Medium Grid 1"/>
+  <w:LsdException Locked="false" Priority="63" Name="Medium Grid 2"/>
+  <w:LsdException Locked="false" Priority="64" Name="Medium Grid 3"/>
+  <w:LsdException Locked="false" Priority="65" Name="Dark List"/>
+  <w:LsdException Locked="false" Priority="99" SemiHidden="true"
+   Name="Colorful Shading"/>
+  <w:LsdException Locked="false" Priority="34" QFormat="true"
+   Name="Colorful List"/>
+  <w:LsdException Locked="false" Priority="29" QFormat="true"
+   Name="Colorful Grid"/>
+  <w:LsdException Locked="false" Priority="30" QFormat="true"
+   Name="Light Shading Accent 1"/>
+  <w:LsdException Locked="false" Priority="66" Name="Light List Accent 1"/>
+  <w:LsdException Locked="false" Priority="67" Name="Light Grid Accent 1"/>
+  <w:LsdException Locked="false" Priority="68" Name="Medium Shading 1 Accent 1"/>
+  <w:LsdException Locked="false" Priority="69" Name="Medium Shading 2 Accent 1"/>
+  <w:LsdException Locked="false" Priority="70" Name="Medium List 1 Accent 1"/>
+  <w:LsdException Locked="false" Priority="71" Name="Revision"/>
+  <w:LsdException Locked="false" Priority="72" QFormat="true"
+   Name="List Paragraph"/>
+  <w:LsdException Locked="false" Priority="73" QFormat="true" Name="Quote"/>
+  <w:LsdException Locked="false" Priority="60" QFormat="true"
+   Name="Intense Quote"/>
+  <w:LsdException Locked="false" Priority="61" Name="Medium List 2 Accent 1"/>
+  <w:LsdException Locked="false" Priority="62" Name="Medium Grid 1 Accent 1"/>
+  <w:LsdException Locked="false" Priority="63" Name="Medium Grid 2 Accent 1"/>
+  <w:LsdException Locked="false" Priority="64" Name="Medium Grid 3 Accent 1"/>
+  <w:LsdException Locked="false" Priority="65" Name="Dark List Accent 1"/>
+  <w:LsdException Locked="false" Priority="66" Name="Colorful Shading Accent 1"/>
+  <w:LsdException Locked="false" Priority="67" Name="Colorful List Accent 1"/>
+  <w:LsdException Locked="false" Priority="68" Name="Colorful Grid Accent 1"/>
+  <w:LsdException Locked="false" Priority="69" Name="Light Shading Accent 2"/>
+  <w:LsdException Locked="false" Priority="70" Name="Light List Accent 2"/>
+  <w:LsdException Locked="false" Priority="71" Name="Light Grid Accent 2"/>
+  <w:LsdException Locked="false" Priority="72" Name="Medium Shading 1 Accent 2"/>
+  <w:LsdException Locked="false" Priority="73" Name="Medium Shading 2 Accent 2"/>
+  <w:LsdException Locked="false" Priority="60" Name="Medium List 1 Accent 2"/>
+  <w:LsdException Locked="false" Priority="61" Name="Medium List 2 Accent 2"/>
+  <w:LsdException Locked="false" Priority="62" Name="Medium Grid 1 Accent 2"/>
+  <w:LsdException Locked="false" Priority="63" Name="Medium Grid 2 Accent 2"/>
+  <w:LsdException Locked="false" Priority="64" Name="Medium Grid 3 Accent 2"/>
+  <w:LsdException Locked="false" Priority="65" Name="Dark List Accent 2"/>
+  <w:LsdException Locked="false" Priority="66" Name="Colorful Shading Accent 2"/>
+  <w:LsdException Locked="false" Priority="67" Name="Colorful List Accent 2"/>
+  <w:LsdException Locked="false" Priority="68" Name="Colorful Grid Accent 2"/>
+  <w:LsdException Locked="false" Priority="69" Name="Light Shading Accent 3"/>
+  <w:LsdException Locked="false" Priority="70" Name="Light List Accent 3"/>
+  <w:LsdException Locked="false" Priority="71" Name="Light Grid Accent 3"/>
+  <w:LsdException Locked="false" Priority="72" Name="Medium Shading 1 Accent 3"/>
+  <w:LsdException Locked="false" Priority="73" Name="Medium Shading 2 Accent 3"/>
+  <w:LsdException Locked="false" Priority="60" Name="Medium List 1 Accent 3"/>
+  <w:LsdException Locked="false" Priority="61" Name="Medium List 2 Accent 3"/>
+  <w:LsdException Locked="false" Priority="62" Name="Medium Grid 1 Accent 3"/>
+  <w:LsdException Locked="false" Priority="63" Name="Medium Grid 2 Accent 3"/>
+  <w:LsdException Locked="false" Priority="64" Name="Medium Grid 3 Accent 3"/>
+  <w:LsdException Locked="false" Priority="65" Name="Dark List Accent 3"/>
+  <w:LsdException Locked="false" Priority="66" Name="Colorful Shading Accent 3"/>
+  <w:LsdException Locked="false" Priority="67" Name="Colorful List Accent 3"/>
+  <w:LsdException Locked="false" Priority="68" Name="Colorful Grid Accent 3"/>
+  <w:LsdException Locked="false" Priority="69" Name="Light Shading Accent 4"/>
+  <w:LsdException Locked="false" Priority="70" Name="Light List Accent 4"/>
+  <w:LsdException Locked="false" Priority="71" Name="Light Grid Accent 4"/>
+  <w:LsdException Locked="false" Priority="72" Name="Medium Shading 1 Accent 4"/>
+  <w:LsdException Locked="false" Priority="73" Name="Medium Shading 2 Accent 4"/>
+  <w:LsdException Locked="false" Priority="60" Name="Medium List 1 Accent 4"/>
+  <w:LsdException Locked="false" Priority="61" Name="Medium List 2 Accent 4"/>
+  <w:LsdException Locked="false" Priority="62" Name="Medium Grid 1 Accent 4"/>
+  <w:LsdException Locked="false" Priority="63" Name="Medium Grid 2 Accent 4"/>
+  <w:LsdException Locked="false" Priority="64" Name="Medium Grid 3 Accent 4"/>
+  <w:LsdException Locked="false" Priority="65" Name="Dark List Accent 4"/>
+  <w:LsdException Locked="false" Priority="66" Name="Colorful Shading Accent 4"/>
+  <w:LsdException Locked="false" Priority="67" Name="Colorful List Accent 4"/>
+  <w:LsdException Locked="false" Priority="68" Name="Colorful Grid Accent 4"/>
+  <w:LsdException Locked="false" Priority="69" Name="Light Shading Accent 5"/>
+  <w:LsdException Locked="false" Priority="70" Name="Light List Accent 5"/>
+  <w:LsdException Locked="false" Priority="71" Name="Light Grid Accent 5"/>
+  <w:LsdException Locked="false" Priority="72" Name="Medium Shading 1 Accent 5"/>
+  <w:LsdException Locked="false" Priority="73" Name="Medium Shading 2 Accent 5"/>
+  <w:LsdException Locked="false" Priority="60" Name="Medium List 1 Accent 5"/>
+  <w:LsdException Locked="false" Priority="61" Name="Medium List 2 Accent 5"/>
+  <w:LsdException Locked="false" Priority="62" Name="Medium Grid 1 Accent 5"/>
+  <w:LsdException Locked="false" Priority="63" Name="Medium Grid 2 Accent 5"/>
+  <w:LsdException Locked="false" Priority="64" Name="Medium Grid 3 Accent 5"/>
+  <w:LsdException Locked="false" Priority="65" Name="Dark List Accent 5"/>
+  <w:LsdException Locked="false" Priority="66" Name="Colorful Shading Accent 5"/>
+  <w:LsdException Locked="false" Priority="67" Name="Colorful List Accent 5"/>
+  <w:LsdException Locked="false" Priority="68" Name="Colorful Grid Accent 5"/>
+  <w:LsdException Locked="false" Priority="69" Name="Light Shading Accent 6"/>
+  <w:LsdException Locked="false" Priority="70" Name="Light List Accent 6"/>
+  <w:LsdException Locked="false" Priority="71" Name="Light Grid Accent 6"/>
+  <w:LsdException Locked="false" Priority="72" Name="Medium Shading 1 Accent 6"/>
+  <w:LsdException Locked="false" Priority="73" Name="Medium Shading 2 Accent 6"/>
+  <w:LsdException Locked="false" Priority="19" QFormat="true"
+   Name="Medium List 1 Accent 6"/>
+  <w:LsdException Locked="false" Priority="21" QFormat="true"
+   Name="Medium List 2 Accent 6"/>
+  <w:LsdException Locked="false" Priority="31" QFormat="true"
+   Name="Medium Grid 1 Accent 6"/>
+  <w:LsdException Locked="false" Priority="32" QFormat="true"
+   Name="Medium Grid 2 Accent 6"/>
+  <w:LsdException Locked="false" Priority="33" QFormat="true"
+   Name="Medium Grid 3 Accent 6"/>
+  <w:LsdException Locked="false" Priority="37" SemiHidden="true"
+   UnhideWhenUsed="true" Name="Dark List Accent 6"/>
+  <w:LsdException Locked="false" Priority="39" SemiHidden="true"
+   UnhideWhenUsed="true" QFormat="true" Name="Colorful Shading Accent 6"/>
+  <w:LsdException Locked="false" Priority="72" Name="Colorful List Accent 6"/>
+  <w:LsdException Locked="false" Priority="73" Name="Colorful Grid Accent 6"/>
+  <w:LsdException Locked="false" Priority="19" QFormat="true"
+   Name="Subtle Emphasis"/>
+  <w:LsdException Locked="false" Priority="21" QFormat="true"
+   Name="Intense Emphasis"/>
+  <w:LsdException Locked="false" Priority="31" QFormat="true"
+   Name="Subtle Reference"/>
+  <w:LsdException Locked="false" Priority="32" QFormat="true"
+   Name="Intense Reference"/>
+  <w:LsdException Locked="false" Priority="33" QFormat="true" Name="Book Title"/>
+  <w:LsdException Locked="false" Priority="37" SemiHidden="true"
+   UnhideWhenUsed="true" Name="Bibliography"/>
+  <w:LsdException Locked="false" Priority="39" SemiHidden="true"
+   UnhideWhenUsed="true" QFormat="true" Name="TOC Heading"/>
+ </w:LatentStyles>
+</xml><![endif]-->
+<style>
+<!--
+ /* Font Definitions */
+@font-face
+	{font-family:Arial;
+	panose-1:2 11 6 4 2 2 2 2 2 4;
+	mso-font-charset:0;
+	mso-generic-font-family:auto;
+	mso-font-pitch:variable;
+	mso-font-signature:-536859905 -1073711037 9 0 511 0;}
+@font-face
+	{font-family:"Courier New";
+	panose-1:2 7 3 9 2 2 5 2 4 4;
+	mso-font-charset:0;
+	mso-generic-font-family:auto;
+	mso-font-pitch:variable;
+	mso-font-signature:-536859905 -1073711037 9 0 511 0;}
+@font-face
+	{font-family:Wingdings;
+	panose-1:5 0 0 0 0 0 0 0 0 0;
+	mso-font-charset:2;
+	mso-generic-font-family:auto;
+	mso-font-pitch:variable;
+	mso-font-signature:0 268435456 0 0 -2147483648 0;}
+@font-face
+	{font-family:Wingdings;
+	panose-1:5 0 0 0 0 0 0 0 0 0;
+	mso-font-charset:2;
+	mso-generic-font-family:auto;
+	mso-font-pitch:variable;
+	mso-font-signature:0 268435456 0 0 -2147483648 0;}
+@font-face
+	{font-family:Georgia;
+	panose-1:2 4 5 2 5 4 5 2 3 3;
+	mso-font-charset:0;
+	mso-generic-font-family:auto;
+	mso-font-pitch:variable;
+	mso-font-signature:3 0 0 0 1 0;}
+ /* Style Definitions */
+p.MsoNormal, li.MsoNormal, div.MsoNormal
+	{mso-style-unhide:no;
+	mso-style-qformat:yes;
+	mso-style-parent:"";
+	margin:0in;
+	margin-bottom:.0001pt;
+	line-height:115%;
+	mso-pagination:widow-orphan;
+	font-size:11.0pt;
+	font-family:Arial;
+	mso-fareast-font-family:Arial;
+	color:black;}
+h1
+	{mso-style-unhide:no;
+	mso-style-qformat:yes;
+	mso-style-next:Normal;
+	margin-top:24.0pt;
+	margin-right:0in;
+	margin-bottom:6.0pt;
+	margin-left:0in;
+	mso-pagination:widow-orphan;
+	mso-outline-level:1;
+	font-size:18.0pt;
+	font-family:Arial;
+	mso-fareast-font-family:Arial;
+	color:black;
+	mso-font-kerning:0pt;}
+h2
+	{mso-style-unhide:no;
+	mso-style-qformat:yes;
+	mso-style-next:Normal;
+	margin-top:.25in;
+	margin-right:0in;
+	margin-bottom:4.0pt;
+	margin-left:0in;
+	mso-pagination:widow-orphan;
+	mso-outline-level:2;
+	font-size:14.0pt;
+	font-family:Arial;
+	mso-fareast-font-family:Arial;
+	color:black;}
+h3
+	{mso-style-unhide:no;
+	mso-style-qformat:yes;
+	mso-style-next:Normal;
+	margin-top:14.0pt;
+	margin-right:0in;
+	margin-bottom:4.0pt;
+	margin-left:0in;
+	mso-pagination:widow-orphan;
+	mso-outline-level:3;
+	font-size:12.0pt;
+	font-family:Arial;
+	mso-fareast-font-family:Arial;
+	color:#666666;}
+h4
+	{mso-style-unhide:no;
+	mso-style-qformat:yes;
+	mso-style-next:Normal;
+	margin-top:12.0pt;
+	margin-right:0in;
+	margin-bottom:2.0pt;
+	margin-left:0in;
+	mso-pagination:widow-orphan;
+	mso-outline-level:4;
+	font-size:11.0pt;
+	font-family:Arial;
+	mso-fareast-font-family:Arial;
+	color:#666666;
+	font-weight:normal;
+	font-style:italic;}
+h5
+	{mso-style-unhide:no;
+	mso-style-qformat:yes;
+	mso-style-next:Normal;
+	margin-top:11.0pt;
+	margin-right:0in;
+	margin-bottom:2.0pt;
+	margin-left:0in;
+	mso-pagination:widow-orphan;
+	mso-outline-level:5;
+	font-size:10.0pt;
+	font-family:Arial;
+	mso-fareast-font-family:Arial;
+	color:#666666;}
+h6
+	{mso-style-unhide:no;
+	mso-style-qformat:yes;
+	mso-style-next:Normal;
+	margin-top:10.0pt;
+	margin-right:0in;
+	margin-bottom:2.0pt;
+	margin-left:0in;
+	mso-pagination:widow-orphan;
+	mso-outline-level:6;
+	font-size:10.0pt;
+	font-family:Arial;
+	mso-fareast-font-family:Arial;
+	color:#666666;
+	font-weight:normal;
+	font-style:italic;}
+p.MsoTitle, li.MsoTitle, div.MsoTitle
+	{mso-style-unhide:no;
+	mso-style-qformat:yes;
+	margin-top:24.0pt;
+	margin-right:0in;
+	margin-bottom:6.0pt;
+	margin-left:0in;
+	mso-pagination:widow-orphan;
+	font-size:36.0pt;
+	font-family:Arial;
+	mso-fareast-font-family:Arial;
+	color:black;
+	font-weight:bold;}
+p.MsoSubtitle, li.MsoSubtitle, div.MsoSubtitle
+	{mso-style-unhide:no;
+	mso-style-qformat:yes;
+	margin-top:.25in;
+	margin-right:0in;
+	margin-bottom:4.0pt;
+	margin-left:0in;
+	mso-pagination:widow-orphan;
+	font-size:24.0pt;
+	font-family:Georgia;
+	mso-fareast-font-family:Georgia;
+	mso-bidi-font-family:Georgia;
+	color:#666666;
+	font-style:italic;}
+.MsoChpDefault
+	{mso-style-type:export-only;
+	mso-default-props:yes;
+	font-size:10.0pt;
+	mso-ansi-font-size:10.0pt;
+	mso-bidi-font-size:10.0pt;}
+@page WordSection1
+	{size:8.5in 11.0in;
+	margin:1.0in 1.0in 1.0in 1.0in;
+	mso-header-margin:35.4pt;
+	mso-footer-margin:35.4pt;
+	mso-paper-source:0;}
+div.WordSection1
+	{page:WordSection1;}
+ /* List Definitions */
+@list l0
+	{mso-list-id:-227;
+	mso-list-template-ids:-208104000;}
+@list l0:level1
+	{mso-level-number-format:bullet;
+	mso-level-text:"";
+	mso-level-tab-stop:0in;
+	mso-level-number-position:left;
+	margin-left:0in;
+	text-indent:0in;
+	font-family:Symbol;}
+@list l0:level2
+	{mso-level-number-format:bullet;
+	mso-level-text:\F0B7;
+	mso-level-tab-stop:.5in;
+	mso-level-number-position:left;
+	margin-left:.75in;
+	text-indent:-.25in;
+	font-family:Symbol;}
+@list l0:level3
+	{mso-level-number-format:bullet;
+	mso-level-text:o;
+	mso-level-tab-stop:1.0in;
+	mso-level-number-position:left;
+	margin-left:1.25in;
+	text-indent:-.25in;
+	font-family:"Courier New";
+	mso-bidi-font-family:"Times New Roman";}
+@list l0:level4
+	{mso-level-number-format:bullet;
+	mso-level-text:\F0A7;
+	mso-level-tab-stop:1.5in;
+	mso-level-number-position:left;
+	margin-left:1.75in;
+	text-indent:-.25in;
+	font-family:Wingdings;}
+@list l0:level5
+	{mso-level-number-format:bullet;
+	mso-level-text:\F0FA;
+	mso-level-tab-stop:2.0in;
+	mso-level-number-position:left;
+	margin-left:2.25in;
+	text-indent:-.25in;
+	font-family:Wingdings;}
+@list l0:level6
+	{mso-level-number-format:bullet;
+	mso-level-text:\F0B7;
+	mso-level-tab-stop:2.5in;
+	mso-level-number-position:left;
+	margin-left:2.75in;
+	text-indent:-.25in;
+	font-family:Symbol;}
+@list l0:level7
+	{mso-level-number-format:bullet;
+	mso-level-text:o;
+	mso-level-tab-stop:3.0in;
+	mso-level-number-position:left;
+	margin-left:3.25in;
+	text-indent:-.25in;
+	font-family:"Courier New";
+	mso-bidi-font-family:"Times New Roman";}
+@list l0:level8
+	{mso-level-number-format:bullet;
+	mso-level-text:\F0A7;
+	mso-level-tab-stop:3.5in;
+	mso-level-number-position:left;
+	margin-left:3.75in;
+	text-indent:-.25in;
+	font-family:Wingdings;}
+@list l0:level9
+	{mso-level-number-format:bullet;
+	mso-level-text:\F0FA;
+	mso-level-tab-stop:4.0in;
+	mso-level-number-position:left;
+	margin-left:4.25in;
+	text-indent:-.25in;
+	font-family:Wingdings;}
+@list l1
+	{mso-list-id:1;
+	mso-list-type:hybrid;
+	mso-list-template-ids:1 326261884 -1992155182 6733464 2049099138 -1060368836 2122350428 1647091790 963015618 1889063412;}
+@list l1:level1
+	{mso-level-number-format:bullet;
+	mso-level-text:\25CF;
+	mso-level-tab-stop:.25in;
+	mso-level-number-position:left;
+	text-indent:-.25in;
+	mso-ansi-font-size:11.0pt;
+	mso-bidi-font-size:11.0pt;
+	mso-ascii-font-family:Arial;
+	mso-fareast-font-family:Arial;
+	mso-hansi-font-family:Arial;
+	mso-bidi-font-family:Arial;
+	color:black;
+	mso-ansi-font-weight:normal;
+	mso-bidi-font-weight:normal;
+	mso-ansi-font-style:normal;
+	mso-bidi-font-style:normal;
+	text-decoration:none;
+	text-underline:none;
+	text-decoration:none;
+	text-line-through:none;}
+@list l1:level2
+	{mso-level-number-format:bullet;
+	mso-level-text:\25CB;
+	mso-level-tab-stop:.75in;
+	mso-level-number-position:left;
+	text-indent:-.25in;
+	mso-ansi-font-size:11.0pt;
+	mso-bidi-font-size:11.0pt;
+	mso-ascii-font-family:Arial;
+	mso-fareast-font-family:Arial;
+	mso-hansi-font-family:Arial;
+	mso-bidi-font-family:Arial;
+	color:black;
+	background:#FEFEFE;
+	mso-shading:white;
+	mso-pattern:solid white;
+	mso-ansi-font-weight:normal;
+	mso-bidi-font-weight:normal;
+	mso-ansi-font-style:normal;
+	mso-bidi-font-style:normal;
+	text-decoration:none;
+	text-underline:none;
+	text-decoration:none;
+	text-line-through:none;}
+@list l1:level3
+	{mso-level-number-format:bullet;
+	mso-level-text:\25A0;
+	mso-level-tab-stop:1.25in;
+	mso-level-number-position:right;
+	text-indent:-9.0pt;
+	mso-ansi-font-size:11.0pt;
+	mso-bidi-font-size:11.0pt;
+	mso-ascii-font-family:Arial;
+	mso-fareast-font-family:Arial;
+	mso-hansi-font-family:Arial;
+	mso-bidi-font-family:Arial;
+	color:black;
+	mso-ansi-font-weight:normal;
+	mso-bidi-font-weight:normal;
+	mso-ansi-font-style:normal;
+	mso-bidi-font-style:normal;
+	text-decoration:none;
+	text-underline:none;
+	text-decoration:none;
+	text-line-through:none;}
+@list l1:level4
+	{mso-level-number-format:bullet;
+	mso-level-text:\25CF;
+	mso-level-tab-stop:1.75in;
+	mso-level-number-position:left;
+	text-indent:-.25in;
+	mso-ansi-font-size:11.0pt;
+	mso-bidi-font-size:11.0pt;
+	mso-ascii-font-family:Arial;
+	mso-fareast-font-family:Arial;
+	mso-hansi-font-family:Arial;
+	mso-bidi-font-family:Arial;
+	color:black;
+	mso-ansi-font-weight:normal;
+	mso-bidi-font-weight:normal;
+	mso-ansi-font-style:normal;
+	mso-bidi-font-style:normal;
+	text-decoration:none;
+	text-underline:none;
+	text-decoration:none;
+	text-line-through:none;}
+@list l1:level5
+	{mso-level-number-format:bullet;
+	mso-level-text:\25CB;
+	mso-level-tab-stop:2.25in;
+	mso-level-number-position:left;
+	text-indent:-.25in;
+	mso-ansi-font-size:11.0pt;
+	mso-bidi-font-size:11.0pt;
+	mso-ascii-font-family:Arial;
+	mso-fareast-font-family:Arial;
+	mso-hansi-font-family:Arial;
+	mso-bidi-font-family:Arial;
+	color:black;
+	mso-ansi-font-weight:normal;
+	mso-bidi-font-weight:normal;
+	mso-ansi-font-style:normal;
+	mso-bidi-font-style:normal;
+	text-decoration:none;
+	text-underline:none;
+	text-decoration:none;
+	text-line-through:none;}
+@list l1:level6
+	{mso-level-number-format:bullet;
+	mso-level-text:\25A0;
+	mso-level-tab-stop:2.75in;
+	mso-level-number-position:right;
+	text-indent:-9.0pt;
+	mso-ansi-font-size:11.0pt;
+	mso-bidi-font-size:11.0pt;
+	mso-ascii-font-family:Arial;
+	mso-fareast-font-family:Arial;
+	mso-hansi-font-family:Arial;
+	mso-bidi-font-family:Arial;
+	color:black;
+	mso-ansi-font-weight:normal;
+	mso-bidi-font-weight:normal;
+	mso-ansi-font-style:normal;
+	mso-bidi-font-style:normal;
+	text-decoration:none;
+	text-underline:none;
+	text-decoration:none;
+	text-line-through:none;}
+@list l1:level7
+	{mso-level-number-format:bullet;
+	mso-level-text:\25CF;
+	mso-level-tab-stop:3.25in;
+	mso-level-number-position:left;
+	text-indent:-.25in;
+	mso-ansi-font-size:11.0pt;
+	mso-bidi-font-size:11.0pt;
+	mso-ascii-font-family:Arial;
+	mso-fareast-font-family:Arial;
+	mso-hansi-font-family:Arial;
+	mso-bidi-font-family:Arial;
+	color:black;
+	mso-ansi-font-weight:normal;
+	mso-bidi-font-weight:normal;
+	mso-ansi-font-style:normal;
+	mso-bidi-font-style:normal;
+	text-decoration:none;
+	text-underline:none;
+	text-decoration:none;
+	text-line-through:none;}
+@list l1:level8
+	{mso-level-number-format:bullet;
+	mso-level-text:\25CB;
+	mso-level-tab-stop:3.75in;
+	mso-level-number-position:left;
+	text-indent:-.25in;
+	mso-ansi-font-size:11.0pt;
+	mso-bidi-font-size:11.0pt;
+	mso-ascii-font-family:Arial;
+	mso-fareast-font-family:Arial;
+	mso-hansi-font-family:Arial;
+	mso-bidi-font-family:Arial;
+	color:black;
+	mso-ansi-font-weight:normal;
+	mso-bidi-font-weight:normal;
+	mso-ansi-font-style:normal;
+	mso-bidi-font-style:normal;
+	text-decoration:none;
+	text-underline:none;
+	text-decoration:none;
+	text-line-through:none;}
+@list l1:level9
+	{mso-level-number-format:bullet;
+	mso-level-text:\25A0;
+	mso-level-tab-stop:4.25in;
+	mso-level-number-position:right;
+	text-indent:-9.0pt;
+	mso-ansi-font-size:11.0pt;
+	mso-bidi-font-size:11.0pt;
+	mso-ascii-font-family:Arial;
+	mso-fareast-font-family:Arial;
+	mso-hansi-font-family:Arial;
+	mso-bidi-font-family:Arial;
+	color:black;
+	mso-ansi-font-weight:normal;
+	mso-bidi-font-weight:normal;
+	mso-ansi-font-style:normal;
+	mso-bidi-font-style:normal;
+	text-decoration:none;
+	text-underline:none;
+	text-decoration:none;
+	text-line-through:none;}
+@list l2
+	{mso-list-id:2;
+	mso-list-type:hybrid;
+	mso-list-template-ids:2 -1631303370 -107717064 558381638 342533302 1386919390 -1139638296 2033075272 -643265168 1713638676;}
+@list l2:level1
+	{mso-level-number-format:bullet;
+	mso-level-text:\25CF;
+	mso-level-tab-stop:.25in;
+	mso-level-number-position:left;
+	text-indent:-.25in;
+	mso-ansi-font-size:11.0pt;
+	mso-bidi-font-size:11.0pt;
+	mso-ascii-font-family:Arial;
+	mso-fareast-font-family:Arial;
+	mso-hansi-font-family:Arial;
+	mso-bidi-font-family:Arial;
+	color:black;
+	mso-ansi-font-weight:normal;
+	mso-bidi-font-weight:normal;
+	mso-ansi-font-style:normal;
+	mso-bidi-font-style:normal;
+	text-decoration:none;
+	text-underline:none;
+	text-decoration:none;
+	text-line-through:none;}
+@list l2:level2
+	{mso-level-number-format:bullet;
+	mso-level-text:\25CB;
+	mso-level-tab-stop:.75in;
+	mso-level-number-position:left;
+	text-indent:-.25in;
+	mso-ansi-font-size:11.0pt;
+	mso-bidi-font-size:11.0pt;
+	mso-ascii-font-family:Arial;
+	mso-fareast-font-family:Arial;
+	mso-hansi-font-family:Arial;
+	mso-bidi-font-family:Arial;
+	color:black;
+	background:#FEFEFE;
+	mso-shading:white;
+	mso-pattern:solid white;
+	mso-ansi-font-weight:normal;
+	mso-bidi-font-weight:normal;
+	mso-ansi-font-style:normal;
+	mso-bidi-font-style:normal;
+	text-decoration:none;
+	text-underline:none;
+	text-decoration:none;
+	text-line-through:none;}
+@list l2:level3
+	{mso-level-number-format:bullet;
+	mso-level-text:\25A0;
+	mso-level-tab-stop:1.25in;
+	mso-level-number-position:right;
+	text-indent:-9.0pt;
+	mso-ansi-font-size:11.0pt;
+	mso-bidi-font-size:11.0pt;
+	mso-ascii-font-family:Arial;
+	mso-fareast-font-family:Arial;
+	mso-hansi-font-family:Arial;
+	mso-bidi-font-family:Arial;
+	color:black;
+	mso-ansi-font-weight:normal;
+	mso-bidi-font-weight:normal;
+	mso-ansi-font-style:normal;
+	mso-bidi-font-style:normal;
+	text-decoration:none;
+	text-underline:none;
+	text-decoration:none;
+	text-line-through:none;}
+@list l2:level4
+	{mso-level-number-format:bullet;
+	mso-level-text:\25CF;
+	mso-level-tab-stop:1.75in;
+	mso-level-number-position:left;
+	text-indent:-.25in;
+	mso-ansi-font-size:11.0pt;
+	mso-bidi-font-size:11.0pt;
+	mso-ascii-font-family:Arial;
+	mso-fareast-font-family:Arial;
+	mso-hansi-font-family:Arial;
+	mso-bidi-font-family:Arial;
+	color:black;
+	mso-ansi-font-weight:normal;
+	mso-bidi-font-weight:normal;
+	mso-ansi-font-style:normal;
+	mso-bidi-font-style:normal;
+	text-decoration:none;
+	text-underline:none;
+	text-decoration:none;
+	text-line-through:none;}
+@list l2:level5
+	{mso-level-number-format:bullet;
+	mso-level-text:\25CB;
+	mso-level-tab-stop:2.25in;
+	mso-level-number-position:left;
+	text-indent:-.25in;
+	mso-ansi-font-size:11.0pt;
+	mso-bidi-font-size:11.0pt;
+	mso-ascii-font-family:Arial;
+	mso-fareast-font-family:Arial;
+	mso-hansi-font-family:Arial;
+	mso-bidi-font-family:Arial;
+	color:black;
+	mso-ansi-font-weight:normal;
+	mso-bidi-font-weight:normal;
+	mso-ansi-font-style:normal;
+	mso-bidi-font-style:normal;
+	text-decoration:none;
+	text-underline:none;
+	text-decoration:none;
+	text-line-through:none;}
+@list l2:level6
+	{mso-level-number-format:bullet;
+	mso-level-text:\25A0;
+	mso-level-tab-stop:2.75in;
+	mso-level-number-position:right;
+	text-indent:-9.0pt;
+	mso-ansi-font-size:11.0pt;
+	mso-bidi-font-size:11.0pt;
+	mso-ascii-font-family:Arial;
+	mso-fareast-font-family:Arial;
+	mso-hansi-font-family:Arial;
+	mso-bidi-font-family:Arial;
+	color:black;
+	mso-ansi-font-weight:normal;
+	mso-bidi-font-weight:normal;
+	mso-ansi-font-style:normal;
+	mso-bidi-font-style:normal;
+	text-decoration:none;
+	text-underline:none;
+	text-decoration:none;
+	text-line-through:none;}
+@list l2:level7
+	{mso-level-number-format:bullet;
+	mso-level-text:\25CF;
+	mso-level-tab-stop:3.25in;
+	mso-level-number-position:left;
+	text-indent:-.25in;
+	mso-ansi-font-size:11.0pt;
+	mso-bidi-font-size:11.0pt;
+	mso-ascii-font-family:Arial;
+	mso-fareast-font-family:Arial;
+	mso-hansi-font-family:Arial;
+	mso-bidi-font-family:Arial;
+	color:black;
+	mso-ansi-font-weight:normal;
+	mso-bidi-font-weight:normal;
+	mso-ansi-font-style:normal;
+	mso-bidi-font-style:normal;
+	text-decoration:none;
+	text-underline:none;
+	text-decoration:none;
+	text-line-through:none;}
+@list l2:level8
+	{mso-level-number-format:bullet;
+	mso-level-text:\25CB;
+	mso-level-tab-stop:3.75in;
+	mso-level-number-position:left;
+	text-indent:-.25in;
+	mso-ansi-font-size:11.0pt;
+	mso-bidi-font-size:11.0pt;
+	mso-ascii-font-family:Arial;
+	mso-fareast-font-family:Arial;
+	mso-hansi-font-family:Arial;
+	mso-bidi-font-family:Arial;
+	color:black;
+	mso-ansi-font-weight:normal;
+	mso-bidi-font-weight:normal;
+	mso-ansi-font-style:normal;
+	mso-bidi-font-style:normal;
+	text-decoration:none;
+	text-underline:none;
+	text-decoration:none;
+	text-line-through:none;}
+@list l2:level9
+	{mso-level-number-format:bullet;
+	mso-level-text:\25A0;
+	mso-level-tab-stop:4.25in;
+	mso-level-number-position:right;
+	text-indent:-9.0pt;
+	mso-ansi-font-size:11.0pt;
+	mso-bidi-font-size:11.0pt;
+	mso-ascii-font-family:Arial;
+	mso-fareast-font-family:Arial;
+	mso-hansi-font-family:Arial;
+	mso-bidi-font-family:Arial;
+	color:black;
+	mso-ansi-font-weight:normal;
+	mso-bidi-font-weight:normal;
+	mso-ansi-font-style:normal;
+	mso-bidi-font-style:normal;
+	text-decoration:none;
+	text-underline:none;
+	text-decoration:none;
+	text-line-through:none;}
+@list l3
+	{mso-list-id:3;
+	mso-list-type:hybrid;
+	mso-list-template-ids:3 1323330288 -437124492 1647090460 595374578 445815278 -1080415164 -2002329472 850160830 919996936;}
+@list l3:level1
+	{mso-level-number-format:bullet;
+	mso-level-text:\25CF;
+	mso-level-tab-stop:.25in;
+	mso-level-number-position:left;
+	text-indent:-.25in;
+	mso-ansi-font-size:11.0pt;
+	mso-bidi-font-size:11.0pt;
+	mso-ascii-font-family:Arial;
+	mso-fareast-font-family:Arial;
+	mso-hansi-font-family:Arial;
+	mso-bidi-font-family:Arial;
+	color:black;
+	mso-ansi-font-weight:normal;
+	mso-bidi-font-weight:normal;
+	mso-ansi-font-style:normal;
+	mso-bidi-font-style:normal;
+	text-decoration:none;
+	text-underline:none;
+	text-decoration:none;
+	text-line-through:none;}
+@list l3:level2
+	{mso-level-number-format:bullet;
+	mso-level-text:\25CB;
+	mso-level-tab-stop:.75in;
+	mso-level-number-position:left;
+	text-indent:-.25in;
+	mso-ansi-font-size:11.0pt;
+	mso-bidi-font-size:11.0pt;
+	mso-ascii-font-family:Arial;
+	mso-fareast-font-family:Arial;
+	mso-hansi-font-family:Arial;
+	mso-bidi-font-family:Arial;
+	color:black;
+	background:#FEFEFE;
+	mso-shading:white;
+	mso-pattern:solid white;
+	mso-ansi-font-weight:normal;
+	mso-bidi-font-weight:normal;
+	mso-ansi-font-style:normal;
+	mso-bidi-font-style:normal;
+	text-decoration:none;
+	text-underline:none;
+	text-decoration:none;
+	text-line-through:none;}
+@list l3:level3
+	{mso-level-number-format:bullet;
+	mso-level-text:\25A0;
+	mso-level-tab-stop:1.25in;
+	mso-level-number-position:right;
+	text-indent:-9.0pt;
+	mso-ansi-font-size:11.0pt;
+	mso-bidi-font-size:11.0pt;
+	mso-ascii-font-family:Arial;
+	mso-fareast-font-family:Arial;
+	mso-hansi-font-family:Arial;
+	mso-bidi-font-family:Arial;
+	color:black;
+	mso-ansi-font-weight:normal;
+	mso-bidi-font-weight:normal;
+	mso-ansi-font-style:normal;
+	mso-bidi-font-style:normal;
+	text-decoration:none;
+	text-underline:none;
+	text-decoration:none;
+	text-line-through:none;}
+@list l3:level4
+	{mso-level-number-format:bullet;
+	mso-level-text:\25CF;
+	mso-level-tab-stop:1.75in;
+	mso-level-number-position:left;
+	text-indent:-.25in;
+	mso-ansi-font-size:11.0pt;
+	mso-bidi-font-size:11.0pt;
+	mso-ascii-font-family:Arial;
+	mso-fareast-font-family:Arial;
+	mso-hansi-font-family:Arial;
+	mso-bidi-font-family:Arial;
+	color:black;
+	mso-ansi-font-weight:normal;
+	mso-bidi-font-weight:normal;
+	mso-ansi-font-style:normal;
+	mso-bidi-font-style:normal;
+	text-decoration:none;
+	text-underline:none;
+	text-decoration:none;
+	text-line-through:none;}
+@list l3:level5
+	{mso-level-number-format:bullet;
+	mso-level-text:\25CB;
+	mso-level-tab-stop:2.25in;
+	mso-level-number-position:left;
+	text-indent:-.25in;
+	mso-ansi-font-size:11.0pt;
+	mso-bidi-font-size:11.0pt;
+	mso-ascii-font-family:Arial;
+	mso-fareast-font-family:Arial;
+	mso-hansi-font-family:Arial;
+	mso-bidi-font-family:Arial;
+	color:black;
+	mso-ansi-font-weight:normal;
+	mso-bidi-font-weight:normal;
+	mso-ansi-font-style:normal;
+	mso-bidi-font-style:normal;
+	text-decoration:none;
+	text-underline:none;
+	text-decoration:none;
+	text-line-through:none;}
+@list l3:level6
+	{mso-level-number-format:bullet;
+	mso-level-text:\25A0;
+	mso-level-tab-stop:2.75in;
+	mso-level-number-position:right;
+	text-indent:-9.0pt;
+	mso-ansi-font-size:11.0pt;
+	mso-bidi-font-size:11.0pt;
+	mso-ascii-font-family:Arial;
+	mso-fareast-font-family:Arial;
+	mso-hansi-font-family:Arial;
+	mso-bidi-font-family:Arial;
+	color:black;
+	mso-ansi-font-weight:normal;
+	mso-bidi-font-weight:normal;
+	mso-ansi-font-style:normal;
+	mso-bidi-font-style:normal;
+	text-decoration:none;
+	text-underline:none;
+	text-decoration:none;
+	text-line-through:none;}
+@list l3:level7
+	{mso-level-number-format:bullet;
+	mso-level-text:\25CF;
+	mso-level-tab-stop:3.25in;
+	mso-level-number-position:left;
+	text-indent:-.25in;
+	mso-ansi-font-size:11.0pt;
+	mso-bidi-font-size:11.0pt;
+	mso-ascii-font-family:Arial;
+	mso-fareast-font-family:Arial;
+	mso-hansi-font-family:Arial;
+	mso-bidi-font-family:Arial;
+	color:black;
+	mso-ansi-font-weight:normal;
+	mso-bidi-font-weight:normal;
+	mso-ansi-font-style:normal;
+	mso-bidi-font-style:normal;
+	text-decoration:none;
+	text-underline:none;
+	text-decoration:none;
+	text-line-through:none;}
+@list l3:level8
+	{mso-level-number-format:bullet;
+	mso-level-text:\25CB;
+	mso-level-tab-stop:3.75in;
+	mso-level-number-position:left;
+	text-indent:-.25in;
+	mso-ansi-font-size:11.0pt;
+	mso-bidi-font-size:11.0pt;
+	mso-ascii-font-family:Arial;
+	mso-fareast-font-family:Arial;
+	mso-hansi-font-family:Arial;
+	mso-bidi-font-family:Arial;
+	color:black;
+	mso-ansi-font-weight:normal;
+	mso-bidi-font-weight:normal;
+	mso-ansi-font-style:normal;
+	mso-bidi-font-style:normal;
+	text-decoration:none;
+	text-underline:none;
+	text-decoration:none;
+	text-line-through:none;}
+@list l3:level9
+	{mso-level-number-format:bullet;
+	mso-level-text:\25A0;
+	mso-level-tab-stop:4.25in;
+	mso-level-number-position:right;
+	text-indent:-9.0pt;
+	mso-ansi-font-size:11.0pt;
+	mso-bidi-font-size:11.0pt;
+	mso-ascii-font-family:Arial;
+	mso-fareast-font-family:Arial;
+	mso-hansi-font-family:Arial;
+	mso-bidi-font-family:Arial;
+	color:black;
+	mso-ansi-font-weight:normal;
+	mso-bidi-font-weight:normal;
+	mso-ansi-font-style:normal;
+	mso-bidi-font-style:normal;
+	text-decoration:none;
+	text-underline:none;
+	text-decoration:none;
+	text-line-through:none;}
+ol
+	{margin-bottom:0in;}
+ul
+	{margin-bottom:0in;}
+-->
+</style>
+<!--[if gte mso 10]>
+<style>
+ /* Style Definitions */
+table.MsoNormalTable
+	{mso-style-name:"Table Normal";
+	mso-tstyle-rowband-size:0;
+	mso-tstyle-colband-size:0;
+	mso-style-noshow:yes;
+	mso-style-priority:99;
+	mso-style-parent:"";
+	mso-padding-alt:0in 5.4pt 0in 5.4pt;
+	mso-para-margin:0in;
+	mso-para-margin-bottom:.0001pt;
+	mso-pagination:widow-orphan;
+	font-size:10.0pt;
+	font-family:"Times New Roman";}
+</style>
+<![endif]--><!--[if gte mso 9]><xml>
+ <o:shapedefaults v:ext="edit" spidmax="1027"/>
+</xml><![endif]--><!--[if gte mso 9]><xml>
+ <o:shapelayout v:ext="edit">
+  <o:idmap v:ext="edit" data="1"/>
+ </o:shapelayout></xml><![endif]-->
+</head>
+
+<body lang=EN-US style='tab-interval:.5in'>
+
+<div class=WordSection1>
+
+<p class=MsoNormal align=center style='text-align:center;line-height:normal'><i><span
+style='font-size:30.0pt;color:blue;background:#FEFEFE;mso-shading:white;
+mso-pattern:solid white'>Introduction to STL containers</span></i></p>
+
+<p class=MsoNormal align=center style='text-align:center;line-height:normal'><i><span
+style='font-size:30.0pt;color:blue;background:#FEFEFE;mso-shading:white;
+mso-pattern:solid white'><o:p>&nbsp;</o:p></span></i></p>
+
+<p class=MsoNormal align=center style='text-align:center;line-height:normal'><span
+style='font-size:30.0pt;color:blue;background:#FEFEFE;mso-shading:white;
+mso-pattern:solid white'>CSinParallel Project<o:p></o:p></span></p>
+
+<p class=MsoNormal style='line-height:normal'><i><span style='background:#FEFEFE;
+mso-shading:white;mso-pattern:solid white'>Note:</span></i><span
+style='background:#FEFEFE;mso-shading:white;mso-pattern:solid white'> This
+reading refers to topics that we will not pursue in homework, but which may
+arise in general C++ coding. Such topics will be marked<b>(Extra)</b>.<i><o:p></o:p></i></span></p>
+
+<h2><span style='font-size:18.0pt;background:#FEFEFE;mso-shading:white;
+mso-pattern:solid white'>Introduction<o:p></o:p></span></h2>
+
+<p class=MsoNormal style='margin-left:.5in;text-indent:-.25in;line-height:normal;
+mso-list:l1 level1 lfo1;tab-stops:list .25in .5in'><![if !supportLists]><span
+style='mso-list:Ignore'>&#9679;<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span><![endif]><span style='background:#FEFEFE;mso-shading:white;
+mso-pattern:solid white'>The C++ </span><a
+href="http://www.cplusplus.com/reference/stl/"><span style='color:#3333CC;
+background:#FEFEFE;mso-shading:white;mso-pattern:solid white'>Standard</span></a><a
+href="http://www.cplusplus.com/reference/stl/"><span style='color:#3333CC;
+background:#FEFEFE;mso-shading:white;mso-pattern:solid white'> </span></a><a
+href="http://www.cplusplus.com/reference/stl/"><span style='color:#3333CC;
+background:#FEFEFE;mso-shading:white;mso-pattern:solid white'>Template</span></a><a
+href="http://www.cplusplus.com/reference/stl/"><span style='color:#3333CC;
+background:#FEFEFE;mso-shading:white;mso-pattern:solid white'> </span></a><a
+href="http://www.cplusplus.com/reference/stl/"><span style='color:#3333CC;
+background:#FEFEFE;mso-shading:white;mso-pattern:solid white'>Library</span></a><i><span
+style='background:#FEFEFE;mso-shading:white;mso-pattern:solid white'>(STL)</span></i><span
+style='background:#FEFEFE;mso-shading:white;mso-pattern:solid white'> is a
+software library of algorithms, data structures, and other features that can be
+used with any pre-defined C++ type and with user-defined types (that provide
+members such as a copy constructor and an assignment operator).<o:p></o:p></span></p>
+
+<p class=MsoNormal style='margin-left:.5in;text-indent:-.25in;line-height:normal;
+mso-list:l1 level1 lfo1;tab-stops:list .25in .5in'><![if !supportLists]><span
+style='mso-list:Ignore'>&#9679;<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span><![endif]><span style='background:#FEFEFE;mso-shading:white;
+mso-pattern:solid white'>The STL uses a C++ feature called the <i>template</i>
+to substitute types throughout a class or function definition, which enables a
+programmer to avoid rewriting definitions that differ in the type being used.<o:p></o:p></span></p>
+
+<p class=MsoNormal style='margin-left:.5in;text-indent:-.25in;line-height:normal;
+mso-list:l1 level1 lfo1;tab-stops:list .25in .5in'><![if !supportLists]><span
+style='mso-list:Ignore'>&#9679;<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span><![endif]><span style='background:#FEFEFE;mso-shading:white;
+mso-pattern:solid white'>For example, our IntArray class for homework provides
+a class structure around an array of int, with error checking, default
+initialization for array elements, whole-array assignment, etc. To define a
+class LongArray or FloatArray, we would only need to replace the type name int
+by a different type name long or float, etc. Templates make it possible to
+define a class Array&lt;T&gt; in which a type name T is used thrroughout the
+definition of that class, so that the notation Array&lt;int&gt; would specify a
+class that behaves just like IntArray, Array&lt;float&gt; would specify
+FloatArray, etc. Here, the angle brackets &lt;...&gt; are the syntax for
+invoking a template, and they enclose a type name to use throughout a
+definition.<o:p></o:p></span></p>
+
+<p class=MsoNormal style='margin-left:.5in;text-indent:-.25in;line-height:normal;
+mso-list:l1 level1 lfo1;tab-stops:list .25in .5in'><![if !supportLists]><span
+style='mso-list:Ignore'>&#9679;<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span><![endif]><span style='background:#FEFEFE;mso-shading:white;
+mso-pattern:solid white'>A programmer can define her/his own templated classes.
+For example, here is a complete program with a definition of a templated
+structPair&lt;T&gt; that represents an group of two elements of the same type,
+together with an example use of that template.<o:p></o:p></span></p>
+
+<p class=MsoNormal style='margin-left:.5in;text-indent:-.25in;line-height:normal;
+mso-list:l1 level1 lfo1;tab-stops:list .25in .5in'><![if !supportLists]><span
+style='mso-list:Ignore'>&#9679;<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span><![endif]><span style='background:#FEFEFE;mso-shading:white;
+mso-pattern:solid white'><span
+style="mso-spacerun:yes">&nbsp;&nbsp;&nbsp;</span>#include &lt;iostream&gt;<br>
+<span style="mso-spacerun:yes">&nbsp;&nbsp;&nbsp; </span>using namespace std;<br>
+<span style="mso-spacerun:yes">&nbsp;&nbsp;&nbsp; </span><br>
+<span style="mso-spacerun:yes">&nbsp;&nbsp;&nbsp; </span>template &lt;class
+T&gt;<br>
+<span style="mso-spacerun:yes">&nbsp;&nbsp;&nbsp; </span>struct Pair {<br>
+<span style="mso-spacerun:yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>T x;<br>
+<span style="mso-spacerun:yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>T y;<br>
+<span style="mso-spacerun:yes">&nbsp;&nbsp;&nbsp; </span><br>
+<span style="mso-spacerun:yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>Pair(T
+val1, T val2) { x = val1;<span style="mso-spacerun:yes">&nbsp; </span>y = val2;
+}<br>
+<span style="mso-spacerun:yes">&nbsp;&nbsp;&nbsp; </span>};<br>
+<span style="mso-spacerun:yes">&nbsp;&nbsp;&nbsp; </span><br>
+<span style="mso-spacerun:yes">&nbsp;&nbsp;&nbsp; </span><br>
+<span style="mso-spacerun:yes">&nbsp;&nbsp;&nbsp; </span>int main() {<br>
+<span style="mso-spacerun:yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span>Pair&lt;float&gt; p(3.14, -1.0);<br>
+<span style="mso-spacerun:yes">&nbsp;&nbsp;&nbsp; </span><br>
+<span style="mso-spacerun:yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>cout
+&lt;&lt; p.x &lt;&lt; &quot;, &quot; &lt;&lt; p.y &lt;&lt; endl;<br>
+<span style="mso-spacerun:yes">&nbsp;&nbsp;&nbsp; </span>}<br style='mso-special-character:
+line-break'>
+<![if !supportLineBreakNewLine]><br style='mso-special-character:line-break'>
+<![endif]><o:p></o:p></span></p>
+
+<p class=MsoNormal style='margin-left:.5in;text-indent:-.25in;line-height:normal;
+mso-list:l1 level1 lfo1;tab-stops:list .25in .5in'><![if !supportLists]><span
+style='mso-list:Ignore'>&#9679;<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span><![endif]><span style='background:#FEFEFE;mso-shading:white;
+mso-pattern:solid white'>The STL <i>containers</i> are templated classes
+defined in the STL that are designed to hold objects in some relationship.
+Examples::<o:p></o:p></span></p>
+
+<p class=MsoNormal style='margin-left:1.0in;text-indent:-.25in;line-height:
+normal;mso-list:l1 level2 lfo1;tab-stops:list .75in 1.0in'><![if !supportLists]><span
+style='mso-list:Ignore'>&#9675;<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span><![endif]><span style='background:#FEFEFE;mso-shading:white;
+mso-pattern:solid white'>The array classes we have implemented in homework are
+examples of containers, although STL's array-like container vector&lt;T&gt; has
+some added useful features such as an ability to resize incrementally that our
+array classes did not include.<o:p></o:p></span></p>
+
+<p class=MsoNormal style='margin-left:1.0in;text-indent:-.25in;line-height:
+normal;mso-list:l1 level2 lfo1;tab-stops:list .75in 1.0in'><![if !supportLists]><span
+style='mso-list:Ignore'>&#9675;<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span><![endif]><span style='background:#FEFEFE;mso-shading:white;
+mso-pattern:solid white'>Another STL container is called a queue&lt;T&gt;, and
+contains a linear list of elements that are added at one end and removed at
+another, comparable to a check-out line of customers at a grocery store. Unlike
+a vector, the elements of a queue do not necessarily appear consecutively in
+memory.<o:p></o:p></span></p>
+
+<p class=MsoNormal style='margin-left:1.0in;text-indent:-.25in;line-height:
+normal;mso-list:l1 level2 lfo1;tab-stops:list .75in 1.0in'><![if !supportLists]><span
+style='mso-list:Ignore'>&#9675;<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span><![endif]><b><span style='background:#FEFEFE;mso-shading:white;
+mso-pattern:solid white'>(Extra)</span></b><span style='background:#FEFEFE;
+mso-shading:white;mso-pattern:solid white'> Another example is the
+map&lt;K,T&gt; container, which includes an operator[] that accepts
+&quot;indices&quot; of a type K (not necessarily an integer type) and
+associates values of type T with those &quot;index&quot; values.<b><o:p></o:p></b></span></p>
+
+<p class=MsoNormal style='margin-left:.5in;text-indent:-.25in;line-height:normal;
+mso-list:l1 level1 lfo1;tab-stops:list .25in .5in'><![if !supportLists]><span
+style='mso-list:Ignore'>&#9679;<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span><![endif]><span style='background:#FEFEFE;mso-shading:white;
+mso-pattern:solid white'>This is not a complete list of STL containers, but
+illustrates some commonly used ones. See </span><a
+href="http://www.cplusplus.com/reference/stl/"><span style='color:#3333CC;
+background:#FEFEFE;mso-shading:white;mso-pattern:solid white'>www</span></a><a
+href="http://www.cplusplus.com/reference/stl/"><span style='color:#3333CC;
+background:#FEFEFE;mso-shading:white;mso-pattern:solid white'>.</span></a><a
+href="http://www.cplusplus.com/reference/stl/"><span style='color:#3333CC;
+background:#FEFEFE;mso-shading:white;mso-pattern:solid white'>cplusplus</span></a><a
+href="http://www.cplusplus.com/reference/stl/"><span style='color:#3333CC;
+background:#FEFEFE;mso-shading:white;mso-pattern:solid white'>.</span></a><a
+href="http://www.cplusplus.com/reference/stl/"><span style='color:#3333CC;
+background:#FEFEFE;mso-shading:white;mso-pattern:solid white'>com</span></a><a
+href="http://www.cplusplus.com/reference/stl/"><span style='color:#3333CC;
+background:#FEFEFE;mso-shading:white;mso-pattern:solid white'>/</span></a><a
+href="http://www.cplusplus.com/reference/stl/"><span style='color:#3333CC;
+background:#FEFEFE;mso-shading:white;mso-pattern:solid white'>reference</span></a><a
+href="http://www.cplusplus.com/reference/stl/"><span style='color:#3333CC;
+background:#FEFEFE;mso-shading:white;mso-pattern:solid white'>/</span></a><a
+href="http://www.cplusplus.com/reference/stl/"><span style='color:#3333CC;
+background:#FEFEFE;mso-shading:white;mso-pattern:solid white'>stl</span></a><a
+href="http://www.cplusplus.com/reference/stl/"><span style='color:#3333CC;
+background:#FEFEFE;mso-shading:white;mso-pattern:solid white'>/</span></a><span
+style='background:#FEFEFE;mso-shading:white;mso-pattern:solid white'> for
+documentation of all STL containers<o:p></o:p></span></p>
+
+<h2><span style='font-size:18.0pt;background:#FEFEFE;mso-shading:white;
+mso-pattern:solid white'>The STL container vector<o:p></o:p></span></h2>
+
+<p class=MsoNormal style='margin-left:.5in;text-indent:-.25in;line-height:normal;
+mso-list:l2 level1 lfo2;tab-stops:list .25in .5in'><![if !supportLists]><span
+style='mso-list:Ignore'>&#9679;<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span><![endif]><span style='background:#FEFEFE;mso-shading:white;
+mso-pattern:solid white'>STL's vector&lt;T&gt; is a templated class that
+behaves like an &quot;elastic array,&quot; in that its size can be changed
+incrementally. For example, consider the following example program:<o:p></o:p></span></p>
+
+<p class=MsoNormal style='margin-left:.5in;text-indent:-.25in;line-height:normal;
+mso-list:l2 level1 lfo2;tab-stops:list .25in .5in'><![if !supportLists]><span
+style='mso-list:Ignore'>&#9679;<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span><![endif]><span style='background:#FEFEFE;mso-shading:white;
+mso-pattern:solid white'><span
+style="mso-spacerun:yes">&nbsp;&nbsp;&nbsp;</span>#include &lt;iostream&gt;<br>
+<span style="mso-spacerun:yes">&nbsp;&nbsp;&nbsp; </span>using namespace std;<br>
+<span style="mso-spacerun:yes">&nbsp;&nbsp;&nbsp; </span>#include
+&lt;vector&gt;<br>
+<br>
+<span style="mso-spacerun:yes">&nbsp;&nbsp;&nbsp; </span>int main() {<br>
+<span style="mso-spacerun:yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span>vector&lt;int&gt; vec(4);<br>
+<span style="mso-spacerun:yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>vec[1] =
+11;<br>
+<span style="mso-spacerun:yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>vec.at(2)
+= 22; <br>
+<span style="mso-spacerun:yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span>vec.push_back(33);<br>
+<span style="mso-spacerun:yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>for (int i
+= 0;<span style="mso-spacerun:yes">&nbsp; </span>i &lt; vec.size(); i++)<br>
+<span style="mso-spacerun:yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span>cout &lt;&lt; vec.at(i) &lt;&lt; endl;<br>
+<span style="mso-spacerun:yes">&nbsp;&nbsp;&nbsp; </span>}<br style='mso-special-character:
+line-break'>
+<![if !supportLineBreakNewLine]><br style='mso-special-character:line-break'>
+<![endif]><o:p></o:p></span></p>
+
+<p class=MsoNormal style='margin-left:1.0in;text-indent:-.25in;line-height:
+normal;mso-list:l2 level2 lfo2;tab-stops:list .75in 1.0in'><![if !supportLists]><span
+style='mso-list:Ignore'>&#9675;<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span><![endif]><span style='background:#FEFEFE;mso-shading:white;
+mso-pattern:solid white'>The preprocessor directive<o:p></o:p></span></p>
+
+<p class=MsoNormal style='margin-left:1.0in;text-indent:-.25in;line-height:
+normal;mso-list:l2 level2 lfo2;tab-stops:list .75in 1.0in'><![if !supportLists]><span
+style='mso-list:Ignore'>&#9675;<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span><![endif]><span style='background:#FEFEFE;mso-shading:white;
+mso-pattern:solid white'><span
+style="mso-spacerun:yes">&nbsp;&nbsp;&nbsp;</span>#include &lt;vector&gt;<br
+style='mso-special-character:line-break'>
+<![if !supportLineBreakNewLine]><br style='mso-special-character:line-break'>
+<![endif]><o:p></o:p></span></p>
+
+<p class=MsoNormal style='margin-left:1.0in;text-indent:-.25in;line-height:
+normal;mso-list:l2 level2 lfo2;tab-stops:list .75in 1.0in'><![if !supportLists]><span
+style='mso-list:Ignore'>&#9675;<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span><![endif]><span style='background:#FEFEFE;mso-shading:white;
+mso-pattern:solid white'>tells the compiler what it needs to know to compile
+with vectors<o:p></o:p></span></p>
+
+<p class=MsoNormal style='margin-left:1.0in;text-indent:-.25in;line-height:
+normal;mso-list:l2 level2 lfo2;tab-stops:list .75in 1.0in'><![if !supportLists]><span
+style='mso-list:Ignore'>&#9675;<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span><![endif]><span style='background:#FEFEFE;mso-shading:white;
+mso-pattern:solid white'>The first statement is a variable definition that
+defines vec to be a vector of four integers. Each integer location is
+initialized at 0 by default.<o:p></o:p></span></p>
+
+<p class=MsoNormal style='margin-left:1.0in;text-indent:-.25in;line-height:
+normal;mso-list:l2 level2 lfo2;tab-stops:list .75in 1.0in'><![if !supportLists]><span
+style='mso-list:Ignore'>&#9675;<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span><![endif]><span style='background:#FEFEFE;mso-shading:white;
+mso-pattern:solid white'>The third statement uses the at() method of vector,
+and behaves exactly like operator[] except for a different style of error
+handling (at throws &quot;exceptions&quot; instead of crashing the program).<o:p></o:p></span></p>
+
+<p class=MsoNormal style='margin-left:1.0in;text-indent:-.25in;line-height:
+normal;mso-list:l2 level2 lfo2;tab-stops:list .75in 1.0in'><![if !supportLists]><span
+style='mso-list:Ignore'>&#9675;<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span><![endif]><span style='background:#FEFEFE;mso-shading:white;
+mso-pattern:solid white'>The call to vector's push_back() method appends a new element
+33 to the end of vec<o:p></o:p></span></p>
+
+<p class=MsoNormal style='margin-left:.5in;text-indent:-.25in;line-height:normal;
+mso-list:l2 level1 lfo2;tab-stops:list .25in .5in'><![if !supportLists]><span
+style='mso-list:Ignore'>&#9679;<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span><![endif]><span style='background:#FEFEFE;mso-shading:white;
+mso-pattern:solid white'>The resulting vector vec contains five int elements:
+0, 11, 22, 0, and 33. Those values will be printed by the final loop.<o:p></o:p></span></p>
+
+<p class=MsoNormal style='margin-left:.5in;text-indent:-.25in;line-height:normal;
+mso-list:l2 level1 lfo2;tab-stops:list .25in .5in'><![if !supportLists]><span
+style='mso-list:Ignore'>&#9679;<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span><![endif]><span style='background:#FEFEFE;mso-shading:white;
+mso-pattern:solid white'>A similar exercise could have been programmed with
+float, Dog, or another type.<o:p></o:p></span></p>
+
+<p class=MsoNormal style='margin-left:.5in;text-indent:-.25in;line-height:normal;
+mso-list:l2 level1 lfo2;tab-stops:list .25in .5in'><![if !supportLists]><span
+style='mso-list:Ignore'>&#9679;<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span><![endif]><b><span style='background:#FEFEFE;mso-shading:white;
+mso-pattern:solid white'>(Extra)</span></b><span style='background:#FEFEFE;
+mso-shading:white;mso-pattern:solid white'> In the &quot;exception&quot; style
+of error handling used by methods such as at(), a runtime error (i.e., while
+the program is running, such as index out of bounds for a vector object)
+creates an object called an <i>exception</i> that includes information about
+that error. We say that the error condition <i>throws</i> the exception object.
+C++ provides an optional try/catch feature for capturing thrown exceptions and
+taking action on them; otherwise, throwing an exception causes a program to
+crash.<b><o:p></o:p></b></span></p>
+
+<p class=MsoNormal style='margin-left:.5in;text-indent:-.25in;line-height:normal;
+mso-list:l2 level1 lfo2;tab-stops:list .25in .5in'><![if !supportLists]><span
+style='mso-list:Ignore'>&#9679;<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span><![endif]><span style='background:#FEFEFE;mso-shading:white;
+mso-pattern:solid white'>The vector method push_back() enables a programmer to
+extend the length of a vector object by one element, as shown above. That new
+element is added at the &quot;back&quot; or highest-indexed end of that vector.<o:p></o:p></span></p>
+
+<p class=MsoNormal style='margin-left:.5in;text-indent:-.25in;line-height:normal;
+mso-list:l2 level1 lfo2;tab-stops:list .25in .5in'><![if !supportLists]><span
+style='mso-list:Ignore'>&#9679;<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span><![endif]><span style='background:#FEFEFE;mso-shading:white;
+mso-pattern:solid white'>Another vector method pop_back() enables a programmer
+to delete the last element of a vector, thus decreasing its length by 1. The
+methodpop_back() requires no argument and returns no value.<o:p></o:p></span></p>
+
+<p class=MsoNormal style='margin-left:.5in;text-indent:-.25in;line-height:normal;
+mso-list:l2 level1 lfo2;tab-stops:list .25in .5in'><![if !supportLists]><span
+style='mso-list:Ignore'>&#9679;<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span><![endif]><span style='background:#FEFEFE;mso-shading:white;
+mso-pattern:solid white'>The vector index operator [ ] and the method at() both
+provide immediate access to any element in a vector.<o:p></o:p></span></p>
+
+<p class=MsoNormal style='margin-left:.5in;text-indent:-.25in;line-height:normal;
+mso-list:l2 level1 lfo2;tab-stops:list .25in .5in'><![if !supportLists]><span
+style='mso-list:Ignore'>&#9679;<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span><![endif]><span style='background:#FEFEFE;mso-shading:white;
+mso-pattern:solid white'>The method size() returns the number of elements
+currently in a vector object.<o:p></o:p></span></p>
+
+<p class=MsoNormal style='margin-left:.5in;text-indent:-.25in;line-height:normal;
+mso-list:l2 level1 lfo2;tab-stops:list .25in .5in'><![if !supportLists]><span
+style='mso-list:Ignore'>&#9679;<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span><![endif]><span style='background:#FEFEFE;mso-shading:white;
+mso-pattern:solid white'>The method back() returns the last element of a
+non-empty vector. Thus, vec.back() returns the same value as vec[vec.size()-1]
+orvec.at(vec.size()-1) .<o:p></o:p></span></p>
+
+<p class=MsoNormal style='margin-left:.5in;text-indent:-.25in;line-height:normal;
+mso-list:l2 level1 lfo2;tab-stops:list .25in .5in'><![if !supportLists]><span
+style='mso-list:Ignore'>&#9679;<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span><![endif]><span style='background:#FEFEFE;mso-shading:white;
+mso-pattern:solid white'>The vector container provides methods for inserting or
+removing values at locations other than the back of a vector object, called
+insert()and erase(). However, these methods are not as efficient as push_back()
+and pop_back(). This is because vector elements are stored consecutively in
+memory, so inserting or removing an element at a position other than the back
+requires copying all element values from that position through the back value.<o:p></o:p></span></p>
+
+<p class=MsoNormal style='margin-left:.5in;text-indent:-.25in;line-height:normal;
+mso-list:l2 level1 lfo2;tab-stops:list .25in .5in'><![if !supportLists]><span
+style='mso-list:Ignore'>&#9679;<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span><![endif]><b><span style='background:#FEFEFE;mso-shading:white;
+mso-pattern:solid white'>(Extra)</span></b><span style='background:#FEFEFE;
+mso-shading:white;mso-pattern:solid white'> Note that the methods <i>insert()</i>
+and <i>erase()</i> require iterator objects to specify position within a vector
+object. An <i>iterator</i> is an object that contains a pointer and has methods
+for certain pointer operations, such as a method next() for advancing to the
+next element in an array or vector.<b><o:p></o:p></b></span></p>
+
+<p class=MsoNormal style='margin-left:.5in;text-indent:-.25in;line-height:normal;
+mso-list:l2 level1 lfo2;tab-stops:list .25in .5in'><![if !supportLists]><span
+style='mso-list:Ignore'>&#9679;<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span><![endif]><span style='background:#FEFEFE;mso-shading:white;
+mso-pattern:solid white'>See </span><a
+href="http://www.cplusplus.com/reference/stl/vector"><span style='color:#3333CC;
+background:#FEFEFE;mso-shading:white;mso-pattern:solid white'>www</span></a><a
+href="http://www.cplusplus.com/reference/stl/vector"><span style='color:#3333CC;
+background:#FEFEFE;mso-shading:white;mso-pattern:solid white'>.</span></a><a
+href="http://www.cplusplus.com/reference/stl/vector"><span style='color:#3333CC;
+background:#FEFEFE;mso-shading:white;mso-pattern:solid white'>cplusplus</span></a><a
+href="http://www.cplusplus.com/reference/stl/vector"><span style='color:#3333CC;
+background:#FEFEFE;mso-shading:white;mso-pattern:solid white'>.</span></a><a
+href="http://www.cplusplus.com/reference/stl/vector"><span style='color:#3333CC;
+background:#FEFEFE;mso-shading:white;mso-pattern:solid white'>com</span></a><a
+href="http://www.cplusplus.com/reference/stl/vector"><span style='color:#3333CC;
+background:#FEFEFE;mso-shading:white;mso-pattern:solid white'>/</span></a><a
+href="http://www.cplusplus.com/reference/stl/vector"><span style='color:#3333CC;
+background:#FEFEFE;mso-shading:white;mso-pattern:solid white'>reference</span></a><a
+href="http://www.cplusplus.com/reference/stl/vector"><span style='color:#3333CC;
+background:#FEFEFE;mso-shading:white;mso-pattern:solid white'>/</span></a><a
+href="http://www.cplusplus.com/reference/stl/vector"><span style='color:#3333CC;
+background:#FEFEFE;mso-shading:white;mso-pattern:solid white'>stl</span></a><a
+href="http://www.cplusplus.com/reference/stl/vector"><span style='color:#3333CC;
+background:#FEFEFE;mso-shading:white;mso-pattern:solid white'>/</span></a><a
+href="http://www.cplusplus.com/reference/stl/vector"><span style='color:#3333CC;
+background:#FEFEFE;mso-shading:white;mso-pattern:solid white'>vector</span></a><span
+style='background:#FEFEFE;mso-shading:white;mso-pattern:solid white'> for a
+reference on vectors.<o:p></o:p></span></p>
+
+<h2><span style='font-size:18.0pt;background:#FEFEFE;mso-shading:white;
+mso-pattern:solid white'>The STL container queue<o:p></o:p></span></h2>
+
+<p class=MsoNormal style='margin-left:.5in;text-indent:-.25in;line-height:normal;
+mso-list:l3 level1 lfo3;tab-stops:list .25in .5in'><![if !supportLists]><span
+style='mso-list:Ignore'>&#9679;<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span><![endif]><span style='background:#FEFEFE;mso-shading:white;
+mso-pattern:solid white'>STL's queue&lt;T&gt; is a templated class that is a <i>FIFO
+(first-in first-out)</i> container. This means that it is capable of holding an
+indeterminate number of elements of a particular type, organized in an ordered
+list, with each element added at one end of the list (the <i>back</i>) and
+removed at the other end (the <i>front</i>).<o:p></o:p></span></p>
+
+<p class=MsoNormal style='margin-left:.5in;text-indent:-.25in;line-height:normal;
+mso-list:l3 level1 lfo3;tab-stops:list .25in .5in'><![if !supportLists]><span
+style='mso-list:Ignore'>&#9679;<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span><![endif]><span style='background:#FEFEFE;mso-shading:white;
+mso-pattern:solid white'>Whereas STL's vector templated class has many methods,
+a queue has only six specified methods (see</span><a
+href="http://www.cplusplus.com/reference/stl/queue"><span style='color:#3333CC;
+background:#FEFEFE;mso-shading:white;mso-pattern:solid white'>www</span></a><a
+href="http://www.cplusplus.com/reference/stl/queue"><span style='color:#3333CC;
+background:#FEFEFE;mso-shading:white;mso-pattern:solid white'>.</span></a><a
+href="http://www.cplusplus.com/reference/stl/queue"><span style='color:#3333CC;
+background:#FEFEFE;mso-shading:white;mso-pattern:solid white'>cplusplus</span></a><a
+href="http://www.cplusplus.com/reference/stl/queue"><span style='color:#3333CC;
+background:#FEFEFE;mso-shading:white;mso-pattern:solid white'>.</span></a><a
+href="http://www.cplusplus.com/reference/stl/queue"><span style='color:#3333CC;
+background:#FEFEFE;mso-shading:white;mso-pattern:solid white'>com</span></a><a
+href="http://www.cplusplus.com/reference/stl/queue"><span style='color:#3333CC;
+background:#FEFEFE;mso-shading:white;mso-pattern:solid white'>/</span></a><a
+href="http://www.cplusplus.com/reference/stl/queue"><span style='color:#3333CC;
+background:#FEFEFE;mso-shading:white;mso-pattern:solid white'>reference</span></a><a
+href="http://www.cplusplus.com/reference/stl/queue"><span style='color:#3333CC;
+background:#FEFEFE;mso-shading:white;mso-pattern:solid white'>/</span></a><a
+href="http://www.cplusplus.com/reference/stl/queue"><span style='color:#3333CC;
+background:#FEFEFE;mso-shading:white;mso-pattern:solid white'>stl</span></a><a
+href="http://www.cplusplus.com/reference/stl/queue"><span style='color:#3333CC;
+background:#FEFEFE;mso-shading:white;mso-pattern:solid white'>/</span></a><a
+href="http://www.cplusplus.com/reference/stl/queue"><span style='color:#3333CC;
+background:#FEFEFE;mso-shading:white;mso-pattern:solid white'>queue</span></a><span
+style='background:#FEFEFE;mso-shading:white;mso-pattern:solid white'>:<o:p></o:p></span></p>
+
+<p class=MsoNormal style='margin-left:1.0in;text-indent:-.25in;line-height:
+normal;mso-list:l3 level2 lfo3;tab-stops:list .75in 1.0in'><![if !supportLists]><span
+style='mso-list:Ignore'>&#9675;<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span><![endif]><span style='background:#FEFEFE;mso-shading:white;
+mso-pattern:solid white'>push(), which adds an element at the end of a queue,<o:p></o:p></span></p>
+
+<p class=MsoNormal style='margin-left:1.0in;text-indent:-.25in;line-height:
+normal;mso-list:l3 level2 lfo3;tab-stops:list .75in 1.0in'><![if !supportLists]><span
+style='mso-list:Ignore'>&#9675;<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span><![endif]><span style='background:#FEFEFE;mso-shading:white;
+mso-pattern:solid white'>pop(), which removes an element from the beginning of
+a queue,<o:p></o:p></span></p>
+
+<p class=MsoNormal style='margin-left:1.0in;text-indent:-.25in;line-height:
+normal;mso-list:l3 level2 lfo3;tab-stops:list .75in 1.0in'><![if !supportLists]><span
+style='mso-list:Ignore'>&#9675;<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span><![endif]><span style='background:#FEFEFE;mso-shading:white;
+mso-pattern:solid white'>front(), which returns the element at the front of a
+non-empty queue (next to be popped),<o:p></o:p></span></p>
+
+<p class=MsoNormal style='margin-left:1.0in;text-indent:-.25in;line-height:
+normal;mso-list:l3 level2 lfo3;tab-stops:list .75in 1.0in'><![if !supportLists]><span
+style='mso-list:Ignore'>&#9675;<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span><![endif]><span style='background:#FEFEFE;mso-shading:white;
+mso-pattern:solid white'>back(), which returns the element at the back of a
+non-empty queue (most recent to be pushed),<o:p></o:p></span></p>
+
+<p class=MsoNormal style='margin-left:1.0in;text-indent:-.25in;line-height:
+normal;mso-list:l3 level2 lfo3;tab-stops:list .75in 1.0in'><![if !supportLists]><span
+style='mso-list:Ignore'>&#9675;<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span><![endif]><span style='background:#FEFEFE;mso-shading:white;
+mso-pattern:solid white'>empty(), which returns Boolean True if there are no
+elements in a queue and False otherwise, and<o:p></o:p></span></p>
+
+<p class=MsoNormal style='margin-left:1.0in;text-indent:-.25in;line-height:
+normal;mso-list:l3 level2 lfo3;tab-stops:list .75in 1.0in'><![if !supportLists]><span
+style='mso-list:Ignore'>&#9675;<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span><![endif]><span style='background:#FEFEFE;mso-shading:white;
+mso-pattern:solid white'>size(), which returns the number of elements currently
+in a queue.<o:p></o:p></span></p>
+
+<p class=MsoNormal style='margin-left:.5in;text-indent:-.25in;line-height:normal;
+mso-list:l3 level1 lfo3;tab-stops:list .25in .5in'><![if !supportLists]><span
+style='mso-list:Ignore'>&#9679;<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span><![endif]><span style='background:#FEFEFE;mso-shading:white;
+mso-pattern:solid white'>Here is a code example of using a queue.<o:p></o:p></span></p>
+
+<p class=MsoNormal style='margin-left:.5in;text-indent:-.25in;line-height:normal;
+mso-list:l3 level1 lfo3;tab-stops:list .25in .5in'><![if !supportLists]><span
+style='mso-list:Ignore'>&#9679;<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span><![endif]><span style='background:#FEFEFE;mso-shading:white;
+mso-pattern:solid white'><span
+style="mso-spacerun:yes">&nbsp;&nbsp;&nbsp;</span>#include &lt;iostream&gt;<br>
+<span style="mso-spacerun:yes">&nbsp;&nbsp;&nbsp; </span>using namespace std;<br>
+<span style="mso-spacerun:yes">&nbsp;&nbsp;&nbsp; </span>#include &lt;queue&gt;<br>
+<br>
+<span style="mso-spacerun:yes">&nbsp;&nbsp;&nbsp; </span>int main() {<br>
+<span style="mso-spacerun:yes">&nbsp;&nbsp;&nbsp; </span><br>
+<span style="mso-spacerun:yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span>queue&lt;float&gt; q;<br>
+<span style="mso-spacerun:yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span>q.push(1.23);<br>
+<span style="mso-spacerun:yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span>q.push(4.56);<br>
+<span style="mso-spacerun:yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span>q.push(7.89);<br>
+<span style="mso-spacerun:yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>while
+(!q.empty()) {<br>
+<span style="mso-spacerun:yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span>cout &lt;&lt; q.front() &lt;&lt; endl;<br>
+<span style="mso-spacerun:yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span>q.pop();<br>
+<span style="mso-spacerun:yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>}<br>
+<span style="mso-spacerun:yes">&nbsp;&nbsp;&nbsp; </span>}<br style='mso-special-character:
+line-break'>
+<![if !supportLineBreakNewLine]><br style='mso-special-character:line-break'>
+<![endif]><o:p></o:p></span></p>
+
+<p class=MsoNormal style='margin-left:.5in;text-indent:-.25in;line-height:normal;
+mso-list:l3 level1 lfo3;tab-stops:list .25in .5in'><![if !supportLists]><span
+style='mso-list:Ignore'>&#9679;<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span><![endif]><span style='background:#FEFEFE;mso-shading:white;
+mso-pattern:solid white'>The output from this code should be the numbers 1.23 <i>then</i>
+4.56 <i>then</i> 7.89, one per line.<o:p></o:p></span></p>
+
+<p class=MsoNormal style='margin-left:.5in;text-indent:-.25in;line-height:normal;
+mso-list:l3 level1 lfo3;tab-stops:list .25in .5in'><![if !supportLists]><span
+style='mso-list:Ignore'>&#9679;<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span><![endif]><span style='background:#FEFEFE;mso-shading:white;
+mso-pattern:solid white'>An STL vector could be used in a situation where a <i>queue</i>
+would be appropriate (e.g., simulating a process comparable to a grocery-store checkout
+line), using the vector methods push_back(), front(), and erase() (to remove
+the front element). But a queue can be implemented more efficiently than a
+vector for this purpose, avoiding the copying of elements that are needed for
+vector's erase() method.<o:p></o:p></span></p>
+
+<p class=MsoNormal style='margin-left:.5in;text-indent:-.25in;line-height:normal;
+mso-list:l3 level1 lfo3;tab-stops:list .25in .5in'><![if !supportLists]><span
+style='mso-list:Ignore'>&#9679;<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span><![endif]><b><span style='background:#FEFEFE;mso-shading:white;
+mso-pattern:solid white'>(Extra)</span></b><span style='background:#FEFEFE;
+mso-shading:white;mso-pattern:solid white'> The underlying data structure for a
+queue can be specified when that queue is created, using a second template
+parameter.<b><o:p></o:p></b></span></p>
+
+<p class=MsoNormal style='margin-left:.5in;text-indent:-.25in;line-height:normal;
+mso-list:l3 level1 lfo3;tab-stops:list .25in .5in'><![if !supportLists]><span
+style='mso-list:Ignore'>&#9679;<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span><![endif]><span style='background:#FEFEFE;mso-shading:white;
+mso-pattern:solid white'>On the other hand, a queue provides no index or at()
+operator for accessing an element other than the front or back elements. The
+ability to access arbitrary element locations (e.g., via indices) is called <i>random
+access</i>, and if random access is needed, a vector may be more desirable than
+a queue.<o:p></o:p></span></p>
+
+<p class=MsoNormal style='margin-left:.5in;text-indent:-.25in;line-height:normal;
+mso-list:l3 level1 lfo3;tab-stops:list .25in .5in'><![if !supportLists]><span
+style='mso-list:Ignore'>&#9679;<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span><![endif]><span style='background:#FEFEFE;mso-shading:white;
+mso-pattern:solid white'>As with vector, the templated container class queue
+can accept a user-defined type for its elements. Thus<o:p></o:p></span></p>
+
+<p class=MsoNormal style='margin-left:.5in;text-indent:-.25in;line-height:normal;
+mso-list:l3 level1 lfo3;tab-stops:list .25in .5in'><![if !supportLists]><span
+style='mso-list:Ignore'>&#9679;<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span><![endif]><span style='background:#FEFEFE;mso-shading:white;
+mso-pattern:solid white'><span
+style="mso-spacerun:yes">&nbsp;&nbsp;&nbsp;</span>queue&lt;Dog&gt; ,<span
+style="mso-spacerun:yes">&nbsp; </span>queue&lt;const Dog*&gt; ,<br
+style='mso-special-character:line-break'>
+<![if !supportLineBreakNewLine]><br style='mso-special-character:line-break'>
+<![endif]><o:p></o:p></span></p>
+
+<p class=MsoNormal style='margin-left:.5in;text-indent:-.25in;line-height:normal;
+mso-list:l3 level1 lfo3;tab-stops:list .25in .5in'><![if !supportLists]><span
+style='mso-list:Ignore'>&#9679;<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span><![endif]><span style='background:#FEFEFE;mso-shading:white;
+mso-pattern:solid white'>and other types may be used.<o:p></o:p></span></p>
+
+<p class=MsoNormal style='line-height:normal'><span style='background:#FEFEFE;
+mso-shading:white;mso-pattern:solid white'><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal style='line-height:normal'><span style='background:#FEFEFE;
+mso-shading:white;mso-pattern:solid white'><o:p>&nbsp;</o:p></span></p>
+
+<div style='mso-element:para-border-div;border:none;border-bottom:solid gray 1.5pt;
+padding:0in 0in 0in 0in'>
+
+<p class=MsoNormal style='line-height:normal;border:none;mso-border-bottom-alt:
+solid gray 1.5pt;padding:0in;mso-padding-alt:0in 0in 0in 0in'><span
+style='background:#FEFEFE;mso-shading:white;mso-pattern:solid white'><o:p>&nbsp;</o:p></span></p>
+
+</div>
+
+<p class=MsoNormal style='line-height:normal'><o:p>&nbsp;</o:p></p>
+
+<p class=MsoNormal style='line-height:normal'><span style='color:#3333CC;
+background:#FEFEFE;mso-shading:white;mso-pattern:solid white'>rab@stolaf.edu</span><span
+style='background:#FEFEFE;mso-shading:white;mso-pattern:solid white'>, April
+27, 2011</span><span style='color:#3333CC;background:#FEFEFE;mso-shading:white;
+mso-pattern:solid white'><o:p></o:p></span></p>
+
+<p class=MsoNormal style='line-height:normal'><a
+href="http://www.stolaf.edu/cwis_policies/personal_disclaimer.html"><i><span
+style='font-size:10.0pt;color:#3333CC;background:#FEFEFE;mso-shading:white;
+mso-pattern:solid white'>Disclaimer</span></i></a><i><u><span style='font-size:
+10.0pt;color:#3333CC;background:#FEFEFE;mso-shading:white;mso-pattern:solid white'><o:p></o:p></span></u></i></p>
+
+<p class=MsoNormal style='line-height:normal'><o:p>&nbsp;</o:p></p>
+
+</div>
+
+</body>
+
+</html>
