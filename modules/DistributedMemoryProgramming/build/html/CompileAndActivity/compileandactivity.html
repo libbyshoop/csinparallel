@@ -1,0 +1,478 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Compiling and Activites &mdash; Distributed Memory Programming</title>
+    
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="top" title="Distributed Memory Programming" href="../index.html" />
+    <link rel="next" title="Decomposition and Activities" href="../DecompositionAndActivity/DecompositionAndActivity.html" />
+    <link rel="prev" title="MPI Communications" href="../MPICommunication/MPICommunication.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../DecompositionAndActivity/DecompositionAndActivity.html" title="Decomposition and Activities"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="../MPICommunication/MPICommunication.html" title="MPI Communications"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../index.html">Distributed Memory Programming</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="compiling-and-activites">
+<h1>Compiling and Activites<a class="headerlink" href="#compiling-and-activites" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="compiling-mpi-program-on-littlefe">
+<h2>Compiling MPI program on LittleFe<a class="headerlink" href="#compiling-mpi-program-on-littlefe" title="Permalink to this headline">¶</a></h2>
+<p>To compile a MPI program on our LittleFe, we can use the following command in the terminal:</p>
+<p><em>mpicc -o name of executable file filename.c</em></p>
+<p><em>mpirun -np #processes ./mpi</em> or <em>mpirun -machinefile machines -np #processes ./mpi</em></p>
+<p><strong>machines</strong>: is the instruction for running the executable file on which node, and how many times on which node.</p>
+</div>
+<div class="section" id="activity-1-pi-computation">
+<h2>Activity 1: PI Computation<a class="headerlink" href="#activity-1-pi-computation" title="Permalink to this headline">¶</a></h2>
+<p>In this activity, we are going to compute PI using integral techniques. We have formula:</p>
+<p>Formula</p>
+<p>Therefore, we can calculating the sum of area under the curve to get the value of the integral. We can split the sum into bins. The idea is we want to split the bins into smaller chunks, and so we can use each process to calculate each chunk, and then combine the result into one value. Remember, that we can get a more accurate result if you split the area under the curve to more number of bins.</p>
+<p>In this activity, we also want to time our computation by using MPI_Wtime() function. We provide you some parts of the codes, and would like you to write some at TO DO, and experiment with the number of bins you are using. Moreover, you want you to run with different number of processes, and compare your timings.</p>
+<div class="highlight-c"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73
+74
+75
+76
+77</pre></div></td><td class="code"><div class="highlight"><pre><span class="cm">/*</span>
+<span class="cm">* Program: Pi Calculation</span>
+<span class="cm">* MPI_Bcast and MPI_Reduce</span>
+<span class="cm">*/</span>
+
+<span class="cp">#include &quot;mpi.h&quot;</span>
+<span class="cp">#include &lt;math.h&gt;</span>
+<span class="cp">#include &lt;stdio.h&gt;</span>
+
+<span class="cp">#define MAX_NAME 80   </span><span class="cm">/* length of characters for naming a process */</span><span class="cp"></span>
+<span class="cp">#define MASTER 0      </span><span class="cm">/* rank of the master */</span><span class="cp"></span>
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span> <span class="o">*</span><span class="n">argv</span><span class="p">[])</span> <span class="p">{</span>
+
+    <span class="kt">int</span> <span class="n">rank</span><span class="p">,</span>                                           <span class="cm">/* rank variable to identify the process */</span>
+        <span class="n">nprocs</span><span class="p">,</span>                                         <span class="cm">/* number of processes */</span>
+        <span class="n">i</span><span class="p">,</span>
+        <span class="n">len</span><span class="p">;</span>                                            <span class="cm">/* variable for storing name of processes */</span>
+
+    <span class="kt">int</span> <span class="n">n</span> <span class="o">=</span> <span class="mi">10000</span><span class="p">;</span>                                      <span class="cm">/* the number of bins */</span>
+    <span class="kt">double</span> <span class="n">PI25DT</span> <span class="o">=</span> <span class="mf">3.141592653589793238462643</span><span class="p">;</span>         <span class="cm">/* 25-digit-PI*/</span>
+    <span class="kt">double</span> <span class="n">mypi</span><span class="p">,</span>                                        <span class="cm">/* value from each process */</span>
+           <span class="n">pi</span><span class="p">,</span>                                          <span class="cm">/* value of PI in total*/</span>
+           <span class="n">step</span><span class="p">,</span>                                        <span class="cm">/* the step */</span>
+           <span class="n">sum</span><span class="p">,</span>                                         <span class="cm">/* sum of area under the curve */</span>
+           <span class="n">x</span><span class="p">;</span>
+
+    <span class="kt">char</span> <span class="n">name</span><span class="p">[</span><span class="n">MAX_NAME</span><span class="p">];</span>        <span class="cm">/* char array for storing the name of each process */</span>
+
+    <span class="kt">double</span> <span class="n">start_time</span><span class="p">,</span>          <span class="cm">/* starting time */</span>
+           <span class="n">end_time</span><span class="p">,</span>            <span class="cm">/* ending time */</span>
+           <span class="n">computation_time</span><span class="p">;</span>    <span class="cm">/* time for computing value of PI */</span>
+
+    <span class="c1">// TO DO</span>
+    <span class="cm">/*Initialize MPI execution environment */</span>
+    <span class="n">MPI_Init</span><span class="p">(</span><span class="o">&amp;</span><span class="n">argc</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">argv</span><span class="p">);</span>
+    <span class="n">MPI_Comm_size</span><span class="p">(</span><span class="n">MPI_COMM_WORLD</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">nprocs</span><span class="p">);</span>
+    <span class="n">MPI_Comm_rank</span><span class="p">(</span><span class="n">MPI_COMM_WORLD</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">rank</span><span class="p">);</span>
+
+    <span class="n">MPI_Get_processor_name</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">len</span><span class="p">);</span>
+
+    <span class="n">start_time</span> <span class="o">=</span> <span class="n">MPI_Wtime</span><span class="p">();</span>
+
+    <span class="cm">/* Broadcast the number of bins to all processes */</span>
+    <span class="cm">/* This broadcasts an integer which is n, from the master to all processes</span>
+<span class="cm">     * and</span>
+<span class="cm">     */</span>
+
+    <span class="c1">// TO DO:</span>
+    <span class="n">MPI_Bcast</span><span class="p">(</span><span class="o">&amp;</span><span class="n">n</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">MPI_INT</span><span class="p">,</span> <span class="n">MASTER</span><span class="p">,</span> <span class="n">MPI_COMM_WORLD</span><span class="p">);</span>
+
+    <span class="cm">/* Calculating for each process */</span>
+    <span class="n">step</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">/</span> <span class="p">(</span><span class="kt">double</span><span class="p">)</span> <span class="n">n</span><span class="p">;</span>
+    <span class="n">sum</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">;</span>
+    <span class="k">for</span> <span class="p">(</span><span class="n">i</span> <span class="o">=</span> <span class="n">rank</span> <span class="o">+</span> <span class="mi">1</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;=</span> <span class="n">n</span><span class="p">;</span> <span class="n">i</span> <span class="o">+=</span> <span class="n">nprocs</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">step</span> <span class="o">*</span> <span class="p">((</span><span class="kt">double</span><span class="p">)</span><span class="n">i</span> <span class="o">-</span> <span class="mf">0.5</span><span class="p">);</span>
+        <span class="n">sum</span> <span class="o">+=</span> <span class="p">(</span><span class="mf">4.0</span><span class="o">/</span><span class="p">(</span><span class="mf">1.0</span> <span class="o">+</span> <span class="n">x</span><span class="o">*</span><span class="n">x</span><span class="p">));</span>
+    <span class="p">}</span>
+
+    <span class="n">mypi</span> <span class="o">=</span> <span class="n">step</span> <span class="o">*</span> <span class="n">sum</span><span class="p">;</span>
+
+    <span class="n">printf</span><span class="p">(</span><span class="s">&quot;This is my sum: %.16f from rank: %d name: %s</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">mypi</span><span class="p">,</span> <span class="n">rank</span><span class="p">,</span> <span class="n">name</span><span class="p">);</span>
+    
+    <span class="cm">/* Now we can reduce all those sums to one value which is Pi */</span>
+    <span class="c1">// TO DO:</span>
+    <span class="n">MPI_Reduce</span><span class="p">(</span><span class="o">&amp;</span><span class="n">mypi</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">pi</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">MPI_DOUBLE</span><span class="p">,</span> <span class="n">MPI_SUM</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">MPI_COMM_WORLD</span><span class="p">);</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="n">myid</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">printf</span><span class="p">(</span><span class="s">&quot;Pi is approximately %.16f, Error is %.16f</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">pi</span><span class="p">,</span> <span class="n">fabs</span><span class="p">(</span><span class="n">pi</span> <span class="o">-</span> <span class="n">PI25DT</span><span class="p">));</span>
+        <span class="n">end_time</span> <span class="o">=</span> <span class="n">MPI_Wtime</span><span class="p">();</span>
+        <span class="n">computation_time</span> <span class="o">=</span> <span class="n">end_time</span> <span class="o">-</span> <span class="n">start_time</span><span class="p">;</span>
+        <span class="n">printf</span><span class="p">(</span><span class="s">&quot;Time of calculating PI is: %f</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">computation_time</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="cm">/* Terminate MPI execution environment */</span>
+    <span class="n">MPI_Finalize</span><span class="p">();</span>
+    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</td></tr></table></div>
+</div>
+<div class="section" id="activity-2-vector-matrix-multiplication">
+<h2>Activity 2: Vector Matrix Multiplication<a class="headerlink" href="#activity-2-vector-matrix-multiplication" title="Permalink to this headline">¶</a></h2>
+<p>In this activity, we will compute vector matrix multiplication. This multiplication will produces a vector of length
+as same as that of the input vector. In this activity, we will illustrate the use of MPI_Bcast, MPI_Scatter, and MPI_Gather to do this multiplication. First, we would want you to complete this MPI program by filling codes at <em>TO DO</em>. After having completed, try to run this MPI program on LittleFe by using different number of processes.</p>
+<div class="highlight-c"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73
+74
+75
+76
+77
+78
+79
+80
+81
+82
+83
+84
+85
+86
+87
+88
+89
+90</pre></div></td><td class="code"><div class="highlight"><pre><span class="cm">/**</span>
+<span class="cm">* In this activity, we will using MPI_Bcast, MPI_Scatter, and MPI_Gather. Also, we will see the</span>
+<span class="cm">* limitations of using collective communication. We want you to try running this MPI program</span>
+<span class="cm">* on LittleFe by using different number of processes. Try to come up with some ideas of what</span>
+<span class="cm">* going on.</span>
+<span class="cm">**/</span>
+
+<span class="cp">#include &quot;mpi.h&quot;</span>
+<span class="cp">#include &lt;stdio.h&gt;</span>
+
+<span class="cp">#define WIDTH 10        </span><span class="cm">/* the size of the vector */</span><span class="cp"></span>
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span> <span class="o">*</span><span class="n">argv</span><span class="p">[])</span> <span class="p">{</span>
+
+    <span class="kt">int</span> <span class="n">nprocs</span><span class="p">,</span>         <span class="cm">/* number of processes */</span>
+        <span class="n">rank</span><span class="p">,</span>           <span class="cm">/* rank of each process */</span>
+        <span class="n">chunk_size</span><span class="p">,</span>     <span class="cm">/* number of rows to be sent to a process */</span>
+        <span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">;</span>
+
+    <span class="kt">int</span> <span class="n">matrix</span><span class="p">[</span><span class="n">WIDTH</span><span class="p">][</span><span class="n">WIDTH</span><span class="p">];</span>           <span class="cm">/* matrix for multiplication */</span>
+    <span class="kt">int</span> <span class="n">vector</span><span class="p">[</span><span class="n">WIDTH</span><span class="p">];</span>                  <span class="cm">/* vector for multiplication */</span>
+    <span class="kt">int</span> <span class="n">local_matrix</span><span class="p">[</span><span class="n">WIDTH</span><span class="p">][</span><span class="n">WIDTH</span><span class="p">];</span>     <span class="cm">/* for storing piece of matrix in each process */</span>
+    <span class="kt">int</span> <span class="n">result</span><span class="p">[</span><span class="n">WIDTH</span><span class="p">];</span>                  <span class="cm">/* for storing result in each process */</span>
+    <span class="kt">int</span> <span class="n">global_result</span><span class="p">[</span><span class="n">WIDTH</span><span class="p">];</span>           <span class="cm">/* vector result after all calculations */</span>
+
+    <span class="n">MPI_Status</span> <span class="n">status</span><span class="p">;</span>                  <span class="cm">/* status for receiving */</span>
+
+    <span class="cm">/* Initialize MPI execution environment */</span>
+    <span class="c1">// TO DO:</span>
+    <span class="n">MPI_Init</span><span class="p">(</span> <span class="o">&amp;</span><span class="n">argc</span><span class="p">,</span><span class="o">&amp;</span><span class="n">argv</span><span class="p">);</span>
+    <span class="n">MPI_Comm_rank</span><span class="p">(</span> <span class="n">MPI_COMM_WORLD</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">rank</span><span class="p">);</span>
+    <span class="n">MPI_Comm_size</span><span class="p">(</span> <span class="n">MPI_COMM_WORLD</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">nprocs</span><span class="p">);</span>
+    <span class="c1">// end TO DO</span>
+    
+    <span class="n">printf</span><span class="p">(</span><span class="s">&quot;Hello from process %d of %d </span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span><span class="n">rank</span><span class="p">,</span><span class="n">nprocs</span><span class="p">);</span>
+
+    <span class="n">chunk_size</span> <span class="o">=</span> <span class="n">WIDTH</span><span class="o">/</span><span class="n">nprocs</span><span class="p">;</span>          <span class="cm">/* number of rows to be sent to each process */</span>
+
+    <span class="cm">/* master doing part of the work here */</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">rank</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+
+        <span class="cm">/* Initialize Matrix and Vector */</span>
+        <span class="k">for</span><span class="p">(</span><span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">WIDTH</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+            <span class="n">vector</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+            <span class="k">for</span><span class="p">(</span><span class="n">j</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">j</span> <span class="o">&lt;</span> <span class="n">WIDTH</span><span class="p">;</span> <span class="n">j</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+                <span class="n">matrix</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+
+    <span class="cm">/* Distribute Vector */</span>
+    <span class="cm">/* All processes need the input vector for multiplication, so we can broadcast it to all processes */</span>
+    <span class="c1">// TO DO:</span>
+    <span class="n">MPI_Bcast</span><span class="p">(</span><span class="n">vector</span><span class="p">,</span> <span class="n">WIDTH</span> <span class="p">,</span> <span class="n">MPI_INT</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">MPI_COMM_WORLD</span><span class="p">);</span>
+
+    <span class="cm">/* Distribute Matrix */</span>
+    <span class="cm">/* We can broadcast entire matrix to all processes, but matrix might be too big,</span>
+<span class="cm">     * and it is not an efficient method. Instead we will split matrix by row.</span>
+<span class="cm">     * Scatter will do that for us. It will take the matrix, and send WIDTH * chunk_size</span>
+<span class="cm">     * to each process, and each piece get stored in local_matrix.</span>
+<span class="cm">     */</span>
+    <span class="c1">// TO DO: </span>
+    <span class="n">MPI_Scatter</span><span class="p">(</span><span class="n">matrix</span><span class="p">,</span> <span class="n">WIDTH</span> <span class="o">*</span> <span class="n">chunk_size</span><span class="p">,</span> <span class="n">MPI_INT</span><span class="p">,</span> <span class="n">local_matrix</span><span class="p">,</span> <span class="n">WIDTH</span> <span class="o">*</span> <span class="n">chunk_size</span><span class="p">,</span> <span class="n">MPI_INT</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">MPI_COMM_WORLD</span><span class="p">);</span>
+
+    <span class="cm">/* Each processor has some rows of matrix, and the vector. Each process works on their multiplication</span>
+<span class="cm">     * and storing the result in result vector.</span>
+<span class="cm">     */</span>
+     <span class="k">for</span><span class="p">(</span><span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">chunk_size</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">result</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+        <span class="k">for</span><span class="p">(</span><span class="n">j</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">j</span> <span class="o">&lt;</span> <span class="n">WIDTH</span><span class="p">;</span> <span class="n">j</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+            <span class="n">result</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">+=</span> <span class="n">local_matrix</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span> <span class="o">*</span> <span class="n">vector</span><span class="p">[</span><span class="n">j</span><span class="p">];</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+
+    <span class="cm">/* Each process sends result back to master, and get stored in global_result */</span>
+    <span class="c1">// TO DO:</span>
+    <span class="n">MPI_Gather</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">chunk_size</span><span class="p">,</span> <span class="n">MPI_INT</span><span class="p">,</span> <span class="n">global_result</span><span class="p">,</span> <span class="n">chunk_size</span><span class="p">,</span> <span class="n">MPI_INT</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">MPI_COMM_WORLD</span><span class="p">);</span>
+
+    <span class="cm">/* master prints elements of the result */</span>
+    <span class="k">if</span><span class="p">(</span><span class="n">rank</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">for</span><span class="p">(</span><span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">WIDTH</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+            <span class="n">printf</span><span class="p">(</span><span class="s">&quot;%d</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">global_result</span><span class="p">[</span><span class="n">i</span><span class="p">]);</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="cm">/* Terminate MPI execution environment */</span>
+    <span class="n">MPI_Finalize</span><span class="p">();</span>
+    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+
+     
+</pre></div>
+</td></tr></table></div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Compiling and Activites</a><ul>
+<li><a class="reference internal" href="#compiling-mpi-program-on-littlefe">Compiling MPI program on LittleFe</a></li>
+<li><a class="reference internal" href="#activity-1-pi-computation">Activity 1: PI Computation</a></li>
+<li><a class="reference internal" href="#activity-2-vector-matrix-multiplication">Activity 2: Vector Matrix Multiplication</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="../MPICommunication/MPICommunication.html"
+                        title="previous chapter">MPI Communications</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="../DecompositionAndActivity/DecompositionAndActivity.html"
+                        title="next chapter">Decomposition and Activities</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="../_sources/CompileAndActivity/compileandactivity.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../DecompositionAndActivity/DecompositionAndActivity.html" title="Decomposition and Activities"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="../MPICommunication/MPICommunication.html" title="MPI Communications"
+             >previous</a> |</li>
+        <li><a href="../index.html">Distributed Memory Programming</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2012, Sophors Khut.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>

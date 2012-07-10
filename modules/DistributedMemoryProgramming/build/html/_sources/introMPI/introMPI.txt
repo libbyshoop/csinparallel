@@ -1,0 +1,80 @@
+Introduction to MPI
+===================
+*************
+What is MPI ?
+*************
+
+Message Passing Interface (MPI) is a subroutine or a library for passing messages between processes in a distributed memory model. MPI is not a programming language. MPI is a programming model that is widely used for parallel programming in a cluster. In the cluster, the head node is known as the master, and the other nodes are known as the workers. By using MPI, programmers are able to divide up the task and distribute each task to each worker or to some specific workers. Thus, each node can compute its own task simultaneously. 
+
+Since this is a small module, we will be focusing on only important and common MPI functions and techniques. For further study, we encourage you to learn it by yourself.
+
+*********
+Why MPI ?
+*********
+
+There are many reasons of using MPI as our parallel programming model: 
+
+- Standardization: MPI is a standard message passing library, and it is supported on all high-performance computer platforms.  
+- Portability: MPI program is able to run on different platforms that support the MPI standard without changing your source codes.
+- Performance: Because of its parallel features, programmers are able to work on a much larger problem size with the faster computation.
+- Functionality: There are many functions defined in MPI Library for our usage.
+- Availability: A variety of implementations are available.
+
+****************************
+How do I write MPI program ?
+****************************
+
+In order to get the MPI library working, you need to include the header file #include <mpi.h> or #include “mpi.h” in your C code.
+
+MPI Program Structure:
+**********************
+
+Like other programming languages you have seen, program that includes MPI library has its structure. The structure is shown in the figure below:
+
+.. image:: images/MPIstructure.png
+	:width: 300px
+	:align: center
+	:height: 400px
+	:alt: MPI Structure
+
+Figure 1: MPI program structure
+
+A MPI program is basically a C program with extending MPI library, SO DON’T BE SCARED. The program has two different parts, one is serial, and the other is parallel. Serial part contains variable declarations etc., and the parallel part will be working on each node such as master splitting the task, and each node will be working on each task, and sending back result to master node.
+
+Communicators are sets of processes for which the source or destination fields are valid. The predefined communicator is MPI_COMM_WORLD, and we will be using this default communicator all the time in this module. MPI_COMM_WORLD is a default communicator consisting all processes. Furthermore, a programmer can also define a new communicator, but we will not touch on that.
+
+Figure 2:
+
+Processes: For this scope of knowledge, we just need to know that processes belong to the MPI_COMM_WORLD. If there are p processes, then each process is defined by its rank, which starts from 0 to p - 1. The master has the rank 0.	
+
+Some Common Functions:
+**********************
+
+The following functions are the functions that are commonly used in MPI programs:
+
+- MPI_Init(&argc, &argv)
+This function has to be called in every MPI program. It is used to initialize the MPI execution environment.
+
+- MPI_Comm_size(comm, &size)
+This function determines the number of processes in the communicator. MPI_COMM_WORLD is commonly used as the communicator. The number of processes get store in the variable size. The size is the same for all processes.
+
+- MPI_Comm_rank(comm, &rank)
+This function determines the rank of the calling process within the communicator. Each process is assigned uniquely by integer rank from 0 to number of processes - 1, and its rank gets stored in the variable rank. 
+
+- MPI_Get_processor_name(name, &len)
+This function returns the unique processor name. Variable name is the array of char of at least the MPI_MAX_PROCESSOR_NAME, and len is the length of the name.
+
+- MPI_Wtime()
+This function returns an elapsed wall clock time in seconds (double precision) on the calling processor.
+
+- MPI_Finalize()
+This function terminates the MPI execution environment. All processes must call this routine before exiting.
+
+Example 1: Hello World MPI
+--------------------------
+.. highlight:: c
+
+.. literalinclude:: hellompi.c
+	:linenos:
+
+	
