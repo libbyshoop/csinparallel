@@ -176,6 +176,9 @@ htmlhelp_basename = 'ProgrammingwithMultipleCoresdoc'
 # -- Options for LaTeX output --------------------------------------------------
 
 latex_elements = {
+
+'releasename': '', 'classoptions': ',openany,oneside', 'babel' : '\\usepackage[english]{babel}'
+
 # The paper size ('letterpaper' or 'a4paper').
 #'papersize': 'letterpaper',
 
@@ -190,7 +193,7 @@ latex_elements = {
 # (source start file, target name, title, author, documentclass [howto/manual]).
 latex_documents = [
   ('index', 'ProgrammingwithMultipleCores.tex', u'Programming with Multiple Cores',
-   u'Richard Brown and Libby Shoop', 'manual'),
+   u'CSInParallel Project', 'manual'),
 ]
 
 # The name of an image file (relative to this directory) to place at the top of
@@ -220,7 +223,7 @@ latex_documents = [
 # (source start file, name, description, authors, manual section).
 man_pages = [
     ('index', 'programmingwithmultiplecores', u'Programming with Multiple Cores',
-     [u'Richard Brown and Libby Shoop'], 1)
+     [u'CSInParallel Project'], 1)
 ]
 
 # If true, show URL addresses after external links.
@@ -234,7 +237,7 @@ man_pages = [
 #  dir menu entry, description, category)
 texinfo_documents = [
   ('index', 'ProgrammingwithMultipleCores', u'Programming with Multiple Cores',
-   u'Richard Brown and Libby Shoop', 'ProgrammingwithMultipleCores', 'CSInParallel project.',
+   u'CSInParallel Project', 'ProgrammingwithMultipleCores', 'CSInParallel project.',
    'Miscellaneous'),
 ]
 
