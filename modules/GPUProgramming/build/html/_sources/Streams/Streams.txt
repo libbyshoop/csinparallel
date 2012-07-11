@@ -2,6 +2,19 @@
 Streams
 *******
 
+Acknowledgement
+###############
+
+The examples used in this chapter are based on examples in `CUDA BY EXAMPLE: An Introduction to General-Purpose GPU Programming`_, written by Jason Sanders and Edward Kandrot, and published by Addison Wesley.
+
+Copyright 1993-2010 NVIDIA Corporation.  All rights reserved. 
+
+This copy of code is a derivative based on the original code and designed for educational purposes only. It contains source code provided by `NVIDIA Corporation`_.
+
+.. _`CUDA BY EXAMPLE: An Introduction to General-Purpose GPU Programming`: http://developer.nvidia.com/content/cuda-example-introduction-general-purpose-gpu-programming-0
+
+.. _NVIDIA Corporation: http://www.nvidia.com
+
 Virtual Memory and Paging
 #########################
 

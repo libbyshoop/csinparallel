@@ -53,6 +53,12 @@
             
   <div class="section" id="thread-advance">
 <h1>Thread Advance<a class="headerlink" href="#thread-advance" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="acknowledgement">
+<h2>Acknowledgement<a class="headerlink" href="#acknowledgement" title="Permalink to this headline">¶</a></h2>
+<p>The examples used in this chapter are based on examples in <a class="reference external" href="http://developer.nvidia.com/content/cuda-example-introduction-general-purpose-gpu-programming-0">CUDA BY EXAMPLE: An Introduction to General-Purpose GPU Programming</a>, written by Jason Sanders and Edward Kandrot, and published by Addison Wesley.</p>
+<p>Copyright 1993-2010 NVIDIA Corporation.  All rights reserved.</p>
+<p>This copy of code is a derivative based on the original code and designed for educational purposes only. It contains source code provided by <a class="reference external" href="http://www.nvidia.com">NVIDIA Corporation</a>.</p>
+</div>
 <div class="section" id="vector-dot-product">
 <h2>Vector Dot Product<a class="headerlink" href="#vector-dot-product" title="Permalink to this headline">¶</a></h2>
 <p>In this example we will see how to perform a dot product using GPU computation. We know that the result of vector addition is a vector, but the result of vector dot product is a number. However, we can divide the vector dot product process into two steps. We first use CUDA to the multiplication process. After this step, the device will return a vector with all its elements as multiplication results to the host code. Then the CPU can do all the adding up process.</p>
@@ -291,6 +297,7 @@ When we are using shared memory to facilitate communication and collaboration be
   <h3><a href="../index.html">Table Of Contents</a></h3>
   <ul>
 <li><a class="reference internal" href="#">Thread Advance</a><ul>
+<li><a class="reference internal" href="#acknowledgement">Acknowledgement</a></li>
 <li><a class="reference internal" href="#vector-dot-product">Vector Dot Product</a><ul>
 <li><a class="reference internal" href="#the-device-code">The Device Code</a></li>
 <li><a class="reference internal" href="#the-host-code">The Host Code</a></li>

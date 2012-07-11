@@ -4,10 +4,23 @@ CUDA Intro
 
 Before you proceed to the next example, please download the following files and place them outside of your source code folder.
 
+Acknowledgement
+###############
+
+The examples used in this chapter are based on examples in `CUDA BY EXAMPLE: An Introduction to General-Purpose GPU Programming`_, written by Jason Sanders and Edward Kandrot, and published by Addison Wesley.
+
+Copyright 1993-2010 NVIDIA Corporation.  All rights reserved. 
+
+This copy of code is a derivative based on the original code and designed for educational purposes only. It contains source code provided by `NVIDIA Corporation`_.
+
+.. _`CUDA BY EXAMPLE: An Introduction to General-Purpose GPU Programming`: http://developer.nvidia.com/content/cuda-example-introduction-general-purpose-gpu-programming-0
+
+.. _NVIDIA Corporation: http://www.nvidia.com
+
 An Example of Vector Addition
 #############################
 
-We will start our CUDA journy by learning a very simple example, the vector addition example. What this program does is basically take two vectors that have same dimensions, add them together and then return it back. 
+We will start our CUDA journey by learning a very simple example, the vector addition example. What this program does is basically take two vectors that have same dimensions, add them together and then return it back. 
 
 Vector Addition source file:
 :download:`VA-GPU-11.cu <VA-GPU-11.cu>`

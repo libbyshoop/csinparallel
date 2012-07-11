@@ -2,6 +2,19 @@
 CUDA in Two-dimension
 *********************
 
+Acknowledgement
+###############
+
+The examples used in this chapter are based on examples in `Programming Massively Parallel Processors: A Hands-on Approach`_, written by David B. Kirk and Wen-mei W. Hwu, and published by Morgan Kaufmann publishers.
+
+Copyright 2010 David B. Kirk/`NVIDIA Corporation`_ and Wen-mei Hwu. Published by Elsevier Inc.  All rights reserved. 
+
+This copy of code is a derivative based on the original code and designed for educational purposes only. It contains source code provided by the book above.
+
+.. _`Programming Massively Parallel Processors: A Hands-on Approach`: http://www.elsevierdirect.com/morgan_kaufmann/kirk/
+
+.. _NVIDIA Corporation: http://www.nvidia.com
+
 An Example of Matrix Multiplication
 ###################################
 
@@ -16,7 +29,7 @@ Performance
 We conducted 5 tests and the results are below.
  * 1. 41045.35 ms
  * 2. 40277.44 ms
- * 3. 40369.30 ms
+ * 3. 40369.30 ms`Programming Massively Parallel Processors: A Hands-on Approach`_
  * 4. 40385.85 ms
  * 5. 40446.14 ms
  * Average: 40504.82 ms
@@ -93,11 +106,14 @@ The nVidia `Tesla C2075`_ companion processor supports 144 gigabytes per second 
 
 To address this problem, CUDA architecture designed several types of memory that could potentially speed up the data loading process. We will see how use them in later examples. For now, we first need to know specifications of different memory types.
 
-.. image:: MT.png
+.. figure:: MT.png
     :width: 640px
     :align: center
     :height: 367px
-    :alt: alternate text 
+    :alt: alternate text
+    :figclass: align-center
+     
+    This figure is from the website http://www.elsevierdirect.com/v2/companion.jsp?ISBN=9780123814722, originally found in the book `Programming Massively Parallel Processors: A Hands-on Approach`_. 
 
 There are in total 4 types of memory designed for GPU cards with CUDA architecture. Global memory, located in the gird, has large storage capacity but limited speed, and can be read and write from all the blocks within CUDA system. Shared memory, located in each block, has small storage capacity (16KB per block) but fast accessing speed, can be read and write by all the threads within the located block. Constant memory, also located in the grid, has very small storage capacity (64KB per GPU) but very fast accessing speed, and can read (can't write) from any threads. There is also local memory located in each thread.
 
@@ -135,11 +151,14 @@ Upon this point, it may occur to you that shared memory is the ideal candidate f
 
 In the previous example, we assigned *Width x Width* many of threads for the computation where each thread will read one row of input matrix M and one column of input matrix N and computes the corresponding element in output matrix P. Although we use multiple blocks in a grid and multiple threads in a block, we don't see how threads are cooperating in the previous example. If we are allowed to assign infinite number of threads in one block, we can use just one block for the previous example. In this example, however, we will instruct all threads within one block to cooperate.
 
-.. image:: MMSM1.png
+.. figure:: MMSM1.png
     :width: 338px
     :align: center
     :height: 336px
     :alt: alternate text
+    :figclass: align-center
+     
+    This figure is from the website http://www.elsevierdirect.com/v2/companion.jsp?ISBN=9780123814722, originally found in the book `Programming Massively Parallel Processors: A Hands-on Approach`_. 
 
 In order to make the problem easier, we use two 4x4 matrices for illustration. We set the size of block as 2x2, which in total has 4 threads. Therefore, the output matrix will have 4 blocks. As shown in the **graph** above, each element of the output matrix is marked by Pd(x,y) where x is the column number and y is the row number. Lets take a look at the block which has element Pd(0,0),Pd(1,0),Pd(0,1) and Pd(1,1). 
 
@@ -149,11 +168,13 @@ The solution is simple. All threads within a block can first collaborate togethe
 
 Then we can load more data from global memory to shared memory. This time, however, we cannot have each thread in the block load corresponding elements in input matrices. In our example, thread(0,0) loads Md(2,0) and Nd(0,2); thread(1,0) loads Md(3,0) and Nd(1,2); thread(0,1) loads Md(2,1) and Nd(0,3); finally threads(1,1) loads Md(3,1) and Nd(1,3). We can use this data for further computations. By the time we finished loading all the data to the shared memory from global memory, all the threads would have final results in the running sums. This way, we can use shared memory to increase the speed but not suffer from the limited storage capacity.
 
-.. image:: MMSM2.png
+.. figure:: MMSM2.png
     :width: 537px
     :align: center
     :height: 330px
-    :alt: alternate text
+    :figclass: align-center
+     
+    This figure is from the website http://www.elsevierdirect.com/v2/companion.jsp?ISBN=9780123814722, originally found in the book `Programming Massively Parallel Processors: A Hands-on Approach`_. 
 
 We call each data loading and computing process a phase. Therefore, in the previous example, we went through 2 phases before we have our final results. It is not hard to find out that by using shared memory, we can reduce the number if times of accessing global memory from *Width* times for every column or row to *Width/blockDim* times. 
 1756.50
@@ -176,7 +197,22 @@ If you are careful enough, you may see that I used a variable called **blockD**.
 
 There are two thing you need to pay attention when defining this variable. First is that you should not assign this variable with a number that is too big. This variable is used to define the dimension of each block. The reason we are using block is to reduce the size of data transfer between global memory and shared memory every time. If you assign too big a number to it, you are risking running out of share memory. 
 
-Another thing is that some of you might wonder why we are using blockD to represent block dimension instead of using blockDim. Well, blockDim is a built-in function used by CUDA C, you can define blockDim as a constant in here, but the built-in function will fail if you call it since you define a function equals a constant. The point I am trying to make here is that be very careful when you are choosing your variable names. CUDA C, different from standard C, has more built-in functions and you might bump into one or two while you are naming variables.
+Another thing is that some of you might wonder why we are using *blockD* to represent block dimension instead of using blockDim. Well, blockDim is a built-in function used by CUDA C, you can define blockDim as a constant in here, but the built-in function will fail if you call it since you define a function equals a constant. The point I am trying to make here is that be very careful when you are choosing your variable names. CUDA C, different from standard C, has more built-in functions and you might bump into one or two while you are naming variables.
+
+About blockDim and matrix dimension
+***********************************
+
+Another thing needs mentioning is that while choosing the value of *blockD*, it is crucial for you to reference the matrix dimension before you decide which number to assign to *blockD*. Different from the global memory version and CPU version, shared memory version requires threads within a block to work collaboratively to load part of the data to shared memory each time. This means matrix's dimension should be multiples of *blockD* so that threads in a block can load same amount of data each time. 
+
+Further, recall that in the device code, we have expression like
+
+.. literalinclude:: MM-GPU-SM.cu	
+    :language: c
+    :lines: 51
+
+where we have *Width* divided by *blockD*. If you pick *Width* that is not dividable by *blockD*, program will return weird thing because it expects a integer coming out of this line of code, instead of some floats.
+
+As this program is using 1024 as *Width*, we picked 32 as the *blockD* value. If you use 1000 instead if 1024 for *Width* and print out the result, you will see weird results. However, if you happen to have matrices with dimension of 1000, you should use 25 instead of 32 as the *blockD* value.
 
 The Host Code
 *************
