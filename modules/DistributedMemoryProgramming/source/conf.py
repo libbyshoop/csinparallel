@@ -41,7 +41,7 @@ master_doc = 'index'
 
 # General information about the project.
 project = u'MPI and Hybrid MPI_CUDA'
-copyright = u'2012, Sophors Khut'
+copyright = u'This work is licensed under a Creative Commons Attribution-ShareAlike 3.0 Unported License'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
@@ -110,7 +110,7 @@ html_title = 'Distributed Memory Programming'
 
 # The name of an image file (relative to this directory) to place at the top
 # of the sidebar.
-#html_logo = None
+html_logo = '../../../images/CSInParallel200wide.png'
 
 # The name of an image file (within the static path) to use as favicon of the
 # docs.  This file should be a Windows icon file (.ico) being 16x16 or 32x32
@@ -170,6 +170,9 @@ htmlhelp_basename = 'MPIandHybridMPI_CUDAdoc'
 # -- Options for LaTeX output --------------------------------------------------
 
 latex_elements = {
+
+'releasename': '', 'classoptions': ',openany,oneside', 'babel' : '\\usepackage[english]{babel}'
+
 # The paper size ('letterpaper' or 'a4paper').
 #'papersize': 'letterpaper',
 
@@ -184,7 +187,7 @@ latex_elements = {
 # (source start file, target name, title, author, documentclass [howto/manual]).
 latex_documents = [
   ('index', 'MPIandHybridMPI_CUDA.tex', u'MPI and Hybrid MPI\\_CUDA Documentation',
-   u'Sophors Khut', 'manual'),
+   u'CSInParallel Project', 'manual'),
 ]
 
 # The name of an image file (relative to this directory) to place at the top of

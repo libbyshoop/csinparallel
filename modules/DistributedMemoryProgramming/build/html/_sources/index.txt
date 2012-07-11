@@ -6,8 +6,6 @@
 Distributed Memory Programming
 ==============================
 
-Contents:
-
 .. toctree::
    :maxdepth: 1
 
@@ -15,7 +13,6 @@ Contents:
    MPICommunication/MPICommunication
    CompileAndActivity/compileandactivity
    DecompositionAndActivity/DecompositionAndActivity
-
 
 
 .. comment out for now
