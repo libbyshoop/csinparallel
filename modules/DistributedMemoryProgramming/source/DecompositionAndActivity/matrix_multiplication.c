@@ -44,8 +44,8 @@ int main (int argc, char *argv[]) {
 
     /* Initializing MPI execution environment */
     MPI_Init(&argc,&argv);
-    MPI_Comm_rank(MPI_COMM_WORLD,&taskid);
-    MPI_Comm_size(MPI_COMM_WORLD,&numtasks);
+    MPI_Comm_rank(MPI_COMM_WORLD, &taskid);
+    MPI_Comm_size(MPI_COMM_WORLD, &numtasks);
 
     /* Need at least two processes, a master and a worker */
     if (numtasks < 2 ) {
@@ -152,6 +152,7 @@ int main (int argc, char *argv[]) {
         MPI_Send(&rows, 1, MPI_INT, MASTER, mtype, MPI_COMM_WORLD);
         MPI_Send(&c, rows*COLB, MPI_DOUBLE, MASTER, mtype, MPI_COMM_WORLD);
     }
+    /* Terminate MPI environment */
     MPI_Finalize();
 }
 

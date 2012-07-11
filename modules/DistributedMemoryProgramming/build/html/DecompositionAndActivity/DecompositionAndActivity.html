@@ -50,10 +50,10 @@
             
   <div class="section" id="decomposition-and-activities">
 <h1>Decomposition and Activities<a class="headerlink" href="#decomposition-and-activities" title="Permalink to this headline">¶</a></h1>
-<p>Decomposition is a very important aspect to optimize the performance of MPI. Decomposition is a way to divide up the task fairly; thus, each task can be distributed to each process. There are many ways to break up a task, and you should choose the way that the best suits your code. For instance, you might want to split your matrix by row, rather than by column if you want to compute matrix multiplication. You often will see this decomposition technique in your activities.</p>
+<p>Decomposition is a very important aspect to optimize the performance of parallel programmind models. Decomposition is a way to divide up the task fairly; thus, each task can be distributed to each process. There are many ways to break up a task, and you should choose the way that the best suits your code. For instance, you might want to split your matrix by row, rather than by column if you want to compute matrix multiplication. You often will see this decomposition technique in your activities.</p>
 <p><strong>Example 3</strong> : Decompose the matrix by row</p>
-<div class="highlight-c"><div class="highlight"><pre><span class="n">averow</span> <span class="o">=</span> <span class="n">ROW_A</span><span class="o">/</span><span class="n">numworkers</span><span class="p">;</span>
-<span class="n">extra</span> <span class="o">=</span> <span class="n">ROW_A</span><span class="o">%</span><span class="n">numworkers</span><span class="p">;</span>
+<div class="highlight-c"><div class="highlight"><pre><span class="n">averow</span> <span class="o">=</span> <span class="n">ROW</span><span class="o">/</span><span class="n">numworkers</span><span class="p">;</span>
+<span class="n">extra</span> <span class="o">=</span> <span class="n">ROW</span><span class="o">%</span><span class="n">numworkers</span><span class="p">;</span>
 <span class="n">offset</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
 <span class="n">mtype</span> <span class="o">=</span> <span class="n">FROM_MASTER</span><span class="p">;</span>
 
@@ -61,6 +61,14 @@
     <span class="n">rows</span> <span class="o">=</span> <span class="p">(</span><span class="n">dest</span> <span class="o">&lt;=</span> <span class="n">extra</span><span class="p">)</span> <span class="o">?</span> <span class="n">averow</span> <span class="o">+</span> <span class="mi">1</span> <span class="o">:</span> <span class="n">averow</span><span class="p">;</span>
     <span class="n">Then</span> <span class="n">send</span> <span class="n">to</span> <span class="n">each</span> <span class="n">worker</span> <span class="n">the</span> <span class="n">number</span> <span class="n">of</span> <span class="n">rows</span>
 </pre></div>
+</div>
+<p>In this example, ROW is the number of rows of matrix, so each process will get at least averow rows. The extra is
+the extra rows when ROW is not divisible by number of workers. In order to send each task to each worker, we need
+to iterate over the number of workers. Then if we have extra rows, we know that number of extra rows must be less
+than the number of workers, so we can give one more row to workers whose ranks are less than extra.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">rows = (dest &lt;= extra) ? averow + 1 : averow means if dest &lt;= extra, we say rows = averow + 1. Otherwise rows = averow.</p>
 </div>
 <div class="section" id="activity-3-vector-matrix-multiplication-improved-version">
 <h2>Activity 3: Vector Matrix Multiplication Improved Version<a class="headerlink" href="#activity-3-vector-matrix-multiplication-improved-version" title="Permalink to this headline">¶</a></h2>
@@ -71,6 +79,91 @@ the number of workers. Thus, we want to use the decomposition technique to help 
 the task fairly among each worker. Then, we can send each task to each worker via MPI_Send.
 After the workers having received their tasks, they will compute each task, and send their results
 back to master, and master will check if they are right.</p>
+<p>I will walk you through the code step by step. First, we will need to initialize the MPI execution
+environment. This should be straight forward to you because you have seen this many times already.</p>
+<div class="highlight-c"><div class="highlight"><pre>    <span class="cm">/* Initialize MPI execution environment */</span>
+<span class="n">MPI_Init</span><span class="p">(</span> <span class="o">&amp;</span><span class="n">argc</span><span class="p">,</span><span class="o">&amp;</span><span class="n">argv</span><span class="p">);</span>
+<span class="n">MPI_Comm_rank</span><span class="p">(</span> <span class="n">MPI_COMM_WORLD</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">rank</span><span class="p">);</span>
+<span class="n">MPI_Comm_size</span><span class="p">(</span> <span class="n">MPI_COMM_WORLD</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">nprocs</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>Then we want to initialize the vector and matrix in master node. This can be done by:</p>
+<div class="highlight-c"><div class="highlight"><pre>    <span class="k">if</span> <span class="p">(</span><span class="n">rank</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+<span class="cm">/* Initialize Matrix and Vector */</span>
+    <span class="k">for</span><span class="p">(</span><span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">WIDTH</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">vector</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+        <span class="k">for</span><span class="p">(</span><span class="n">j</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">j</span> <span class="o">&lt;</span> <span class="n">WIDTH</span><span class="p">;</span> <span class="n">j</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+            <span class="n">matrix</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Since we have seen that using the collective communication without decomposition is not the best way
+of doing this problem. Here is better way that will work for any number of processes. We will be using
+the decomposition technique above to split the task for each process. Then, we will be sending each process
+the number of rows (rows) of matrix, and send the vector to all processes. You are asked to complete this part
+of the code.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">You should use MPI_Send to send the starting rows, and number of rows, and part of matrix, and the vector to the processes whose ranks are less than number of workers. Moreover, when you send part of matrix, you should use MPI_Send(&amp;matrix[starting row][0], number of elements, ...). This will send the rows of matrix, which contain the number of elements.</p>
+</div>
+<div class="highlight-c"><div class="highlight"><pre><span class="n">averow</span> <span class="o">=</span> <span class="n">ROW</span><span class="o">/</span><span class="n">numworkers</span><span class="p">;</span>
+<span class="n">extra</span> <span class="o">=</span> <span class="n">ROW</span><span class="o">%</span><span class="n">numworkers</span><span class="p">;</span>
+<span class="n">offset</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+<span class="n">mtype</span> <span class="o">=</span> <span class="n">FROM_MASTER</span><span class="p">;</span>
+
+<span class="k">for</span> <span class="p">(</span><span class="n">dest</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span> <span class="n">dest</span> <span class="o">&lt;=</span> <span class="n">numworkers</span><span class="p">;</span> <span class="n">dest</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">rows</span> <span class="o">=</span> <span class="p">(</span><span class="n">dest</span> <span class="o">&lt;=</span> <span class="n">extra</span><span class="p">)</span> <span class="o">?</span> <span class="n">averow</span> <span class="o">+</span> <span class="mi">1</span> <span class="o">:</span> <span class="n">averow</span><span class="p">;</span>
+        <span class="c1">// TO DO</span>
+</pre></div>
+</div>
+<p>After having sent the messages to all workers, we need to ask the workers to receive what being sent from the master. We need to check if the process is not the master, we should set the receive function, MPI_Recv. You are asked complete this part.</p>
+<div class="highlight-c"><div class="highlight"><pre><span class="k">if</span> <span class="p">(</span><span class="n">rank</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+<span class="n">mtype</span> <span class="o">=</span> <span class="n">FROM_MASTER</span><span class="p">;</span>
+
+<span class="cm">/* Receive the task from master */</span>
+<span class="c1">// TO DO:</span>
+<span class="n">MPI_Recv</span><span class="p">(</span><span class="o">&amp;</span><span class="n">offset</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">MPI_INT</span><span class="p">,</span> <span class="n">MASTER</span><span class="p">,</span> <span class="n">mtype</span><span class="p">,</span> <span class="n">MPI_COMM_WORLD</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">status</span><span class="p">);</span>
+<span class="n">MPI_Recv</span><span class="p">(</span><span class="o">&amp;</span><span class="n">rows</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">MPI_INT</span><span class="p">,</span> <span class="n">MASTER</span><span class="p">,</span> <span class="n">mtype</span><span class="p">,</span> <span class="n">MPI_COMM_WORLD</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">status</span><span class="p">);</span>
+<span class="n">MPI_Recv</span><span class="p">(</span><span class="o">&amp;</span><span class="n">matrix</span><span class="p">,</span> <span class="n">rows</span><span class="o">*</span><span class="n">WIDTH</span><span class="p">,</span> <span class="n">MPI_INT</span><span class="p">,</span> <span class="n">MASTER</span><span class="p">,</span> <span class="n">mtype</span><span class="p">,</span> <span class="n">MPI_COMM_WORLD</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">status</span><span class="p">);</span>
+<span class="n">MPI_Recv</span><span class="p">(</span><span class="o">&amp;</span><span class="n">vector</span><span class="p">,</span> <span class="n">WIDTH</span><span class="p">,</span> <span class="n">MPI_INT</span><span class="p">,</span> <span class="n">MASTER</span><span class="p">,</span> <span class="n">mtype</span><span class="p">,</span> <span class="n">MPI_COMM_WORLD</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">status</span><span class="p">);</span>
+<span class="c1">// end TO DO</span>
+</pre></div>
+</div>
+<p>Then each worker will compute their part of calculation, and we need to send the result back to the master. You are asked to complete this part.</p>
+<div class="highlight-c"><div class="highlight"><pre><span class="cm">/* Each worker works on their computation */</span>
+<span class="k">for</span><span class="p">(</span><span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">rows</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">result</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="k">for</span><span class="p">(</span><span class="n">j</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">j</span> <span class="o">&lt;</span> <span class="n">WIDTH</span><span class="p">;</span> <span class="n">j</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">result</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">+=</span> <span class="n">matrix</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span> <span class="o">*</span> <span class="n">vector</span><span class="p">[</span><span class="n">j</span><span class="p">];</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="cm">/* send the result back to the master */</span>
+<span class="n">mtype</span> <span class="o">=</span> <span class="n">FROM_WORKER</span><span class="p">;</span>
+<span class="c1">// TO DO:</span>
+<span class="n">MPI_Send</span><span class="p">(</span><span class="o">&amp;</span><span class="n">offset</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">MPI_INT</span><span class="p">,</span> <span class="n">MASTER</span><span class="p">,</span> <span class="n">mtype</span><span class="p">,</span> <span class="n">MPI_COMM_WORLD</span><span class="p">);</span>
+<span class="n">MPI_Send</span><span class="p">(</span><span class="o">&amp;</span><span class="n">rows</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">MPI_INT</span><span class="p">,</span> <span class="n">MASTER</span><span class="p">,</span> <span class="n">mtype</span><span class="p">,</span> <span class="n">MPI_COMM_WORLD</span><span class="p">);</span>
+<span class="n">MPI_Send</span><span class="p">(</span><span class="o">&amp;</span><span class="n">result</span><span class="p">,</span> <span class="n">rows</span><span class="p">,</span> <span class="n">MPI_INT</span><span class="p">,</span> <span class="n">MASTER</span><span class="p">,</span> <span class="n">mtype</span><span class="p">,</span> <span class="n">MPI_COMM_WORLD</span><span class="p">);</span>
+<span class="c1">//end TO DO</span>
+</pre></div>
+</div>
+<p>The last part is you need to receive the results sent from worker in the master node. You are asked to complete this part.</p>
+<div class="highlight-c"><div class="highlight"><pre><span class="cm">/* Receiving the work from each worker */</span>
+<span class="n">mtype</span> <span class="o">=</span> <span class="n">FROM_WORKER</span><span class="p">;</span>
+<span class="c1">//TO DO:</span>
+<span class="k">for</span> <span class="p">(</span><span class="n">i</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;=</span> <span class="n">numworkers</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+     <span class="n">source</span> <span class="o">=</span> <span class="n">i</span><span class="p">;</span>
+     <span class="n">MPI_Recv</span><span class="p">(</span><span class="o">&amp;</span><span class="n">offset</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">MPI_INT</span><span class="p">,</span> <span class="n">source</span><span class="p">,</span><span class="n">mtype</span><span class="p">,</span> <span class="n">MPI_COMM_WORLD</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">status</span><span class="p">);</span>
+     <span class="n">MPI_Recv</span><span class="p">(</span><span class="o">&amp;</span><span class="n">rows</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">MPI_INT</span><span class="p">,</span> <span class="n">source</span><span class="p">,</span> <span class="n">mtype</span><span class="p">,</span> <span class="n">MPI_COMM_WORLD</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">status</span><span class="p">);</span>
+     <span class="n">MPI_Recv</span><span class="p">(</span><span class="o">&amp;</span><span class="n">result</span><span class="p">[</span><span class="n">offset</span><span class="p">],</span> <span class="n">rows</span><span class="p">,</span> <span class="n">MPI_INT</span><span class="p">,</span> <span class="n">source</span><span class="p">,</span> <span class="n">mtype</span><span class="p">,</span> <span class="n">MPI_COMM_WORLD</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">status</span><span class="p">);</span>
+     <span class="n">printf</span><span class="p">(</span><span class="s">&quot;Received results from task %d</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">source</span><span class="p">);</span>
+<span class="p">}</span>
+<span class="c1">//end TO DO</span>
+</pre></div>
+</div>
+<p>Below is the complete source code:</p>
 <div class="highlight-c"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>  1
   2
   3
@@ -181,13 +274,25 @@ back to master, and master will check if they are right.</p>
 108
 109
 110
-111</pre></div></td><td class="code"><div class="highlight"><pre><span class="cp">#include &quot;mpi.h&quot;</span>
+111
+112
+113
+114
+115
+116
+117
+118
+119
+120
+121
+122</pre></div></td><td class="code"><div class="highlight"><pre><span class="cp">#include &quot;mpi.h&quot;</span>
 <span class="cp">#include &lt;stdio.h&gt;</span>
 
 <span class="cp">#define WIDTH 10          </span><span class="cm">/* the size of vector */</span><span class="cp"></span>
 <span class="cp">#define FROM_MASTER 1     </span><span class="cm">/* message tag */</span><span class="cp"></span>
 <span class="cp">#define FROM_WORKER 2     </span><span class="cm">/* message tag */</span><span class="cp"></span>
 <span class="cp">#define ROW 10            </span><span class="cm">/* number of rows of matrix */</span><span class="cp"></span>
+<span class="cp">#define MASTER 0          </span><span class="cm">/* master has rank of 0 */</span><span class="cp"></span>
 
 <span class="kt">int</span> <span class="nf">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span> <span class="o">*</span><span class="n">argv</span><span class="p">[]</span> <span class="p">)</span> <span class="p">{</span>
 
@@ -210,7 +315,7 @@ back to master, and master will check if they are right.</p>
 
     <span class="n">MPI_Status</span> <span class="n">status</span><span class="p">;</span>          <span class="cm">/* status for receiving */</span>
 
-    <span class="cm">/* Initialize MPI */</span>
+    <span class="cm">/* Initialize MPI execution environment */</span>
     <span class="n">MPI_Init</span><span class="p">(</span> <span class="o">&amp;</span><span class="n">argc</span><span class="p">,</span><span class="o">&amp;</span><span class="n">argv</span><span class="p">);</span>
     <span class="n">MPI_Comm_rank</span><span class="p">(</span> <span class="n">MPI_COMM_WORLD</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">rank</span><span class="p">);</span>
     <span class="n">MPI_Comm_size</span><span class="p">(</span> <span class="n">MPI_COMM_WORLD</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">nprocs</span><span class="p">);</span>
@@ -226,8 +331,8 @@ back to master, and master will check if they are right.</p>
                 <span class="n">matrix</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
             <span class="p">}</span>
         <span class="p">}</span>
-
-        <span class="n">numworkers</span> <span class="o">=</span> <span class="n">nprocs</span> <span class="o">-</span> <span class="mi">1</span><span class="p">;</span>        <span class="cm">/* number of workers in the communicator MPI_COMM_WORLD */</span>
+         <span class="cm">/* number of workers in the communicator MPI_COMM_WORLD */</span>
+        <span class="n">numworkers</span> <span class="o">=</span> <span class="n">nprocs</span> <span class="o">-</span> <span class="mi">1</span><span class="p">;</span>       
 
         <span class="cm">/* decomposing the rows of matrix for each worker */</span>
         <span class="n">averow</span> <span class="o">=</span> <span class="n">ROW</span><span class="o">/</span><span class="n">numworkers</span><span class="p">;</span>
@@ -238,6 +343,8 @@ back to master, and master will check if they are right.</p>
         <span class="cm">/* sending each task to each worker, some workers will get more others</span>
 <span class="cm">         * if number of rows is not divisible by number of processes</span>
 <span class="cm">         */</span>
+
+         <span class="c1">// TO DO:</span>
         <span class="k">for</span><span class="p">(</span><span class="n">dest</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span> <span class="n">dest</span> <span class="o">&lt;=</span> <span class="n">numworkers</span><span class="p">;</span> <span class="n">dest</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
             <span class="n">rows</span> <span class="o">=</span> <span class="p">(</span><span class="n">dest</span> <span class="o">&lt;=</span> <span class="n">extra</span><span class="p">)</span> <span class="o">?</span> <span class="n">averow</span> <span class="o">+</span> <span class="mi">1</span> <span class="o">:</span> <span class="n">averow</span><span class="p">;</span>
             <span class="n">printf</span><span class="p">(</span><span class="s">&quot;Sending %d rows to task %d offset = %d</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">rows</span><span class="p">,</span> <span class="n">dest</span><span class="p">,</span> <span class="n">offset</span><span class="p">);</span>
@@ -247,9 +354,11 @@ back to master, and master will check if they are right.</p>
             <span class="n">MPI_Send</span><span class="p">(</span><span class="o">&amp;</span><span class="n">vector</span><span class="p">,</span> <span class="n">WIDTH</span><span class="p">,</span> <span class="n">MPI_INT</span><span class="p">,</span> <span class="n">dest</span><span class="p">,</span> <span class="n">mtype</span><span class="p">,</span> <span class="n">MPI_COMM_WORLD</span><span class="p">);</span>
             <span class="n">offset</span> <span class="o">+=</span> <span class="n">rows</span><span class="p">;</span>
         <span class="p">}</span>
+        <span class="c1">// end TO DO</span>
 
         <span class="cm">/* Receiving the work from each worker */</span>
         <span class="n">mtype</span> <span class="o">=</span> <span class="n">FROM_WORKER</span><span class="p">;</span>
+        <span class="c1">//TO DO:</span>
         <span class="k">for</span> <span class="p">(</span><span class="n">i</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;=</span> <span class="n">numworkers</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
              <span class="n">source</span> <span class="o">=</span> <span class="n">i</span><span class="p">;</span>
              <span class="n">MPI_Recv</span><span class="p">(</span><span class="o">&amp;</span><span class="n">offset</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">MPI_INT</span><span class="p">,</span> <span class="n">source</span><span class="p">,</span><span class="n">mtype</span><span class="p">,</span> <span class="n">MPI_COMM_WORLD</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">status</span><span class="p">);</span>
@@ -257,6 +366,8 @@ back to master, and master will check if they are right.</p>
              <span class="n">MPI_Recv</span><span class="p">(</span><span class="o">&amp;</span><span class="n">result</span><span class="p">[</span><span class="n">offset</span><span class="p">],</span> <span class="n">rows</span><span class="p">,</span> <span class="n">MPI_INT</span><span class="p">,</span> <span class="n">source</span><span class="p">,</span> <span class="n">mtype</span><span class="p">,</span> <span class="n">MPI_COMM_WORLD</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">status</span><span class="p">);</span>
              <span class="n">printf</span><span class="p">(</span><span class="s">&quot;Received results from task %d</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">source</span><span class="p">);</span>
         <span class="p">}</span>
+        <span class="c1">//end TO DO</span>
+
         <span class="cm">/* Printing results */</span>
         <span class="k">for</span> <span class="p">(</span><span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">WIDTH</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
             <span class="n">printf</span><span class="p">(</span><span class="s">&quot;%d</span><span class="se">\n</span><span class="s"> &quot;</span><span class="p">,</span> <span class="n">result</span><span class="p">[</span><span class="n">i</span><span class="p">]);</span>
@@ -268,10 +379,12 @@ back to master, and master will check if they are right.</p>
         <span class="n">mtype</span> <span class="o">=</span> <span class="n">FROM_MASTER</span><span class="p">;</span>
 
         <span class="cm">/* Receive the task from master */</span>
-        <span class="n">MPI_Recv</span><span class="p">(</span><span class="o">&amp;</span><span class="n">offset</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">MPI_INT</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">mtype</span><span class="p">,</span> <span class="n">MPI_COMM_WORLD</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">status</span><span class="p">);</span>
-        <span class="n">MPI_Recv</span><span class="p">(</span><span class="o">&amp;</span><span class="n">rows</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">MPI_INT</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">mtype</span><span class="p">,</span> <span class="n">MPI_COMM_WORLD</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">status</span><span class="p">);</span>
-        <span class="n">MPI_Recv</span><span class="p">(</span><span class="o">&amp;</span><span class="n">matrix</span><span class="p">,</span> <span class="n">rows</span><span class="o">*</span><span class="n">WIDTH</span><span class="p">,</span> <span class="n">MPI_INT</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">mtype</span><span class="p">,</span> <span class="n">MPI_COMM_WORLD</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">status</span><span class="p">);</span>
-        <span class="n">MPI_Recv</span><span class="p">(</span><span class="o">&amp;</span><span class="n">vector</span><span class="p">,</span> <span class="n">WIDTH</span><span class="p">,</span> <span class="n">MPI_INT</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">mtype</span><span class="p">,</span> <span class="n">MPI_COMM_WORLD</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">status</span><span class="p">);</span>
+        <span class="c1">// TO DO:</span>
+        <span class="n">MPI_Recv</span><span class="p">(</span><span class="o">&amp;</span><span class="n">offset</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">MPI_INT</span><span class="p">,</span> <span class="n">MASTER</span><span class="p">,</span> <span class="n">mtype</span><span class="p">,</span> <span class="n">MPI_COMM_WORLD</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">status</span><span class="p">);</span>
+        <span class="n">MPI_Recv</span><span class="p">(</span><span class="o">&amp;</span><span class="n">rows</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">MPI_INT</span><span class="p">,</span> <span class="n">MASTER</span><span class="p">,</span> <span class="n">mtype</span><span class="p">,</span> <span class="n">MPI_COMM_WORLD</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">status</span><span class="p">);</span>
+        <span class="n">MPI_Recv</span><span class="p">(</span><span class="o">&amp;</span><span class="n">matrix</span><span class="p">,</span> <span class="n">rows</span><span class="o">*</span><span class="n">WIDTH</span><span class="p">,</span> <span class="n">MPI_INT</span><span class="p">,</span> <span class="n">MASTER</span><span class="p">,</span> <span class="n">mtype</span><span class="p">,</span> <span class="n">MPI_COMM_WORLD</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">status</span><span class="p">);</span>
+        <span class="n">MPI_Recv</span><span class="p">(</span><span class="o">&amp;</span><span class="n">vector</span><span class="p">,</span> <span class="n">WIDTH</span><span class="p">,</span> <span class="n">MPI_INT</span><span class="p">,</span> <span class="n">MASTER</span><span class="p">,</span> <span class="n">mtype</span><span class="p">,</span> <span class="n">MPI_COMM_WORLD</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">status</span><span class="p">);</span>
+        <span class="c1">// end TO DO</span>
 
         <span class="cm">/* Each worker works on their computation */</span>
         <span class="k">for</span><span class="p">(</span><span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">rows</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
@@ -283,9 +396,11 @@ back to master, and master will check if they are right.</p>
 
         <span class="cm">/* send the result back to the master */</span>
         <span class="n">mtype</span> <span class="o">=</span> <span class="n">FROM_WORKER</span><span class="p">;</span>
-        <span class="n">MPI_Send</span><span class="p">(</span><span class="o">&amp;</span><span class="n">offset</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">MPI_INT</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">mtype</span><span class="p">,</span> <span class="n">MPI_COMM_WORLD</span><span class="p">);</span>
-        <span class="n">MPI_Send</span><span class="p">(</span><span class="o">&amp;</span><span class="n">rows</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">MPI_INT</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">mtype</span><span class="p">,</span> <span class="n">MPI_COMM_WORLD</span><span class="p">);</span>
-        <span class="n">MPI_Send</span><span class="p">(</span><span class="o">&amp;</span><span class="n">result</span><span class="p">,</span> <span class="n">rows</span><span class="p">,</span> <span class="n">MPI_INT</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">mtype</span><span class="p">,</span> <span class="n">MPI_COMM_WORLD</span><span class="p">);</span>
+        <span class="c1">// TO DO:</span>
+        <span class="n">MPI_Send</span><span class="p">(</span><span class="o">&amp;</span><span class="n">offset</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">MPI_INT</span><span class="p">,</span> <span class="n">MASTER</span><span class="p">,</span> <span class="n">mtype</span><span class="p">,</span> <span class="n">MPI_COMM_WORLD</span><span class="p">);</span>
+        <span class="n">MPI_Send</span><span class="p">(</span><span class="o">&amp;</span><span class="n">rows</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">MPI_INT</span><span class="p">,</span> <span class="n">MASTER</span><span class="p">,</span> <span class="n">mtype</span><span class="p">,</span> <span class="n">MPI_COMM_WORLD</span><span class="p">);</span>
+        <span class="n">MPI_Send</span><span class="p">(</span><span class="o">&amp;</span><span class="n">result</span><span class="p">,</span> <span class="n">rows</span><span class="p">,</span> <span class="n">MPI_INT</span><span class="p">,</span> <span class="n">MASTER</span><span class="p">,</span> <span class="n">mtype</span><span class="p">,</span> <span class="n">MPI_COMM_WORLD</span><span class="p">);</span>
+        <span class="c1">//end TO DO</span>
     <span class="p">}</span>
 
     <span class="cm">/* Terminate the MPI execution environment */</span>
@@ -298,7 +413,7 @@ back to master, and master will check if they are right.</p>
 <div class="section" id="activity-4-matrix-multiplication">
 <h2>Activity 4: Matrix Multiplication<a class="headerlink" href="#activity-4-matrix-multiplication" title="Permalink to this headline">¶</a></h2>
 <p>In this activity, we want you to use the techniques you have since in the previous activities to
-complete the matrix multiplication program.</p>
+complete the matrix multiplication program. Please fill your code at TO DO.</p>
 <div class="highlight-c"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>  1
   2
   3
@@ -454,7 +569,8 @@ complete the matrix multiplication program.</p>
 153
 154
 155
-156</pre></div></td><td class="code"><div class="highlight"><pre><span class="cm">/******************************************************************************</span>
+156
+157</pre></div></td><td class="code"><div class="highlight"><pre><span class="cm">/******************************************************************************</span>
 <span class="cm">* FILE: mpi_mm.c</span>
 <span class="cm">* DESCRIPTION:</span>
 <span class="cm">*   MPI Matrix Multiply - C Version</span>
@@ -500,8 +616,8 @@ complete the matrix multiplication program.</p>
 
     <span class="cm">/* Initializing MPI execution environment */</span>
     <span class="n">MPI_Init</span><span class="p">(</span><span class="o">&amp;</span><span class="n">argc</span><span class="p">,</span><span class="o">&amp;</span><span class="n">argv</span><span class="p">);</span>
-    <span class="n">MPI_Comm_rank</span><span class="p">(</span><span class="n">MPI_COMM_WORLD</span><span class="p">,</span><span class="o">&amp;</span><span class="n">taskid</span><span class="p">);</span>
-    <span class="n">MPI_Comm_size</span><span class="p">(</span><span class="n">MPI_COMM_WORLD</span><span class="p">,</span><span class="o">&amp;</span><span class="n">numtasks</span><span class="p">);</span>
+    <span class="n">MPI_Comm_rank</span><span class="p">(</span><span class="n">MPI_COMM_WORLD</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">taskid</span><span class="p">);</span>
+    <span class="n">MPI_Comm_size</span><span class="p">(</span><span class="n">MPI_COMM_WORLD</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">numtasks</span><span class="p">);</span>
 
     <span class="cm">/* Need at least two processes, a master and a worker */</span>
     <span class="k">if</span> <span class="p">(</span><span class="n">numtasks</span> <span class="o">&lt;</span> <span class="mi">2</span> <span class="p">)</span> <span class="p">{</span>
@@ -608,6 +724,7 @@ complete the matrix multiplication program.</p>
         <span class="n">MPI_Send</span><span class="p">(</span><span class="o">&amp;</span><span class="n">rows</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">MPI_INT</span><span class="p">,</span> <span class="n">MASTER</span><span class="p">,</span> <span class="n">mtype</span><span class="p">,</span> <span class="n">MPI_COMM_WORLD</span><span class="p">);</span>
         <span class="n">MPI_Send</span><span class="p">(</span><span class="o">&amp;</span><span class="n">c</span><span class="p">,</span> <span class="n">rows</span><span class="o">*</span><span class="n">COLB</span><span class="p">,</span> <span class="n">MPI_DOUBLE</span><span class="p">,</span> <span class="n">MASTER</span><span class="p">,</span> <span class="n">mtype</span><span class="p">,</span> <span class="n">MPI_COMM_WORLD</span><span class="p">);</span>
     <span class="p">}</span>
+    <span class="cm">/* Terminate MPI environment */</span>
     <span class="n">MPI_Finalize</span><span class="p">();</span>
 <span class="p">}</span>
 </pre></div>
