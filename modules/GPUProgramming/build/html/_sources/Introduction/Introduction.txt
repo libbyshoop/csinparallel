@@ -20,16 +20,21 @@ The major difference between GPU and CPU is that GPU has highly parallel structu
 
 The reason behind the difference of computation capability between CPU and GPU is that GPU is specialized for compute-intensive and highly parallel computation, which is exactly what you need to render graphics. The design of GPU is more of data processing than data caching and flow control. If a problem can be processed in parallel, it usually means that: first, same problem is executed for each element, which requires less sophisticated flow control; second, dataset is massive and problem has high arithmetic intensity, which reduces the need for low latency memory.
 
-.. image:: CPUGPU.png
+.. figure:: CPUGPU.png
     :width: 620px
     :align: center
     :height: 230px
     :alt: alternate text
+    :figclass: align-center
+     
+    This figure is from the `NVIDIA CUDA Programming Guide`_
 
-The graph above shows the different between CPU and GPU in their structure. **Cache** is designed for data caching; **Control** is designed for flow control; ALU (Arithmetic Logic Unit) is designed for data processing.
+The graph above shows the different between CPU and GPU in their structure. **Cache** is designed for data caching; **Control** is designed for flow control; **ALU** (Arithmetic Logic Unit) is designed for data processing.
 
 In the NVISION 08 Conference organized by NVIDIA corporation, employers from NVIDIA used a rather interesting yet straight forward example illustrating the difference between CPU and GPU. You can watch the video by clicking the link below and hope it can give you a better idea what the difference between GPU and CPU is.
 `Video <http://www.NVIDIA.com/object/nvision08_gpu_v_cpu.html>`_
+
+.. _NVIDIA CUDA Programming Guide: http://developer.download.nvidia.com/compute/DevZone/docs/html/C/doc/CUDA_C_Programming_Guide.pdf
 
 What is the advantage of using GPU for computation?
 ###################################################
@@ -46,11 +51,14 @@ What are the important parts inside a GPU?
 
 Although modern GPU are basically computers themselves, they still serve as a part of computer system. A modern GPU is connected with the host through high speed I/O bus slot, usually a PCI-Express slot. Modern GPUs are extremely energy consuming. Some of the GPUs alone consumes hundreds watts of power, sometimes higher than all other parts of the computer system combined. Part of the reason is that GPU is much complex  structure and can perform much sophisticated task than other parts of computer system. Owe to its high capability, GPU needs its own memory, control chipset as well as many processors. 
 
-.. image:: CUDA.png
+.. figure:: CUDA.png
     :width: 874px
     :align: center
     :height: 478px
     :alt: alternate text
+    :figclass: align-center
+     
+    This figure is inspired by the figure found in `Understanding the CUDA Data Parallel Threading Model: A Primer`_ written by Michael Wolfe from The Portland Group  
 
 GPUs these days usually equipped with several gigabytes of on-board memory for user configuration. GPUs designed for daily use like gaming and video rendering, such as NVIDIA's Geforce_ series GPUs and ATI/AMD's Radeon_ series GPUs, have on-board memory capacity ranging from several hundreds megabytes to several gigabytes. Professional GPUs designed for high-definition image processing and General Purpose Computation, such as the Tesla_ Companion Processor we are using, usually have memory up to 5 or 6 gigabytes. Data is transferred between the GPU on-board memory and host memory through a method called DMA (Direct Memory Access). One thing needs mentioning is that CUDA C programming language supports direct access of the host memory from GPU end under certain restrictions. As GPU is designed for compute intensive operations, device memory usually supports high data bandwidth with not deeply cached memory hierarchy.
 
@@ -61,6 +69,8 @@ Shared memory, or L1 cache, is a small data cache that can be configured through
 .. _Geforce: http://www.nvidia.com/object/geforce_family.html
 
 .. _Radeon: http://www.amd.com/us/products/desktop/graphics/pages/desktop-graphics.aspx
+
+.. _`Understanding the CUDA Data Parallel Threading Model: A Primer`: http://www.pgroup.com/lit/articles/insider/v2n1a5.htm
 
 How does CUDA connect with hardware?
 ####################################

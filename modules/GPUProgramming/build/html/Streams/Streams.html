@@ -49,6 +49,12 @@
             
   <div class="section" id="streams">
 <h1>Streams<a class="headerlink" href="#streams" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="acknowledgement">
+<h2>Acknowledgement<a class="headerlink" href="#acknowledgement" title="Permalink to this headline">¶</a></h2>
+<p>The examples used in this chapter are based on examples in <a class="reference external" href="http://developer.nvidia.com/content/cuda-example-introduction-general-purpose-gpu-programming-0">CUDA BY EXAMPLE: An Introduction to General-Purpose GPU Programming</a>, written by Jason Sanders and Edward Kandrot, and published by Addison Wesley.</p>
+<p>Copyright 1993-2010 NVIDIA Corporation.  All rights reserved.</p>
+<p>This copy of code is a derivative based on the original code and designed for educational purposes only. It contains source code provided by <a class="reference external" href="http://www.nvidia.com">NVIDIA Corporation</a>.</p>
+</div>
 <div class="section" id="virtual-memory-and-paging">
 <h2>Virtual Memory and Paging<a class="headerlink" href="#virtual-memory-and-paging" title="Permalink to this headline">¶</a></h2>
 <p>Before we entered the world of CUDA, we have learned something about virtual memory in computer systems. If you do not remember much, lets jog your memory a little bit. When you launch multiple programs in you computer, you are taking the risk of running out of memory. Although modern customer end computers usually have 4GB even more memory, it is still not enough for running many programs at the same time. Through virtual memory, or to be more specific, through the process of paging, a computer can store and retrieve data from secondary storage for use in main memory. Simply put, the operating system would transfer some of the data stored in memory that are not currently at use to secondary storage so that the system can free physical memory and proceed to other programs.</p>
@@ -76,6 +82,7 @@
   <h3><a href="../index.html">Table Of Contents</a></h3>
   <ul>
 <li><a class="reference internal" href="#">Streams</a><ul>
+<li><a class="reference internal" href="#acknowledgement">Acknowledgement</a></li>
 <li><a class="reference internal" href="#virtual-memory-and-paging">Virtual Memory and Paging</a></li>
 <li><a class="reference internal" href="#pageable-host-memory-and-page-locked-host-memory">Pageable Host Memory and Page-locked Host Memory</a><ul>
 <li><a class="reference internal" href="#the-cudahostalloc-function">The cudaHostAlloc() Function</a></li>

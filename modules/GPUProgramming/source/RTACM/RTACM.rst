@@ -2,6 +2,19 @@
 Ray Tracing and Constant Memory
 *******************************
 
+Acknowledgement
+###############
+
+The examples used in this chapter are based on examples in `CUDA BY EXAMPLE: An Introduction to General-Purpose GPU Programming`_, written by Jason Sanders and Edward Kandrot, and published by Addison Wesley.
+
+Copyright 1993-2010 NVIDIA Corporation.  All rights reserved. 
+
+This copy of code is a derivative based on the original code and designed for educational purposes only. It contains source code provided by `NVIDIA Corporation`_.
+
+.. _`CUDA BY EXAMPLE: An Introduction to General-Purpose GPU Programming`: http://developer.nvidia.com/content/cuda-example-introduction-general-purpose-gpu-programming-0
+
+.. _NVIDIA Corporation: http://www.nvidia.com
+
 Basics of Ray Tracing
 #####################
 
@@ -102,13 +115,14 @@ Host Code
 
 There is nothing worth mentioning about the host code. You first declare the data block and the variables. Then you allocate memory on both CPU and GPU for those variables. Then you can initialize some variables, the 20 spheres in this case on the CPU and then transfer them to the GPU memory. Later on you can call the kernel invocation code and let GPU finish the hard work. Finally, you transfer the bitmap back to CPU and display the bitmap.
 
-.. image:: RayTracing.png
+.. figure:: RayTracing.png
     :width: 500px
     :align: center
     :height: 500px
     :alt: alternate text
+    :figclass: align-center
 
-A screenshot from the ray tracing example
+    A screenshot from the ray tracing example
 
 Performance
 ***********

@@ -53,6 +53,12 @@
             
   <div class="section" id="ray-tracing-and-constant-memory">
 <h1>Ray Tracing and Constant Memory<a class="headerlink" href="#ray-tracing-and-constant-memory" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="acknowledgement">
+<h2>Acknowledgement<a class="headerlink" href="#acknowledgement" title="Permalink to this headline">¶</a></h2>
+<p>The examples used in this chapter are based on examples in <a class="reference external" href="http://developer.nvidia.com/content/cuda-example-introduction-general-purpose-gpu-programming-0">CUDA BY EXAMPLE: An Introduction to General-Purpose GPU Programming</a>, written by Jason Sanders and Edward Kandrot, and published by Addison Wesley.</p>
+<p>Copyright 1993-2010 NVIDIA Corporation.  All rights reserved.</p>
+<p>This copy of code is a derivative based on the original code and designed for educational purposes only. It contains source code provided by <a class="reference external" href="http://www.nvidia.com">NVIDIA Corporation</a>.</p>
+</div>
 <div class="section" id="basics-of-ray-tracing">
 <h2>Basics of Ray Tracing<a class="headerlink" href="#basics-of-ray-tracing" title="Permalink to this headline">¶</a></h2>
 <p>First of all, what is ray tracing. Well, ray tracing is how you reflect a scene consisting three-dimensional objects on a two dimensional image. This is similar to the games you play on your computer, except your games might use a different method. However, the basic idea behind is the same.</p>
@@ -248,8 +254,10 @@
 </pre></div>
 </div>
 <p>There is nothing worth mentioning about the host code. You first declare the data block and the variables. Then you allocate memory on both CPU and GPU for those variables. Then you can initialize some variables, the 20 spheres in this case on the CPU and then transfer them to the GPU memory. Later on you can call the kernel invocation code and let GPU finish the hard work. Finally, you transfer the bitmap back to CPU and display the bitmap.</p>
-<img alt="alternate text" class="align-center" src="../_images/RayTracing.png" style="width: 500px; height: 500px;" />
-<p>A screenshot from the ray tracing example</p>
+<div class="align-center figure align-center">
+<img alt="alternate text" src="../_images/RayTracing.png" style="width: 500px; height: 500px;" />
+<p class="caption">A screenshot from the ray tracing example</p>
+</div>
 </div>
 <div class="section" id="performance">
 <h3>Performance<a class="headerlink" href="#performance" title="Permalink to this headline">¶</a></h3>
@@ -355,6 +363,7 @@
   <h3><a href="../index.html">Table Of Contents</a></h3>
   <ul>
 <li><a class="reference internal" href="#">Ray Tracing and Constant Memory</a><ul>
+<li><a class="reference internal" href="#acknowledgement">Acknowledgement</a></li>
 <li><a class="reference internal" href="#basics-of-ray-tracing">Basics of Ray Tracing</a></li>
 <li><a class="reference internal" href="#notes-for-compile">Notes for Compile</a></li>
 <li><a class="reference internal" href="#ray-tracing-without-constant-memory">Ray Tracing Without Constant Memory</a><ul>

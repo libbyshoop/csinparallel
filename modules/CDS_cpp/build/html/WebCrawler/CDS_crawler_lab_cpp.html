@@ -1,0 +1,457 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Concurrent Data Structures in C++: Web crawler lab &mdash; Concurrent Data Structures in C++</title>
+    
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="top" title="Concurrent Data Structures in C++" href="../index.html" />
+    <link rel="next" title="Introduction to STL containers" href="../IntroSTLContainers/introduction_stl_containers.html" />
+    <link rel="prev" title="Concurrent Data Structures in C++" href="../index.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../IntroSTLContainers/introduction_stl_containers.html" title="Introduction to STL containers"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="../index.html" title="Concurrent Data Structures in C++"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../index.html">Concurrent Data Structures in C++</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="concurrent-data-structures-in-c-web-crawler-lab">
+<h1>Concurrent Data Structures in C++: Web crawler lab<a class="headerlink" href="#concurrent-data-structures-in-c-web-crawler-lab" title="Permalink to this headline">¶</a></h1>
+<p>In this lab you will complete some code provided to you that will &#8216;crawl&#8217; the web from a beginning page to a given depth by following every linked page and scraping it for more links to follow.  The links found on each page are kept in a data structure until they are processed.</p>
+<div class="section" id="your-goals">
+<h2>Your goals<a class="headerlink" href="#your-goals" title="Permalink to this headline">¶</a></h2>
+<p>The goals for this lab are:</p>
+<ul class="simple">
+<li>complete and test a web crawler application, which fetches web pages then visits the links contained in those web pages, using STL containers;</li>
+<li>experiment with an example of threads programming, a type of multicore parallel programming;</li>
+<li>to complete a correct multi-threaded web crawler application that uses threaded building block (TBB) containers.</li>
+</ul>
+</div>
+<div class="section" id="source-code">
+<h2>Source Code<a class="headerlink" href="#source-code" title="Permalink to this headline">¶</a></h2>
+<div class="topic">
+<p class="topic-title first">Still need</p>
+<p>The work on this lab requires a &#8220;tarball&#8221; named <tt class="docutils literal"><span class="pre">cds.tar.gz</span></tt>.</p>
+<p>Instructors, please contact us for the complete code.</p>
+</div>
+</div>
+<div class="section" id="packages-needed">
+<h2>Packages needed<a class="headerlink" href="#packages-needed" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li>C++ compiler</li>
+<li>Standard Template Library STL</li>
+<li>CURL library for web access</li>
+<li>Boost library, for threads and mutexes</li>
+<li>Intel&#8217;s Threading Building Blocks (TBB)</li>
+<li>Make program</li>
+</ul>
+</div>
+<div class="section" id="preparation">
+<h2>Preparation<a class="headerlink" href="#preparation" title="Permalink to this headline">¶</a></h2>
+<p>Copy the tarball into your directory on a multicore linux machine.  Then &#8216;unxip&#8217; and &#8216;untar&#8217; it like this:</p>
+<blockquote>
+<div><div class="highlight-python"><pre>% tar xfz cds.tar.gz</pre>
+</div>
+<p>This will create a directory <tt class="docutils literal"><span class="pre">cds</span></tt> that contains the code. Change
+to that directory.</p>
+<div class="highlight-python"><pre>% cd cds</pre>
+</div>
+</div></blockquote>
+</div>
+<div class="section" id="to-do">
+<h2>To Do<a class="headerlink" href="#to-do" title="Permalink to this headline">¶</a></h2>
+<ol class="arabic">
+<li><p class="first">The directory <tt class="docutils literal"><span class="pre">serial</span></tt> contains several subdirectories, and is
+organized in a structure suitable for a software project that is
+capable of growing very large.</p>
+<p>Examine the code for this program. Observe the following:</p>
+<ul class="simple">
+<li>The source files (<tt class="docutils literal"><span class="pre">.cpp</span></tt> implementation and driver modules) are
+contained in a subdirectory named <tt class="docutils literal"><span class="pre">src</span></tt>, and the header files
+(interface modules) are named with <tt class="docutils literal"><span class="pre">.hcc</span></tt> and are stored in a
+subdirectory named <tt class="docutils literal"><span class="pre">include</span></tt>.</li>
+<li>Some of the state variables in classes within <tt class="docutils literal"><span class="pre">serial</span></tt> are STL
+containers, as described in <a class="reference external" href="http://serc.carleton.edu/files/csinparallel/sigcse_demos/introduction_stl_containers.doc">a class
+handout</a>.</li>
+<li>Three classes are defined:<ul>
+<li><tt class="docutils literal"><span class="pre">spider</span></tt> is the main class, with methods for crawling from
+page to page and for processing each page, and state variables
+for recording the work to be done (i.e., web addresses or
+<em>URLs</em> of pages to visit), the finished work (URLs already
+processes), and a <tt class="docutils literal"><span class="pre">vector</span></tt> of <tt class="docutils literal"><span class="pre">page</span></tt> objects.</li>
+<li><tt class="docutils literal"><span class="pre">page</span></tt> contains state variables for the URL of a particular
+web page (as a <tt class="docutils literal"><span class="pre">string</span></tt>) and a <tt class="docutils literal"><span class="pre">vector</span></tt> of URLs found in
+that web page (which are candidates for future processing).
+<tt class="docutils literal"><span class="pre">page</span></tt> also contains a method for scanning a web page and
+filling that <tt class="docutils literal"><span class="pre">vector</span></tt> with URLs that are contained in that
+page.</li>
+<li><tt class="docutils literal"><span class="pre">raw_page</span></tt> has helper methods for fetching pages from the web
+and for delivering the HTML code from a fetched web page.</li>
+</ul>
+</li>
+<li>The main program is in the file <tt class="docutils literal"><span class="pre">spider_driver.cpp</span></tt>. It obtains
+two values from the command line, namely the starting URL to crawl
+from, and the maximum number of URLs to visit (which must be
+<em>parsed</em> from a string to an integer). Then, the program performs
+the crawl and prints results.</li>
+<li>The <tt class="docutils literal"><span class="pre">Makefile</span></tt> uses <tt class="docutils literal"><span class="pre">make</span></tt> variables to make it easier to
+change items such as compilation flags. Source files in the
+<tt class="docutils literal"><span class="pre">src</span></tt> subdirectory are compiled to produce object (<tt class="docutils literal"><span class="pre">.o</span></tt>) files
+in the <tt class="docutils literal"><span class="pre">build</span></tt> subdirectory, and those object files are linked
+to creat an executable named <tt class="docutils literal"><span class="pre">bin/spider</span></tt>.</li>
+</ul>
+<p><strong>DO THIS:</strong> Write down other observations or comments about the
+<tt class="docutils literal"><span class="pre">serial</span></tt> code. Feel free to include opinions you may have about the
+code or its organization.</p>
+</li>
+<li><p class="first">Comments in <tt class="docutils literal"><span class="pre">spider.cpp</span></tt> indicate that two parts of the code need
+to be filled in for the crawler program to work. Before actually
+fillin that code in, we will see if we can compile and run the code
+successfully.</p>
+<p>First, insert output statements in those two locations, to indicate
+whether those sections of the code are reached. One message might
+state &#8220;processing the page x&#8221; where x is the URL of the page being
+processed, and the other might state &#8220;crawling the page x&#8221;.</p>
+<p>Then <tt class="docutils literal"><span class="pre">cd</span></tt> to the <tt class="docutils literal"><span class="pre">serial</span></tt> directory, and issue a <tt class="docutils literal"><span class="pre">make</span></tt> command
+in that directory <tt class="docutils literal"><span class="pre">serial</span></tt>. This should compile the code and create
+an executable <tt class="docutils literal"><span class="pre">bin/spider</span></tt></p>
+</li>
+<li><p class="first">Now fill in the missing code for the <tt class="docutils literal"><span class="pre">spider::crawl()</span></tt> method.
+<em>Notes:</em></p>
+<ul>
+<li><p class="first">You will have to use appropriate methods for fetching a web page,
+processing that page, and adding that page to the finished
+<tt class="docutils literal"><span class="pre">queue</span></tt>, then adding 1 to the variable named <tt class="docutils literal"><span class="pre">processed</span></tt>.</p>
+<p><em>Note:</em> The method for fetching requires a C-style string
+(null-terminated array of characters) for its argument, but the
+URL you are crawling is stored in a <tt class="docutils literal"><span class="pre">string</span></tt> object. Use the
+online documentation for <tt class="docutils literal"><span class="pre">string</span></tt> to look for a method of
+<tt class="docutils literal"><span class="pre">string</span></tt> that returns a C-style string with the same characters
+as that <tt class="docutils literal"><span class="pre">string</span></tt> object.</p>
+</li>
+<li><p class="first">Do you get the expected output, given that <tt class="docutils literal"><span class="pre">spider::process()</span></tt>
+is still only printing a message?</p>
+</li>
+</ul>
+</li>
+<li><p class="first">Finally, complete the implementation of the <tt class="docutils literal"><span class="pre">spider::process()</span></tt>
+method, compile, and test. <em>Note:</em></p>
+<ul class="simple">
+<li>The method <tt class="docutils literal"><span class="pre">spider::is_image()</span></tt> currently always returns
+<tt class="docutils literal"><span class="pre">false</span></tt>. In a more sophisticated crawler, this method could
+examine file extensions in order to determine whether a URL is an
+image (no need to crawl) or not.</li>
+</ul>
+</li>
+<li><p class="first">Change directory to the <tt class="docutils literal"><span class="pre">cds/threads</span></tt> directory within your lab1
+directory.</p>
+<div class="highlight-python"><pre>% cd ~/lab1/cds/threads</pre>
+</div>
+</li>
+<li><p class="first">First, look at the sequential program <tt class="docutils literal"><span class="pre">primes.cpp</span></tt> in that
+directory. It computes a table of primes up to a maximum number, then
+counts the number of primes produced.</p>
+<p><tt class="docutils literal"><span class="pre">primes.cpp</span></tt> does <em>not</em> use threads, but is an ordinary program
+with multiple loops.</p>
+<p>Then, compile and run the program, using the Makefile provided
+(<tt class="docutils literal"><span class="pre">make</span> <span class="pre">primes</span></tt>). Feel free to experiment. <em>Note:</em> Be prepared to
+wait...</p>
+</li>
+<li><p class="first">Now, examine the multi-threaded program <tt class="docutils literal"><span class="pre">threads/primes2.cpp</span></tt>. This
+program uses the same algorithm for determining primes, but it
+divides the range 2..<tt class="docutils literal"><span class="pre">MAX</span></tt> up into <tt class="docutils literal"><span class="pre">threadct</span></tt> non-overlapping
+subranges or &#8220;chunks&#8221;, and has a separate <tt class="docutils literal"><span class="pre">boost</span></tt> thread determine
+the primes within each chunk. Observe the following:</p>
+<ul>
+<li><p class="first">The loop for determining primes from 2 to <tt class="docutils literal"><span class="pre">MAX</span></tt>, which was
+located in <tt class="docutils literal"><span class="pre">main()</span></tt> in the program <tt class="docutils literal"><span class="pre">primes.cpp</span></tt>, has been
+relocated to a separate function <tt class="docutils literal"><span class="pre">work()</span></tt>. That function has two
+arguments <tt class="docutils literal"><span class="pre">min</span></tt> and <tt class="docutils literal"><span class="pre">max</span></tt>, and the loop has been modified to
+check only the subrange <tt class="docutils literal"><span class="pre">min</span></tt>..<tt class="docutils literal"><span class="pre">max</span></tt> instead of the entire
+range 2..<tt class="docutils literal"><span class="pre">MAX</span></tt>.</p>
+<p>Each thread will execute <tt class="docutils literal"><span class="pre">work()</span></tt> as if it were a &#8220;main program&#8221;
+for that thread.</p>
+</li>
+<li><p class="first"><tt class="docutils literal"><span class="pre">pool</span></tt> is an array of pointers to <tt class="docutils literal"><span class="pre">boost</span></tt> threads.</p>
+</li>
+<li><p class="first">Each <tt class="docutils literal"><span class="pre">boost</span></tt> thread is initialized with a unique subrange of
+2..<tt class="docutils literal"><span class="pre">MAX</span></tt>. Threads other than the first and the last receive
+subranges of length <tt class="docutils literal"><span class="pre">segsize</span></tt>. The first and last subranges are
+treated specially, to insure that the complete computation covers
+exactly the range 2..<tt class="docutils literal"><span class="pre">MAX</span></tt>.</p>
+</li>
+<li><p class="first">To construct a <tt class="docutils literal"><span class="pre">boost</span></tt> thread running <tt class="docutils literal"><span class="pre">work()</span></tt> with arguments
+<tt class="docutils literal"><span class="pre">a</span></tt> and <tt class="docutils literal"><span class="pre">b</span></tt>, the following constructor call would be used:</p>
+<div class="highlight-python"><pre>thread(boost::bind(work, a, b))</pre>
+</div>
+</li>
+<li><p class="first">The call above constructs a thread, but that thread doesn&#8217;t begin
+executing until its <tt class="docutils literal"><span class="pre">join()</span></tt> method is called. Thus, there is a
+separate loop that calls <tt class="docutils literal"><span class="pre">join()</span></tt> for all the threads in the
+array <tt class="docutils literal"><span class="pre">pool</span></tt>, which starts up all the threads.</p>
+</li>
+</ul>
+</li>
+<li><p class="first">Now, compile and run the program <tt class="docutils literal"><span class="pre">threads/primes2.cpp</span></tt>, using the
+<tt class="docutils literal"><span class="pre">Makefile</span></tt> provided (<tt class="docutils literal"><span class="pre">make</span> <span class="pre">primes2</span></tt>). This program takes an
+optional positive integer argument, for the thread count (default is
+1 thread).</p>
+</li>
+<li><p class="first">You can time how long a program runs at the Linux or Macintosh
+command line by preceding the command with the word <tt class="docutils literal"><span class="pre">time</span></tt>. For
+example, the two commands</p>
+<div class="highlight-python"><pre>% time primes
+% time primes2 4</pre>
+</div>
+<p>will report the timing for running both the sequential <tt class="docutils literal"><span class="pre">primes</span></tt>
+program, and the multi-threaded <tt class="docutils literal"><span class="pre">primes2</span></tt> program with four
+threads.</p>
+<p>Perform time tests of these two programs, for at least one run of
+<tt class="docutils literal"><span class="pre">primes</span></tt>, one run of <tt class="docutils literal"><span class="pre">primes2</span></tt> with one thread, and one run of
+<tt class="docutils literal"><span class="pre">primes2</span></tt> with 4 threads. Feel free to experiment further.</p>
+</li>
+<li><p class="first">Examine the code for the program <tt class="docutils literal"><span class="pre">parallel</span></tt>. Observe the following:</p>
+<ul>
+<li><p class="first">The same four-directory structure is used as for the <tt class="docutils literal"><span class="pre">serial</span></tt>
+directory in the previous lab.</p>
+</li>
+<li><p class="first">The header files <tt class="docutils literal"><span class="pre">serial/include/page.hpp</span></tt> and
+<tt class="docutils literal"><span class="pre">parallel/include/page.hpp</span></tt> are identical. You can use the
+following <tt class="docutils literal"><span class="pre">diff</span></tt> command to verify this:</p>
+<div class="highlight-python"><pre>$ cd ~/SD/lab1
+$ diff serial/include/page.hpp parallel/include/page.hpp</pre>
+</div>
+<p>If the <tt class="docutils literal"><span class="pre">diff</span></tt> command finds any differences between its two file
+arguments, it will report those differences; if there are no
+differences, <tt class="docutils literal"><span class="pre">diff</span></tt> will print nothing.</p>
+</li>
+</ul>
+<p><strong>DO THIS:</strong> Use the <tt class="docutils literal"><span class="pre">diff</span></tt> command to compare <tt class="docutils literal"><span class="pre">raw_page.hpp</span></tt> and
+<tt class="docutils literal"><span class="pre">spider.hpp</span></tt> for these two versions <tt class="docutils literal"><span class="pre">serial</span></tt> and <tt class="docutils literal"><span class="pre">parallel</span></tt>.
+<em>Note:</em> The <tt class="docutils literal"><span class="pre">diff</span></tt> program will report differences by printing
+lines that appear differently in those files. Lines that appear only
+in the first file argument to <tt class="docutils literal"><span class="pre">diff</span></tt> will be prefixed by <tt class="docutils literal"><span class="pre">&lt;</span></tt>, and
+lines that appear only in the second file will be prefixed by <tt class="docutils literal"><span class="pre">&gt;</span></tt>.</p>
+<p>Here are differences between <tt class="docutils literal"><span class="pre">serial/include/spider.hpp</span></tt> and
+<tt class="docutils literal"><span class="pre">parallel/include/spider.hpp</span></tt>.</p>
+<ul>
+<li><p class="first">A different selection of <tt class="docutils literal"><span class="pre">#include</span></tt> directives appears in the
+two files. In particular,</p>
+<ul>
+<li><p class="first"><tt class="docutils literal"><span class="pre">serial/include/spider.hpp</span></tt> includes <tt class="docutils literal"><span class="pre">&lt;queue&gt;</span></tt>, for the STL
+queue container.</p>
+</li>
+<li><p class="first"><tt class="docutils literal"><span class="pre">parallel/include/spider.hpp</span></tt> includes three other files
+instead of <tt class="docutils literal"><span class="pre">&lt;queue&gt;</span></tt>. One refers to a new file
+<tt class="docutils literal"><span class="pre">atomic_counter.hpp</span></tt> that is part of this program (in the
+directory <tt class="docutils literal"><span class="pre">parallel/include</span></tt>). The others provide two <em>TBB
+containers</em>, named <tt class="docutils literal"><span class="pre">tbb::concurrent_queue</span></tt> and
+<tt class="docutils literal"><span class="pre">tbb::concurrent_vector</span></tt></p>
+<p>TBB stands for <em>Intel Threading Building Blocks</em>, which
+provides an alternative implementation of some common
+containers. TBB also provides various parallel algorithms, but
+we will not use those algorithm features in this lab.</p>
+</li>
+</ul>
+</li>
+<li><p class="first">The state variables <tt class="docutils literal"><span class="pre">m_work</span></tt>, <tt class="docutils literal"><span class="pre">m_finished</span></tt>, and <tt class="docutils literal"><span class="pre">m_pages</span></tt>
+use the TBB container types <tt class="docutils literal"><span class="pre">tbb::concurrent_queue</span></tt> or
+<tt class="docutils literal"><span class="pre">tbb::concurrent_vector</span></tt> instead of the STL containers
+<tt class="docutils literal"><span class="pre">std::queue</span></tt> and <tt class="docutils literal"><span class="pre">std::vector</span></tt>.</p>
+</li>
+<li><p class="first"><tt class="docutils literal"><span class="pre">parallel/include/spider.hpp</span></tt> has two new state variables:</p>
+<ul class="simple">
+<li><tt class="docutils literal"><span class="pre">m_processed</span></tt>, which has type <tt class="docutils literal"><span class="pre">atomic_counter</span></tt> (defined in
+<tt class="docutils literal"><span class="pre">atomic_counter.hpp</span></tt>)</li>
+<li><tt class="docutils literal"><span class="pre">m_threadCount</span></tt> of type <tt class="docutils literal"><span class="pre">size_t</span></tt>, which is an integer type</li>
+</ul>
+</li>
+<li><p class="first">In <tt class="docutils literal"><span class="pre">parallel</span></tt>, one of the constructors for <tt class="docutils literal"><span class="pre">spider</span></tt> has a
+second argument of type <tt class="docutils literal"><span class="pre">size_t</span></tt>.</p>
+</li>
+<li><p class="first">There are two new methods, named <tt class="docutils literal"><span class="pre">work()</span></tt> and <tt class="docutils literal"><span class="pre">work_once()</span></tt>.</p>
+</li>
+</ul>
+<p><strong>Note:</strong> TBB containers are used instead of STL containers because
+TBB containers are <em>thread safe</em>. This means that multiple threads
+can safely interact with a TBB container at the same time without
+causing errors. STL containers are <em>not</em> thread-safe: with STL
+containers, it is possible for two threads to interact with a
+container in a way that produces incorrect results.</p>
+<p>When the correct behavior of a program depends on timing, we say that
+program has a <em>race condition</em>. The parallel version of the program
+uses TBB containers in order to avoid race conditions. (Race
+conditions are discussed in other
+<a class="reference external" href="http://csinparallel.org/">CSinParallel</a> modules.)</p>
+<p>Likewise, the state variable <tt class="docutils literal"><span class="pre">m_processed</span></tt> has the type
+<tt class="docutils literal"><span class="pre">atomic_counter</span></tt> instead of <tt class="docutils literal"><span class="pre">int</span></tt> or <tt class="docutils literal"><span class="pre">long</span></tt> because the
+<tt class="docutils literal"><span class="pre">atomic_counter</span></tt> type is thread-safe, enabling us to avoid a race
+condition that may arise if multiple threads interact with an integer
+variable at about the same time.</p>
+</li>
+<li><p class="first">The files <tt class="docutils literal"><span class="pre">serial/src/spider.cpp</span></tt> and <tt class="docutils literal"><span class="pre">parallel/src/spider.cpp</span></tt>
+contain the main differences between these programs &#8211; the
+<tt class="docutils literal"><span class="pre">parallel</span></tt> version uses multiple threads. Running <tt class="docutils literal"><span class="pre">diff</span></tt> shows
+these differences:</p>
+<ul class="simple">
+<li>In <tt class="docutils literal"><span class="pre">parallel</span></tt>, one of the constructors for <tt class="docutils literal"><span class="pre">spider</span></tt> has a
+second argument, to specify the number of threads to use.</li>
+<li>The counter <tt class="docutils literal"><span class="pre">processed</span></tt> is a local variable in <tt class="docutils literal"><span class="pre">spider::crawl</span></tt>
+in <tt class="docutils literal"><span class="pre">serial</span></tt>. This local variable is replaced by a <em>state
+variable</em> <tt class="docutils literal"><span class="pre">m_processed</span></tt> in <tt class="docutils literal"><span class="pre">parallel</span></tt>.</li>
+<li>The main work of <tt class="docutils literal"><span class="pre">crawl</span></tt> is moved into a method <tt class="docutils literal"><span class="pre">work()</span></tt> for
+the multithreaded version <tt class="docutils literal"><span class="pre">parallel</span></tt>, and that version creates
+<tt class="docutils literal"><span class="pre">threadCount</span></tt> threads to carry that work out. Note that
+<tt class="docutils literal"><span class="pre">work()</span></tt> has one argument, an integer index of a thread in the
+array <tt class="docutils literal"><span class="pre">threads[]</span></tt>.</li>
+<li>The method <tt class="docutils literal"><span class="pre">spider::process()</span></tt> and the rest of the code in
+<tt class="docutils literal"><span class="pre">spider.cpp</span></tt> are identical (except for missing code). The
+comment within <tt class="docutils literal"><span class="pre">process()</span></tt> indicates that the same algorithm can
+be used for <tt class="docutils literal"><span class="pre">parallel</span></tt> as for <tt class="docutils literal"><span class="pre">serial</span></tt>. Why can the same
+algorithm be used in the multi-threaded version as in the
+sequential version?</li>
+</ul>
+</li>
+<li><p class="first">Fill in the code indicated in two locations for the <tt class="docutils literal"><span class="pre">parallel</span></tt>
+version of <tt class="docutils literal"><span class="pre">spider.cpp</span></tt>, working from the code you wrote for the
+<tt class="docutils literal"><span class="pre">serial</span></tt> version, as indicated by comments in the <tt class="docutils literal"><span class="pre">parallel</span></tt>
+code. Then compile and run your program.</p>
+<p><em>Note:</em> This version of the program requires three command-line
+arguments: the maximum number of URLs; the number of threads to use
+(this arg is new); and the starting URL to crawl.</p>
+<p>Run the program with multiple threads (say, 4 threads). What do you
+observe about the run?</p>
+<ul>
+<li><p class="first">You can examine the beginning of the output using the <tt class="docutils literal"><span class="pre">more</span></tt>
+program, e.g.,</p>
+<div class="highlight-python"><pre>% bin/spider 100 4 www.stolaf.edu | more</pre>
+</div>
+<p>Each thread is programmed to print a message such as</p>
+<div class="highlight-python"><pre>Thread 2 finished after processing 29 URLs</pre>
+</div>
+<p>when it completes.</p>
+</li>
+<li><p class="first">You will probably find that a small number of threads processed
+all of the URLs, and that the other threads finished early without
+doing any work. How many threads processed URLs in your run? Can
+you think of a reason why the others finished early without
+processing any URLs? (<em>Hint:</em> Think about the work queue near the
+beginning of the program, just as the threads are starting their
+work.)</p>
+</li>
+</ul>
+</li>
+<li><p class="first">To spread the computational work out better among the threads,
+observe that the method <tt class="docutils literal"><span class="pre">spider::crawl()</span></tt> includes a call to a
+method <tt class="docutils literal"><span class="pre">work_once()</span></tt> that has been commented out.</p>
+<div class="highlight-python"><pre>/* work_once(); */</pre>
+</div>
+<p>Remove those comments, in order to enable that call to
+<tt class="docutils literal"><span class="pre">work_once();</span></tt> . This will cause the program to process one web
+page before beginning multi-thread processing. If that first
+processed page includes several links, they will be added to the
+queue <tt class="docutils literal"><span class="pre">m_work</span></tt>, so that several threads can retrieve web pages to
+process when they first begin.</p>
+</li>
+</ol>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Concurrent Data Structures in C++: Web crawler lab</a><ul>
+<li><a class="reference internal" href="#your-goals">Your goals</a></li>
+<li><a class="reference internal" href="#source-code">Source Code</a></li>
+<li><a class="reference internal" href="#packages-needed">Packages needed</a></li>
+<li><a class="reference internal" href="#preparation">Preparation</a></li>
+<li><a class="reference internal" href="#to-do">To Do</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="../index.html"
+                        title="previous chapter">Concurrent Data Structures in C++</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="../IntroSTLContainers/introduction_stl_containers.html"
+                        title="next chapter">Introduction to STL containers</a></p>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../IntroSTLContainers/introduction_stl_containers.html" title="Introduction to STL containers"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="../index.html" title="Concurrent Data Structures in C++"
+             >previous</a> |</li>
+        <li><a href="../index.html">Concurrent Data Structures in C++</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright This work is licensed under a Creative Commons Attribution-ShareAlike 3.0 Unported License.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>
