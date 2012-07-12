@@ -1,8 +1,8 @@
-This is pdfTeX, Version 3.1415926-1.40.10 (TeX Live 2009/Debian) (format=pdflatex 2011.7.11)  12 JUL 2012 09:58
+This is pdfTeX, Version 3.1415926-1.40.10 (TeX Live 2009/Debian) (format=pdflatex 2011.7.11)  12 JUL 2012 10:01
 entering extended mode
  %&-line parsing enabled.
-**GPUProgramming.tex
-(./GPUProgramming.tex
+**ProgrammingwithMultipleCores.tex
+(./ProgrammingwithMultipleCores.tex
 LaTeX2e <2009/09/24>
 Babel <v3.8l> and hyphenation patterns for english, usenglishmax, dumylang, noh
 yphenation, loaded.
@@ -764,12 +764,12 @@ Package: hypcap 2008/09/08 v1.10 Adjusting anchors of captions (HO)
 \bigstrutjot=\dimen139
 )
 \@indexfile=\write5
-\openout5 = `GPUProgramming.idx'.
+\openout5 = `ProgrammingwithMultipleCores.idx'.
 
 
-Writing index file GPUProgramming.idx
-(./GPUProgramming.aux)
-\openout1 = `GPUProgramming.aux'.
+Writing index file ProgrammingwithMultipleCores.idx
+No file ProgrammingwithMultipleCores.aux.
+\openout1 = `ProgrammingwithMultipleCores.aux'.
 
 LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 106.
 LaTeX Font Info:    ... okay on input line 106.
@@ -786,7 +786,7 @@ LaTeX Font Info:    ... okay on input line 106.
 LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 106.
 LaTeX Font Info:    Try loading font information for TS1+cmr on input line 106.
 
- (/usr/share/texmf-texlive/tex/latex/base/ts1cmr.fd
+(/usr/share/texmf-texlive/tex/latex/base/ts1cmr.fd
 File: ts1cmr.fd 1999/05/25 v2.5h Standard LaTeX font definitions
 )
 LaTeX Font Info:    ... okay on input line 106.
@@ -821,10 +821,8 @@ Package: refcount 2008/08/11 v3.1 Data extraction from references (HO)
 )
 LaTeX Info: Redefining \ref on input line 106.
 LaTeX Info: Redefining \pageref on input line 106.
-
-(./GPUProgramming.out) (./GPUProgramming.out)
 \@outlinefile=\write6
-\openout6 = `GPUProgramming.out'.
+\openout6 = `ProgrammingwithMultipleCores.out'.
 
 \AtBeginShipoutBox=\box41
 
@@ -853,13 +851,8 @@ LaTeX Font Info:    Font shape `T1/phv/bx/n' in size <17.28> not available
 Package Fancyhdr Warning: \fancyfoot's `E' option without twoside option is use
 less on input line 109.
 
-(./GPUProgramming.toc
-LaTeX Font Info:    Font shape `T1/ptm/bx/n' in size <10> not available
-(Font)              Font shape `T1/ptm/b/n' tried instead on input line 2.
-)
 \tf@toc=\write7
-\openout7 = `GPUProgramming.toc'.
-
+\openout7 = `ProgrammingwithMultipleCores.toc'.
 
 
 Package Fancyhdr Warning: \fancyfoot's `E' option without twoside option is use
@@ -891,133 +884,141 @@ less on input line 109.
 Chapter 1.
 LaTeX Font Info:    Font shape `T1/phv/bx/n' in size <14.4> not available
 (Font)              Font shape `T1/phv/b/n' tried instead on input line 114.
-<CPUGPU.png, id=187, 1244.65pt x 462.72874pt>
-File: CPUGPU.png Graphic file (type png)
- <use CPUGPU.png>
-File: CPUGPU.png Graphic file (type png)
+LaTeX Font Info:    Font shape `T1/ptm/bx/n' in size <10> not available
+(Font)              Font shape `T1/ptm/b/n' tried instead on input line 121.
 
-<use CPUGPU.png>
+Overfull \hbox (14.79999pt too wide) in paragraph at lines 134--134
+ [] 
+ []
+
 
 Package Fancyhdr Warning: \fancyfoot's `E' option without twoside option is use
-less on input line 145.
+less on input line 174.
 
 [1
 
 
-] <CUDA.png, id=199, 1315.91624pt x 720.6925pt>
-File: CUDA.png Graphic file (type png)
- <use CUDA.png>
-File: CUDA.png Graphic file (type png)
-
-<use CUDA.png> [2 <./CPUGPU.png (PNG copy)>] [3 <./CUDA.png>] [4]
-Chapter 2.
-LaTeX Font Info:    Try loading font information for T1+pcr on input line 201.
-(/usr/share/texmf-texlive/tex/latex/psnfss/t1pcr.fd
+]
+LaTeX Font Info:    Try loading font information for T1+pcr on input line 192.
+ (/usr/share/texmf-texlive/tex/latex/psnfss/t1pcr.fd
 File: t1pcr.fd 2001/06/04 font definitions for T1/pcr.
 )
-LaTeX Font Info:    Font shape `T1/phv/bx/n' in size <12> not available
-(Font)              Font shape `T1/phv/b/n' tried instead on input line 204.
-LaTeX Font Info:    Font shape `T1/pcr/bx/n' in size <9> not available
-(Font)              Font shape `T1/pcr/b/n' tried instead on input line 209.
 LaTeX Font Info:    Font shape `T1/pcr/m/it' in size <9> not available
-(Font)              Font shape `T1/pcr/m/sl' tried instead on input line 211.
+(Font)              Font shape `T1/pcr/m/sl' tried instead on input line 193.
+LaTeX Font Info:    Font shape `T1/pcr/bx/n' in size <9> not available
+(Font)              Font shape `T1/pcr/b/n' tried instead on input line 196.
+ [2]
+LaTeX Font Info:    Try loading font information for TS1+ptm on input line 240.
 
-
-Package Fancyhdr Warning: \fancyfoot's `E' option without twoside option is use
-less on input line 223.
-
-[5
-
-] [6] [7] [8] [9] [10] [11]
-Chapter 3.
-
-Package Fancyhdr Warning: \fancyfoot's `E' option without twoside option is use
-less on input line 562.
-
-[12
-
-]
-Underfull \vbox (badness 5726) detected at line 627
- []
-
-[13] [14] [15] [16] [17]
-Chapter 4.
-LaTeX Font Info:    Try loading font information for TS1+ptm on input line 831.
 
 (/usr/share/texmf-texlive/tex/latex/psnfss/ts1ptm.fd
 File: ts1ptm.fd 2001/06/04 font definitions for TS1/ptm.
-)
+) [3]
+Overfull \hbox (14.79999pt too wide) in paragraph at lines 397--397
+ [] 
+ []
 
-Package Fancyhdr Warning: \fancyfoot's `E' option without twoside option is use
-less on input line 880.
+[4] [5]
+Chapter 2.
+Runaway argument?
+{ 
+! Paragraph ended before \text@command was complete.
+<to be read again> 
+                   \par 
+l.447 }
+        & \textbf{
+? 
+! Missing { inserted.
+<inserted text> 
+                {
+l.447 } &
+          \textbf{
+? 
 
-[18
-
-] [19] [20] [21] <MT.png, id=362, 642.4pt x 368.37625pt>
-File: MT.png Graphic file (type png)
- <use MT.png>
-File: MT.png Graphic file (type png)
-
-<use MT.png> [22 <./MT.png (PNG copy)>]
-<MMSM1.png, id=372, 339.2675pt x 337.26pt>
-File: MMSM1.png Graphic file (type png)
- <use MMSM1.png>
-File: MMSM1.png Graphic file (type png)
- <use MMSM1.png>
-[23] [24 <./MMSM1.png (PNG copy)>]
-<MMSM2.png, id=388, 539.01375pt x 331.2375pt>
-File: MMSM2.png Graphic file (type png)
- <use MMSM2.png>
-File: MMSM2.png Graphic file (type png)
- <use MMSM2.png>
-[25 <./MMSM2.png (PNG copy)>] [26] [27]
-Underfull \vbox (badness 10000) detected at line 1389
+Overfull \hbox (14.58386pt too wide) in paragraph at lines 443--486
+[][] 
  []
 
 
-Underfull \vbox (badness 10000) detected at line 1389
+Overfull \hbox (14.79999pt too wide) in paragraph at lines 504--504
+ [] 
  []
 
-[28] [29]
-Chapter 5.
 
 Package Fancyhdr Warning: \fancyfoot's `E' option without twoside option is use
-less on input line 1468.
+less on input line 504.
 
-[30
+[6
 
-] [31] [32] [33] <RayTracing.png, id=446, 1024.82875pt x 1003.75pt>
-File: RayTracing.png Graphic file (type png)
+]
+Overfull \hbox (14.79999pt too wide) in paragraph at lines 519--519
+ [] 
+ []
 
-<use RayTracing.png>
-File: RayTracing.png Graphic file (type png)
- <use RayTracing.png> [34] [35 <./RayTracing.png (PNG copy)>] [36] [37]
-Chapter 6.
+
+Overfull \hbox (14.79999pt too wide) in paragraph at lines 572--572
+ [] 
+ []
+
+[7]
+Overfull \hbox (14.79999pt too wide) in paragraph at lines 590--590
+ [] 
+ []
+
+[8]
+Chapter 3.
+LaTeX Font Info:    Font shape `T1/phv/bx/n' in size <12> not available
+(Font)              Font shape `T1/phv/b/n' tried instead on input line 621.
+
+Overfull \hbox (14.79999pt too wide) in paragraph at lines 665--665
+ [] 
+ []
+
 
 Package Fancyhdr Warning: \fancyfoot's `E' option without twoside option is use
-less on input line 1844.
+less on input line 677.
 
-[38
+[9
 
-] (./GPUProgramming.ind) [39] (./GPUProgramming.aux) ) 
+]
+Overfull \hbox (14.79999pt too wide) in paragraph at lines 720--720
+ [] 
+ []
+
+[10]
+Overfull \hbox (14.79999pt too wide) in paragraph at lines 811--811
+ [] 
+ []
+
+[11] [12] [13]
+No file ProgrammingwithMultipleCores.ind.
+[14] (./ProgrammingwithMultipleCores.aux)
+
+LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
+
+ ) 
 Here is how much of TeX's memory you used:
- 8210 strings out of 495061
- 112503 string characters out of 1182621
- 202955 words of memory out of 3000000
- 11040 multiletter control sequences out of 15000+50000
- 55254 words of font info for 64 fonts, out of 3000000 for 9000
+ 7949 strings out of 495061
+ 108769 string characters out of 1182621
+ 195312 words of memory out of 3000000
+ 10896 multiletter control sequences out of 15000+50000
+ 57976 words of font info for 66 fonts, out of 3000000 for 9000
  29 hyphenation exceptions out of 8191
- 45i,12n,45p,1269b,415s stack positions out of 5000i,500n,10000p,200000b,50000s
-{/usr/share/texmf-texlive
-/fonts/enc/dvips/base/8r.enc}</usr/share/texmf-texlive/fonts/type1/urw/courier/
-ucrb8a.pfb></usr/share/texmf-texlive/fonts/type1/urw/courier/ucrr8a.pfb></usr/s
-hare/texmf-texlive/fonts/type1/urw/courier/ucrro8a.pfb></usr/share/texmf-texliv
-e/fonts/type1/urw/helvetic/uhvb8a.pfb></usr/share/texmf-texlive/fonts/type1/urw
-/times/utmb8a.pfb></usr/share/texmf-texlive/fonts/type1/urw/times/utmr8a.pfb></
-usr/share/texmf-texlive/fonts/type1/urw/times/utmri8a.pfb>
-Output written on GPUProgramming.pdf (41 pages, 659042 bytes).
+ 45i,14n,45p,671b,447s stack positions out of 5000i,500n,10000p,200000b,50000s
+{/usr/share/texmf-texlive/fonts/enc/dvips/base/8r.enc}</usr/share/texmf-texli
+ve/fonts/type1/public/amsfonts/cm/cmex10.pfb></usr/share/texmf-texlive/fonts/ty
+pe1/public/amsfonts/cm/cmmi10.pfb></usr/share/texmf-texlive/fonts/type1/public/
+amsfonts/cm/cmmi7.pfb></usr/share/texmf-texlive/fonts/type1/public/amsfonts/cm/
+cmr10.pfb></usr/share/texmf-texlive/fonts/type1/public/amsfonts/cm/cmr7.pfb></u
+sr/share/texmf-texlive/fonts/type1/urw/courier/ucrb8a.pfb></usr/share/texmf-tex
+live/fonts/type1/urw/courier/ucrr8a.pfb></usr/share/texmf-texlive/fonts/type1/u
+rw/courier/ucrro8a.pfb></usr/share/texmf-texlive/fonts/type1/urw/helvetic/uhvb8
+a.pfb></usr/share/texmf-texlive/fonts/type1/urw/times/utmb8a.pfb></usr/share/te
+xmf-texlive/fonts/type1/urw/times/utmr8a.pfb></usr/share/texmf-texlive/fonts/ty
+pe1/urw/times/utmri8a.pfb>
+Output written on ProgrammingwithMultipleCores.pdf (16 pages, 186992 bytes).
 PDF statistics:
- 551 PDF objects out of 1000 (max. 8388607)
- 145 named destinations out of 1000 (max. 500000)
- 303 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 172 PDF objects out of 1000 (max. 8388607)
+ 44 named destinations out of 1000 (max. 500000)
+ 1 words of extra memory for PDF output out of 10000 (max. 10000000)
 

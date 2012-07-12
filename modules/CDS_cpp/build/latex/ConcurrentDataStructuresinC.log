@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-1.40.10 (TeX Live 2009/Debian) (format=pdflatex 2011.7.11)  11 JUL 2012 17:16
+This is pdfTeX, Version 3.1415926-1.40.10 (TeX Live 2009/Debian) (format=pdflatex 2011.7.11)  12 JUL 2012 09:59
 entering extended mode
  %&-line parsing enabled.
 **ConcurrentDataStructuresinC.tex
@@ -889,78 +889,76 @@ less on input line 109.
 Package Fancyhdr Warning: \fancyhead's `E' option without twoside option is use
 less on input line 109.
 
-[1
-
-]
 Chapter 1.
 LaTeX Font Info:    Font shape `T1/phv/bx/n' in size <14.4> not available
-(Font)              Font shape `T1/phv/b/n' tried instead on input line 116.
-LaTeX Font Info:    Try loading font information for TS1+ptm on input line 125.
+(Font)              Font shape `T1/phv/b/n' tried instead on input line 114.
+LaTeX Font Info:    Try loading font information for TS1+ptm on input line 123.
 
 (/usr/share/texmf-texlive/tex/latex/psnfss/ts1ptm.fd
 File: ts1ptm.fd 2001/06/04 font definitions for TS1/ptm.
 )
-LaTeX Font Info:    Try loading font information for T1+pcr on input line 145.
+LaTeX Font Info:    Try loading font information for T1+pcr on input line 143.
 
 (/usr/share/texmf-texlive/tex/latex/psnfss/t1pcr.fd
 File: t1pcr.fd 2001/06/04 font definitions for T1/pcr.
 )
-Overfull \hbox (14.79999pt too wide) in paragraph at lines 149--149
+Overfull \hbox (14.79999pt too wide) in paragraph at lines 147--147
  [] 
  []
 
 
 Package Fancyhdr Warning: \fancyfoot's `E' option without twoside option is use
-less on input line 172.
+less on input line 170.
 
-[2
+[1
 
-] [3] [4]
-Underfull \hbox (badness 10000) in paragraph at lines 424--426
+
+] [2] [3]
+Underfull \hbox (badness 10000) in paragraph at lines 422--424
 []\T1/ptm/m/n/10 Here are dif-fer-ences be-tween \T1/pcr/m/n/10 serial/include/
 spider.hpp \T1/ptm/m/n/10 and
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 436--442
+Underfull \hbox (badness 10000) in paragraph at lines 434--440
 []\T1/pcr/m/n/10 parallel/include/spider.hpp \T1/ptm/m/n/10 in-cludes three oth
 er files in-stead of \T1/pcr/m/n/10 <queue>\T1/ptm/m/n/10 .
  []
 
 
-Underfull \hbox (badness 6332) in paragraph at lines 436--442
+Underfull \hbox (badness 6332) in paragraph at lines 434--440
 \T1/ptm/m/n/10 One refers to a new file \T1/pcr/m/n/10 atomic_counter.hpp \T1/p
 tm/m/n/10 that is part of this pro-gram (in
  []
 
 
-Underfull \hbox (badness 5288) in paragraph at lines 451--455
+Underfull \hbox (badness 5288) in paragraph at lines 449--453
 []\T1/ptm/m/n/10 The state vari-ables \T1/pcr/m/n/10 m_work\T1/ptm/m/n/10 , \T1
 /pcr/m/n/10 m_finished\T1/ptm/m/n/10 , and \T1/pcr/m/n/10 m_pages \T1/ptm/m/n/1
 0 use the TBB con-tainer types
  []
 
-[5] [6]
+[4] [5]
 Chapter 2.
 
 Package Fancyhdr Warning: \fancyfoot's `E' option without twoside option is use
-less on input line 647.
+less on input line 645.
 
-[7
+[6
 
 ]
-Underfull \hbox (badness 6188) in paragraph at lines 659--663
+Underfull \hbox (badness 6188) in paragraph at lines 657--661
 []\T1/ptm/m/n/10 This is not a com-plete list of STL con-tain-ers, but il-lus-t
 rates some com-monly used ones. See
  []
 
 LaTeX Font Info:    Font shape `T1/pcr/m/it' in size <9> not available
-(Font)              Font shape `T1/pcr/m/sl' tried instead on input line 687.
-[8] [9] (./ConcurrentDataStructuresinC.ind) [10]
+(Font)              Font shape `T1/pcr/m/sl' tried instead on input line 685.
+[7] [8] (./ConcurrentDataStructuresinC.ind) [9]
 (./ConcurrentDataStructuresinC.aux) ) 
 Here is how much of TeX's memory you used:
- 7930 strings out of 495061
- 107685 string characters out of 1182621
+ 7929 strings out of 495061
+ 107678 string characters out of 1182621
  193017 words of memory out of 3000000
  10878 multiletter control sequences out of 15000+50000
  50167 words of font info for 59 fonts, out of 3000000 for 9000
@@ -972,9 +970,9 @@ share/texmf-texlive/fonts/type1/urw/courier/ucrro8a.pfb></usr/share/texmf-texli
 ve/fonts/type1/urw/helvetic/uhvb8a.pfb></usr/share/texmf-texlive/fonts/type1/ur
 w/times/utmb8a.pfb></usr/share/texmf-texlive/fonts/type1/urw/times/utmr8a.pfb><
 /usr/share/texmf-texlive/fonts/type1/urw/times/utmri8a.pfb>
-Output written on ConcurrentDataStructuresinC.pdf (12 pages, 123819 bytes).
+Output written on ConcurrentDataStructuresinC.pdf (11 pages, 122774 bytes).
 PDF statistics:
- 162 PDF objects out of 1000 (max. 8388607)
- 37 named destinations out of 1000 (max. 500000)
+ 155 PDF objects out of 1000 (max. 8388607)
+ 36 named destinations out of 1000 (max. 500000)
  81 words of extra memory for PDF output out of 10000 (max. 10000000)
 
