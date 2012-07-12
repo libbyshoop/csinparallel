@@ -4,8 +4,8 @@ Decomposition and Activities
 
 Decomposition is a very important aspect to optimize the performance of parallel programmind models. Decomposition is a way to divide up the task fairly; thus, each task can be distributed to each process. There are many ways to break up a task, and you should choose the way that the best suits your code. For instance, you might want to split your matrix by row, rather than by column if you want to compute matrix multiplication. You often will see this decomposition technique in your activities.
 
-**Example 3** : Decompose the matrix by row
-
+Example 3: Decompose the matrix by row
+**************************************
 .. highlight:: c
 
 ::
@@ -19,21 +19,19 @@ Decomposition is a very important aspect to optimize the performance of parallel
           rows = (dest <= extra) ? averow + 1 : averow;
           Then send to each worker the number of rows
 
-In this example, ROW is the number of rows of matrix, so each process will get at least averow rows. The extra is 
-the extra rows when ROW is not divisible by number of workers. In order to send each task to each worker, we need 
-to iterate over the number of workers. Then if we have extra rows, we know that number of extra rows must be less 
-than the number of workers, so we can give one more row to workers whose ranks are less than extra.
+.. note:: **rows = (dest <= extra) ? averow + 1 : averow** means if **dest <= extra**, we have **rows = averow + 1**. Otherwise, we have **rows = averow**. This is a shorter version of if and else statement.
 
-.. note:: rows = (dest <= extra) ? averow + 1 : averow means if dest <= extra, we say rows = averow + 1. Otherwise rows = averow.
+In this example, **ROW** is the number of rows of matrix, so each process will get at least **averow** rows. The **extra** is the extra rows when **ROW** is not divisible by number of workers. In order to send each task to each worker, we need to iterate over the number of workers. Then if we have extra rows, we know that number of extra rows must be less than the number of workers, so we can give one more row to workers whose ranks are less than extra.
+
 
 Activity 3: Vector Matrix Multiplication Improved Version
 ---------------------------------------------------------
 
 In this activity, we will be using decomposition technique, MPI_Send, and MPI_Recv to 
-improve the efficiency of vector matrix multiplication. We already seen that by using 
+improve the efficiency and accuracy of vector matrix multiplication. We already seen that by using 
 MPI_Scatter, we do not get the right result if the length of vector is not divisible by
 the number of workers. Thus, we want to use the decomposition technique to help us divide 
-the task fairly among each worker. Then, we can send each task to each worker via MPI_Send. 
+the task fairly among each worker. Then, we can send each task to each worker by using MPI_Send. 
 After the workers having received their tasks, they will compute each task, and send their results 
 back to master, and master will check if they are right.
 

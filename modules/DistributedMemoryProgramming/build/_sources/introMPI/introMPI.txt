@@ -38,11 +38,11 @@ Like other programming languages you have seen, program that includes MPI librar
 	:height: 400px
 	:alt: MPI Structure
 
-.. centered:: Figure 1: MPI program structure
+.. centered:: Figure 1: MPI program structure [1]
 
 A MPI program is basically a C program with extending MPI library, SO DON’T BE SCARED. The program has two different parts, one is serial, and the other is parallel. Serial part contains variable declarations etc., and the parallel part will be working on each node such as master splitting the task, and each node will be working on each task, and sending back result to master node.
 
-**Communicators**: sets of processes for which the source or destination fields are valid. The predefined communicator is MPI_COMM_WORLD, and we will be using this default communicator all the time in this module. MPI_COMM_WORLD is a default communicator consisting all processes. Furthermore, a programmer can also define a new communicator, but we will not touch on that.
+**Communicators**: sets of processes that have a valid source or destination fields. The predefined communicator is MPI_COMM_WORLD, and we will be using this default communicator all the time in this module. MPI_COMM_WORLD is a default communicator consisting all processes. Furthermore, a programmer can also define a new communicator, which has a smaller number of processes than MPI_COMM_WORLD.
 
 .. image:: images/MPI_COMM_WORLD.png
 	:width: 500px
@@ -50,7 +50,7 @@ A MPI program is basically a C program with extending MPI library, SO DON’T BE
 	:height: 250px
 	:alt: MPI_COMM_WORLD
 
-.. centered:: Figure 2: MPI_COMM_WORLD vs a Communicator
+.. centered:: Figure 2: MPI_COMM_WORLD [2]
 
 **Processes**: For this scope of knowledge, we just need to know that processes belong to the MPI_COMM_WORLD. If there are p processes, then each process is defined by its rank, which starts from 0 to p - 1. The master has the rank 0.	
 
@@ -91,3 +91,7 @@ Example 1: Hello World MPI
 	:linenos:
 
 .. note:: In this hello world program, it illustrates how to use some basic functions of MPI. First it initializes the MPI execution environment. Then it prints "Hello world from process rank of number of processes". Then it terminates the MPI execution environment. 	
+
+.. rubric:: Footnotes
+.. [1] https://computing.llnl.gov/tutorials/mpi/
+.. [2] https://computing.llnl.gov/tutorials/mpi/

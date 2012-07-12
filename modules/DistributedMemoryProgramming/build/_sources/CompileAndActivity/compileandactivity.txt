@@ -38,7 +38,7 @@ In this activity, we are going to compute PI using integration. We have formula:
 
 .. math::
 
-    \int_0^1 \frac{1}{1 + x^2} dx = \frac {\pi}{4}
+    \int_0^1 \frac{4}{1 + x^2} dx = {\pi}
 
 Therefore, we can compute the area under the curve to get the value of the integral. 
 
@@ -51,7 +51,7 @@ Therefore, we can compute the area under the curve to get the value of the integ
 .. centered:: Figure 4: Graph for function
 
 
-We can split the sum into bins. The idea is to split the bins into smaller chunks, and so we can use each process to calculate each chunk, and then combine the result into one value. Remember, that we can get a more accurate result if you split the area under the curve to more number of bins.
+We can split the area under the curve into bins. The idea is to group the bins into smaller chunks, and so we can use each process to calculate each chunk, and then combine the result into one value. Remember, that we can get a more accurate result if you split the area under the curve to more number of bins.
 
 In this activity, we also want to time our computation by using MPI_Wtime() function. We provide you some parts of the code, and would like you to complete **TO DO**, and then you can experiment with the different number of bins you are using. Moreover,  we want you to execute with different number of processes, and compare your timings. I will walk you through the code step by step.
 
@@ -59,7 +59,8 @@ First, you need to initialize the MPI execution environment, define the size of 
 
 Then we want to let each process know the number of bins we are using. Therefore, we can broadcast the number of bin to all processes in our MPI_COMM_WORLD. You should use MPI_Bcast to broadcast from master node. You are asked to complete this part.
 
-After that we are ready to ask each process compute their task. This can be done by using the following piece of code: ::
+After that we are ready to ask each process compute their task. Since we want to find the sum from *0* to *1*, we can use the step(width of each bin) to move from one bin to the next. We know that we are iterating over the number of bins, and we start from 1; therefore, to find the center of each bin, we need to use *- 0.5*.
+This can be done by using the following piece of code: ::
 
     /* Calculating for each process */
     step = 1.0 / (double) n;
@@ -71,7 +72,7 @@ After that we are ready to ask each process compute their task. This can be done
 
     mypi = step * sum;
 
-When all processes have finished their computations, their results are stored in *mypi*. Therefore, we can reduce all their results into one result. You task is to complete this part by using MPI_Reduce. 
+When all processes have finished their computations, their results are stored in **mypi**. Therefore, we can reduce all their results into one result. You task is to complete this part by using MPI_Reduce. 
 
 Below is the complete source code for mpi_pi.c[1]:
 
@@ -82,8 +83,7 @@ Below is the complete source code for mpi_pi.c[1]:
 Activity 2: Vector Matrix Multiplication
 ----------------------------------------	
 
-In this activity, we will compute vector matrix multiplication. This multiplication will produces a vector of length 
-as same as that of the input vector. In this activity, we will illustrate the use of MPI_Bcast, MPI_Scatter, and MPI_Gather to do this multiplication. First, we would want you to complete this MPI program by filling codes at *TO DO*. After having completed, try to run this MPI program on LittleFe by using different number of processes.
+In this activity, we will compute vector matrix multiplication. In this activity, we will illustrate the use of MPI_Bcast, MPI_Scatter, and MPI_Gather to do this multiplication. First, we want you to complete this MPI program by filling codes at **TO DO**. After having completed this task, try to run this MPI program on LittleFe by using different number of processes.
 
 I will explain how the vector matrix multiplication works. First let's say we have a matrix *A*, and a vector *x* as below:  
 
@@ -95,14 +95,13 @@ I will explain how the vector matrix multiplication works. First let's say we ha
 
 .. centered:: Figure 5: vector matrix multiplication [2]
 
-This multiplication produces a new vector whose length is the number of rows of *A*. The multiplication is very simple, we just need to take a row of *A* dot product with *x*, and this produces an element of result vector. For example, the first row of *A* dot products with *x* will produce the first element in vector *y*. 
+This multiplication produces a new vector whose length is the number of rows of *A*. The multiplication is very simple, we just need to take a row of matrix *A* dot product with vector *x*, and this produces an element of the result vector. For example, the first row of matrix *A* dot products with vector *x* will produce the first element in vector *y*. 
 
-I will step you through the source code for this MPI program. Since this is a MPI program, we need to create MPI execution environment. You are asked to completed this part of the source code.
+I will step you through the source code for this MPI program. Since this is a MPI program, we need to create MPI execution environment, define the size of communicator, and give each process a rank. You are asked to completed this part of the code.
 
 After having initialized the MPI environment, we want to ask the master to initialize the vector and matrix we are going to multiply. In order to do that, first we check if the process is master, if so we just need to initialize the matrix and vector. ::
 
-	if (rank == 0) {
-
+    if (rank == 0) {
         /* Initialize Matrix and Vector */
         for(i=0; i < WIDTH; i++) {
             vector[i] = 1;
@@ -112,14 +111,14 @@ After having initialized the MPI environment, we want to ask the master to initi
         }
     }
 
-Since the vector is not very large here and all processes need to have vector to do the multiplication, we will broadcast entire vector to all processes. We do that by using MPI_Bcast. Also, we want to distribute the matrix to each process in the MPI_COMM_WORLD. We would do this using MPI_Scatter. You are asked to complete this part. 
+Since the vector is not very large here and all processes need to have this vector to do the multiplication, we will broadcast entire vector to all processes. We do that by using MPI_Bcast. Also, we want to distribute the matrix to each process in the MPI_COMM_WORLD. We would do this using MPI_Scatter. You are asked to complete this part. 
 
-When all processes are able to see the vector and part of matrix, they are now able to do the multiplication. We need to store the result in result matrix. ::
+When all processes are able to see the vector and some rows of matrix, they are now able to do the multiplication. We need to store their result in the result matrix. ::
 
-	for(i = 0; i < chunk_size; i++) {
+    for(i = 0; i < chunk_size; i++) {
         result[i] = 0;
-    	for(j = 0; j < WIDTH; j++) {
-        	result[i] += local_matrix[i][j] * vector[j];
+        for(j = 0; j < WIDTH; j++) {
+            result[i] += local_matrix[i][j] * vector[j];
         }
     }
 

@@ -79,7 +79,7 @@ This function displays the message to all other processes in MPI_COMM_WORLD from
 
 	MPI_Reduce(&buffer, &receivebuffer, int count, MPI_Datatype datatype, MPI_Op op, int root, comm)
 
-This function applies a reduction operation on all tasks in MPI_COMM_WORLD and reduces results from each process into one value. MPI_Op includes for example, MPI_MAX, MPI_MIN, MPI_PROD, and MPI_SUM .etc. ::
+This function applies a reduction operation on all tasks in MPI_COMM_WORLD and reduces results from each process into one value. MPI_Op[1] includes for example, MPI_MAX, MPI_MIN, MPI_PROD, and MPI_SUM .etc. ::
 
 	MPI_Scatter(&buffer, int count, MPI_Datatype, &receivebuffer, int count, MPI_Datatype, int root, comm)
 
@@ -88,3 +88,7 @@ This function divides a message into equal contiguous parts and sends each part 
 	MPI_Gather(&buffer, int count, MPI_Datatype, &receivebuffer, int count, MPI_Datatype, int root, comm)
 
 This function gathers distinct messages from each task in the group to a single destination task. This routine is the reverse operation of MPI_Scatter. 
+
+
+.. rubric:: Footnotes
+.. [1] http://www.mpi-forum.org/docs/mpi-11-html/node78.html#Node78

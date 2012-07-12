@@ -207,7 +207,7 @@ MPI_Recv(void* buffer, int count, MPI_Datatype datatype, int source, int tag, MP
 <div class="highlight-c"><div class="highlight"><pre><span class="n">MPI_Reduce</span><span class="p">(</span><span class="o">&amp;</span><span class="n">buffer</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">receivebuffer</span><span class="p">,</span> <span class="kt">int</span> <span class="n">count</span><span class="p">,</span> <span class="n">MPI_Datatype</span> <span class="n">datatype</span><span class="p">,</span> <span class="n">MPI_Op</span> <span class="n">op</span><span class="p">,</span> <span class="kt">int</span> <span class="n">root</span><span class="p">,</span> <span class="n">comm</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>This function applies a reduction operation on all tasks in MPI_COMM_WORLD and reduces results from each process into one value. MPI_Op includes for example, MPI_MAX, MPI_MIN, MPI_PROD, and MPI_SUM .etc.</p>
+<p>This function applies a reduction operation on all tasks in MPI_COMM_WORLD and reduces results from each process into one value. MPI_Op[1] includes for example, MPI_MAX, MPI_MIN, MPI_PROD, and MPI_SUM .etc.</p>
 <div class="highlight-c"><div class="highlight"><pre><span class="n">MPI_Scatter</span><span class="p">(</span><span class="o">&amp;</span><span class="n">buffer</span><span class="p">,</span> <span class="kt">int</span> <span class="n">count</span><span class="p">,</span> <span class="n">MPI_Datatype</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">receivebuffer</span><span class="p">,</span> <span class="kt">int</span> <span class="n">count</span><span class="p">,</span> <span class="n">MPI_Datatype</span><span class="p">,</span> <span class="kt">int</span> <span class="n">root</span><span class="p">,</span> <span class="n">comm</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -216,6 +216,13 @@ MPI_Recv(void* buffer, int count, MPI_Datatype datatype, int source, int tag, MP
 </pre></div>
 </div>
 <p>This function gathers distinct messages from each task in the group to a single destination task. This routine is the reverse operation of MPI_Scatter.</p>
+<p class="rubric">Footnotes</p>
+<table class="docutils footnote" frame="void" id="id1" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label">[1]</td><td><a class="reference external" href="http://www.mpi-forum.org/docs/mpi-11-html/node78.html#Node78">http://www.mpi-forum.org/docs/mpi-11-html/node78.html#Node78</a></td></tr>
+</tbody>
+</table>
 </div>
 </div>
 
