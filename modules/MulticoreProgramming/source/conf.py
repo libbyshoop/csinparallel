@@ -27,9 +27,13 @@ import sys, os
 # coming with Sphinx (named 'sphinx.ext.*') or your custom ones.
 extensions = ['sphinx.ext.pngmath']
 
-#!!!! these paths work on Macs with a TeXLive install
-pngmath_latex = '/usr/local/texlive/2011/bin/x86_64-darwin/latex'
-pngmath_dvipng = '/usr/local/texlive/2011/bin/x86_64-darwin/dvipng'
+
+if 'Darwin' in os.uname()[0]:
+	pngmath_latex = '/usr/local/texlive/2011/bin/x86_64-darwin/latex'
+	pngmath_dvipng = '/usr/local/texlive/2011/bin/x86_64-darwin/dvipng'
+elif 'Linux' in os.uname()[0]:
+	pngmath_latex = '/usr/bin/latex'
+	pngmath_dvipng = '/usr/bin/dvipng'
 
 #extensions = ['sphinx.ext.jsmath']
 
