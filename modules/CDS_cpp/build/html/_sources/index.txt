@@ -6,8 +6,6 @@
 Concurrent Data Structures in C++
 ==================================
 
-Contents:
-
 .. toctree::
    :maxdepth: 2
 

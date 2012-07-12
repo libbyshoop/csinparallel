@@ -71,14 +71,13 @@
 <div class="section" id="activity-3-vector-matrix-multiplication-improved-version">
 <h3>Activity 3: Vector Matrix Multiplication Improved Version<a class="headerlink" href="#activity-3-vector-matrix-multiplication-improved-version" title="Permalink to this headline">¶</a></h3>
 <p>In this activity, we will be using decomposition technique, MPI_Send, and MPI_Recv to
-improve the efficiency of vector matrix multiplication. We already seen that by using
+improve the efficiency and accuracy of vector matrix multiplication. We already seen that by using
 MPI_Scatter, we do not get the right result if the length of vector is not divisible by
 the number of workers. Thus, we want to use the decomposition technique to help us divide
-the task fairly among each worker. Then, we can send each task to each worker via MPI_Send.
+the task fairly among each worker. Then, we can send each task to each worker by using MPI_Send.
 After the workers having received their tasks, they will compute each task, and send their results
 back to master, and master will check if they are right.</p>
-<p>I will walk you through the code step by step. First, we will need to initialize the MPI execution
-environment. This should be straight forward to you because you have seen this many times already.</p>
+<p>I will walk you through the code step by step. First, we will need to initialize the MPI environment, define the size of communicator, and give a rank to each process. This should be straight forward to you because you have seen this many times already.</p>
 <div class="highlight-c"><div class="highlight"><pre>    <span class="cm">/* Initialize MPI execution environment */</span>
 <span class="n">MPI_Init</span><span class="p">(</span> <span class="o">&amp;</span><span class="n">argc</span><span class="p">,</span><span class="o">&amp;</span><span class="n">argv</span><span class="p">);</span>
 <span class="n">MPI_Comm_rank</span><span class="p">(</span> <span class="n">MPI_COMM_WORLD</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">rank</span><span class="p">);</span>
@@ -97,10 +96,10 @@ environment. This should be straight forward to you because you have seen this m
 <span class="p">}</span>
 </pre></div>
 </div>
-<p>Since we have seen that using the collective communication without decomposition is not the best way
+<p>We have seen that using the collective communication without decomposition is not the best way
 of doing this problem. Here is better way that will work for any number of processes. We will be using
 the decomposition technique above to split the task for each process. Then, we will be sending each process
-the number of rows (rows) of matrix, and send the vector to all processes. You are asked to complete this part
+the number of rows (<strong>rows</strong>) of matrix, and send the vector to all processes. You are asked to complete this part
 of the code.</p>
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
@@ -737,6 +736,9 @@ complete the matrix multiplication program. Please fill your code at TO DO.</p>
       </div>
       <div class="sphinxsidebar">
         <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../index.html">
+              <img class="logo" src="../_static/CSInParallel200wide.png" alt="Logo"/>
+            </a></p>
   <h3><a href="../index.html">Table Of Contents</a></h3>
   <ul>
 <li><a class="reference internal" href="#">Decomposition and Activities</a><ul>
@@ -787,7 +789,7 @@ complete the matrix multiplication program. Please fill your code at TO DO.</p>
       </ul>
     </div>
     <div class="footer">
-        &copy; Copyright 2012, Sophors Khut.
+        &copy; Copyright This work is licensed under a Creative Commons Attribution-ShareAlike 3.0 Unported License.
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
     </div>
   </body>

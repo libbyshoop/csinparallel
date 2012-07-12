@@ -6,8 +6,6 @@
 Programming with multiple cores
 ===============================
 
-Contents:
-
 .. toctree::
    :maxdepth: 1
 

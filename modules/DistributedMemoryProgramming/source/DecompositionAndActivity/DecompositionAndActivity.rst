@@ -35,8 +35,7 @@ the task fairly among each worker. Then, we can send each task to each worker by
 After the workers having received their tasks, they will compute each task, and send their results 
 back to master, and master will check if they are right.
 
-I will walk you through the code step by step. First, we will need to initialize the MPI execution 
-environment. This should be straight forward to you because you have seen this many times already. ::
+I will walk you through the code step by step. First, we will need to initialize the MPI environment, define the size of communicator, and give a rank to each process. This should be straight forward to you because you have seen this many times already. ::
 
 	/* Initialize MPI execution environment */
     MPI_Init( &argc,&argv);
@@ -55,10 +54,10 @@ Then we want to initialize the vector and matrix in master node. This can be don
         }
     }        
 
-Since we have seen that using the collective communication without decomposition is not the best way 
+We have seen that using the collective communication without decomposition is not the best way 
 of doing this problem. Here is better way that will work for any number of processes. We will be using 
 the decomposition technique above to split the task for each process. Then, we will be sending each process 
-the number of rows (rows) of matrix, and send the vector to all processes. You are asked to complete this part 
+the number of rows (**rows**) of matrix, and send the vector to all processes. You are asked to complete this part 
 of the code. 
 
 .. note:: You should use MPI_Send to send the starting rows, and number of rows, and part of matrix, and the vector to the processes whose ranks are less than number of workers. Moreover, when you send part of matrix, you should use MPI_Send(&matrix[starting row][0], number of elements, ...). This will send the rows of matrix, which contain the number of elements.
