@@ -9,6 +9,7 @@ Distributed Memory Programming
 .. toctree::
    :maxdepth: 1
 
+   LittleFe/LittleFe
    introMPI/introMPI
    MPICommunication/MPICommunication
    CompileAndActivity/compileandactivity

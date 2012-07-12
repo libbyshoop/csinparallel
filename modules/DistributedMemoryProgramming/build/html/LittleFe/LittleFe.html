@@ -1,0 +1,115 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>LittleFe &mdash; Distributed Memory Programming</title>
+    
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="top" title="Distributed Memory Programming" href="../index.html" />
+    <link rel="next" title="Introduction to MPI" href="../introMPI/introMPI.html" />
+    <link rel="prev" title="Distributed Memory Programming" href="../index.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../introMPI/introMPI.html" title="Introduction to MPI"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="../index.html" title="Distributed Memory Programming"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../index.html">Distributed Memory Programming</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="littlefe">
+<h1>LittleFe<a class="headerlink" href="#littlefe" title="Permalink to this headline">¶</a></h1>
+<p>LittleFe is a 6-node distributed memory cluster. LittleFe is able to have its node work simultaneously. It uses MPI library to distribute the task to each node, and let each node work their own task. After they finish, we can combine the result from each node to get the overall output. LittleFe is a linux based machine. Each node of LittleFe has nVidia GT 218 GPU, which enables LittleFe to do GPU programming, CUDA C. All of them connect via the network router.</p>
+<p>LittleFe is a based Linux cluster, which is provided by Bootable Cluster CD (BCCD). BCCD also provides some cool applications that can be ran using MPI such as GalaxSee, Life, and Parameter-space .etc. Because of LittleFe&#8217;s ability, we have also been working on Heterogeneous programming model, which combines CUDA and MPI. You will see in the next module. In this module, we will be using LittleFe for our parallel programming activities.</p>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="../index.html"
+                        title="previous chapter">Distributed Memory Programming</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="../introMPI/introMPI.html"
+                        title="next chapter">Introduction to MPI</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="../_sources/LittleFe/LittleFe.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../introMPI/introMPI.html" title="Introduction to MPI"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="../index.html" title="Distributed Memory Programming"
+             >previous</a> |</li>
+        <li><a href="../index.html">Distributed Memory Programming</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2012, Sophors Khut.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>

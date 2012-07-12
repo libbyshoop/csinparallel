@@ -6,8 +6,6 @@
 GPU Programming
 =====================================
 
-Contents:
-
 .. toctree::
    :maxdepth: 1
 

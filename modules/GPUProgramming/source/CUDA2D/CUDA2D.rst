@@ -29,7 +29,7 @@ Performance
 We conducted 5 tests and the results are below.
  * 1. 41045.35 ms
  * 2. 40277.44 ms
- * 3. 40369.30 ms`Programming Massively Parallel Processors: A Hands-on Approach`_
+ * 3. 40369.30 ms
  * 4. 40385.85 ms
  * 5. 40446.14 ms
  * Average: 40504.82 ms
