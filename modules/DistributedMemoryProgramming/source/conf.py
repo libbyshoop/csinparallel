@@ -217,7 +217,7 @@ latex_documents = [
 # (source start file, name, description, authors, manual section).
 man_pages = [
     ('index', 'mpiandhybridmpi_cuda', u'MPI and Hybrid MPI_CUDA Documentation',
-     [u'Sophors Khut'], 1)
+     [u'CSInParallel Project'], 1)
 ]
 
 # If true, show URL addresses after external links.
@@ -231,7 +231,7 @@ man_pages = [
 #  dir menu entry, description, category)
 texinfo_documents = [
   ('index', 'MPIandHybridMPI_CUDA', u'MPI and Hybrid MPI_CUDA Documentation',
-   u'Sophors Khut', 'MPIandHybridMPI_CUDA', 'One line description of project.',
+   u'CSInParallel Project', 'MPIandHybridMPI_CUDA', 'One line description of project.',
    'Miscellaneous'),
 ]
 
