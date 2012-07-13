@@ -56,7 +56,7 @@
 <h1>MPI Communications<a class="headerlink" href="#mpi-communications" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="point-to-point-communication">
 <h2>Point-to-point Communication<a class="headerlink" href="#point-to-point-communication" title="Permalink to this headline">¶</a></h2>
-<p>Point-to-point communication is a way that pair of processors transmit the data between one another, one processor sending, and the other receiving. MPI provides SEND(MPI_Send) and RECEIVE(MPI_Recv) functions that allow point-to-point communication taking place in the MPI world.</p>
+<p>Point-to-point communication is a way that pair of processors transmits the data between one another, one processor sending, and the other receiving. MPI provides SEND(MPI_Send) and RECEIVE(MPI_Recv) functions that allow point-to-point communication taking place in the MPI world.</p>
 <div class="highlight-python"><pre>MPI_Send(void* buffer, int count, MPI_Datatype datatype, int destination, int tag, MPI_Comm comm)
 
         - buffer:       initial address of send buffer
@@ -71,8 +71,13 @@ MPI_Recv(void* buffer, int count, MPI_Datatype datatype, int source, int tag, MP
         - source:       rank of the sending processor
         - status:       return status</pre>
 </div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">To read more on MPI_Status, please read <a class="reference external" href="http://www.netlib.org/utk/papers/mpi-book/node31.html">MPI_Status</a>.</p>
+</div>
 <div class="section" id="mpi-datatype">
 <h3>MPI Datatype<a class="headerlink" href="#mpi-datatype" title="Permalink to this headline">¶</a></h3>
+<p>In most MPI functions, which you will be using, require you specify the datatype of your message. Below is the table showing the corresponding datatype between MPI Datatype and C Datatype.</p>
 <table border="1" class="docutils">
 <colgroup>
 <col width="46%" />
@@ -119,7 +124,7 @@ MPI_Recv(void* buffer, int count, MPI_Datatype datatype, int source, int tag, MP
 </tr>
 </tbody>
 </table>
-<p>Table 1: Corresponding datatype between MPI and C</p>
+<p><strong>Table 1: Corresponding datatype between MPI and C</strong></p>
 </div>
 <div class="section" id="example-2-send-and-receive-hello-world">
 <h3>Example 2: Send and Receive Hello World<a class="headerlink" href="#example-2-send-and-receive-hello-world" title="Permalink to this headline">¶</a></h3>
@@ -154,12 +159,18 @@ MPI_Recv(void* buffer, int count, MPI_Datatype datatype, int source, int tag, MP
 29
 30
 31
-32</pre></div></td><td class="code"><div class="highlight"><pre><span class="cp">#include &lt;stdio.h&gt;</span>
+32
+33
+34
+35
+36</pre></div></td><td class="code"><div class="highlight"><pre><span class="cp">#include &lt;stdio.h&gt;</span>
 <span class="cp">#include &quot;mpi.h&quot;</span>
+
+<span class="cp">#define FROM_MASTER 1</span>
 
 <span class="kt">int</span> <span class="nf">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span> <span class="o">**</span> <span class="n">argv</span><span class="p">[])</span> <span class="p">{</span>
 
-    <span class="kt">int</span> <span class="n">rank</span><span class="p">,</span> <span class="n">ntag</span> <span class="o">=</span> <span class="mi">100</span><span class="p">;</span>
+    <span class="kt">int</span> <span class="n">rank</span><span class="p">,</span> <span class="n">nprocs</span><span class="p">;</span>
     <span class="kt">char</span> <span class="n">message</span><span class="p">[</span><span class="mi">12</span><span class="p">]</span> <span class="o">=</span> <span class="s">&quot;Hello, world&quot;</span><span class="p">;</span>
     
     <span class="cm">/* status for MPI_Recv */</span>
@@ -167,20 +178,22 @@ MPI_Recv(void* buffer, int count, MPI_Datatype datatype, int source, int tag, MP
     
     <span class="cm">/* Initialize MPI execution environment */</span>
     <span class="n">MPI_Init</span><span class="p">(</span><span class="o">&amp;</span><span class="n">argc</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">argv</span><span class="p">);</span>
+    <span class="cm">/* Determines the size of MPI_COMM_WORLD */</span>
+    <span class="n">MPI_Comm_size</span><span class="p">(</span><span class="n">MPI_COMM_WORLD</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">nprocs</span><span class="p">)</span>
     <span class="cm">/* Give each process a unique rank */</span>
     <span class="n">MPI_Comm_rank</span><span class="p">(</span><span class="n">MPI_COMM_WORLD</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">rank</span><span class="p">);</span>
 	
     <span class="cm">/* If the process is the master */</span>
     <span class="k">if</span> <span class="p">(</span> <span class="n">rank</span> <span class="o">==</span> <span class="mi">0</span> <span class="p">)</span>
         <span class="cm">/* Send message to process whose rank is 1 in the MPI_COMM_WORLD */</span>
-        <span class="n">MPI_Send</span><span class="p">(</span><span class="o">&amp;</span><span class="n">message</span><span class="p">,</span> <span class="mi">12</span><span class="p">,</span> <span class="n">MPI_CHAR</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">ntag</span><span class="p">,</span> <span class="n">MPI_COMM_WORLD</span><span class="p">);</span>
+        <span class="n">MPI_Send</span><span class="p">(</span><span class="o">&amp;</span><span class="n">message</span><span class="p">,</span> <span class="mi">12</span><span class="p">,</span> <span class="n">MPI_CHAR</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">FROM_MASTER</span><span class="p">,</span> <span class="n">MPI_COMM_WORLD</span><span class="p">);</span>
 
     <span class="cm">/* If the process has rank of 1 */</span>
     <span class="k">else</span> <span class="k">if</span> <span class="p">(</span> <span class="n">rank</span> <span class="o">==</span> <span class="mi">1</span> <span class="p">)</span> <span class="p">{</span>
         <span class="cm">/* Receive message sent from master */</span>
-        <span class="n">MPI_Recv</span><span class="p">(</span><span class="o">&amp;</span><span class="n">message</span><span class="p">,</span> <span class="mi">12</span><span class="p">,</span> <span class="n">MPI_CHAR</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">ntag</span><span class="p">,</span> <span class="n">MPI_COMM_WORLD</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">status</span><span class="p">);</span>
+        <span class="n">MPI_Recv</span><span class="p">(</span><span class="o">&amp;</span><span class="n">message</span><span class="p">,</span> <span class="mi">12</span><span class="p">,</span> <span class="n">MPI_CHAR</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">FROM_MASTER</span><span class="p">,</span> <span class="n">MPI_COMM_WORLD</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">status</span><span class="p">);</span>
         <span class="cm">/* Print the rank and message */</span>
-        <span class="n">printf</span><span class="p">(</span><span class="s">&quot;Node %d : %s</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">rank</span><span class="p">,</span> <span class="n">message</span><span class="p">);</span> 
+        <span class="n">printf</span><span class="p">(</span><span class="s">&quot;Process %d says : %s</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">rank</span><span class="p">,</span> <span class="n">message</span><span class="p">);</span> 
     <span class="p">}</span>
     
     <span class="cm">/* Terminate MPI execution environment */</span>
@@ -188,7 +201,7 @@ MPI_Recv(void* buffer, int count, MPI_Datatype datatype, int source, int tag, MP
 <span class="p">}</span>
 </pre></div>
 </td></tr></table></div>
-<p>This MPI program illustrates the use of MPI_Send and MPI_Recv functions. Basically, the master just send a message, “Hello, world”, to the process whose rank is 1, and then after having received the message, the process just prints out the message along with its rank.</p>
+<p>This MPI program illustrates the use of MPI_Send and MPI_Recv functions. Basically, the master sends a message, “Hello, world”, to the process whose rank is 1, and then after having received the message, the process prints out the message along with its rank.</p>
 </div>
 </div>
 <div class="section" id="collective-communication">
@@ -196,7 +209,7 @@ MPI_Recv(void* buffer, int count, MPI_Datatype datatype, int source, int tag, MP
 <p>Collective communication is a communication that must have all processes involved in the scope of a communicator. We will be using MPI_COMM_WORLD as our communicator; therefore, the collective communication will include all processes.</p>
 <img alt="MPI_COMM_WORLD" class="align-center" src="../_images/collective.png" style="width: 450px; height: 350px;" />
 <p class="centered">
-<strong>Figure 3: Collective Communications</strong></p><div class="highlight-c"><div class="highlight"><pre><span class="n">MPI_Barrier</span><span class="p">(</span><span class="n">comm</span><span class="p">)</span>
+<strong>Figure 3: Collective Communications[1]</strong></p><div class="highlight-c"><div class="highlight"><pre><span class="n">MPI_Barrier</span><span class="p">(</span><span class="n">comm</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>This function creates a barrier synchronization in a commmunicator(MPI_COMM_WORLD). Each task waits at MPI_Barrier call until all tasks in the communicator reach the same MPI_Barrier call.</p>
@@ -207,7 +220,13 @@ MPI_Recv(void* buffer, int count, MPI_Datatype datatype, int source, int tag, MP
 <div class="highlight-c"><div class="highlight"><pre><span class="n">MPI_Reduce</span><span class="p">(</span><span class="o">&amp;</span><span class="n">buffer</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">receivebuffer</span><span class="p">,</span> <span class="kt">int</span> <span class="n">count</span><span class="p">,</span> <span class="n">MPI_Datatype</span> <span class="n">datatype</span><span class="p">,</span> <span class="n">MPI_Op</span> <span class="n">op</span><span class="p">,</span> <span class="kt">int</span> <span class="n">root</span><span class="p">,</span> <span class="n">comm</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>This function applies a reduction operation on all tasks in MPI_COMM_WORLD and reduces results from each process into one value. MPI_Op[1] includes for example, MPI_MAX, MPI_MIN, MPI_PROD, and MPI_SUM .etc.</p>
+<p>This function applies a reduction operation on all tasks in MPI_COMM_WORLD and reduces results from each process into one value. MPI_Op includes for example, MPI_MAX, MPI_MIN, MPI_PROD, and MPI_SUM .etc.</p>
+<blockquote>
+<div><div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">To read more on MPI_Op, please read <a class="reference external" href="http://www.mpi-forum.org/docs/mpi-11-html/node78.html#Node78">MPI_Op</a>.</p>
+</div>
+</div></blockquote>
 <div class="highlight-c"><div class="highlight"><pre><span class="n">MPI_Scatter</span><span class="p">(</span><span class="o">&amp;</span><span class="n">buffer</span><span class="p">,</span> <span class="kt">int</span> <span class="n">count</span><span class="p">,</span> <span class="n">MPI_Datatype</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">receivebuffer</span><span class="p">,</span> <span class="kt">int</span> <span class="n">count</span><span class="p">,</span> <span class="n">MPI_Datatype</span><span class="p">,</span> <span class="kt">int</span> <span class="n">root</span><span class="p">,</span> <span class="n">comm</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -215,12 +234,12 @@ MPI_Recv(void* buffer, int count, MPI_Datatype datatype, int source, int tag, MP
 <div class="highlight-c"><div class="highlight"><pre><span class="n">MPI_Gather</span><span class="p">(</span><span class="o">&amp;</span><span class="n">buffer</span><span class="p">,</span> <span class="kt">int</span> <span class="n">count</span><span class="p">,</span> <span class="n">MPI_Datatype</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">receivebuffer</span><span class="p">,</span> <span class="kt">int</span> <span class="n">count</span><span class="p">,</span> <span class="n">MPI_Datatype</span><span class="p">,</span> <span class="kt">int</span> <span class="n">root</span><span class="p">,</span> <span class="n">comm</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>This function gathers distinct messages from each task in the group to a single destination task. This routine is the reverse operation of MPI_Scatter.</p>
+<p>This function collects distinct messages from each task in the communicator to a single task. This function is the reverse operation of MPI_Scatter.</p>
 <p class="rubric">Footnotes</p>
 <table class="docutils footnote" frame="void" id="id1" rules="none">
 <colgroup><col class="label" /><col /></colgroup>
 <tbody valign="top">
-<tr><td class="label">[1]</td><td><a class="reference external" href="http://www.mpi-forum.org/docs/mpi-11-html/node78.html#Node78">http://www.mpi-forum.org/docs/mpi-11-html/node78.html#Node78</a></td></tr>
+<tr><td class="label">[1]</td><td><a class="reference external" href="https://computing.llnl.gov/tutorials/mpi/">https://computing.llnl.gov/tutorials/mpi/</a></td></tr>
 </tbody>
 </table>
 </div>

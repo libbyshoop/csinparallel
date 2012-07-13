@@ -28,11 +28,7 @@
     <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <link rel="top" title="Distributed Memory Programming" href="../index.html" />
     <link rel="next" title="MPI Communications" href="../MPICommunication/MPICommunication.html" />
-<<<<<<< HEAD
-    <link rel="prev" title="Distributed Memory Programming" href="../index.html" /> 
-=======
-    <link rel="prev" title="LittleFe" href="../LittleFe/LittleFe.html" /> 
->>>>>>> 41a939aa54bd203e1dd41dcc7cc04060c210f45a
+    <link rel="prev" title="Local Cluster Configurations" href="../LocalClusterConfig/LocalClusterConfig.html" /> 
   </head>
   <body>
     <div class="related">
@@ -45,11 +41,7 @@
           <a href="../MPICommunication/MPICommunication.html" title="MPI Communications"
              accesskey="N">next</a> |</li>
         <li class="right" >
-<<<<<<< HEAD
-          <a href="../index.html" title="Distributed Memory Programming"
-=======
-          <a href="../LittleFe/LittleFe.html" title="LittleFe"
->>>>>>> 41a939aa54bd203e1dd41dcc7cc04060c210f45a
+          <a href="../LocalClusterConfig/LocalClusterConfig.html" title="Local Cluster Configurations"
              accesskey="P">previous</a> |</li>
         <li><a href="../index.html">Distributed Memory Programming</a> &raquo;</li> 
       </ul>
@@ -64,8 +56,8 @@
 <h1>Introduction to MPI<a class="headerlink" href="#introduction-to-mpi" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="what-is-mpi">
 <h2>What is MPI ?<a class="headerlink" href="#what-is-mpi" title="Permalink to this headline">¶</a></h2>
-<p>Message Passing Interface (MPI) is a subroutine or a library for passing messages between processes in a distributed memory model. MPI is not a programming language. MPI is a programming model that is widely used for parallel programming in a cluster. In the cluster, the head node is known as the master, and the other nodes are known as the workers. By using MPI, programmers are able to divide up the task and distribute each task to each worker or to some specific workers. Thus, each node can compute its own task simultaneously.</p>
-<p>Since this is a small module, we will be focusing on only important and common MPI functions and techniques. For further study, we encourage you to learn it by yourself.</p>
+<p>Message Passing Interface (MPI) is a subroutine or a library for passing messages between processes in a distributed memory model. MPI is not a programming language. MPI is a programming model that is widely used for parallel programming in a cluster. In the cluster, the head node is known as the master, and the other nodes are known as the workers. By using MPI, programmers are able to divide up the task and distribute each task to each worker or to some specific workers. Thus, each node can work on its own task simultaneously.</p>
+<p>Since this is a small module, we will be focusing on only important and common MPI functions and techniques. For further study, there are a lot of free resources available on the internet.</p>
 </div>
 <div class="section" id="why-mpi">
 <h2>Why MPI ?<a class="headerlink" href="#why-mpi" title="Permalink to this headline">¶</a></h2>
@@ -80,17 +72,17 @@
 </div>
 <div class="section" id="how-do-i-write-mpi-program">
 <h2>How do I write MPI program ?<a class="headerlink" href="#how-do-i-write-mpi-program" title="Permalink to this headline">¶</a></h2>
-<p>In order to get the MPI library working, you need to include the header file <em>#include &lt;mpi.h&gt;</em> or <em>#include “mpi.h”</em> in your C code.</p>
+<p>In order to get the MPI library working, you need to include the header file <strong>#include &lt;mpi.h&gt;</strong> or <strong>#include “mpi.h”</strong> in your C code.</p>
 <div class="section" id="mpi-program-structure">
 <h3>MPI Program Structure:<a class="headerlink" href="#mpi-program-structure" title="Permalink to this headline">¶</a></h3>
 <p>Like other programming languages you have seen, program that includes MPI library has its structure. The structure is shown in the figure below:</p>
 <img alt="MPI Structure" class="align-center" src="../_images/MPIstructure.png" style="width: 350px; height: 400px;" />
 <p class="centered">
-<strong>Figure 1: MPI program structure [1]</strong></p><p>A MPI program is basically a C program with extending MPI library, SO DON’T BE SCARED. The program has two different parts, one is serial, and the other is parallel. Serial part contains variable declarations etc., and the parallel part will be working on each node such as master splitting the task, and each node will be working on each task, and sending back result to master node.</p>
-<p><strong>Communicators</strong>: sets of processes that have a valid source or destination fields. The predefined communicator is MPI_COMM_WORLD, and we will be using this default communicator all the time in this module. MPI_COMM_WORLD is a default communicator consisting all processes. Furthermore, a programmer can also define a new communicator, which has a smaller number of processes than MPI_COMM_WORLD.</p>
-<img alt="MPI_COMM_WORLD" class="align-center" src="../_images/MPI_COMM_WORLD.png" style="width: 500px; height: 250px;" />
+<strong>Figure 1: MPI program structure [1]</strong></p><p>A MPI program is basically a C program with extending MPI library, SO DON’T BE SCARED. The program has two different parts, one is serial, and the other is parallel. Serial part contains variable declarations etc., and the parallel part starts when MPI execution environment has been initialized, and ends when MPI_Finalize() has been called.</p>
+<p><strong>Communicators</strong>: sets of processes that have a valid source or destination fields. The predefined communicator is MPI_COMM_WORLD, and we will be using this default communicator all the time in this module. MPI_COMM_WORLD is a default communicator consisting all processes. Furthermore, a programmer can also define a new communicator, which has a smaller number of processes than MPI_COMM_WORLD does.</p>
+<img alt="MPI_COMM_WORLD" class="align-center" src="../_images/MPI_COMM_WORLD.png" style="width: 400px; height: 250px;" />
 <p class="centered">
-<strong>Figure 2: MPI_COMM_WORLD [2]</strong></p><p><strong>Processes</strong>: For this scope of knowledge, we just need to know that processes belong to the MPI_COMM_WORLD. If there are p processes, then each process is defined by its rank, which starts from 0 to p - 1. The master has the rank 0.</p>
+<strong>Figure 2: MPI_COMM_WORLD [2]</strong></p><p><strong>Processes</strong>: For this scope of knowledge, we just need to know that processes belong to the MPI_COMM_WORLD. If there are <em>p</em> processes, then each process is defined by its rank, which starts from <em>0</em> to <em>p - 1</em>. The master has the rank <em>0</em>.</p>
 </div>
 <div class="section" id="some-common-functions">
 <h3>Some Common Functions:<a class="headerlink" href="#some-common-functions" title="Permalink to this headline">¶</a></h3>
@@ -100,21 +92,21 @@
 <p>This function has to be called in every MPI program. It is used to initialize the MPI execution environment.</p>
 <div class="highlight-python"><pre>MPI_Comm_size(comm, &amp;size)</pre>
 </div>
-<p>This function determines the number of processes in the communicator. MPI_COMM_WORLD is commonly used as the communicator. The number of processes get store in the variable size. The size is the same for all processes.</p>
+<p>This function determines the number of processes in the communicator. MPI_COMM_WORLD is commonly used as the communicator. The number of processes get store in the variable size. Size is the same for all processes.</p>
 <div class="highlight-python"><pre>MPI_Comm_rank(comm, &amp;rank)</pre>
 </div>
-<p>This function determines the rank of the calling process within the communicator. Each process is assigned uniquely by integer rank from 0 to number of processes - 1, and its rank gets stored in the variable rank.</p>
+<p>This function determines the rank of the calling process within the communicator. Each process is assigned uniquely by integer rank from <em>0</em> to <em>number of processes - 1</em>, and its rank gets stored in the variable rank.</p>
 <div class="highlight-python"><pre>MPI_Get_processor_name(name, &amp;len)</pre>
 </div>
 <p>This function returns the unique processor name. Variable name is the array of char of at least the MPI_MAX_PROCESSOR_NAME, and len is the length of the name.</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="n">MPI_Wtime</span><span class="p">()</span>
 </pre></div>
 </div>
-<p>This function returns an elapsed wall clock time in seconds (double precision) on the calling processor.</p>
+<p>This function returns an elapsed wall clock time in seconds on the calling processor.</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="n">MPI_Finalize</span><span class="p">()</span>
 </pre></div>
 </div>
-<p>This function terminates the MPI execution environment. All processes must call this routine before exiting.</p>
+<p>This function terminates the MPI execution environment. MPI_Finalize() has to be called by all processes before exiting.</p>
 <div class="section" id="example-1-hello-world-mpi">
 <h4>Example 1: Hello World MPI<a class="headerlink" href="#example-1-hello-world-mpi" title="Permalink to this headline">¶</a></h4>
 <div class="highlight-c"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
@@ -146,7 +138,7 @@
 </td></tr></table></div>
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
-<p class="last">In this hello world program, it illustrates how to use some basic functions of MPI. First it initializes the MPI execution environment. Then it prints &#8220;Hello world from process rank of number of processes&#8221;. Then it terminates the MPI execution environment.</p>
+<p class="last">In this hello world program, it illustrates how to use some basic functions of MPI. First, it initializes the MPI execution environment. Then it prints &#8220;Hello world from process rank of number of processes&#8221;. Then it terminates the MPI execution environment.</p>
 </div>
 <p class="rubric">Footnotes</p>
 <table class="docutils footnote" frame="void" id="id1" rules="none">
@@ -193,13 +185,8 @@
 </ul>
 
   <h4>Previous topic</h4>
-<<<<<<< HEAD
-  <p class="topless"><a href="../index.html"
-                        title="previous chapter">Distributed Memory Programming</a></p>
-=======
-  <p class="topless"><a href="../LittleFe/LittleFe.html"
-                        title="previous chapter">LittleFe</a></p>
->>>>>>> 41a939aa54bd203e1dd41dcc7cc04060c210f45a
+  <p class="topless"><a href="../LocalClusterConfig/LocalClusterConfig.html"
+                        title="previous chapter">Local Cluster Configurations</a></p>
   <h4>Next topic</h4>
   <p class="topless"><a href="../MPICommunication/MPICommunication.html"
                         title="next chapter">MPI Communications</a></p>
@@ -235,11 +222,7 @@
           <a href="../MPICommunication/MPICommunication.html" title="MPI Communications"
              >next</a> |</li>
         <li class="right" >
-<<<<<<< HEAD
-          <a href="../index.html" title="Distributed Memory Programming"
-=======
-          <a href="../LittleFe/LittleFe.html" title="LittleFe"
->>>>>>> 41a939aa54bd203e1dd41dcc7cc04060c210f45a
+          <a href="../LocalClusterConfig/LocalClusterConfig.html" title="Local Cluster Configurations"
              >previous</a> |</li>
         <li><a href="../index.html">Distributed Memory Programming</a> &raquo;</li> 
       </ul>

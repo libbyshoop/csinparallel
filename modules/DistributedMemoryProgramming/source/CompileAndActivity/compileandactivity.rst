@@ -4,21 +4,21 @@ Compiling and Activites
 
 .. highlight:: c
 
-Compiling MPI program on LittleFe
----------------------------------
+Compiling an MPI program
+------------------------
 
-To compile a MPI program on our LittleFe, we can use the following commands in the terminal:
+To compile an MPI program on your local cluster, you can enter the following commands in the terminal:
 
-First we need to make an object from the MPI program: ::
+First, we need to make an executable file from the MPI program: ::
 
 	mpicc -o name_executable_file filename.c
 
-Then we are able to compile that object using **mpirun** : ::
+Then you are able to execute it using **mpirun** : ::
 
 	mpirun -machinefile machines -np #processes ./name_executable_file
 
 .. note:: 
-	**machines**: is the instruction for running the executable file on which node, and how many times on which node. It has the structure as follow: 
+	**machines**: is the instruction for running the executable file on which node, and how many times on which node. For example, machines on LittleFe has structure as follow: 
 
         - node000.bccd.net    slots = 1
         - node011.bccd.net    slots = 1
@@ -27,14 +27,16 @@ Then we are able to compile that object using **mpirun** : ::
         - node014.bccd.net    slots = 1
         - node015.bccd.net    slots = 1
 
-Moreover, you can also compile a MPI program without using **machines**, you can use the following command to run only on the master node: ::
+Moreover, you can also compile an MPI program without using **machines**, you can use the following command to run only on the master node: ::
 
 	mpirun -np #processes ./name_executable_file
 
-Activity 1: PI Computation
---------------------------
+.. note:: Please look at `LocalClusterConfig/LocalClusterConfig.rst` or ask your instructor on how to log in onto your local machine.    
 
-In this activity, we are going to compute PI using integration. We have formula:
+Activity 1: What is my :math:`{\pi}` ?
+---------------------------------------
+
+In this activity, we are going to compute :math:`{\pi}` using integration. We have formula:
 
 .. math::
 
@@ -51,22 +53,21 @@ Therefore, we can compute the area under the curve to get the value of the integ
 .. centered:: Figure 4: Graph for function
 
 
-We can split the area under the curve into bins. The idea is to group the bins into smaller chunks, and so we can use each process to calculate each chunk, and then combine the result into one value. Remember, that we can get a more accurate result if you split the area under the curve to more number of bins.
+We can split the area under the curve into bins. The idea is to group the bins into smaller chunks, and so we can use each process to calculate each chunk, and then combine the result into one value. Remember, that we can get a more accurate result if you split the area under the curve into more number of bins.
 
-In this activity, we also want to time our computation by using MPI_Wtime() function. We provide you some parts of the code, and would like you to complete **TO DO**, and then you can experiment with the different number of bins you are using. Moreover,  we want you to execute with different number of processes, and compare your timings. I will walk you through the code step by step.
+In this activity, we also want you to time your computation by using MPI_Wtime() function. We provide you some parts of the code, and would like you to complete **TO DO**, and then you can experiment with the different number of bins you are using. Moreover,  we want you to execute your program with different number of processes, and compare your timings. I will walk you through the code step by step.
 
-First, you need to initialize the MPI execution environment, define the size of communicator, and define the rank of each process. This should be straight forward for you. You are asked to complete this part.
+First, you need to initialize the MPI execution environment, define the size of communicator, and define the rank of each process. This should be straight forward for you. You are asked to complete this task.
 
-Then we want to let each process know the number of bins we are using. Therefore, we can broadcast the number of bin to all processes in our MPI_COMM_WORLD. You should use MPI_Bcast to broadcast from master node. You are asked to complete this part.
+Then you want to let each process know the **number of bins** you are using. Therefore, you need broadcast the **number of bins** to all processes in our MPI_COMM_WORLD. You should use **MPI_Bcast** to broadcast this from master node. You are asked to complete this part.
 
-After that we are ready to ask each process compute their task. Since we want to find the sum from *0* to *1*, we can use the step(width of each bin) to move from one bin to the next. We know that we are iterating over the number of bins, and we start from 1; therefore, to find the center of each bin, we need to use *- 0.5*.
-This can be done by using the following piece of code: ::
+After that we are ready to ask each process compute their task. We want to evaluate the integral of :math:`\frac {4}{1 + x^2}` from *0* to *1*, and we can do so by finding the sum of all bins from *0* to *1*. Each bin is approximately :math:`\frac {1}{n} * \frac {4}{1 + x^2}` (**n** is the number of bins). We are iterating over the number of bins, and we start from *0*; therefore, to find the center of each bin, we need to add *+0.5* to variable *i*. Moreover, in the **for loop**, we ask the rank *0* to compute the first bin, the (nprocs) bin, and so on, rank *1* to compute the second bin, the (nprocs + 1) bin, and so on, ..., as long as value of *i* is less than **n** . This can be done by using the following piece of code: ::
 
     /* Calculating for each process */
     step = 1.0 / (double) n;
     sum = 0.0;
-    for (i = rank + 1; i <= n; i += nprocs) {
-        x = step * ((double)i - 0.5);
+    for (i = rank; i < n; i += nprocs) {
+        x = step * ((double)i + 0.5);
         sum += (4.0/(1.0 + x*x));
     }
 
@@ -83,7 +84,7 @@ Below is the complete source code for mpi_pi.c[1]:
 Activity 2: Vector Matrix Multiplication
 ----------------------------------------	
 
-In this activity, we will compute vector matrix multiplication. In this activity, we will illustrate the use of MPI_Bcast, MPI_Scatter, and MPI_Gather to do this multiplication. First, we want you to complete this MPI program by filling codes at **TO DO**. After having completed this task, try to run this MPI program on LittleFe by using different number of processes.
+In this activity, we will compute vector matrix multiplication. We will illustrate the use of MPI_Bcast, MPI_Scatter, and MPI_Gather to do this multiplication. First, we want you to complete this MPI program by filling codes at **TO DO**. After having completed this task, try to run this MPI program by using different number of processes. Try to explain yourself what happening !
 
 I will explain how the vector matrix multiplication works. First let's say we have a matrix *A*, and a vector *x* as below:  
 
@@ -95,11 +96,11 @@ I will explain how the vector matrix multiplication works. First let's say we ha
 
 .. centered:: Figure 5: vector matrix multiplication [2]
 
-This multiplication produces a new vector whose length is the number of rows of *A*. The multiplication is very simple, we just need to take a row of matrix *A* dot product with vector *x*, and this produces an element of the result vector. For example, the first row of matrix *A* dot products with vector *x* will produce the first element in vector *y*. 
+This multiplication produces a new vector whose length is the number of rows of *A*. The multiplication is very simple, we take a row of matrix *A* dot product with vector *x*, and this produces an element of the result vector. For instance, the first row of matrix *A* dot products with vector *x* will produce the first element in vector *y*. 
 
-I will step you through the source code for this MPI program. Since this is a MPI program, we need to create MPI execution environment, define the size of communicator, and give each process a rank. You are asked to completed this part of the code.
+I will step you through the source code for this MPI program. Since this is an MPI program, we need to create the MPI execution environment, define the size of communicator, and give each process a rank. You are asked to completed this part of the code.
 
-After having initialized the MPI environment, we want to ask the master to initialize the vector and matrix we are going to multiply. In order to do that, first we check if the process is master, if so we just need to initialize the matrix and vector. ::
+After having initialized the MPI environment, we want to ask the master to initialize the vector and matrix we are going to multiply. In order to do that, we check if the process is master, if so we initialize the matrix and vector. ::
 
     if (rank == 0) {
         /* Initialize Matrix and Vector */
@@ -111,9 +112,9 @@ After having initialized the MPI environment, we want to ask the master to initi
         }
     }
 
-Since the vector is not very large here and all processes need to have this vector to do the multiplication, we will broadcast entire vector to all processes. We do that by using MPI_Bcast. Also, we want to distribute the matrix to each process in the MPI_COMM_WORLD. We would do this using MPI_Scatter. You are asked to complete this part. 
+Since the vector is not very large and all processes must have this vector to do the multiplication, we will broadcast entire vector to all processes. We do this by using MPI_Bcast. In addition, we want to distribute the matrix to each process in the MPI_COMM_WORLD. We would do this using MPI_Scatter. You are asked to complete this task.
 
-When all processes are able to see the vector and some rows of matrix, they are now able to do the multiplication. We need to store their result in the result matrix. ::
+When all processes can see the vector and some rows of matrix, they are now able to do the multiplication. We need to store their result in the result matrix. ::
 
     for(i = 0; i < chunk_size; i++) {
         result[i] = 0;
@@ -122,7 +123,7 @@ When all processes are able to see the vector and some rows of matrix, they are 
         }
     }
 
-The last part you need to complete is to gather all result vectors in all processes, and store them in the output vector, which is called global_result vector. This will be our result vector. Moreover, we can print out the value of each element in the global_result vector, and then terminate the MPI execution environment.    
+The last part you need to complete is to gather all result vectors in all processes, and store them in the output vector, called global_result vector. This will be our result vector. Moreover, we can print out the value of each element in the global_result vector, and then terminate the MPI execution environment.    
 
 Below is the entire source code for vector matrix multiplication [3]:    
 

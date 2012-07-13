@@ -54,11 +54,22 @@
             
   <div class="section" id="littlefe">
 <h1>LittleFe<a class="headerlink" href="#littlefe" title="Permalink to this headline">¶</a></h1>
-<p>LittleFe is a 6-node distributed memory cluster. LittleFe is able to have its node work simultaneously. It uses MPI library to distribute the task to each node, and let each node work their own task. After they finish, we can combine the result from each node to get the overall output. LittleFe is a linux based machine. Each node of LittleFe has nVidia GT 218 GPU, which enables LittleFe to do GPU programming, CUDA C. All of them connect via the network router.</p>
-<p>LittleFe is a based Linux cluster, which is provided by Bootable Cluster CD (BCCD). BCCD also provides some cool applications that can be ran using MPI such as GalaxSee, Life, and Parameter-space .etc. Because of LittleFe&#8217;s ability, we have also been working on Heterogeneous programming model, which combines CUDA and MPI. You will see in the next module. In this module, we will be using LittleFe for our parallel programming activities. Below is a picture of LittleFe:</p>
+<p>LittleFe is a 6-node distributed memory cluster. LittleFe is able to have its nodes work simultaneously. It uses Message Passing Interface (MPI) library to distribute the task to each node, and let each node work their own task. After they finish, we can combine the result from each node to get the overall output. Each node of LittleFe has nVidia GT 218 GPU, which enables LittleFe to do GPU programming, CUDA C. All the nodes connect via the network router.</p>
+<p>LittleFe is a Linux based cluster, which is provided by Bootable Cluster CD (BCCD). BCCD also provides some cool applications that can be ran using MPI such as GalaxSee, Life, and Parameter-space .etc. Because of LittleFe&#8217;s ability, we have also been working on Heterogeneous programming model, which combines CUDA and MPI. You will see in the next module. In this module, we will be using LittleFe for our MPI programming activities. Below is a picture of LittleFe:</p>
 <img alt="LittleFe" class="align-center" src="../_images/LittleFe.jpg" style="width: 450px; height: 350px;" />
 <p class="centered">
-<strong>Figure 1: LittleFe</strong></p></div>
+<strong>Figure 1: LittleFe</strong></p><div class="section" id="how-to-log-in-onto-littlefe">
+<h2>How to log in onto LittleFe<a class="headerlink" href="#how-to-log-in-onto-littlefe" title="Permalink to this headline">¶</a></h2>
+<p>In order to run a program on LittleFe, we can remotely log in onto LittleFe by using the following command:</p>
+<div class="highlight-python"><pre>ssh bccd@141.140.151.98</pre>
+</div>
+<p>When it prompts for a password, enter:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">bccd</span>
+</pre></div>
+</div>
+<p>You are then successfully log in onto LittleFe, and ready to run your program.</p>
+</div>
+</div>
 
 
           </div>
@@ -69,6 +80,14 @@
             <p class="logo"><a href="../index.html">
               <img class="logo" src="../_static/CSInParallel200wide.png" alt="Logo"/>
             </a></p>
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">LittleFe</a><ul>
+<li><a class="reference internal" href="#how-to-log-in-onto-littlefe">How to log in onto LittleFe</a></li>
+</ul>
+</li>
+</ul>
+
   <h4>Previous topic</h4>
   <p class="topless"><a href="../index.html"
                         title="previous chapter">Distributed Memory Programming</a></p>

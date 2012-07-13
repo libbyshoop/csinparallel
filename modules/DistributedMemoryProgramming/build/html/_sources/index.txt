@@ -9,7 +9,8 @@ Distributed Memory Programming
 .. toctree::
    :maxdepth: 1
 
-   LittleFe/LittleFe
+   IntroCluster/IntroCluster
+   LocalClusterConfig/LocalClusterConfig
    introMPI/introMPI
    MPICommunication/MPICommunication
    CompileAndActivity/compileandactivity

@@ -5,7 +5,7 @@ MPI Communications
 Point-to-point Communication
 ----------------------------
 
-Point-to-point communication is a way that pair of processors transmit the data between one another, one processor sending, and the other receiving. MPI provides SEND(MPI_Send) and RECEIVE(MPI_Recv) functions that allow point-to-point communication taking place in the MPI world. ::
+Point-to-point communication is a way that pair of processors transmits the data between one another, one processor sending, and the other receiving. MPI provides SEND(MPI_Send) and RECEIVE(MPI_Recv) functions that allow point-to-point communication taking place in the MPI world. ::
 
 	MPI_Send(void* buffer, int count, MPI_Datatype datatype, int destination, int tag, MPI_Comm comm)
 
@@ -21,11 +21,13 @@ Point-to-point communication is a way that pair of processors transmit the data 
 		- source:	rank of the sending processor	
 		- status:	return status
 
+.. note:: To read more on MPI_Status, please read `MPI_Status <http://www.netlib.org/utk/papers/mpi-book/node31.html>`_.
+
 
 MPI Datatype
 ^^^^^^^^^^^^
 
-
+In most MPI functions, which you will be using, require you specify the datatype of your message. Below is the table showing the corresponding datatype between MPI Datatype and C Datatype.
 
 =================== =================
     MPI Datatype         C Datatype   
@@ -42,7 +44,8 @@ MPI_FLOAT               float
 MPI_DOUBLE              double 
 MPI_LONG_DOUBLE         long double 
 =================== =================
-Table 1: Corresponding datatype between MPI and C
+
+**Table 1: Corresponding datatype between MPI and C**
 
 Example 2: Send and Receive Hello World
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -52,7 +55,7 @@ Example 2: Send and Receive Hello World
 	:linenos:
 
 
-This MPI program illustrates the use of MPI_Send and MPI_Recv functions. Basically, the master just send a message, “Hello, world”, to the process whose rank is 1, and then after having received the message, the process just prints out the message along with its rank.
+This MPI program illustrates the use of MPI_Send and MPI_Recv functions. Basically, the master sends a message, “Hello, world”, to the process whose rank is 1, and then after having received the message, the process prints out the message along with its rank.
 
 Collective Communication
 ------------------------
@@ -65,7 +68,7 @@ Collective communication is a communication that must have all processes involve
 	:height: 350px
 	:alt: MPI_COMM_WORLD
 
-.. centered:: Figure 3: Collective Communications 
+.. centered:: Figure 3: Collective Communications[1] 
 
 ::
 
@@ -79,7 +82,11 @@ This function displays the message to all other processes in MPI_COMM_WORLD from
 
 	MPI_Reduce(&buffer, &receivebuffer, int count, MPI_Datatype datatype, MPI_Op op, int root, comm)
 
-This function applies a reduction operation on all tasks in MPI_COMM_WORLD and reduces results from each process into one value. MPI_Op[1] includes for example, MPI_MAX, MPI_MIN, MPI_PROD, and MPI_SUM .etc. ::
+This function applies a reduction operation on all tasks in MPI_COMM_WORLD and reduces results from each process into one value. MPI_Op includes for example, MPI_MAX, MPI_MIN, MPI_PROD, and MPI_SUM .etc. 
+
+	.. note:: To read more on MPI_Op, please read `MPI_Op <http://www.mpi-forum.org/docs/mpi-11-html/node78.html#Node78>`_. 
+
+::
 
 	MPI_Scatter(&buffer, int count, MPI_Datatype, &receivebuffer, int count, MPI_Datatype, int root, comm)
 
@@ -87,8 +94,7 @@ This function divides a message into equal contiguous parts and sends each part 
 
 	MPI_Gather(&buffer, int count, MPI_Datatype, &receivebuffer, int count, MPI_Datatype, int root, comm)
 
-This function gathers distinct messages from each task in the group to a single destination task. This routine is the reverse operation of MPI_Scatter. 
-
+This function collects distinct messages from each task in the communicator to a single task. This function is the reverse operation of MPI_Scatter. 
 
 .. rubric:: Footnotes
-.. [1] http://www.mpi-forum.org/docs/mpi-11-html/node78.html#Node78
+.. [1] https://computing.llnl.gov/tutorials/mpi/
