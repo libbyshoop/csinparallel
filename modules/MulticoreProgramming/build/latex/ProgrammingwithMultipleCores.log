@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-1.40.10 (TeX Live 2009/Debian) (format=pdflatex 2011.7.11)  12 JUL 2012 10:01
+This is pdfTeX, Version 3.1415926-1.40.10 (TeX Live 2009/Debian) (format=pdflatex 2011.7.11)  13 JUL 2012 09:53
 entering extended mode
  %&-line parsing enabled.
 **ProgrammingwithMultipleCores.tex
@@ -768,7 +768,7 @@ Package: hypcap 2008/09/08 v1.10 Adjusting anchors of captions (HO)
 
 
 Writing index file ProgrammingwithMultipleCores.idx
-No file ProgrammingwithMultipleCores.aux.
+(./ProgrammingwithMultipleCores.aux)
 \openout1 = `ProgrammingwithMultipleCores.aux'.
 
 LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 106.
@@ -785,6 +785,7 @@ LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 106.
 LaTeX Font Info:    ... okay on input line 106.
 LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 106.
 LaTeX Font Info:    Try loading font information for TS1+cmr on input line 106.
+
 
 (/usr/share/texmf-texlive/tex/latex/base/ts1cmr.fd
 File: ts1cmr.fd 1999/05/25 v2.5h Standard LaTeX font definitions
@@ -821,6 +822,8 @@ Package: refcount 2008/08/11 v3.1 Data extraction from references (HO)
 )
 LaTeX Info: Redefining \ref on input line 106.
 LaTeX Info: Redefining \pageref on input line 106.
+
+(./ProgrammingwithMultipleCores.out) (./ProgrammingwithMultipleCores.out)
 \@outlinefile=\write6
 \openout6 = `ProgrammingwithMultipleCores.out'.
 
@@ -851,8 +854,13 @@ LaTeX Font Info:    Font shape `T1/phv/bx/n' in size <17.28> not available
 Package Fancyhdr Warning: \fancyfoot's `E' option without twoside option is use
 less on input line 109.
 
+(./ProgrammingwithMultipleCores.toc
+LaTeX Font Info:    Font shape `T1/ptm/bx/n' in size <10> not available
+(Font)              Font shape `T1/ptm/b/n' tried instead on input line 2.
+)
 \tf@toc=\write7
 \openout7 = `ProgrammingwithMultipleCores.toc'.
+
 
 
 Package Fancyhdr Warning: \fancyfoot's `E' option without twoside option is use
@@ -884,8 +892,6 @@ less on input line 109.
 Chapter 1.
 LaTeX Font Info:    Font shape `T1/phv/bx/n' in size <14.4> not available
 (Font)              Font shape `T1/phv/b/n' tried instead on input line 114.
-LaTeX Font Info:    Font shape `T1/ptm/bx/n' in size <10> not available
-(Font)              Font shape `T1/ptm/b/n' tried instead on input line 121.
 
 Overfull \hbox (14.79999pt too wide) in paragraph at lines 134--134
  [] 
@@ -920,105 +926,86 @@ Overfull \hbox (14.79999pt too wide) in paragraph at lines 397--397
 
 [4] [5]
 Chapter 2.
-Runaway argument?
-{ 
-! Paragraph ended before \text@command was complete.
-<to be read again> 
-                   \par 
-l.447 }
-        & \textbf{
-? 
-! Missing { inserted.
-<inserted text> 
-                {
-l.447 } &
-          \textbf{
-? 
 
-Overfull \hbox (14.58386pt too wide) in paragraph at lines 443--486
+Overfull \hbox (14.58386pt too wide) in paragraph at lines 443--480
 [][] 
  []
 
 
-Overfull \hbox (14.79999pt too wide) in paragraph at lines 504--504
+Overfull \hbox (14.79999pt too wide) in paragraph at lines 498--498
  [] 
  []
 
 
 Package Fancyhdr Warning: \fancyfoot's `E' option without twoside option is use
-less on input line 504.
+less on input line 498.
 
 [6
 
 ]
-Overfull \hbox (14.79999pt too wide) in paragraph at lines 519--519
+Overfull \hbox (14.79999pt too wide) in paragraph at lines 513--513
  [] 
  []
 
 
-Overfull \hbox (14.79999pt too wide) in paragraph at lines 572--572
+Overfull \hbox (14.79999pt too wide) in paragraph at lines 566--566
  [] 
  []
 
 [7]
-Overfull \hbox (14.79999pt too wide) in paragraph at lines 590--590
+Overfull \hbox (14.79999pt too wide) in paragraph at lines 584--584
  [] 
  []
 
 [8]
 Chapter 3.
 LaTeX Font Info:    Font shape `T1/phv/bx/n' in size <12> not available
-(Font)              Font shape `T1/phv/b/n' tried instead on input line 621.
+(Font)              Font shape `T1/phv/b/n' tried instead on input line 615.
 
-Overfull \hbox (14.79999pt too wide) in paragraph at lines 665--665
+Overfull \hbox (14.79999pt too wide) in paragraph at lines 659--659
  [] 
  []
 
 
 Package Fancyhdr Warning: \fancyfoot's `E' option without twoside option is use
-less on input line 677.
+less on input line 671.
 
 [9
 
 ]
-Overfull \hbox (14.79999pt too wide) in paragraph at lines 720--720
+Overfull \hbox (14.79999pt too wide) in paragraph at lines 714--714
  [] 
  []
 
 [10]
-Overfull \hbox (14.79999pt too wide) in paragraph at lines 811--811
+Overfull \hbox (14.79999pt too wide) in paragraph at lines 805--805
  [] 
  []
 
-[11] [12] [13]
-No file ProgrammingwithMultipleCores.ind.
-[14] (./ProgrammingwithMultipleCores.aux)
-
-LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
-
- ) 
+[11] [12] [13] (./ProgrammingwithMultipleCores.ind) [14]
+(./ProgrammingwithMultipleCores.aux) ) 
 Here is how much of TeX's memory you used:
- 7949 strings out of 495061
- 108769 string characters out of 1182621
- 195312 words of memory out of 3000000
- 10896 multiletter control sequences out of 15000+50000
+ 7976 strings out of 495061
+ 109303 string characters out of 1182621
+ 197025 words of memory out of 3000000
+ 10913 multiletter control sequences out of 15000+50000
  57976 words of font info for 66 fonts, out of 3000000 for 9000
  29 hyphenation exceptions out of 8191
  45i,14n,45p,671b,447s stack positions out of 5000i,500n,10000p,200000b,50000s
-{/usr/share/texmf-texlive/fonts/enc/dvips/base/8r.enc}</usr/share/texmf-texli
-ve/fonts/type1/public/amsfonts/cm/cmex10.pfb></usr/share/texmf-texlive/fonts/ty
-pe1/public/amsfonts/cm/cmmi10.pfb></usr/share/texmf-texlive/fonts/type1/public/
-amsfonts/cm/cmmi7.pfb></usr/share/texmf-texlive/fonts/type1/public/amsfonts/cm/
-cmr10.pfb></usr/share/texmf-texlive/fonts/type1/public/amsfonts/cm/cmr7.pfb></u
-sr/share/texmf-texlive/fonts/type1/urw/courier/ucrb8a.pfb></usr/share/texmf-tex
-live/fonts/type1/urw/courier/ucrr8a.pfb></usr/share/texmf-texlive/fonts/type1/u
-rw/courier/ucrro8a.pfb></usr/share/texmf-texlive/fonts/type1/urw/helvetic/uhvb8
-a.pfb></usr/share/texmf-texlive/fonts/type1/urw/times/utmb8a.pfb></usr/share/te
-xmf-texlive/fonts/type1/urw/times/utmr8a.pfb></usr/share/texmf-texlive/fonts/ty
-pe1/urw/times/utmri8a.pfb>
-Output written on ProgrammingwithMultipleCores.pdf (16 pages, 186992 bytes).
+{/usr/share/texmf-texlive/fonts/enc/dvips
+/base/8r.enc}</usr/share/texmf-texlive/fonts/type1/public/amsfonts/cm/cmex10.pf
+b></usr/share/texmf-texlive/fonts/type1/public/amsfonts/cm/cmmi10.pfb></usr/sha
+re/texmf-texlive/fonts/type1/public/amsfonts/cm/cmmi7.pfb></usr/share/texmf-tex
+live/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/share/texmf-texlive/fonts/t
+ype1/public/amsfonts/cm/cmr7.pfb></usr/share/texmf-texlive/fonts/type1/urw/cour
+ier/ucrb8a.pfb></usr/share/texmf-texlive/fonts/type1/urw/courier/ucrr8a.pfb></u
+sr/share/texmf-texlive/fonts/type1/urw/courier/ucrro8a.pfb></usr/share/texmf-te
+xlive/fonts/type1/urw/helvetic/uhvb8a.pfb></usr/share/texmf-texlive/fonts/type1
+/urw/times/utmb8a.pfb></usr/share/texmf-texlive/fonts/type1/urw/times/utmr8a.pf
+b></usr/share/texmf-texlive/fonts/type1/urw/times/utmri8a.pfb>
+Output written on ProgrammingwithMultipleCores.pdf (16 pages, 196295 bytes).
 PDF statistics:
- 172 PDF objects out of 1000 (max. 8388607)
+ 237 PDF objects out of 1000 (max. 8388607)
  44 named destinations out of 1000 (max. 500000)
- 1 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 129 words of extra memory for PDF output out of 10000 (max. 10000000)
 

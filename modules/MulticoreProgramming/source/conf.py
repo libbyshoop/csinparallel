@@ -27,9 +27,13 @@ import sys, os
 # coming with Sphinx (named 'sphinx.ext.*') or your custom ones.
 extensions = ['sphinx.ext.pngmath']
 
-#!!!! these paths work on Macs with a TeXLive install
-pngmath_latex = '/usr/local/texlive/2011/bin/x86_64-darwin/latex'
-pngmath_dvipng = '/usr/local/texlive/2011/bin/x86_64-darwin/dvipng'
+
+if 'Darwin' in os.uname()[0]:
+	pngmath_latex = '/usr/local/texlive/2011/bin/x86_64-darwin/latex'
+	pngmath_dvipng = '/usr/local/texlive/2011/bin/x86_64-darwin/dvipng'
+elif 'Linux' in os.uname()[0]:
+	pngmath_latex = '/usr/bin/latex'
+	pngmath_dvipng = '/usr/bin/dvipng'
 
 #extensions = ['sphinx.ext.jsmath']
 
@@ -116,7 +120,7 @@ html_title = 'Programming with Multiple Cores'
 
 # The name of an image file (relative to this directory) to place at the top
 # of the sidebar.
-#html_logo = None
+html_logo = '../../../images/CSInParallel200wide.png'
 
 # The name of an image file (within the static path) to use as favicon of the
 # docs.  This file should be a Windows icon file (.ico) being 16x16 or 32x32
@@ -126,7 +130,7 @@ html_title = 'Programming with Multiple Cores'
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,
 # so a file named "default.css" will overwrite the builtin "default.css".
-html_static_path = ['_static']
+#html_static_path = ['_static']
 
 # If not '', a 'Last updated on:' timestamp is inserted at every page bottom,
 # using the given strftime format.

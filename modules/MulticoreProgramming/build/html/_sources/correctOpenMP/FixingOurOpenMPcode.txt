@@ -18,7 +18,7 @@ But when threadct > 1, there are at least two independent threads, executed on s
 ``integral``. The incorrect answer results when the reads and writes of that memory location get out of order. Here is one example of how unfortunate ordering can happen with two threads:
 
 ========================= =========================== ===========================
-\                          Thread 1                    Thread 2
+                           Thread 1                    Thread 2
 ========================= =========================== ===========================
 source code:              | integral += f(a+i\*h);    | integral += f(a+i\*h); 
 execution of binary code: |                           |
