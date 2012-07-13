@@ -8,6 +8,15 @@ A cluster is usually a linux-based operating system, and it is called *Beowulf C
 	- Shared memory
 	- Distributed memory
 
+Benefits of using clusters are:
+
+	- Inexpensive
+	- Scalability
+	- Adaptability
+	- Faster Technology Innovation
+
+Programming Environments 
+
 We want to introduce you to a distributed memory model of parallel programming. These clusters are made of many individual nodes, each node contains at least one processor, a motherboard, memory, and network to connect to other nodes .etc. They do not share memory space.
 
 
