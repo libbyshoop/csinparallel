@@ -1,0 +1,299 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>URL Spider &mdash; CDS_java</title>
+    
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="top" title="CDS_java" href="../index.html" />
+    <link rel="next" title="Improving the ‘Spider’" href="../SpiderLabpart2/SpiderLabpart2.html" />
+    <link rel="prev" title="One Crawler" href="../TheSpiderLabonecrawler/TheSpiderLabonecrawler.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../SpiderLabpart2/SpiderLabpart2.html" title="Improving the ‘Spider’"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="../TheSpiderLabonecrawler/TheSpiderLabonecrawler.html" title="One Crawler"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../index.html">CDS_java</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="url-spider">
+<h1>URL Spider<a class="headerlink" href="#url-spider" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="environment">
+<h2>Environment<a class="headerlink" href="#environment" title="Permalink to this headline">¶</a></h2>
+<ol class="arabic simple">
+<li>On Machines with multiple cores</li>
+</ol>
+<ul>
+<li><dl class="first docutils">
+<dt><strong>Threads</strong> within a program can enable concurrency</dt>
+<dd><ul class="first last simple">
+<li>Run in parallel on multiple cores</li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><p class="first">Threads can share data in memory</p>
+</li>
+<li><dl class="first docutils">
+<dt>Ideally, needed work can get done faster</dt>
+<dd><ul class="first last simple">
+<li>There is a speedup in the computation when using multiple threads as opposed to using 1 thread</li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+<ol class="arabic simple" start="2">
+<li>Threads are not a concept associated with clusters of machines</li>
+</ol>
+</div>
+<div class="section" id="executing-sequentially">
+<h2>Executing sequentially<a class="headerlink" href="#executing-sequentially" title="Permalink to this headline">¶</a></h2>
+<div class="align-center figure align-center">
+<img alt="alternate text" src="../_images/Spider1.png" style="width: 750px; height: 372px;" />
+<p class="caption">Single Spider accesses the data and does all the work</p>
+</div>
+</div>
+<div class="section" id="one-spider">
+<h2>One spider<a class="headerlink" href="#one-spider" title="Permalink to this headline">¶</a></h2>
+<ol class="arabic simple">
+<li>The original web crawling spider that you’ve been working on looks like this:</li>
+</ol>
+<ul>
+<li><dl class="first docutils">
+<dt>3 data structures holding information</dt>
+<dd><ul class="first last simple">
+<li>Accessed individually by the Spider class</li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><p class="first">The Spider class does all the work, one step at a time</p>
+</li>
+<li><dl class="first docutils">
+<dt>In this case, the ‘work’ is piling up!</dt>
+<dd><ul class="first last simple">
+<li>Each page that is visited has many more links to follow</li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+<ol class="arabic simple" start="2">
+<li>What might make this process faster so that more work gets done?</li>
+</ol>
+</div>
+<div class="section" id="executing-concurrently">
+<h2>Executing concurrently<a class="headerlink" href="#executing-concurrently" title="Permalink to this headline">¶</a></h2>
+<div class="align-center figure align-center">
+<img alt="alternate text" src="../_images/Spider2.png" style="width: 780px; height: 390px;" />
+<p class="caption">Multiple Spider ‘Runnable’ Threads all access the shared data</p>
+</div>
+</div>
+<div class="section" id="multiple-spider-threads">
+<h2>Multiple Spider &#8216;threads&#8217;<a class="headerlink" href="#multiple-spider-threads" title="Permalink to this headline">¶</a></h2>
+<ul>
+<li><dl class="first docutils">
+<dt>What happens when several threads need to read and write from the ‘work’ data structure?</dt>
+<dd><ul class="first last">
+<li><p class="first">Imagine yourself as a spider working with a group of others</p>
+</li>
+<li><dl class="first docutils">
+<dt>What actions are involved when you:</dt>
+<dd><ul class="first last simple">
+<li>Grab a new page to work on from the work data structure</li>
+<li>Save new links to the ‘work’ data structure</li>
+<li>Store the completed page in ‘done’ data structure</li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+</div>
+<div class="section" id="key-point-locking">
+<h2>Key point: locking<a class="headerlink" href="#key-point-locking" title="Permalink to this headline">¶</a></h2>
+<ul>
+<li><dl class="first docutils">
+<dt>For certain operations on a shared data structure,</dt>
+<dd><ul class="first last simple">
+<li>Other threads must be barred from accessing when another thread is executing that operation</li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><p class="first">These operations must be atomic: only one thread can be executing this operation at a time</p>
+</li>
+<li><p class="first">Which operations on the work data structure should be atomic?</p>
+</li>
+</ul>
+</div>
+<div class="section" id="how-to-do-this-in-java">
+<h2>How to do this in Java<a class="headerlink" href="#how-to-do-this-in-java" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="creating-threads-in-java">
+<h3>Creating Threads in Java<a class="headerlink" href="#creating-threads-in-java" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li>Build a class that implements the Runnable interface:</li>
+</ul>
+<div class="highlight-python"><pre>public interface Runnable {
+        abstract public void run();
+}</pre>
+</div>
+<ul class="simple">
+<li>In a class containing ‘main’, create each thread and pass it a new instance of the Runnable class</li>
+</ul>
+</div>
+<div class="section" id="sharing-the-data">
+<h3>Sharing the Data<a class="headerlink" href="#sharing-the-data" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li>Create your shared data structures in a separate class</li>
+<li>Create one instance of the shared data class in the ‘main’ class</li>
+<li>Pass that instance of the shared data to each instance of the Runnable class via the constructor</li>
+</ul>
+</div>
+<div class="section" id="the-shared-data">
+<h3>The Shared Data<a class="headerlink" href="#the-shared-data" title="Permalink to this headline">¶</a></h3>
+<ul>
+<li><p class="first">Java has special data structures designed to be shared by Threads</p>
+</li>
+<li><p class="first">See the documentation for <a class="reference external" href="http://java.sun.com/j2se/1.5.0/docs/api/java/util/concurrent/package-summary.html">java.util.concurrent</a></p>
+</li>
+<li><dl class="first docutils">
+<dt>We’re using:</dt>
+<dd><ul class="first last simple">
+<li>ArrayBlockingQueue</li>
+<li>ConcurrentLinkedQueue</li>
+<li>(ConcurrentHashMap, inside another class provided for you to hold the counts of the URLs)</li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+<div class="topic">
+<p class="topic-title first">Dig Deeper:</p>
+<p>Once you’ve implemented your solution,</p>
+<ol class="arabic simple">
+<li>Roughly determine the speedup of your threaded version</li>
+</ol>
+<ul class="simple">
+<li>For varying numbers of threads</li>
+<li>What will you need to measure?</li>
+</ul>
+<ol class="arabic simple" start="2">
+<li>Write a short report analyzing the speedup of your threaded solution</li>
+</ol>
+</div>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../index.html">
+              <img class="logo" src="../_static/CSInParallel200wide.png" alt="Logo"/>
+            </a></p>
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">URL Spider</a><ul>
+<li><a class="reference internal" href="#environment">Environment</a></li>
+<li><a class="reference internal" href="#executing-sequentially">Executing sequentially</a></li>
+<li><a class="reference internal" href="#one-spider">One spider</a></li>
+<li><a class="reference internal" href="#executing-concurrently">Executing concurrently</a></li>
+<li><a class="reference internal" href="#multiple-spider-threads">Multiple Spider &#8216;threads&#8217;</a></li>
+<li><a class="reference internal" href="#key-point-locking">Key point: locking</a></li>
+<li><a class="reference internal" href="#how-to-do-this-in-java">How to do this in Java</a><ul>
+<li><a class="reference internal" href="#creating-threads-in-java">Creating Threads in Java</a></li>
+<li><a class="reference internal" href="#sharing-the-data">Sharing the Data</a></li>
+<li><a class="reference internal" href="#the-shared-data">The Shared Data</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="../TheSpiderLabonecrawler/TheSpiderLabonecrawler.html"
+                        title="previous chapter">One Crawler</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="../SpiderLabpart2/SpiderLabpart2.html"
+                        title="next chapter">Improving the ‘Spider’</a></p>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../SpiderLabpart2/SpiderLabpart2.html" title="Improving the ‘Spider’"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="../TheSpiderLabonecrawler/TheSpiderLabonecrawler.html" title="One Crawler"
+             >previous</a> |</li>
+        <li><a href="../index.html">CDS_java</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright This work is licensed under a Creative Commons Attribution-ShareAlike 3.0 Unported License.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>
