@@ -5,9 +5,9 @@ Introduction to MPI
 What is MPI ?
 *************
 
-Message Passing Interface (MPI) is a subroutine or a library for passing messages between processes in a distributed memory model. MPI is not a programming language. MPI is a programming model that is widely used for parallel programming in a cluster. In the cluster, the head node is known as the master, and the other nodes are known as the workers. By using MPI, programmers are able to divide up the task and distribute each task to each worker or to some specific workers. Thus, each node can compute its own task simultaneously. 
+Message Passing Interface (MPI) is a subroutine or a library for passing messages between processes in a distributed memory model. MPI is not a programming language. MPI is a programming model that is widely used for parallel programming in a cluster. In the cluster, the head node is known as the master, and the other nodes are known as the workers. By using MPI, programmers are able to divide up the task and distribute each task to each worker or to some specific workers. Thus, each node can work on its own task simultaneously. 
 
-Since this is a small module, we will be focusing on only important and common MPI functions and techniques. For further study, we encourage you to learn it by yourself.
+Since this is a small module, we will be focusing on only important and common MPI functions and techniques. For further study, there are a lot of free resources available on the internet.
 
 *********
 Why MPI ?
@@ -25,7 +25,7 @@ There are many reasons of using MPI as our parallel programming model:
 How do I write MPI program ?
 ****************************
 
-In order to get the MPI library working, you need to include the header file *#include <mpi.h>* or *#include “mpi.h”* in your C code.
+In order to get the MPI library working, you need to include the header file **#include <mpi.h>** or **#include “mpi.h”** in your C code.
 
 MPI Program Structure:
 **********************
@@ -40,19 +40,19 @@ Like other programming languages you have seen, program that includes MPI librar
 
 .. centered:: Figure 1: MPI program structure [1]
 
-A MPI program is basically a C program with extending MPI library, SO DON’T BE SCARED. The program has two different parts, one is serial, and the other is parallel. Serial part contains variable declarations etc., and the parallel part will be working on each node such as master splitting the task, and each node will be working on each task, and sending back result to master node.
+A MPI program is basically a C program with extending MPI library, SO DON’T BE SCARED. The program has two different parts, one is serial, and the other is parallel. Serial part contains variable declarations etc., and the parallel part starts when MPI execution environment has been initialized, and ends when MPI_Finalize() has been called.
 
-**Communicators**: sets of processes that have a valid source or destination fields. The predefined communicator is MPI_COMM_WORLD, and we will be using this default communicator all the time in this module. MPI_COMM_WORLD is a default communicator consisting all processes. Furthermore, a programmer can also define a new communicator, which has a smaller number of processes than MPI_COMM_WORLD.
+**Communicators**: sets of processes that have a valid source or destination fields. The predefined communicator is MPI_COMM_WORLD, and we will be using this default communicator all the time in this module. MPI_COMM_WORLD is a default communicator consisting all processes. Furthermore, a programmer can also define a new communicator, which has a smaller number of processes than MPI_COMM_WORLD does.
 
 .. image:: images/MPI_COMM_WORLD.png
-	:width: 500px
+	:width: 400px
 	:align: center
 	:height: 250px
 	:alt: MPI_COMM_WORLD
 
 .. centered:: Figure 2: MPI_COMM_WORLD [2]
 
-**Processes**: For this scope of knowledge, we just need to know that processes belong to the MPI_COMM_WORLD. If there are p processes, then each process is defined by its rank, which starts from 0 to p - 1. The master has the rank 0.	
+**Processes**: For this scope of knowledge, we just need to know that processes belong to the MPI_COMM_WORLD. If there are *p* processes, then each process is defined by its rank, which starts from *0* to *p - 1*. The master has the rank *0*.	
 
 Some Common Functions:
 **********************
@@ -65,11 +65,11 @@ This function has to be called in every MPI program. It is used to initialize th
 
 	MPI_Comm_size(comm, &size)
 
-This function determines the number of processes in the communicator. MPI_COMM_WORLD is commonly used as the communicator. The number of processes get store in the variable size. The size is the same for all processes. ::
+This function determines the number of processes in the communicator. MPI_COMM_WORLD is commonly used as the communicator. The number of processes get store in the variable size. Size is the same for all processes. ::
 
 	MPI_Comm_rank(comm, &rank)
 
-This function determines the rank of the calling process within the communicator. Each process is assigned uniquely by integer rank from 0 to number of processes - 1, and its rank gets stored in the variable rank. ::
+This function determines the rank of the calling process within the communicator. Each process is assigned uniquely by integer rank from *0* to *number of processes - 1*, and its rank gets stored in the variable rank. ::
 
 	MPI_Get_processor_name(name, &len)
 
@@ -77,11 +77,11 @@ This function returns the unique processor name. Variable name is the array of c
 
 	MPI_Wtime()
 
-This function returns an elapsed wall clock time in seconds (double precision) on the calling processor. ::
+This function returns an elapsed wall clock time in seconds on the calling processor. ::
 
 	MPI_Finalize()
 
-This function terminates the MPI execution environment. All processes must call this routine before exiting.
+This function terminates the MPI execution environment. MPI_Finalize() has to be called by all processes before exiting.
 
 Example 1: Hello World MPI
 ^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -90,7 +90,7 @@ Example 1: Hello World MPI
 .. literalinclude:: hellompi.c
 	:linenos:
 
-.. note:: In this hello world program, it illustrates how to use some basic functions of MPI. First it initializes the MPI execution environment. Then it prints "Hello world from process rank of number of processes". Then it terminates the MPI execution environment. 	
+.. note:: In this hello world program, it illustrates how to use some basic functions of MPI. First, it initializes the MPI execution environment. Then it prints "Hello world from process rank of number of processes". Then it terminates the MPI execution environment. 	
 
 .. rubric:: Footnotes
 .. [1] https://computing.llnl.gov/tutorials/mpi/
