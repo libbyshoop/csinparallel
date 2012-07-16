@@ -5,13 +5,26 @@ Introduction
 Motivation
 ##########
 
-*Moore's "Law"*: an empirical observation by Intel co-founder Gordon Moore in 1965. The number of components in computer circuits had doubled each year since 1958, and Moore predicted that this doubling trend would continue for another decade.  Incredibly, over four decades later, that number has continued to double each two years or less.
+`Moore's "Law"`_: an empirical observation by Intel co-founder Gordon Moore in 1965. The number of components in computer circuits had doubled each year since 1958, and Moore predicted that this doubling trend would continue for another decade.  Incredibly, over four decades later, that number has continued to double each two years or less.
 
 However, since about 2005, it has been impossible to achieve such performance improvements by making larger and faster single CPU circuits. Instead, the industry has created *multi-core* CPUs – single chips that contain multiple circuits for carrying out instructions (cores) per chip. 
 
 The number of cores per CPU chip is growing exponentially, in order to maintain the exponential growth curve of Moore's Law. But most **software** has been designed for single cores.
 
+.. figure:: MooresLaw.png
+    :width: 1000px
+    :align: center
+    :height: 899px
+    :alt: alternate text
+    :figclass: align-center
+
+    Plot of CPU transistor counts against dates of introduction. Note the logarithmic vertical scale; the line corresponds to exponential growth with transistor count doubling every two years. This figure is from `Wikimedia Commons`_.
+
 Therefore, CS students must learn principles of parallel computing to be prepared for careers that will require increasing understanding of how to take advantage of multi-core systems.
+
+.. _Wikimedia Commons: http://en.wikipedia.org/wiki/File:Transistor_Count_and_Moore%27s_Law_-_2011.svg
+
+.. _`Moore's "Law"`: http://en.wikipedia.org/wiki/Moore%27s_law
 
 Some pairs of terms
 ###################
