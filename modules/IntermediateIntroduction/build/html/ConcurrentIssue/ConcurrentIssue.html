@@ -1,0 +1,120 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Some issues in concurrency &mdash; Intermediate Introduction to Parallel Computing</title>
+    
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="top" title="Intermediate Introduction to Parallel Computing" href="../index.html" />
+    <link rel="prev" title="Some Options For Communication" href="../OptionsForCommunication/OptionsForCommunication.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../OptionsForCommunication/OptionsForCommunication.html" title="Some Options For Communication"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../index.html">Intermediate Introduction to Parallel Computing</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="some-issues-in-concurrency">
+<h1>Some issues in concurrency<a class="headerlink" href="#some-issues-in-concurrency" title="Permalink to this headline">¶</a></h1>
+<p>We will use the Hadoop implementation of map-reduce for clusters as a running example.</p>
+<p><strong>Fault tolerance</strong> is the capacity of a computing system to continue to satisfy its spec in the presence of faults (causes of error)</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Comments:</th><td class="field-body">With more parallel computing components and more interactions between them, more faults become possible. Also, in large computations, the cost of restarting a computation may become greater. Thus, fault tolerance becomes more important and more challenging as one increases the use of parallelism. Systems (such as map-reduce) that automatically provide for fault tolerance help programmers of parallel systems become more productive.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Mutually exclusive access to shared resources</strong> means that at most one computation (process or thread) can access a resource (such as a shared memory location) at a time. This is one of the requirements for correct IPC.  One approach to mutually exclusive access is locking, in which a mechanism is provided for one computation to acquire a &#8220;lock&#8221; that only one computation may hold at any given time. A computation possessing the lock may then use that lock&#8217;s resource without fear of interference by another process, then release the lock when done.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Comments:</th><td class="field-body">Designing computationally correct locking systems and using them correctly for IPC can often be quite tricky.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Scheduling</strong> means assigning computations (processes or threads) to processors (cores, distributed computers, etc.) according to time. For example, in map-reduce computing, we mapper processes are scheduled to particular cluster nodes having the necessary local data; they are rescheduled in the case of faults; reducers are scheduled at a later time.</p>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../index.html">
+              <img class="logo" src="../_static/CSInParallel200wide.png" alt="Logo"/>
+            </a></p>
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="../OptionsForCommunication/OptionsForCommunication.html"
+                        title="previous chapter">Some Options For Communication</a></p>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../OptionsForCommunication/OptionsForCommunication.html" title="Some Options For Communication"
+             >previous</a> |</li>
+        <li><a href="../index.html">Intermediate Introduction to Parallel Computing</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright This work is licensed under a Creative Commons Attribution-ShareAlike 3.0 Unported License.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>
