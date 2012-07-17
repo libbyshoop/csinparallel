@@ -1,21 +1,76 @@
 Introduction to Cluster
 =======================
 
-**Definition**: A cluster is a type of parallel or distributed processing system, which consists of a collection of interconnected stand-alone computers cooperatively working together as a single, integrated computing resource. 
+**Definition**: "A cluster is a type of parallel or distributed processing system, which consists of a collection of interconnected stand-alone computers cooperatively working together as a single, integrated computing resource." - by R. Buyya
 
-A cluster is usually a linux-based operating system, and it is called *Beowulf Cluster*. There are two parallel models for a cluster:
+A cluster is usually a linux-based operating system. A cluster has four major parts:
+	
+	- Network:
+		- Provides communications between nodes, server, and gateway.
+	- Nodes:
+		- Each node has its own processor, memory, and storage.
+	- Server:
+		- Provides network services to the cluster.
+	- Gateway:
+		- Acts as a firewall between the cluster and outside world.
 
-	- Shared memory computing
-	- Distributed memory computing
+There are two parallel models for a cluster:
+
+	- Shared Memory Model
+	- Distributed Memory Model
+
+General Characteristics of Shared Memory Model Obtained from [1]:
+	
+	- All processors have ability to access all memory as global address space.
+	- Multiple processors can operate independently but share the same memory resources.
+	- Changes in a memory location effected by one processor are visible to all other processors.	
+
+.. image:: images/SharedMemoryUMA.png
+	:width: 350px
+	:align: center
+	:height: 250px
+	:alt: MPI Structure
+
+.. centered:: Figure 1: Shared Memory: Uniform Memory Access [1]
+
+General Characteristics of Distributed Memory Model Obtained from [2]:
+
+	- Distributed memory systems require a communication network to connect inter-processor memory.
+	- Processors have their own local memory. Memory addresses in one processor do not map to another processor, so there is no concept of global address space across all processors.
+	- Because each processor has its own local memory, it operates independently. Changes it makes to its local memory have no effect on the memory of other processors. Hence, the concept of cache coherency does not apply.
+	- When a processor needs access to data in another processor, it is usually the task of the programmer to explicitly define how and when data is communicated. Synchronization between tasks is likewise the programmer's responsibility.
+
+.. image:: images/DistributedMemory.png
+	:width: 450px
+	:align: center
+	:height: 200px
+	:alt: MPI Structure
+
+.. centered:: Figure 1: Distributed Memory System [2]
 
 Some benefits of using clusters are:
 
 	- Inexpensive: Hardware and software of a cluster cost significantly much less than those of supercomputer.
-	- Scalability
-	- Adaptability
-	- Faster Technology Innovation
+	- Scalability: Able to scale without impact on performance.
+	- Manageability: Ability to manage local and remote resources.
+	- High Performance: Operations should be optimized and efficient.
+	- Great capacity: Ability to solve a larger problem size.
 
-In order to use a cluster effectively, we need to have some programming environments such as Message Passing Interface (MPI), and OpenMP.etc. In this module, we will be learning about MPI on distributed memory cluster. These clusters are made of many individual nodes, each node contains at least one processor, a motherboard, memory, and network to connect to other nodes .etc. They do not share memory space.
+There are many applications of clustering such as:
+	
+	- Scientific computation
+	- Parametric Simulations
+	- Database Applications
+	- Internet Applications
+	- E-commerce Applications
+
+.. note:: Case Study on Cluster Applications: read the recommended reading from page 16 - 22.
+
+In order to use a cluster effectively, we need to have some programming environments such as Message Passing Interface (MPI), and OpenMP.etc. In this module, we will be learning about MPI on distributed memory cluster. 
 
 
+.. note:: Recommended reading: `Cluster Computing: High-Performance, High-Availability, and High-Throughput Processing on a Network of Computers <http://www.google.com/url?sa=t&rct=j&q=&esrc=s&source=web&cd=5&ved=0CG0QFjAE&url=http%3A%2F%2Fciteseerx.ist.psu.edu%2Fviewdoc%2Fdownload%3Fdoi%3D10.1.1.66.1453%26rep%3Drep1%26type%3Dpdf&ei=pnUEUKWhOMXbqgHK6o2xDA&usg=AFQjCNF6xIOgt0rm6YzPSpjVYNwjQfVZxw>`_
 
+.. rubric:: Footnotes
+.. [1] https://computing.llnl.gov/tutorials/parallel_comp/#SharedMemory
+.. [2] https://computing.llnl.gov/tutorials/parallel_comp/#DistributedMemory

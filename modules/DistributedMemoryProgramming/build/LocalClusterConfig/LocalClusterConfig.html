@@ -57,26 +57,17 @@
 <p>There are two local clusters at Macalester College, one is Selkie, and the other is LittleFe. Here we want to give you a sense of how the two clusters work.</p>
 <div class="section" id="littlefe">
 <h2>LittleFe<a class="headerlink" href="#littlefe" title="Permalink to this headline">¶</a></h2>
-<p>LittleFe is a 6-node distributed memory cluster. LittleFe is able to have its nodes work simultaneously. It uses Message Passing Interface (MPI) library to distribute the task to each node, and let each node work their own task. After they finish, we can combine the result from each node to get the overall output. Each node of LittleFe has nVidia GT 218 GPU, which enables LittleFe to do GPU programming, CUDA C. All the nodes connect via the network router.</p>
-<p>LittleFe is Linux-based, which is provided by Bootable Cluster CD (BCCD). BCCD also provides some cool applications that can be ran using MPI such as GalaxSee, Life, and Parameter-space .etc. Because of LittleFe&#8217;s ability, we have also been working on Heterogeneous programming model, which combines CUDA and MPI. You will see in the next module. In this module, we will be using LittleFe for our MPI programming activities. Below is a picture of LittleFe.</p>
+<p>LittleFe is a 6-node distributed memory cluster. Each node is a motherboard consists of a CPU, I/O devices, and memory .etc. It uses Message Passing Interface (MPI) library to distribute the task to each node, and let each node work their own task simultaneously. Then we can combine the result from each node to get the overall output. Each node of LittleFe has nVidia GT 218 GPU, which enables LittleFe to do GPU programming, CUDA C. All the nodes connect via the network router.</p>
+<p>LittleFe is Linux-based operating system, which is provided by Bootable Cluster CD (BCCD). BCCD also provides some cool applications that can be ran using MPI such as GalaxSee, Life, and Parameter-space .etc. Because of LittleFe&#8217;s ability, we have also been working on Heterogeneous programming model, which combines both CUDA and MPI. You will see in the next module. In this module, we will be using LittleFe for our MPI programming activities. Below is a picture of LittleFe.</p>
 <img alt="LittleFe" class="align-center" src="../_images/LittleFe.jpg" style="width: 450px; height: 350px;" />
 <p class="centered">
-<strong>Figure 1: LittleFe</strong></p><div class="section" id="how-to-log-in-onto-littlefe">
-<h3>How to log in onto LittleFe<a class="headerlink" href="#how-to-log-in-onto-littlefe" title="Permalink to this headline">¶</a></h3>
-<p>In order to run a program on LittleFe, we can remotely log in onto LittleFe by using the following command:</p>
-<div class="highlight-python"><pre>ssh bccd@141.140.151.98</pre>
-</div>
-<p>When it prompts for a password, enter:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="n">bccd</span>
-</pre></div>
-</div>
-<p>You are then successfully logging in onto LittleFe, and are ready to run your program.</p>
-</div>
-</div>
+<strong>Figure 1: LittleFe</strong></p></div>
 <div class="section" id="selkie">
 <h2>Selkie<a class="headerlink" href="#selkie" title="Permalink to this headline">¶</a></h2>
-<div class="section" id="how-to-log-in-onto-selkie">
-<h3>How to log in onto Selkie<a class="headerlink" href="#how-to-log-in-onto-selkie" title="Permalink to this headline">¶</a></h3>
+<p>Selkie is a virtual cluster, which was built in summer 2011, at Macalester College by a research group. The hardware platforms of Selkie are Apple iMacs, 16 mid-2010 models and 28 new mid-2011 models. VirtualBox product was used for virtual machines. The operating system configuration on each virtual machine is Ubuntu linix Server version 10.04.</p>
+<div class="section" id="how-to-log-in-onto-your-local-clusters">
+<h3>How to log in onto your local clusters<a class="headerlink" href="#how-to-log-in-onto-your-local-clusters" title="Permalink to this headline">¶</a></h3>
+<p>Your instructor will provide the instructions of how to log in onto your local clusters.</p>
 </div>
 </div>
 </div>
@@ -93,12 +84,9 @@
   <h3><a href="../index.html">Table Of Contents</a></h3>
   <ul>
 <li><a class="reference internal" href="#">Local Cluster Configurations</a><ul>
-<li><a class="reference internal" href="#littlefe">LittleFe</a><ul>
-<li><a class="reference internal" href="#how-to-log-in-onto-littlefe">How to log in onto LittleFe</a></li>
-</ul>
-</li>
+<li><a class="reference internal" href="#littlefe">LittleFe</a></li>
 <li><a class="reference internal" href="#selkie">Selkie</a><ul>
-<li><a class="reference internal" href="#how-to-log-in-onto-selkie">How to log in onto Selkie</a></li>
+<li><a class="reference internal" href="#how-to-log-in-onto-your-local-clusters">How to log in onto your local clusters</a></li>
 </ul>
 </li>
 </ul>
