@@ -55,7 +55,8 @@ Example 2: Send and Receive Hello World
 	:linenos:
 
 
-This MPI program illustrates the use of MPI_Send and MPI_Recv functions. Basically, the master sends a message, “Hello, world”, to the process whose rank is 1, and then after having received the message, the process prints the message along with its rank.
+:Comments: 
+	This MPI program illustrates the use of MPI_Send and MPI_Recv functions. Basically, the master sends a message, “Hello, world”, to the process whose rank is 1, and then after having received the message, the process prints the message along with its rank.
 
 Collective Communication
 ------------------------
@@ -68,7 +69,7 @@ Collective communication is a communication that must have all processes involve
 	:height: 350px
 	:alt: MPI_COMM_WORLD
 
-.. centered:: Figure 3: Collective Communications[1] 
+.. centered:: Figure 5: Collective Communications Obtained from computing.llnl.gov [1] 
 
 ::
 
@@ -82,7 +83,7 @@ This function displays the message to all other processes in MPI_COMM_WORLD from
 
 	MPI_Reduce(&message, &receivemessage, int count, MPI_Datatype datatype, MPI_Op op, int root, comm)
 
-This function applies a reduction operation on all tasks in MPI_COMM_WORLD and reduces results from each process into one value. MPI_Op includes for example, MPI_MAX, MPI_MIN, MPI_PROD, and MPI_SUM .etc. 
+This function applies a reduction operation on all tasks in MPI_COMM_WORLD and reduces results from each process into one value. MPI_Op includes for example, MPI_MAX, MPI_MIN, MPI_PROD, and MPI_SUM, etc. 
 
 	.. note:: To read more on MPI_Op, please read `MPI_Op <http://www.mpi-forum.org/docs/mpi-11-html/node78.html#Node78>`_. 
 

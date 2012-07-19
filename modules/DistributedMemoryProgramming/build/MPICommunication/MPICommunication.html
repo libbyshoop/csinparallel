@@ -201,7 +201,14 @@ MPI_Recv(void* message, int count, MPI_Datatype datatype, int source, int tag, M
 <span class="p">}</span>
 </pre></div>
 </td></tr></table></div>
-<p>This MPI program illustrates the use of MPI_Send and MPI_Recv functions. Basically, the master sends a message, “Hello, world”, to the process whose rank is 1, and then after having received the message, the process prints the message along with its rank.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Comments:</th><td class="field-body">This MPI program illustrates the use of MPI_Send and MPI_Recv functions. Basically, the master sends a message, “Hello, world”, to the process whose rank is 1, and then after having received the message, the process prints the message along with its rank.</td>
+</tr>
+</tbody>
+</table>
 </div>
 </div>
 <div class="section" id="collective-communication">
@@ -209,7 +216,7 @@ MPI_Recv(void* message, int count, MPI_Datatype datatype, int source, int tag, M
 <p>Collective communication is a communication that must have all processes involved in the scope of a communicator. We will be using MPI_COMM_WORLD as our communicator; therefore, the collective communication will include all processes.</p>
 <img alt="MPI_COMM_WORLD" class="align-center" src="../_images/collective.png" style="width: 450px; height: 350px;" />
 <p class="centered">
-<strong>Figure 3: Collective Communications[1]</strong></p><div class="highlight-c"><div class="highlight"><pre><span class="n">MPI_Barrier</span><span class="p">(</span><span class="n">comm</span><span class="p">)</span>
+<strong>Figure 5: Collective Communications Obtained from computing.llnl.gov [1]</strong></p><div class="highlight-c"><div class="highlight"><pre><span class="n">MPI_Barrier</span><span class="p">(</span><span class="n">comm</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>This function creates a barrier synchronization in a commmunicator(MPI_COMM_WORLD). Each task waits at MPI_Barrier call until all other tasks in the communicator reach the same MPI_Barrier call.</p>
@@ -220,7 +227,7 @@ MPI_Recv(void* message, int count, MPI_Datatype datatype, int source, int tag, M
 <div class="highlight-c"><div class="highlight"><pre><span class="n">MPI_Reduce</span><span class="p">(</span><span class="o">&amp;</span><span class="n">message</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">receivemessage</span><span class="p">,</span> <span class="kt">int</span> <span class="n">count</span><span class="p">,</span> <span class="n">MPI_Datatype</span> <span class="n">datatype</span><span class="p">,</span> <span class="n">MPI_Op</span> <span class="n">op</span><span class="p">,</span> <span class="kt">int</span> <span class="n">root</span><span class="p">,</span> <span class="n">comm</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>This function applies a reduction operation on all tasks in MPI_COMM_WORLD and reduces results from each process into one value. MPI_Op includes for example, MPI_MAX, MPI_MIN, MPI_PROD, and MPI_SUM .etc.</p>
+<p>This function applies a reduction operation on all tasks in MPI_COMM_WORLD and reduces results from each process into one value. MPI_Op includes for example, MPI_MAX, MPI_MIN, MPI_PROD, and MPI_SUM, etc.</p>
 <blockquote>
 <div><div class="admonition note">
 <p class="first admonition-title">Note</p>

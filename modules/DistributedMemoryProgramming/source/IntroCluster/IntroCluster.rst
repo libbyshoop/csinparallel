@@ -5,25 +5,25 @@ Introduction to Cluster
 
 A cluster is usually a linux-based operating system. Basically, a cluster has four major parts:
 	
-	- Network:
-		- Provides communications between nodes, server, and gateway.
-	- Nodes:
-		- Each node has its own processor, memory, and storage.
-	- Server:
-		- Provides network services to the cluster.
-	- Gateway:
-		- Acts as a firewall between the cluster and outside world.
+	- Network: Provides communications between nodes, server, and gateway.
+	- Nodes: Each node has its own processor, memory, and storage.
+	- Server: Provides network services to the cluster.
+	- Gateway: Acts as a firewall between the cluster and outside world.
 
-To give you background information about what we will be working on, you should have a good understanding of parallel computer memory architectures. We are going to look at two parallel computer memory architectures: 
+In order to prepare for what you will be working on, you should have a good understanding of parallel computer memory architectures. We are going to look at two parallel computer memory architectures: 
 
 	- Shared Memory Model
 	- Distributed Memory Model
 
-General Characteristics of Shared Memory Model Obtained from [1]:
+General Characteristics of Shared Memory Model:
 	
-	- All processors have ability to access all memory as global address space.
+	"
+	
+	- Shared memory parallel computers vary widely, but generally have in common the ability for all processors to access all memory as global address space.
+	
 	- Multiple processors can operate independently but share the same memory resources.
-	- Changes in a memory location effected by one processor are visible to all other processors.	
+	
+	- Changes in a memory location effected by one processor are visible to all other processors." [1]
 
 .. image:: images/SharedMemoryUMA.png
 	:width: 350px
@@ -31,14 +31,19 @@ General Characteristics of Shared Memory Model Obtained from [1]:
 	:height: 250px
 	:alt: MPI Structure
 
-.. centered:: Figure 1: Shared Memory: Uniform Memory Access [1]
+.. centered:: Figure 1: Shared Memory: Uniform Memory Access Obtained from www.computing.llnl.gov [2]
 
-General Characteristics of Distributed Memory Model Obtained from [2]:
+General Characteristics of Distributed Memory Model:
+
+	"
 
 	- Distributed memory systems require a communication network to connect inter-processor memory.
+	
 	- Processors have their own local memory. Memory addresses in one processor do not map to another processor, so there is no concept of global address space across all processors.
+	
 	- Because each processor has its own local memory, it operates independently. Changes it makes to its local memory have no effect on the memory of other processors. Hence, the concept of cache coherency does not apply.
-	- When a processor needs access to data in another processor, it is usually the task of the programmer to explicitly define how and when data is communicated. Synchronization between tasks is likewise the programmer's responsibility.
+	
+	- When a processor needs access to data in another processor, it is usually the task of the programmer to explicitly define how and when data is communicated. Synchronization between tasks is likewise the programmer's responsibility." [3]
 
 .. image:: images/DistributedMemory.png
 	:width: 450px
@@ -46,7 +51,7 @@ General Characteristics of Distributed Memory Model Obtained from [2]:
 	:height: 200px
 	:alt: MPI Structure
 
-.. centered:: Figure 1: Distributed Memory System [2]
+.. centered:: Figure 2: Distributed Memory System Obtained from www.computing.llnl.gov [4]
 
 Some benefits of using clusters are:
 
@@ -64,13 +69,20 @@ There are many applications of clustering such as:
 	- Internet Applications
 	- E-commerce Applications
 
-.. note:: Case Studies on Cluster Applications: read the recommended reading from page 16 - 22.
+.. topic:: Recommended Reading:
+	
+	* Please read `Cluster Computing: High-Performance, High-Availability, and High-Throughput Processing on a Network of Computers <http://www.cloudbus.org/papers/ic_cluster.pdf>`_ [5]. 
 
-In order to use a cluster effectively, we need to have some programming environments such as Message Passing Interface (MPI), and OpenMP.etc. In this module, we will be learning about MPI on distributed memory cluster.
+	* Case Studies on Cluster Applications: read from page 16 - 22.
 
 
-.. note:: Recommended reading: `Cluster Computing: High-Performance, High-Availability, and High-Throughput Processing on a Network of Computers <http://www.google.com/url?sa=t&rct=j&q=&esrc=s&source=web&cd=5&ved=0CG0QFjAE&url=http%3A%2F%2Fciteseerx.ist.psu.edu%2Fviewdoc%2Fdownload%3Fdoi%3D10.1.1.66.1453%26rep%3Drep1%26type%3Dpdf&ei=pnUEUKWhOMXbqgHK6o2xDA&usg=AFQjCNF6xIOgt0rm6YzPSpjVYNwjQfVZxw>`_
+In order to use a cluster effectively, we need to have some programming environments such as Message Passing Interface (MPI), and OpenMP, etc. In this module, we will be learning about MPI on distributed memory cluster.
 
-.. rubric:: Footnotes
+
+.. rubric:: References
+
 .. [1] https://computing.llnl.gov/tutorials/parallel_comp/#SharedMemory
-.. [2] https://computing.llnl.gov/tutorials/parallel_comp/#DistributedMemory
+.. [2] https://computing.llnl.gov/tutorials/parallel_comp/#SharedMemory
+.. [3] https://computing.llnl.gov/tutorials/parallel_comp/#DistributedMemory
+.. [4] https://computing.llnl.gov/tutorials/parallel_comp/#DistributedMemory
+.. [5] Chee Shin Yeo, Rajkumar Buyya, Hossein Pourreza, Rasit Eskicioglu, Peter Graham, and Frank Sommers, "Cluster Computing: High-Performance, High-Availability, and High-Throughput Processing on a Network of Computers", in Handbook of Nature-Inspired and Innovative Computing: Integrating Classical Models with Emerging Technologies, chapter 16, page 521 - 551, 2006

@@ -15,11 +15,11 @@ Why MPI ?
 
 There are many reasons of using MPI as our parallel programming model: 
 
-- Standardization: MPI is a standard message passing library, and it is supported on all high-performance computer platforms.  
-- Portability: MPI program is able to run on different platforms that support the MPI standard without changing your source codes.
-- Performance: Because of its parallel features, programmers are able to work on a much larger problem size with the faster computation.
-- Functionality: There are many functions defined in MPI Library for our usage.
-- Availability: A variety of implementations are available.
+	- MPI is a standard message passing library, and it is supported on all high-performance computer platforms.  
+	- MPI program is able to run on different platforms that support the MPI standard without changing your source codes.
+	- Because of its parallel features, programmers are able to work on a much larger problem size with the faster computation.
+	- There are many functions defined in MPI Library for our usage.
+	- A variety of implementations are available.
 
 ****************************
 How do I write MPI program ?
@@ -27,8 +27,8 @@ How do I write MPI program ?
 
 In order to get the MPI library working, you need to include the header file **#include <mpi.h>** or **#include “mpi.h”** in your C code.
 
-MPI Program Structure:
-**********************
+MPI Program Structure
+*********************
 
 Like other programming languages you have seen, program that includes MPI library has its structure. The structure is shown in the figure below:
 
@@ -38,9 +38,9 @@ Like other programming languages you have seen, program that includes MPI librar
 	:height: 400px
 	:alt: MPI Structure
 
-.. centered:: Figure 1: MPI program structure [1]
+.. centered:: Figure 3: MPI program structure Obtained from computing.llnl.gov [1]
 
-A MPI program is basically a C program with extending MPI library, SO DON’T BE SCARED. The program has two different parts, one is serial, and the other is parallel. Serial part contains variable declarations etc., and the parallel part starts when MPI execution environment has been initialized, and ends when MPI_Finalize() has been called.
+A MPI program is basically a C program with extending MPI library, SO DON’T BE SCARED. The program has two different parts, one is serial, and the other is parallel. Serial part contains variable declarations, etc., and the parallel part starts when MPI execution environment has been initialized, and ends when MPI_Finalize() has been called.
 
 **Communicator**: a set of processes that have a valid rank of source or destination fields. The predefined communicator is MPI_COMM_WORLD, and we will be using this communicator all the time in this module. MPI_COMM_WORLD is a default communicator consisting all processes. Furthermore, a programmer can also define a new communicator, which has a smaller number of processes than MPI_COMM_WORLD does.
 
@@ -50,7 +50,7 @@ A MPI program is basically a C program with extending MPI library, SO DON’T BE
 	:height: 250px
 	:alt: MPI_COMM_WORLD
 
-.. centered:: Figure 2: MPI_COMM_WORLD [2]
+.. centered:: Figure 4: MPI_COMM_WORLD Obtained from computing.llnl.gov [2]
 
 **Processes**: For this scope of knowledge, we just need to know that processes belong to the MPI_COMM_WORLD. If there are *p* processes, then each process is defined by its rank, which starts from *0* to *p - 1*. The master has the rank *0*.	
 
@@ -90,7 +90,9 @@ Example 1: Hello World MPI
 .. literalinclude:: hellompi.c
 	:linenos:
 
-.. note:: In this hello world program, it illustrates how to use some basic functions of MPI. First, it initializes the MPI execution environment. Then it prints "Hello world from process rank of number of processes". Finally, it terminates the MPI execution environment. 	
+:Comments:
+	
+	In this hello world program, it illustrates how to use some basic functions of MPI. First, it initializes the MPI execution environment. Then it prints "Hello world from process rank of number of processes". Finally, it terminates the MPI execution environment. 	
 
 .. rubric:: References
 .. [1] https://computing.llnl.gov/tutorials/mpi/

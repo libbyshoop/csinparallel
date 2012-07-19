@@ -57,70 +57,44 @@
 <p><strong>Definition</strong>: &#8220;A cluster is a type of parallel or distributed processing system, which consists of a collection of interconnected stand-alone computers cooperatively working together as a single, integrated computing resource.&#8221; - by Rajkumar Buyya</p>
 <p>A cluster is usually a linux-based operating system. Basically, a cluster has four major parts:</p>
 <blockquote>
-<div><ul>
-<li><dl class="first docutils">
-<dt>Network:</dt>
-<dd><ul class="first last simple">
-<li>Provides communications between nodes, server, and gateway.</li>
-</ul>
-</dd>
-</dl>
-</li>
-<li><dl class="first docutils">
-<dt>Nodes:</dt>
-<dd><ul class="first last simple">
-<li>Each node has its own processor, memory, and storage.</li>
-</ul>
-</dd>
-</dl>
-</li>
-<li><dl class="first docutils">
-<dt>Server:</dt>
-<dd><ul class="first last simple">
-<li>Provides network services to the cluster.</li>
-</ul>
-</dd>
-</dl>
-</li>
-<li><dl class="first docutils">
-<dt>Gateway:</dt>
-<dd><ul class="first last simple">
-<li>Acts as a firewall between the cluster and outside world.</li>
-</ul>
-</dd>
-</dl>
-</li>
+<div><ul class="simple">
+<li>Network: Provides communications between nodes, server, and gateway.</li>
+<li>Nodes: Each node has its own processor, memory, and storage.</li>
+<li>Server: Provides network services to the cluster.</li>
+<li>Gateway: Acts as a firewall between the cluster and outside world.</li>
 </ul>
 </div></blockquote>
-<p>To give you background information about what we will be working on, you should have a good understanding of parallel computer memory architectures. We are going to look at two parallel computer memory architectures:</p>
+<p>In order to prepare for what you will be working on, you should have a good understanding of parallel computer memory architectures. We are going to look at two parallel computer memory architectures:</p>
 <blockquote>
 <div><ul class="simple">
 <li>Shared Memory Model</li>
 <li>Distributed Memory Model</li>
 </ul>
 </div></blockquote>
-<p>General Characteristics of Shared Memory Model Obtained from [1]:</p>
+<p>General Characteristics of Shared Memory Model:</p>
 <blockquote>
-<div><ul class="simple">
-<li>All processors have ability to access all memory as global address space.</li>
+<div><p>&#8220;</p>
+<ul class="simple">
+<li>Shared memory parallel computers vary widely, but generally have in common the ability for all processors to access all memory as global address space.</li>
 <li>Multiple processors can operate independently but share the same memory resources.</li>
-<li>Changes in a memory location effected by one processor are visible to all other processors.</li>
+<li>Changes in a memory location effected by one processor are visible to all other processors.&#8221; [1]</li>
 </ul>
 </div></blockquote>
 <img alt="MPI Structure" class="align-center" src="../_images/SharedMemoryUMA.png" style="width: 350px; height: 250px;" />
 <p class="centered">
-<strong>Figure 1: Shared Memory: Uniform Memory Access [1]</strong></p><p>General Characteristics of Distributed Memory Model Obtained from [2]:</p>
+<strong>Figure 1: Shared Memory: Uniform Memory Access Obtained from www.computing.llnl.gov [2]</strong></p><p>General Characteristics of Distributed Memory Model:</p>
 <blockquote>
-<div><ul class="simple">
+<div><p>&#8220;</p>
+<ul class="simple">
 <li>Distributed memory systems require a communication network to connect inter-processor memory.</li>
 <li>Processors have their own local memory. Memory addresses in one processor do not map to another processor, so there is no concept of global address space across all processors.</li>
 <li>Because each processor has its own local memory, it operates independently. Changes it makes to its local memory have no effect on the memory of other processors. Hence, the concept of cache coherency does not apply.</li>
-<li>When a processor needs access to data in another processor, it is usually the task of the programmer to explicitly define how and when data is communicated. Synchronization between tasks is likewise the programmer&#8217;s responsibility.</li>
+<li>When a processor needs access to data in another processor, it is usually the task of the programmer to explicitly define how and when data is communicated. Synchronization between tasks is likewise the programmer&#8217;s responsibility.&#8221; [3]</li>
 </ul>
 </div></blockquote>
 <img alt="MPI Structure" class="align-center" src="../_images/DistributedMemory.png" style="width: 450px; height: 200px;" />
 <p class="centered">
-<strong>Figure 1: Distributed Memory System [2]</strong></p><p>Some benefits of using clusters are:</p>
+<strong>Figure 2: Distributed Memory System Obtained from www.computing.llnl.gov [4]</strong></p><p>Some benefits of using clusters are:</p>
 <blockquote>
 <div><ul class="simple">
 <li>Inexpensive: Hardware and software of a cluster cost significantly much less than those of a supercomputer.</li>
@@ -140,16 +114,15 @@
 <li>E-commerce Applications</li>
 </ul>
 </div></blockquote>
-<div class="admonition note">
-<p class="first admonition-title">Note</p>
-<p class="last">Case Studies on Cluster Applications: read the recommended reading from page 16 - 22.</p>
+<div class="topic">
+<p class="topic-title first">Recommended Reading:</p>
+<ul class="simple">
+<li>Please read <a class="reference external" href="http://www.cloudbus.org/papers/ic_cluster.pdf">Cluster Computing: High-Performance, High-Availability, and High-Throughput Processing on a Network of Computers</a> [5].</li>
+<li>Case Studies on Cluster Applications: read from page 16 - 22.</li>
+</ul>
 </div>
-<p>In order to use a cluster effectively, we need to have some programming environments such as Message Passing Interface (MPI), and OpenMP.etc. In this module, we will be learning about MPI on distributed memory cluster.</p>
-<div class="admonition note">
-<p class="first admonition-title">Note</p>
-<p class="last">Recommended reading: <a class="reference external" href="http://www.google.com/url?sa=t&amp;rct=j&amp;q=&amp;esrc=s&amp;source=web&amp;cd=5&amp;ved=0CG0QFjAE&amp;url=http%3A%2F%2Fciteseerx.ist.psu.edu%2Fviewdoc%2Fdownload%3Fdoi%3D10.1.1.66.1453%26rep%3Drep1%26type%3Dpdf&amp;ei=pnUEUKWhOMXbqgHK6o2xDA&amp;usg=AFQjCNF6xIOgt0rm6YzPSpjVYNwjQfVZxw">Cluster Computing: High-Performance, High-Availability, and High-Throughput Processing on a Network of Computers</a></p>
-</div>
-<p class="rubric">Footnotes</p>
+<p>In order to use a cluster effectively, we need to have some programming environments such as Message Passing Interface (MPI), and OpenMP, etc. In this module, we will be learning about MPI on distributed memory cluster.</p>
+<p class="rubric">References</p>
 <table class="docutils footnote" frame="void" id="id1" rules="none">
 <colgroup><col class="label" /><col /></colgroup>
 <tbody valign="top">
@@ -159,7 +132,25 @@
 <table class="docutils footnote" frame="void" id="id2" rules="none">
 <colgroup><col class="label" /><col /></colgroup>
 <tbody valign="top">
-<tr><td class="label">[2]</td><td><a class="reference external" href="https://computing.llnl.gov/tutorials/parallel_comp/#DistributedMemory">https://computing.llnl.gov/tutorials/parallel_comp/#DistributedMemory</a></td></tr>
+<tr><td class="label">[2]</td><td><a class="reference external" href="https://computing.llnl.gov/tutorials/parallel_comp/#SharedMemory">https://computing.llnl.gov/tutorials/parallel_comp/#SharedMemory</a></td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="id3" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label">[3]</td><td><a class="reference external" href="https://computing.llnl.gov/tutorials/parallel_comp/#DistributedMemory">https://computing.llnl.gov/tutorials/parallel_comp/#DistributedMemory</a></td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="id4" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label">[4]</td><td><a class="reference external" href="https://computing.llnl.gov/tutorials/parallel_comp/#DistributedMemory">https://computing.llnl.gov/tutorials/parallel_comp/#DistributedMemory</a></td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="id5" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label">[5]</td><td>Chee Shin Yeo, Rajkumar Buyya, Hossein Pourreza, Rasit Eskicioglu, Peter Graham, and Frank Sommers, &#8220;Cluster Computing: High-Performance, High-Availability, and High-Throughput Processing on a Network of Computers&#8221;, in Handbook of Nature-Inspired and Innovative Computing: Integrating Classical Models with Emerging Technologies, chapter 16, page 521 - 551, 2006</td></tr>
 </tbody>
 </table>
 </div>
