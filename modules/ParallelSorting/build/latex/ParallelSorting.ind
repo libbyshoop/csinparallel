@@ -1,0 +1,13 @@
+\begin{theindex}
+\def\bigletter#1{{\Large\sffamily#1}\nopagebreak\vspace{1mm}}
+
+  \bigletter C
+  \item Concurrent Reads (CR), \textbf{4}
+  \item Concurrent Writes (CW), \textbf{4}
+
+  \indexspace
+  \bigletter E
+  \item Exclusive Read (ER), \textbf{4}
+  \item Exclusive Write (EW), \textbf{4}
+
+\end{theindex}
