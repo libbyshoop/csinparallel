@@ -1,0 +1,320 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>The pi-calculus, informally &mdash; A Theory of Parallel Computation</title>
+    
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="top" title="A Theory of Parallel Computation" href="../index.html" />
+    <link rel="next" title="Examples and applications" href="../ExamplesAndApplications/ExamplesAndApplications.html" />
+    <link rel="prev" title="Background" href="../Background/Background.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../ExamplesAndApplications/ExamplesAndApplications.html" title="Examples and applications"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="../Background/Background.html" title="Background"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../index.html">A Theory of Parallel Computation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="the-pi-calculus-informally">
+<h1>The pi-calculus, informally<a class="headerlink" href="#the-pi-calculus-informally" title="Permalink to this headline">¶</a></h1>
+<ul>
+<li><p class="first">A <em>calculus</em> is a method or computation based on symbolic manipulation.</p>
+<ul class="simple">
+<li>In <em>differential calculus</em>, symbolic manipulations involve an operator <img class="math" src="../_images/math/b4e547a65c7d4fe064e52a07834af65b7c310237.png" alt="\frac{d}{dx}"/> that satisfies rules such as the following:</li>
+</ul>
+<div class="math">
+<p><img src="../_images/math/c1148c67b5104c92a5cbfc085306af449471885d.png" alt="{d\over dx}(f+g) = ({d\over dx}f) + ({d\over dx}g)\\
+{d\over dx}(f\cdot g) = ({d\over dx}f) \cdot g + f \cdot ({d\over dx} g)"/></p>
+</div><ul class="simple">
+<li>In <em>integral calculus</em>, symbolic manipulations involve an operator <img class="math" src="../_images/math/7c38da4937277409f0236bbeab5e4b13b9c4df3b.png" alt="\int ...\,dx"/> that satisfies rules such as the following:</li>
+</ul>
+<div class="math">
+<p><img src="../_images/math/7d6dd97faabc5986562e583d26dc87066e934b4d.png" alt="\int f+g\,dx = \int f\,dx + \int g\,dx \\
+\int f\cdot ({d\over dx}g)\,dx = f\cdot g - \int ({d\over dx}f)\cdot g\,dx"/></p>
+</div><ul class="simple">
+<li>In the <img class="math" src="../_images/math/ce4588fd900d02afcbd260bc07f54cce49a7dc4a.png" alt="\lambda"/>-calculus, symbolic manipulations involve an operator <img class="math" src="../_images/math/ce4588fd900d02afcbd260bc07f54cce49a7dc4a.png" alt="\lambda"/> that has its manipulation rules, involving operations such as substitution of variables and applying functions to particular &#8220;input&#8221; values (function calls).</li>
+</ul>
+</li>
+<li><p class="first">The operators and manipulation rules for a calculus may have useful concrete applications. For example, the differential calculus rules are satisfied by certain continuous mathematical functions, where the operator <img class="math" src="../_images/math/b4e547a65c7d4fe064e52a07834af65b7c310237.png" alt="\frac{d}{dx}"/> represents the rate of change of those functions.</p>
+<p>We typically think of <img class="math" src="../_images/math/b4e547a65c7d4fe064e52a07834af65b7c310237.png" alt="\frac{d}{dx}"/> as operating on those functions, although the differential calculus rules are actually abstract and might be applied to other entities than functions.</p>
+</li>
+<li><p class="first">The <img class="math" src="../_images/math/f2ca003a7da0de4994b4733e203b74ff52d42553.png" alt="\pi"/>-calculus has six operators. We think of them as operating on <em>sequential processes</em>, i.e., running computer programs, although they are abstract and can be used without any particular concrete application.</p>
+<ul>
+<li><p class="first">The <em>concurrency operator</em> <img class="math" src="../_images/math/e0692cdaf4a73f1f9fda4c5ff41e7020b3ee5b00.png" alt="P|Q"/> (pronounced <em>&#8220;P par Q&#8221;</em>) may be thought of as two processes <em>P</em> and <em>Q</em> executing in parallel (e.g., simultaneously on separate cores or on different computers).</p>
+</li>
+<li><p class="first">The <em>communication operators</em> may be thought of as sending and receiving messages from one process to another, across a communication channel that is used only by those two processes (i.e., a <em>dedicated</em> communication channel in the language of CS).</p>
+<ul>
+<li><p class="first">The output prefixing operator <img class="math" src="../_images/math/0c1bad6f7e8fcd8de3d10b5370b309a0aa62ec5e.png" alt="\bar{c} \langle x \rangle . P"/> (pronounced &#8220;output x along c (then proceed with P)&#8221;) may be thought of as send a message <em>x</em> across a channel <em>c</em>, then proceeding to carry out process <em>P</em>. Here, the channel c may be thought of as starting from this process to another.</p>
+<p>Channels such as c may be set up between any two processes, but those two processes are then uniquely determined for c, and may not be changed later. Channels provide for a single communication in one direction only, specified when the channel is created.</p>
+<p>The &#8220;dot&#8221; that appears in this notation indicates the boundary between one step and a next step in a process.</p>
+</li>
+<li><p class="first">The <em>input prefixing</em> operator <img class="math" src="../_images/math/0b9fd61b4ea381e877e8d9a265920d4b05a8f804.png" alt="c(y).P"/> (pronounced &#8220;Input y along c&#8221;) may be thought of as waiting to receive a value from the channel <em>c</em>, and once a value is received, storing that value in <em>y</em> and proceeding to carry out process <em>P</em>.</p>
+</li>
+</ul>
+</li>
+<li><p class="first">The replication operator <img class="math" src="../_images/math/7a06c0d9a9788a8eb7967a0decf2ba73d6fd2540.png" alt="!P"/> (&#8220;bang P&#8221;) may be thought of as creating a new process that is a duplicate of <em>P</em>.</p>
+<p>This sort of an operation is quite realistic in parallel computing. For example, a <em>web server</em> is a program that receives requests for particular web pages and responds by sending those web pages. Web servers must be capable of handling multiple responses at the same time, because some web pages may take a significant amount of time to prepare and deliver, and it would be undesirable for one user to be delayed by another user&#8217;s request. Therefore, a web server system may start up a new duplicate process for handling each request it receives. (Students who have studied operating systems will also see an analogy between the system call fork() and this replication operator.)</p>
+<p>In the <img class="math" src="../_images/math/f2ca003a7da0de4994b4733e203b74ff52d42553.png" alt="\pi"/>-calculus, arbitrarily many duplicate processes are created by a single application of the replication operator.</p>
+</li>
+<li><p class="first">The name allocation operator <img class="math" src="../_images/math/4a252117606196295df55b280f7077a04405e7cd.png" alt="(\nu{\it c}).{P}"/> (&#8220;new c in P&#8221;) may be thought of as allocating a new constant communication channel <em>c</em> within the process <em>P</em>. The symbol <img class="math" src="../_images/math/d6a7ccf879c4a4fe694033606332cb83806db296.png" alt="\nu"/> is the Greek letter nu, pronounced like &#8220;new&#8221;.</p>
+</li>
+<li><p class="first">The alternative operator <img class="math" src="../_images/math/38263eed0b52edb412385695351651edab3b37e3.png" alt="P+Q"/> (&#8220;P plus Q&#8221;) represents a process capable of taking part in exactly one alternative for communication. That process cannot make the choice among its alternatives; that selection among alternatives cannot be determined until it occurs, and once determined, any remaining alternatives have lost their chance and will never occur. (These restrictions on the alternative operator are not strictly necessary for <img class="math" src="../_images/math/f2ca003a7da0de4994b4733e203b74ff52d42553.png" alt="\pi"/>-calculus to work, but they simplify the theory.)</p>
+</li>
+</ul>
+</li>
+<li><p class="first">Besides these operations, there is one constant process 0 that does nothing. For example, we might write <img class="math" src="../_images/math/0ad21a1213fc1e4a7639cfbc4df8cf3ab167ab63.png" alt="\bar{c} \langle x \rangle . 0"/> for a process that sends one message across a channel <em>c</em>, then does nothing more.</p>
+</li>
+<li><p class="first">Observe that all of the operations have to do with entire processes or with communication among processes. For example, there are no arithmetic operations such as multiplication, nor any operations related to applying (i.e., calling) functions, nor a way to store values in memory (assignment). The <img class="math" src="../_images/math/f2ca003a7da0de4994b4733e203b74ff52d42553.png" alt="\pi"/>-calculus is entirely concerned with communication among processes that are executing in parallel.</p>
+<p>However, a theory of sequential processes, such as automata or the <img class="math" src="../_images/math/ce4588fd900d02afcbd260bc07f54cce49a7dc4a.png" alt="\lambda"/>-calculus, can be used in conjunction with <img class="math" src="../_images/math/f2ca003a7da0de4994b4733e203b74ff52d42553.png" alt="\pi"/>-calculus in order to model both the parallelism of communication and sequential algorithms that take place between communication events.</p>
+<p>In our examples, we will use an informal notation for the sequential aspects of a process for readability and convenience, but we will use the <img class="math" src="../_images/math/f2ca003a7da0de4994b4733e203b74ff52d42553.png" alt="\pi"/>-calculus formalism carefully in matters of parallelism and communication between processes.</p>
+<p>Here is an example that models parallel computation using the <img class="math" src="../_images/math/f2ca003a7da0de4994b4733e203b74ff52d42553.png" alt="\pi"/>-calculus operators.</p>
+<p>A <em>client-server application</em> is a parallel system in which a program running on one computer, called the <em>server</em> program, responds to requests that may be sent by programs that may be running on other computers, called <em>client</em> programs. One example of a client-server application consists of web browsers (as clients) communicating with a web server (as server). However, there are other possibilities.</p>
+<p>Consider a client-server application in which clients send requests to a server to apply a particular function to arguments that a client provides. In CS, this type of service is called <em>remote procedure call (RPC)</em> (where &#8220;procedure&#8221; is another term for &#8220;function&#8221;). RPC can enable clients to obtain the results of computations that those clients may be unable to compute on their own &#8220;local&#8221; hardware.</p>
+<p>We will model RPC using a simple incrementing function.</p>
+<ul>
+<li><p class="first">Here is C++ language code for the desired function.</p>
+<div class="highlight-python"><pre>int incr(int x){
+  return x+1;
+}</pre>
+</div>
+<p>In case you are not a programmer: The first line indicates that the name of this function is incr, and that incr accepts one integer input (argument) named x and returns an integer value (as indicated by the int at the beginning of the line). The second line is a return statement, which specifies the output (&#8220;return value&#8221;) in terms of the input <em>x</em>. This incrementing function returns the value x+1.</p>
+</li>
+<li><p class="first">Here is a model for the server process:</p>
+<div class="math">
+<p><img src="../_images/math/cfd217461999c057127035e5c8707727a34e4648.png" alt="!{\it incr}(c,x).\overline{\it c}\langle x+1 \rangle.{0}"/></p>
+</div><p>Here, the expression x+1 indicates sequential code, but the remainder of the expression uses <img class="math" src="../_images/math/f2ca003a7da0de4994b4733e203b74ff52d42553.png" alt="\pi"/>-calculus formalism. Observe that <em>incr</em> is a channel for communicating to the server.</p>
+<p>The use of the replication operator <em>!</em> means that the entire remainder of the expression will be duplicated as many times as needed (in order to serve as many RPC requests as may arrive over time). We will consider the operator ! to have higher precedence that | and + but lower precedence than the other <img class="math" src="../_images/math/f2ca003a7da0de4994b4733e203b74ff52d42553.png" alt="\pi"/>-calculus operators; this means that the expression above is equivalent to</p>
+</li>
+</ul>
+<div class="math">
+<p><img src="../_images/math/c89a09dea793b518f15ba1f2f613a9626fc8737a.png" alt="!\big({\it incr}(c,x).\overline{\it c}\langle x+1 \rangle.{0}\big)"/></p>
+</div><ul>
+<li><p class="first">Here is C++ code for part of a client process:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">y</span> <span class="o">=</span> <span class="n">incr</span><span class="p">(</span><span class="mi">17</span><span class="p">)</span>
+<span class="o">...</span>
+</pre></div>
+</div>
+<p>The dots represent steps to be taken after accomplishing a remote procedure call of <em>incr</em>.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p>for non-programmers</p>
+<p class="last">In this C++ context, the symbol = is an <em>assignment operator</em>, not an equality relation. The effect is to compute the result of applying the function incr with input value 17, and to store the output (return value) into computer memory under the name y.</p>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p>for everyone</p>
+<p class="last">The mathematical effect of making an assignment is substitution. In other words, the assignment of 18 to <em>y</em> means that every occurrence of <em>y</em> should be replaced by 18 throughout the program steps indicated by dots above.</p>
+</div>
+</li>
+<li><p class="first">Here is a model for that client process, starting from the assignment above:</p>
+<div class="math">
+<p><img src="../_images/math/af1f03052479066d293d52422d99e5436e49c9d2.png" alt="(\nu{\it a})\big(\overline{\it incr}\langle a,17 \rangle.{0}|{\it a}(y).{P}\big)"/></p>
+</div><p>Here, we create a new channel a and send that <em>channel</em>, together with the value 17 that we want to increment, to the server, using the <em>incr</em> channel from client to server. The channel a is for communicating from the server back to the same client. Observe that the output along <em>incr</em> requesting the service takes place in parallel with the input along <em>a</em> for delivering the result. (Of course, the first of these will necessarily occur before the second in this particular situation.) The entire client model consists of <img class="math" src="../_images/math/f2ca003a7da0de4994b4733e203b74ff52d42553.png" alt="\pi"/>-calculus expressions, except for the integer 17.</p>
+<p>In this expression, the process <em>P</em> represents steps the client will take after the remote procedure call of <em>incr</em>. In other words, <em>P</em> represents the dots in the client code above. We want RPC to cause <em>y</em> to be replaced by 18 throughout <em>P</em>.</p>
+</li>
+<li><p class="first">We can now express a model for the entire client-server application.</p>
+<div class="math">
+<p><img src="../_images/math/3b7f1235b6a2dba22e3b9567f8806780c2535c57.png" alt="!{\it incr}(c,x).\overline{\it c}\langle x+1 \rangle.{0}\quad |\quad (\nu{\it a})\big(\overline{\it incr}\langle a,17 \rangle.{0}\ |\ {\it a}(y).{P}\big)"/></p>
+</div></li>
+</ul>
+</li>
+<li><p class="first"><a class="reference external" href="http://en.wikipedia.org/wiki/Pi-calculus#Structural_congruence">Structural congruence</a>, an equivalence relation on <img class="math" src="../_images/math/f2ca003a7da0de4994b4733e203b74ff52d42553.png" alt="\pi"/>-calculus expressions</p>
+</li>
+<li><p class="first"><a class="reference external" href="http://en.wikipedia.org/wiki/Pi-calculus#Reduction_semantics">Reduction</a>, the &#8220;calculus rules&#8221; for <img class="math" src="../_images/math/f2ca003a7da0de4994b4733e203b74ff52d42553.png" alt="\pi"/>-calculus.</p>
+</li>
+<li><p class="first">We can now use the definition of structural congruence and the reduction rules to give a formal proof that our <img class="math" src="../_images/math/f2ca003a7da0de4994b4733e203b74ff52d42553.png" alt="\pi"/>-calculus model of an <em>incr</em> remote procedure call service produces the results we desired for it.</p>
+</li>
+</ul>
+<div class="topic">
+<p class="topic-title first">Verify</p>
+<div class="math">
+<p><img src="../_images/math/5b4d79329d33618e6bdb51c2f2b03fcfefa9a578.png" alt="!{\it incr}(c,x).\overline{\it c}\langle x+1 \rangle.{0}\quad |\quad (\nu{\it a})\big(\overline{\it incr}\langle a,17 \rangle.{0}\ |\ {\it a}(y).{P}\big)
+
+\equiv \quad {\it incr}(c,x).\overline{\it c}\langle x+1 \rangle.{0}\quad |\quad !{\it incr}(c,x).\overline{\it c}\langle x+1 \rangle.{0}\quad |\quad (\nu{\it a})\big(\overline{\it incr}\langle a,17 \rangle.{0}\ |\ {\it a}(y).{P}\big)
+
+\text{by structural congruence axiom for !}
+
+\text{(this dispenses a copy of the server process to use)}
+
+\equiv \quad !{\it incr}(c,x).\overline{\it c}\langle x+1 \rangle.{0}\quad |\quad{\it incr}(c,x).\overline{\it c}\langle x+1 \rangle.{0}\quad |\quad (\nu{\it a})\big(\overline{\it incr}\langle a,17 \rangle.{0}\ |\ {\it a}(y).{P}\big)
+
+\text{by commutative law for }|
+
+\longrightarrow \quad !{\it incr}(c,x).\overline{\it c}\langle x+1 \rangle.{0}\quad |\quad \overline{\it c}\langle x+1 \rangle.{0}[c,x/a,17]\quad |\quad (\nu{\it a})\big(0\ |\ {\it a}(y).{P}\big)
+
+\text{by main reduction rule (this corresponds to sending a message)}
+
+\text{\textit{Note:} the notation [c,x/a,17] means to replace c by a and replace x by 17.}
+
+= \quad !{\it incr}(c,x).\overline{\it c}\langle x+1 \rangle.{0}\quad |\quad \overline{\it a}\langle 18 \rangle.{0}\quad |\quad (\nu{\it a})\big(0\ |\ {\it a}(y).{P}\big)
+
+\text{by definition of substitution and arithmetic}
+
+\equiv \quad !{\it incr}(c,x).\overline{\it c}\langle x+1 \rangle.{0}\quad |\quad \overline{\it a}\langle 18 \rangle.{0}\quad |\quad (\nu{\it a})\big({\it a}(y).{P}\ |\ 0\big)
+
+\text{by commutativity axiom for }|
+
+\equiv \quad !{\it incr}(c,x).\overline{\it c}\langle x+1 \rangle.{0}\quad |\quad \overline{\it a}\langle 18 \rangle.{0}\quad |\quad (\nu{\it a})\big({\it a}(y).{P}\big)
+
+\text{by identity axiom for }|
+
+\longrightarrow \quad !{\it incr}(c,x).\overline{\it c}\langle x+1 \rangle.{0}\quad |\quad 0 \quad |\quad (\nu{\it a})\big(P[y/18]\big)
+
+\text{by main reduction rule}
+
+\equiv \quad !{\it incr}(c,x).\overline{\it c}\langle x+1 \rangle.{0}\quad |\quad (\nu{\it a})\big(P[y/18]\big)
+
+\text{by associativity and identity for }|"/></p>
+</div></div>
+<p>In this proof, we started with the <img class="math" src="../_images/math/f2ca003a7da0de4994b4733e203b74ff52d42553.png" alt="\pi"/>-calculus expression for the server and the <img class="math" src="../_images/math/f2ca003a7da0de4994b4733e203b74ff52d42553.png" alt="\pi"/>-calculus expression for the client <em>before</em> RPC, running in parallel. We ended with that same server we began with, and with a client process P <em>after</em> RPC that has every occurrence of y replaced by 18 &#8211; as desired.</p>
+<div class="section" id="exercises">
+<h2>Exercises<a class="headerlink" href="#exercises" title="Permalink to this headline">¶</a></h2>
+<ol class="arabic simple">
+<li>If <em>a</em> does not appear in <em>P</em>, show that the last line above is structurally congruent to <img class="math" src="../_images/math/5742ab33595a13cd1cc2ee325f67741c0af9e04c.png" alt="!\textit{incr}(c,x).\bar{c}\langle x+1 \rangle.0 \quad | \quad P[y/18]"/>. Give a formal proof segment using the axioms and reduction rules.</li>
+<li>Prove the following facts, using formal proofs from axiom and reduction rules, as in the verification of the RPC server above.</li>
+</ol>
+<div class="math">
+<p><img src="../_images/math/f30ac7f50ba04e378fecac46484d70aeb097c390.png" alt="0|P \equiv P \\
+!P \equiv !P|P"/></p>
+</div><ol class="arabic simple" start="3">
+<li>Write a <img class="math" src="../_images/math/f2ca003a7da0de4994b4733e203b74ff52d42553.png" alt="\pi"/>-calculus expression that models an RPC system for an echo function, whose return value (output) is the same as its argument (input).</li>
+</ol>
+<div class="topic">
+<p class="topic-title first">Hints:</p>
+<p>Modify the RPC example for incr to serve echo instead. You can use the same client expression as before, but you will need to alter the server expression. Since the problem asks for a <em>system</em> instead of only a server, your final answer should be a <img class="math" src="../_images/math/f2ca003a7da0de4994b4733e203b74ff52d42553.png" alt="\pi"/>-calculus expression for both the client and the server.</p>
+<p>Here&#8217;s a C++ programming language definition of echo, in case it&#8217;s helpful.</p>
+<div class="highlight-python"><pre>int echo(int x){
+  return x;
+}</pre>
+</div>
+</div>
+<ol class="arabic simple" start="4">
+<li>Examine the formal proof of the <img class="math" src="../_images/math/f2ca003a7da0de4994b4733e203b74ff52d42553.png" alt="\pi"/>-calculus model of an incr RPC service above, and indicate how to transform it to a proof of your <img class="math" src="../_images/math/f2ca003a7da0de4994b4733e203b74ff52d42553.png" alt="\pi"/>-calculus model of an echo RPC service in the previous problem.</li>
+</ol>
+<ol class="arabic simple" start="5">
+<li>Consider the following <img class="math" src="../_images/math/f2ca003a7da0de4994b4733e203b74ff52d42553.png" alt="\pi"/>-calculus model.</li>
+</ol>
+<blockquote>
+<div><div class="math">
+<p><img src="../_images/math/666706ce9f59fd7caee8bf7a8b8312e7d2da4d4f.png" alt="!\ {\it a}(v).\overline{\it v}\langle \hbox{\tt p()} \rangle.{0}\quad | \quad !\ (\nu{\it c})\overline{\it a}\langle c \rangle.{\it c}(y).{\hbox{\tt q($y$)}}"/></p>
+</div><p>Here, the notations p() and q(x) represent <em>sequential</em> computer functions, and are not part of the <img class="math" src="../_images/math/f2ca003a7da0de4994b4733e203b74ff52d42553.png" alt="\pi"/>-calculus notation.</p>
+<blockquote>
+<div><p>The function p() requires no arguments and sequentially produces a return value (output) when called (applied).</p>
+<p>The function q(x) requires one argument (input) <em>x</em> and performs some sequential operation with that argument when called.</p>
+</div></blockquote>
+<p>Answer the following questions:</p>
+<ol class="loweralpha simple">
+<li>This model formally describes an interaction between two programs running in parallel. Give an informal verbal description of what those two programs do and how they interact, according to the <img class="math" src="../_images/math/f2ca003a7da0de4994b4733e203b74ff52d42553.png" alt="\pi"/>-calculus expression above.</li>
+<li>Perform <img class="math" src="../_images/math/f2ca003a7da0de4994b4733e203b74ff52d42553.png" alt="\pi"/>-calculus reduction and structural congruence to work through one interaction between these two programs.</li>
+<li>You may give a thorough formal computation as in the proof of the incr RPC system, or you may skip or combine steps you feel comfortable with, as long as your work is accurate and expresses the calculation clearly.</li>
+</ol>
+</div></blockquote>
+<ol class="arabic simple" start="6">
+<li>Write your own <img class="math" src="../_images/math/f2ca003a7da0de4994b4733e203b74ff52d42553.png" alt="\pi"/>-calculus expressions for modeling each of the following parallel computations. (Each itemized sentence describes a separate problem to solve.) Note: No <img class="math" src="../_images/math/f2ca003a7da0de4994b4733e203b74ff52d42553.png" alt="\pi"/>-calculus replication operations are necessary for these problems, although you may optionally include it.</li>
+</ol>
+<blockquote>
+<div><ol class="loweralpha simple">
+<li>One program uses channel <em>a</em> to send an integer value 5 and a new channel to another program, and that latter program sends twice that integer value back to the first program along that new channel.</li>
+<li>One program uses channel <em>b</em> to send an integer value 10 and a new channel to another program; that second program uses channel <em>c</em> to send twice that integer value and that same new channel to a third program; and that third program outputs three times the integer it receives along the channel it receives to the first program.</li>
+</ol>
+</div></blockquote>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../index.html">
+              <img class="logo" src="../_static/CSInParallel200wide.png" alt="Logo"/>
+            </a></p>
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">The pi-calculus, informally</a><ul>
+<li><a class="reference internal" href="#exercises">Exercises</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="../Background/Background.html"
+                        title="previous chapter">Background</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="../ExamplesAndApplications/ExamplesAndApplications.html"
+                        title="next chapter">Examples and applications</a></p>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../ExamplesAndApplications/ExamplesAndApplications.html" title="Examples and applications"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="../Background/Background.html" title="Background"
+             >previous</a> |</li>
+        <li><a href="../index.html">A Theory of Parallel Computation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright This work is licensed under a Creative Commons Attribution-ShareAlike 3.0 Unported License.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>
