@@ -56,19 +56,19 @@
 <h1>MPI Communications<a class="headerlink" href="#mpi-communications" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="point-to-point-communication">
 <h2>Point-to-point Communication<a class="headerlink" href="#point-to-point-communication" title="Permalink to this headline">¶</a></h2>
-<p>Point-to-point communication is a way that pair of processors transmits the data between one another, one processor sending, and the other receiving. MPI provides SEND(MPI_Send) and RECEIVE(MPI_Recv) functions that allow point-to-point communication taking place in the MPI world.</p>
-<div class="highlight-python"><pre>MPI_Send(void* buffer, int count, MPI_Datatype datatype, int destination, int tag, MPI_Comm comm)
+<p>Point-to-point communication is a way that pair of processors transmits the data between one another, one processor sending, and the other receiving. MPI provides SEND(MPI_Send) and RECEIVE(MPI_Recv) functions that allow point-to-point communication taking place in a communicator.</p>
+<div class="highlight-python"><pre>MPI_Send(void* message, int count, MPI_Datatype datatype, int destination, int tag, MPI_Comm comm)
 
-        - buffer:       initial address of send buffer
+        - message:      initial address of the message
         - count:        number of entries to send
         - datatype:     type of each entry
-        - destination:  rank of the receiving processor
-        - tag:          message tag is a way to identify types of messages
+        - destination:  rank of the receiving process
+        - tag:          message tag is a way to identify the type of a message
         - comm:         communicator (MPI_COMM_WORLD)
 
-MPI_Recv(void* buffer, int count, MPI_Datatype datatype, int source, int tag, MPI_Comm comm, MPI_Status *status)
+MPI_Recv(void* message, int count, MPI_Datatype datatype, int source, int tag, MPI_Comm comm, MPI_Status *status)
 
-        - source:       rank of the sending processor
+        - source:       rank of the sending process
         - status:       return status</pre>
 </div>
 <div class="admonition note">
@@ -77,7 +77,7 @@ MPI_Recv(void* buffer, int count, MPI_Datatype datatype, int source, int tag, MP
 </div>
 <div class="section" id="mpi-datatype">
 <h3>MPI Datatype<a class="headerlink" href="#mpi-datatype" title="Permalink to this headline">¶</a></h3>
-<p>In most MPI functions, which you will be using, require you specify the datatype of your message. Below is the table showing the corresponding datatype between MPI Datatype and C Datatype.</p>
+<p>In most MPI functions, which you will be using, require you to specify the datatype of your message. Below is the table showing the corresponding datatype between MPI Datatype and C Datatype.</p>
 <table border="1" class="docutils">
 <colgroup>
 <col width="46%" />
@@ -201,7 +201,7 @@ MPI_Recv(void* buffer, int count, MPI_Datatype datatype, int source, int tag, MP
 <span class="p">}</span>
 </pre></div>
 </td></tr></table></div>
-<p>This MPI program illustrates the use of MPI_Send and MPI_Recv functions. Basically, the master sends a message, “Hello, world”, to the process whose rank is 1, and then after having received the message, the process prints out the message along with its rank.</p>
+<p>This MPI program illustrates the use of MPI_Send and MPI_Recv functions. Basically, the master sends a message, “Hello, world”, to the process whose rank is 1, and then after having received the message, the process prints the message along with its rank.</p>
 </div>
 </div>
 <div class="section" id="collective-communication">
@@ -212,12 +212,12 @@ MPI_Recv(void* buffer, int count, MPI_Datatype datatype, int source, int tag, MP
 <strong>Figure 3: Collective Communications[1]</strong></p><div class="highlight-c"><div class="highlight"><pre><span class="n">MPI_Barrier</span><span class="p">(</span><span class="n">comm</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>This function creates a barrier synchronization in a commmunicator(MPI_COMM_WORLD). Each task waits at MPI_Barrier call until all tasks in the communicator reach the same MPI_Barrier call.</p>
-<div class="highlight-c"><div class="highlight"><pre><span class="n">MPI_Bcast</span><span class="p">(</span><span class="o">&amp;</span><span class="n">buffer</span><span class="p">,</span> <span class="kt">int</span> <span class="n">count</span><span class="p">,</span> <span class="n">MPI_Datatype</span> <span class="n">datatype</span><span class="p">,</span> <span class="kt">int</span> <span class="n">root</span><span class="p">,</span> <span class="n">comm</span><span class="p">)</span>
+<p>This function creates a barrier synchronization in a commmunicator(MPI_COMM_WORLD). Each task waits at MPI_Barrier call until all other tasks in the communicator reach the same MPI_Barrier call.</p>
+<div class="highlight-c"><div class="highlight"><pre><span class="n">MPI_Bcast</span><span class="p">(</span><span class="o">&amp;</span><span class="n">message</span><span class="p">,</span> <span class="kt">int</span> <span class="n">count</span><span class="p">,</span> <span class="n">MPI_Datatype</span> <span class="n">datatype</span><span class="p">,</span> <span class="kt">int</span> <span class="n">root</span><span class="p">,</span> <span class="n">comm</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>This function displays the message to all other processes in MPI_COMM_WORLD from the process whose rank is root.</p>
-<div class="highlight-c"><div class="highlight"><pre><span class="n">MPI_Reduce</span><span class="p">(</span><span class="o">&amp;</span><span class="n">buffer</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">receivebuffer</span><span class="p">,</span> <span class="kt">int</span> <span class="n">count</span><span class="p">,</span> <span class="n">MPI_Datatype</span> <span class="n">datatype</span><span class="p">,</span> <span class="n">MPI_Op</span> <span class="n">op</span><span class="p">,</span> <span class="kt">int</span> <span class="n">root</span><span class="p">,</span> <span class="n">comm</span><span class="p">)</span>
+<div class="highlight-c"><div class="highlight"><pre><span class="n">MPI_Reduce</span><span class="p">(</span><span class="o">&amp;</span><span class="n">message</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">receivemessage</span><span class="p">,</span> <span class="kt">int</span> <span class="n">count</span><span class="p">,</span> <span class="n">MPI_Datatype</span> <span class="n">datatype</span><span class="p">,</span> <span class="n">MPI_Op</span> <span class="n">op</span><span class="p">,</span> <span class="kt">int</span> <span class="n">root</span><span class="p">,</span> <span class="n">comm</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>This function applies a reduction operation on all tasks in MPI_COMM_WORLD and reduces results from each process into one value. MPI_Op includes for example, MPI_MAX, MPI_MIN, MPI_PROD, and MPI_SUM .etc.</p>
@@ -227,15 +227,15 @@ MPI_Recv(void* buffer, int count, MPI_Datatype datatype, int source, int tag, MP
 <p class="last">To read more on MPI_Op, please read <a class="reference external" href="http://www.mpi-forum.org/docs/mpi-11-html/node78.html#Node78">MPI_Op</a>.</p>
 </div>
 </div></blockquote>
-<div class="highlight-c"><div class="highlight"><pre><span class="n">MPI_Scatter</span><span class="p">(</span><span class="o">&amp;</span><span class="n">buffer</span><span class="p">,</span> <span class="kt">int</span> <span class="n">count</span><span class="p">,</span> <span class="n">MPI_Datatype</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">receivebuffer</span><span class="p">,</span> <span class="kt">int</span> <span class="n">count</span><span class="p">,</span> <span class="n">MPI_Datatype</span><span class="p">,</span> <span class="kt">int</span> <span class="n">root</span><span class="p">,</span> <span class="n">comm</span><span class="p">)</span>
+<div class="highlight-c"><div class="highlight"><pre><span class="n">MPI_Scatter</span><span class="p">(</span><span class="o">&amp;</span><span class="n">message</span><span class="p">,</span> <span class="kt">int</span> <span class="n">count</span><span class="p">,</span> <span class="n">MPI_Datatype</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">receivemessage</span><span class="p">,</span> <span class="kt">int</span> <span class="n">count</span><span class="p">,</span> <span class="n">MPI_Datatype</span><span class="p">,</span> <span class="kt">int</span> <span class="n">root</span><span class="p">,</span> <span class="n">comm</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>This function divides a message into equal contiguous parts and sends each part to each node. The master gets the first part, and the process whose rank is 1 gets the second part, and so on. The number of elements get sent to each worker is specified by count.</p>
-<div class="highlight-c"><div class="highlight"><pre><span class="n">MPI_Gather</span><span class="p">(</span><span class="o">&amp;</span><span class="n">buffer</span><span class="p">,</span> <span class="kt">int</span> <span class="n">count</span><span class="p">,</span> <span class="n">MPI_Datatype</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">receivebuffer</span><span class="p">,</span> <span class="kt">int</span> <span class="n">count</span><span class="p">,</span> <span class="n">MPI_Datatype</span><span class="p">,</span> <span class="kt">int</span> <span class="n">root</span><span class="p">,</span> <span class="n">comm</span><span class="p">)</span>
+<div class="highlight-c"><div class="highlight"><pre><span class="n">MPI_Gather</span><span class="p">(</span><span class="o">&amp;</span><span class="n">message</span><span class="p">,</span> <span class="kt">int</span> <span class="n">count</span><span class="p">,</span> <span class="n">MPI_Datatype</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">receivemessage</span><span class="p">,</span> <span class="kt">int</span> <span class="n">count</span><span class="p">,</span> <span class="n">MPI_Datatype</span><span class="p">,</span> <span class="kt">int</span> <span class="n">root</span><span class="p">,</span> <span class="n">comm</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>This function collects distinct messages from each task in the communicator to a single task. This function is the reverse operation of MPI_Scatter.</p>
-<p class="rubric">Footnotes</p>
+<p class="rubric">References</p>
 <table class="docutils footnote" frame="void" id="id1" rules="none">
 <colgroup><col class="label" /><col /></colgroup>
 <tbody valign="top">

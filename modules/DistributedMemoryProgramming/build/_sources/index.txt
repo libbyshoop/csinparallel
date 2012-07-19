@@ -9,6 +9,7 @@ Distributed Memory Programming
 .. toctree::
    :maxdepth: 1
 
+   Prerequisites/Prerequisites
    IntroCluster/IntroCluster
    LocalClusterConfig/LocalClusterConfig
    introMPI/introMPI

@@ -79,7 +79,7 @@
 <img alt="MPI Structure" class="align-center" src="../_images/MPIstructure.png" style="width: 350px; height: 400px;" />
 <p class="centered">
 <strong>Figure 1: MPI program structure [1]</strong></p><p>A MPI program is basically a C program with extending MPI library, SO DON’T BE SCARED. The program has two different parts, one is serial, and the other is parallel. Serial part contains variable declarations etc., and the parallel part starts when MPI execution environment has been initialized, and ends when MPI_Finalize() has been called.</p>
-<p><strong>Communicators</strong>: sets of processes that have a valid source or destination fields. The predefined communicator is MPI_COMM_WORLD, and we will be using this default communicator all the time in this module. MPI_COMM_WORLD is a default communicator consisting all processes. Furthermore, a programmer can also define a new communicator, which has a smaller number of processes than MPI_COMM_WORLD does.</p>
+<p><strong>Communicator</strong>: a set of processes that have a valid rank of source or destination fields. The predefined communicator is MPI_COMM_WORLD, and we will be using this communicator all the time in this module. MPI_COMM_WORLD is a default communicator consisting all processes. Furthermore, a programmer can also define a new communicator, which has a smaller number of processes than MPI_COMM_WORLD does.</p>
 <img alt="MPI_COMM_WORLD" class="align-center" src="../_images/MPI_COMM_WORLD.png" style="width: 400px; height: 250px;" />
 <p class="centered">
 <strong>Figure 2: MPI_COMM_WORLD [2]</strong></p><p><strong>Processes</strong>: For this scope of knowledge, we just need to know that processes belong to the MPI_COMM_WORLD. If there are <em>p</em> processes, then each process is defined by its rank, which starts from <em>0</em> to <em>p - 1</em>. The master has the rank <em>0</em>.</p>
@@ -92,13 +92,13 @@
 <p>This function has to be called in every MPI program. It is used to initialize the MPI execution environment.</p>
 <div class="highlight-python"><pre>MPI_Comm_size(comm, &amp;size)</pre>
 </div>
-<p>This function determines the number of processes in the communicator. MPI_COMM_WORLD is commonly used as the communicator. The number of processes get store in the variable size. Size is the same for all processes.</p>
+<p>This function determines the number of processes in the communicator. The number of processes get store in the variable <em>size</em>. All processes in a communicator have the same value of <em>size</em>.</p>
 <div class="highlight-python"><pre>MPI_Comm_rank(comm, &amp;rank)</pre>
 </div>
-<p>This function determines the rank of the calling process within the communicator. Each process is assigned uniquely by integer rank from <em>0</em> to <em>number of processes - 1</em>, and its rank gets stored in the variable rank.</p>
+<p>This function determines the rank of the calling process within the communicator. Each process is assigned uniquely by integer rank from <em>0</em> to <em>number of processes - 1</em>, and its rank gets stored in the variable <em>rank</em>.</p>
 <div class="highlight-python"><pre>MPI_Get_processor_name(name, &amp;len)</pre>
 </div>
-<p>This function returns the unique processor name. Variable name is the array of char of at least the MPI_MAX_PROCESSOR_NAME, and len is the length of the name.</p>
+<p>This function returns the unique processor name. Variable <em>name</em> is the array of char for storing the name, and <em>len</em> is the length of the name.</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="n">MPI_Wtime</span><span class="p">()</span>
 </pre></div>
 </div>
@@ -138,9 +138,9 @@
 </td></tr></table></div>
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
-<p class="last">In this hello world program, it illustrates how to use some basic functions of MPI. First, it initializes the MPI execution environment. Then it prints &#8220;Hello world from process rank of number of processes&#8221;. Then it terminates the MPI execution environment.</p>
+<p class="last">In this hello world program, it illustrates how to use some basic functions of MPI. First, it initializes the MPI execution environment. Then it prints &#8220;Hello world from process rank of number of processes&#8221;. Finally, it terminates the MPI execution environment.</p>
 </div>
-<p class="rubric">Footnotes</p>
+<p class="rubric">References</p>
 <table class="docutils footnote" frame="void" id="id1" rules="none">
 <colgroup><col class="label" /><col /></colgroup>
 <tbody valign="top">

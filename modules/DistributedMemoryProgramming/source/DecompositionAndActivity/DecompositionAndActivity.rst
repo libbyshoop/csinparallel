@@ -21,7 +21,7 @@ Example 3: Decompose the matrix by row
 
 .. note:: **rows = (dest <= extra) ? averow + 1 : averow** means if **dest <= extra**, we have **rows = averow + 1**. Otherwise, we have **rows = averow**. This is a shorter version of if and else statement.
 
-In this example, **ROW** is the number of rows of matrix, so each process will get at least **averow** rows. The **extra** is the extra rows when **ROW** is not divisible by number of workers. In order to send each task to each worker, we need to iterate over the number of workers. Then if we have extra rows, we know that number of extra rows must be less than the number of workers, so we can give one more row to workers whose ranks are less than extra.
+In this example, **ROW** is the number of rows of the matrix, so each process will get at least **averow** rows. The **extra** is the extra rows when **ROW** is not divisible by number of workers. In order to send each task to each worker, we need to iterate over the number of workers. Then if we have extra rows, we know that number of extra rows must be less than the number of workers, so we can give one more row to workers whose ranks are less than or equal to extra.
 
 
 Activity 3: Vector Matrix Multiplication Improved Version
@@ -35,7 +35,7 @@ the task fairly among each worker. Then, we can send each task to each worker by
 After the workers having received their tasks, they will compute their own task, and send their results 
 back to the master. Finally the master will receive results from workers, and combine them into a result vector.
 
-I will walk you through the code step by step. First, we will need to initialize the MPI environment, define the size of communicator, and give a rank to each process. This should be straight forward to you because you have seen this many times already. ::
+I will walk you through the code step by step. First, we will need to initialize the MPI environment, define the size of the communicator, and give a rank to each process. This should be straight forward to you because you have seen this many times already. ::
 
   /* Initialize MPI execution environment */
   MPI_Init( &argc,&argv);
@@ -56,9 +56,7 @@ Then we want to initialize the vector and matrix on master node. This can be don
 
 We have seen that using the collective communications without decomposition is not the best way 
 of doing this problem. Here is a better way that will work for any number of processes. We will be using 
-the decomposition technique above to split the task for each process. Then, the master will be sending each process 
-the number of rows (**rows**) of matrix, and the vector. You are asked to complete this part 
-of the code. 
+the decomposition technique above to split the task for each process. Then, the master will be sending each process the number of rows (**rows**) of matrix, and the vector. You are asked to complete this part of the code. 
 
 .. note:: You should use MPI_Send to send the starting rows, and number of rows, and some rows of matrix, and the vector to the workers. Moreover, when you send some rows of matrix, you should use MPI_Send(&matrix[starting row][0], number of elements, ...). This will send the rows of matrix, which contain the number of elements, and it starts from the first element in that row.
 
@@ -72,17 +70,17 @@ of the code.
   for (dest = 1; dest <= numworkers; dest++) {
       rows = (dest <= extra) ? averow + 1 : averow;
       // TO DO
+      ..............
+      // end TO DO
+  }
 
-After having sent the messages to all workers, we need to ask workers to receive the messages from the master. We check if the process is not the master, we will use MPI_Recv to receive the messages from the master. You are asked complete this task. ::
+After having sent the messages to all workers, we need to ask workers to receive the messages from the master. We check if the process is not the master, we will use MPI_Recv to receive the messages sent from the master. You are asked complete this task. ::
 
   if (rank > 0) {
       mtype = FROM_MASTER;
       /* Receive the task from master */
       // TO DO:
-      MPI_Recv(&offset, 1, MPI_INT, MASTER, mtype, MPI_COMM_WORLD, &status);
-      MPI_Recv(&rows, 1, MPI_INT, MASTER, mtype, MPI_COMM_WORLD, &status);
-      MPI_Recv(&matrix, rows*WIDTH, MPI_INT, MASTER, mtype, MPI_COMM_WORLD, &status);
-      MPI_Recv(&vector, WIDTH, MPI_INT, MASTER, mtype, MPI_COMM_WORLD, &status);
+      ..............
       // end TO DO
   }    
 
@@ -99,9 +97,7 @@ Each worker now can compute their task, and then we have to send the results bac
         /* send the result back to the master */
         mtype = FROM_WORKER;
         // TO DO:
-        MPI_Send(&offset, 1, MPI_INT, MASTER, mtype, MPI_COMM_WORLD);
-        MPI_Send(&rows, 1, MPI_INT, MASTER, mtype, MPI_COMM_WORLD);
-        MPI_Send(&result, rows, MPI_INT, MASTER, mtype, MPI_COMM_WORLD);
+        ............
         //end TO DO
 
 
@@ -109,15 +105,13 @@ Finally, the master has to receive the results from all workers. You are asked t
 
 	/* Receiving the work from each worker */
         mtype = FROM_WORKER;
-        //TO DO:
         for (i = 1; i <= numworkers; i++) {
              source = i;
-             MPI_Recv(&offset, 1, MPI_INT, source,mtype, MPI_COMM_WORLD, &status);
-             MPI_Recv(&rows, 1, MPI_INT, source, mtype, MPI_COMM_WORLD, &status);
-             MPI_Recv(&result[offset], rows, MPI_INT, source, mtype, MPI_COMM_WORLD, &status);
+             // TO DO
+             ..............
+             // end TO DO
              printf("Received results from task %d\n", source);
         }
-        //end TO DO
 
 Below is the complete source code:
 
@@ -128,8 +122,7 @@ Below is the complete source code:
 Activity 4: Matrix Multiplication
 ---------------------------------
 
-In this activity, we want you to use decomposition technique, MPI_Send, and MPI_Recv the previous activities to 
-complete the matrix multiplication program. If you have not seen matrix multiplication before, please click on `matrix multiplication <http://mathworld.wolfram.com/MatrixMultiplication.html>`_ to read how matrix multiplication works.
+In this activity, we want you to use decomposition technique, MPI_Send, and MPI_Recv the previous activities to complete the matrix multiplication program. If you have not seen matrix multiplication before, please click on `matrix multiplication <http://mathworld.wolfram.com/MatrixMultiplication.html>`_ to read how matrix multiplication works.
 
 This activity is not much different from the previous activity. First, we use the decomposition method in the previous activity. Then we want to send some rows in the first matrix, and entire second matrix to each worker. Note that this is not the most efficient method of doing matrix multiplication because when the second matrix gets really large, we might not be able to send entire matrix to each worker. We use this method because of its simplicity. ::
 
@@ -187,5 +180,5 @@ Below is the complete source code for matrix multiplication [1]:
 .. literalinclude:: matrix_multiplication.c
 	:linenos:
 
-.. rubric:: Footnotes
+.. rubric:: References
 .. [1] https://computing.llnl.gov/tutorials/mpi/samples/C/mpi_mm.c

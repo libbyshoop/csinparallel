@@ -1,9 +1,9 @@
 Introduction to Cluster
 =======================
 
-**Definition**: "A cluster is a type of parallel or distributed processing system, which consists of a collection of interconnected stand-alone computers cooperatively working together as a single, integrated computing resource." - by R. Buyya
+**Definition**: "A cluster is a type of parallel or distributed processing system, which consists of a collection of interconnected stand-alone computers cooperatively working together as a single, integrated computing resource." - by Rajkumar Buyya
 
-A cluster is usually a linux-based operating system. A cluster has four major parts:
+A cluster is usually a linux-based operating system. Basically, a cluster has four major parts:
 	
 	- Network:
 		- Provides communications between nodes, server, and gateway.
@@ -14,7 +14,7 @@ A cluster is usually a linux-based operating system. A cluster has four major pa
 	- Gateway:
 		- Acts as a firewall between the cluster and outside world.
 
-There are two parallel models for a cluster:
+To give you background information about what we will be working on, you should have a good understanding of parallel computer memory architectures. We are going to look at two parallel computer memory architectures: 
 
 	- Shared Memory Model
 	- Distributed Memory Model
@@ -50,9 +50,9 @@ General Characteristics of Distributed Memory Model Obtained from [2]:
 
 Some benefits of using clusters are:
 
-	- Inexpensive: Hardware and software of a cluster cost significantly much less than those of supercomputer.
+	- Inexpensive: Hardware and software of a cluster cost significantly much less than those of a supercomputer.
 	- Scalability: Able to scale without impact on performance.
-	- Manageability: Ability to manage local and remote resources.
+	- Maintenance: A cluster is relatively easy to set up and maintain.
 	- High Performance: Operations should be optimized and efficient.
 	- Great capacity: Ability to solve a larger problem size.
 
@@ -66,7 +66,7 @@ There are many applications of clustering such as:
 
 .. note:: Case Studies on Cluster Applications: read the recommended reading from page 16 - 22.
 
-In order to use a cluster effectively, we need to have some programming environments such as Message Passing Interface (MPI), and OpenMP.etc. In this module, we will be learning about MPI on distributed memory cluster. 
+In order to use a cluster effectively, we need to have some programming environments such as Message Passing Interface (MPI), and OpenMP.etc. In this module, we will be learning about MPI on distributed memory cluster.
 
 
 .. note:: Recommended reading: `Cluster Computing: High-Performance, High-Availability, and High-Throughput Processing on a Network of Computers <http://www.google.com/url?sa=t&rct=j&q=&esrc=s&source=web&cd=5&ved=0CG0QFjAE&url=http%3A%2F%2Fciteseerx.ist.psu.edu%2Fviewdoc%2Fdownload%3Fdoi%3D10.1.1.66.1453%26rep%3Drep1%26type%3Dpdf&ei=pnUEUKWhOMXbqgHK6o2xDA&usg=AFQjCNF6xIOgt0rm6YzPSpjVYNwjQfVZxw>`_

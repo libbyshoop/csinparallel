@@ -42,7 +42,7 @@ Like other programming languages you have seen, program that includes MPI librar
 
 A MPI program is basically a C program with extending MPI library, SO DON’T BE SCARED. The program has two different parts, one is serial, and the other is parallel. Serial part contains variable declarations etc., and the parallel part starts when MPI execution environment has been initialized, and ends when MPI_Finalize() has been called.
 
-**Communicators**: sets of processes that have a valid source or destination fields. The predefined communicator is MPI_COMM_WORLD, and we will be using this default communicator all the time in this module. MPI_COMM_WORLD is a default communicator consisting all processes. Furthermore, a programmer can also define a new communicator, which has a smaller number of processes than MPI_COMM_WORLD does.
+**Communicator**: a set of processes that have a valid rank of source or destination fields. The predefined communicator is MPI_COMM_WORLD, and we will be using this communicator all the time in this module. MPI_COMM_WORLD is a default communicator consisting all processes. Furthermore, a programmer can also define a new communicator, which has a smaller number of processes than MPI_COMM_WORLD does.
 
 .. image:: images/MPI_COMM_WORLD.png
 	:width: 400px
@@ -65,15 +65,15 @@ This function has to be called in every MPI program. It is used to initialize th
 
 	MPI_Comm_size(comm, &size)
 
-This function determines the number of processes in the communicator. MPI_COMM_WORLD is commonly used as the communicator. The number of processes get store in the variable size. Size is the same for all processes. ::
+This function determines the number of processes in the communicator. The number of processes get store in the variable *size*. All processes in a communicator have the same value of *size*. ::
 
 	MPI_Comm_rank(comm, &rank)
 
-This function determines the rank of the calling process within the communicator. Each process is assigned uniquely by integer rank from *0* to *number of processes - 1*, and its rank gets stored in the variable rank. ::
+This function determines the rank of the calling process within the communicator. Each process is assigned uniquely by integer rank from *0* to *number of processes - 1*, and its rank gets stored in the variable *rank*. ::
 
 	MPI_Get_processor_name(name, &len)
 
-This function returns the unique processor name. Variable name is the array of char of at least the MPI_MAX_PROCESSOR_NAME, and len is the length of the name. ::
+This function returns the unique processor name. Variable *name* is the array of char for storing the name, and *len* is the length of the name. ::
 
 	MPI_Wtime()
 
@@ -90,8 +90,8 @@ Example 1: Hello World MPI
 .. literalinclude:: hellompi.c
 	:linenos:
 
-.. note:: In this hello world program, it illustrates how to use some basic functions of MPI. First, it initializes the MPI execution environment. Then it prints "Hello world from process rank of number of processes". Then it terminates the MPI execution environment. 	
+.. note:: In this hello world program, it illustrates how to use some basic functions of MPI. First, it initializes the MPI execution environment. Then it prints "Hello world from process rank of number of processes". Finally, it terminates the MPI execution environment. 	
 
-.. rubric:: Footnotes
+.. rubric:: References
 .. [1] https://computing.llnl.gov/tutorials/mpi/
 .. [2] https://computing.llnl.gov/tutorials/mpi/

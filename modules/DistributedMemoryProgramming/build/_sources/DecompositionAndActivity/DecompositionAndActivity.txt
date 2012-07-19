@@ -187,5 +187,5 @@ Below is the complete source code for matrix multiplication [1]:
 .. literalinclude:: matrix_multiplication.c
 	:linenos:
 
-.. rubric:: Footnotes
+.. rubric:: References
 .. [1] https://computing.llnl.gov/tutorials/mpi/samples/C/mpi_mm.c
