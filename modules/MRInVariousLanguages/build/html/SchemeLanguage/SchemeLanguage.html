@@ -1,0 +1,129 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Example: WebMapReduce using Scheme language &mdash; Map-Reduce in Various Programming Languages</title>
+    
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="top" title="Map-Reduce in Various Programming Languages" href="../index.html" />
+    <link rel="next" title="WebMapReduce in various languages" href="../VariousLanguages/VariousLanguages.html" />
+    <link rel="prev" title="Context of Map-Reduce Computing" href="../Context/Context.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../VariousLanguages/VariousLanguages.html" title="WebMapReduce in various languages"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="../Context/Context.html" title="Context of Map-Reduce Computing"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../index.html">Map-Reduce in Various Programming Languages</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="example-webmapreduce-using-scheme-language">
+<h1>Example: WebMapReduce using Scheme language<a class="headerlink" href="#example-webmapreduce-using-scheme-language" title="Permalink to this headline">¶</a></h1>
+<ul>
+<li><p class="first"><strong>WebMapReduce (WMR)</strong> is a strategically simplified interface for performing map-reduce computing developed by students from St. Olaf College.  While initially supporting Scheme, the platform currently supports several high-level languages, including Python, C++, and Java.</p>
+</li>
+<li><p class="first">Wmr_scm.pdf includes specs for the functions provided in this Scheme WMR interface. <a class="reference download internal" href="../_downloads/Wmr_scm.pdf"><tt class="xref download docutils literal"><span class="pre">download</span> <span class="pre">Wmr_scm.pdf</span></tt></a></p>
+</li>
+<li><p class="first">This implementation of the Scheme interface for entering mappers and reducers uses an iterator for providing values in a reducer. Each call of a reducer receives all the key-value pairs for a particular key, and the two arguments for that reducer are that key and an iterator for obtaining the values.</p>
+<blockquote>
+<div><p><strong>Iterator</strong> - an (object-oriented programming) object that enables a programmer to obtain each value in a collection as a sequence of values, encapsulating the internal representation of that collection.  We may visualize an iterator as a &#8220;dispenser&#8221; of values, providing one value at a time until all are exhausted.</p>
+</div></blockquote>
+</li>
+<li><p class="first">Iterators are used to provide reducer values because when there are very many key-value pairs, the total size of the collection of values may exceed the size of main memory.</p>
+</li>
+<li><p class="first">As the spec indicates, the second argument of a reducer is a <tt class="docutils literal"><span class="pre">WmrIterator</span></tt> object (we&#8217;ll call it <tt class="docutils literal"><span class="pre">iter</span></tt>), and that object <tt class="docutils literal"><span class="pre">iter</span></tt> has two methods:</p>
+<ul class="simple">
+<li>The call (<tt class="docutils literal"><span class="pre">iter</span> <span class="pre">'has-next</span></tt>) returns true if a next element exists, false otherwise.</li>
+<li>The call (<tt class="docutils literal"><span class="pre">iter</span> <span class="pre">'get-next</span></tt>) delivers the next element from the iterator, and advances that iterator (so a next call to the iterator will return a fresh value, if available); this call returns false if there is no next value.</li>
+</ul>
+</li>
+</ul>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../index.html">
+              <img class="logo" src="../_static/CSInParallel200wide.png" alt="Logo"/>
+            </a></p>
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="../Context/Context.html"
+                        title="previous chapter">Context of Map-Reduce Computing</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="../VariousLanguages/VariousLanguages.html"
+                        title="next chapter">WebMapReduce in various languages</a></p>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../VariousLanguages/VariousLanguages.html" title="WebMapReduce in various languages"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="../Context/Context.html" title="Context of Map-Reduce Computing"
+             >previous</a> |</li>
+        <li><a href="../index.html">Map-Reduce in Various Programming Languages</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright This work is licensed under a Creative Commons Attribution-ShareAlike 3.0 Unported License.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>

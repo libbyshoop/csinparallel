@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 #
-# Multi-core Programming Using Threading Building Blocks documentation build configuration file, created by
-# sphinx-quickstart on Fri Jul 20 09:12:27 2012.
+# Map-Reduce in Various Programming Languages documentation build configuration file, created by
+# sphinx-quickstart on Fri Jul 20 14:13:11 2012.
 #
 # This file is execfile()d with the current directory set to its containing dir.
 #
@@ -47,7 +47,7 @@ source_suffix = '.rst'
 master_doc = 'index'
 
 # General information about the project.
-project = u'Multi-core Programming Using Threading Building Blocks'
+project = u'Map-Reduce in Various Programming Languages'
 copyright = u'This work is licensed under a Creative Commons Attribution-ShareAlike 3.0 Unported License'
 
 # The version info for the project you're documenting, acts as replacement for
@@ -110,7 +110,7 @@ html_theme = 'default'
 
 # The name for this set of Sphinx documents.  If None, it defaults to
 # "<project> v<release> documentation".
-html_title = 'Multi-core Programming Using Threading Building Blocks'
+html_title = 'Map-Reduce in Various Programming Languages'
 
 # A shorter title for the navigation bar.  Default is the same as html_title.
 #html_short_title = None
@@ -157,7 +157,7 @@ html_static_path = ['_static']
 html_show_sourcelink = False
 
 # If true, "Created using Sphinx" is shown in the HTML footer. Default is True.
-#html_show_sphinx = TrueWhen extending a template in the base th
+#html_show_sphinx = True
 
 # If true, "(C) Copyright ..." is shown in the HTML footer. Default is True.
 #html_show_copyright = True
@@ -171,7 +171,7 @@ html_show_sourcelink = False
 #html_file_suffix = None
 
 # Output file base name for HTML help builder.
-htmlhelp_basename = 'Multi-coreProgrammingUsingThreadingBuildingBlocksdoc'
+htmlhelp_basename = 'Map-ReduceinVariousProgrammingLanguagesdoc'
 
 
 # -- Options for LaTeX output --------------------------------------------------
@@ -193,7 +193,7 @@ latex_elements = {
 # Grouping the document tree into LaTeX files. List of tuples
 # (source start file, target name, title, author, documentclass [howto/manual]).
 latex_documents = [
-  ('index', 'Multi-coreProgrammingUsingThreadingBuildingBlocks.tex', u'Multi-core Programming Using Threading Building Blocks Documentation',
+  ('index', 'Map-ReduceinVariousProgrammingLanguages.tex', u'Map-Reduce in Various Programming Languages Documentation',
    u'CSInParallel Project', 'manual'),
 ]
 
@@ -223,7 +223,7 @@ latex_documents = [
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
 man_pages = [
-    ('index', 'multi-coreprogrammingusingthreadingbuildingblocks', u'Multi-core Programming Using Threading Building Blocks Documentation',
+    ('index', 'map-reduceinvariousprogramminglanguages', u'Map-Reduce in Various Programming Languages Documentation',
      [u'CSInParallel Project'], 1)
 ]
 
@@ -237,8 +237,8 @@ man_pages = [
 # (source start file, target name, title, author,
 #  dir menu entry, description, category)
 texinfo_documents = [
-  ('index', 'Multi-coreProgrammingUsingThreadingBuildingBlocks', u'Multi-core Programming Using Threading Building Blocks Documentation',
-   u'CSInParallel Project', 'Multi-coreProgrammingUsingThreadingBuildingBlocks', 'One line description of project.',
+  ('index', 'Map-ReduceinVariousProgrammingLanguages', u'Map-Reduce in Various Programming Languages Documentation',
+   u'CSInParallel Project', 'Map-ReduceinVariousProgrammingLanguages', 'One line description of project.',
    'Miscellaneous'),
 ]
 
