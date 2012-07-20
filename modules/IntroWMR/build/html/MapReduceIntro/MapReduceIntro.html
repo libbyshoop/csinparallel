@@ -1,0 +1,281 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Using Parallelism to Analyze Very Large Files: Google’s Map Reduce Paradigm &mdash; Map-reduce Computing for Introductory Students using WebMapReduce</title>
+    
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="top" title="Map-reduce Computing for Introductory Students using WebMapReduce" href="../index.html" />
+    <link rel="next" title="Using Parallelism to Analyze Very Large Files: Google’s MapReduce Paradigm" href="../wmr_py/wmr_py.html" />
+    <link rel="prev" title="Map-reduce Computing for Introductory Students using WebMapReduce" href="../index.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../wmr_py/wmr_py.html" title="Using Parallelism to Analyze Very Large Files: Google’s MapReduce Paradigm"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="../index.html" title="Map-reduce Computing for Introductory Students using WebMapReduce"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../index.html">Map-reduce Computing for Introductory Students using WebMapReduce</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="using-parallelism-to-analyze-very-large-files-google-s-map-reduce-paradigm">
+<h1>Using Parallelism to Analyze Very Large Files: Google&#8217;s Map Reduce Paradigm<a class="headerlink" href="#using-parallelism-to-analyze-very-large-files-google-s-map-reduce-paradigm" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="introduction">
+<h2>Introduction<a class="headerlink" href="#introduction" title="Permalink to this headline">¶</a></h2>
+<p>Up to now in this course, you have been writing programs that run
+<em>sequentially</em> by executing one step at a time until they complete
+(unless you mistakenly wrote one with an infinite loop!).
+Sequential execution is the standard basic mode of operation on all
+computers. However, when we need to process large amounts of data
+that might take a long time to complete, we can use a technique
+known as <em>parallel computing</em>, in which we define portions of our
+computation to run at the same time by using multiple processors on
+a single machine or multiple computers at the same time.</p>
+<p>In a lab and homework in this course you will use a system called
+<em>MapReduce</em> that was designed to harness the power of many
+computers together in a <em>cluster</em> to execute in parallel to process
+large amounts of data. You will be writing programs designed to run
+in parallel, or concurrently (at the same time), each one working
+on a portion of the data. By doing this, your parallel program will
+be faster than a corresponding sequential version using one
+computer to process all of the data. We call this kind of program
+one that uses <em>data parallelism</em>, because the data is split and
+processed in parallel.</p>
+<p><em>MapReduce</em> is a strategy for solving problems using two stages for
+processing data that includes a sort action between those two
+stages. This problem-solving strategy has been used for decades in
+<em>functional programming</em> languages such as LISP or Scheme. More
+recently Google has adapted the map-reduce programming model
+(<a class="reference external" href="http://labs.google.com/papers/mapreduce.html">Dean and Ghemawat,2004</a>)
+to function efficiently on large clusters of computers to process
+vast amounts of data&#8211;for example, Google&#8217;s selection of the entire
+web.</p>
+<p>The Apache Foundation provides an open-source implementation of
+MapReduce for clusters called
+<a class="reference external" href="http://hadoop.apache.org/core/">Hadoop</a>, which has primarily
+been implemented by Yahoo!. Student researchers at St. Olaf College
+have created a user interface called <em>WebMapReduce (WMR)</em> that uses
+Hadoop to make map-reduce programming convenient enough for
+students in computer science courses to use.</p>
+</div>
+<div class="section" id="description-of-the-mapreduce-programming-model">
+<h2>Description of the MapReduce programming model<a class="headerlink" href="#description-of-the-mapreduce-programming-model" title="Permalink to this headline">¶</a></h2>
+<p>In map-reduce programming, a programmer provides two functions,
+called the <em>mapper</em> and the <em>reducer</em>, for carrying out a sequence
+of two computational stages on potentially vast quantities of data.
+A series of identical &#8216;map&#8217; functions can be run on a large amount
+of input data in parallel, as shown in Figure mrconcept. The
+results from these mapper processes, spread across many computers,
+are then sent to reduce functions, also spread across many
+computers. The most important concepts to remember are these:</p>
+<ul class="simple">
+<li>The mapper function that you design is applied to each line of
+data, and breaks up that data into labelled units of interest,
+called <em>key-value pairs</em>.</li>
+<li>The reducer function that you design is then applied to all the
+key-value pairs <em>that share the same key</em>, allowing some kind of
+consolidation of those pairs.</li>
+</ul>
+<div class="align-center figure align-center">
+<img alt="alternate text" src="../_images/Figure1.jpg" style="width: 720px; height: 540px;" />
+<p class="caption">Figure 1: The concept behind how map functions can run in parallel and
+pass their results to reduce functions, whose results are output in
+sorted order by the keys created by the reduce function.(mrconcept)</p>
+</div>
+<p>In a <cite>map-reduce system</cite>, which is made of of many computers
+working at the same time, some computers are assigned mapper tasks,
+some shuffle the data from mappers and hand it over to reducers,
+and some computers handle the reducer tasks. Between the mapper and
+reducer stages, a map-reduce system automatically reorganizes the
+intermediate key-value pairs, so that each call of the reducer
+function can receive a complete set of key-value pairs
+<em>for a particular key</em>, and so that the reducer function is called
+for every key in sorted order. We will refer to this reorganization
+of key-value pairs between the mapper and reducer stages as
+<em>shuffling</em>. Figure mrstages illustrates the three steps of
+mapping, shuffling, and reducing.</p>
+<div class="align-center figure align-center">
+<img alt="alternate text" src="../_images/Figure2.png" style="width: 460px; height: 300px;" />
+<p class="caption">Figure 2: How each computer in a cluster breaks up the work and runs
+mappers locally, then shuffles the key-value pair results by key and
+sends the results for each key to other computers who run reducers.(mrstages)</p>
+</div>
+<p>Before the mapper stage, a map-reduce system such as Hadoop breaks
+the entire input data up into portions, known as <em>splits</em>; each
+split is assigned to one computer in a cluster, which then applies
+the mapper function to each line of that split. Thus,multiple
+computers can process different splits of data simultaneously.
+(With, say, 2000 computers or <em>nodes</em> in a large-scale commercial
+cluster, quadrillions of bytes (<em>petabytes</em>) of data might be
+processed in a few hours that might otherwise require years of
+computing time on a single computer.) Likewise, reducers may be run
+on multiple computers in order to speed up the performance of that
+stage.</p>
+<p><em>Parallel computing</em> is the practice of using multiple computations
+at the same time in order to improve the performance of those
+computations. The map-reduce programming model is an example of two
+varieties of parallel computing:</p>
+<ol class="arabic simple">
+<li><em>Data parallelism</em>, in which multiple portions of data are
+processed simultaneously on multiple processors (CPUs). This occurs
+when multiple splits of data are handled on different computers in
+a cluster.</li>
+<li><em>Pipelining</em>, in which data is processed in a sequence of
+stages, like an assembly line. The mapper and reducer stages
+represent a two-stage pipeline. If shuffling is considered as its
+own stage, the pipeline would have three stages. Pipelining is an
+example of <em>task parallelism</em>, in which different computational
+tasks take place at the same time. In the case of the map-reduce
+stages, mapping could overlap with shuffling to some extent, by
+having mappers stream their output to shuffle processes, which
+would prepare it for reducers while the mappers are generating
+results. Thus, different computers could handle each of these
+tasks.</li>
+</ol>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Hadoop actually carries out the three stages of mapping,
+shuffling, and reducing <em>sequentially</em> (one stage after the other),
+instead of using task parallelism. That is, all of the mapping
+occurs before any of the shuffling begins, and all of the shuffling
+is completed before any of the reducing begins. (See below for
+reasons why.) Thus, Hadoop&#8217;s implementation of map-reduce doesn&#8217;t
+literally qualify as pipeline parallelism, because multiple stages
+do not take place at the same time. However, true pipeline
+parallelism <em>does</em> take place within our testing program used in
+the <tt class="docutils literal"><span class="pre">WebMapReduce</span></tt> interface, called <tt class="docutils literal"><span class="pre">wmrtest</span></tt>, which is useful
+for testing and debugging mapper and reducer functions with small
+data. In general, solving problems using pipeline (assembly line)
+thinking creates opportunities for using parallelism to improve
+performance.</p>
+</div>
+<p><strong>Fault tolerance.</strong> Large (e.g., 2000-node) clusters offer the
+potential for great performance speedup, but breakdowns are
+inevitable when using so many computers. In order to avoid losing
+the results of enormous computations because of breakdowns,
+map-reduce systems such as Hadoop are <em>fault tolerant</em>, i.e.,
+designed to recover from a significant amount of computer failure.
+Here are some fault-tolerance strategies used in Hadoop:</p>
+<ul class="simple">
+<li>All data is <em>replicated</em> on multiple computers. Thus,if one
+computer fails, its data is readily available on other computers.</li>
+<li>If a computer running a mapper function fails, that mapper
+operation can thus be restarted on another computer that has the
+same data (after discarding the partial results (key-value pairs)
+from incomplete mapper calls on that failed computer).</li>
+<li>If all mappers have completed, but a computer fails during
+shuffling, then any lost mapper results can be regenerated on
+another computer, and shuffling can resume using non-failed
+computers.</li>
+<li>Shuffling results are also replicated, so if a computer running
+reducers fails, those reducers can be rerun on another computer.</li>
+</ul>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Hadoop&#8217;s fault tolerance features make it a good use for
+the <em>selkie</em> cluster at Macalester, which uses the many computers
+in two large labs in the MSCS Department in Olin-Rice.
+Occasionally, these are sometimes unfortunately rebooted by users.
+These occasional failures of machines in the cluster can be
+compensated for by Hadoop. However, when many of these computers
+are rebooted at about the same time, all of the copies of some data
+may become unavailable, leading to Hadoop failures.</p>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../index.html">
+              <img class="logo" src="../_static/CSInParallel200wide.png" alt="Logo"/>
+            </a></p>
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Using Parallelism to Analyze Very Large Files: Google&#8217;s Map Reduce Paradigm</a><ul>
+<li><a class="reference internal" href="#introduction">Introduction</a></li>
+<li><a class="reference internal" href="#description-of-the-mapreduce-programming-model">Description of the MapReduce programming model</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="../index.html"
+                        title="previous chapter">Map-reduce Computing for Introductory Students using WebMapReduce</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="../wmr_py/wmr_py.html"
+                        title="next chapter">Using Parallelism to Analyze Very Large Files: Google&#8217;s MapReduce Paradigm</a></p>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../wmr_py/wmr_py.html" title="Using Parallelism to Analyze Very Large Files: Google’s MapReduce Paradigm"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="../index.html" title="Map-reduce Computing for Introductory Students using WebMapReduce"
+             >previous</a> |</li>
+        <li><a href="../index.html">Map-reduce Computing for Introductory Students using WebMapReduce</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright This work is licensed under a Creative Commons Attribution-ShareAlike 3.0 Unported License.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>
