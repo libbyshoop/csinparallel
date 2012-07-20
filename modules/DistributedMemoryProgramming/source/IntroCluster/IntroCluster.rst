@@ -10,7 +10,7 @@ A cluster is usually a linux-based operating system. Basically, a cluster has fo
 	- Server: Provides network services to the cluster.
 	- Gateway: Acts as a firewall between the cluster and outside world.
 
-In order to prepare for what you will be working on, you should have a good understanding of parallel computer memory architectures. We are going to look at two parallel computer memory architectures: 
+In order to prepare for what you will be working on, you should have a good understanding of parallel computer architectures. We are going to look at two parallel computer architectures: 
 
 	- Shared Memory Model
 	- Distributed Memory Model
