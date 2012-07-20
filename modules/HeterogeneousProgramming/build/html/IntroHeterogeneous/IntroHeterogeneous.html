@@ -28,7 +28,7 @@
     <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <link rel="top" title="Heterogeneous Computing" href="../index.html" />
     <link rel="next" title="Coding and Compiling a Heterogeneous Program" href="../CodingAndCompiling/CodingAndCompiling.html" />
-    <link rel="prev" title="Heterogeneous Computing" href="../index.html" /> 
+    <link rel="prev" title="Prerequisites" href="../Prerequisites/Prerequisites.html" /> 
   </head>
   <body>
     <div class="related">
@@ -41,7 +41,7 @@
           <a href="../CodingAndCompiling/CodingAndCompiling.html" title="Coding and Compiling a Heterogeneous Program"
              accesskey="N">next</a> |</li>
         <li class="right" >
-          <a href="../index.html" title="Heterogeneous Computing"
+          <a href="../Prerequisites/Prerequisites.html" title="Prerequisites"
              accesskey="P">previous</a> |</li>
         <li><a href="../index.html">Heterogeneous Computing</a> &raquo;</li> 
       </ul>
@@ -54,7 +54,7 @@
             
   <div class="section" id="introduction-to-heterogeneous-computing">
 <h1>Introduction to Heterogeneous Computing<a class="headerlink" href="#introduction-to-heterogeneous-computing" title="Permalink to this headline">¶</a></h1>
-<p>We know that we can decompose the task and distribute each smaller task to each worker, and let each node work simultaneously in an MPI program. Thus it enables a programmer to work on a larger problem size, and reduce the computational time. Similarly, CUDA C is a GPU programming language, and is another parallel programming model. Our goal of this module is to program in the hybrid environment CUDA and MPI.</p>
+<p>You have already seen that you can decompose the task and distribute each smaller task to each worker, and let each node work simultaneously in an MPI program. Thus, it enables a programmer to work on a larger problem size, and reduce the computational time. Similarly, CUDA C is a GPU programming language, and is another parallel programming model. Our goal of this module is to program in the hybrid environment CUDA and MPI.</p>
 <p>It turns out that we can produce a new parallel programming model that combines MPI and CUDA together. The idea is that we use MPI to distribute work among nodes, each of which uses CUDA to work on its task. In order for this to work, we need to keep in mind that we need to have a cluster or something similar, where each node contains GPUs capable of doing CUDA computation.</p>
 <p class="centered">
 <strong>Figure 1: Heterogeneous Programming Model: CUDA and MPI</strong></p><div class="admonition-todo admonition" id="index-0">
@@ -69,17 +69,15 @@
       </div>
       <div class="sphinxsidebar">
         <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../index.html">
+              <img class="logo" src="../_static/CSInParallel200wide.png" alt="Logo"/>
+            </a></p>
   <h4>Previous topic</h4>
-  <p class="topless"><a href="../index.html"
-                        title="previous chapter">Heterogeneous Computing</a></p>
+  <p class="topless"><a href="../Prerequisites/Prerequisites.html"
+                        title="previous chapter">Prerequisites</a></p>
   <h4>Next topic</h4>
   <p class="topless"><a href="../CodingAndCompiling/CodingAndCompiling.html"
                         title="next chapter">Coding and Compiling a Heterogeneous Program</a></p>
-  <h3>This Page</h3>
-  <ul class="this-page-menu">
-    <li><a href="../_sources/IntroHeterogeneous/IntroHeterogeneous.txt"
-           rel="nofollow">Show Source</a></li>
-  </ul>
 <div id="searchbox" style="display: none">
   <h3>Quick search</h3>
     <form class="search" action="../search.html" method="get">
@@ -107,7 +105,7 @@
           <a href="../CodingAndCompiling/CodingAndCompiling.html" title="Coding and Compiling a Heterogeneous Program"
              >next</a> |</li>
         <li class="right" >
-          <a href="../index.html" title="Heterogeneous Computing"
+          <a href="../Prerequisites/Prerequisites.html" title="Prerequisites"
              >previous</a> |</li>
         <li><a href="../index.html">Heterogeneous Computing</a> &raquo;</li> 
       </ul>
