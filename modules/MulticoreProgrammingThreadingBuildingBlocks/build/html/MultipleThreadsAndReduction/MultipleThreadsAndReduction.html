@@ -1,0 +1,231 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>TBB, multiple threads, and reduction &mdash; Multi-core Programming Using Threading Building Blocks</title>
+    
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="top" title="Multi-core Programming Using Threading Building Blocks" href="../index.html" />
+    <link rel="prev" title="Intel’s Threading Building Blocks (TBB)" href="../TBB/TBB.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../TBB/TBB.html" title="Intel’s Threading Building Blocks (TBB)"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../index.html">Multi-core Programming Using Threading Building Blocks</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="tbb-multiple-threads-and-reduction">
+<h1>TBB, multiple threads, and reduction<a class="headerlink" href="#tbb-multiple-threads-and-reduction" title="Permalink to this headline">¶</a></h1>
+<p>The code above for a TBB trapezoidal computation produces an incorrect answer if there are multiple threads, because each thread attempts to update the shared variable <tt class="docutils literal"><span class="pre">integral</span></tt> without any mechanism to avoid one thread from overwriting the results produced by another thread.  We will solve this issue using a <em>reduction</em>, in which results will be computed in <em>local</em> variables for each thread, then those local results added together at the end.</p>
+<ol class="arabic simple">
+<li>To do the reduction in TBB, we will use the <tt class="docutils literal"><span class="pre">parallel_reduce</span></tt> call instead of the <tt class="docutils literal"><span class="pre">parallel_for</span></tt> call, and will use a modified class <tt class="docutils literal"><span class="pre">SumHeights2</span></tt>.</li>
+</ol>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="cp">#include &lt;iostream&gt;</span>
+<span class="cp">#include &lt;cmath&gt;</span>
+<span class="k">using</span> <span class="k">namespace</span> <span class="n">std</span><span class="p">;</span>
+
+<span class="cp">#include &quot;tbb/tbb.h&quot;</span>
+<span class="k">using</span> <span class="k">namespace</span> <span class="n">tbb</span><span class="p">;</span>
+
+<span class="cm">/* Demo program for TBB: computes trapezoidal approximation to an integral*/</span>
+
+<span class="k">const</span> <span class="kt">double</span> <span class="n">pi</span> <span class="o">=</span> <span class="mf">3.141592653589793238462643383079</span><span class="p">;</span>
+
+<span class="kt">double</span> <span class="n">f</span><span class="p">(</span><span class="kt">double</span> <span class="n">x</span><span class="p">);</span>
+     
+<span class="k">class</span> <span class="nc">SumHeights2</span> <span class="p">{</span>
+  <span class="kt">double</span> <span class="k">const</span> <span class="n">my_a</span><span class="p">;</span>
+  <span class="kt">double</span> <span class="k">const</span> <span class="n">my_h</span><span class="p">;</span>
+
+<span class="k">public</span><span class="o">:</span>
+  <span class="kt">double</span> <span class="n">my_int</span><span class="p">;</span>
+
+  <span class="kt">void</span> <span class="k">operator</span><span class="p">()</span> <span class="p">(</span><span class="k">const</span> <span class="n">blocked_range</span><span class="o">&lt;</span><span class="n">size_t</span><span class="o">&gt;&amp;</span> <span class="n">r</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kt">double</span> <span class="n">a2</span> <span class="o">=</span> <span class="n">my_a</span><span class="p">;</span>
+    <span class="kt">double</span> <span class="n">h2</span> <span class="o">=</span> <span class="n">my_h</span><span class="p">;</span>
+    <span class="kt">double</span> <span class="n">int2</span> <span class="o">=</span> <span class="n">my_int</span><span class="p">;</span>
+    <span class="n">size_t</span> <span class="n">end</span> <span class="o">=</span> <span class="n">r</span><span class="p">.</span><span class="n">end</span><span class="p">();</span>
+    <span class="k">for</span><span class="p">(</span><span class="n">size_t</span> <span class="n">i</span> <span class="o">=</span> <span class="n">r</span><span class="p">.</span><span class="n">begin</span><span class="p">();</span> <span class="n">i</span> <span class="o">!=</span> <span class="n">end</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+      <span class="n">int2</span> <span class="o">+=</span> <span class="n">f</span><span class="p">(</span><span class="n">a2</span><span class="o">+</span><span class="n">i</span><span class="o">*</span><span class="n">h2</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="n">my_int</span> <span class="o">=</span> <span class="n">int2</span><span class="p">;</span>
+  <span class="p">}</span>
+  
+  <span class="n">SumHeights2</span><span class="p">(</span><span class="k">const</span> <span class="kt">double</span> <span class="n">a</span><span class="p">,</span> <span class="k">const</span> <span class="kt">double</span> <span class="n">h</span><span class="p">,</span> <span class="k">const</span> <span class="kt">double</span> <span class="n">integral</span><span class="p">)</span> <span class="o">:</span> 
+    <span class="n">my_a</span><span class="p">(</span><span class="n">a</span><span class="p">),</span> <span class="n">my_h</span><span class="p">(</span><span class="n">h</span><span class="p">),</span> <span class="n">my_int</span><span class="p">(</span><span class="n">integral</span><span class="p">)</span>
+  <span class="p">{}</span>
+
+  <span class="n">SumHeights2</span><span class="p">(</span><span class="n">SumHeights2</span> <span class="o">&amp;</span><span class="n">x</span><span class="p">,</span> <span class="n">split</span><span class="p">)</span> <span class="o">:</span> 
+    <span class="n">my_a</span><span class="p">(</span><span class="n">x</span><span class="p">.</span><span class="n">my_a</span><span class="p">),</span> <span class="n">my_h</span><span class="p">(</span><span class="n">x</span><span class="p">.</span><span class="n">my_h</span><span class="p">),</span> <span class="n">my_int</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+  <span class="p">{}</span>
+
+  <span class="kt">void</span> <span class="n">join</span><span class="p">(</span> <span class="k">const</span> <span class="n">SumHeights2</span> <span class="o">&amp;</span><span class="n">y</span><span class="p">)</span> <span class="p">{</span> <span class="n">my_int</span> <span class="o">+=</span> <span class="n">y</span><span class="p">.</span><span class="n">my_int</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">};</span>
+
+<span class="kt">int</span> <span class="n">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span><span class="o">**</span> <span class="n">argv</span><span class="p">)</span> <span class="p">{</span>
+   <span class="cm">/* Variables */</span>
+   <span class="kt">double</span> <span class="n">a</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span> <span class="n">b</span> <span class="o">=</span> <span class="n">pi</span><span class="p">;</span>  <span class="cm">/* limits of integration */</span><span class="p">;</span>
+   <span class="kt">int</span> <span class="n">n</span> <span class="o">=</span> <span class="mi">1048576</span><span class="p">;</span> <span class="cm">/* number of subdivisions = 2^20 */</span>
+
+   <span class="kt">double</span> <span class="n">h</span> <span class="o">=</span> <span class="p">(</span><span class="n">b</span> <span class="o">-</span> <span class="n">a</span><span class="p">)</span> <span class="o">/</span> <span class="n">n</span><span class="p">;</span> <span class="cm">/* width of subdivision */</span>
+   <span class="kt">double</span> <span class="n">integral</span><span class="p">;</span> <span class="cm">/* accumulates answer */</span>
+   
+   <span class="n">integral</span> <span class="o">=</span> <span class="p">(</span><span class="n">f</span><span class="p">(</span><span class="n">a</span><span class="p">)</span> <span class="o">+</span> <span class="n">f</span><span class="p">(</span><span class="n">b</span><span class="p">))</span><span class="o">/</span><span class="mf">2.0</span><span class="p">;</span>
+
+   <span class="n">SumHeights2</span> <span class="n">sh2</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">h</span><span class="p">,</span> <span class="n">integral</span><span class="p">);</span>
+   <span class="n">parallel_reduce</span><span class="p">(</span><span class="n">blocked_range</span><span class="o">&lt;</span><span class="n">size_t</span><span class="o">&gt;</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">n</span><span class="p">),</span> <span class="n">sh2</span><span class="p">);</span>
+   <span class="n">integral</span> <span class="o">+=</span> <span class="n">sh2</span><span class="p">.</span><span class="n">my_int</span><span class="p">;</span>
+   
+   <span class="n">integral</span> <span class="o">=</span> <span class="n">integral</span> <span class="o">*</span> <span class="n">h</span><span class="p">;</span>
+   <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;With n = &quot;</span> <span class="o">&lt;&lt;</span> <span class="n">n</span> <span class="o">&lt;&lt;</span> <span class="s">&quot; trapezoids, our estimate of the integral&quot;</span> <span class="o">&lt;&lt;</span>
+     <span class="s">&quot; from &quot;</span> <span class="o">&lt;&lt;</span> <span class="n">a</span> <span class="o">&lt;&lt;</span> <span class="s">&quot; to &quot;</span> <span class="o">&lt;&lt;</span> <span class="n">b</span> <span class="o">&lt;&lt;</span> <span class="s">&quot; is &quot;</span> <span class="o">&lt;&lt;</span> <span class="n">integral</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+<span class="p">}</span>
+    
+<span class="kt">double</span> <span class="n">f</span><span class="p">(</span><span class="kt">double</span> <span class="n">x</span><span class="p">)</span> <span class="p">{</span>
+
+   <span class="k">return</span> <span class="n">sin</span><span class="p">(</span><span class="n">x</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Comments:</th><td class="field-body"><ul class="first last">
+<li><p class="first">The class <tt class="docutils literal"><span class="pre">SumHeights2</span></tt> handles the variable <tt class="docutils literal"><span class="pre">my_int</span></tt> differently than the class <tt class="docutils literal"><span class="pre">SumHeights</span></tt> does. Instead of <tt class="docutils literal"><span class="pre">SumHeights</span></tt>&#8216;s misguided attempt to share main()&#8217;s memory location <tt class="docutils literal"><span class="pre">integral</span></tt> through reference types, the new class <tt class="docutils literal"><span class="pre">SumHeights2</span></tt> allocates a new separate (state) variable location my_int for each object of type <tt class="docutils literal"><span class="pre">SumHeights2</span></tt> (by avoiding reference types).</p>
+</li>
+<li><p class="first">Also, <tt class="docutils literal"><span class="pre">my_int</span></tt> is a <tt class="docutils literal"><span class="pre">public</span></tt> state variable in <tt class="docutils literal"><span class="pre">SumHeights2</span></tt>, instead of the default <tt class="docutils literal"><span class="pre">private</span></tt> visibility in the prior class <tt class="docutils literal"><span class="pre">SumHeights</span></tt>. This makes it possible for a method of a <tt class="docutils literal"><span class="pre">SumHeights2</span></tt> object to compute a value and store that value in <tt class="docutils literal"><span class="pre">my_int</span></tt>, then for another part of the code to access that computed value through that public state variable <tt class="docutils literal"><span class="pre">my_int</span></tt>. (Alternatively, we could have made <tt class="docutils literal"><span class="pre">my_int</span></tt> private like the other state variables, and added a &#8220;getter&#8221; method <tt class="docutils literal"><span class="pre">get_my_int()</span></tt> to retrieve that computed value.)</p>
+</li>
+<li><p class="first">The <tt class="docutils literal"><span class="pre">operator()</span></tt> definitions in the two classes differ in several ways.</p>
+<ol class="arabic simple">
+<li>The code for the new class&#8217;s operator <tt class="docutils literal"><span class="pre">SumHeights2::operator()</span></tt> begins my making local copies <tt class="docutils literal"><span class="pre">a2</span></tt>, <tt class="docutils literal"><span class="pre">h2</span></tt>, and <tt class="docutils literal"><span class="pre">int2</span></tt> of the variables <tt class="docutils literal"><span class="pre">my_a</span></tt>, <tt class="docutils literal"><span class="pre">my_h</span></tt>, and <tt class="docutils literal"><span class="pre">my_int</span></tt>, and also storing the (unchanging) value of <tt class="docutils literal"><span class="pre">r.end()</span></tt> in another local variable. These local variable assignments are not necessary for the logical correctness of the code. Instead, they make it possible for the compiler to produce a more efficient computations. With this help, the compiler can realize that it&#8217;s safe to use <em>registers</em> to implement those variables <em>instead of memory locations</em>, which would lead to faster access to those values.</li>
+<li>The loop is rewritten to use these local variables, but otherwise represents the same computation as in the previous <tt class="docutils literal"><span class="pre">SumHeights::operator()</span></tt>.</li>
+<li><em>After</em> the loop, the local variable <tt class="docutils literal"><span class="pre">int2</span></tt> is assigned to the state variable <tt class="docutils literal"><span class="pre">my_int</span></tt>, in order to deliver the sum for this thread&#8217;s subdivision (chunk) of the summation range.</li>
+<li><tt class="docutils literal"><span class="pre">SumHeights2::operator()</span></tt> is <em>not</em> a <tt class="docutils literal"><span class="pre">const</span></tt> method. This means it&#8217;s not safe for <tt class="docutils literal"><span class="pre">const</span></tt> objects to call this method &#8211; they will be changed. In this case, the change is that <tt class="docutils literal"><span class="pre">my_int</span></tt> is changed when <tt class="docutils literal"><span class="pre">operator()</span></tt> is called.</li>
+</ol>
+</li>
+<li><p class="first">The three-argument constructor for <tt class="docutils literal"><span class="pre">SumHeights</span></tt> is the same as the three-argument constructor for <tt class="docutils literal"><span class="pre">SumHeights2</span></tt>, except for the handling of the third argument <tt class="docutils literal"><span class="pre">integral</span></tt> (discussed above).</p>
+</li>
+<li><p class="first">However, the class <tt class="docutils literal"><span class="pre">SumHeights2</span></tt> has an additional constructor and an additional method <tt class="docutils literal"><span class="pre">join()</span></tt>.</p>
+<ol class="arabic simple">
+<li>The second constructor is called a <em>split constructor</em>. This constructor will be used to construct new instances of <tt class="docutils literal"><span class="pre">SumHeights2</span></tt> for additional threads brought into the summation computation.</li>
+<li>The method <tt class="docutils literal"><span class="pre">join()</span></tt> is used to add the partial sum from one thread&#8217;s computation to a running sum &#8211; i.e., to perform the reduction operation.</li>
+</ol>
+</li>
+<li><p class="first">Here is an overview description of the parallel computation for this program.</p>
+<ol class="arabic simple">
+<li>An object <tt class="docutils literal"><span class="pre">sh2</span></tt> is allocated, using the three-argument constructor for <tt class="docutils literal"><span class="pre">SumHeights2</span></tt>.</li>
+<li>The call to <tt class="docutils literal"><span class="pre">parallel_reduce()</span></tt> in <tt class="docutils literal"><span class="pre">main()</span></tt> performs <tt class="docutils literal"><span class="pre">sh2</span></tt>&#8216;s <tt class="docutils literal"><span class="pre">operator()</span></tt> over the range 1 to n by subdividing (i.e., chunking) that range and assigning a thread to perform the trapezoidal sum for each chunk.</li>
+<li>Each of those threads creates its own <tt class="docutils literal"><span class="pre">SumHeights2</span></tt> object using the splitting constructor.</li>
+</ol>
+<blockquote>
+<div><ul class="simple">
+<li>The thread first calls that splitting object&#8217;s <tt class="docutils literal"><span class="pre">operator()</span></tt> with that thread&#8217;s range chunk to compute a partial sum.</li>
+<li>Then, the thread calls <tt class="docutils literal"><span class="pre">sh2.join()</span></tt> with that splitting object as the argument, in order to add its partial sum to <tt class="docutils literal"><span class="pre">sh2</span></tt>&#8216;s accumulator <tt class="docutils literal"><span class="pre">sh2.my_int</span></tt>.</li>
+</ul>
+</div></blockquote>
+<ol class="arabic simple" start="4">
+<li>After all range chunks have been processed, <tt class="docutils literal"><span class="pre">parallel_reduce()</span></tt> finishes, leaving the final answer in the <tt class="docutils literal"><span class="pre">public</span></tt> state variable <tt class="docutils literal"><span class="pre">sh2.my_int</span></tt>.</li>
+</ol>
+<blockquote>
+<div><ul class="simple">
+<li>The splitting constructor for <tt class="docutils literal"><span class="pre">SumHeights2</span></tt> has a dummy argument of type <tt class="docutils literal"><span class="pre">split</span></tt> (defined by the TBB library), because without that extra argument, there would be no way for a compiler to tell the difference between a call to that splitting constructor and a call to <tt class="docutils literal"><span class="pre">SumHeight2</span></tt>&#8216;s copy constructor.</li>
+</ul>
+</div></blockquote>
+</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<ol class="arabic" start="2">
+<li><p class="first">Enter the program above, using the filename <tt class="docutils literal"><span class="pre">trap-tbb2.cpp</span></tt>. Or you can download the file <a class="reference download internal" href="../_downloads/trap-tbb2.cpp"><tt class="xref download docutils literal"><span class="pre">trap-tbb2.cpp</span></tt></a></p>
+<p>You can enter it on a lab machine, but then you&#8217;d have to disconnect Cisco VPN on your local machine (e.g., your laptop), <tt class="docutils literal"><span class="pre">scp</span></tt> the new file to your local machine, reconnect Cisco VPN, and <tt class="docutils literal"><span class="pre">scp</span></tt> to the MTL machine in order to transfer it to the MTL system.</p>
+</li>
+<li><p class="first">Compile and test your <tt class="docutils literal"><span class="pre">trap-tbb2</span></tt> program on the MTL. Does it now produce the correct answer of 2 for the trapezoidal approximation?</p>
+</li>
+<li><p class="first">Also time the performance of runs of this revised program, and compare to the time performance of runs of the prior program <tt class="docutils literal"><span class="pre">trap-tbb</span></tt>.</p>
+</li>
+</ol>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../index.html">
+              <img class="logo" src="../_static/CSInParallel200wide.png" alt="Logo"/>
+            </a></p>
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="../TBB/TBB.html"
+                        title="previous chapter">Intel&#8217;s Threading Building Blocks (TBB)</a></p>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../TBB/TBB.html" title="Intel’s Threading Building Blocks (TBB)"
+             >previous</a> |</li>
+        <li><a href="../index.html">Multi-core Programming Using Threading Building Blocks</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright This work is licensed under a Creative Commons Attribution-ShareAlike 3.0 Unported License.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>
