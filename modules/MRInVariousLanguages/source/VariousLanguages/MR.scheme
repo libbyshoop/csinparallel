@@ -1,0 +1,24 @@
+(define helper
+  (lambda (lis) ; a list of strings
+    (cond 
+      ((null? lis) #t)
+      ;; at least one element in lis
+      (else (wmr-emit (car lis) "1")
+            (helper (cdr lis))))))
+
+(define mapper
+  (lambda (key value)
+    (helper (wmr-split key))))
+
+(define loop
+  (lambda (key iter ct) ; a key,value iterator in its current state, and
+                        ; subtotal so far
+    (cond 
+      ((iter 'has-next) 
+       (loop key iter (+ ct (string->number (iter 'get-next)))))
+      ;; assert -- no more input values to add
+      (else (wmr-emit key (number->string ct))))))
+
+(define reducer
+  (lambda (key iter)
+    (loop key iter 0)))

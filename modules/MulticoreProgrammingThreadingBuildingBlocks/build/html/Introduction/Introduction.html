@@ -1,0 +1,130 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Introduction &mdash; Multi-core Programming Using Threading Building Blocks</title>
+    
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="top" title="Multi-core Programming Using Threading Building Blocks" href="../index.html" />
+    <link rel="next" title="Preparing your machine for the lab" href="../Preparement/Preparement.html" />
+    <link rel="prev" title="Multi-core Programming Using Threading Building Blocks" href="../index.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../Preparement/Preparement.html" title="Preparing your machine for the lab"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="../index.html" title="Multi-core Programming Using Threading Building Blocks"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../index.html">Multi-core Programming Using Threading Building Blocks</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="introduction">
+<h1>Introduction<a class="headerlink" href="#introduction" title="Permalink to this headline">¶</a></h1>
+<p>Intel Corporation has set up a special remote system that allows faculty and students to work with computers with lots of cores, called the <em>Manycore Testing Lab (MTL)</em>. In this lab, we will create a program that intentionally uses multi-core parallelism, upload and run it on the MTL, and explore the issues in parallelism and concurrency that arise.</p>
+<div class="section" id="requirements">
+<h2>Requirements<a class="headerlink" href="#requirements" title="Permalink to this headline">¶</a></h2>
+<p>It is recommended that you work on a non-lab machine (preferably a personal laptop) for this lab; you can still use the lab computers in order to develop our multi-core program, but we need to connect to the Intel MTL system using a non-lab computer. This is because the Cisco VPN software for connecting to the MTL blocks all other network access, so we can&#8217;t use it on the lab computers or it would interfere with all other uses of those computers.</p>
+<p>If you choose to use your own computer for this lab, you will need the following materials:</p>
+<ul class="simple">
+<li>A C++ compiler, if you do not have one on your computer already.  GNU&#8217;s gcc compiler is one such example, and is available on Windows, Mac OS, and Linux.</li>
+<li>A text editor or program to write and save C++ programs</li>
+<li>Cisco VPN client, which we will use to access the MTL. Instructions for installing Cisco VPN client for your machine is detailed in the next section.</li>
+<li>A terminal. Linux and Mac OS have UNIX-based terminals by default. For Windows, you also need ssh and scp capabilities. Putty and Cygwin are two ways to get these capabilities. With <a class="reference external" href="http://www.chiark.greenend.org.uk/~sgtatham/putty/download.html">Putty</a>, you&#8217;ll need both <strong>putty.exe</strong> and <strong>pscp.exe</strong>. Ask for help if you need it.</li>
+</ul>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../index.html">
+              <img class="logo" src="../_static/CSInParallel200wide.png" alt="Logo"/>
+            </a></p>
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Introduction</a><ul>
+<li><a class="reference internal" href="#requirements">Requirements</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="../index.html"
+                        title="previous chapter">Multi-core Programming Using Threading Building Blocks</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="../Preparement/Preparement.html"
+                        title="next chapter">Preparing your machine for the lab</a></p>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../Preparement/Preparement.html" title="Preparing your machine for the lab"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="../index.html" title="Multi-core Programming Using Threading Building Blocks"
+             >previous</a> |</li>
+        <li><a href="../index.html">Multi-core Programming Using Threading Building Blocks</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright This work is licensed under a Creative Commons Attribution-ShareAlike 3.0 Unported License.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>

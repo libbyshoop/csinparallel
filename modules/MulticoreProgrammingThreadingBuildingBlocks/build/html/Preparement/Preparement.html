@@ -1,0 +1,159 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Preparing your machine for the lab &mdash; Multi-core Programming Using Threading Building Blocks</title>
+    
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="top" title="Multi-core Programming Using Threading Building Blocks" href="../index.html" />
+    <link rel="next" title="Intel’s Threading Building Blocks (TBB)" href="../TBB/TBB.html" />
+    <link rel="prev" title="Introduction" href="../Introduction/Introduction.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../TBB/TBB.html" title="Intel’s Threading Building Blocks (TBB)"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="../Introduction/Introduction.html" title="Introduction"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../index.html">Multi-core Programming Using Threading Building Blocks</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="preparing-your-machine-for-the-lab">
+<h1>Preparing your machine for the lab<a class="headerlink" href="#preparing-your-machine-for-the-lab" title="Permalink to this headline">¶</a></h1>
+<p><strong>Carry the steps in this section before the lab, if possible, on a laptop you can bring with you to the lab session.</strong></p>
+<p>The Cisco VPN client software is free, easy to install, easy to use, and does not interfere with your computer except while you are connected to the MTL. Here are download links (install before the lab if possible):</p>
+<ul>
+<li><p class="first"><a class="reference external" href="http://www.cs.stolaf.edu/pub/vpnclient-win-msi-5.0.06.0160-k9.exe">Windows (2000,XP,Vista,7)</a></p>
+<p>Download the from this link and run the executable to install the Cisco VPN client.</p>
+</li>
+<li><p class="first"><a class="reference external" href="http://helpdesk.ugent.be/vpn/download/vpnclient-darwin-4.9.01.0080-universal-k9-5-10.dmg">Mac OS 10.4 and later</a></p>
+<p>Download from this link, which creates a pseudodisk on your desktop, then open that pseudodisk and follow the instructions. (You can delete the pseudodisk when you&#8217;re done.)</p>
+<p>You can use a UNIX terminal window to access ssh and scp.</p>
+</li>
+<li><p class="first">For Linux and other versions of Windows and Macintosh, you can see the <a class="reference external" href="http://helpdesk.ugent.be/vpn/en/akkoord.php">University of Ghent page</a> that these downloads were obtained from. Choose among the &#8220;Cisco VPN clients without config file&#8221;.</p>
+</li>
+</ul>
+<p>Once you have installed the Cisco VPN client (and have ssh and scp installed), configure the Cisco VPN client to access the multicore testing lab, as follows.</p>
+<ol class="arabic simple">
+<li>Start up the Cisco VPN client.</li>
+</ol>
+<blockquote>
+<div><div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">This is installed as a software application. <em>Don&#8217;t</em> look for it under system network connection options, like other VPN systems.</p>
+</div>
+</div></blockquote>
+<ol class="arabic simple" start="2">
+<li>Create a new connection, with the following connection information:</li>
+</ol>
+<blockquote>
+<div><ul class="simple">
+<li><em>Connection entry:</em> Choose a name, perhaps &#8220;Intel MTL VPN&#8221;</li>
+<li><em>Description:</em> Optional</li>
+<li><em>Host:</em> <strong>192.55.51.80</strong></li>
+<li>Select <em>Group Authentication</em> (probably the default)</li>
+<li><em>Name</em> is <strong>VPN2</strong></li>
+<li><em>Password</em> is sent to you separately.</li>
+</ul>
+<p>Save this connection to finish creating it.</p>
+</div></blockquote>
+<ol class="arabic simple" start="3">
+<li>Now try connecting on your new VPN connection entry.</li>
+</ol>
+<blockquote>
+<div><ul class="simple">
+<li>If this succeeds, you will find that <em>none of your usual network services work</em>. For example, your browser won&#8217;t be able to find any pages (thus, you&#8217;ll have to use a different machine while you&#8217;re connected to the MTL if you need to access network services).</li>
+<li>If your new VPN connection fails, recheck the settings you entered, or seek help.</li>
+</ul>
+</div></blockquote>
+<ol class="arabic simple" start="4">
+<li>Finally, disconnect from your new VPN connection entry. This will give you your usual network capabilities back, etc.</li>
+</ol>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../index.html">
+              <img class="logo" src="../_static/CSInParallel200wide.png" alt="Logo"/>
+            </a></p>
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="../Introduction/Introduction.html"
+                        title="previous chapter">Introduction</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="../TBB/TBB.html"
+                        title="next chapter">Intel&#8217;s Threading Building Blocks (TBB)</a></p>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../TBB/TBB.html" title="Intel’s Threading Building Blocks (TBB)"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="../Introduction/Introduction.html" title="Introduction"
+             >previous</a> |</li>
+        <li><a href="../index.html">Multi-core Programming Using Threading Building Blocks</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright This work is licensed under a Creative Commons Attribution-ShareAlike 3.0 Unported License.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>
