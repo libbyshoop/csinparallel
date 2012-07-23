@@ -9,7 +9,7 @@ Compiling an MPI program
 
 To compile an MPI program on your local cluster, you can enter the following commands in the terminal:
 
-First, we need to make an executable file from the MPI program: ::
+First, we need to make an executable file from the MPI program by using **mpicc**: ::
 
 	mpicc -o filename filename.c
 
@@ -18,7 +18,7 @@ Then you are able to execute it using **mpirun** : ::
 	mpirun -machinefile machines -np #processes ./filename
 
 .. note:: 
-	**machines**: is the instruction for running the executable file on which node, and how many times on which node. For example, machines on LittleFe has structure as follow: 
+	**machines**: is the instruction for running the executable file on a cluster. It tells the executable file to run on which nodes and how many times on those nodes. For example, machines on LittleFe has structure as follow: 
 
         - node000.bccd.net    slots = 1
         - node011.bccd.net    slots = 1
@@ -86,7 +86,7 @@ To download the entire source code from www.mcs.anl.gov [1]:
 Activity 2: Vector Matrix Multiplication
 ----------------------------------------	
 
-In this activity, we are going to compute vector matrix multiplication. We will illustrate the use of MPI_Bcast, MPI_Scatter, and MPI_Gather to do this multiplication. First, we want you to complete this MPI program by filling codes at **TO DO**. After having completed this task, try to run this MPI program by using different number of processes. Try to explain yourself what is happening !
+In this activity, we are going to compute vector matrix multiplication. This activity illustrates the use of MPI_Bcast, MPI_Scatter, and MPI_Gather to do this multiplication. First, we want you to complete this MPI program by filling codes at **TO DO**. After having completed this task, try to run this MPI program by using different number of processes. Try to explain yourself what is happening !
 
 I will explain how the vector matrix multiplication works. First, let's say we have a matrix *A*, and a vector *x* as below:  
 
@@ -98,13 +98,13 @@ I will explain how the vector matrix multiplication works. First, let's say we h
 
 .. centered:: Figure 5: vector matrix multiplication Obtained from cms.uni-konstanz.de [2]
 
-This multiplication produces a new vector whose length is the number of rows of matrix *A*. The multiplication is very simple, we take a row of matrix *A* dot product with vector *x*, and this produces an element of the result vector. For instance, the first row of matrix *A* dot products with vector *x* will produce the first element in vector *y*. 
+This multiplication produces a new vector whose length is the number of rows of matrix *A*. The multiplication is very simple. We take a row of matrix *A* dot product with vector *x*, and this produces an element of the result vector. For instance, the first row of matrix *A* dot products with vector *x* will produce the first element in vector *y*. 
 
 :Comments:
 
-    * We will step you through the source code for this MPI program. Since this is an MPI program, we need to create the MPI execution environment, define the size of the communicator, and give each process a unique rank. You are asked to completed this part of the code.
+    * We will step you through this activity step by step. Since this is an MPI program, we need to create the MPI execution environment, define the size of the communicator, and give each process a unique rank. You are asked to completed this part of the code.
 
-    * After having initialized the MPI environment, we want to ask the master to initialize the vector and matrix we are going to multiply. In order to do that, we check if the process is master. If so, we initialize the matrix and vector. ::
+    * After having initialized the MPI environment, we want to ask the master to initialize the vector and matrix we are going to multiply. In order to do that, we check if the process is master. If so, we initialize the matrix and vector. We initialize every entry to 1 because of its simplicity. ::
 
         if (rank == 0) {
             /* Initialize the matrix and vector */
@@ -132,7 +132,7 @@ This multiplication produces a new vector whose length is the number of rows of 
 To download the source code to do your activity: 
 :download:`download vector_matrix_todo.c <vector_matrix_buggy_todo.c>`
 
-To download the entire source code from www.public.asu.edu [3]:
+To download the entire source code from www.public.asu.edu/~dstanzoi [3]:
 :download:`download vector_matrix_done.c <vector_matrix_buggy_done.c>`
 
 
