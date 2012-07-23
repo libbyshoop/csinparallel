@@ -26,6 +26,14 @@ import sys, os
 # Add any Sphinx extension module names here, as strings. They can be extensions
 # coming with Sphinx (named 'sphinx.ext.*') or your custom ones.
 extensions = ['sphinx.ext.autodoc', 'sphinx.ext.doctest', 'sphinx.ext.intersphinx', 'sphinx.ext.todo', 'sphinx.ext.coverage', 'sphinx.ext.pngmath', 'sphinx.ext.mathjax', 'sphinx.ext.ifconfig', 'sphinx.ext.viewcode']
+
+if 'Darwin' in os.uname()[0]:
+	pngmath_latex = '/usr/local/texlive/2011/bin/x86_64-darwin/latex'
+	pngmath_dvipng = '/usr/local/texlive/2011/bin/x86_64-darwin/dvipng'
+elif 'Linux' in os.uname()[0]:
+	pngmath_latex = '/usr/bin/latex'
+	pngmath_dvipng = '/usr/bin/dvipng'
+
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']
 
@@ -39,7 +47,7 @@ source_suffix = '.rst'
 master_doc = 'index'
 
 # General information about the project.
-project = u'Heterogeneous Programming'
+project = u'Heterogeneous Computing'
 copyright = u'This work is licensed under a Creative Commons Attribution-ShareAlike 3.0 Unported License'
 
 # The version info for the project you're documenting, acts as replacement for
@@ -109,7 +117,7 @@ html_title = "Heterogeneous Computing"
 
 # The name of an image file (relative to this directory) to place at the top
 # of the sidebar.
-#html_logo = None
+html_logo = '../../../images/CSInParallel200wide.png'
 
 # The name of an image file (within the static path) to use as favicon of the
 # docs.  This file should be a Windows icon file (.ico) being 16x16 or 32x32
@@ -119,7 +127,7 @@ html_title = "Heterogeneous Computing"
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,
 # so a file named "default.css" will overwrite the builtin "default.css".
-html_static_path = ['_static']
+#html_static_path = ['_static']
 
 # If not '', a 'Last updated on:' timestamp is inserted at every page bottom,
 # using the given strftime format.
@@ -146,7 +154,7 @@ html_static_path = ['_static']
 #html_split_index = False
 
 # If true, links to the reST sources are added to the pages.
-#html_show_sourcelink = True
+html_show_sourcelink = False
 
 # If true, "Created using Sphinx" is shown in the HTML footer. Default is True.
 #html_show_sphinx = True
@@ -163,12 +171,15 @@ html_static_path = ['_static']
 #html_file_suffix = None
 
 # Output file base name for HTML help builder.
-htmlhelp_basename = 'HeterogeneousProgrammingdoc'
+htmlhelp_basename = 'HeterogeneousComputingdoc'
 
 
 # -- Options for LaTeX output --------------------------------------------------
 
 latex_elements = {
+
+'releasename': '', 'classoptions': ',openany,oneside', 'babel' : '\\usepackage[english]{babel}'
+
 # The paper size ('letterpaper' or 'a4paper').
 #'papersize': 'letterpaper',
 
@@ -182,8 +193,8 @@ latex_elements = {
 # Grouping the document tree into LaTeX files. List of tuples
 # (source start file, target name, title, author, documentclass [howto/manual]).
 latex_documents = [
-  ('index', 'HeterogeneousProgramming.tex', u'Heterogeneous Programming Documentation',
-   u'Sophors Khut', 'manual'),
+  ('index', 'HeterogeneousComputing.tex', u'Heterogeneous Computing Documentation',
+   u'CSInParallel Project', 'manual'),
 ]
 
 # The name of an image file (relative to this directory) to place at the top of
@@ -212,8 +223,8 @@ latex_documents = [
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
 man_pages = [
-    ('index', 'heterogeneousprogramming', u'Heterogeneous Programming Documentation',
-     [u'Sophors Khut'], 1)
+    ('index', 'heterogeneouscomputing', u'Heterogeneous Computing Documentation',
+     [u'CSInParallel Project'], 1)
 ]
 
 # If true, show URL addresses after external links.
@@ -226,8 +237,8 @@ man_pages = [
 # (source start file, target name, title, author,
 #  dir menu entry, description, category)
 texinfo_documents = [
-  ('index', 'HeterogeneousProgramming', u'Heterogeneous Programming Documentation',
-   u'Sophors Khut', 'HeterogeneousProgramming', 'One line description of project.',
+  ('index', 'HeterogeneousComputing', u'Heterogeneous Computing Documentation',
+   u'CSInParallel Project', 'HeterogeneousComputing', 'One line description of project.',
    'Miscellaneous'),
 ]
 
@@ -239,10 +250,6 @@ texinfo_documents = [
 
 # How to display URL addresses: 'footnote', 'no', or 'inline'.
 #texinfo_show_urls = 'footnote'
-
-# Example configuration for intersphinx: refer to the Python standard library.
-intersphinx_mapping = {'http://docs.python.org/': None}
-
 
 # To Do
 [extensions]

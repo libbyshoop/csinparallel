@@ -57,7 +57,7 @@
 <div class="section" id="compiling-an-mpi-program">
 <h2>Compiling an MPI program<a class="headerlink" href="#compiling-an-mpi-program" title="Permalink to this headline">¶</a></h2>
 <p>To compile an MPI program on your local cluster, you can enter the following commands in the terminal:</p>
-<p>First, we need to make an executable file from the MPI program:</p>
+<p>First, we need to make an executable file from the MPI program by using <strong>mpicc</strong>:</p>
 <div class="highlight-c"><div class="highlight"><pre><span class="n">mpicc</span> <span class="o">-</span><span class="n">o</span> <span class="n">filename</span> <span class="n">filename</span><span class="p">.</span><span class="n">c</span>
 </pre></div>
 </div>
@@ -66,7 +66,7 @@
 </div>
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
-<p><strong>machines</strong>: is the instruction for running the executable file on which node, and how many times on which node. For example, machines on LittleFe has structure as follow:</p>
+<p><strong>machines</strong>: is the instruction for running the executable file on a cluster. It tells the executable file to run on which nodes and how many times on those nodes. For example, machines on LittleFe has structure as follow:</p>
 <ul class="last simple">
 <li>node000.bccd.net    slots = 1</li>
 <li>node011.bccd.net    slots = 1</li>
@@ -132,19 +132,19 @@
 </div>
 <div class="section" id="activity-2-vector-matrix-multiplication">
 <h2>Activity 2: Vector Matrix Multiplication<a class="headerlink" href="#activity-2-vector-matrix-multiplication" title="Permalink to this headline">¶</a></h2>
-<p>In this activity, we are going to compute vector matrix multiplication. We will illustrate the use of MPI_Bcast, MPI_Scatter, and MPI_Gather to do this multiplication. First, we want you to complete this MPI program by filling codes at <strong>TO DO</strong>. After having completed this task, try to run this MPI program by using different number of processes. Try to explain yourself what is happening !</p>
+<p>In this activity, we are going to compute vector matrix multiplication. This activity illustrates the use of MPI_Bcast, MPI_Scatter, and MPI_Gather to do this multiplication. First, we want you to complete this MPI program by filling codes at <strong>TO DO</strong>. After having completed this task, try to run this MPI program by using different number of processes. Try to explain yourself what is happening !</p>
 <p>I will explain how the vector matrix multiplication works. First, let&#8217;s say we have a matrix <em>A</em>, and a vector <em>x</em> as below:</p>
 <img alt="MPI Structure" class="align-center" src="../_images/vector_matrix_multi.png" style="width: 500px; height: 300px;" />
 <p class="centered">
-<strong>Figure 5: vector matrix multiplication Obtained from cms.uni-konstanz.de [2]</strong></p><p>This multiplication produces a new vector whose length is the number of rows of matrix <em>A</em>. The multiplication is very simple, we take a row of matrix <em>A</em> dot product with vector <em>x</em>, and this produces an element of the result vector. For instance, the first row of matrix <em>A</em> dot products with vector <em>x</em> will produce the first element in vector <em>y</em>.</p>
+<strong>Figure 5: vector matrix multiplication Obtained from cms.uni-konstanz.de [2]</strong></p><p>This multiplication produces a new vector whose length is the number of rows of matrix <em>A</em>. The multiplication is very simple. We take a row of matrix <em>A</em> dot product with vector <em>x</em>, and this produces an element of the result vector. For instance, the first row of matrix <em>A</em> dot products with vector <em>x</em> will produce the first element in vector <em>y</em>.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Comments:</th><td class="field-body"><ul class="first last">
-<li><p class="first">We will step you through the source code for this MPI program. Since this is an MPI program, we need to create the MPI execution environment, define the size of the communicator, and give each process a unique rank. You are asked to completed this part of the code.</p>
+<li><p class="first">We will step you through this activity step by step. Since this is an MPI program, we need to create the MPI execution environment, define the size of the communicator, and give each process a unique rank. You are asked to completed this part of the code.</p>
 </li>
-<li><p class="first">After having initialized the MPI environment, we want to ask the master to initialize the vector and matrix we are going to multiply. In order to do that, we check if the process is master. If so, we initialize the matrix and vector.</p>
+<li><p class="first">After having initialized the MPI environment, we want to ask the master to initialize the vector and matrix we are going to multiply. In order to do that, we check if the process is master. If so, we initialize the matrix and vector. We initialize every entry to 1 because of its simplicity.</p>
 <div class="highlight-c"><div class="highlight"><pre><span class="k">if</span> <span class="p">(</span><span class="n">rank</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
     <span class="cm">/* Initialize the matrix and vector */</span>
     <span class="k">for</span><span class="p">(</span><span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">WIDTH</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
@@ -178,7 +178,7 @@
 </table>
 <p>To download the source code to do your activity:
 <a class="reference download internal" href="../_downloads/vector_matrix_buggy_todo.c"><tt class="xref download docutils literal"><span class="pre">download</span> <span class="pre">vector_matrix_todo.c</span></tt></a></p>
-<p>To download the entire source code from www.public.asu.edu [3]:
+<p>To download the entire source code from www.public.asu.edu/~dstanzoi [3]:
 <a class="reference download internal" href="../_downloads/vector_matrix_buggy_done.c"><tt class="xref download docutils literal"><span class="pre">download</span> <span class="pre">vector_matrix_done.c</span></tt></a></p>
 <p class="rubric">References</p>
 <table class="docutils footnote" frame="void" id="id1" rules="none">
@@ -227,11 +227,6 @@
   <h4>Next topic</h4>
   <p class="topless"><a href="../DecompositionAndActivity/DecompositionAndActivity.html"
                         title="next chapter">Decomposition and Activities</a></p>
-  <h3>This Page</h3>
-  <ul class="this-page-menu">
-    <li><a href="../_sources/CompileAndActivity/compileandactivity.txt"
-           rel="nofollow">Show Source</a></li>
-  </ul>
 <div id="searchbox" style="display: none">
   <h3>Quick search</h3>
     <form class="search" action="../search.html" method="get">

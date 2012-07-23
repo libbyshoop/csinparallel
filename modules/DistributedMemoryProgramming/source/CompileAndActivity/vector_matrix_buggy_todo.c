@@ -1,8 +1,6 @@
 /**
-* In this activity, we will using MPI_Bcast, MPI_Scatter, and MPI_Gather. Also, we will see the
-* limitations of using collective communication. We want you to try running this MPI program
-* on LittleFe by using different number of processes. Try to come up with some ideas of what
-* going on.
+* This activity is to illustrate the use of MPI_Bcast, MPI_Scatter, and MPI_Gather. 
+* 
 **/
 
 #include "mpi.h"

@@ -1,16 +1,16 @@
 Introduction to Cluster
 =======================
 
-**Definition**: "A cluster is a type of parallel or distributed processing system, which consists of a collection of interconnected stand-alone computers cooperatively working together as a single, integrated computing resource." - by Rajkumar Buyya
+**Definition**: "A cluster is a type of parallel or distributed processing system, which consists of a collection of interconnected stand-alone computers cooperatively working together as a single, integrated computing resource." - by Rajkumar Buyya.
 
-A cluster is usually a linux-based operating system. Basically, a cluster has four major parts:
+A cluster is usually a linux-based operating system. Basically, a cluster has four major components:
 	
-	- Network: Provides communications between nodes, server, and gateway.
-	- Nodes: Each node has its own processor, memory, and storage.
-	- Server: Provides network services to the cluster.
-	- Gateway: Acts as a firewall between the cluster and outside world.
+	- Network is to provide communications between nodes and server.
+	- Each node has its own processor, memory, and storage.
+	- Server is to provide network services to the cluster.
+	- Gateway acts as a firewall between the outside world and the cluster.
 
-In order to prepare for what you will be working on, you should have a good understanding of parallel computer memory architectures. We are going to look at two parallel computer memory architectures: 
+In order to prepare for what you will be working on, you should have a good understanding of parallel computer architectures. We are going to look at two parallel computer architectures: 
 
 	- Shared Memory Model
 	- Distributed Memory Model
@@ -56,7 +56,7 @@ General Characteristics of Distributed Memory Model:
 Some benefits of using clusters are:
 
 	- Inexpensive: Hardware and software of a cluster cost significantly much less than those of a supercomputer.
-	- Scalability: Able to scale without impact on performance.
+	- Scalability: extra nodes can be added to a cluster when work exceeds the capacities of the current system in the cluster.
 	- Maintenance: A cluster is relatively easy to set up and maintain.
 	- High Performance: Operations should be optimized and efficient.
 	- Great capacity: Ability to solve a larger problem size.

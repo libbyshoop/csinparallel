@@ -104,7 +104,7 @@
 <div class="highlight-python"><div class="highlight"><pre><span class="n">MPI_Wtime</span><span class="p">()</span>
 </pre></div>
 </div>
-<p>This function returns an elapsed wall clock time in seconds on the calling processor.</p>
+<p>This function returns an elapsed wall clock time in seconds on the calling processor. This function is often used to measure the running time of an MPI program. There is no defined starting point; therefore, in order to measure the running time, a programmer needs to call two different MPI_Wtime(), and find the difference.</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="n">MPI_Finalize</span><span class="p">()</span>
 </pre></div>
 </div>
@@ -196,11 +196,6 @@
   <h4>Next topic</h4>
   <p class="topless"><a href="../MPICommunication/MPICommunication.html"
                         title="next chapter">MPI Communications</a></p>
-  <h3>This Page</h3>
-  <ul class="this-page-menu">
-    <li><a href="../_sources/introMPI/introMPI.txt"
-           rel="nofollow">Show Source</a></li>
-  </ul>
 <div id="searchbox" style="display: none">
   <h3>Quick search</h3>
     <form class="search" action="../search.html" method="get">

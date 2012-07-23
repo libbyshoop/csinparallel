@@ -77,7 +77,7 @@ This function returns the unique processor name. Variable *name* is the array of
 
 	MPI_Wtime()
 
-This function returns an elapsed wall clock time in seconds on the calling processor. ::
+This function returns an elapsed wall clock time in seconds on the calling processor. This function is often used to measure the running time of an MPI program. There is no defined starting point; therefore, in order to measure the running time, a programmer needs to call two different MPI_Wtime(), and find the difference. ::
 
 	MPI_Finalize()
 

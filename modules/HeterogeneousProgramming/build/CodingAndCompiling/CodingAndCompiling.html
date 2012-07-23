@@ -139,24 +139,34 @@
 <span class="p">}</span>
 </pre></div>
 </td></tr></table></div>
-<p>From source codes above, CUDA program creates a grid consisting a block, which has a thread. It will print “Hello World !”. The <strong>hello</strong> function in CUDA program uses the keyword <strong>extern “C”</strong>, so the MPI program is able to link to use <strong>hello</strong> function using a &#8216;C&#8217; compatible header file that contains just the declaration of <strong>hello</strong> function. In addition, MPI program only creates the MPI execution environment, defines the size of the MPI_COMM_WORLD, gives the unique rank to each process, calls <strong>hello</strong> function from CUDA program to print &#8220;Hello World !&#8221;, and prints the rank, size, and name of the process. Finally, all processes terminate the MPI execution environment.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Comments:</th><td class="field-body"><ul class="first last simple">
+<li>From source codes above, CUDA program creates a grid consisting a block, which has a thread. It will print “Hello World !”. The <strong>hello</strong> function in CUDA program uses the keyword <strong>extern “C”</strong>, so the MPI program is able to link to use <strong>hello</strong> function using a &#8216;C&#8217; compatible header file that contains just the declaration of <strong>hello</strong> function. In addition, MPI program only creates the MPI execution environment, defines the size of the MPI_COMM_WORLD, gives the unique rank to each process, calls <strong>hello</strong> function from CUDA program to print &#8220;Hello World !&#8221;, and prints the rank, size, and name of the process. Finally, all processes terminate the MPI execution environment.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="section" id="compiling-a-heterogeneous-program">
 <h2>Compiling a Heterogeneous Program<a class="headerlink" href="#compiling-a-heterogeneous-program" title="Permalink to this headline">¶</a></h2>
 <p>The most common way of compiling a heterogeneous program MPI and Cuda is:</p>
 <blockquote>
 <div><ol class="arabic">
-<li><p class="first">Make a CUDA object from the CUDA program. This can be done by using command on the terminal:</p>
+<li><p class="first">Make a CUDA object from the CUDA program. This can be done by using this command on the terminal:</p>
 <div class="highlight-c"><div class="highlight"><pre><span class="n">nvcc</span> <span class="o">-</span><span class="n">c</span> <span class="n">cuda</span><span class="p">.</span><span class="n">cu</span> <span class="o">-</span><span class="n">o</span> <span class="n">cuda</span><span class="p">.</span><span class="n">o</span>
 </pre></div>
 </div>
 </li>
-<li><p class="first">Make an MPI object from MPI program. This can be done by using command on the terminal:</p>
+<li><p class="first">Make an MPI object from MPI program. This can be done by using this command on the terminal:</p>
 <div class="highlight-c"><div class="highlight"><pre><span class="n">mpicc</span> <span class="o">-</span><span class="n">c</span> <span class="n">mpi</span><span class="p">.</span><span class="n">c</span> <span class="o">-</span><span class="n">o</span> <span class="n">mpi</span><span class="p">.</span><span class="n">o</span>
 </pre></div>
 </div>
 </li>
-<li><p class="first">Make an executable file from both objects. This can be done by using command on the terminal:</p>
+<li><p class="first">Make an executable file from both objects. This can be done by using this command on the terminal:</p>
 <div class="highlight-c"><div class="highlight"><pre><span class="n">mpicc</span> <span class="o">-</span><span class="n">o</span> <span class="n">cudampi</span> <span class="n">mpi</span><span class="p">.</span><span class="n">o</span> <span class="n">cuda</span><span class="p">.</span><span class="n">o</span> <span class="o">-</span><span class="n">L</span><span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">local</span><span class="o">/</span><span class="n">cuda</span><span class="o">/</span><span class="n">lib64</span> <span class="o">-</span><span class="n">lcudart</span>
 </pre></div>
 </div>
@@ -169,16 +179,24 @@
 <div class="section" id="activity-1-vector-addition">
 <h3>Activity 1: Vector Addition<a class="headerlink" href="#activity-1-vector-addition" title="Permalink to this headline">¶</a></h3>
 <p>In this activity, we are going to compute vector addition by using hybrid programming model, CUDA and MPI. Vector addition is very simple and easy. Suppose we have vector <em>A</em> and vector <em>B</em>, and both have the same length. To add vector <em>A</em> and <em>B</em>, we just add the corresponding element of <em>A</em> and <em>B</em>. This results in a new vector of the same length.</p>
-<p>We will walk you through this first activity step by step. First, let&#8217;s look at the CUDA program for vector addition. We need to have a kernel function for vector addition. This should be straight forward to you. Each thread computes an element of the result matrix, where thread index is the index of that element.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name" colspan="2">Comments on CUDA Program:</th></tr>
+<tr class="field-odd field"><td>&nbsp;</td><td class="field-body"><ul class="first">
+<li><p class="first">We will walk you through this first activity step by step. First, let&#8217;s look at the CUDA program for vector addition. We need to have a kernel function for vector addition. This should be straight forward to you. Each thread computes an element of the result matrix, where thread index is the index of that element.</p>
 <div class="highlight-c"><div class="highlight"><pre><span class="n">__global__</span> <span class="kt">void</span> <span class="nf">kernel</span><span class="p">(</span><span class="kt">int</span> <span class="o">*</span><span class="n">a</span><span class="p">,</span> <span class="kt">int</span> <span class="o">*</span><span class="n">b</span><span class="p">,</span> <span class="kt">int</span> <span class="o">*</span><span class="n">c</span><span class="p">)</span> <span class="p">{</span>
         <span class="cm">/* this thread index is the index of the vector */</span>
         <span class="kt">int</span> <span class="n">index</span> <span class="o">=</span> <span class="n">blockIdx</span><span class="p">.</span><span class="n">x</span> <span class="o">*</span> <span class="n">blockDim</span><span class="p">.</span><span class="n">x</span> <span class="o">+</span> <span class="n">threadIdx</span><span class="p">.</span><span class="n">x</span><span class="p">;</span>
         <span class="c1">// TO DO</span>
-        <span class="n">c</span><span class="p">[</span><span class="n">index</span><span class="p">]</span> <span class="o">=</span> <span class="n">a</span><span class="p">[</span><span class="n">index</span><span class="p">]</span> <span class="o">+</span> <span class="n">b</span><span class="p">[</span><span class="n">index</span><span class="p">];</span>
+        <span class="c1">// add corresponding elements of a and b</span>
+        <span class="c1">// end TO DO</span>
 <span class="p">}</span>
 </pre></div>
 </div>
-<p>Another function in the CUDA program is <strong>run_kernel</strong>, which works on the host(CPU) and calls the kernel function on the device(GPU). This function allocates memory on the GPU for storing vectors, copies input vectors onto the device, does the calculations on the device, copies output vector back to the host, and erases all those vectors on the device. This function will be called in the MPI program.</p>
+</li>
+<li><p class="first">Another function in the CUDA program is <strong>run_kernel</strong>, which works on the host(CPU) and calls the kernel function on the device(GPU). This function allocates memory on the GPU for storing input vectors, copies input vectors onto the device, does the calculations on the device, copies output vector back to the host, and erases all those vectors on the device. This function will be called in the MPI program.</p>
 <div class="highlight-c"><div class="highlight"><pre><span class="cm">/*</span>
 <span class="cm">* size is the number of elements in the vector</span>
 <span class="cm">* nblocks is the number of blocks per grid</span>
@@ -199,8 +217,10 @@
         <span class="n">cudaMemcpy</span><span class="p">(</span><span class="n">dev_b</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="k">sizeof</span><span class="p">(</span><span class="kt">int</span><span class="p">)</span><span class="o">*</span><span class="n">size</span><span class="p">,</span> <span class="n">cudaMemcpyHostToDevice</span><span class="p">);</span>
 
         <span class="cm">/* Calling the kernel function to do calculation */</span>
+
         <span class="c1">// TO DO</span>
-        <span class="n">kernel</span><span class="o">&lt;&lt;&lt;</span><span class="n">nblocks</span><span class="p">,</span> <span class="n">nthreads</span><span class="o">&gt;&gt;&gt;</span><span class="p">(</span><span class="n">dev_a</span><span class="p">,</span> <span class="n">dev_b</span><span class="p">,</span> <span class="n">dev_c</span><span class="p">);</span>
+        <span class="c1">// Call kernel function here</span>
+        <span class="c1">// end TO DO</span>
 
         <span class="cm">/* Copy the result vector from device to host*/</span>
         <span class="n">cudaMemcpy</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="n">dev_c</span><span class="p">,</span> <span class="k">sizeof</span><span class="p">(</span><span class="kt">int</span><span class="p">)</span><span class="o">*</span><span class="n">size</span><span class="p">,</span> <span class="n">cudaMemcpyDeviceToHost</span><span class="p">);</span>
@@ -212,79 +232,15 @@
 <span class="p">}</span>
 </pre></div>
 </div>
-<div class="highlight-c"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
- 2
- 3
- 4
- 5
- 6
- 7
- 8
- 9
-10
-11
-12
-13
-14
-15
-16
-17
-18
-19
-20
-21
-22
-23
-24
-25
-26
-27
-28
-29
-30
-31
-32
-33
-34
-35</pre></div></td><td class="code"><div class="highlight"><pre><span class="cp">#include &lt;stdio.h&gt;</span>
-<span class="cp">#include &lt;cuda.h&gt;</span>
-
-<span class="cm">/* kernel function */</span>
-<span class="n">__global__</span> <span class="kt">void</span> <span class="nf">kernel</span><span class="p">(</span><span class="kt">int</span> <span class="o">*</span><span class="n">a</span><span class="p">,</span> <span class="kt">int</span> <span class="o">*</span><span class="n">b</span><span class="p">,</span> <span class="kt">int</span> <span class="o">*</span><span class="n">c</span><span class="p">)</span> <span class="p">{</span>
-    <span class="kt">int</span> <span class="n">index</span> <span class="o">=</span> <span class="n">blockIdx</span><span class="p">.</span><span class="n">x</span> <span class="o">*</span> <span class="n">blockDim</span><span class="p">.</span><span class="n">x</span> <span class="o">+</span> <span class="n">threadIdx</span><span class="p">.</span><span class="n">x</span><span class="p">;</span>
-    <span class="n">c</span><span class="p">[</span><span class="n">index</span><span class="p">]</span> <span class="o">=</span> <span class="n">a</span><span class="p">[</span><span class="n">index</span><span class="p">]</span> <span class="o">+</span> <span class="n">b</span><span class="p">[</span><span class="n">index</span><span class="p">];</span>
-<span class="p">}</span>
-
-<span class="cm">/* function to be called in the MPI program, and size is the number of elements in array */</span>
-<span class="k">extern</span> <span class="s">&quot;C&quot;</span> <span class="kt">void</span> <span class="n">run_kernel</span><span class="p">(</span><span class="kt">int</span> <span class="o">*</span><span class="n">a</span><span class="p">,</span> <span class="kt">int</span> <span class="o">*</span><span class="n">b</span><span class="p">,</span> <span class="kt">int</span> <span class="o">*</span><span class="n">c</span><span class="p">,</span> <span class="kt">int</span> <span class="n">size</span><span class="p">,</span> <span class="kt">int</span> <span class="n">nblocks</span><span class="p">,</span> <span class="kt">int</span> <span class="n">nthreads</span><span class="p">)</span> <span class="p">{</span>
-
-    <span class="cm">/* pointers to the arrays on the GPU */</span>
-    <span class="kt">int</span> <span class="o">*</span><span class="n">dev_a</span><span class="p">,</span> <span class="o">*</span><span class="n">dev_b</span><span class="p">,</span> <span class="o">*</span><span class="n">dev_c</span><span class="p">;</span> 
-
-    <span class="cm">/* Allocate memory on the GPU */</span>
-    <span class="n">cudaMalloc</span><span class="p">((</span><span class="kt">void</span><span class="o">**</span><span class="p">)</span><span class="o">&amp;</span><span class="n">dev_a</span><span class="p">,</span> <span class="k">sizeof</span><span class="p">(</span><span class="kt">int</span><span class="p">)</span><span class="o">*</span><span class="n">size</span><span class="p">);</span>
-    <span class="n">cudaMalloc</span><span class="p">((</span><span class="kt">void</span><span class="o">**</span><span class="p">)</span><span class="o">&amp;</span><span class="n">dev_b</span><span class="p">,</span> <span class="k">sizeof</span><span class="p">(</span><span class="kt">int</span><span class="p">)</span><span class="o">*</span><span class="n">size</span><span class="p">);</span>
-    <span class="n">cudaMalloc</span><span class="p">((</span><span class="kt">void</span><span class="o">**</span><span class="p">)</span><span class="o">&amp;</span><span class="n">dev_c</span><span class="p">,</span> <span class="k">sizeof</span><span class="p">(</span><span class="kt">int</span><span class="p">)</span><span class="o">*</span><span class="n">size</span><span class="p">);</span>
-
-    <span class="cm">/* Copy array a and b from host to GPU */</span>
-    <span class="n">cudaMemcpy</span><span class="p">(</span><span class="n">dev_a</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="k">sizeof</span><span class="p">(</span><span class="kt">int</span><span class="p">)</span><span class="o">*</span><span class="n">size</span><span class="p">,</span> <span class="n">cudaMemcpyHostToDevice</span><span class="p">);</span>
-    <span class="n">cudaMemcpy</span><span class="p">(</span><span class="n">dev_b</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="k">sizeof</span><span class="p">(</span><span class="kt">int</span><span class="p">)</span><span class="o">*</span><span class="n">size</span><span class="p">,</span> <span class="n">cudaMemcpyHostToDevice</span><span class="p">);</span>
-
-    <span class="cm">/* Calling the kernel function to do calculation */</span>
-    <span class="n">kernel</span><span class="o">&lt;&lt;&lt;</span><span class="n">nblocks</span><span class="p">,</span> <span class="n">nthreads</span><span class="o">&gt;&gt;&gt;</span><span class="p">(</span><span class="n">dev_a</span><span class="p">,</span> <span class="n">dev_b</span><span class="p">,</span> <span class="n">dev_c</span><span class="p">);</span>
-
-    <span class="cm">/* Copy the result array from device to host*/</span>
-    <span class="n">cudaMemcpy</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="n">dev_c</span><span class="p">,</span> <span class="k">sizeof</span><span class="p">(</span><span class="kt">int</span><span class="p">)</span><span class="o">*</span><span class="n">size</span><span class="p">,</span> <span class="n">cudaMemcpyDeviceToHost</span><span class="p">);</span>
-
-    <span class="cm">/* Free memory on the device */</span>
-    <span class="n">cudaFree</span><span class="p">(</span><span class="n">dev_a</span><span class="p">);</span>
-    <span class="n">cudaFree</span><span class="p">(</span><span class="n">dev_b</span><span class="p">);</span>
-    <span class="n">cudaFree</span><span class="p">(</span><span class="n">dev_c</span><span class="p">);</span>
-<span class="p">}</span>
-</pre></div>
-</td></tr></table></div>
-<p>This MPI program is basically the MPI program with an addition of a function in CUDA program. It splits both input vectors into smaller pieces, and sends each piece of each vector to each worker. Then we will use the <strong>run_kernel</strong> function from CUDA program to calculate the additions on each node. This method uses the thread architecture on the GPU to speed up the performance.</p>
-<p>First we need to initialize the MPI execution environment, define the size of all processes, and give a unique rank to each process. Then we will ask the master to initialize the input vectors, split the input vectors into smaller chunks, and  send these chunks to each process.</p>
+</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name" colspan="2">Comments on MPI Program:</th></tr>
+<tr class="field-even field"><td>&nbsp;</td><td class="field-body"><ul class="first last">
+<li><p class="first">This MPI program is basically the MPI program with an addition of a function from CUDA program. It splits both input vectors into smaller pieces, and sends each piece of each vector to each worker. Then we will call the <strong>run_kernel</strong> function from CUDA program to calculate additions of the two vectors on each node.</p>
+</li>
+<li><p class="first">First we need to initialize the MPI execution environment, define the size of all processes, and give a unique rank to each process. Then we will ask the master to initialize the input vectors, split the input vectors into smaller chunks, and send these chunks to each process. Your task is to send the pieces of input vectors to each worker.</p>
 <div class="highlight-c"><div class="highlight"><pre><span class="cm">/******************** Master ***********************/</span>
 <span class="k">if</span> <span class="p">(</span><span class="n">rank</span> <span class="o">==</span> <span class="n">MASTER</span><span class="p">)</span> <span class="p">{</span>
         <span class="cm">/* Initializing both vectors in master */</span>
@@ -307,15 +263,19 @@
                 <span class="n">eles</span> <span class="o">=</span> <span class="p">(</span><span class="n">dest</span> <span class="o">&lt;=</span> <span class="n">extra</span><span class="p">)</span> <span class="o">?</span> <span class="n">ave_size</span> <span class="o">+</span> <span class="mi">1</span><span class="o">:</span> <span class="n">ave_size</span><span class="p">;</span>
                 <span class="n">MPI_Send</span><span class="p">(</span><span class="o">&amp;</span><span class="n">offset</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">MPI_INT</span><span class="p">,</span> <span class="n">dest</span><span class="p">,</span> <span class="n">mtype</span><span class="p">,</span> <span class="n">MPI_COMM_WORLD</span><span class="p">);</span>
                 <span class="n">MPI_Send</span><span class="p">(</span><span class="o">&amp;</span><span class="n">eles</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">MPI_INT</span><span class="p">,</span> <span class="n">dest</span><span class="p">,</span> <span class="n">mtype</span><span class="p">,</span> <span class="n">MPI_COMM_WORLD</span><span class="p">);</span>
-                <span class="n">MPI_Send</span><span class="p">(</span><span class="o">&amp;</span><span class="n">arr_a</span><span class="p">[</span><span class="n">offset</span><span class="p">],</span> <span class="n">eles</span><span class="p">,</span> <span class="n">MPI_INT</span><span class="p">,</span> <span class="n">dest</span><span class="p">,</span> <span class="n">mtype</span><span class="p">,</span> <span class="n">MPI_COMM_WORLD</span><span class="p">);</span>
-                <span class="n">MPI_Send</span><span class="p">(</span><span class="o">&amp;</span><span class="n">arr_b</span><span class="p">[</span><span class="n">offset</span><span class="p">],</span> <span class="n">eles</span><span class="p">,</span> <span class="n">MPI_INT</span><span class="p">,</span> <span class="n">dest</span><span class="p">,</span> <span class="n">mtype</span><span class="p">,</span> <span class="n">MPI_COMM_WORLD</span><span class="p">);</span>
+
+                <span class="c1">// TO DO</span>
+                <span class="c1">// send a piece of each vector to each worker</span>
+                <span class="c1">// end TO DO</span>
+
                 <span class="n">printf</span><span class="p">(</span><span class="s">&quot;Master sent elements %d to %d to rank %d</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">offset</span><span class="p">,</span> <span class="n">offset</span> <span class="o">+</span> <span class="n">eles</span><span class="p">,</span> <span class="n">dest</span><span class="p">);</span>
                 <span class="n">offset</span> <span class="o">+=</span> <span class="n">eles</span><span class="p">;</span>
         <span class="p">}</span>
 <span class="p">}</span>
 </pre></div>
 </div>
-<p>Then we want all workers to receive the messages sent from master, and use the <strong>run_kernel</strong> function from CUDA program to compute the sum of both vectors on each worker. This function then will call the kernel function and compute the addition on the GPU on each worker. When they are done with the computation, each worker needs to send its result vector to the master.</p>
+</li>
+<li><p class="first">Then we want all workers to receive the messages sent from master, and we call the <strong>run_kernel</strong> function from CUDA program to compute the sum of both vectors on each worker. This function will call the kernel function and compute additions on the GPU of each worker. When they are done with computations, each worker needs to send its result vector to the master. Your task is to receive the vectors sent from master, and to call <strong>run_kernel</strong> function from the CUDA program.</p>
 <div class="highlight-c"><div class="highlight"><pre><span class="cm">/* The workers receive the task from master, and will each run run_kernel to</span>
 <span class="cm">* compute the sum of each element from vector a and vector b. After computation</span>
 <span class="cm">* each worker sends the result back to master node.</span>
@@ -325,16 +285,18 @@
         <span class="n">mtype</span> <span class="o">=</span> <span class="n">FROM_MASTER</span><span class="p">;</span>
         <span class="n">source</span> <span class="o">=</span> <span class="n">MASTER</span><span class="p">;</span>
         <span class="cm">/* Receive data from master */</span>
-        <span class="n">MPI_Recv</span><span class="p">(</span><span class="o">&amp;</span><span class="n">offset</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">MPI_INT</span><span class="p">,</span> <span class="n">source</span><span class="p">,</span> <span class="n">mtype</span><span class="p">,</span> <span class="n">MPI_COMM_WORLD</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">status</span><span class="p">);</span>
-        <span class="n">MPI_Recv</span><span class="p">(</span><span class="o">&amp;</span><span class="n">eles</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">MPI_INT</span><span class="p">,</span> <span class="n">source</span><span class="p">,</span> <span class="n">mtype</span><span class="p">,</span> <span class="n">MPI_COMM_WORLD</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">status</span><span class="p">);</span>
-        <span class="n">MPI_Recv</span><span class="p">(</span><span class="o">&amp;</span><span class="n">arr_a</span><span class="p">,</span> <span class="n">eles</span><span class="p">,</span> <span class="n">MPI_INT</span><span class="p">,</span> <span class="n">source</span><span class="p">,</span> <span class="n">mtype</span><span class="p">,</span> <span class="n">MPI_COMM_WORLD</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">status</span><span class="p">);</span>
-        <span class="n">MPI_Recv</span><span class="p">(</span><span class="o">&amp;</span><span class="n">arr_b</span><span class="p">,</span> <span class="n">eles</span><span class="p">,</span> <span class="n">MPI_INT</span><span class="p">,</span> <span class="n">source</span><span class="p">,</span> <span class="n">mtype</span><span class="p">,</span> <span class="n">MPI_COMM_WORLD</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">status</span><span class="p">);</span>
+
+        <span class="c1">// TO DO</span>
+        <span class="c1">// receive the vectors sent from master</span>
+        <span class="c1">// end TO DO</span>
 
         <span class="n">MPI_Get_processor_name</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">len</span><span class="p">);</span>
 
         <span class="cm">/* Use kernel to compute the sum of element a and b */</span>
+
         <span class="c1">// TO DO</span>
-        <span class="n">run_kernel</span><span class="p">(</span><span class="n">arr_a</span><span class="p">,</span> <span class="n">arr_b</span><span class="p">,</span> <span class="n">arr_c</span><span class="p">,</span> <span class="n">WIDTH</span><span class="p">,</span> <span class="n">BLOCKS</span><span class="p">,</span> <span class="n">THREADS</span><span class="p">);</span>
+        <span class="c1">// call run_kernel function here</span>
+        <span class="c1">// end TO DO</span>
 
         <span class="cm">/* send result back to the master */</span>
         <span class="n">mtype</span> <span class="o">=</span> <span class="n">FROM_WORKER</span><span class="p">;</span>
@@ -344,7 +306,8 @@
 <span class="p">}</span>
 </pre></div>
 </div>
-<p>We need to ask the master to receive the result vector sent from each worker. We then can check to see if they are correct. Verification part should not be measured if you time your code.</p>
+</li>
+<li><p class="first">We need to ask the master to receive the result vector sent from each worker. We then can check to see if they are correct. Verification part should not be included in your timing.</p>
 <div class="highlight-c"><div class="highlight"><pre><span class="cm">/* Master receives the result from each worker */</span>
 <span class="n">mtype</span> <span class="o">=</span> <span class="n">FROM_WORKER</span><span class="p">;</span>
 <span class="k">for</span><span class="p">(</span><span class="n">i</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;=</span> <span class="n">num_worker</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
@@ -365,257 +328,22 @@
 <span class="n">printf</span><span class="p">(</span><span class="s">&quot;Successful !</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">);</span>
 </pre></div>
 </div>
-<div class="highlight-c"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>  1
-  2
-  3
-  4
-  5
-  6
-  7
-  8
-  9
- 10
- 11
- 12
- 13
- 14
- 15
- 16
- 17
- 18
- 19
- 20
- 21
- 22
- 23
- 24
- 25
- 26
- 27
- 28
- 29
- 30
- 31
- 32
- 33
- 34
- 35
- 36
- 37
- 38
- 39
- 40
- 41
- 42
- 43
- 44
- 45
- 46
- 47
- 48
- 49
- 50
- 51
- 52
- 53
- 54
- 55
- 56
- 57
- 58
- 59
- 60
- 61
- 62
- 63
- 64
- 65
- 66
- 67
- 68
- 69
- 70
- 71
- 72
- 73
- 74
- 75
- 76
- 77
- 78
- 79
- 80
- 81
- 82
- 83
- 84
- 85
- 86
- 87
- 88
- 89
- 90
- 91
- 92
- 93
- 94
- 95
- 96
- 97
- 98
- 99
-100
-101
-102
-103
-104
-105
-106
-107
-108
-109
-110
-111
-112
-113
-114
-115
-116
-117
-118
-119
-120
-121
-122
-123
-124
-125</pre></div></td><td class="code"><div class="highlight"><pre><span class="cp">#include &lt;mpi.h&gt;</span>
-<span class="cp">#include &lt;stdio.h&gt;</span>
-<span class="cp">#include &lt;stdlib.h&gt;</span>
-
-<span class="cp">#define WIDTH 10        </span><span class="cm">/* number of elements in each array */</span><span class="cp"></span>
-<span class="cp">#define MAX_NAME 80     </span><span class="cm">/* lenght of character array for name of the nodes */</span><span class="cp"></span>
-<span class="cp">#define FROM_MASTER 1   </span><span class="cm">/* message sent from master */</span><span class="cp"></span>
-<span class="cp">#define FROM_WORKER 2   </span><span class="cm">/* message sent from workers*/</span><span class="cp"></span>
-<span class="cp">#define MASTER 0        </span><span class="cm">/* master has rank 0 */</span><span class="cp"></span>
-<span class="cp">#define BLOCKS 30       </span><span class="cm">/* Number of blocks per grid */</span><span class="cp"></span>
-<span class="cp">#define THREADS 128     </span><span class="cm">/* Number of threads per block */</span><span class="cp"></span>
-
-<span class="n">MPI_Status</span> <span class="n">status</span><span class="p">;</span>      <span class="cm">/* used to return data in recieving */</span>
-
-<span class="cm">/* Cuda function declared */</span>
-<span class="kt">void</span> <span class="n">run_kernel</span><span class="p">(</span><span class="kt">int</span> <span class="o">*</span><span class="n">a</span><span class="p">,</span> <span class="kt">int</span> <span class="o">*</span><span class="n">b</span><span class="p">,</span> <span class="kt">int</span> <span class="o">*</span><span class="n">c</span><span class="p">,</span> <span class="kt">int</span> <span class="n">size</span><span class="p">,</span> <span class="kt">int</span> <span class="n">nblocks</span><span class="p">,</span> <span class="kt">int</span> <span class="n">nthreads</span><span class="p">);</span>
-
-<span class="kt">int</span> <span class="nf">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span><span class="o">*</span> <span class="n">argv</span><span class="p">[])</span> <span class="p">{</span>
-
-    <span class="kt">int</span> <span class="n">rank</span><span class="p">,</span>   <span class="cm">/* rank for each process */</span>
-        <span class="n">size</span><span class="p">,</span>   <span class="cm">/* size of the communicator */</span>
-        <span class="n">len</span><span class="p">;</span>    <span class="cm">/* length of the name of a process */</span>
-
-    <span class="kt">int</span> <span class="n">i</span><span class="p">,</span>
-        <span class="n">source</span><span class="p">,</span>         <span class="cm">/* rank of the source */</span>
-        <span class="n">dest</span><span class="p">,</span>           <span class="cm">/* rank of the destination */</span>
-        <span class="n">num_worker</span><span class="p">,</span>     <span class="cm">/* number of workers */</span>
-        <span class="n">ave_size</span><span class="p">,</span>       <span class="cm">/* average size of task to be sent to each worker */</span>
-        <span class="n">extra</span><span class="p">,</span>          <span class="cm">/* extra task to be sent to some workers */</span>
-        <span class="n">mtype</span><span class="p">,</span>          <span class="cm">/* message type */</span>
-        <span class="n">offset</span><span class="p">,</span>         <span class="cm">/* starting position of element */</span>
-        <span class="n">eles</span><span class="p">;</span>           <span class="cm">/* number of elements to be sent */</span>
-
-    <span class="kt">int</span> <span class="n">arr_a</span><span class="p">[</span><span class="n">WIDTH</span><span class="p">],</span> <span class="n">arr_b</span><span class="p">[</span><span class="n">WIDTH</span><span class="p">],</span> <span class="n">arr_c</span><span class="p">[</span><span class="n">WIDTH</span><span class="p">];</span> <span class="cm">/* vectors for addition */</span>
-
-    <span class="kt">char</span> <span class="n">name</span><span class="p">[</span><span class="n">MAX_NAME</span><span class="p">];</span>        <span class="cm">/* character array for storing name of process */</span>
-
-    <span class="cm">/* Initialize MPI execution environment */</span>
-    <span class="n">MPI_Init</span><span class="p">(</span><span class="o">&amp;</span><span class="n">argc</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">argv</span><span class="p">);</span>
-    <span class="n">MPI_Comm_size</span><span class="p">(</span><span class="n">MPI_COMM_WORLD</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">size</span><span class="p">);</span>
-    <span class="n">MPI_Comm_rank</span><span class="p">(</span><span class="n">MPI_COMM_WORLD</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">rank</span><span class="p">);</span>
-
-    <span class="cm">/******************** Master ***********************/</span>
-    <span class="k">if</span> <span class="p">(</span><span class="n">rank</span> <span class="o">==</span> <span class="n">MASTER</span><span class="p">)</span> <span class="p">{</span>
-
-        <span class="cm">/* Initializing both vectors in master */</span>
-        <span class="kt">int</span> <span class="n">sum</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
-        <span class="k">for</span> <span class="p">(</span><span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">WIDTH</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
-            <span class="n">arr_a</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">i</span><span class="p">;</span>
-            <span class="n">arr_b</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">i</span><span class="o">*</span><span class="n">i</span><span class="p">;</span>
-        <span class="p">}</span>
-
-        <span class="cm">/* Decomposing the problem into smaller problems, and send each task</span>
-<span class="cm">         * to each worker. Master not taking part in any computation.</span>
-<span class="cm">         */</span>
-        <span class="n">num_worker</span> <span class="o">=</span> <span class="n">size</span> <span class="o">-</span> <span class="mi">1</span><span class="p">;</span>
-        <span class="n">ave_size</span> <span class="o">=</span> <span class="n">WIDTH</span><span class="o">/</span><span class="n">num_worker</span><span class="p">;</span> <span class="cm">/* finding the average size of task for a process */</span>
-        <span class="n">extra</span> <span class="o">=</span> <span class="n">WIDTH</span> <span class="o">%</span> <span class="n">num_worker</span><span class="p">;</span>  <span class="cm">/* finding extra task for some processes*/</span>
-        <span class="n">offset</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
-        <span class="n">mtype</span> <span class="o">=</span> <span class="n">FROM_MASTER</span><span class="p">;</span>    <span class="cm">/* message sends from master */</span>
-
-        <span class="cm">/* Master sends each task to each worker */</span>
-        <span class="k">for</span> <span class="p">(</span><span class="n">dest</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span> <span class="n">dest</span> <span class="o">&lt;=</span> <span class="n">num_worker</span><span class="p">;</span> <span class="n">dest</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
-            <span class="n">eles</span> <span class="o">=</span> <span class="p">(</span><span class="n">dest</span> <span class="o">&lt;=</span> <span class="n">extra</span><span class="p">)</span> <span class="o">?</span> <span class="n">ave_size</span> <span class="o">+</span> <span class="mi">1</span><span class="o">:</span> <span class="n">ave_size</span><span class="p">;</span>
-            <span class="n">MPI_Send</span><span class="p">(</span><span class="o">&amp;</span><span class="n">offset</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">MPI_INT</span><span class="p">,</span> <span class="n">dest</span><span class="p">,</span> <span class="n">mtype</span><span class="p">,</span> <span class="n">MPI_COMM_WORLD</span><span class="p">);</span>
-            <span class="n">MPI_Send</span><span class="p">(</span><span class="o">&amp;</span><span class="n">eles</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">MPI_INT</span><span class="p">,</span> <span class="n">dest</span><span class="p">,</span> <span class="n">mtype</span><span class="p">,</span> <span class="n">MPI_COMM_WORLD</span><span class="p">);</span>
-            <span class="n">MPI_Send</span><span class="p">(</span><span class="o">&amp;</span><span class="n">arr_a</span><span class="p">[</span><span class="n">offset</span><span class="p">],</span> <span class="n">eles</span><span class="p">,</span> <span class="n">MPI_INT</span><span class="p">,</span> <span class="n">dest</span><span class="p">,</span> <span class="n">mtype</span><span class="p">,</span> <span class="n">MPI_COMM_WORLD</span><span class="p">);</span>
-            <span class="n">MPI_Send</span><span class="p">(</span><span class="o">&amp;</span><span class="n">arr_b</span><span class="p">[</span><span class="n">offset</span><span class="p">],</span> <span class="n">eles</span><span class="p">,</span> <span class="n">MPI_INT</span><span class="p">,</span> <span class="n">dest</span><span class="p">,</span> <span class="n">mtype</span><span class="p">,</span> <span class="n">MPI_COMM_WORLD</span><span class="p">);</span>
-            <span class="n">printf</span><span class="p">(</span><span class="s">&quot;Master sent elements %d to %d to rank %d</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">offset</span><span class="p">,</span> <span class="n">offset</span> <span class="o">+</span> <span class="n">eles</span><span class="p">,</span> <span class="n">dest</span><span class="p">);</span>
-            <span class="n">offset</span> <span class="o">+=</span> <span class="n">eles</span><span class="p">;</span>
-
-        <span class="p">}</span>
-
-        <span class="cm">/* Master receives the result from each worker */</span>
-        <span class="n">mtype</span> <span class="o">=</span> <span class="n">FROM_WORKER</span><span class="p">;</span>
-        <span class="k">for</span><span class="p">(</span><span class="n">i</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;=</span> <span class="n">num_worker</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
-            <span class="n">source</span> <span class="o">=</span> <span class="n">i</span><span class="p">;</span>
-            <span class="n">MPI_Recv</span><span class="p">(</span><span class="o">&amp;</span><span class="n">offset</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">MPI_INT</span><span class="p">,</span> <span class="n">source</span><span class="p">,</span> <span class="n">mtype</span><span class="p">,</span> <span class="n">MPI_COMM_WORLD</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">status</span><span class="p">);</span>
-            <span class="n">MPI_Recv</span><span class="p">(</span><span class="o">&amp;</span><span class="n">eles</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">MPI_INT</span><span class="p">,</span> <span class="n">source</span><span class="p">,</span> <span class="n">mtype</span><span class="p">,</span> <span class="n">MPI_COMM_WORLD</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">status</span><span class="p">);</span>
-            <span class="n">MPI_Recv</span><span class="p">(</span><span class="o">&amp;</span><span class="n">arr_c</span><span class="p">[</span><span class="n">offset</span><span class="p">],</span> <span class="n">eles</span><span class="p">,</span> <span class="n">MPI_INT</span><span class="p">,</span> <span class="n">source</span><span class="p">,</span> <span class="n">mtype</span><span class="p">,</span> <span class="n">MPI_COMM_WORLD</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">status</span><span class="p">);</span>
-            <span class="n">printf</span><span class="p">(</span><span class="s">&quot;Received results from task %d</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">source</span><span class="p">);</span>
-        <span class="p">}</span>
-
-        <span class="cm">/* checking the result on master */</span>
-        <span class="k">for</span> <span class="p">(</span><span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">WIDTH</span><span class="p">;</span> <span class="n">i</span> <span class="o">++</span><span class="p">)</span> <span class="p">{</span>
-            <span class="k">if</span> <span class="p">(</span><span class="n">arr_c</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">!=</span> <span class="n">arr_a</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">+</span> <span class="n">arr_b</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="p">{</span>
-                <span class="n">printf</span><span class="p">(</span><span class="s">&quot;Failure !&quot;</span><span class="p">);</span>
-                <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
-            <span class="p">}</span>
-        <span class="p">}</span>
-        <span class="n">printf</span><span class="p">(</span><span class="s">&quot;Successful !</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">);</span>
-    <span class="p">}</span>
-
-    <span class="cm">/* The workers receive the task from master, and will each run run_kernel to</span>
-<span class="cm">     * compute the sum of each element from vector a and vector b. After computation</span>
-<span class="cm">     * each worker sends the result back to master node.</span>
-<span class="cm">     */</span>
-    <span class="cm">/******************************* Workers **************************/</span>
-    <span class="k">if</span> <span class="p">(</span><span class="n">rank</span> <span class="o">&gt;</span> <span class="n">MASTER</span><span class="p">)</span> <span class="p">{</span>
-        <span class="n">mtype</span> <span class="o">=</span> <span class="n">FROM_MASTER</span><span class="p">;</span>
-        <span class="n">source</span> <span class="o">=</span> <span class="n">MASTER</span><span class="p">;</span>
-        <span class="cm">/* Receive data from master */</span>
-        <span class="n">MPI_Recv</span><span class="p">(</span><span class="o">&amp;</span><span class="n">offset</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">MPI_INT</span><span class="p">,</span> <span class="n">source</span><span class="p">,</span> <span class="n">mtype</span><span class="p">,</span> <span class="n">MPI_COMM_WORLD</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">status</span><span class="p">);</span>
-        <span class="n">MPI_Recv</span><span class="p">(</span><span class="o">&amp;</span><span class="n">eles</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">MPI_INT</span><span class="p">,</span> <span class="n">source</span><span class="p">,</span> <span class="n">mtype</span><span class="p">,</span> <span class="n">MPI_COMM_WORLD</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">status</span><span class="p">);</span>
-        <span class="n">MPI_Recv</span><span class="p">(</span><span class="o">&amp;</span><span class="n">arr_a</span><span class="p">,</span> <span class="n">eles</span><span class="p">,</span> <span class="n">MPI_INT</span><span class="p">,</span> <span class="n">source</span><span class="p">,</span> <span class="n">mtype</span><span class="p">,</span> <span class="n">MPI_COMM_WORLD</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">status</span><span class="p">);</span>
-        <span class="n">MPI_Recv</span><span class="p">(</span><span class="o">&amp;</span><span class="n">arr_b</span><span class="p">,</span> <span class="n">eles</span><span class="p">,</span> <span class="n">MPI_INT</span><span class="p">,</span> <span class="n">source</span><span class="p">,</span> <span class="n">mtype</span><span class="p">,</span> <span class="n">MPI_COMM_WORLD</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">status</span><span class="p">);</span>
-        
-        <span class="n">MPI_Get_processor_name</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">len</span><span class="p">);</span>
-
-        <span class="cm">/* Use kernel to compute the sum of element a and b */</span>
-        <span class="c1">// TO DO</span>
-        <span class="n">run_kernel</span><span class="p">(</span><span class="n">arr_a</span><span class="p">,</span> <span class="n">arr_b</span><span class="p">,</span> <span class="n">arr_c</span><span class="p">,</span> <span class="n">WIDTH</span><span class="p">,</span> <span class="n">BLOCKS</span><span class="p">,</span> <span class="n">THREADS</span><span class="p">);</span>
-
-        <span class="cm">/* send result back to the master */</span>
-        <span class="n">mtype</span> <span class="o">=</span> <span class="n">FROM_WORKER</span><span class="p">;</span>
-        <span class="n">MPI_Send</span><span class="p">(</span><span class="o">&amp;</span><span class="n">offset</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">MPI_INT</span><span class="p">,</span> <span class="n">MASTER</span><span class="p">,</span> <span class="n">mtype</span><span class="p">,</span> <span class="n">MPI_COMM_WORLD</span><span class="p">);</span>
-        <span class="n">MPI_Send</span><span class="p">(</span><span class="o">&amp;</span><span class="n">eles</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">MPI_INT</span><span class="p">,</span> <span class="n">MASTER</span><span class="p">,</span> <span class="n">mtype</span><span class="p">,</span> <span class="n">MPI_COMM_WORLD</span><span class="p">);</span>
-        <span class="n">MPI_Send</span><span class="p">(</span><span class="o">&amp;</span><span class="n">arr_c</span><span class="p">,</span> <span class="n">eles</span><span class="p">,</span> <span class="n">MPI_INT</span><span class="p">,</span> <span class="n">MASTER</span><span class="p">,</span> <span class="n">mtype</span><span class="p">,</span> <span class="n">MPI_COMM_WORLD</span><span class="p">);</span>
-    <span class="p">}</span>
-
-    <span class="cm">/* Terminate the MPI execution environment */</span>
-    <span class="n">MPI_Finalize</span><span class="p">();</span>
-    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
-<span class="p">}</span>
-    
-</pre></div>
-</td></tr></table></div>
+</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="docutils">
+<dt>Download the source code to do your activity:</dt>
+<dd><p class="first"><a class="reference download internal" href="../_downloads/vecadd_todo.cu"><tt class="xref download docutils literal"><span class="pre">download</span> <span class="pre">CUDA</span> <span class="pre">program</span></tt></a></p>
+<p class="last"><a class="reference download internal" href="../_downloads/vecadd_todo.c"><tt class="xref download docutils literal"><span class="pre">download</span> <span class="pre">MPI</span> <span class="pre">program</span></tt></a></p>
+</dd>
+<dt>Download the entire source code:</dt>
+<dd><p class="first"><a class="reference download internal" href="../_downloads/vecadd.cu"><tt class="xref download docutils literal"><span class="pre">download</span> <span class="pre">CUDA</span> <span class="pre">program</span></tt></a></p>
+<p class="last"><a class="reference download internal" href="../_downloads/vecadd.c"><tt class="xref download docutils literal"><span class="pre">download</span> <span class="pre">MPI</span> <span class="pre">program</span></tt></a></p>
+</dd>
+</dl>
 </div>
 </div>
 </div>
@@ -626,6 +354,9 @@
       </div>
       <div class="sphinxsidebar">
         <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../index.html">
+              <img class="logo" src="../_static/CSInParallel200wide.png" alt="Logo"/>
+            </a></p>
   <h3><a href="../index.html">Table Of Contents</a></h3>
   <ul>
 <li><a class="reference internal" href="#">Coding and Compiling a Heterogeneous Program</a><ul>
@@ -644,11 +375,6 @@
   <h4>Next topic</h4>
   <p class="topless"><a href="../Activities/Activities.html"
                         title="next chapter">Activities</a></p>
-  <h3>This Page</h3>
-  <ul class="this-page-menu">
-    <li><a href="../_sources/CodingAndCompiling/CodingAndCompiling.txt"
-           rel="nofollow">Show Source</a></li>
-  </ul>
 <div id="searchbox" style="display: none">
   <h3>Quick search</h3>
     <form class="search" action="../search.html" method="get">

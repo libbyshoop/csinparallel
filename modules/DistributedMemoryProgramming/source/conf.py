@@ -27,6 +27,13 @@ import sys, os
 # coming with Sphinx (named 'sphinx.ext.*') or your custom ones.
 extensions = ['sphinx.ext.autodoc', 'sphinx.ext.doctest', 'sphinx.ext.intersphinx', 'sphinx.ext.todo', 'sphinx.ext.coverage', 'sphinx.ext.pngmath', 'sphinx.ext.mathjax', 'sphinx.ext.ifconfig', 'sphinx.ext.viewcode']
 
+if 'Darwin' in os.uname()[0]:
+	pngmath_latex = '/usr/local/texlive/2011/bin/x86_64-darwin/latex'
+	pngmath_dvipng = '/usr/local/texlive/2011/bin/x86_64-darwin/dvipng'
+elif 'Linux' in os.uname()[0]:
+	pngmath_latex = '/usr/bin/latex'
+	pngmath_dvipng = '/usr/bin/dvipng'
+
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']
 
@@ -40,7 +47,7 @@ source_suffix = '.rst'
 master_doc = 'index'
 
 # General information about the project.
-project = u'MPI and Hybrid MPI_CUDA'
+project = u'Distributed Memory Computing'
 copyright = u'This work is licensed under a Creative Commons Attribution-ShareAlike 3.0 Unported License'
 
 # The version info for the project you're documenting, acts as replacement for
@@ -120,7 +127,7 @@ html_logo = '../../../images/CSInParallel200wide.png'
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,
 # so a file named "default.css" will overwrite the builtin "default.css".
-html_static_path = ['_static']
+#html_static_path = ['_static']
 
 # If not '', a 'Last updated on:' timestamp is inserted at every page bottom,
 # using the given strftime format.
@@ -147,7 +154,7 @@ html_static_path = ['_static']
 #html_split_index = False
 
 # If true, links to the reST sources are added to the pages.
-#html_show_sourcelink = True
+html_show_sourcelink = False
 
 # If true, "Created using Sphinx" is shown in the HTML footer. Default is True.
 #html_show_sphinx = True
@@ -186,7 +193,7 @@ latex_elements = {
 # Grouping the document tree into LaTeX files. List of tuples
 # (source start file, target name, title, author, documentclass [howto/manual]).
 latex_documents = [
-  ('index', 'MPIandHybridMPI_CUDA.tex', u'MPI and Hybrid MPI\\_CUDA Documentation',
+  ('index', 'DistributedMemoryComputing.tex', u'Distributed Memory Computing Documentation',
    u'CSInParallel Project', 'manual'),
 ]
 
@@ -216,7 +223,7 @@ latex_documents = [
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
 man_pages = [
-    ('index', 'mpiandhybridmpi_cuda', u'MPI and Hybrid MPI_CUDA Documentation',
+    ('index', 'distributedmemorycomputing', u'Distributed Memory Computing Documentation',
      [u'CSInParallel Project'], 1)
 ]
 
@@ -230,8 +237,8 @@ man_pages = [
 # (source start file, target name, title, author,
 #  dir menu entry, description, category)
 texinfo_documents = [
-  ('index', 'MPIandHybridMPI_CUDA', u'MPI and Hybrid MPI_CUDA Documentation',
-   u'CSInParallel Project', 'MPIandHybridMPI_CUDA', 'One line description of project.',
+  ('index', 'DistributedMemoryComputing', u'Distributed Memory Computing Documentation',
+   u'CSInParallel Project', 'DistributedMemoryComputing', 'One line description of project.',
    'Miscellaneous'),
 ]
 
@@ -246,4 +253,4 @@ texinfo_documents = [
 
 
 # Example configuration for intersphinx: refer to the Python standard library.
-intersphinx_mapping = {'http://docs.python.org/': None}
+#intersphinx_mapping = {'http://docs.python.org/': None}
