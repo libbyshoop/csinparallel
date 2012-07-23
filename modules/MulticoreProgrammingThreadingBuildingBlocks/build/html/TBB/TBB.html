@@ -130,12 +130,6 @@
 </div>
 <ul class="simple">
 <li>Recall that in the OpenMP code, we parallelized the loop below by adding a pragma just before that for loop.</li>
-</ul>
-<div class="highlight-python"><pre>for(i = 1; i &lt; n; i++) {
-  integral += f(a+i*h);
-}</pre>
-</div>
-<ul class="simple">
 <li>In order to program a comparable computation in TBB, we create a class <tt class="docutils literal"><span class="pre">SumHeights</span></tt> whose method <tt class="docutils literal"><span class="pre">operator()</span></tt> contains the following loop:</li>
 </ul>
 <div class="highlight-c++"><div class="highlight"><pre>    <span class="k">for</span><span class="p">(</span><span class="n">size_t</span> <span class="n">i</span> <span class="o">=</span> <span class="n">r</span><span class="p">.</span><span class="n">begin</span><span class="p">();</span> <span class="n">i</span> <span class="o">!=</span> <span class="n">r</span><span class="p">.</span><span class="n">end</span><span class="p">();</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
@@ -166,9 +160,9 @@
 </pre></div>
 </div>
 <p>the expression <tt class="docutils literal"><span class="pre">my_a(a)</span></tt> located after the colon : and before the curly bracket <tt class="docutils literal"><span class="pre">{</span></tt> has the same effect as an assignment</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="n">my_a</span> <span class="o">=</span> <span class="n">a</span><span class="p">;</span>
-</pre></div>
-</div>
+<blockquote>
+<div><p>my_a = a;</p>
+</div></blockquote>
 <p>would if it occurred <em>between</em> the curly brackets. Colon initialization is optional for the state variables <tt class="docutils literal"><span class="pre">my_a</span></tt> and <tt class="docutils literal"><span class="pre">my_h</span></tt>, but it is required for the state variable <tt class="docutils literal"><span class="pre">my_int</span></tt>, because that state variable was defined using a reference type.</p>
 </div></blockquote>
 </li>

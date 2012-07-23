@@ -32,11 +32,10 @@ For You To Do
 
    * Recall that in the OpenMP code, we parallelized the loop below by adding a pragma just before that for loop.
 
-   :: 
-  
-      for(i = 1; i < n; i++) {
-        integral += f(a+i*h);
-      }
+     .. comment
+         for(i = 1; i < n; i++) {
+            integral += f(a+i*h);
+          }
 
    * In order to program a comparable computation in TBB, we create a class ``SumHeights`` whose method ``operator()`` contains the following loop: 
 
@@ -71,8 +70,6 @@ For You To Do
            :lines: 26-28
  
        the expression ``my_a(a)`` located after the colon : and before the curly bracket ``{`` has the same effect as an assignment   
-      
-       ::
 
           my_a = a;
 
