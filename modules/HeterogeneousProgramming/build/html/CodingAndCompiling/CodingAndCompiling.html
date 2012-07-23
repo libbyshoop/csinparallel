@@ -144,7 +144,7 @@
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Comments:</th><td class="field-body"><ul class="first last simple">
-<li>From source codes above, CUDA program creates a grid consisting a block, which has a thread. It will print “Hello World !”. The <strong>hello</strong> function in CUDA program uses the keyword <strong>extern “C”</strong>, so the MPI program is able to link to use <strong>hello</strong> function using a &#8216;C&#8217; compatible header file that contains just the declaration of <strong>hello</strong> function. In addition, MPI program only creates the MPI execution environment, defines the size of the MPI_COMM_WORLD, gives the unique rank to each process, calls <strong>hello</strong> function from CUDA program to print &#8220;Hello World !&#8221;, and prints the rank, size, and name of the process. Finally, all processes terminate the MPI execution environment.</li>
+<li>From source codes above, CUDA program creates a grid consisting a block, which has a single thread. It will print “Hello World !”. The <strong>hello</strong> function in CUDA program uses the keyword <strong>extern “C”</strong>, so the MPI program is able to link to use <strong>hello</strong> function using a &#8216;C&#8217; compatible header file that contains just the declaration of <strong>hello</strong> function. In addition, MPI program only creates the MPI execution environment, defines the size of the MPI_COMM_WORLD, gives the unique rank to each process, calls <strong>hello</strong> function from CUDA program to print &#8220;Hello World !&#8221;, and prints the rank, size, and name of the process. Finally, all processes terminate the MPI execution environment.</li>
 </ul>
 </td>
 </tr>
@@ -176,9 +176,18 @@
 <p>To execute the executable file, <strong>cudampi</strong>, we can enter the following command on the terminal:</p>
 <div class="highlight-c"><pre>mpirun -machinefile machines -x LD_LIBRARY_PATH -np #processes ./cudampi</pre>
 </div>
+<div class="section" id="timing-a-heterogeneous-cuda-and-mpi">
+<h3>Timing a Heterogeneous CUDA and MPI<a class="headerlink" href="#timing-a-heterogeneous-cuda-and-mpi" title="Permalink to this headline">¶</a></h3>
+<blockquote>
+<div><ul class="simple">
+<li>In order to time your hybrid CUDA and MPI program, you just need to use MPI_Wtime() function as in an MPI program.</li>
+<li>We need to keep in mind that a heterogeneous CUDA and MPI program theoretically has lower running time than an MPI does; however, running time also depends on each node&#8217;s properties. Copying data from a CPU to GPU may take a long period of time, which results in a much longer running time for a heterogeneous program.</li>
+</ul>
+</div></blockquote>
+</div>
 <div class="section" id="activity-1-vector-addition">
 <h3>Activity 1: Vector Addition<a class="headerlink" href="#activity-1-vector-addition" title="Permalink to this headline">¶</a></h3>
-<p>In this activity, we are going to compute vector addition by using hybrid programming model, CUDA and MPI. Vector addition is very simple and easy. Suppose we have vector <em>A</em> and vector <em>B</em>, and both have the same length. To add vector <em>A</em> and <em>B</em>, we just add the corresponding element of <em>A</em> and <em>B</em>. This results in a new vector of the same length.</p>
+<p>In this activity, we are going to compute vector addition by using hybrid programming model, CUDA and MPI. Vector addition is very simple and easy. Suppose we have vector <em>A</em> and vector <em>B</em>, and both have the same length. To add vector <em>A</em> and <em>B</em>, we just add the corresponding elements of <em>A</em> and <em>B</em>. This results a new vector of the same length.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -362,6 +371,7 @@
 <li><a class="reference internal" href="#">Coding and Compiling a Heterogeneous Program</a><ul>
 <li><a class="reference internal" href="#heterogeneous-program-hello-world">Heterogeneous Program: Hello World</a></li>
 <li><a class="reference internal" href="#compiling-a-heterogeneous-program">Compiling a Heterogeneous Program</a><ul>
+<li><a class="reference internal" href="#timing-a-heterogeneous-cuda-and-mpi">Timing a Heterogeneous CUDA and MPI</a></li>
 <li><a class="reference internal" href="#activity-1-vector-addition">Activity 1: Vector Addition</a></li>
 </ul>
 </li>

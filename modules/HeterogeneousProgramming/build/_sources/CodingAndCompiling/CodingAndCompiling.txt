@@ -20,7 +20,7 @@ Distributed memory computing and GPU computing are two different parallel progra
 
 :Comments:
 	
-	* From source codes above, CUDA program creates a grid consisting a block, which has a thread. It will print “Hello World !”. The **hello** function in CUDA program uses the keyword **extern “C”**, so the MPI program is able to link to use **hello** function using a 'C' compatible header file that contains just the declaration of **hello** function. In addition, MPI program only creates the MPI execution environment, defines the size of the MPI_COMM_WORLD, gives the unique rank to each process, calls **hello** function from CUDA program to print "Hello World !", and prints the rank, size, and name of the process. Finally, all processes terminate the MPI execution environment. 	
+	* From source codes above, CUDA program creates a grid consisting a block, which has a single thread. It will print “Hello World !”. The **hello** function in CUDA program uses the keyword **extern “C”**, so the MPI program is able to link to use **hello** function using a 'C' compatible header file that contains just the declaration of **hello** function. In addition, MPI program only creates the MPI execution environment, defines the size of the MPI_COMM_WORLD, gives the unique rank to each process, calls **hello** function from CUDA program to print "Hello World !", and prints the rank, size, and name of the process. Finally, all processes terminate the MPI execution environment. 	
 
 
 Compiling a Heterogeneous Program
@@ -44,11 +44,17 @@ To execute the executable file, **cudampi**, we can enter the following command 
 
 	mpirun -machinefile machines -x LD_LIBRARY_PATH -np #processes ./cudampi
 
+Timing a Heterogeneous CUDA and MPI
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+	- In order to time your hybrid CUDA and MPI program, you just need to use MPI_Wtime() function as in an MPI program.
+
+	- We need to keep in mind that a heterogeneous CUDA and MPI program theoretically has lower running time than an MPI does; however, running time also depends on each node's properties. Copying data from a CPU to GPU may take a long period of time, which results in a much longer running time for a heterogeneous program.
+
 
 Activity 1: Vector Addition
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-In this activity, we are going to compute vector addition by using hybrid programming model, CUDA and MPI. Vector addition is very simple and easy. Suppose we have vector *A* and vector *B*, and both have the same length. To add vector *A* and *B*, we just add the corresponding element of *A* and *B*. This results in a new vector of the same length.
+In this activity, we are going to compute vector addition by using hybrid programming model, CUDA and MPI. Vector addition is very simple and easy. Suppose we have vector *A* and vector *B*, and both have the same length. To add vector *A* and *B*, we just add the corresponding elements of *A* and *B*. This results a new vector of the same length.
 
 :Comments on CUDA Program:
 
@@ -188,6 +194,7 @@ In this activity, we are going to compute vector addition by using hybrid progra
 			}
 		}
 		printf("Successful !\n");
+
 
 Download the source code to do your activity: 
 	:download:`download CUDA program <vecadd_todo.cu>`
