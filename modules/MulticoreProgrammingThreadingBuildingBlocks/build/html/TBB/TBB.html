@@ -120,29 +120,32 @@
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Comments:</th><td class="field-body"><ul class="first last">
-<li><p class="first">This program does <em>not</em> use a command-line argument (and the <tt class="docutils literal"><span class="pre">cstdlib</span></tt> library is not needed). Unlike OpenMP, TBB does not provide a simple way to request a particular number of threads. Instead, the TBB system chooses a number of threads to use automatically. (OpenMP will also make such a selection for you if you do not specify the number of threads to use.)</p>
-</li>
-<li><p class="first">The following lines prepare for using TBB.</p>
+<tr class="field-odd field"><th class="field-name">Comments:</th><td class="field-body"><ul class="first simple">
+<li>This program does <em>not</em> use a command-line argument (and the <tt class="docutils literal"><span class="pre">cstdlib</span></tt> library is not needed). Unlike OpenMP, TBB does not provide a simple way to request a particular number of threads. Instead, the TBB system chooses a number of threads to use automatically. (OpenMP will also make such a selection for you if you do not specify the number of threads to use.)</li>
+<li>The following lines prepare for using TBB.</li>
+</ul>
 <div class="highlight-c++"><div class="highlight"><pre><span class="cp">#include &quot;tbb/tbb.h&quot;</span>
 <span class="k">using</span> <span class="k">namespace</span> <span class="n">tbb</span><span class="p">;</span>
 </pre></div>
 </div>
-</li>
-<li><p class="first">Recall that in the OpenMP code, we parallelized the loop below by adding a pragma just before that for loop.</p>
+<ul class="simple">
+<li>Recall that in the OpenMP code, we parallelized the loop below by adding a pragma just before that for loop.</li>
+</ul>
 <div class="highlight-python"><pre>for(i = 1; i &lt; n; i++) {
   integral += f(a+i*h);
 }</pre>
 </div>
-</li>
-<li><p class="first">In order to program a comparable computation in TBB, we create a class <tt class="docutils literal"><span class="pre">SumHeights</span></tt> whose method <tt class="docutils literal"><span class="pre">operator()</span></tt> contains the following loop:</p>
+<ul class="simple">
+<li>In order to program a comparable computation in TBB, we create a class <tt class="docutils literal"><span class="pre">SumHeights</span></tt> whose method <tt class="docutils literal"><span class="pre">operator()</span></tt> contains the following loop:</li>
+</ul>
 <div class="highlight-c++"><div class="highlight"><pre>    <span class="k">for</span><span class="p">(</span><span class="n">size_t</span> <span class="n">i</span> <span class="o">=</span> <span class="n">r</span><span class="p">.</span><span class="n">begin</span><span class="p">();</span> <span class="n">i</span> <span class="o">!=</span> <span class="n">r</span><span class="p">.</span><span class="n">end</span><span class="p">();</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
       <span class="n">my_int</span> <span class="o">+=</span> <span class="n">f</span><span class="p">(</span><span class="n">my_a</span><span class="o">+</span><span class="n">i</span><span class="o">*</span><span class="n">my_h</span><span class="p">);</span>
     <span class="p">}</span>
 </pre></div>
 </div>
-<p>then passes an instance of that class <tt class="docutils literal"><span class="pre">SumHeights</span></tt> to a call of <tt class="docutils literal"><span class="pre">parallel_for()</span></tt>. Observe that the forms of the two loops indicate the same iterative computation, if one      matches 1 to <tt class="docutils literal"><span class="pre">r.begin()</span></tt>, <tt class="docutils literal"><span class="pre">n</span></tt> to <tt class="docutils literal"><span class="pre">r.end()</span></tt>, variables and integral, a, and h to <tt class="docutils literal"><span class="pre">SumHeights</span></tt> state variables <tt class="docutils literal"><span class="pre">my_int</span></tt>, <tt class="docutils literal"><span class="pre">my_a</span></tt>, and <tt class="docutils literal"><span class="pre">my_h</span></tt>.</p>
-<p>One way to describe this relationship is to say that the class <tt class="docutils literal"><span class="pre">SumHeights</span></tt> is a &#8220;wrapper&#8221;       around its loop.</p>
+<p>then passes an instance of that class <tt class="docutils literal"><span class="pre">SumHeights</span></tt> to a call of <tt class="docutils literal"><span class="pre">parallel_for()</span></tt>. Observe that the forms of the two loops indicate the same iterative computation, if one        matches 1 to <tt class="docutils literal"><span class="pre">r.begin()</span></tt>, <tt class="docutils literal"><span class="pre">n</span></tt> to <tt class="docutils literal"><span class="pre">r.end()</span></tt>, variables and integral, a, and h to <tt class="docutils literal"><span class="pre">SumHeights</span></tt> state variables <tt class="docutils literal"><span class="pre">my_int</span></tt>, <tt class="docutils literal"><span class="pre">my_a</span></tt>, and <tt class="docutils literal"><span class="pre">my_h</span></tt>.</p>
+<blockquote class="last">
+<div><p>One way to describe this relationship is to say that the class <tt class="docutils literal"><span class="pre">SumHeights</span></tt> is a &#8220;wrapper&#8221;       around its loop.</p>
 <ol class="arabic simple">
 <li>The class <tt class="docutils literal"><span class="pre">SumHeights</span></tt> defines <tt class="docutils literal"><span class="pre">operator()</span></tt>, which means that an object of type <tt class="docutils literal"><span class="pre">SumHeights</span></tt> can be called using function-call syntax. Since <tt class="docutils literal"><span class="pre">operator()</span></tt> is defined here with one argument, this means we can cause the for loop to execute using a call <tt class="docutils literal"><span class="pre">sh(range)</span></tt>, where <tt class="docutils literal"><span class="pre">sh</span></tt> is an object of type <tt class="docutils literal"><span class="pre">SumHeights</span></tt> and <tt class="docutils literal"><span class="pre">range</span></tt> is an appropriate argument.</li>
 <li>Note that <tt class="docutils literal"><span class="pre">operator()</span></tt> is a <tt class="docutils literal"><span class="pre">const</span></tt> method (indicated by the const after <tt class="docutils literal"><span class="pre">)</span></tt> and before <tt class="docutils literal"><span class="pre">{</span></tt> ), which means that it is permitted to call <tt class="docutils literal"><span class="pre">sh(range)</span></tt> with a <tt class="docutils literal"><span class="pre">const</span></tt> object sh.</li>
@@ -172,8 +175,7 @@
 </li>
 </ul>
 </div></blockquote>
-</li>
-</ul>
+</div></blockquote>
 </td>
 </tr>
 </tbody>

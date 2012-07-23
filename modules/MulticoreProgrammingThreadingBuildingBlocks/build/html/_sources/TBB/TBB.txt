@@ -26,25 +26,25 @@ For You To Do
 
    * The following lines prepare for using TBB.
 
-     .. literalinclude:: trap-tbb.cpp
-         :language: c++
-         :lines: 5-6
+   .. literalinclude:: trap-tbb.cpp
+       :language: c++
+       :lines: 5-6
 
    * Recall that in the OpenMP code, we parallelized the loop below by adding a pragma just before that for loop.
 
-     :: 
+   :: 
   
-        for(i = 1; i < n; i++) {
-          integral += f(a+i*h);
-        }
+      for(i = 1; i < n; i++) {
+        integral += f(a+i*h);
+      }
 
    * In order to program a comparable computation in TBB, we create a class ``SumHeights`` whose method ``operator()`` contains the following loop: 
 
-     .. literalinclude:: trap-tbb.cpp
-         :language: c++
-         :lines: 21-23
+   .. literalinclude:: trap-tbb.cpp
+       :language: c++
+       :lines: 21-23
 
-     then passes an instance of that class ``SumHeights`` to a call of ``parallel_for()``. Observe that the forms of the two loops indicate the same iterative computation, if one 	matches 1 to ``r.begin()``, ``n`` to ``r.end()``, variables and integral, a, and h to ``SumHeights`` state variables ``my_int``, ``my_a``, and ``my_h``.
+   then passes an instance of that class ``SumHeights`` to a call of ``parallel_for()``. Observe that the forms of the two loops indicate the same iterative computation, if one 	matches 1 to ``r.begin()``, ``n`` to ``r.end()``, variables and integral, a, and h to ``SumHeights`` state variables ``my_int``, ``my_a``, and ``my_h``.
 
      One way to describe this relationship is to say that the class ``SumHeights`` is a "wrapper" 	around its loop. 
 
