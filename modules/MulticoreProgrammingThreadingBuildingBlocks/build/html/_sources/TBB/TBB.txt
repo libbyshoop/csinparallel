@@ -58,13 +58,13 @@ For You To Do
 
    5. The constructor ``SumHeights()`` makes local copies ``my_a``, etc., of variables ``a``, etc., in ``main()``, enabling values in ``main()`` to be used within the class ``SumHeights``. 
 
-       * The range ``r`` has the type ``blocked_range<size_t>``. This is a *templated type* built over the ``size_t`` type. There could be ``blocked_range`` types built over other types, as well, e.g., ``int`` or ``long``.
+       The range ``r`` has the type ``blocked_range<size_t>``. This is a *templated type* built over the ``size_t`` type. There could be ``blocked_range`` types built over other types, as well, e.g., ``int`` or ``long``.
 
-       * The call to ``parallel_for`` in ``main()`` automatically subdivides (or chunks) the range ``r`` for multi-threaded parallel computation. ``parallel_for`` expects a range in its first argument, and an object with a method ``operator()`` having one range argument in its second argument. 
+       The call to ``parallel_for`` in ``main()`` automatically subdivides (or chunks) the range ``r`` for multi-threaded parallel computation. ``parallel_for`` expects a range in its first argument, and an object with a method ``operator()`` having one range argument in its second argument. 
 
-       * The variable ``integral`` is passed by reference in the constructor ``SumHeights()`` in an effort to use that memory location ``integral`` as an accumulator during the parallelized computation.
+       The variable ``integral`` is passed by reference in the constructor ``SumHeights()`` in an effort to use that memory location ``integral`` as an accumulator during the parallelized computation.
 
-       * The constructor initializes the state variables ``my_a``, ``my_h``, and ``my_int`` using *colon initializers*. In the constructor definition
+       The constructor initializes the state variables ``my_a``, ``my_h``, and ``my_int`` using *colon initializers*. In the constructor definition
 
        .. literalinclude:: trap-tbb.cpp
            :language: c++
