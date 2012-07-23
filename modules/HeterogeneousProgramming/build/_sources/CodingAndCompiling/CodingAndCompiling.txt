@@ -48,7 +48,7 @@ Timing a Heterogeneous CUDA and MPI
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 	- In order to time your hybrid CUDA and MPI program, you just need to use MPI_Wtime() function as in an MPI program.
 
-	- We need to keep in mind that a heterogeneous CUDA and MPI program theoretically has lower running time than an MPI does; however, running time also depends on each node's properties. Copying data from a CPU to GPU may take a long period of time, which results in a much longer running time for a heterogeneous program.
+	- We need to keep in mind that a heterogeneous CUDA and MPI program theoretically has lower running time than an MPI does; however, running time also depends on each node's properties such as memory. Copying data from a CPU to GPU may take a long period of time, which results in a much longer running time for a heterogeneous program. Therefore, you do not always get benefits from the heterogeneous programming model.
 
 
 Activity 1: Vector Addition

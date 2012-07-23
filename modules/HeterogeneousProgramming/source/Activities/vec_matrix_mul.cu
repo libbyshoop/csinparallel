@@ -3,10 +3,10 @@
 
 /* kernel function for computation on the GPU */
 __global__ void kernel(int *A, int *x, int *y, int width, int block_size) {
-    int i;
+
     int tid = blockIdx.y * blockDim.y + threadIdx.y;
     int entry = 0;
-    for (i = 0; i < width; i++) {
+    for (int i = 0; i < width; i++) {
         entry += A[tid * width + i] * x[i];
     }
     y[tid] = entry;

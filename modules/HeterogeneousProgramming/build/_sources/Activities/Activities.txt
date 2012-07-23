@@ -8,11 +8,11 @@ In this chapter, we are going to look at two problems, one is vector-matrix mult
 Activity 2: Vector Matrix Multiplication
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-In this activity, we are going to compute vector-matrix multiplication in hybrid environment MPI and CUDA. You might already see this problem before in the MPI module. If so, it will be not much different. The basic idea is we would like to split the rows of the matrix, and ask the master to send some rows of the matrix and entire input vector to each worker. We then ask each worker to receive messages from the master, and each worker will call the CUDA function to do computation on their own GPU. Basically, on the GPU each thread will take care of a multiplication between an element of the matrix, and an element of the vector. This obviously would speed up our computation.
+In this activity, we are going to compute vector-matrix multiplication in hybrid environment MPI and CUDA. You might already see this problem before in the MPI module. If so, it will not be much different. The basic idea is we want to split the rows of the matrix, and ask the master to send some rows of the matrix and entire input vector to each worker. We then ask each worker to receive messages from the master, and each worker will call the CUDA function to do computation on their own GPU. Basically, on the GPU each thread will compute a new element of the vector. 
 
 :Comments on CUDA program:
 	
-	* First let's look at the kernel function in the CUDA program. We use one thread to for one row of the matrix in our vector matrix multiplication. We also use linear array instead of two dimensional array. ::
+	* First let's look at the kernel function in the CUDA program. We use one thread to compute multiplications of a row of the matrix with the vector. We also use linear array instead of two dimensional array. ::
 
 		/* kernel function for computation on the GPU */
 		__global__ void kernel(int *A, int *x, int *y, int width, int block_size) {
