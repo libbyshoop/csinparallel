@@ -124,7 +124,7 @@
 <li><p class="first">This program does <em>not</em> use a command-line argument (and the <tt class="docutils literal"><span class="pre">cstdlib</span></tt> library is not needed). Unlike OpenMP, TBB does not provide a simple way to request a particular number of threads. Instead, the TBB system chooses a number of threads to use automatically. (OpenMP will also make such a selection for you if you do not specify the number of threads to use.)</p>
 </li>
 <li><p class="first">The following lines prepare for using TBB.</p>
-<div class="highlight-cpp"><div class="highlight"><pre><span class="cp">#include &quot;tbb/tbb.h&quot;</span>
+<div class="highlight-c++"><div class="highlight"><pre><span class="cp">#include &quot;tbb/tbb.h&quot;</span>
 <span class="k">using</span> <span class="k">namespace</span> <span class="n">tbb</span><span class="p">;</span>
 </pre></div>
 </div>
@@ -136,7 +136,7 @@
 </div>
 </li>
 <li><p class="first">In order to program a comparable computation in TBB, we create a class <tt class="docutils literal"><span class="pre">SumHeights</span></tt> whose method <tt class="docutils literal"><span class="pre">operator()</span></tt> contains the following loop:</p>
-<div class="highlight-cpp"><div class="highlight"><pre>    <span class="k">for</span><span class="p">(</span><span class="n">size_t</span> <span class="n">i</span> <span class="o">=</span> <span class="n">r</span><span class="p">.</span><span class="n">begin</span><span class="p">();</span> <span class="n">i</span> <span class="o">!=</span> <span class="n">r</span><span class="p">.</span><span class="n">end</span><span class="p">();</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+<div class="highlight-c++"><div class="highlight"><pre>    <span class="k">for</span><span class="p">(</span><span class="n">size_t</span> <span class="n">i</span> <span class="o">=</span> <span class="n">r</span><span class="p">.</span><span class="n">begin</span><span class="p">();</span> <span class="n">i</span> <span class="o">!=</span> <span class="n">r</span><span class="p">.</span><span class="n">end</span><span class="p">();</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
       <span class="n">my_int</span> <span class="o">+=</span> <span class="n">f</span><span class="p">(</span><span class="n">my_a</span><span class="o">+</span><span class="n">i</span><span class="o">*</span><span class="n">my_h</span><span class="p">);</span>
     <span class="p">}</span>
 </pre></div>
@@ -159,7 +159,7 @@
 <li><p class="first">The variable <tt class="docutils literal"><span class="pre">integral</span></tt> is passed by reference in the constructor <tt class="docutils literal"><span class="pre">SumHeights()</span></tt> in an effort to use that memory location <tt class="docutils literal"><span class="pre">integral</span></tt> as an accumulator during the parallelized computation.</p>
 </li>
 <li><p class="first">The constructor initializes the state variables <tt class="docutils literal"><span class="pre">my_a</span></tt>, <tt class="docutils literal"><span class="pre">my_h</span></tt>, and <tt class="docutils literal"><span class="pre">my_int</span></tt> using <em>colon initializers</em>. In the constructor definition</p>
-<div class="highlight-cpp"><div class="highlight"><pre>  <span class="n">SumHeights</span><span class="p">(</span><span class="k">const</span> <span class="kt">double</span> <span class="n">a</span><span class="p">,</span> <span class="k">const</span> <span class="kt">double</span> <span class="n">h</span><span class="p">,</span> <span class="kt">double</span> <span class="o">&amp;</span><span class="n">integral</span><span class="p">)</span> <span class="o">:</span> 
+<div class="highlight-c++"><div class="highlight"><pre>  <span class="n">SumHeights</span><span class="p">(</span><span class="k">const</span> <span class="kt">double</span> <span class="n">a</span><span class="p">,</span> <span class="k">const</span> <span class="kt">double</span> <span class="n">h</span><span class="p">,</span> <span class="kt">double</span> <span class="o">&amp;</span><span class="n">integral</span><span class="p">)</span> <span class="o">:</span> 
     <span class="n">my_a</span><span class="p">(</span><span class="n">a</span><span class="p">),</span> <span class="n">my_h</span><span class="p">(</span><span class="n">h</span><span class="p">),</span> <span class="n">my_int</span><span class="p">(</span><span class="n">integral</span><span class="p">)</span> 
   <span class="p">{}</span>
 </pre></div>

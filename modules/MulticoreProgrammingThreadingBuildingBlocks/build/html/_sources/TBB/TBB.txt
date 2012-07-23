@@ -27,7 +27,7 @@ For You To Do
    * The following lines prepare for using TBB.
 
      .. literalinclude:: trap-tbb.cpp
-         :language: cpp
+         :language: c++
          :lines: 5-6
 
    * Recall that in the OpenMP code, we parallelized the loop below by adding a pragma just before that for loop.
@@ -41,7 +41,7 @@ For You To Do
    * In order to program a comparable computation in TBB, we create a class ``SumHeights`` whose method ``operator()`` contains the following loop: 
 
      .. literalinclude:: trap-tbb.cpp
-         :language: cpp
+         :language: c++
          :lines: 21-23
 
      then passes an instance of that class ``SumHeights`` to a call of ``parallel_for()``. Observe that the forms of the two loops indicate the same iterative computation, if one 	matches 1 to ``r.begin()``, ``n`` to ``r.end()``, variables and integral, a, and h to ``SumHeights`` state variables ``my_int``, ``my_a``, and ``my_h``.
@@ -67,7 +67,7 @@ For You To Do
        * The constructor initializes the state variables ``my_a``, ``my_h``, and ``my_int`` using *colon initializers*. In the constructor definition
 
          .. literalinclude:: trap-tbb.cpp
-             :language: cpp
+             :language: c++
              :lines: 26-28
  
          the expression ``my_a(a)`` located after the colon : and before the curly bracket ``{`` has the same effect as an assignment   
