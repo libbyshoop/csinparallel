@@ -58,268 +58,87 @@
 <div class="section" id="activity-2-vector-matrix-multiplication">
 <h2>Activity 2: Vector Matrix Multiplication<a class="headerlink" href="#activity-2-vector-matrix-multiplication" title="Permalink to this headline">¶</a></h2>
 <p>In this activity, we are going to compute vector-matrix multiplication in hybrid environment MPI and CUDA. You might already see this problem before in the MPI module. If so, it will be not much different. The basic idea is we would like to split the rows of the matrix, and ask the master to send some rows of the matrix and entire input vector to each worker. We then ask each worker to receive messages from the master, and each worker will call the CUDA function to do computation on their own GPU. Basically, on the GPU each thread will take care of a multiplication between an element of the matrix, and an element of the vector. This obviously would speed up our computation.</p>
-<div class="highlight-c"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
- 2
- 3
- 4
- 5
- 6
- 7
- 8
- 9
-10
-11
-12
-13
-14
-15
-16
-17
-18
-19
-20
-21
-22
-23
-24
-25
-26
-27
-28
-29
-30
-31
-32
-33
-34
-35
-36
-37
-38
-39
-40
-41
-42
-43
-44
-45
-46
-47
-48</pre></div></td><td class="code"><div class="highlight"><pre><span class="cp">#include &lt;stdio.h&gt;</span>
-<span class="cp">#include &lt;cuda.h&gt;</span>
-
-<span class="cm">/* kernel function for computation on the GPU */</span>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name" colspan="2">Comments on CUDA program:</th></tr>
+<tr class="field-odd field"><td>&nbsp;</td><td class="field-body"><ul class="first">
+<li><p class="first">First let&#8217;s look at the kernel function in the CUDA program. We use one thread to for one row of the matrix in our vector matrix multiplication. We also use linear array instead of two dimensional array.</p>
+<div class="highlight-c"><div class="highlight"><pre><span class="cm">/* kernel function for computation on the GPU */</span>
 <span class="n">__global__</span> <span class="kt">void</span> <span class="nf">kernel</span><span class="p">(</span><span class="kt">int</span> <span class="o">*</span><span class="n">A</span><span class="p">,</span> <span class="kt">int</span> <span class="o">*</span><span class="n">x</span><span class="p">,</span> <span class="kt">int</span> <span class="o">*</span><span class="n">y</span><span class="p">,</span> <span class="kt">int</span> <span class="n">width</span><span class="p">,</span> <span class="kt">int</span> <span class="n">block_size</span><span class="p">)</span> <span class="p">{</span>
-    <span class="kt">int</span> <span class="n">i</span><span class="p">;</span>
-    <span class="kt">int</span> <span class="n">tid</span> <span class="o">=</span> <span class="n">blockIdx</span><span class="p">.</span><span class="n">y</span> <span class="o">*</span> <span class="n">blockDim</span><span class="p">.</span><span class="n">y</span> <span class="o">+</span> <span class="n">threadIdx</span><span class="p">.</span><span class="n">y</span><span class="p">;</span>
-    <span class="kt">int</span> <span class="n">entry</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
-    <span class="k">for</span> <span class="p">(</span><span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">width</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
-        <span class="n">entry</span> <span class="o">+=</span> <span class="n">A</span><span class="p">[</span><span class="n">tid</span> <span class="o">*</span> <span class="n">width</span> <span class="o">+</span> <span class="n">i</span><span class="p">]</span> <span class="o">*</span> <span class="n">x</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
-    <span class="p">}</span>
-    <span class="n">y</span><span class="p">[</span><span class="n">tid</span><span class="p">]</span> <span class="o">=</span> <span class="n">entry</span><span class="p">;</span>
-<span class="p">}</span>
-
-<span class="cm">/* function on the host, CPU */</span>
-<span class="k">extern</span> <span class="s">&quot;C&quot;</span> <span class="kt">void</span> <span class="n">run_kernel</span><span class="p">(</span><span class="kt">int</span> <span class="o">*</span><span class="n">A</span><span class="p">,</span> <span class="kt">int</span> <span class="o">*</span><span class="n">x</span><span class="p">,</span> <span class="kt">int</span> <span class="o">*</span><span class="n">y</span><span class="p">,</span> <span class="kt">int</span> <span class="n">width</span><span class="p">,</span> <span class="kt">int</span> <span class="n">block_size</span><span class="p">)</span> <span class="p">{</span>
-
-    <span class="cm">/* the size of the matrix and the vector */</span>
-    <span class="kt">int</span> <span class="n">matrix_size</span> <span class="o">=</span> <span class="k">sizeof</span><span class="p">(</span><span class="kt">int</span><span class="p">)</span> <span class="o">*</span> <span class="n">width</span> <span class="o">*</span> <span class="n">width</span><span class="p">;</span>
-    <span class="kt">int</span> <span class="n">vector_size</span> <span class="o">=</span> <span class="k">sizeof</span><span class="p">(</span><span class="kt">int</span><span class="p">)</span> <span class="o">*</span> <span class="n">width</span><span class="p">;</span>
-
-    <span class="cm">/* Pointes array on GPU */</span>
-    <span class="kt">int</span> <span class="o">*</span><span class="n">dev_A</span><span class="p">,</span> <span class="o">*</span><span class="n">dev_x</span><span class="p">,</span> <span class="o">*</span><span class="n">dev_y</span><span class="p">;</span>
-
-    <span class="cm">/* Allocate memory on GPU */</span>
-    <span class="n">cudaMalloc</span><span class="p">((</span><span class="kt">void</span><span class="o">**</span><span class="p">)</span><span class="o">&amp;</span><span class="n">dev_A</span><span class="p">,</span> <span class="n">matrix_size</span><span class="p">);</span>
-    <span class="n">cudaMalloc</span><span class="p">((</span><span class="kt">void</span><span class="o">**</span><span class="p">)</span><span class="o">&amp;</span><span class="n">dev_x</span><span class="p">,</span> <span class="n">vector_size</span><span class="p">);</span>
-    <span class="n">cudaMalloc</span><span class="p">((</span><span class="kt">void</span><span class="o">**</span><span class="p">)</span><span class="o">&amp;</span><span class="n">dev_y</span><span class="p">,</span> <span class="n">vector_size</span><span class="p">);</span>
-
-    <span class="cm">/* Copy matrix and vector from CPU to GPU */</span>
-    <span class="n">cudaMemcpy</span><span class="p">(</span><span class="n">dev_A</span><span class="p">,</span> <span class="n">A</span><span class="p">,</span> <span class="n">matrix_size</span><span class="p">,</span> <span class="n">cudaMemcpyHostToDevice</span><span class="p">);</span>
-    <span class="n">cudaMemcpy</span><span class="p">(</span><span class="n">dev_x</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">vector_size</span><span class="p">,</span> <span class="n">cudaMemcpyHostToDevice</span><span class="p">);</span>
-
-    <span class="cm">/* Initializing the grid size and block size */</span>
-    <span class="n">dim3</span> <span class="n">dimGrid</span><span class="p">(</span><span class="n">width</span><span class="o">/</span><span class="n">block_size</span><span class="p">,</span> <span class="n">width</span><span class="o">/</span><span class="n">block_size</span><span class="p">);</span>
-    <span class="n">dim3</span> <span class="n">dimBlock</span><span class="p">(</span><span class="n">block_size</span><span class="p">,</span> <span class="n">block_size</span><span class="p">);</span>
-
-    <span class="cm">/* Running the kernel function */</span>
-    <span class="n">kernel</span><span class="o">&lt;&lt;&lt;</span><span class="n">dimGrid</span><span class="p">,</span> <span class="n">dimBlock</span><span class="o">&gt;&gt;&gt;</span><span class="p">(</span><span class="n">dev_A</span><span class="p">,</span> <span class="n">dev_x</span><span class="p">,</span> <span class="n">dev_y</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">block_size</span><span class="p">);</span>
-
-    <span class="cm">/* Copy the output vector from GPU to CPU */</span>
-    <span class="n">cudaMemcpy</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">dev_y</span><span class="p">,</span> <span class="n">vector_size</span><span class="p">,</span> <span class="n">cudaMemcpyDeviceToHost</span><span class="p">);</span>
-
-    <span class="cm">/* Free memory on GPU */</span>
-    <span class="n">cudaFree</span><span class="p">(</span><span class="n">dev_A</span><span class="p">);</span>
-    <span class="n">cudaFree</span><span class="p">(</span><span class="n">dev_x</span><span class="p">);</span>
-    <span class="n">cudaFree</span><span class="p">(</span><span class="n">dev_y</span><span class="p">);</span>
+        <span class="kt">int</span> <span class="n">i</span><span class="p">;</span>
+        <span class="kt">int</span> <span class="n">tid</span> <span class="o">=</span> <span class="n">blockIdx</span><span class="p">.</span><span class="n">y</span> <span class="o">*</span> <span class="n">blockDim</span><span class="p">.</span><span class="n">y</span> <span class="o">+</span> <span class="n">threadIdx</span><span class="p">.</span><span class="n">y</span><span class="p">;</span>
+        <span class="kt">int</span> <span class="n">entry</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+        <span class="k">for</span> <span class="p">(</span><span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">width</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+                <span class="n">entry</span> <span class="o">+=</span> <span class="n">A</span><span class="p">[</span><span class="n">tid</span> <span class="o">*</span> <span class="n">width</span> <span class="o">+</span> <span class="n">i</span><span class="p">]</span> <span class="o">*</span> <span class="n">x</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+        <span class="p">}</span>
+        <span class="n">y</span><span class="p">[</span><span class="n">tid</span><span class="p">]</span> <span class="o">=</span> <span class="n">entry</span><span class="p">;</span>
 <span class="p">}</span>
 </pre></div>
-</td></tr></table></div>
-<div class="highlight-c"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>  1
-  2
-  3
-  4
-  5
-  6
-  7
-  8
-  9
- 10
- 11
- 12
- 13
- 14
- 15
- 16
- 17
- 18
- 19
- 20
- 21
- 22
- 23
- 24
- 25
- 26
- 27
- 28
- 29
- 30
- 31
- 32
- 33
- 34
- 35
- 36
- 37
- 38
- 39
- 40
- 41
- 42
- 43
- 44
- 45
- 46
- 47
- 48
- 49
- 50
- 51
- 52
- 53
- 54
- 55
- 56
- 57
- 58
- 59
- 60
- 61
- 62
- 63
- 64
- 65
- 66
- 67
- 68
- 69
- 70
- 71
- 72
- 73
- 74
- 75
- 76
- 77
- 78
- 79
- 80
- 81
- 82
- 83
- 84
- 85
- 86
- 87
- 88
- 89
- 90
- 91
- 92
- 93
- 94
- 95
- 96
- 97
- 98
- 99
-100
-101
-102
-103
-104
-105
-106
-107
-108
-109
-110
-111
-112
-113
-114</pre></div></td><td class="code"><div class="highlight"><pre><span class="cp">#include &quot;mpi.h&quot;</span>
-<span class="cp">#include &lt;stdio.h&gt;</span>
+</div>
+</li>
+<li><p class="first">Then we need to have a function that calls the kernel function on the host. This function is to allocate memory for the matrix and vector on the device, copy matrix and vector from host to device, compute the vector matrix multiplication, and copy the result vector from device to the host. This function will be called in the MPI program. Your task is to call kernel function at <strong>TO DO</strong>.</p>
+<div class="highlight-c"><div class="highlight"><pre><span class="cm">/* function on the host, CPU */</span>
+<span class="k">extern</span> <span class="s">&quot;C&quot;</span> <span class="kt">void</span> <span class="n">run_kernel</span><span class="p">(</span><span class="kt">int</span> <span class="o">*</span><span class="n">A</span><span class="p">,</span> <span class="kt">int</span> <span class="o">*</span><span class="n">x</span><span class="p">,</span> <span class="kt">int</span> <span class="o">*</span><span class="n">y</span><span class="p">,</span> <span class="kt">int</span> <span class="n">width</span><span class="p">,</span> <span class="kt">int</span> <span class="n">block_size</span><span class="p">)</span> <span class="p">{</span>
 
-<span class="cp">#define COLS 24         </span><span class="cm">/* number of columns of the matrix */</span><span class="cp"></span>
-<span class="cp">#define ROWS 24         </span><span class="cm">/* number of rows of the matrix */</span><span class="cp"></span>
-<span class="cp">#define MASTER 0        </span><span class="cm">/* master has rank 0 */</span><span class="cp"></span>
-<span class="cp">#define FROM_MASTER 1   </span><span class="cm">/* message sent from master */</span><span class="cp"></span>
-<span class="cp">#define FROM_WORKER 2   </span><span class="cm">/* message sent from worker */</span><span class="cp"></span>
-<span class="cp">#define BLOCK_SIZE 12   </span><span class="cm">/* number of threads in a block */</span><span class="cp"></span>
-<span class="cp">#define MAX_NAME 80     </span><span class="cm">/* length of character for naming a node */</span><span class="cp"></span>
+        <span class="cm">/* the size of the matrix and the vector */</span>
+        <span class="kt">int</span> <span class="n">matrix_size</span> <span class="o">=</span> <span class="k">sizeof</span><span class="p">(</span><span class="kt">int</span><span class="p">)</span> <span class="o">*</span> <span class="n">width</span> <span class="o">*</span> <span class="n">width</span><span class="p">;</span>
+        <span class="kt">int</span> <span class="n">vector_size</span> <span class="o">=</span> <span class="k">sizeof</span><span class="p">(</span><span class="kt">int</span><span class="p">)</span> <span class="o">*</span> <span class="n">width</span><span class="p">;</span>
 
-<span class="cm">/* Declaring CUDA function for vector-matrix multiplication */</span>
-<span class="kt">void</span> <span class="n">run_kernel</span><span class="p">(</span><span class="kt">int</span> <span class="o">*</span><span class="n">A</span><span class="p">,</span> <span class="kt">int</span> <span class="o">*</span><span class="n">x</span><span class="p">,</span> <span class="kt">int</span> <span class="o">*</span><span class="n">y</span><span class="p">,</span> <span class="kt">int</span> <span class="n">width</span><span class="p">,</span> <span class="kt">int</span> <span class="n">block_size</span><span class="p">);</span>
+        <span class="cm">/* Pointes array on GPU */</span>
+        <span class="kt">int</span> <span class="o">*</span><span class="n">dev_A</span><span class="p">,</span> <span class="o">*</span><span class="n">dev_x</span><span class="p">,</span> <span class="o">*</span><span class="n">dev_y</span><span class="p">;</span>
 
-<span class="kt">int</span> <span class="nf">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span> <span class="o">*</span><span class="n">argv</span><span class="p">[]</span> <span class="p">)</span> <span class="p">{</span>
+        <span class="cm">/* Allocate memory on GPU */</span>
+        <span class="n">cudaMalloc</span><span class="p">((</span><span class="kt">void</span><span class="o">**</span><span class="p">)</span><span class="o">&amp;</span><span class="n">dev_A</span><span class="p">,</span> <span class="n">matrix_size</span><span class="p">);</span>
+        <span class="n">cudaMalloc</span><span class="p">((</span><span class="kt">void</span><span class="o">**</span><span class="p">)</span><span class="o">&amp;</span><span class="n">dev_x</span><span class="p">,</span> <span class="n">vector_size</span><span class="p">);</span>
+        <span class="n">cudaMalloc</span><span class="p">((</span><span class="kt">void</span><span class="o">**</span><span class="p">)</span><span class="o">&amp;</span><span class="n">dev_y</span><span class="p">,</span> <span class="n">vector_size</span><span class="p">);</span>
 
-    <span class="kt">int</span> <span class="n">nprocs</span><span class="p">,</span>         <span class="cm">/* number of processes */</span>
-        <span class="n">rank</span><span class="p">,</span>           <span class="cm">/* rank of a process */</span>
-        <span class="n">len</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">;</span>
+        <span class="cm">/* Copy matrix and vector from CPU to GPU */</span>
+        <span class="n">cudaMemcpy</span><span class="p">(</span><span class="n">dev_A</span><span class="p">,</span> <span class="n">A</span><span class="p">,</span> <span class="n">matrix_size</span><span class="p">,</span> <span class="n">cudaMemcpyHostToDevice</span><span class="p">);</span>
+        <span class="n">cudaMemcpy</span><span class="p">(</span><span class="n">dev_x</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">vector_size</span><span class="p">,</span> <span class="n">cudaMemcpyHostToDevice</span><span class="p">);</span>
 
-    <span class="kt">int</span> <span class="n">averow</span><span class="p">,</span>         <span class="cm">/* average rows to be sent to each worker */</span>
-        <span class="n">extra</span><span class="p">,</span>          <span class="cm">/* extra rows to be sent to some workers */</span>
-        <span class="n">offset</span><span class="p">,</span>         <span class="cm">/* starting position of row to be sent */</span>
-        <span class="n">dest</span><span class="p">,</span>           <span class="cm">/* rank of the destination process */</span>
-        <span class="n">numworkers</span><span class="p">,</span>     <span class="cm">/* number of workers */</span>
-        <span class="n">mtype</span><span class="p">,</span>          <span class="cm">/* message type */</span>
-        <span class="n">source</span><span class="p">,</span>         <span class="cm">/* rank of the source process */</span>
-        <span class="n">rows</span><span class="p">;</span>           <span class="cm">/* number of rows to be sent to a worker */</span>
+        <span class="cm">/* Initializing the grid size and block size */</span>
+        <span class="n">dim3</span> <span class="n">dimGrid</span><span class="p">(</span><span class="n">width</span><span class="o">/</span><span class="n">block_size</span><span class="p">,</span> <span class="n">width</span><span class="o">/</span><span class="n">block_size</span><span class="p">);</span>
+        <span class="n">dim3</span> <span class="n">dimBlock</span><span class="p">(</span><span class="n">block_size</span><span class="p">,</span> <span class="n">block_size</span><span class="p">);</span>
 
-    <span class="kt">int</span> <span class="n">matrix</span><span class="p">[</span><span class="n">ROWS</span><span class="p">][</span><span class="n">COLS</span><span class="p">];</span>     <span class="cm">/* matrix for the multiplication */</span>
-    <span class="kt">int</span> <span class="n">vector</span><span class="p">[</span><span class="n">ROWS</span><span class="p">];</span>           <span class="cm">/* vector for the multiplication */</span>
-    <span class="kt">int</span> <span class="n">result</span><span class="p">[</span><span class="n">ROWS</span><span class="p">];</span>           <span class="cm">/* output vector */</span>
+        <span class="cm">/* Running the kernel function */</span>
+        <span class="c1">// TO DO</span>
+        <span class="c1">// call the kernel function</span>
+        <span class="c1">// end TO DO</span>
 
-    <span class="kt">char</span> <span class="n">name</span><span class="p">[</span><span class="n">MAX_NAME</span><span class="p">];</span>        <span class="cm">/* char array for storing name of a process */</span>
+        <span class="cm">/* Copy the output vector from GPU to CPU */</span>
+        <span class="n">cudaMemcpy</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">dev_y</span><span class="p">,</span> <span class="n">vector_size</span><span class="p">,</span> <span class="n">cudaMemcpyDeviceToHost</span><span class="p">);</span>
 
-    <span class="n">MPI_Status</span> <span class="n">status</span><span class="p">;</span>          <span class="cm">/* status for receiving message from MPI_Send */</span>
+        <span class="cm">/* Free memory on GPU */</span>
+        <span class="n">cudaFree</span><span class="p">(</span><span class="n">dev_A</span><span class="p">);</span>
+        <span class="n">cudaFree</span><span class="p">(</span><span class="n">dev_x</span><span class="p">);</span>
+        <span class="n">cudaFree</span><span class="p">(</span><span class="n">dev_y</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name" colspan="2">Comments on MPI program:</th></tr>
+<tr class="field-even field"><td>&nbsp;</td><td class="field-body"><ul class="first last">
+<li><p class="first">Now we can look at our MPI program with an addition of a CUDA function. First we need to initialize the MPI execution environment, define the size of MPI_COMM_WORLD, and give a unique rank to each process. Then we ask the master to initialize the input matrix and vector, divide the matrix by row, and send their pieces and the entire vector to each worker. Your task is to complete code at <strong>TO DO</strong>:</p>
+<div class="highlight-c"><div class="highlight"><pre><span class="cm">/* Initialize MPI execution environment */</span>
+<span class="n">MPI_Init</span><span class="p">(</span><span class="o">&amp;</span><span class="n">argc</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">argv</span><span class="p">);</span>
+<span class="n">MPI_Comm_rank</span><span class="p">(</span><span class="n">MPI_COMM_WORLD</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">rank</span><span class="p">);</span>
+<span class="n">MPI_Comm_size</span><span class="p">(</span><span class="n">MPI_COMM_WORLD</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">nprocs</span><span class="p">);</span>
 
-    <span class="cm">/* Initialize MPI execution environment */</span>
-    <span class="n">MPI_Init</span><span class="p">(</span><span class="o">&amp;</span><span class="n">argc</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">argv</span><span class="p">);</span>
-    <span class="n">MPI_Comm_rank</span><span class="p">(</span><span class="n">MPI_COMM_WORLD</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">rank</span><span class="p">);</span>
-    <span class="n">MPI_Comm_size</span><span class="p">(</span><span class="n">MPI_COMM_WORLD</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">nprocs</span><span class="p">);</span>
+<span class="n">MPI_Get_processor_name</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">len</span><span class="p">);</span>
 
-    <span class="n">MPI_Get_processor_name</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">len</span><span class="p">);</span>
-
-    <span class="cm">/******************************* Master ***************************/</span>
-    <span class="k">if</span> <span class="p">(</span><span class="n">rank</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
-    <span class="cm">/* Initialize Matrix and Vector */</span>
+<span class="cm">/******************************* Master ***************************/</span>
+<span class="k">if</span> <span class="p">(</span><span class="n">rank</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+        <span class="cm">/* Initialize Matrix and Vector */</span>
         <span class="k">for</span><span class="p">(</span><span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">ROWS</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
-            <span class="n">vector</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="mi">10</span><span class="p">;</span>
-            <span class="k">for</span><span class="p">(</span><span class="n">j</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">j</span> <span class="o">&lt;</span> <span class="n">COLS</span><span class="p">;</span> <span class="n">j</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
-                <span class="n">matrix</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="mi">10</span><span class="p">;</span>
-            <span class="p">}</span>
+                <span class="n">vector</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="mi">10</span><span class="p">;</span>
+                <span class="k">for</span><span class="p">(</span><span class="n">j</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">j</span> <span class="o">&lt;</span> <span class="n">COLS</span><span class="p">;</span> <span class="n">j</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+                        <span class="n">matrix</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="mi">10</span><span class="p">;</span>
+                <span class="p">}</span>
         <span class="p">}</span>
 
         <span class="n">numworkers</span> <span class="o">=</span> <span class="n">nprocs</span> <span class="o">-</span> <span class="mi">1</span><span class="p">;</span>
@@ -332,43 +151,35 @@
 
         <span class="cm">/* Master sends smaller task to each worker */</span>
         <span class="k">for</span><span class="p">(</span><span class="n">dest</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span> <span class="n">dest</span> <span class="o">&lt;=</span> <span class="n">numworkers</span><span class="p">;</span> <span class="n">dest</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
-            <span class="n">rows</span> <span class="o">=</span> <span class="p">(</span><span class="n">dest</span> <span class="o">&lt;=</span> <span class="n">extra</span><span class="p">)</span> <span class="o">?</span> <span class="n">averow</span> <span class="o">+</span> <span class="mi">1</span> <span class="o">:</span> <span class="n">averow</span><span class="p">;</span>
-            <span class="n">MPI_Send</span><span class="p">(</span><span class="o">&amp;</span><span class="n">offset</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">MPI_INT</span><span class="p">,</span> <span class="n">dest</span><span class="p">,</span> <span class="n">mtype</span><span class="p">,</span> <span class="n">MPI_COMM_WORLD</span><span class="p">);</span>
-            <span class="n">MPI_Send</span><span class="p">(</span><span class="o">&amp;</span><span class="n">rows</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">MPI_INT</span><span class="p">,</span> <span class="n">dest</span><span class="p">,</span> <span class="n">mtype</span><span class="p">,</span> <span class="n">MPI_COMM_WORLD</span><span class="p">);</span>
-            <span class="n">MPI_Send</span><span class="p">(</span><span class="o">&amp;</span><span class="n">matrix</span><span class="p">[</span><span class="n">offset</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span> <span class="n">rows</span> <span class="o">*</span> <span class="n">COLS</span><span class="p">,</span> <span class="n">MPI_INT</span><span class="p">,</span> <span class="n">dest</span><span class="p">,</span> <span class="n">mtype</span><span class="p">,</span> <span class="n">MPI_COMM_WORLD</span><span class="p">);</span>
-            <span class="n">MPI_Send</span><span class="p">(</span><span class="o">&amp;</span><span class="n">vector</span><span class="p">,</span> <span class="n">ROWS</span><span class="p">,</span> <span class="n">MPI_INT</span><span class="p">,</span> <span class="n">dest</span><span class="p">,</span> <span class="n">mtype</span><span class="p">,</span> <span class="n">MPI_COMM_WORLD</span><span class="p">);</span>
-            <span class="n">printf</span><span class="p">(</span><span class="s">&quot;Master sent elements %d to %d to rank %d</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">offset</span><span class="p">,</span> <span class="n">offset</span> <span class="o">+</span> <span class="n">rows</span><span class="p">,</span> <span class="n">dest</span><span class="p">);</span>
-            <span class="n">offset</span> <span class="o">+=</span> <span class="n">rows</span><span class="p">;</span>
-        <span class="p">}</span>
+                <span class="n">rows</span> <span class="o">=</span> <span class="p">(</span><span class="n">dest</span> <span class="o">&lt;=</span> <span class="n">extra</span><span class="p">)</span> <span class="o">?</span> <span class="n">averow</span> <span class="o">+</span> <span class="mi">1</span> <span class="o">:</span> <span class="n">averow</span><span class="p">;</span>
 
-        <span class="cm">/* Master receives the output from each worker*/</span>
-        <span class="n">mtype</span> <span class="o">=</span> <span class="n">FROM_WORKER</span><span class="p">;</span>
-        <span class="k">for</span> <span class="p">(</span><span class="n">i</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;=</span> <span class="n">numworkers</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
-             <span class="n">source</span> <span class="o">=</span> <span class="n">i</span><span class="p">;</span>
-             <span class="n">MPI_Recv</span><span class="p">(</span><span class="o">&amp;</span><span class="n">offset</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">MPI_INT</span><span class="p">,</span> <span class="n">source</span><span class="p">,</span><span class="n">mtype</span><span class="p">,</span> <span class="n">MPI_COMM_WORLD</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">status</span><span class="p">);</span>
-             <span class="n">MPI_Recv</span><span class="p">(</span><span class="o">&amp;</span><span class="n">rows</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">MPI_INT</span><span class="p">,</span> <span class="n">source</span><span class="p">,</span> <span class="n">mtype</span><span class="p">,</span> <span class="n">MPI_COMM_WORLD</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">status</span><span class="p">);</span>
-             <span class="n">MPI_Recv</span><span class="p">(</span><span class="o">&amp;</span><span class="n">result</span><span class="p">[</span><span class="n">offset</span><span class="p">],</span> <span class="n">rows</span><span class="p">,</span> <span class="n">MPI_INT</span><span class="p">,</span> <span class="n">source</span><span class="p">,</span> <span class="n">mtype</span><span class="p">,</span> <span class="n">MPI_COMM_WORLD</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">status</span><span class="p">);</span>
-             <span class="n">printf</span><span class="p">(</span><span class="s">&quot;Received results from task %d</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">source</span><span class="p">);</span>
-        <span class="p">}</span>
+                <span class="c1">// TO DO</span>
+                <span class="c1">// send each piece of matrix and entire vector to each worker</span>
+                <span class="c1">// end TO DO</span>
 
-        <span class="cm">/* Master prints results */</span>
-        <span class="k">for</span> <span class="p">(</span><span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">ROWS</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
-            <span class="n">printf</span><span class="p">(</span><span class="s">&quot;The element of output vector is: %d</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">result</span><span class="p">[</span><span class="n">i</span><span class="p">]);</span>
+                <span class="n">printf</span><span class="p">(</span><span class="s">&quot;Master sent elements %d to %d to rank %d</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">offset</span><span class="p">,</span> <span class="n">offset</span> <span class="o">+</span> <span class="n">rows</span><span class="p">,</span> <span class="n">dest</span><span class="p">);</span>
+                <span class="n">offset</span> <span class="o">+=</span> <span class="n">rows</span><span class="p">;</span>
         <span class="p">}</span>
-    <span class="p">}</span>
-
-    <span class="cm">/************************************** Workers *************************************/</span>
-    <span class="k">if</span> <span class="p">(</span><span class="n">rank</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">We need to ask all workers to receive the messages sent from the master. Then we want each worker to call the CUDA function to compute their vector matrix multiplication. After having computed their multiplications, each worker needs to send their result back to the master. Please complete the following code at <strong>TO DO</strong>.</p>
+<div class="highlight-c"><div class="highlight"><pre><span class="cm">/************************************** Workers *************************************/</span>
+<span class="k">if</span> <span class="p">(</span><span class="n">rank</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
         <span class="n">mtype</span> <span class="o">=</span> <span class="n">FROM_MASTER</span><span class="p">;</span>
         <span class="cm">/* Each worker receives messages sent from the master*/</span>
-        <span class="n">MPI_Recv</span><span class="p">(</span><span class="o">&amp;</span><span class="n">offset</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">MPI_INT</span><span class="p">,</span> <span class="n">MASTER</span><span class="p">,</span> <span class="n">mtype</span><span class="p">,</span> <span class="n">MPI_COMM_WORLD</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">status</span><span class="p">);</span>
-        <span class="n">MPI_Recv</span><span class="p">(</span><span class="o">&amp;</span><span class="n">rows</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">MPI_INT</span><span class="p">,</span> <span class="n">MASTER</span><span class="p">,</span> <span class="n">mtype</span><span class="p">,</span> <span class="n">MPI_COMM_WORLD</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">status</span><span class="p">);</span>
-        <span class="n">MPI_Recv</span><span class="p">(</span><span class="o">&amp;</span><span class="n">matrix</span><span class="p">,</span> <span class="n">rows</span><span class="o">*</span><span class="n">COLS</span><span class="p">,</span> <span class="n">MPI_INT</span><span class="p">,</span> <span class="n">MASTER</span><span class="p">,</span> <span class="n">mtype</span><span class="p">,</span> <span class="n">MPI_COMM_WORLD</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">status</span><span class="p">);</span>
-        <span class="n">MPI_Recv</span><span class="p">(</span><span class="o">&amp;</span><span class="n">vector</span><span class="p">,</span> <span class="n">ROWS</span><span class="p">,</span> <span class="n">MPI_INT</span><span class="p">,</span> <span class="n">MASTER</span><span class="p">,</span> <span class="n">mtype</span><span class="p">,</span> <span class="n">MPI_COMM_WORLD</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">status</span><span class="p">);</span>
+
+        <span class="c1">// TO DO</span>
+        <span class="c1">// receive each piece of the matrix and vector sent from master</span>
+        <span class="c1">// end TO DO</span>
+
         <span class="n">printf</span><span class="p">(</span><span class="s">&quot;Worker rank %d, %s receives the messages</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">rank</span><span class="p">,</span> <span class="n">name</span><span class="p">);</span>
 
         <span class="cm">/* use CUDA function to compute the the vector-matrix multiplication for each worker */</span>
-        <span class="n">run_kernel</span><span class="p">(</span><span class="o">*</span><span class="n">matrix</span><span class="p">,</span> <span class="n">vector</span><span class="p">,</span> <span class="n">result</span><span class="p">,</span> <span class="n">ROWS</span><span class="p">,</span> <span class="n">BLOCK_SIZE</span><span class="p">);</span>
+        <span class="c1">// TO DO</span>
+        <span class="c1">// call CUDA function</span>
+        <span class="c1">// end TO DO</span>
 
         <span class="cm">/* Each worker sends the result back to the master */</span>
         <span class="n">mtype</span> <span class="o">=</span> <span class="n">FROM_WORKER</span><span class="p">;</span>
@@ -376,14 +187,43 @@
         <span class="n">MPI_Send</span><span class="p">(</span><span class="o">&amp;</span><span class="n">rows</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">MPI_INT</span><span class="p">,</span> <span class="n">MASTER</span><span class="p">,</span> <span class="n">mtype</span><span class="p">,</span> <span class="n">MPI_COMM_WORLD</span><span class="p">);</span>
         <span class="n">MPI_Send</span><span class="p">(</span><span class="o">&amp;</span><span class="n">result</span><span class="p">,</span> <span class="n">rows</span><span class="p">,</span> <span class="n">MPI_INT</span><span class="p">,</span> <span class="n">MASTER</span><span class="p">,</span> <span class="n">mtype</span><span class="p">,</span> <span class="n">MPI_COMM_WORLD</span><span class="p">);</span>
         <span class="n">printf</span><span class="p">(</span><span class="s">&quot;Worker rank %d, %s sends the result to master </span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">rank</span><span class="p">,</span> <span class="n">name</span><span class="p">);</span>
-    <span class="p">}</span>
-
-    <span class="cm">/* Terminate the MPI execution environment */</span>
-    <span class="n">MPI_Finalize</span><span class="p">();</span>
-    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
 <span class="p">}</span>
 </pre></div>
-</td></tr></table></div>
+</div>
+</li>
+<li><p class="first">Finally, we need to ask the master to receive the result vector sent from each worker, and prints the result vector.</p>
+<div class="highlight-c"><div class="highlight"><pre><span class="cm">/* Master receives the output from each worker*/</span>
+<span class="n">mtype</span> <span class="o">=</span> <span class="n">FROM_WORKER</span><span class="p">;</span>
+<span class="k">for</span> <span class="p">(</span><span class="n">i</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;=</span> <span class="n">numworkers</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">source</span> <span class="o">=</span> <span class="n">i</span><span class="p">;</span>
+        <span class="n">MPI_Recv</span><span class="p">(</span><span class="o">&amp;</span><span class="n">offset</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">MPI_INT</span><span class="p">,</span> <span class="n">source</span><span class="p">,</span><span class="n">mtype</span><span class="p">,</span> <span class="n">MPI_COMM_WORLD</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">status</span><span class="p">);</span>
+        <span class="n">MPI_Recv</span><span class="p">(</span><span class="o">&amp;</span><span class="n">rows</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">MPI_INT</span><span class="p">,</span> <span class="n">source</span><span class="p">,</span> <span class="n">mtype</span><span class="p">,</span> <span class="n">MPI_COMM_WORLD</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">status</span><span class="p">);</span>
+        <span class="n">MPI_Recv</span><span class="p">(</span><span class="o">&amp;</span><span class="n">result</span><span class="p">[</span><span class="n">offset</span><span class="p">],</span> <span class="n">rows</span><span class="p">,</span> <span class="n">MPI_INT</span><span class="p">,</span> <span class="n">source</span><span class="p">,</span> <span class="n">mtype</span><span class="p">,</span> <span class="n">MPI_COMM_WORLD</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">status</span><span class="p">);</span>
+        <span class="n">printf</span><span class="p">(</span><span class="s">&quot;Received results from task %d</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">source</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="cm">/* Master prints results */</span>
+<span class="k">for</span> <span class="p">(</span><span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">ROWS</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">printf</span><span class="p">(</span><span class="s">&quot;The element of output vector is: %d</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">result</span><span class="p">[</span><span class="n">i</span><span class="p">]);</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="docutils">
+<dt>Download the source code to do your activity:</dt>
+<dd><p class="first"><a class="reference download internal" href="../_downloads/vec_matrix_mul_todo.cu"><tt class="xref download docutils literal"><span class="pre">download</span> <span class="pre">CUDA</span> <span class="pre">program</span></tt></a></p>
+<p class="last"><a class="reference download internal" href="../_downloads/vec_matrix_mul_todo.c"><tt class="xref download docutils literal"><span class="pre">download</span> <span class="pre">MPI</span> <span class="pre">program</span></tt></a></p>
+</dd>
+<dt>Download the entire source code:</dt>
+<dd><p class="first"><a class="reference download internal" href="../_downloads/vec_matrix_mul.cu"><tt class="xref download docutils literal"><span class="pre">download</span> <span class="pre">CUDA</span> <span class="pre">program</span></tt></a></p>
+<p class="last"><a class="reference download internal" href="../_downloads/vec_matrix_mul.c"><tt class="xref download docutils literal"><span class="pre">download</span> <span class="pre">MPI</span> <span class="pre">program</span></tt></a></p>
+</dd>
+</dl>
 </div>
 <div class="section" id="activity-3-matrix-multiplication">
 <h2>Activity 3: Matrix Multiplication<a class="headerlink" href="#activity-3-matrix-multiplication" title="Permalink to this headline">¶</a></h2>
@@ -420,7 +260,7 @@
 </li>
 <li><p class="first">We use 2-dimensional blocks and threads for matrices. Each thread calculate an element of the result matrix.</p>
 </li>
-<li><p class="first">Then we need to have a function that calls the kernel function on the host. This function is to allocate memory for the matrices on the device, copy matrices from host to device, compute the matrix multiplication, and copy the result matrix from device to the host. This function will be called in the MPI program.</p>
+<li><p class="first">Then we need to have a function that calls the kernel function on the host. This function is to allocate memory for the matrices on the device, copy matrices from host to device, compute the matrix multiplication, and copy the result matrix from device to the host. This function will be called in the MPI program. Your task is to call kernel function at <strong>TO DO</strong>.</p>
 <div class="highlight-c"><div class="highlight"><pre><span class="cm">/* function that you will call in mpi code */</span>
 <span class="k">extern</span> <span class="s">&quot;C&quot;</span> <span class="kt">void</span> <span class="n">MatrixMul</span><span class="p">(</span><span class="kt">float</span><span class="o">*</span> <span class="n">M</span><span class="p">,</span> <span class="kt">float</span><span class="o">*</span> <span class="n">N</span><span class="p">,</span> <span class="kt">float</span><span class="o">*</span> <span class="n">P</span><span class="p">,</span> <span class="kt">int</span> <span class="n">width</span><span class="p">,</span> <span class="kt">int</span> <span class="n">block_size</span><span class="p">)</span> <span class="p">{</span>
 

@@ -10,11 +10,156 @@ Activity 2: Vector Matrix Multiplication
 
 In this activity, we are going to compute vector-matrix multiplication in hybrid environment MPI and CUDA. You might already see this problem before in the MPI module. If so, it will be not much different. The basic idea is we would like to split the rows of the matrix, and ask the master to send some rows of the matrix and entire input vector to each worker. We then ask each worker to receive messages from the master, and each worker will call the CUDA function to do computation on their own GPU. Basically, on the GPU each thread will take care of a multiplication between an element of the matrix, and an element of the vector. This obviously would speed up our computation.
 
-.. literalinclude:: vec_matrix_mul.cu
-	:linenos:
+:Comments on CUDA program:
+	
+	* First let's look at the kernel function in the CUDA program. We use one thread to for one row of the matrix in our vector matrix multiplication. We also use linear array instead of two dimensional array. ::
 
-.. literalinclude:: vec_matrix_mul.c
-	:linenos:
+		/* kernel function for computation on the GPU */
+		__global__ void kernel(int *A, int *x, int *y, int width, int block_size) {
+			int i;
+			int tid = blockIdx.y * blockDim.y + threadIdx.y;
+			int entry = 0;
+			for (i = 0; i < width; i++) {
+				entry += A[tid * width + i] * x[i];
+			}
+			y[tid] = entry;
+		}
+
+
+	* Then we need to have a function that calls the kernel function on the host. This function is to allocate memory for the matrix and vector on the device, copy matrix and vector from host to device, compute the vector matrix multiplication, and copy the result vector from device to the host. This function will be called in the MPI program. Your task is to call kernel function at **TO DO**. ::
+
+		/* function on the host, CPU */
+		extern "C" void run_kernel(int *A, int *x, int *y, int width, int block_size) {
+
+			/* the size of the matrix and the vector */
+			int matrix_size = sizeof(int) * width * width;
+			int vector_size = sizeof(int) * width;
+
+			/* Pointes array on GPU */
+			int *dev_A, *dev_x, *dev_y;
+
+			/* Allocate memory on GPU */
+			cudaMalloc((void**)&dev_A, matrix_size);
+			cudaMalloc((void**)&dev_x, vector_size);
+			cudaMalloc((void**)&dev_y, vector_size);
+
+			/* Copy matrix and vector from CPU to GPU */
+			cudaMemcpy(dev_A, A, matrix_size, cudaMemcpyHostToDevice);
+			cudaMemcpy(dev_x, x, vector_size, cudaMemcpyHostToDevice);
+
+			/* Initializing the grid size and block size */
+			dim3 dimGrid(width/block_size, width/block_size);
+			dim3 dimBlock(block_size, block_size);
+
+			/* Running the kernel function */
+			// TO DO
+			// call the kernel function
+			// end TO DO
+
+			/* Copy the output vector from GPU to CPU */
+			cudaMemcpy(y, dev_y, vector_size, cudaMemcpyDeviceToHost);
+
+			/* Free memory on GPU */
+			cudaFree(dev_A);
+			cudaFree(dev_x);
+			cudaFree(dev_y);
+		}
+
+:Comments on MPI program:
+	
+	* Now we can look at our MPI program with an addition of a CUDA function. First we need to initialize the MPI execution environment, define the size of MPI_COMM_WORLD, and give a unique rank to each process. Then we ask the master to initialize the input matrix and vector, divide the matrix by row, and send their pieces and the entire vector to each worker. Your task is to complete code at **TO DO**::
+
+		/* Initialize MPI execution environment */
+		MPI_Init(&argc, &argv);
+		MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+		MPI_Comm_size(MPI_COMM_WORLD, &nprocs);
+		
+		MPI_Get_processor_name(name, &len);
+
+		/******************************* Master ***************************/
+		if (rank == 0) {
+			/* Initialize Matrix and Vector */
+			for(i = 0; i < ROWS; i++) {
+				vector[i] = 10;
+				for(j = 0; j < COLS; j++) {
+					matrix[i][j] = 10;
+				}
+			}
+
+			numworkers = nprocs - 1;
+
+			/* divide the number of rows for each worker */
+			averow = ROWS/numworkers;
+			extra = ROWS%numworkers;
+			offset = 0;
+			mtype = FROM_MASTER;
+
+			/* Master sends smaller task to each worker */
+			for(dest = 1; dest <= numworkers; dest++) {
+ 				rows = (dest <= extra) ? averow + 1 : averow;
+
+				// TO DO
+				// send each piece of matrix and entire vector to each worker
+				// end TO DO
+
+				printf("Master sent elements %d to %d to rank %d\n", offset, offset + rows, dest);
+				offset += rows;
+			}
+		}
+
+	* We need to ask all workers to receive the messages sent from the master. Then we want each worker to call the CUDA function to compute their vector matrix multiplication. After having computed their multiplications, each worker needs to send their result back to the master. Please complete the following code at **TO DO**. ::
+
+		/************************************** Workers *************************************/
+		if (rank > 0) {
+			mtype = FROM_MASTER;
+			/* Each worker receives messages sent from the master*/
+
+			// TO DO
+			// receive each piece of the matrix and vector sent from master
+			// end TO DO
+
+			printf("Worker rank %d, %s receives the messages\n", rank, name);
+
+			/* use CUDA function to compute the the vector-matrix multiplication for each worker */
+			// TO DO
+			// call CUDA function 
+			// end TO DO
+
+			/* Each worker sends the result back to the master */
+			mtype = FROM_WORKER;
+			MPI_Send(&offset, 1, MPI_INT, MASTER, mtype, MPI_COMM_WORLD);
+			MPI_Send(&rows, 1, MPI_INT, MASTER, mtype, MPI_COMM_WORLD);
+			MPI_Send(&result, rows, MPI_INT, MASTER, mtype, MPI_COMM_WORLD);
+			printf("Worker rank %d, %s sends the result to master \n", rank, name);
+		}
+
+	* Finally, we need to ask the master to receive the result vector sent from each worker, and prints the result vector. ::
+
+		/* Master receives the output from each worker*/
+		mtype = FROM_WORKER;
+		for (i = 1; i <= numworkers; i++) {
+			source = i;
+			MPI_Recv(&offset, 1, MPI_INT, source,mtype, MPI_COMM_WORLD, &status);
+			MPI_Recv(&rows, 1, MPI_INT, source, mtype, MPI_COMM_WORLD, &status);
+			MPI_Recv(&result[offset], rows, MPI_INT, source, mtype, MPI_COMM_WORLD, &status);
+			printf("Received results from task %d\n", source);
+		}
+
+		/* Master prints results */
+		for (i = 0; i < ROWS; i++) {
+			printf("The element of output vector is: %d\n", result[i]);
+		}
+
+
+Download the source code to do your activity: 
+	:download:`download CUDA program <vec_matrix_mul_todo.cu>`
+
+	:download:`download MPI program <vec_matrix_mul_todo.c>`
+
+Download the entire source code:
+	:download:`download CUDA program <vec_matrix_mul.cu>`
+
+	:download:`download MPI program <vec_matrix_mul.c>`
 
 Activity 3: Matrix Multiplication
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -46,7 +191,7 @@ In this activity, we are going to compute matrix-matrix multiplication in hybrid
 
 	* We use 2-dimensional blocks and threads for matrices. Each thread calculate an element of the result matrix. 
 
-	* Then we need to have a function that calls the kernel function on the host. This function is to allocate memory for the matrices on the device, copy matrices from host to device, compute the matrix multiplication, and copy the result matrix from device to the host. This function will be called in the MPI program. ::
+	* Then we need to have a function that calls the kernel function on the host. This function is to allocate memory for the matrices on the device, copy matrices from host to device, compute the matrix multiplication, and copy the result matrix from device to the host. This function will be called in the MPI program. Your task is to call kernel function at **TO DO**. ::
 
 		/* function that you will call in mpi code */
 		extern "C" void MatrixMul(float* M, float* N, float* P, int width, int block_size) {
