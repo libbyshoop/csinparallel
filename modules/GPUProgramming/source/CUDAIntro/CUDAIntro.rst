@@ -2,7 +2,16 @@
 CUDA Intro
 **********
 
-Before you proceed to the next example, please download the following files and place them outside of your source code folder.
+Before we proceed to our first example, please follow the following instructions to set up your working environment.
+
+1. Download the follow file. :download:`download common.tar.gz <common.tar.gz>`
+2. Extract all the files.
+3. Create a empty folder **common** and then put extracted files into it.
+4. Put the common folder **outside** of your source code folder.
+
+.. note::
+
+   In side the common folder are source code that contains helper functions. These include some handle error functions and APIs required for the later graphic programs, such as ray-tracing.
 
 Acknowledgement
 ###############
@@ -20,7 +29,7 @@ This copy of code is a derivative based on the original code and designed for ed
 An Example of Vector Addition
 #############################
 
-We will start our CUDA journey by learning a very simple example, the vector addition example. What this program does is basically take two vectors that have same dimensions, add them together and then return it back. 
+We will start our CUDA journey by learning a very simple example, the vector addition example. It basically takes two vectors that have same dimensions, adds them together and then returns the new vector back. 
 
 Vector Addition source file:
 :download:`VA-GPU-11.cu <VA-GPU-11.cu>`
@@ -28,7 +37,7 @@ Vector Addition source file:
 The Device Code
 ***************
 
-As you may notice in your background reading about CUDA programming, the program executes in two separated places. One is called host, another is called device. In our example, the add() function executes on the device (our GPU) and the rest of the C program executes on our CPU.
+As you may notice in your background reading about CUDA programming, CUDA programs execute in two separated places. One is called host, another is called device. In our example, the add() function executes on the device (our GPU) and the rest of the C program executes on our CPU.
 
 .. literalinclude:: VA-GPU-11.cu	
     :language: c
@@ -36,7 +45,7 @@ As you may notice in your background reading about CUDA programming, the program
 
 As shown in the code block above, we need to add a **__global__** qualifier to the function name of the original C code in order to let function add() execute on a device.
 
-You might notice that this code is much like standard C code except for the **__global__** qualifier. We are seeing this because this version of vector addition device code is utilizing only one core of the GPU. We can see this from the line
+You might notice that this code is much like standard C code except for the **__global__** qualifier. We are seeing this because this version of vector addition's device code is utilizing only one core of the GPU. We can see this from the line
 
 .. literalinclude:: VA-GPU-11.cu	
     :language: c
@@ -47,24 +56,36 @@ where we only add 1 to the *tid*. In the later examples, where we will be using 
 The Host Code
 *************
 
+.. topic:: Before you proceed
+
+   Different from device code, the host code is more complicated and require more explanation. We advice you to download the source file provided at the beginning of this page and have it open in a separate window. We divided the host code into several parts for the purpose of easier explanation. However, looking at the host code as a whole might be helpful, especially for CUDA programming, where host codes are usually highly organized and structured.
+
 .. literalinclude:: VA-GPU-11.cu	
     :language: c
     :lines: 35-49
 
-As shown in the code block above, we first need to declare pointers. Notice that we declared two sets of pointers, one set is used to store data on host memory, another is used to store data on the device memory.
+As shown in the code block above, similar to standard C programming, we first need to declare pointers. Notice that we declared two sets of pointers, one set is used to store data on host memory, another is used to store data on the device memory.
 
 The `Event API`_
 ----------------
 
-Before we go any further, we need to first learn ways of measuring performance in CUDA runtime. The tool we use to measure the time GPU spends on a task is CUDA `Event API`_. If you are C programming language veteran you may ask the question: why don't we use the the timing functions in standard C, such as *clock()* or *timeval* structure, to perform this task? Well, this is a really good question.
+Before we go any further, we need to first learn ways of measuring performance in CUDA runtime. How do we measure performance? Well, in the simplest yet most direct way, how fast can the program run. To be more specific, we will try to time the program.
 
-The fundamental motivation of using `Event API`_ instead of timing functions in standard C lies on the difference between CPU and GPU computation. To be more specific, GPU is a companion computation device, which means every time CPU has to call GPU to do computations. However, when GPU is doing computation, CPU does not wait for it to finish its task, instead CPU will continue to execute next line of code while GPU is still working on previous call. This *asynchronous* feature of GPU computation structure leads to possible inaccuracy in standard C timing functions. Therefore, `Event API`_ become needed.
+The tool we use to measure the time GPU spends on a task is CUDA `Event API`_. 
 
 .. literalinclude:: VA-GPU-11.cu	
     :language: c
     :lines: 51-57
 
-The first step of using event is declaring the event. In this example. we declared two events, one called start, which will record the start event and another called stop, which will record the stop event. After declaring the events, we can use the command `cudaEventRecord()`_ to record a event. You can think of record a event as initializing it. You may noticed that we pass this command a second argument (0 in this case). In our example, this argument is actually useless. However, if you are really interested in this, you can read more about CUDA stream.
+The first step of using event is declaring the event. In this example. we declared two events, one called start, which will record the start event and another called stop, which will record the stop event. After declaring the events, we can use the command `cudaEventRecord()`_ to record a event. You can think of recording a event as initializing it. You may also notice that we pass this command a second argument (0 in this case). In our example, this argument is actually useless. However, if you are really interested in this, you can read more about CUDA stream.
+
+You can see we that there is another function HANDLE_ERROR() around each of the commands. For the moment, this function does not do anything than returning the error if CUDA commands run into any.
+
+.. topic:: Why would we use Event API?
+
+  If you are C programming language veteran you may ask the question: why don't we use the the timing functions in standard C, such as *clock()* or *timeval* structure, to perform this task? Well, this is a really good question.
+
+  The fundamental motivation of using `Event API`_ instead of timing functions in standard C lies on the difference between CPU and GPU computation. To be more specific, GPU is a companion computation device, which means every time CPU has to call GPU to do computations. However, when GPU is doing computation, CPU does not wait for it to finish its task, instead CPU will continue to execute next line of code while GPU is still working on previous call. This *asynchronous* feature of GPU computation structure leads to possible inaccuracy when measuring time using standard C timing functions. Therefore, `Event API`_ become needed.
 
 The `cudaMalloc()`_ Function
 ----------------------------
@@ -165,7 +186,7 @@ You can add the following code verify whether the GPU has done the task correctl
 Vector Addition with Blocks
 ###########################
 
-We have learned some basic concepts in CUDA C in our last example. Starting from this example, you will begin to learn how to write CUDA language that will explore the potential of our GPU card how to measure the performance.
+We have learned some basic concepts in CUDA C in our last example. Starting from this example, we will begin to learn how to write CUDA language that will explore the potential of our GPU card how to measure the performance.
 
 Vector Addition with Blocks source file:
 :download:`VA-GPU-N1.cu <VA-GPU-N1.cu>`
@@ -183,9 +204,9 @@ to call for device kernels and we left those two numbers in the triple angle bra
 
 Blocks are organized into a one-dimensional, two-dimensional, or three-dimensional grid. Why do we need two-dimensional or even three-dimensional grid? why can't we just stick with one-dimensional? Well, it turned out that for problems with two or more dimensional domains, such as matrices multiplication or image processing (don't forget the reason GPU been exist is to process image faster), it is often convenient and more efficient to use two or more dimensional indexing. Right now, nVidia GPUs that support CUDA structure can assign up to 65536 blocks in each dimension of the grid, that is in total 65536 * 65536 * 65536 blocks in a grid. 
 
-However, as we are doing vector addition, a one-dimensional process, we don't need to use two-dimensional grid. However, don't get disappointed, we will use higher dimensional grid in later examples.
-
 Some of the books may refer grid in CUDA has only one and two-dimensions. This is incorrect because the official CUDA programming guide specifically addressed that grid can be three-dimensional.
+
+However, as we are doing vector addition, a one-dimensional process, we don't need to use two-dimensional grid. However, don't get disappointed, we will use higher dimensional grid in later examples.
 
 The Device Code
 ***************
