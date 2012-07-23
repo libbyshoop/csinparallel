@@ -2,11 +2,17 @@
 Intel's Threading Building Blocks (TBB)
 ***************************************
 
+Introduction
+-------------
+
 OpenMP works well for adding parallelism to loops in working sequential code, and it's available for C, C++, and Fortran languages on many platforms (including Linux, Windows, and Macintosh OS X). Older versions of OpenMP did not readily support non-loop parallelism or programming with concurrent data structures, but OpenMP version 3.0 (released May 2008) provides a task feature for programming such computations. 
 
 Intel's `Threading Building Blocks (TBB)`_ provides an object-oriented approach to implementing parallel algorithms, for the C++ language (and any of the three platforms). Adding parallelism to existing code in TBB is somewhat more involved than in OpenMP, but is considerably less complicated than programming in a native threads package for a particular operating system. The forthcoming new standard for the C++ language is likely to include parallelism similar to TBB.
 
 .. _`Threading Building Blocks (TBB)`: http://threadingbuildingblocks.org/
+
+For You To Do
+-------------
 
 1. Enter the following TBB program into a file ``trap-tbb.cpp``. Or you can download the file :download:`trap-tbb.cpp <trap-tbb.cpp>`  
 
@@ -20,57 +26,57 @@ Intel's `Threading Building Blocks (TBB)`_ provides an object-oriented approach 
 
    * The following lines prepare for using TBB.
 
-     .. literalinclude:: trap-tbb.cpp
-         :language: cpp
-         :lines: 5-6
+   .. literalinclude:: trap-tbb.cpp
+       :language: c++
+       :lines: 5-6
 
    * Recall that in the OpenMP code, we parallelized the loop below by adding a pragma just before that for loop.
 
-     :: 
+   :: 
   
-        for(i = 1; i < n; i++) {
-          integral += f(a+i*h);
-        }
+      for(i = 1; i < n; i++) {
+        integral += f(a+i*h);
+      }
 
    * In order to program a comparable computation in TBB, we create a class ``SumHeights`` whose method ``operator()`` contains the following loop: 
 
-     .. literalinclude:: trap-tbb.cpp
-         :language: cpp
-         :lines: 21-23
+   .. literalinclude:: trap-tbb.cpp
+       :language: c++
+       :lines: 21-23
 
-     then passes an instance of that class ``SumHeights`` to a call of ``parallel_for()``. Observe that the forms of the two loops indicate the same iterative computation, if one 	matches 1 to ``r.begin()``, ``n`` to ``r.end()``, variables and integral, a, and h to ``SumHeights`` state variables ``my_int``, ``my_a``, and ``my_h``.
+   then passes an instance of that class ``SumHeights`` to a call of ``parallel_for()``. Observe that the forms of the two loops indicate the same iterative computation, if one 	matches 1 to ``r.begin()``, ``n`` to ``r.end()``, variables and integral, a, and h to ``SumHeights`` state variables ``my_int``, ``my_a``, and ``my_h``.
 
-     One way to describe this relationship is to say that the class ``SumHeights`` is a "wrapper" 	around its loop. 
+   One way to describe this relationship is to say that the class ``SumHeights`` is a "wrapper" 	around its loop. 
 
-     1. The class ``SumHeights`` defines ``operator()``, which means that an object of type ``SumHeights`` can be called using function-call syntax. Since ``operator()`` is defined here with one argument, this means we can cause the for loop to execute using a call ``sh(range)``, where ``sh`` is an object of type ``SumHeights`` and ``range`` is an appropriate argument.
+   1. The class ``SumHeights`` defines ``operator()``, which means that an object of type ``SumHeights`` can be called using function-call syntax. Since ``operator()`` is defined here with one argument, this means we can cause the for loop to execute using a call ``sh(range)``, where ``sh`` is an object of type ``SumHeights`` and ``range`` is an appropriate argument.
 
-     2. Note that ``operator()`` is a ``const`` method (indicated by the const after ``)`` and before ``{`` ), which means that it is permitted to call ``sh(range)`` with a ``const`` object sh.
+   2. Note that ``operator()`` is a ``const`` method (indicated by the const after ``)`` and before ``{`` ), which means that it is permitted to call ``sh(range)`` with a ``const`` object sh.
 
-     3. The argument ``r`` of ``operator()`` indicates the *range* of the loop, i.e., the starting and ending values for the loop control variable.
+   3. The argument ``r`` of ``operator()`` indicates the *range* of the loop, i.e., the starting and ending values for the loop control variable.
 
-     4. The loop control variable ``i`` has type ``int`` in the OpenMP implementation, but type ``size_t`` in the TBB implementation. ``size_t`` is an integer type, which may be equivalent to ``int``, ``long``, or another integer type depending on implementation.
+   4. The loop control variable ``i`` has type ``int`` in the OpenMP implementation, but type ``size_t`` in the TBB implementation. ``size_t`` is an integer type, which may be equivalent to ``int``, ``long``, or another integer type depending on implementation.
 
-     5. The constructor ``SumHeights()`` makes local copies ``my_a``, etc., of variables ``a``, etc., in ``main()``, enabling values in ``main()`` to be used within the class ``SumHeights``. 
+   5. The constructor ``SumHeights()`` makes local copies ``my_a``, etc., of variables ``a``, etc., in ``main()``, enabling values in ``main()`` to be used within the class ``SumHeights``. 
 
-       * The range ``r`` has the type ``blocked_range<size_t>``. This is a *templated type* built over the ``size_t`` type. There could be ``blocked_range`` types built over other types, as well, e.g., ``int`` or ``long``.
+       The range ``r`` has the type ``blocked_range<size_t>``. This is a *templated type* built over the ``size_t`` type. There could be ``blocked_range`` types built over other types, as well, e.g., ``int`` or ``long``.
 
-       * The call to ``parallel_for`` in ``main()`` automatically subdivides (or chunks) the range ``r`` for multi-threaded parallel computation. ``parallel_for`` expects a range in its first argument, and an object with a method ``operator()`` having one range argument in its second argument. 
+       The call to ``parallel_for`` in ``main()`` automatically subdivides (or chunks) the range ``r`` for multi-threaded parallel computation. ``parallel_for`` expects a range in its first argument, and an object with a method ``operator()`` having one range argument in its second argument. 
 
-       * The variable ``integral`` is passed by reference in the constructor ``SumHeights()`` in an effort to use that memory location ``integral`` as an accumulator during the parallelized computation.
+       The variable ``integral`` is passed by reference in the constructor ``SumHeights()`` in an effort to use that memory location ``integral`` as an accumulator during the parallelized computation.
 
-       * The constructor initializes the state variables ``my_a``, ``my_h``, and ``my_int`` using *colon initializers*. In the constructor definition
+       The constructor initializes the state variables ``my_a``, ``my_h``, and ``my_int`` using *colon initializers*. In the constructor definition
 
-         .. literalinclude:: trap-tbb.cpp
-             :language: cpp
-             :lines: 26-28
+       .. literalinclude:: trap-tbb.cpp
+           :language: c++
+           :lines: 26-28
  
-         the expression ``my_a(a)`` located after the colon : and before the curly bracket ``{`` has the same effect as an assignment   
+       the expression ``my_a(a)`` located after the colon : and before the curly bracket ``{`` has the same effect as an assignment   
       
-         ::
+       ::
 
-            my_a = a;
+          my_a = a;
 
-         would if it occurred *between* the curly brackets. Colon initialization is optional for the state variables ``my_a`` and ``my_h``, but it is required for the state variable ``my_int``, because that state variable was defined using a reference type. 
+       would if it occurred *between* the curly brackets. Colon initialization is optional for the state variables ``my_a`` and ``my_h``, but it is required for the state variable ``my_int``, because that state variable was defined using a reference type. 
 
 .. note:: Can you detect any problems in this code?
 
