@@ -60,9 +60,9 @@
 </div>
 <div class="section" id="for-you-to-do">
 <h2>For You To Do<a class="headerlink" href="#for-you-to-do" title="Permalink to this headline">¶</a></h2>
-<ol class="arabic simple">
-<li>Enter the following TBB program into a file <tt class="docutils literal"><span class="pre">trap-tbb.cpp</span></tt>. Or you can download the file <a class="reference download internal" href="../_downloads/trap-tbb.cpp"><tt class="xref download docutils literal"><span class="pre">trap-tbb.cpp</span></tt></a></li>
-</ol>
+<div class="section" id="create-the-code">
+<h3>Create the code<a class="headerlink" href="#create-the-code" title="Permalink to this headline">¶</a></h3>
+<p>Enter the following TBB program into a file <tt class="docutils literal"><span class="pre">trap-tbb.cpp</span></tt>. Or you can download the file <a class="reference download internal" href="../_downloads/trap-tbb.cpp"><tt class="xref download docutils literal"><span class="pre">trap-tbb.cpp</span></tt></a></p>
 <div class="highlight-cpp"><div class="highlight"><pre><span class="cp">#include &lt;iostream&gt;</span>
 <span class="cp">#include &lt;cmath&gt;</span>
 <span class="k">using</span> <span class="k">namespace</span> <span class="n">std</span><span class="p">;</span>
@@ -116,41 +116,36 @@
 <span class="p">}</span>
 </pre></div>
 </div>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Comments:</th><td class="field-body"><ul class="first simple">
-<li>This program does <em>not</em> use a command-line argument (and the <tt class="docutils literal"><span class="pre">cstdlib</span></tt> library is not needed). Unlike OpenMP, TBB does not provide a simple way to request a particular number of threads. Instead, the TBB system chooses a number of threads to use automatically. (OpenMP will also make such a selection for you if you do not specify the number of threads to use.)</li>
-<li>The following lines prepare for using TBB.</li>
-</ul>
+</div>
+<div class="section" id="study-this-code-carefully">
+<h3>Study this code carefully<a class="headerlink" href="#study-this-code-carefully" title="Permalink to this headline">¶</a></h3>
+<p>Observe the following:</p>
+<p>This program does <em>not</em> use a command-line argument (and the <tt class="docutils literal"><span class="pre">cstdlib</span></tt> library is not needed). Unlike OpenMP, TBB does not provide a simple way to request a particular number of threads. Instead, the TBB system chooses a number of threads to use automatically. (OpenMP will also make such a selection for you if you do not specify the number of threads to use.)</p>
+<p>The following lines prepare for using TBB.</p>
 <div class="highlight-c++"><div class="highlight"><pre><span class="cp">#include &quot;tbb/tbb.h&quot;</span>
 <span class="k">using</span> <span class="k">namespace</span> <span class="n">tbb</span><span class="p">;</span>
 </pre></div>
 </div>
-<ul class="simple">
-<li>Recall that in the OpenMP code, we parallelized the loop below by adding a pragma just before that for loop.</li>
-<li>In order to program a comparable computation in TBB, we create a class <tt class="docutils literal"><span class="pre">SumHeights</span></tt> whose method <tt class="docutils literal"><span class="pre">operator()</span></tt> contains the following loop:</li>
-</ul>
+<p>Recall that in the OpenMP code, we parallelized the loop below by adding a pragma just before that for loop.</p>
+<div class="highlight-python"><pre>for(i = 1; i &lt; n; i++) {
+   integral += f(a+i*h);
+ }</pre>
+</div>
+<p>In order to program a comparable computation in TBB, we create a class <tt class="docutils literal"><span class="pre">SumHeights</span></tt> whose method <tt class="docutils literal"><span class="pre">operator()</span></tt> contains the following loop:</p>
 <div class="highlight-c++"><div class="highlight"><pre>    <span class="k">for</span><span class="p">(</span><span class="n">size_t</span> <span class="n">i</span> <span class="o">=</span> <span class="n">r</span><span class="p">.</span><span class="n">begin</span><span class="p">();</span> <span class="n">i</span> <span class="o">!=</span> <span class="n">r</span><span class="p">.</span><span class="n">end</span><span class="p">();</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
       <span class="n">my_int</span> <span class="o">+=</span> <span class="n">f</span><span class="p">(</span><span class="n">my_a</span><span class="o">+</span><span class="n">i</span><span class="o">*</span><span class="n">my_h</span><span class="p">);</span>
     <span class="p">}</span>
 </pre></div>
 </div>
-<p>then passes an instance of that class <tt class="docutils literal"><span class="pre">SumHeights</span></tt> to a call of <tt class="docutils literal"><span class="pre">parallel_for()</span></tt>. Observe that the forms of the two loops indicate the same iterative computation, if one        matches 1 to <tt class="docutils literal"><span class="pre">r.begin()</span></tt>, <tt class="docutils literal"><span class="pre">n</span></tt> to <tt class="docutils literal"><span class="pre">r.end()</span></tt>, variables and integral, a, and h to <tt class="docutils literal"><span class="pre">SumHeights</span></tt> state variables <tt class="docutils literal"><span class="pre">my_int</span></tt>, <tt class="docutils literal"><span class="pre">my_a</span></tt>, and <tt class="docutils literal"><span class="pre">my_h</span></tt>.</p>
-<p>One way to describe this relationship is to say that the class <tt class="docutils literal"><span class="pre">SumHeights</span></tt> is a &#8220;wrapper&#8221;         around its loop.</p>
-<ol class="last arabic">
-<li><p class="first">The class <tt class="docutils literal"><span class="pre">SumHeights</span></tt> defines <tt class="docutils literal"><span class="pre">operator()</span></tt>, which means that an object of type <tt class="docutils literal"><span class="pre">SumHeights</span></tt> can be called using function-call syntax. Since <tt class="docutils literal"><span class="pre">operator()</span></tt> is defined here with one argument, this means we can cause the for loop to execute using a call <tt class="docutils literal"><span class="pre">sh(range)</span></tt>, where <tt class="docutils literal"><span class="pre">sh</span></tt> is an object of type <tt class="docutils literal"><span class="pre">SumHeights</span></tt> and <tt class="docutils literal"><span class="pre">range</span></tt> is an appropriate argument.</p>
-</li>
-<li><p class="first">Note that <tt class="docutils literal"><span class="pre">operator()</span></tt> is a <tt class="docutils literal"><span class="pre">const</span></tt> method (indicated by the const after <tt class="docutils literal"><span class="pre">)</span></tt> and before <tt class="docutils literal"><span class="pre">{</span></tt> ), which means that it is permitted to call <tt class="docutils literal"><span class="pre">sh(range)</span></tt> with a <tt class="docutils literal"><span class="pre">const</span></tt> object sh.</p>
-</li>
-<li><p class="first">The argument <tt class="docutils literal"><span class="pre">r</span></tt> of <tt class="docutils literal"><span class="pre">operator()</span></tt> indicates the <em>range</em> of the loop, i.e., the starting and ending values for the loop control variable.</p>
-</li>
-<li><p class="first">The loop control variable <tt class="docutils literal"><span class="pre">i</span></tt> has type <tt class="docutils literal"><span class="pre">int</span></tt> in the OpenMP implementation, but type <tt class="docutils literal"><span class="pre">size_t</span></tt> in the TBB implementation. <tt class="docutils literal"><span class="pre">size_t</span></tt> is an integer type, which may be equivalent to <tt class="docutils literal"><span class="pre">int</span></tt>, <tt class="docutils literal"><span class="pre">long</span></tt>, or another integer type depending on implementation.</p>
-</li>
-<li><p class="first">The constructor <tt class="docutils literal"><span class="pre">SumHeights()</span></tt> makes local copies <tt class="docutils literal"><span class="pre">my_a</span></tt>, etc., of variables <tt class="docutils literal"><span class="pre">a</span></tt>, etc., in <tt class="docutils literal"><span class="pre">main()</span></tt>, enabling values in <tt class="docutils literal"><span class="pre">main()</span></tt> to be used within the class <tt class="docutils literal"><span class="pre">SumHeights</span></tt>.</p>
-<blockquote>
-<div><p>The range <tt class="docutils literal"><span class="pre">r</span></tt> has the type <tt class="docutils literal"><span class="pre">blocked_range&lt;size_t&gt;</span></tt>. This is a <em>templated type</em> built over the <tt class="docutils literal"><span class="pre">size_t</span></tt> type. There could be <tt class="docutils literal"><span class="pre">blocked_range</span></tt> types built over other types, as well, e.g., <tt class="docutils literal"><span class="pre">int</span></tt> or <tt class="docutils literal"><span class="pre">long</span></tt>.</p>
+<p>Observe that the forms of the two loops indicate the same iterative computation, if one matches 1 to <tt class="docutils literal"><span class="pre">r.begin()</span></tt>, <tt class="docutils literal"><span class="pre">n</span></tt> to <tt class="docutils literal"><span class="pre">r.end()</span></tt> and <tt class="docutils literal"><span class="pre">integral</span></tt>, <tt class="docutils literal"><span class="pre">a</span></tt>, and h to <tt class="docutils literal"><span class="pre">SumHeights</span></tt> state variables <tt class="docutils literal"><span class="pre">my_int</span></tt>, <tt class="docutils literal"><span class="pre">my_a</span></tt>, and <tt class="docutils literal"><span class="pre">my_h</span></tt>.  One way to describe this relationship is to say that the class <tt class="docutils literal"><span class="pre">SumHeights</span></tt> is a &#8220;wrapper&#8221;     around its loop.</p>
+<p>The class <tt class="docutils literal"><span class="pre">SumHeights</span></tt> defines <tt class="docutils literal"><span class="pre">operator()</span></tt>, which means that an object of type <tt class="docutils literal"><span class="pre">SumHeights</span></tt> can be called using function-call syntax. Since <tt class="docutils literal"><span class="pre">operator()</span></tt> is defined here with one argument, this means we can cause the for loop to execute using a call <tt class="docutils literal"><span class="pre">sh(range)</span></tt>, where <tt class="docutils literal"><span class="pre">sh</span></tt> is an object of type <tt class="docutils literal"><span class="pre">SumHeights</span></tt> and <tt class="docutils literal"><span class="pre">range</span></tt> is an appropriate argument.</p>
+<ol class="arabic simple">
+<li>Note that <tt class="docutils literal"><span class="pre">operator()</span></tt> is a <tt class="docutils literal"><span class="pre">const</span></tt> method (indicated by the const after <tt class="docutils literal"><span class="pre">)</span></tt> and before <tt class="docutils literal"><span class="pre">{</span></tt> ), which means that it is permitted to call <tt class="docutils literal"><span class="pre">sh(range)</span></tt> with a <tt class="docutils literal"><span class="pre">const</span></tt> object sh.</li>
+<li>The argument <tt class="docutils literal"><span class="pre">r</span></tt> of <tt class="docutils literal"><span class="pre">operator()</span></tt> indicates the <em>range</em> of the loop, i.e., the starting and ending values for the loop control variable.</li>
+<li>The loop control variable <tt class="docutils literal"><span class="pre">i</span></tt> has type <tt class="docutils literal"><span class="pre">int</span></tt> in the OpenMP implementation, but type <tt class="docutils literal"><span class="pre">size_t</span></tt> in the TBB implementation. <tt class="docutils literal"><span class="pre">size_t</span></tt> is an integer type, which may be equivalent to <tt class="docutils literal"><span class="pre">int</span></tt>, <tt class="docutils literal"><span class="pre">long</span></tt>, or another integer type depending on implementation.</li>
+<li>The range <tt class="docutils literal"><span class="pre">r</span></tt> has the type <tt class="docutils literal"><span class="pre">blocked_range&lt;size_t&gt;</span></tt>. This is a <em>templated type</em> built over the <tt class="docutils literal"><span class="pre">size_t</span></tt> type. There could be <tt class="docutils literal"><span class="pre">blocked_range</span></tt> types built over other types, as well, e.g., <tt class="docutils literal"><span class="pre">int</span></tt> or <tt class="docutils literal"><span class="pre">long</span></tt>.</li>
+</ol>
+<p>The constructor <tt class="docutils literal"><span class="pre">SumHeights()</span></tt> makes local copies <tt class="docutils literal"><span class="pre">my_a</span></tt>, etc., of variables <tt class="docutils literal"><span class="pre">a</span></tt>, etc., in <tt class="docutils literal"><span class="pre">main()</span></tt>, enabling values in <tt class="docutils literal"><span class="pre">main()</span></tt> to be used within the class <tt class="docutils literal"><span class="pre">SumHeights</span></tt>.</p>
 <p>The call to <tt class="docutils literal"><span class="pre">parallel_for</span></tt> in <tt class="docutils literal"><span class="pre">main()</span></tt> automatically subdivides (or chunks) the range <tt class="docutils literal"><span class="pre">r</span></tt> for multi-threaded parallel computation. <tt class="docutils literal"><span class="pre">parallel_for</span></tt> expects a range in its first argument, and an object with a method <tt class="docutils literal"><span class="pre">operator()</span></tt> having one range argument in its second argument.</p>
 <p>The variable <tt class="docutils literal"><span class="pre">integral</span></tt> is passed by reference in the constructor <tt class="docutils literal"><span class="pre">SumHeights()</span></tt> in an effort to use that memory location <tt class="docutils literal"><span class="pre">integral</span></tt> as an accumulator during the parallelized computation.</p>
 <p>The constructor initializes the state variables <tt class="docutils literal"><span class="pre">my_a</span></tt>, <tt class="docutils literal"><span class="pre">my_h</span></tt>, and <tt class="docutils literal"><span class="pre">my_int</span></tt> using <em>colon initializers</em>. In the constructor definition</p>
@@ -159,55 +154,40 @@
   <span class="p">{}</span>
 </pre></div>
 </div>
-<p>the expression <tt class="docutils literal"><span class="pre">my_a(a)</span></tt> located after the colon : and before the curly bracket <tt class="docutils literal"><span class="pre">{</span></tt> has the same effect as an assignment</p>
-<blockquote>
-<div><p>my_a = a;</p>
-</div></blockquote>
+<p>The expression <tt class="docutils literal"><span class="pre">my_a(a)</span></tt> located after the colon : and before the curly bracket <tt class="docutils literal"><span class="pre">{</span></tt> has the same effect as an assignment</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">my_a</span> <span class="o">=</span> <span class="n">a</span><span class="p">;</span>
+</pre></div>
+</div>
 <p>would if it occurred <em>between</em> the curly brackets. Colon initialization is optional for the state variables <tt class="docutils literal"><span class="pre">my_a</span></tt> and <tt class="docutils literal"><span class="pre">my_h</span></tt>, but it is required for the state variable <tt class="docutils literal"><span class="pre">my_int</span></tt>, because that state variable was defined using a reference type.</p>
-</div></blockquote>
-</li>
-</ol>
-</td>
-</tr>
-</tbody>
-</table>
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
 <p class="last">Can you detect any problems in this code?</p>
 </div>
-<ol class="arabic simple" start="2">
-<li>For this lab, we will run this TBB program on the MTL.</li>
-</ol>
-<ul>
-<li><p class="first">First, if necessary, copy the program file you created to a local machine for connecting to MTL, e.g., your laptop.</p>
-</li>
-<li><p class="first">If your code is on a lab machine, use the following command from the terminal on your local machine (where “username” is your username, “labmachinename” is the name of the machine on which you are working, and “file_location” is the location of <tt class="docutils literal"><span class="pre">trap-tbb.cpp</span></tt> within your directory):</p>
-<div class="highlight-python"><pre>laptop% scp username@labmachinename:file_location/trap-tbb.cpp .</pre>
 </div>
-<p>(Don&#8217;t forget the final dot!)</p>
+<div class="section" id="execute-this-code">
+<h3>Execute this code<a class="headerlink" href="#execute-this-code" title="Permalink to this headline">¶</a></h3>
+<p>For this lab, we will run this TBB program on the MTL.</p>
+<ul>
+<li><p class="first">First, if necessary, copy the program file you created to a local machine for connecting to MTL, e.g., your laptop. You will need to use a ‘terminal’ on Macs or ‘Putty’ on PCs.  If you are off campus, you will need to ssh into a machine on your campus before then logging into the MTL machine at Intel’s headquarters in Oregon.</p>
 </li>
-<li><p class="first">Now connect to the MTL&#8217;s network using the Cisco VPN client software on that local machine.  Login to the MTL computer, as follows:</p>
-<div class="highlight-python"><pre>laptop% ssh accountname@36.81.203.1</pre>
+<li><p class="first">You can login to the MTL computer, as follows</p>
+<div class="highlight-python"><pre>laptop% ssh accountname@192.55.51.81</pre>
 </div>
 <p>Use one of the student account usernames provided to you, together with the password distributed to the class.</p>
 </li>
-<li><p class="first">Create a subdirectory for yourself in the home directory for that student account name:</p>
-<div class="highlight-python"><pre>36.81.203.1% mkdir username</pre>
+<li><p class="first">Next, copy your program from your laptop or local linux machine to the MTL machine. One way to do this is to use another window (to keep for copying your code), then enter the following command from the directory where your code is located:</p>
+<div class="highlight-python"><pre>scp trap-tbb.cpp accountname@192.55.51.81:</pre>
 </div>
-<p>Here, <em>username</em> can be your username.</p>
-</li>
-<li><p class="first">Use <tt class="docutils literal"><span class="pre">scp</span></tt> to copy your file to your subdirectory in the MTL system:</p>
-<div class="highlight-python"><pre>laptop% scp trap-omp.C accountname@36.81.203.1:username</pre>
-</div>
-<p>After making this copy, login into the MTL machine <tt class="docutils literal"><span class="pre">36.81.203.1</span></tt> again.</p>
 </li>
 <li><p class="first">On the remote MTL system, execute the following command, which sets up environment variables for compiling with TBB:</p>
-<div class="highlight-python"><pre>36.81.203.1% source/opt/intel/Compiler/11.1/056/tbb/bin/tbbvars.sh intel64</pre>
+<div class="highlight-python"><pre>source/opt/intel/Compiler/11.1/056/tbb/bin/tbbvars.sh intel64</pre>
 </div>
 <p>The <tt class="docutils literal"><span class="pre">intel64</span></tt> command-line argument prepares for 64-bit compilation.</p>
 </li>
+<li><p class="first">After making this copy, login into the MTL machine 192.55.51.81 in another window.</p>
+</li>
 <li><p class="first">To compile your program that was copied in a prior step, issue this command:</p>
-<div class="highlight-python"><pre>36.81.203.1% g++ -o trap-tbb trap-tbb.cpp -ltbb_debug</pre>
+<div class="highlight-python"><pre>192.55.51.81% g++ -o trap-tbb trap-tbb.cpp -ltbb_debug</pre>
 </div>
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
@@ -215,15 +195,16 @@
 </div>
 </li>
 <li><p class="first">Now run your program with the following command:</p>
-<div class="highlight-python"><pre>36.81.203.1% ./trap-tbb</pre>
+<div class="highlight-python"><pre>192.55.51.81% ./trap-tbb</pre>
 </div>
 <p>The result is significantly less than 2! Can you think of an explanation for the answer being so far off?</p>
 <p>Also run several time tests of your program</p>
-<div class="highlight-python"><pre>36.81.203.1% time ./trap-tbb</pre>
+<div class="highlight-python"><pre>192.55.51.81% time ./trap-tbb</pre>
 </div>
 <p>What do you observe in these time tests? How do the times compare to timed runs of <tt class="docutils literal"><span class="pre">trap-omp</span></tt> for various thread sizes?</p>
 </li>
 </ul>
+</div>
 </div>
 </div>
 
@@ -240,7 +221,12 @@
   <ul>
 <li><a class="reference internal" href="#">Intel&#8217;s Threading Building Blocks (TBB)</a><ul>
 <li><a class="reference internal" href="#introduction">Introduction</a></li>
-<li><a class="reference internal" href="#for-you-to-do">For You To Do</a></li>
+<li><a class="reference internal" href="#for-you-to-do">For You To Do</a><ul>
+<li><a class="reference internal" href="#create-the-code">Create the code</a></li>
+<li><a class="reference internal" href="#study-this-code-carefully">Study this code carefully</a></li>
+<li><a class="reference internal" href="#execute-this-code">Execute this code</a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
