@@ -2,11 +2,17 @@
 Intel's Threading Building Blocks (TBB)
 ***************************************
 
+Introduction
+-------------
+
 OpenMP works well for adding parallelism to loops in working sequential code, and it's available for C, C++, and Fortran languages on many platforms (including Linux, Windows, and Macintosh OS X). Older versions of OpenMP did not readily support non-loop parallelism or programming with concurrent data structures, but OpenMP version 3.0 (released May 2008) provides a task feature for programming such computations. 
 
 Intel's `Threading Building Blocks (TBB)`_ provides an object-oriented approach to implementing parallel algorithms, for the C++ language (and any of the three platforms). Adding parallelism to existing code in TBB is somewhat more involved than in OpenMP, but is considerably less complicated than programming in a native threads package for a particular operating system. The forthcoming new standard for the C++ language is likely to include parallelism similar to TBB.
 
 .. _`Threading Building Blocks (TBB)`: http://threadingbuildingblocks.org/
+
+For You To Do
+-------------
 
 1. Enter the following TBB program into a file ``trap-tbb.cpp``. Or you can download the file :download:`trap-tbb.cpp <trap-tbb.cpp>`  
 
