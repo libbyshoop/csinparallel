@@ -4,7 +4,7 @@ Context of Map-Reduce Computing
 
 * The use of LISP's map and reduce functions to solve computational problems probably dates from the 1960s -- very early in the history of programming languages
 
-* In 2004, Google published their adaptation of the map-reduce strategy for data-intensive scalable computing (DISC) on large clusters. Their implementation, called **MapReduce**, incorporates features automatically to split up enormous (e.g., multiple *peta*bytes) data sets, schedule the mapper and reducer processes, arrange for those processes always to operate on local data for performance efficiency, and recover from faults such as computers or racks crashing.
+* In 2004, Google published their adaptation of the map-reduce strategy for data-intensive scalable computing (DISC) on large clusters. Their implementation, called **MapReduce**, incorporates features automatically to split up enormous (e.g., multiple *petabytes*) data sets, schedule the mapper and reducer processes, arrange for those processes always to operate on local data for performance efficiency, and recover from faults such as computers or racks crashing.
 
 * MapReduce, together with the page rank algorithm, gave Google the competitive combination it needed to become the most popular search engine (approximately 2/3 of the market at present). Google proceeded to apply map-reduce techniques to everything from ad placement to maps and document services.
 
