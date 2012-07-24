@@ -12,14 +12,14 @@ In this activity, we are going to compute vector-matrix multiplication in hybrid
 
 :Comments on CUDA program:
 	
-	* First let's look at the kernel function in the CUDA program. We use one thread to compute multiplications of a row of the matrix with the vector. We also use linear array instead of two dimensional array. ::
+	* First let's look at the kernel function in the CUDA program. We use one thread to compute multiplications of a row of the matrix with the vector, and this produces a new element of the result vector. We also use our two-dimensional array, the matrix, as a one-dimensional array to ease the problem. We are using two-dimensional block and thread. We use *threadIdx.y* because we want each thread to work on the multiplications of each row of the matrix with the vector. ::
 
 		/* kernel function for computation on the GPU */
 		__global__ void kernel(int *A, int *x, int *y, int width, int block_size) {
-			int i;
-			int tid = blockIdx.y * blockDim.y + threadIdx.y;
+
+			int tid = blockIdx.y * block_size + threadIdx.y;
 			int entry = 0;
-			for (i = 0; i < width; i++) {
+			for (int i = 0; i < width; i++) {
 				entry += A[tid * width + i] * x[i];
 			}
 			y[tid] = entry;
@@ -67,7 +67,7 @@ In this activity, we are going to compute vector-matrix multiplication in hybrid
 
 :Comments on MPI program:
 	
-	* Now we can look at our MPI program with an addition of a CUDA function. First we need to initialize the MPI execution environment, define the size of MPI_COMM_WORLD, and give a unique rank to each process. Then we ask the master to initialize the input matrix and vector, divide the matrix by row, and send their pieces and the entire vector to each worker. Your task is to complete code at **TO DO**::
+	* Now we can look at our MPI program with an addition of a CUDA function. First we need to initialize the MPI execution environment, define the size of MPI_COMM_WORLD, and give a unique rank to each process. Then we ask the master to initialize the input matrix and vector, divide the matrix by row, and send their pieces and the entire vector to each worker. Your task is to complete code at **TO DO**. ::
 
 		/* Initialize MPI execution environment */
 		MPI_Init(&argc, &argv);
@@ -122,7 +122,7 @@ In this activity, we are going to compute vector-matrix multiplication in hybrid
 
 			/* use CUDA function to compute the the vector-matrix multiplication for each worker */
 			// TO DO
-			// call CUDA function 
+			// call a function from CUDA program
 			// end TO DO
 
 			/* Each worker sends the result back to the master */
@@ -164,21 +164,26 @@ Download the entire source code:
 Activity 3: Matrix Multiplication
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-In this activity, we are going to compute matrix-matrix multiplication in hybrid environment MPI and CUDA. The basic idea is we want to split the rows of the first matrix, and ask the master to send some rows of the first matrix and the entire second matrix to each worker. We then ask each worker to receive messages sent from the master, and each worker will call the CUDA function to do computation on their own GPU. On the GPU each thread will take care of a multiplication between an element of the first matrix, and an element of the second matrix. 
+In this activity, we are going to compute matrix-matrix multiplication in hybrid environment MPI and CUDA. The basic idea is we want to split the rows of the first matrix, and ask the master to send some rows of the first matrix and the entire second matrix to each worker. We then ask each worker to receive messages sent from the master, and each worker will call the CUDA function to do computation on their own GPU. 
 
-.. note:: This is not the most efficient method of doing matrix-matrix multiplication by using CUDA and MPI because when the second matrix gets too large, a progammer may not be able to send it to each worker. Furthermore, a programmer can improve the kernel function to be more effective by using the shared memory archeticture in the GPU. 
+.. note:: This is not the most efficient method of computing matrix-matrix multiplication by using hybrid environment CUDA and MPI because when the second matrix gets too large, a progammer may not be able to send it to each worker. Furthermore, a programmer can improve the kernel function to be more effecient by using the shared memory archeticture in the GPU. 
 
 :Comments on CUDA Program:
 
-	* First let's look at the kernel function in the CUDA program. ::
+	* First let's look at the kernel function in the CUDA program. In this kernel function, we are using two different threads. One thread is to calculate the row index of the first matrix, and the other is to calculate the column index the second matrix. To calculate the row index, we use *threadIdx.y*, and to calculate the column index, we use *threadIdx.x*. Then we need to iterate over the width of the matrix, and multiply each corresponding elements of the two input matrices, and sum all of them to produce a new element of the result matrix. Your task to complete the code at **TO DO**. ::
 
 		/* kernel function */
 		__global__ void MatrixKernel(float *dM, float *dN, float *dP, int width) {
 
 			/* calculate the row index of the dP element and M */
-			int row = blockIdx.y * blockDim.y + threadIdx.y;
+			// TO DO
+			// int row = .........
+			// end TO DO
+
 			/* calculate the column index of dP element and N */
-			int col = blockIdx.x * blockDim.x + threadIdx.x;
+			// TO DO
+			// int col = .........
+			// end TO DO
 
 			float pvalue = 0.0f;
 			for (int k = 0; k < width; k++) {
@@ -188,8 +193,6 @@ In this activity, we are going to compute matrix-matrix multiplication in hybrid
 			}
 			dP[row * width + col] = pvalue;
 		}
-
-	* We use 2-dimensional blocks and threads for matrices. Each thread calculate an element of the result matrix. 
 
 	* Then we need to have a function that calls the kernel function on the host. This function is to allocate memory for the matrices on the device, copy matrices from host to device, compute the matrix multiplication, and copy the result matrix from device to the host. This function will be called in the MPI program. Your task is to call kernel function at **TO DO**. ::
 
@@ -257,7 +260,7 @@ In this activity, we are going to compute matrix-matrix multiplication in hybrid
 			}
 		}
 
-	* We need to ask all workers to receive the messages sent from the master. Then we want each worker to call the CUDA function to compute their matrix multiplication. After having computed their multiplications, each worker needs to send their result back to the master. Please complete the following code at **TO DO**.::
+	* We need to ask all workers to receive the messages sent from the master. Then we want each worker to call the CUDA function to compute their matrix multiplication. After having computed their multiplications, each worker needs to send their result back to the master. Please complete the following code at **TO DO**. ::
 
 		/**************************** worker task ************************************/
 		if (taskid > MASTER) {

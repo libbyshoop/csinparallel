@@ -64,13 +64,13 @@
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name" colspan="2">Comments on CUDA program:</th></tr>
 <tr class="field-odd field"><td>&nbsp;</td><td class="field-body"><ul class="first">
-<li><p class="first">First let&#8217;s look at the kernel function in the CUDA program. We use one thread to compute multiplications of a row of the matrix with the vector. We also use linear array instead of two dimensional array.</p>
+<li><p class="first">First let&#8217;s look at the kernel function in the CUDA program. We use one thread to compute multiplications of a row of the matrix with the vector, and this produces a new element of the result vector. We also use our two-dimensional array, the matrix, as a one-dimensional array to ease the problem. We are using two-dimensional block and thread. We use <em>threadIdx.y</em> because we want each thread to work on the multiplications of each row of the matrix with the vector.</p>
 <div class="highlight-c"><div class="highlight"><pre><span class="cm">/* kernel function for computation on the GPU */</span>
 <span class="n">__global__</span> <span class="kt">void</span> <span class="nf">kernel</span><span class="p">(</span><span class="kt">int</span> <span class="o">*</span><span class="n">A</span><span class="p">,</span> <span class="kt">int</span> <span class="o">*</span><span class="n">x</span><span class="p">,</span> <span class="kt">int</span> <span class="o">*</span><span class="n">y</span><span class="p">,</span> <span class="kt">int</span> <span class="n">width</span><span class="p">,</span> <span class="kt">int</span> <span class="n">block_size</span><span class="p">)</span> <span class="p">{</span>
-        <span class="kt">int</span> <span class="n">i</span><span class="p">;</span>
-        <span class="kt">int</span> <span class="n">tid</span> <span class="o">=</span> <span class="n">blockIdx</span><span class="p">.</span><span class="n">y</span> <span class="o">*</span> <span class="n">blockDim</span><span class="p">.</span><span class="n">y</span> <span class="o">+</span> <span class="n">threadIdx</span><span class="p">.</span><span class="n">y</span><span class="p">;</span>
+
+        <span class="kt">int</span> <span class="n">tid</span> <span class="o">=</span> <span class="n">blockIdx</span><span class="p">.</span><span class="n">y</span> <span class="o">*</span> <span class="n">block_size</span> <span class="o">+</span> <span class="n">threadIdx</span><span class="p">.</span><span class="n">y</span><span class="p">;</span>
         <span class="kt">int</span> <span class="n">entry</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
-        <span class="k">for</span> <span class="p">(</span><span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">width</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">width</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
                 <span class="n">entry</span> <span class="o">+=</span> <span class="n">A</span><span class="p">[</span><span class="n">tid</span> <span class="o">*</span> <span class="n">width</span> <span class="o">+</span> <span class="n">i</span><span class="p">]</span> <span class="o">*</span> <span class="n">x</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
         <span class="p">}</span>
         <span class="n">y</span><span class="p">[</span><span class="n">tid</span><span class="p">]</span> <span class="o">=</span> <span class="n">entry</span><span class="p">;</span>
@@ -178,7 +178,7 @@
 
         <span class="cm">/* use CUDA function to compute the the vector-matrix multiplication for each worker */</span>
         <span class="c1">// TO DO</span>
-        <span class="c1">// call CUDA function</span>
+        <span class="c1">// call a function from CUDA program</span>
         <span class="c1">// end TO DO</span>
 
         <span class="cm">/* Each worker sends the result back to the master */</span>
@@ -227,10 +227,10 @@
 </div>
 <div class="section" id="activity-3-matrix-multiplication">
 <h2>Activity 3: Matrix Multiplication<a class="headerlink" href="#activity-3-matrix-multiplication" title="Permalink to this headline">¶</a></h2>
-<p>In this activity, we are going to compute matrix-matrix multiplication in hybrid environment MPI and CUDA. The basic idea is we want to split the rows of the first matrix, and ask the master to send some rows of the first matrix and the entire second matrix to each worker. We then ask each worker to receive messages sent from the master, and each worker will call the CUDA function to do computation on their own GPU. On the GPU each thread will take care of a multiplication between an element of the first matrix, and an element of the second matrix.</p>
+<p>In this activity, we are going to compute matrix-matrix multiplication in hybrid environment MPI and CUDA. The basic idea is we want to split the rows of the first matrix, and ask the master to send some rows of the first matrix and the entire second matrix to each worker. We then ask each worker to receive messages sent from the master, and each worker will call the CUDA function to do computation on their own GPU.</p>
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
-<p class="last">This is not the most efficient method of doing matrix-matrix multiplication by using CUDA and MPI because when the second matrix gets too large, a progammer may not be able to send it to each worker. Furthermore, a programmer can improve the kernel function to be more effective by using the shared memory archeticture in the GPU.</p>
+<p class="last">This is not the most efficient method of computing matrix-matrix multiplication by using hybrid environment CUDA and MPI because when the second matrix gets too large, a progammer may not be able to send it to each worker. Furthermore, a programmer can improve the kernel function to be more effecient by using the shared memory archeticture in the GPU.</p>
 </div>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -238,14 +238,19 @@
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name" colspan="2">Comments on CUDA Program:</th></tr>
 <tr class="field-odd field"><td>&nbsp;</td><td class="field-body"><ul class="first">
-<li><p class="first">First let&#8217;s look at the kernel function in the CUDA program.</p>
+<li><p class="first">First let&#8217;s look at the kernel function in the CUDA program. In this kernel function, we are using two different threads. One thread is to calculate the row index of the first matrix, and the other is to calculate the column index the second matrix. To calculate the row index, we use <em>threadIdx.y</em>, and to calculate the column index, we use <em>threadIdx.x</em>. Then we need to iterate over the width of the matrix, and multiply each corresponding elements of the two input matrices, and sum all of them to produce a new element of the result matrix. Your task to complete the code at <strong>TO DO</strong>.</p>
 <div class="highlight-c"><div class="highlight"><pre><span class="cm">/* kernel function */</span>
 <span class="n">__global__</span> <span class="kt">void</span> <span class="nf">MatrixKernel</span><span class="p">(</span><span class="kt">float</span> <span class="o">*</span><span class="n">dM</span><span class="p">,</span> <span class="kt">float</span> <span class="o">*</span><span class="n">dN</span><span class="p">,</span> <span class="kt">float</span> <span class="o">*</span><span class="n">dP</span><span class="p">,</span> <span class="kt">int</span> <span class="n">width</span><span class="p">)</span> <span class="p">{</span>
 
         <span class="cm">/* calculate the row index of the dP element and M */</span>
-        <span class="kt">int</span> <span class="n">row</span> <span class="o">=</span> <span class="n">blockIdx</span><span class="p">.</span><span class="n">y</span> <span class="o">*</span> <span class="n">blockDim</span><span class="p">.</span><span class="n">y</span> <span class="o">+</span> <span class="n">threadIdx</span><span class="p">.</span><span class="n">y</span><span class="p">;</span>
+        <span class="c1">// TO DO</span>
+        <span class="c1">// int row = .........</span>
+        <span class="c1">// end TO DO</span>
+
         <span class="cm">/* calculate the column index of dP element and N */</span>
-        <span class="kt">int</span> <span class="n">col</span> <span class="o">=</span> <span class="n">blockIdx</span><span class="p">.</span><span class="n">x</span> <span class="o">*</span> <span class="n">blockDim</span><span class="p">.</span><span class="n">x</span> <span class="o">+</span> <span class="n">threadIdx</span><span class="p">.</span><span class="n">x</span><span class="p">;</span>
+        <span class="c1">// TO DO</span>
+        <span class="c1">// int col = .........</span>
+        <span class="c1">// end TO DO</span>
 
         <span class="kt">float</span> <span class="n">pvalue</span> <span class="o">=</span> <span class="mf">0.0f</span><span class="p">;</span>
         <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">k</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">k</span> <span class="o">&lt;</span> <span class="n">width</span><span class="p">;</span> <span class="n">k</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
@@ -257,8 +262,6 @@
 <span class="p">}</span>
 </pre></div>
 </div>
-</li>
-<li><p class="first">We use 2-dimensional blocks and threads for matrices. Each thread calculate an element of the result matrix.</p>
 </li>
 <li><p class="first">Then we need to have a function that calls the kernel function on the host. This function is to allocate memory for the matrices on the device, copy matrices from host to device, compute the matrix multiplication, and copy the result matrix from device to the host. This function will be called in the MPI program. Your task is to call kernel function at <strong>TO DO</strong>.</p>
 <div class="highlight-c"><div class="highlight"><pre><span class="cm">/* function that you will call in mpi code */</span>
@@ -331,7 +334,7 @@
 </pre></div>
 </div>
 </li>
-<li><p class="first">We need to ask all workers to receive the messages sent from the master. Then we want each worker to call the CUDA function to compute their matrix multiplication. After having computed their multiplications, each worker needs to send their result back to the master. Please complete the following code at <strong>TO DO</strong>.:</p>
+<li><p class="first">We need to ask all workers to receive the messages sent from the master. Then we want each worker to call the CUDA function to compute their matrix multiplication. After having computed their multiplications, each worker needs to send their result back to the master. Please complete the following code at <strong>TO DO</strong>.</p>
 <div class="highlight-c"><div class="highlight"><pre>    <span class="cm">/**************************** worker task ************************************/</span>
     <span class="k">if</span> <span class="p">(</span><span class="n">taskid</span> <span class="o">&gt;</span> <span class="n">MASTER</span><span class="p">)</span> <span class="p">{</span>
 

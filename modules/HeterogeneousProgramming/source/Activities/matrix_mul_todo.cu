@@ -4,8 +4,15 @@
 /* kernel function */
 __global__ void MatrixKernel(float *dM, float *dN, float *dP, int width) {
 
-    int row = blockIdx.y * blockDim.y + threadIdx.y;
-    int col = blockIdx.x * blockDim.x + threadIdx.x;
+    /* calculate the row index of the dP element and M */
+    // TO DO
+    // int row = .........
+    // end TO DO
+
+    /* calculate the column index of dP element and N */
+    // TO DO
+    // int col = .........
+    // end TO DO
 
     float pvalue = 0.0f;
     for (int k = 0; k < width; k++) {

@@ -63,10 +63,11 @@ int main(int argc, char *argv[] ) {
         /* Master sends smaller task to each worker */
         for(dest = 1; dest <= numworkers; dest++) {
             rows = (dest <= extra) ? averow + 1 : averow;
-            MPI_Send(&offset, 1, MPI_INT, dest, mtype, MPI_COMM_WORLD);
-            MPI_Send(&rows, 1, MPI_INT, dest, mtype, MPI_COMM_WORLD);
-            MPI_Send(&matrix[offset][0], rows * COLS, MPI_INT, dest, mtype, MPI_COMM_WORLD);
-            MPI_Send(&vector, ROWS, MPI_INT, dest, mtype, MPI_COMM_WORLD);
+
+            // TO DO
+            // send each piece of matrix and entire vector to each worker
+            // end TO DO
+            
             printf("Master sent elements %d to %d to rank %d\n", offset, offset + rows, dest);
             offset += rows;
         }
@@ -91,14 +92,17 @@ int main(int argc, char *argv[] ) {
     if (rank > 0) {
         mtype = FROM_MASTER;
         /* Each worker receives messages sent from the master*/
-        MPI_Recv(&offset, 1, MPI_INT, MASTER, mtype, MPI_COMM_WORLD, &status);
-        MPI_Recv(&rows, 1, MPI_INT, MASTER, mtype, MPI_COMM_WORLD, &status);
-        MPI_Recv(&matrix, rows*COLS, MPI_INT, MASTER, mtype, MPI_COMM_WORLD, &status);
-        MPI_Recv(&vector, ROWS, MPI_INT, MASTER, mtype, MPI_COMM_WORLD, &status);
+        
+        // TO DO
+        // receive each piece of the matrix and vector sent from master
+        // end TO DO
+
         printf("Worker rank %d, %s receives the messages\n", rank, name);
 
         /* use CUDA function to compute the the vector-matrix multiplication for each worker */
-        run_kernel(*matrix, vector, result, ROWS, BLOCK_SIZE);
+        // TO DO
+        // call a function from CUDA program
+        // end TO DO
 
         /* Each worker sends the result back to the master */
         mtype = FROM_WORKER;

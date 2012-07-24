@@ -3,10 +3,10 @@
 
 /* kernel function for computation on the GPU */
 __global__ void kernel(int *A, int *x, int *y, int width, int block_size) {
-    int i;
-    int tid = blockIdx.y * blockDim.y + threadIdx.y;
+
+    int tid = blockIdx.y * block_size + threadIdx.y;
     int entry = 0;
-    for (i = 0; i < width; i++) {
+    for (int i = 0; i < width; i++) {
         entry += A[tid * width + i] * x[i];
     }
     y[tid] = entry;
@@ -36,8 +36,10 @@ extern "C" void run_kernel(int *A, int *x, int *y, int width, int block_size) {
     dim3 dimBlock(block_size, block_size);
 
     /* Running the kernel function */
-    kernel<<<dimGrid, dimBlock>>>(dev_A, dev_x, dev_y, width, block_size);
-
+    // TO DO
+    // call the kernel function
+    // end TO DO
+    
     /* Copy the output vector from GPU to CPU */
     cudaMemcpy(y, dev_y, vector_size, cudaMemcpyDeviceToHost);
 
