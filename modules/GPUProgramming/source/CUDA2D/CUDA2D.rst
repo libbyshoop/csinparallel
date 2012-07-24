@@ -18,7 +18,7 @@ This copy of code is a derivative based on the original code and designed for ed
 An Example of Matrix Multiplication
 ###################################
 
-Starting from next chapter, we will learn more about GPU computing on multi-dimensional problems and really experience the advantage of GPU computing over CPU computing. Before we proceed to the next chapter, this chapter will introduce a Matrix Multiplication program that is written in standard C and use only CPU for the computation. We hope the result we obtain in this chapter can serve as a baseline for following chapters and provide a clearer view on how fast GPU computing can be.
+In this chapter, we will learn more about GPU computing on multi-dimensional problems and really experience the advantage of GPU computing over CPU computing. Before we proceed to the next section, this section will introduce a Matrix Multiplication program that is written in standard C and use only CPU for the computation. We hope the result we obtain in this chapter can serve as a baseline for following sections and provide a clearer view on how fast GPU computing can be.
 
 CPU Matrix Multiplication Program source file: 
 :download:`MM-CPU.c <MM-CPU.c>`
@@ -39,13 +39,12 @@ We conducted 5 tests and the results are below.
 Global Memory Version
 #####################
 
-Starting from this example, we will look at the how to solve problem in two-dimensional domain using two-dimensional grid and block. As we know, threads can be organized into multi-dimensional blocks and blocks can also be organized into multi-dimensional grid. This feature in CUDA architecture enable us to create two-dimensional or even three-dimensional thread hierarchy and solve two or three-dimensional problems more easily and more efficient. 
+Starting from this example, we will look at the how to solve problem in two-dimensional domain using two-dimensional grid and block. As we know, threads can be organized into multi-dimensional block and blocks can also be organized into multi-dimensional grid. This feature in CUDA architecture enable us to create two-dimensional or even three-dimensional thread hierarchy so that solving two or three-dimensional problems becomes easier and more efficient. 
 
-In this example, we will do the Square Matrix Multiplication. Two input matrices of size Width x Width are M and N and the output matrix is P with the same size. If you have learned linear algebra before, you will know that the output of two square matrices multiplied together is a square matrix of the same size. For example, to calculate entry (A,B) in the output matrix, we need to use row A in one input matrix and column B in another input matrix. We first take the left most element in row A and multiply it by top element in column B. Later, we take the second left element in row A and multiply it by second top element in column B. We do this for all the elements in row A and column B, and then we get the sum of products. The results will be the value at entry (A,B). As you can see, this kind of operation is highly paralleled, make it perfect for us to use CUDA. We do this by assigning each entry in output matrix a thread of its own. This thread will fetch the data and do all the calculations. It will later on write back the result to the out put matrix.
+In this example, we will do the Square Matrix Multiplication. Two input matrices of size *Width x Width* are M and N. The output matrix is P with the same size. If you have learned linear algebra before, you will know that the output of two square matrices multiplied together is a square matrix of the same size. For example, to calculate entry (A,B) in the output matrix, we need to use row A in one input matrix and column B in another input matrix. We first take the left most element in row A and multiply it by top element in column B. Later, we take the second left element in row A and multiply it by second top element in column B. We do this for all the elements in row A and column B, and then we get the sum of products. The result will be the value at entry (A,B) in the output matrix. As you can see, this kind of operation is highly paralleled, make it perfect for us to use CUDA. We do this by assigning each entry in output matrix a thread of its own. This thread will fetch the data and do all the calculations. It will later on write back the result to the out put matrix.
 
 Matrix Multiplication with Global Memory source file: 
 :download:`MM-GPU-GM.cu <MM-GPU-GM.cu>`
-
 
 The Device Code
 ***************
@@ -60,7 +59,7 @@ This is the complete device code.
     :language: c
     :lines: 38-41
 
-The 4 lines of code will assign index to the thread so that they can match up with entries in output matrix. As you may notice, we introduced a new CUDA built-in variable **blockDim** into this code. **blockDim** has the variable type of dim3, which is an 3-component integer vector type that is used to specify dimensions. This variable contains the dimensions of the block, and we can access its component by calling blockDim.x, blockDim.y, blockdIM.z.
+This 4 lines of code will assign index to the thread so that they can match up with entries in output matrix. As you may notice, we introduced a new CUDA built-in variable **blockDim** into this code. **blockDim** has the variable type of dim3, which is an 3-component integer vector type that is used to specify dimensions. This variable contains the dimensions of the block, and we can access its component by calling blockDim.x, blockDim.y, blockdIM.z.
 
 Each thread in one specific block is identified by threadIdx.x and threadIdx.y. Each block is one specific grid is identified by blockIdx.x and blockIdx.y. Therefore, if we have threadIdx.x, threadIdx.y, blockIdx.x and blockIdx.y, we can locate one specific thread. 
 
@@ -71,7 +70,7 @@ The Host Code
     :language: c
     :lines: 74-76
 
-The 3 lines of code above is declaring and initializing dim3 variables which give the grid dimensions and block dimensions. In each of the initializations, we only passed two parameters as components. The CUDA runtime will initialize any component left unspecified to 1. So technically, we are initializing dimBlock as (32, 32, 1) and dimGrid as (Width/32, Width/32, 1).
+This 3 lines of code above is declaring and initializing dim3 variables which give the grid dimensions and block dimensions. In each of the initializations, we only passed two parameters as components. The CUDA runtime will initialize any component left unspecified to 1. So technically, we are initializing dimBlock as (32, 32, 1) and dimGrid as (Width/32, Width/32, 1).
 
 The rest of the host code is similar to examples we have seen before. Here is the complete version of the host code.
 
@@ -98,7 +97,7 @@ Compared the CPU program, our GPU program is **772** times faster.
 CUDA Memory Types
 #################
 
-The reason CUDA architecture has many memory types is increasing the memory accessing speed so that data transfer speed can match data processing speed.The following example will show you why matching these two speeds is so important to GPU computation. 
+The reason CUDA architecture has many memory types is to increase the memory accessing speed so that data transfer speed can match data processing speed. The following example will show you why matching these two speeds is so important to GPU computation. 
 
 One of the most important standards of a processor's computation ability is its flops_ computation. We assume that in order to perform one floating point operation, the runtime need to transfer one single-precision floating-point from global memory datum to the computational kernel. With this in mind, we can proceed to our example. 
 

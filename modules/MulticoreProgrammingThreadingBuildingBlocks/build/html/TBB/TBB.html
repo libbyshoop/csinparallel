@@ -167,34 +167,27 @@
 <div class="section" id="execute-this-code">
 <h3>Execute this code<a class="headerlink" href="#execute-this-code" title="Permalink to this headline">¶</a></h3>
 <p>For this lab, we will run this TBB program on the MTL.</p>
-<ul>
-<li><p class="first">First, if necessary, copy the program file you created to a local machine for connecting to MTL, e.g., your laptop. You will need to use a ‘terminal’ on Macs or ‘Putty’ on PCs.  If you are off campus, you will need to ssh into a machine on your campus before then logging into the MTL machine at Intel’s headquarters in Oregon.</p>
-</li>
-<li><p class="first">You can login to the MTL computer, as follows</p>
+<p>First, if necessary, copy the program file you created to a local machine for connecting to MTL, e.g., your laptop. You will need to use a ‘terminal’ on Macs or ‘Putty’ on PCs.  If you are off campus, you will need to ssh into a machine on your campus before then logging into the MTL machine at Intel’s headquarters in Oregon.</p>
+<p>You can login to the MTL computer, as follows</p>
 <div class="highlight-python"><pre>laptop% ssh accountname@192.55.51.81</pre>
 </div>
 <p>Use one of the student account usernames provided to you, together with the password distributed to the class.</p>
-</li>
-<li><p class="first">Next, copy your program from your laptop or local linux machine to the MTL machine. One way to do this is to use another window (to keep for copying your code), then enter the following command from the directory where your code is located:</p>
+<p>Next, copy your program from your laptop or local linux machine to the MTL machine. One way to do this is to use another window (to keep for copying your code), then enter the following command from the directory where your code is located:</p>
 <div class="highlight-python"><pre>scp trap-tbb.cpp accountname@192.55.51.81:</pre>
 </div>
-</li>
-<li><p class="first">On the remote MTL system, execute the following command, which sets up environment variables for compiling with TBB:</p>
+<p>On the remote MTL system, execute the following command, which sets up environment variables for compiling with TBB:</p>
 <div class="highlight-python"><pre>source/opt/intel/Compiler/11.1/056/tbb/bin/tbbvars.sh intel64</pre>
 </div>
 <p>The <tt class="docutils literal"><span class="pre">intel64</span></tt> command-line argument prepares for 64-bit compilation.</p>
-</li>
-<li><p class="first">After making this copy, login into the MTL machine 192.55.51.81 in another window.</p>
-</li>
-<li><p class="first">To compile your program that was copied in a prior step, issue this command:</p>
+<p>After making this copy, login into the MTL machine 192.55.51.81 in another window.</p>
+<p>To compile your program that was copied in a prior step, issue this command:</p>
 <div class="highlight-python"><pre>192.55.51.81% g++ -o trap-tbb trap-tbb.cpp -ltbb_debug</pre>
 </div>
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
 <p class="last">You can use <tt class="docutils literal"><span class="pre">-ltbb</span></tt> instead of <tt class="docutils literal"><span class="pre">-ltbb_debug</span></tt> for a production version of the library instead of one with debugging hooks.</p>
 </div>
-</li>
-<li><p class="first">Now run your program with the following command:</p>
+<p>Now run your program with the following command:</p>
 <div class="highlight-python"><pre>192.55.51.81% ./trap-tbb</pre>
 </div>
 <p>The result is significantly less than 2! Can you think of an explanation for the answer being so far off?</p>
@@ -202,8 +195,6 @@
 <div class="highlight-python"><pre>192.55.51.81% time ./trap-tbb</pre>
 </div>
 <p>What do you observe in these time tests? How do the times compare to timed runs of <tt class="docutils literal"><span class="pre">trap-omp</span></tt> for various thread sizes?</p>
-</li>
-</ul>
 </div>
 </div>
 </div>

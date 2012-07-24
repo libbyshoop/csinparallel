@@ -27,8 +27,3 @@
 \BOOKMARK [1][-]{section.5.4}{Ray Tracing Without Constant Memory}{chapter.5}
 \BOOKMARK [1][-]{section.5.5}{Constant Memory}{chapter.5}
 \BOOKMARK [1][-]{section.5.6}{Ray Tracing With Constant Memory}{chapter.5}
-\BOOKMARK [0][-]{chapter.6}{Streams}{}
-\BOOKMARK [1][-]{section.6.1}{Acknowledgement}{chapter.6}
-\BOOKMARK [1][-]{section.6.2}{Virtual Memory and Paging}{chapter.6}
-\BOOKMARK [1][-]{section.6.3}{Pageable Host Memory and Page-locked Host Memory}{chapter.6}
-\BOOKMARK [1][-]{section.6.4}{CUDA Streams}{chapter.6}
