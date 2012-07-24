@@ -54,7 +54,7 @@ int main (int argc, char *argv[]) {
         exit(1);
     }
 
-    numworkers = numtasks-1;    /* number of workers */
+    numworkers = numtasks - 1;    /* number of workers */
 
     /**************************** master task ************************************/
     if (taskid == MASTER) {
