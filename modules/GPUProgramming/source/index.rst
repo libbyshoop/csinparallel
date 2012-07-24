@@ -14,7 +14,6 @@ GPU Programming
    ThreadAdvance/ThreadAdvance
    CUDA2D/CUDA2D
    RTACM/RTACM
-   Streams/Streams
   
 .. comment
 	* :ref:`genindex`

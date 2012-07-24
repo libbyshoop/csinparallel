@@ -225,7 +225,7 @@
 <hr class="docutils" />
 <div class="section" id="vector-addition-with-blocks">
 <h2>Vector Addition with Blocks<a class="headerlink" href="#vector-addition-with-blocks" title="Permalink to this headline">¶</a></h2>
-<p>We have learned some basic concepts in CUDA C in our last example. Starting from this example, we will begin to learn how to write CUDA language that will explore the potential of our GPU card how to measure the performance.</p>
+<p>We have learned some basic concepts in CUDA C in our last example. Starting from this example, we will begin to learn how to write CUDA language that will explore the potential of our GPU card.</p>
 <p>Vector Addition with Blocks source file:
 <a class="reference download internal" href="../_downloads/VA-GPU-N1.cu"><tt class="xref download docutils literal"><span class="pre">VA-GPU-N1.cu</span></tt></a></p>
 <div class="section" id="block">
@@ -235,9 +235,12 @@
 </pre></div>
 </div>
 <p>to call for device kernels and we left those two numbers in the triple angle brackets unexplained. Well, the first number tells the kernel how many parallel blocks we would like to use to execute the instruction. For example, if we launch the kernel &lt;&lt;&lt;16,1&gt;&gt;&gt;, we are essentially creating 16 copies of the kernel and running them in parallel. We call each of these parallel invocations a block.</p>
-<p>Blocks are organized into a one-dimensional, two-dimensional, or three-dimensional grid. Why do we need two-dimensional or even three-dimensional grid? why can&#8217;t we just stick with one-dimensional? Well, it turned out that for problems with two or more dimensional domains, such as matrices multiplication or image processing (don&#8217;t forget the reason GPU been exist is to process image faster), it is often convenient and more efficient to use two or more dimensional indexing. Right now, nVidia GPUs that support CUDA structure can assign up to 65536 blocks in each dimension of the grid, that is in total 65536 * 65536 * 65536 blocks in a grid.</p>
-<p>Some of the books may refer grid in CUDA has only one and two-dimensions. This is incorrect because the official CUDA programming guide specifically addressed that grid can be three-dimensional.</p>
-<p>However, as we are doing vector addition, a one-dimensional process, we don&#8217;t need to use two-dimensional grid. However, don&#8217;t get disappointed, we will use higher dimensional grid in later examples.</p>
+<p>Blocks are organized into a one-dimensional, two-dimensional, or three-dimensional grid. Why do we need two-dimensional or even three-dimensional grid? why can&#8217;t we just stick with one-dimensional? Well, it turned out that for problems with two or more dimensional domains, such as matrices multiplication or image processing (don&#8217;t forget the reason GPU been exist is to process image faster), it is often convenient and more efficient to use two or more dimensional indexing. Right now, nVidia GPUs that support CUDA structure can assign up to 65536 blocks in each dimension of the grid, that is in total <img class="math" src="../_images/math/290c92c3b571efd7ab911766288b25a0b25e2368.png" alt="65536 \times 65536 \times 65536"/> blocks in a grid.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p>Some of the books may refer grid in CUDA has top two-dimensions. On the other hand, some books (including the official CUDA Programming Guide provided by NVIDIA) may suggest that grid can be three-dimensional. It turns out that older GPU units are not powerful enough to run grid in three-dimensions. Therefore older books might refer CUDA has only two-dimensional grid. However, as GPUs get more and more powerful, NVIDIA enable newer GPUs to utilize three-dimensional grid.</p>
+<p class="last">To see whether your device support three-dimensional grid or not, please run the following source code and see the Compute Capability entry in the output. If it is 2.x or 3.x, then your device supports three-dimensional grid. If it is 1.x or less, you can only use two-dimensional grid. <a class="reference download internal" href="../_downloads/enum_gpu.cu"><tt class="xref download docutils literal"><span class="pre">download</span> <span class="pre">enum_gpu.cu</span></tt></a></p>
+</div>
 </div>
 <div class="section" id="id1">
 <h3>The Device Code<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h3>
