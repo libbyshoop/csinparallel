@@ -20,4 +20,4 @@ It turns out that we can produce a new parallel programming model that combines 
 
 .. rubric:: References
 
-[1] http://cacuda.googlecode.com/files/CaCUDA.pdf
+.. [1] http://cacuda.googlecode.com/files/CaCUDA.pdf
