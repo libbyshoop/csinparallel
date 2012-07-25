@@ -67,11 +67,13 @@ int main (int argc, char *argv[]) {
         /* Initializing the matrices A and B */
         for (i = 0; i < ROWA; i++) {
             for (j = 0; j < COLA; j++) {
+                // Change here to use random integer
                 a[i][j]= 1;
             }
         }
         for (i = 0; i < COLA; i++) {
             for (j = 0; j < COLB; j++) {
+                // Change here to use random integer
                 b[i][j]= 1;
             }
         }

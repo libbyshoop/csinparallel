@@ -17,8 +17,7 @@ In order to prepare for what you will be working on, you should have a good unde
 
 General Characteristics of Shared Memory Model:
 	
-	"
-	
+"
 	- Shared memory parallel computers vary widely, but generally have in common the ability for all processors to access all memory as global address space.
 	
 	- Multiple processors can operate independently but share the same memory resources.
@@ -35,8 +34,7 @@ General Characteristics of Shared Memory Model:
 
 General Characteristics of Distributed Memory Model:
 
-	"
-
+"	
 	- Distributed memory systems require a communication network to connect inter-processor memory.
 	
 	- Processors have their own local memory. Memory addresses in one processor do not map to another processor, so there is no concept of global address space across all processors.

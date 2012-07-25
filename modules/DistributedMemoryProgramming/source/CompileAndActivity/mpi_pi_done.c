@@ -1,7 +1,8 @@
-/*
+/************************************************************
 * Program: Pi Calculation
 * MPI_Bcast and MPI_Reduce
-*/
+* This PI program was taken from Argonne National Laboratory.
+*************************************************************/
 
 #include "mpi.h"
 #include <math.h>

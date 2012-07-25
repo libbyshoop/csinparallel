@@ -72,26 +72,28 @@
 </ul>
 </div></blockquote>
 <p>General Characteristics of Shared Memory Model:</p>
-<blockquote>
-<div><p>&#8220;</p>
-<ul class="simple">
+<dl class="docutils">
+<dt>&#8220;</dt>
+<dd><ul class="first last simple">
 <li>Shared memory parallel computers vary widely, but generally have in common the ability for all processors to access all memory as global address space.</li>
 <li>Multiple processors can operate independently but share the same memory resources.</li>
 <li>Changes in a memory location effected by one processor are visible to all other processors.&#8221; [1]</li>
 </ul>
-</div></blockquote>
+</dd>
+</dl>
 <img alt="MPI Structure" class="align-center" src="../_images/SharedMemoryUMA.png" style="width: 350px; height: 250px;" />
 <p class="centered">
 <strong>Figure 1: Shared Memory: Uniform Memory Access Obtained from www.computing.llnl.gov [2]</strong></p><p>General Characteristics of Distributed Memory Model:</p>
-<blockquote>
-<div><p>&#8220;</p>
-<ul class="simple">
+<dl class="docutils">
+<dt>&#8220;</dt>
+<dd><ul class="first last simple">
 <li>Distributed memory systems require a communication network to connect inter-processor memory.</li>
 <li>Processors have their own local memory. Memory addresses in one processor do not map to another processor, so there is no concept of global address space across all processors.</li>
 <li>Because each processor has its own local memory, it operates independently. Changes it makes to its local memory have no effect on the memory of other processors. Hence, the concept of cache coherency does not apply.</li>
 <li>When a processor needs access to data in another processor, it is usually the task of the programmer to explicitly define how and when data is communicated. Synchronization between tasks is likewise the programmer&#8217;s responsibility.&#8221; [3]</li>
 </ul>
-</div></blockquote>
+</dd>
+</dl>
 <img alt="MPI Structure" class="align-center" src="../_images/DistributedMemory.png" style="width: 450px; height: 200px;" />
 <p class="centered">
 <strong>Figure 2: Distributed Memory System Obtained from www.computing.llnl.gov [4]</strong></p><p>Some benefits of using clusters are:</p>
