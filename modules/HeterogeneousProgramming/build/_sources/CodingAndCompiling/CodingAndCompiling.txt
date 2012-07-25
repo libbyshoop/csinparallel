@@ -4,7 +4,7 @@ Coding and Compiling a Heterogeneous Program
 Heterogeneous Program: Hello World
 **********************************
 
-Distributed memory computing and GPU computing are two different parallel programming models. In this section, you will learn how to put these two parallel models together, and that will speed up your running time. In order to introduce you to this new concept, we will look at the **Hello World** program using hybrid CUDA and MPI model. In order to combine CUDA and MPI, we need to get their codes to communicate to each other during the compilation. Let's look at the **Hello World** program below.
+Distributed memory computing and GPU computing are two different parallel programming models. In this section, you will learn how to put these two parallel models together, and that will speed up your running time. As always we will look at the **Hello World** program using hybrid CUDA and MPI model. In order to combine CUDA and MPI, we need to get their codes to communicate to each other during the compilation. Let's look at the **Hello World** program below.
 
 .. highlight:: c
 

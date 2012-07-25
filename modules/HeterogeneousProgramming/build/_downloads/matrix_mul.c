@@ -62,9 +62,11 @@ int main (int argc, char *argv[]) {
         /* Initializing both matrices on master node */
         for (i = 0; i < ROW_A; i++)
             for (j = 0; j < COL_A; j++)
+                // change here to use random integer
                 a[i][j]= 1;
         for (i = 0; i < COL_A; i++)
             for (j = 0; j < COL_B; j++)
+                // change here to use random integer
                 b[i][j]= 1;
 
         /* Computing the average row and extra row for each process */

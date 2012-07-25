@@ -14,7 +14,9 @@ It turns out that we can produce a new parallel programming model that combines 
 
 .. centered:: Figure 1: Heterogeneous Programming Model: CUDA and MPI from cacuda.googlecode.com [1]
 
-.. todo:: Please Do Your Reading: `On the Comparative Performance of Parallel Algorithms on Small GPU/CUDA Clusters <http://www.hipc.org/hipc2009/documents/HIPCSS09Papers/1569247597.pdf>`_
+.. topic:: Recommended Reading
+
+	* Please Do Your Reading: `On the Comparative Performance of Parallel Algorithms on Small GPU/CUDA Clusters <http://www.hipc.org/hipc2009/documents/HIPCSS09Papers/1569247597.pdf>`_
 
 .. rubric:: References
 

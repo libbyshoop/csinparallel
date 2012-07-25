@@ -67,7 +67,7 @@ In this activity, we are going to compute vector-matrix multiplication in hybrid
 
 :Comments on MPI program:
 	
-	* Now we can look at our MPI program with an addition of a CUDA function. First we need to initialize the MPI execution environment, define the size of MPI_COMM_WORLD, and give a unique rank to each process. Then we ask the master to initialize the input matrix and vector, divide the matrix by row, and send their pieces and the entire vector to each worker. Your task is to complete code at **TO DO**::
+	* Now we can look at our MPI program with an addition of a CUDA function. First we need to initialize the MPI execution environment, define the size of MPI_COMM_WORLD, and give a unique rank to each process. Then we ask the master to initialize the input matrix and vector, divide the matrix by row, and send their pieces and the entire vector to each worker. Your task is to complete code at **TO DO**. ::
 
 		/* Initialize MPI execution environment */
 		MPI_Init(&argc, &argv);
@@ -80,9 +80,11 @@ In this activity, we are going to compute vector-matrix multiplication in hybrid
 		if (rank == 0) {
 			/* Initialize Matrix and Vector */
 			for(i = 0; i < ROWS; i++) {
-				vector[i] = 10;
+				// change here to use random integer
+				vector[i] = 1;
 				for(j = 0; j < COLS; j++) {
-					matrix[i][j] = 10;
+					// change here to use random integer
+					matrix[i][j] = 1;
 				}
 			}
 
@@ -231,14 +233,16 @@ In this activity, we are going to compute matrix-matrix multiplication in hybrid
 	* Now we can look at the MPI program. This MPI program is a revised version of the Matrix Mutiplication MPI program that was written by Blaise Barney. First we need to initialize the MPI execution environment, define the size of MPI_COMM_WORLD, and give a unique rank to each process. Then we ask the master to initialize the input matrices, divide these matrices, and send their pieces to each worker. ::
 
 		/**************************** master task ************************************/
-	    if (taskid == MASTER) {
+		if (taskid == MASTER) {
 
 			/* Initializing both matrices on master node */
 			for (i = 0; i < ROW_A; i++)
 				for (j = 0; j < COL_A; j++)
+					// change here to use random integer
 					a[i][j]= 1;
 			for (i = 0; i < COL_A; i++)
 				for (j = 0; j < COL_B; j++)
+					// change here to use random integer
 					b[i][j]= 1;
 
 			/* Computing the average row and extra row for each process */
@@ -265,7 +269,7 @@ In this activity, we are going to compute matrix-matrix multiplication in hybrid
 		/**************************** worker task ************************************/
 		if (taskid > MASTER) {
 
-			/* Each receives task from master*/
+			/* Each receives task from master*/	
 			mtype = FROM_MASTER;
 			
 			// TO DO
@@ -283,7 +287,7 @@ In this activity, we are going to compute matrix-matrix multiplication in hybrid
 			MPI_Send(&offset, 1, MPI_INT, MASTER, mtype, MPI_COMM_WORLD);
 			MPI_Send(&rows, 1, MPI_INT, MASTER, mtype, MPI_COMM_WORLD);
 			MPI_Send(&c, rows*COL_B, MPI_FLOAT, MASTER, mtype, MPI_COMM_WORLD);
-	    }
+		}
 
 	* Finally, we need to ask the master to receive the result matrix sent from each worker, and prints the result matrix. ::
 
