@@ -186,7 +186,7 @@ You can add the following code verify whether the GPU has done the task correctl
 Vector Addition with Blocks
 ###########################
 
-We have learned some basic concepts in CUDA C in our last example. Starting from this example, we will begin to learn how to write CUDA language that will explore the potential of our GPU card how to measure the performance.
+We have learned some basic concepts in CUDA C in our last example. Starting from this example, we will begin to learn how to write CUDA language that will explore the potential of our GPU card.
 
 Vector Addition with Blocks source file:
 :download:`VA-GPU-N1.cu <VA-GPU-N1.cu>`
@@ -202,11 +202,13 @@ Recall that in the previous example, we use the code
 
 to call for device kernels and we left those two numbers in the triple angle brackets unexplained. Well, the first number tells the kernel how many parallel blocks we would like to use to execute the instruction. For example, if we launch the kernel <<<16,1>>>, we are essentially creating 16 copies of the kernel and running them in parallel. We call each of these parallel invocations a block. 
 
-Blocks are organized into a one-dimensional, two-dimensional, or three-dimensional grid. Why do we need two-dimensional or even three-dimensional grid? why can't we just stick with one-dimensional? Well, it turned out that for problems with two or more dimensional domains, such as matrices multiplication or image processing (don't forget the reason GPU been exist is to process image faster), it is often convenient and more efficient to use two or more dimensional indexing. Right now, nVidia GPUs that support CUDA structure can assign up to 65536 blocks in each dimension of the grid, that is in total 65536 * 65536 * 65536 blocks in a grid. 
+Blocks are organized into a one-dimensional, two-dimensional, or three-dimensional grid. Why do we need two-dimensional or even three-dimensional grid? why can't we just stick with one-dimensional? Well, it turned out that for problems with two or more dimensional domains, such as matrices multiplication or image processing (don't forget the reason GPU been exist is to process image faster), it is often convenient and more efficient to use two or more dimensional indexing. Right now, nVidia GPUs that support CUDA structure can assign up to 65536 blocks in each dimension of the grid, that is in total :math:`65536 \times 65536 \times 65536` blocks in a grid. 
 
-Some of the books may refer grid in CUDA has only one and two-dimensions. This is incorrect because the official CUDA programming guide specifically addressed that grid can be three-dimensional.
+.. note::
 
-However, as we are doing vector addition, a one-dimensional process, we don't need to use two-dimensional grid. However, don't get disappointed, we will use higher dimensional grid in later examples.
+   Some of the books may refer grid in CUDA has top two-dimensions. On the other hand, some books (including the official CUDA Programming Guide provided by NVIDIA) may suggest that grid can be three-dimensional. It turns out that older GPU units are not powerful enough to run grid in three-dimensions. Therefore older books might refer CUDA has only two-dimensional grid. However, as GPUs get more and more powerful, NVIDIA enable newer GPUs to utilize three-dimensional grid.
+
+   To see whether your device support three-dimensional grid or not, please run the following source code and see the Compute Capability entry in the output. If it is 2.x or 3.x, then your device supports three-dimensional grid. If it is 1.x or less, you can only use two-dimensional grid. :download:`download enum_gpu.cu <enum_gpu.cu>`
 
 The Device Code
 ***************

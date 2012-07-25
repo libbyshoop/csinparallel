@@ -230,7 +230,8 @@ pre {
 tt {
     background-color: #ecf0f3;
     padding: 0 1px 0 1px;
-    font-size: 1.35em;
+    /*font-size: 1.35em;*/
+	font-family:"Lucida Console", Monaco, monospace;
 }
 
 th {

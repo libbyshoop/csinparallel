@@ -92,67 +92,56 @@ Execute this code
 
 For this lab, we will run this TBB program on the MTL.
 
-* First, if necessary, copy the program file you created to a local machine for connecting to MTL, e.g., your laptop. You will need to use a ‘terminal’ on Macs or ‘Putty’ on PCs.  If you are off campus, you will need to ssh into a machine on your campus before then logging into the MTL machine at Intel’s headquarters in Oregon.
+First, if necessary, copy the program file you created to a local machine for connecting to MTL, e.g., your laptop. You will need to use a ‘terminal’ on Macs or ‘Putty’ on PCs.  If you are off campus, you will need to ssh into a machine on your campus before then logging into the MTL machine at Intel’s headquarters in Oregon.
 
-* You can login to the MTL computer, as follows
+You can login to the MTL computer, as follows
 
-  ::
+::
 
-    laptop% ssh accountname@192.55.51.81
+  laptop% ssh accountname@192.55.51.81
 
-  Use one of the student account usernames provided to you, together with the password distributed to the class. 
+Use one of the student account usernames provided to you, together with the password distributed to the class. 
 
-* Next, copy your program from your laptop or local linux machine to the MTL machine. One way to do this is to use another window (to keep for copying your code), then enter the following command from the directory where your code is located:
+Next, copy your program from your laptop or local linux machine to the MTL machine. One way to do this is to use another window (to keep for copying your code), then enter the following command from the directory where your code is located:
 
-  :: 
+:: 
 
-    scp trap-tbb.cpp accountname@192.55.51.81:
+  scp trap-tbb.cpp accountname@192.55.51.81:
     
 
-* On the remote MTL system, execute the following command, which sets up environment variables for compiling with TBB: 
+On the remote MTL system, execute the following command, which sets up environment variables for compiling with TBB: 
 
-  ::
+::
 
-    source/opt/intel/Compiler/11.1/056/tbb/bin/tbbvars.sh intel64
+  source/opt/intel/Compiler/11.1/056/tbb/bin/tbbvars.sh intel64
 
-  The ``intel64`` command-line argument prepares for 64-bit compilation.
+The ``intel64`` command-line argument prepares for 64-bit compilation.
 
-* After making this copy, login into the MTL machine 192.55.51.81 in another window.
+After making this copy, login into the MTL machine 192.55.51.81 in another window.
 
-* To compile your program that was copied in a prior step, issue this command: 
+To compile your program that was copied in a prior step, issue this command: 
 
-  ::
+::
 
-    192.55.51.81% g++ -o trap-tbb trap-tbb.cpp -ltbb_debug
+  192.55.51.81% g++ -o trap-tbb trap-tbb.cpp -ltbb_debug
 
-  .. note:: You can use ``-ltbb`` instead of ``-ltbb_debug`` for a production version of the library instead of one with debugging hooks.
+.. note:: You can use ``-ltbb`` instead of ``-ltbb_debug`` for a production version of the library instead of one with debugging hooks.
 
-* Now run your program with the following command: 
+Now run your program with the following command: 
 
-  ::
+::
 
-    192.55.51.81% ./trap-tbb
+  192.55.51.81% ./trap-tbb
 
-  The result is significantly less than 2! Can you think of an explanation for the answer being so far off?
+The result is significantly less than 2! Can you think of an explanation for the answer being so far off?
 
-  Also run several time tests of your program
+Also run several time tests of your program
 
-  ::
+::
 
-    192.55.51.81% time ./trap-tbb
+  192.55.51.81% time ./trap-tbb
 
-  What do you observe in these time tests? How do the times compare to timed runs of ``trap-omp`` for various thread sizes? 
-
-
-    
-
-
-
-
-
-
-
-
+What do you observe in these time tests? How do the times compare to timed runs of ``trap-omp`` for various thread sizes? 
 
 
 

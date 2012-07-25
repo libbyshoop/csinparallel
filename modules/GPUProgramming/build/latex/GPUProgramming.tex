@@ -13,7 +13,7 @@
 
 
 \title{GPU Programming}
-\date{July 13, 2012}
+\date{July 24, 2012}
 \release{}
 \author{CSInParallel Project}
 \newcommand{\sphinxlogo}{}
@@ -148,7 +148,7 @@ Different from traditional supercomputers that is built with many CPU cores, sup
 
 \section{What are the important parts inside a GPU?}
 \label{Introduction/Introduction:tesla}\label{Introduction/Introduction:what-are-the-important-parts-inside-a-gpu}
-Although modern GPU are basically computers themselves, they still serve as a part of computer system. A modern GPU is connected with the host through high speed I/O bus slot, usually a PCI-Express slot. Modern GPUs are extremely energy consuming. Some of the GPUs alone consumes hundreds watts of power, sometimes higher than all other parts of the computer system combined. Part of the reason is that GPU is much complex  structure and can perform much sophisticated task than other parts of computer system. Owe to its high capability, GPU needs its own memory, control chipset as well as many processors.
+Although modern GPU are basically computers themselves, they still serve as a part of computer system. A modern GPU is connected with the host through high speed I/O bus slot, usually a PCI-Express slot. Modern GPUs are extremely energy consuming. Some of the GPUs alone consumes hundreds watts of power, sometimes higher than all other parts of the computer system combined. Part of the reason that GPUs require such power supply is that they have much complex  structure and can perform much sophisticated task than other parts of computer system. Owe to its high capability, GPU needs its own memory, control chipset as well as many processors.
 \begin{figure}[htbp]
 \centering
 \capstart
@@ -181,7 +181,25 @@ Furthermore, NVIDIA is not the only company manufacturing GPU cards, which means
 
 \chapter{CUDA Intro}
 \label{CUDAIntro/CUDAIntro:opencl}\label{CUDAIntro/CUDAIntro::doc}\label{CUDAIntro/CUDAIntro:cuda-intro}
-Before you proceed to the next example, please download the following files and place them outside of your source code folder.
+Before we proceed to our first example, please follow the following instructions to set up your working environment.
+\begin{enumerate}
+\item {} 
+Download the follow file. \code{download common.tar.gz}
+
+\item {} 
+Extract all the files.
+
+\item {} 
+Create a empty folder \textbf{common} and then put extracted files into it.
+
+\item {} 
+Put the common folder \textbf{outside} of your source code folder.
+
+\end{enumerate}
+
+\begin{notice}{note}{Note:}
+In side the common folder are source code that contains helper functions. These include some handle error functions and APIs required for the later graphic programs, such as ray-tracing.
+\end{notice}
 
 
 \section{Acknowledgement}
@@ -195,7 +213,7 @@ This copy of code is a derivative based on the original code and designed for ed
 
 \section{An Example of Vector Addition}
 \label{CUDAIntro/CUDAIntro:nvidia-corporation}\label{CUDAIntro/CUDAIntro:an-example-of-vector-addition}
-We will start our CUDA journey by learning a very simple example, the vector addition example. What this program does is basically take two vectors that have same dimensions, add them together and then return it back.
+We will start our CUDA journey by learning a very simple example, the vector addition example. It basically takes two vectors that have same dimensions, adds them together and then returns the new vector back.
 
 Vector Addition source file:
 \code{VA-GPU-11.cu}
@@ -203,7 +221,7 @@ Vector Addition source file:
 
 \subsection{The Device Code}
 \label{CUDAIntro/CUDAIntro:the-device-code}
-As you may notice in your background reading about CUDA programming, the program executes in two separated places. One is called host, another is called device. In our example, the add() function executes on the device (our GPU) and the rest of the C program executes on our CPU.
+As you may notice in your background reading about CUDA programming, CUDA programs execute in two separated places. One is called host, another is called device. In our example, the add() function executes on the device (our GPU) and the rest of the C program executes on our CPU.
 
 \begin{Verbatim}[commandchars=\\\{\}]
 \PYG{n}{\PYGZus{}\PYGZus{}global\PYGZus{}\PYGZus{}} \PYG{k+kt}{void} \PYG{n+nf}{add}\PYG{p}{(} \PYG{k+kt}{int} \PYG{o}{*}\PYG{n}{a}\PYG{p}{,} \PYG{k+kt}{int} \PYG{o}{*}\PYG{n}{b}\PYG{p}{,} \PYG{k+kt}{int} \PYG{o}{*}\PYG{n}{c} \PYG{p}{)} \PYG{p}{\PYGZob{}}    
@@ -218,7 +236,7 @@ As you may notice in your background reading about CUDA programming, the program
 
 As shown in the code block above, we need to add a \textbf{\_\_global\_\_} qualifier to the function name of the original C code in order to let function add() execute on a device.
 
-You might notice that this code is much like standard C code except for the \textbf{\_\_global\_\_} qualifier. We are seeing this because this version of vector addition device code is utilizing only one core of the GPU. We can see this from the line
+You might notice that this code is much like standard C code except for the \textbf{\_\_global\_\_} qualifier. We are seeing this because this version of vector addition's device code is utilizing only one core of the GPU. We can see this from the line
 
 \begin{Verbatim}[commandchars=\\\{\}]
         \PYG{n}{tid} \PYG{o}{+}\PYG{o}{=} \PYG{l+m+mi}{1}\PYG{p}{;} \PYG{c+c1}{// we are using one thread in one block}
@@ -228,7 +246,17 @@ where we only add 1 to the \emph{tid}. In the later examples, where we will be u
 
 
 \subsection{The Host Code}
-\label{CUDAIntro/CUDAIntro:the-host-code}
+\label{CUDAIntro/CUDAIntro:the-host-code}\setbox0\vbox{
+\begin{minipage}{0.95\linewidth}
+\textbf{Before you proceed}
+
+\medskip
+
+
+Different from device code, the host code is more complicated and require more explanation. We advice you to download the source file provided at the beginning of this page and have it open in a separate window. We divided the host code into several parts for the purpose of easier explanation. However, looking at the host code as a whole might be helpful, especially for CUDA programming, where host codes are usually highly organized and structured.
+\end{minipage}}
+\begin{center}\setlength{\fboxsep}{5pt}\shadowbox{\box0}\end{center}
+
 \begin{Verbatim}[commandchars=\\\{\}]
 \PYG{k+kt}{int} \PYG{n+nf}{main}\PYG{p}{(} \PYG{k+kt}{void} \PYG{p}{)} \PYG{p}{\PYGZob{}}
 
@@ -247,14 +275,14 @@ where we only add 1 to the \emph{tid}. In the later examples, where we will be u
     \PYG{p}{\PYGZcb{}}
 \end{Verbatim}
 
-As shown in the code block above, we first need to declare pointers. Notice that we declared two sets of pointers, one set is used to store data on host memory, another is used to store data on the device memory.
+As shown in the code block above, similar to standard C programming, we first need to declare pointers. Notice that we declared two sets of pointers, one set is used to store data on host memory, another is used to store data on the device memory.
 
 
 \subsubsection{The Event API}
 \label{CUDAIntro/CUDAIntro:the-event-api}
-Before we go any further, we need to first learn ways of measuring performance in CUDA runtime. The tool we use to measure the time GPU spends on a task is CUDA \href{http://developer.download.nvidia.com/compute/cuda/4\_2/rel/toolkit/docs/online/group\_\_CUDART\_\_MEMORY\_g48efa06b81cc031b2aa6fdc2e9930741.html\#g48efa06b81cc031b2aa6fdc2e9930741}{Event API}. If you are C programming language veteran you may ask the question: why don't we use the the timing functions in standard C, such as \emph{clock()} or \emph{timeval} structure, to perform this task? Well, this is a really good question.
+Before we go any further, we need to first learn ways of measuring performance in CUDA runtime. How do we measure performance? Well, in the simplest yet most direct way, how fast can the program run. To be more specific, we will try to time the program.
 
-The fundamental motivation of using \href{http://developer.download.nvidia.com/compute/cuda/4\_2/rel/toolkit/docs/online/group\_\_CUDART\_\_MEMORY\_g48efa06b81cc031b2aa6fdc2e9930741.html\#g48efa06b81cc031b2aa6fdc2e9930741}{Event API} instead of timing functions in standard C lies on the difference between CPU and GPU computation. To be more specific, GPU is a companion computation device, which means every time CPU has to call GPU to do computations. However, when GPU is doing computation, CPU does not wait for it to finish its task, instead CPU will continue to execute next line of code while GPU is still working on previous call. This \emph{asynchronous} feature of GPU computation structure leads to possible inaccuracy in standard C timing functions. Therefore, \href{http://developer.download.nvidia.com/compute/cuda/4\_2/rel/toolkit/docs/online/group\_\_CUDART\_\_MEMORY\_g48efa06b81cc031b2aa6fdc2e9930741.html\#g48efa06b81cc031b2aa6fdc2e9930741}{Event API} become needed.
+The tool we use to measure the time GPU spends on a task is CUDA \href{http://developer.download.nvidia.com/compute/cuda/4\_2/rel/toolkit/docs/online/group\_\_CUDART\_\_MEMORY\_g48efa06b81cc031b2aa6fdc2e9930741.html\#g48efa06b81cc031b2aa6fdc2e9930741}{Event API}.
 
 \begin{Verbatim}[commandchars=\\\{\}]
     \PYG{c+c1}{// define events in the field}
@@ -266,7 +294,21 @@ The fundamental motivation of using \href{http://developer.download.nvidia.com/c
     \PYG{n}{HANDLE\PYGZus{}ERROR}\PYG{p}{(} \PYG{n}{cudaEventRecord}\PYG{p}{(} \PYG{n}{start}\PYG{p}{,} \PYG{l+m+mi}{0} \PYG{p}{)} \PYG{p}{)}\PYG{p}{;}
 \end{Verbatim}
 
-The first step of using event is declaring the event. In this example. we declared two events, one called start, which will record the start event and another called stop, which will record the stop event. After declaring the events, we can use the command \href{http://developer.download.nvidia.com/compute/cuda/4\_2/rel/toolkit/docs/online/group\_\_CUDART\_\_EVENT\_ga324d5ce3fbf46899b15e5e42ff9cfa5.html\#ga324d5ce3fbf46899b15e5e42ff9cfa5}{cudaEventRecord()} to record a event. You can think of record a event as initializing it. You may noticed that we pass this command a second argument (0 in this case). In our example, this argument is actually useless. However, if you are really interested in this, you can read more about CUDA stream.
+The first step of using event is declaring the event. In this example. we declared two events, one called start, which will record the start event and another called stop, which will record the stop event. After declaring the events, we can use the command \href{http://developer.download.nvidia.com/compute/cuda/4\_2/rel/toolkit/docs/online/group\_\_CUDART\_\_EVENT\_ga324d5ce3fbf46899b15e5e42ff9cfa5.html\#ga324d5ce3fbf46899b15e5e42ff9cfa5}{cudaEventRecord()} to record a event. You can think of recording a event as initializing it. You may also notice that we pass this command a second argument (0 in this case). In our example, this argument is actually useless. However, if you are really interested in this, you can read more about CUDA stream.
+
+You can see we that there is another function HANDLE\_ERROR() around each of the commands. For the moment, this function does not do anything than returning the error if CUDA commands run into any.
+\setbox0\vbox{
+\begin{minipage}{0.95\linewidth}
+\textbf{Why would we use Event API?}
+
+\medskip
+
+
+If you are C programming language veteran you may ask the question: why don't we use the the timing functions in standard C, such as \emph{clock()} or \emph{timeval} structure, to perform this task? Well, this is a really good question.
+
+The fundamental motivation of using \href{http://developer.download.nvidia.com/compute/cuda/4\_2/rel/toolkit/docs/online/group\_\_CUDART\_\_MEMORY\_g48efa06b81cc031b2aa6fdc2e9930741.html\#g48efa06b81cc031b2aa6fdc2e9930741}{Event API} instead of timing functions in standard C lies on the difference between CPU and GPU computation. To be more specific, GPU is a companion computation device, which means every time CPU has to call GPU to do computations. However, when GPU is doing computation, CPU does not wait for it to finish its task, instead CPU will continue to execute next line of code while GPU is still working on previous call. This \emph{asynchronous} feature of GPU computation structure leads to possible inaccuracy when measuring time using standard C timing functions. Therefore, \href{http://developer.download.nvidia.com/compute/cuda/4\_2/rel/toolkit/docs/online/group\_\_CUDART\_\_MEMORY\_g48efa06b81cc031b2aa6fdc2e9930741.html\#g48efa06b81cc031b2aa6fdc2e9930741}{Event API} become needed.
+\end{minipage}}
+\begin{center}\setlength{\fboxsep}{5pt}\shadowbox{\box0}\end{center}
 
 
 \subsubsection{The cudaMalloc() Function}
@@ -377,7 +419,7 @@ You can add the following code verify whether the GPU has done the task correctl
 
 \section{Vector Addition with Blocks}
 \label{CUDAIntro/CUDAIntro:vector-addition-with-blocks}\label{CUDAIntro/CUDAIntro:cudamemcpydevicetohost}
-We have learned some basic concepts in CUDA C in our last example. Starting from this example, you will begin to learn how to write CUDA language that will explore the potential of our GPU card how to measure the performance.
+We have learned some basic concepts in CUDA C in our last example. Starting from this example, we will begin to learn how to write CUDA language that will explore the potential of our GPU card.
 
 Vector Addition with Blocks source file:
 \code{VA-GPU-N1.cu}
@@ -393,11 +435,13 @@ Recall that in the previous example, we use the code
 
 to call for device kernels and we left those two numbers in the triple angle brackets unexplained. Well, the first number tells the kernel how many parallel blocks we would like to use to execute the instruction. For example, if we launch the kernel \textless{}\textless{}\textless{}16,1\textgreater{}\textgreater{}\textgreater{}, we are essentially creating 16 copies of the kernel and running them in parallel. We call each of these parallel invocations a block.
 
-Blocks are organized into a one-dimensional, two-dimensional, or three-dimensional grid. Why do we need two-dimensional or even three-dimensional grid? why can't we just stick with one-dimensional? Well, it turned out that for problems with two or more dimensional domains, such as matrices multiplication or image processing (don't forget the reason GPU been exist is to process image faster), it is often convenient and more efficient to use two or more dimensional indexing. Right now, nVidia GPUs that support CUDA structure can assign up to 65536 blocks in each dimension of the grid, that is in total 65536 * 65536 * 65536 blocks in a grid.
+Blocks are organized into a one-dimensional, two-dimensional, or three-dimensional grid. Why do we need two-dimensional or even three-dimensional grid? why can't we just stick with one-dimensional? Well, it turned out that for problems with two or more dimensional domains, such as matrices multiplication or image processing (don't forget the reason GPU been exist is to process image faster), it is often convenient and more efficient to use two or more dimensional indexing. Right now, nVidia GPUs that support CUDA structure can assign up to 65536 blocks in each dimension of the grid, that is in total $65536 \times 65536 \times 65536$ blocks in a grid.
 
-However, as we are doing vector addition, a one-dimensional process, we don't need to use two-dimensional grid. However, don't get disappointed, we will use higher dimensional grid in later examples.
+\begin{notice}{note}{Note:}
+Some of the books may refer grid in CUDA has top two-dimensions. On the other hand, some books (including the official CUDA Programming Guide provided by NVIDIA) may suggest that grid can be three-dimensional. It turns out that older GPU units are not powerful enough to run grid in three-dimensions. Therefore older books might refer CUDA has only two-dimensional grid. However, as GPUs get more and more powerful, NVIDIA enable newer GPUs to utilize three-dimensional grid.
 
-Some of the books may refer grid in CUDA has only one and two-dimensions. This is incorrect because the official CUDA programming guide specifically addressed that grid can be three-dimensional.
+To see whether your device support three-dimensional grid or not, please run the following source code and see the Compute Capability entry in the output. If it is 2.x or 3.x, then your device supports three-dimensional grid. If it is 1.x or less, you can only use two-dimensional grid. \code{download enum\_gpu.cu}
+\end{notice}
 
 
 \subsection{The Device Code}
@@ -819,7 +863,7 @@ This copy of code is a derivative based on the original code and designed for ed
 
 \section{An Example of Matrix Multiplication}
 \label{CUDA2D/CUDA2D:nvidia-corporation}\label{CUDA2D/CUDA2D:an-example-of-matrix-multiplication}
-Starting from next chapter, we will learn more about GPU computing on multi-dimensional problems and really experience the advantage of GPU computing over CPU computing. Before we proceed to the next chapter, this chapter will introduce a Matrix Multiplication program that is written in standard C and use only CPU for the computation. We hope the result we obtain in this chapter can serve as a baseline for following chapters and provide a clearer view on how fast GPU computing can be.
+In this chapter, we will learn more about GPU computing on multi-dimensional problems and really experience the advantage of GPU computing over CPU computing. Before we proceed to the next section, this section will introduce a Matrix Multiplication program that is written in standard C and use only CPU for the computation. We hope the result we obtain in this chapter can serve as a baseline for following sections and provide a clearer view on how fast GPU computing can be.
 
 CPU Matrix Multiplication Program source file:
 \code{MM-CPU.c}
@@ -876,9 +920,9 @@ Average: 40504.82 ms
 
 \section{Global Memory Version}
 \label{CUDA2D/CUDA2D:global-memory-version}
-Starting from this example, we will look at the how to solve problem in two-dimensional domain using two-dimensional grid and block. As we know, threads can be organized into multi-dimensional blocks and blocks can also be organized into multi-dimensional grid. This feature in CUDA architecture enable us to create two-dimensional or even three-dimensional thread hierarchy and solve two or three-dimensional problems more easily and more efficient.
+Starting from this example, we will look at the how to solve problem in two-dimensional domain using two-dimensional grid and block. As we know, threads can be organized into multi-dimensional block and blocks can also be organized into multi-dimensional grid. This feature in CUDA architecture enable us to create two-dimensional or even three-dimensional thread hierarchy so that solving two or three-dimensional problems becomes easier and more efficient.
 
-In this example, we will do the Square Matrix Multiplication. Two input matrices of size Width x Width are M and N and the output matrix is P with the same size. If you have learned linear algebra before, you will know that the output of two square matrices multiplied together is a square matrix of the same size. For example, to calculate entry (A,B) in the output matrix, we need to use row A in one input matrix and column B in another input matrix. We first take the left most element in row A and multiply it by top element in column B. Later, we take the second left element in row A and multiply it by second top element in column B. We do this for all the elements in row A and column B, and then we get the sum of products. The results will be the value at entry (A,B). As you can see, this kind of operation is highly paralleled, make it perfect for us to use CUDA. We do this by assigning each entry in output matrix a thread of its own. This thread will fetch the data and do all the calculations. It will later on write back the result to the out put matrix.
+In this example, we will do the Square Matrix Multiplication. Two input matrices of size \emph{Width x Width} are M and N. The output matrix is P with the same size. If you have learned linear algebra before, you will know that the output of two square matrices multiplied together is a square matrix of the same size. For example, to calculate entry (A,B) in the output matrix, we need to use row A in one input matrix and column B in another input matrix. We first take the left most element in row A and multiply it by top element in column B. Later, we take the second left element in row A and multiply it by second top element in column B. We do this for all the elements in row A and column B, and then we get the sum of products. The result will be the value at entry (A,B) in the output matrix. As you can see, this kind of operation is highly paralleled, make it perfect for us to use CUDA. We do this by assigning each entry in output matrix a thread of its own. This thread will fetch the data and do all the calculations. It will later on write back the result to the out put matrix.
 
 Matrix Multiplication with Global Memory source file:
 \code{MM-GPU-GM.cu}
@@ -914,7 +958,7 @@ This is the complete device code.
   \PYG{k+kt}{int} \PYG{n}{y} \PYG{o}{=} \PYG{n}{threadIdx}\PYG{p}{.}\PYG{n}{y} \PYG{o}{+} \PYG{n}{blockIdx}\PYG{p}{.}\PYG{n}{y} \PYG{o}{*} \PYG{n}{blockDim}\PYG{p}{.}\PYG{n}{y}\PYG{p}{;}
 \end{Verbatim}
 
-The 4 lines of code will assign index to the thread so that they can match up with entries in output matrix. As you may notice, we introduced a new CUDA built-in variable \textbf{blockDim} into this code. \textbf{blockDim} has the variable type of dim3, which is an 3-component integer vector type that is used to specify dimensions. This variable contains the dimensions of the block, and we can access its component by calling blockDim.x, blockDim.y, blockdIM.z.
+This 4 lines of code will assign index to the thread so that they can match up with entries in output matrix. As you may notice, we introduced a new CUDA built-in variable \textbf{blockDim} into this code. \textbf{blockDim} has the variable type of dim3, which is an 3-component integer vector type that is used to specify dimensions. This variable contains the dimensions of the block, and we can access its component by calling blockDim.x, blockDim.y, blockdIM.z.
 
 Each thread in one specific block is identified by threadIdx.x and threadIdx.y. Each block is one specific grid is identified by blockIdx.x and blockIdx.y. Therefore, if we have threadIdx.x, threadIdx.y, blockIdx.x and blockIdx.y, we can locate one specific thread.
 
@@ -927,7 +971,7 @@ Each thread in one specific block is identified by threadIdx.x and threadIdx.y. 
     \PYG{n}{Kernel}\PYG{o}{\textless{}}\PYG{o}{\textless{}}\PYG{o}{\textless{}}\PYG{n}{dimGrid}\PYG{p}{,} \PYG{n}{dimBlock}\PYG{o}{\textgreater{}}\PYG{o}{\textgreater{}}\PYG{o}{\textgreater{}}\PYG{p}{(} \PYG{n}{Md}\PYG{p}{,} \PYG{n}{Nd}\PYG{p}{,} \PYG{n}{Pd}\PYG{p}{,} \PYG{n}{Width}\PYG{p}{)}\PYG{p}{;}
 \end{Verbatim}
 
-The 3 lines of code above is declaring and initializing dim3 variables which give the grid dimensions and block dimensions. In each of the initializations, we only passed two parameters as components. The CUDA runtime will initialize any component left unspecified to 1. So technically, we are initializing dimBlock as (32, 32, 1) and dimGrid as (Width/32, Width/32, 1).
+This 3 lines of code above is declaring and initializing dim3 variables which give the grid dimensions and block dimensions. In each of the initializations, we only passed two parameters as components. The CUDA runtime will initialize any component left unspecified to 1. So technically, we are initializing dimBlock as (32, 32, 1) and dimGrid as (Width/32, Width/32, 1).
 
 The rest of the host code is similar to examples we have seen before. Here is the complete version of the host code.
 
@@ -1063,7 +1107,7 @@ Compared the CPU program, our GPU program is \textbf{772} times faster.
 
 \section{CUDA Memory Types}
 \label{CUDA2D/CUDA2D:cuda-memory-types}
-The reason CUDA architecture has many memory types is increasing the memory accessing speed so that data transfer speed can match data processing speed.The following example will show you why matching these two speeds is so important to GPU computation.
+The reason CUDA architecture has many memory types is to increase the memory accessing speed so that data transfer speed can match data processing speed. The following example will show you why matching these two speeds is so important to GPU computation.
 
 One of the most important standards of a processor's computation ability is its \href{http://en.wikipedia.org/wiki/FLOPS}{flops} computation. We assume that in order to perform one floating point operation, the runtime need to transfer one single-precision floating-point from global memory datum to the computational kernel. With this in mind, we can proceed to our example.
 
@@ -1184,7 +1228,11 @@ Well, to answer that question, we need to first look at the relationship between
 
 First, we have in total \emph{Width x Width} many of threads and each thread computes one element of the output matrix. Then, let's take a closer look at each thread. For example, thread with the threadIdx of (x,y) will computes the element in the x column and y row of the output matrix. In order to do this, thread (x,y) have to access elements in row x of matrix M and elements in column y of matrix N. How about thread (x,y+1)? This time kernel will have to access row x in matrix M again and a different column y+1 in matrix N. What about thread (x,y+2) or (x+1,y)? It is not hard for you to find out that we accessed each row in matrix M the \emph{Width} times and each column in matrix N the \emph{Width} times as well. If we can reduce the access time to once for every row in matrix M and once for every column in matrix N, we can not only save bandwidth, but also increase performance significantly.
 
-Notice that although we say we want the kernel to access each row in matrix M and each column in matrix N once from global memory, we are not saying that the kernel access data once throughout the program. As we can see from previous sections, global memory has large capacity but low access speed. What we want is to transfer data from global memory to another type of memory which has fast access speed. The kernel still need to access same row or same column many times in that memory location, but this will significantly improve performance.
+Notice that although we say we want the kernel to access each row in matrix M and each column in matrix N once from global memory, we are not saying that the kernel access data once throughout the program. As we can see from previous sections, global memory has large capacity but low access speed. What we want is to transfer data from global memory to another type of memory which has fast access speed.
+
+\begin{notice}{note}{Note:}
+The kernel still need to access every row and every column \emph{Width} times in that memory location. However, as we are accessing them in a faster memory location, the time takes for those data to load will be significantly reduced. So technically we did not reduce the number of times each row or column was accessed, we simply made the speed of accessing them faster.
+\end{notice}
 
 Upon this point, it may occur to you that shared memory is the ideal candidate for such task for it can access data faster than global memory. However, shared memory also has the drawback of small storage capacity. In the case of matrix multiplication, we can't just store the whole matrix into the shared memory. Remember that shared memory only has 48kB storage space per block, which is not large enough for some gigantic matrices. We solve this problem by managing shared memory in a dynamically way.
 
@@ -1814,38 +1862,6 @@ Average: 6.28 ms
 
 Due to the small bitmap size we are using, the improvement is not significant.
 
-
-\chapter{Streams}
-\label{Streams/Streams:streams}\label{Streams/Streams::doc}
-
-\section{Acknowledgement}
-\label{Streams/Streams:acknowledgement}
-The examples used in this chapter are based on examples in \href{http://developer.nvidia.com/content/cuda-example-introduction-general-purpose-gpu-programming-0}{CUDA BY EXAMPLE: An Introduction to General-Purpose GPU Programming}, written by Jason Sanders and Edward Kandrot, and published by Addison Wesley.
-
-Copyright 1993-2010 NVIDIA Corporation.  All rights reserved.
-
-This copy of code is a derivative based on the original code and designed for educational purposes only. It contains source code provided by \href{http://www.nvidia.com}{NVIDIA Corporation}.
-
-
-\section{Virtual Memory and Paging}
-\label{Streams/Streams:virtual-memory-and-paging}\label{Streams/Streams:nvidia-corporation}
-Before we entered the world of CUDA, we have learned something about virtual memory in computer systems. If you do not remember much, lets jog your memory a little bit. When you launch multiple programs in you computer, you are taking the risk of running out of memory. Although modern customer end computers usually have 4GB even more memory, it is still not enough for running many programs at the same time. Through virtual memory, or to be more specific, through the process of paging, a computer can store and retrieve data from secondary storage for use in main memory. Simply put, the operating system would transfer some of the data stored in memory that are not currently at use to secondary storage so that the system can free physical memory and proceed to other programs.
-
-
-\section{Pageable Host Memory and Page-locked Host Memory}
-\label{Streams/Streams:pageable-host-memory-and-page-locked-host-memory}
-
-\subsection{The cudaHostAlloc() Function}
-\label{Streams/Streams:the-cudahostalloc-function}
-In previous examples, we have been using the function malloc() in standard C libraries to allocate memory on host memory. The malloc() function would allocate standard pageable host memory for our program. In this chapter, we introduce the cudaHostAlloc() function in CUDA library. Different from malloc() function, cudaHostAlloc() function would allocate page-locked host memory for our program. When you allocate pageable memory, you are taking the risk of operating system might page this memory out to secondary storage if it feels that the system is running out of physical memory. However, when you allocate page-locked memory, the operating system guarantees that it will never page this memory to secondary storage and ensure that this memory will always reside on physical memory.
-
-Knowing the difference, you may want to ask the question? Why do we need page-locked memory? Well, the answer to this question lies in how CUDA driver move data between different kind of memories. When you call cudaMemcpy() function from the host code, CUDA driver will start to transfer data from host memory to GPU memory, or vice versa. What happens is the driver will first move the data from a pageable system buffer to a page-locked system buffer. Then it will move the data from page-locked memory to the GPU. However, if we instruct the system to store the data on the page-locked system buffer in the first place, we can skip the first step and start from the second step.
-
-Therefore, if we allocate memory on pageable host memory, our data transfer speed is limited by the lower of the system front-side bus speed (first step) and PCI Express speed (second step). However, if we are using page-locked memory, we are limited only by PCI Express speed. The machine we are using is equipped with Intel Core 2 Quad processor with front-side bus speed between 8512MB/s to 10656MB/s, which is roughly 8GB/s to 10GB/s. The graphics card is installed on PCI Express x16 2.0 slot, which also has 8GB/s transfer speed. Therefore, if we are using page-locked memory instead of pageable memory, we can see the transfer time reduce to at most 50\% of the original time.
-
-
-\section{CUDA Streams}
-\label{Streams/Streams:cuda-streams}
 
 
 \renewcommand{\indexname}{Index}
