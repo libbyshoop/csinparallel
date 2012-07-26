@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-1.40.10 (TeX Live 2009/Debian) (format=pdflatex 2011.7.11)  23 JUL 2012 10:39
+This is pdfTeX, Version 3.1415926-1.40.10 (TeX Live 2009/Debian) (format=pdflatex 2011.7.11)  26 JUL 2012 16:33
 entering extended mode
  %&-line parsing enabled.
 **Map-ReduceinVariousProgrammingLanguages.tex
@@ -944,7 +944,7 @@ less on input line 493.
 Here is how much of TeX's memory you used:
  7958 strings out of 495061
  108693 string characters out of 1182621
- 195615 words of memory out of 3000000
+ 195601 words of memory out of 3000000
  10907 multiletter control sequences out of 15000+50000
  55254 words of font info for 64 fonts, out of 3000000 for 9000
  29 hyphenation exceptions out of 8191
@@ -956,7 +956,7 @@ texmf-texlive/fonts/type1/urw/courier/ucrro8a.pfb></usr/share/texmf-texlive/fon
 ts/type1/urw/helvetic/uhvb8a.pfb></usr/share/texmf-texlive/fonts/type1/urw/time
 s/utmb8a.pfb></usr/share/texmf-texlive/fonts/type1/urw/times/utmr8a.pfb></usr/s
 hare/texmf-texlive/fonts/type1/urw/times/utmri8a.pfb>
-Output written on Map-ReduceinVariousProgrammingLanguages.pdf (11 pages, 129551
+Output written on Map-ReduceinVariousProgrammingLanguages.pdf (11 pages, 129485
  bytes).
 PDF statistics:
  158 PDF objects out of 1000 (max. 8388607)

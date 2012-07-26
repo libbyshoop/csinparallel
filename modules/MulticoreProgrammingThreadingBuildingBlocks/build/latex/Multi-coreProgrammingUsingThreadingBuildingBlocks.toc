@@ -3,4 +3,9 @@
 \contentsline {section}{\numberline {1.1}Requirements}{1}{section.1.1}
 \contentsline {chapter}{\numberline {2}Preparing your machine for the lab}{2}{chapter.2}
 \contentsline {chapter}{\numberline {3}Intel's Threading Building Blocks (TBB)}{4}{chapter.3}
+\contentsline {section}{\numberline {3.1}Introduction}{4}{section.3.1}
+\contentsline {section}{\numberline {3.2}For You To Do}{4}{section.3.2}
+\contentsline {subsection}{\numberline {3.2.1}Create the code}{4}{subsection.3.2.1}
+\contentsline {subsection}{\numberline {3.2.2}Study this code carefully}{5}{subsection.3.2.2}
+\contentsline {subsection}{\numberline {3.2.3}Execute this code}{6}{subsection.3.2.3}
 \contentsline {chapter}{\numberline {4}TBB, multiple threads, and reduction}{8}{chapter.4}

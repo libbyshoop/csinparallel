@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-1.40.10 (TeX Live 2009/Debian) (format=pdflatex 2011.7.11)  20 JUL 2012 14:02
+This is pdfTeX, Version 3.1415926-1.40.10 (TeX Live 2009/Debian) (format=pdflatex 2011.7.11)  26 JUL 2012 16:36
 entering extended mode
  %&-line parsing enabled.
 **Multi-coreProgrammingUsingThreadingBuildingBlocks.tex
@@ -915,18 +915,20 @@ less on input line 214.
 
 ] [3]
 Chapter 3.
-LaTeX Font Info:    Try loading font information for T1+pcr on input line 234.
+LaTeX Font Info:    Font shape `T1/phv/bx/n' in size <12> not available
+(Font)              Font shape `T1/phv/b/n' tried instead on input line 240.
+LaTeX Font Info:    Try loading font information for T1+pcr on input line 242.
 (/usr/share/texmf-texlive/tex/latex/psnfss/t1pcr.fd
 File: t1pcr.fd 2001/06/04 font definitions for T1/pcr.
 )
 LaTeX Font Info:    Font shape `T1/pcr/m/it' in size <9> not available
-(Font)              Font shape `T1/pcr/m/sl' tried instead on input line 239.
+(Font)              Font shape `T1/pcr/m/sl' tried instead on input line 245.
 LaTeX Font Info:    Font shape `T1/pcr/bx/n' in size <9> not available
-(Font)              Font shape `T1/pcr/b/n' tried instead on input line 241.
+(Font)              Font shape `T1/pcr/b/n' tried instead on input line 247.
 
 
 Package Fancyhdr Warning: \fancyfoot's `E' option without twoside option is use
-less on input line 290.
+less on input line 296.
 
 [4
 
@@ -934,18 +936,18 @@ less on input line 290.
 Chapter 4.
 
 Package Fancyhdr Warning: \fancyfoot's `E' option without twoside option is use
-less on input line 539.
+less on input line 505.
 
 [8
 
 ] [9] (./Multi-coreProgrammingUsingThreadingBuildingBlocks.ind) [10]
 (./Multi-coreProgrammingUsingThreadingBuildingBlocks.aux) ) 
 Here is how much of TeX's memory you used:
- 7938 strings out of 495061
- 107907 string characters out of 1182621
- 193004 words of memory out of 3000000
- 10877 multiletter control sequences out of 15000+50000
- 50788 words of font info for 61 fonts, out of 3000000 for 9000
+ 7958 strings out of 495061
+ 108299 string characters out of 1182621
+ 193274 words of memory out of 3000000
+ 10894 multiletter control sequences out of 15000+50000
+ 55254 words of font info for 64 fonts, out of 3000000 for 9000
  29 hyphenation exceptions out of 8191
  45i,11n,45p,738b,525s stack positions out of 5000i,500n,10000p,200000b,50000s
 {/usr/share/texmf-te
@@ -956,9 +958,9 @@ exlive/fonts/type1/urw/helvetic/uhvb8a.pfb></usr/share/texmf-texlive/fonts/type
 1/urw/times/utmb8a.pfb></usr/share/texmf-texlive/fonts/type1/urw/times/utmr8a.p
 fb></usr/share/texmf-texlive/fonts/type1/urw/times/utmri8a.pfb>
 Output written on Multi-coreProgrammingUsingThreadingBuildingBlocks.pdf (12 pag
-es, 135227 bytes).
+es, 136320 bytes).
 PDF statistics:
- 153 PDF objects out of 1000 (max. 8388607)
- 44 named destinations out of 1000 (max. 500000)
- 41 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 163 PDF objects out of 1000 (max. 8388607)
+ 46 named destinations out of 1000 (max. 500000)
+ 57 words of extra memory for PDF output out of 10000 (max. 10000000)
 

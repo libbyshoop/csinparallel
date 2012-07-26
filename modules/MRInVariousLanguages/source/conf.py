@@ -193,7 +193,7 @@ latex_elements = {
 # Grouping the document tree into LaTeX files. List of tuples
 # (source start file, target name, title, author, documentclass [howto/manual]).
 latex_documents = [
-  ('index', 'Map-ReduceinVariousProgrammingLanguages.tex', u'Map-Reduce in Various Programming Languages Documentation',
+  ('index', 'Map-ReduceinVariousProgrammingLanguages.tex', u'Map-Reduce in Various Programming Languages',
    u'CSInParallel Project', 'manual'),
 ]
 
@@ -223,7 +223,7 @@ latex_documents = [
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
 man_pages = [
-    ('index', 'map-reduceinvariousprogramminglanguages', u'Map-Reduce in Various Programming Languages Documentation',
+    ('index', 'map-reduceinvariousprogramminglanguages', u'Map-Reduce in Various Programming Languages',
      [u'CSInParallel Project'], 1)
 ]
 
@@ -237,7 +237,7 @@ man_pages = [
 # (source start file, target name, title, author,
 #  dir menu entry, description, category)
 texinfo_documents = [
-  ('index', 'Map-ReduceinVariousProgrammingLanguages', u'Map-Reduce in Various Programming Languages Documentation',
+  ('index', 'Map-ReduceinVariousProgrammingLanguages', u'Map-Reduce in Various Programming Languages',
    u'CSInParallel Project', 'Map-ReduceinVariousProgrammingLanguages', 'One line description of project.',
    'Miscellaneous'),
 ]

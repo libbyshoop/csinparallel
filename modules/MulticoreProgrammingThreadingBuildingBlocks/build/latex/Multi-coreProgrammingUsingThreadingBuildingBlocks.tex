@@ -12,8 +12,8 @@
 \usepackage{multirow}
 
 
-\title{Multi-core Programming Using Threading Building Blocks Documentation}
-\date{July 20, 2012}
+\title{Multi-core Programming Using Threading Building Blocks}
+\date{July 26, 2012}
 \release{}
 \author{CSInParallel Project}
 \newcommand{\sphinxlogo}{}
@@ -226,14 +226,20 @@ Finally, disconnect from your new VPN connection entry. This will give you your 
 
 \chapter{Intel's Threading Building Blocks (TBB)}
 \label{TBB/TBB:intel-s-threading-building-blocks-tbb}\label{TBB/TBB::doc}\label{TBB/TBB:university-of-ghent-page}
+
+\section{Introduction}
+\label{TBB/TBB:introduction}
 OpenMP works well for adding parallelism to loops in working sequential code, and it's available for C, C++, and Fortran languages on many platforms (including Linux, Windows, and Macintosh OS X). Older versions of OpenMP did not readily support non-loop parallelism or programming with concurrent data structures, but OpenMP version 3.0 (released May 2008) provides a task feature for programming such computations.
 
 Intel's \href{http://threadingbuildingblocks.org/}{Threading Building Blocks (TBB)} provides an object-oriented approach to implementing parallel algorithms, for the C++ language (and any of the three platforms). Adding parallelism to existing code in TBB is somewhat more involved than in OpenMP, but is considerably less complicated than programming in a native threads package for a particular operating system. The forthcoming new standard for the C++ language is likely to include parallelism similar to TBB.
-\begin{enumerate}
-\item {} 
-Enter the following TBB program into a file \code{trap-tbb.cpp}. Or you can download the file \code{trap-tbb.cpp}
 
-\end{enumerate}
+
+\section{For You To Do}
+\label{TBB/TBB:threading-building-blocks-tbb}\label{TBB/TBB:for-you-to-do}
+
+\subsection{Create the code}
+\label{TBB/TBB:create-the-code}
+Enter the following TBB program into a file \code{trap-tbb.cpp}. Or you can download the file \code{trap-tbb.cpp}
 
 \begin{Verbatim}[commandchars=\\\{\}]
 \PYG{c+cp}{\#}\PYG{c+cp}{include \textless{}iostream\textgreater{}}
@@ -288,12 +294,14 @@ Enter the following TBB program into a file \code{trap-tbb.cpp}. Or you can down
    \PYG{k}{return} \PYG{n}{sin}\PYG{p}{(}\PYG{n}{x}\PYG{p}{)}\PYG{p}{;}
 \PYG{p}{\PYGZcb{}}
 \end{Verbatim}
-\begin{quote}\begin{description}
-\item[{Comments}] \leavevmode\begin{itemize}
-\item {} 
+
+
+\subsection{Study this code carefully}
+\label{TBB/TBB:study-this-code-carefully}
+Observe the following:
+
 This program does \emph{not} use a command-line argument (and the \code{cstdlib} library is not needed). Unlike OpenMP, TBB does not provide a simple way to request a particular number of threads. Instead, the TBB system chooses a number of threads to use automatically. (OpenMP will also make such a selection for you if you do not specify the number of threads to use.)
 
-\item {} 
 The following lines prepare for using TBB.
 
 \begin{Verbatim}[commandchars=\\\{\}]
@@ -301,16 +309,14 @@ The following lines prepare for using TBB.
 \PYG{k}{using} \PYG{k}{namespace} \PYG{n}{tbb}\PYG{p}{;}
 \end{Verbatim}
 
-\item {} 
 Recall that in the OpenMP code, we parallelized the loop below by adding a pragma just before that for loop.
 
 \begin{Verbatim}[commandchars=\\\{\}]
 for(i = 1; i \textless{} n; i++) \PYGZob{}
-  integral += f(a+i*h);
-\PYGZcb{}
+   integral += f(a+i*h);
+ \PYGZcb{}
 \end{Verbatim}
 
-\item {} 
 In order to program a comparable computation in TBB, we create a class \code{SumHeights} whose method \code{operator()} contains the following loop:
 
 \begin{Verbatim}[commandchars=\\\{\}]
@@ -319,13 +325,10 @@ In order to program a comparable computation in TBB, we create a class \code{Sum
     \PYG{p}{\PYGZcb{}}
 \end{Verbatim}
 
-then passes an instance of that class \code{SumHeights} to a call of \code{parallel\_for()}. Observe that the forms of the two loops indicate the same iterative computation, if one      matches 1 to \code{r.begin()}, \code{n} to \code{r.end()}, variables and integral, a, and h to \code{SumHeights} state variables \code{my\_int}, \code{my\_a}, and \code{my\_h}.
+Observe that the forms of the two loops indicate the same iterative computation, if one matches 1 to \code{r.begin()}, \code{n} to \code{r.end()} and \code{integral}, \code{a}, and h to \code{SumHeights} state variables \code{my\_int}, \code{my\_a}, and \code{my\_h}.  One way to describe this relationship is to say that the class \code{SumHeights} is a ``wrapper''     around its loop.
 
-One way to describe this relationship is to say that the class \code{SumHeights} is a ``wrapper''       around its loop.
-\begin{enumerate}
-\item {} 
 The class \code{SumHeights} defines \code{operator()}, which means that an object of type \code{SumHeights} can be called using function-call syntax. Since \code{operator()} is defined here with one argument, this means we can cause the for loop to execute using a call \code{sh(range)}, where \code{sh} is an object of type \code{SumHeights} and \code{range} is an appropriate argument.
-
+\begin{enumerate}
 \item {} 
 Note that \code{operator()} is a \code{const} method (indicated by the const after \code{)} and before \code{\{} ), which means that it is permitted to call \code{sh(range)} with a \code{const} object sh.
 
@@ -336,20 +339,16 @@ The argument \code{r} of \code{operator()} indicates the \emph{range} of the loo
 The loop control variable \code{i} has type \code{int} in the OpenMP implementation, but type \code{size\_t} in the TBB implementation. \code{size\_t} is an integer type, which may be equivalent to \code{int}, \code{long}, or another integer type depending on implementation.
 
 \item {} 
-The constructor \code{SumHeights()} makes local copies \code{my\_a}, etc., of variables \code{a}, etc., in \code{main()}, enabling values in \code{main()} to be used within the class \code{SumHeights}.
-
-\end{enumerate}
-\begin{itemize}
-\item {} 
 The range \code{r} has the type \code{blocked\_range\textless{}size\_t\textgreater{}}. This is a \emph{templated type} built over the \code{size\_t} type. There could be \code{blocked\_range} types built over other types, as well, e.g., \code{int} or \code{long}.
 
-\item {} 
+\end{enumerate}
+
+The constructor \code{SumHeights()} makes local copies \code{my\_a}, etc., of variables \code{a}, etc., in \code{main()}, enabling values in \code{main()} to be used within the class \code{SumHeights}.
+
 The call to \code{parallel\_for} in \code{main()} automatically subdivides (or chunks) the range \code{r} for multi-threaded parallel computation. \code{parallel\_for} expects a range in its first argument, and an object with a method \code{operator()} having one range argument in its second argument.
 
-\item {} 
 The variable \code{integral} is passed by reference in the constructor \code{SumHeights()} in an effort to use that memory location \code{integral} as an accumulator during the parallelized computation.
 
-\item {} 
 The constructor initializes the state variables \code{my\_a}, \code{my\_h}, and \code{my\_int} using \emph{colon initializers}. In the constructor definition
 
 \begin{Verbatim}[commandchars=\\\{\}]
@@ -358,7 +357,7 @@ The constructor initializes the state variables \code{my\_a}, \code{my\_h}, and 
   \PYG{p}{\PYGZob{}}\PYG{p}{\PYGZcb{}}
 \end{Verbatim}
 
-the expression \code{my\_a(a)} located after the colon : and before the curly bracket \code{\{} has the same effect as an assignment
+The expression \code{my\_a(a)} located after the colon : and before the curly bracket \code{\{} has the same effect as an assignment
 
 \begin{Verbatim}[commandchars=\\\{\}]
 \PYG{n}{my\PYGZus{}a} \PYG{o}{=} \PYG{n}{a}\PYG{p}{;}
@@ -366,86 +365,55 @@ the expression \code{my\_a(a)} located after the colon : and before the curly br
 
 would if it occurred \emph{between} the curly brackets. Colon initialization is optional for the state variables \code{my\_a} and \code{my\_h}, but it is required for the state variable \code{my\_int}, because that state variable was defined using a reference type.
 
-\end{itemize}
-
-\end{itemize}
-
-\end{description}\end{quote}
-
 \begin{notice}{note}{Note:}
 Can you detect any problems in this code?
 \end{notice}
-\begin{enumerate}
-\setcounter{enumi}{1}
-\item {} 
+
+
+\subsection{Execute this code}
+\label{TBB/TBB:execute-this-code}
 For this lab, we will run this TBB program on the MTL.
 
-\end{enumerate}
-\begin{itemize}
-\item {} 
-First, if necessary, copy the program file you created to a local machine for connecting to MTL, e.g., your laptop.
+First, if necessary, copy the program file you created to a local machine for connecting to MTL, e.g., your laptop. You will need to use a ‘terminal’ on Macs or ‘Putty’ on PCs.  If you are off campus, you will need to ssh into a machine on your campus before then logging into the MTL machine at Intel’s headquarters in Oregon.
 
-\item {} 
-If your code is on a lab machine, use the following command from the terminal on your local machine (where “username” is your username, “labmachinename” is the name of the machine on which you are working, and “file\_location” is the location of \code{trap-tbb.cpp} within your directory):
+You can login to the MTL computer, as follows
 
 \begin{Verbatim}[commandchars=\\\{\}]
-laptop\% scp username@labmachinename:file\_location/trap-tbb.cpp .
-\end{Verbatim}
-
-(Don't forget the final dot!)
-
-\item {} 
-Now connect to the MTL's network using the Cisco VPN client software on that local machine.  Login to the MTL computer, as follows:
-
-\begin{Verbatim}[commandchars=\\\{\}]
-laptop\% ssh accountname@36.81.203.1
+laptop\% ssh accountname@192.55.51.81
 \end{Verbatim}
 
 Use one of the student account usernames provided to you, together with the password distributed to the class.
 
-\item {} 
-Create a subdirectory for yourself in the home directory for that student account name:
+Next, copy your program from your laptop or local linux machine to the MTL machine. One way to do this is to use another window (to keep for copying your code), then enter the following command from the directory where your code is located:
 
 \begin{Verbatim}[commandchars=\\\{\}]
-36.81.203.1\% mkdir username
+scp trap-tbb.cpp accountname@192.55.51.81:
 \end{Verbatim}
 
-Here, \emph{username} can be your username.
-
-\item {} 
-Use \code{scp} to copy your file to your subdirectory in the MTL system:
-
-\begin{Verbatim}[commandchars=\\\{\}]
-laptop\% scp trap-omp.C accountname@36.81.203.1:username
-\end{Verbatim}
-
-After making this copy, login into the MTL machine \code{36.81.203.1} again.
-
-\item {} 
 On the remote MTL system, execute the following command, which sets up environment variables for compiling with TBB:
 
 \begin{Verbatim}[commandchars=\\\{\}]
-36.81.203.1\% source/opt/intel/Compiler/11.1/056/tbb/bin/tbbvars.sh intel64
+source/opt/intel/Compiler/11.1/056/tbb/bin/tbbvars.sh intel64
 \end{Verbatim}
 
 The \code{intel64} command-line argument prepares for 64-bit compilation.
 
-\item {} 
+After making this copy, login into the MTL machine 192.55.51.81 in another window.
+
 To compile your program that was copied in a prior step, issue this command:
 
 \begin{Verbatim}[commandchars=\\\{\}]
-36.81.203.1\% g++ -o trap-tbb trap-tbb.cpp -ltbb\_debug
+192.55.51.81\% g++ -o trap-tbb trap-tbb.cpp -ltbb\_debug
 \end{Verbatim}
 
 \begin{notice}{note}{Note:}
 You can use \code{-ltbb} instead of \code{-ltbb\_debug} for a production version of the library instead of one with debugging hooks.
 \end{notice}
 
-\item {} 
 Now run your program with the following command:
 
 \begin{Verbatim}[commandchars=\\\{\}]
-36.81.203.1\% ./trap-tbb
+192.55.51.81\% ./trap-tbb
 \end{Verbatim}
 
 The result is significantly less than 2! Can you think of an explanation for the answer being so far off?
@@ -453,12 +421,10 @@ The result is significantly less than 2! Can you think of an explanation for the
 Also run several time tests of your program
 
 \begin{Verbatim}[commandchars=\\\{\}]
-36.81.203.1\% time ./trap-tbb
+192.55.51.81\% time ./trap-tbb
 \end{Verbatim}
 
 What do you observe in these time tests? How do the times compare to timed runs of \code{trap-omp} for various thread sizes?
-
-\end{itemize}
 
 
 \chapter{TBB, multiple threads, and reduction}

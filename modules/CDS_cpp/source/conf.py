@@ -27,6 +27,13 @@ import sys, os
 # coming with Sphinx (named 'sphinx.ext.*') or your custom ones.
 extensions = ['sphinx.ext.pngmath']
 
+if 'Darwin' in os.uname()[0]:
+	pngmath_latex = '/usr/local/texlive/2011/bin/x86_64-darwin/latex'
+	pngmath_dvipng = '/usr/local/texlive/2011/bin/x86_64-darwin/dvipng'
+elif 'Linux' in os.uname()[0]:
+	pngmath_latex = '/usr/bin/latex'
+	pngmath_dvipng = '/usr/bin/dvipng'
+
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']
 
@@ -186,7 +193,7 @@ latex_elements = {
 # Grouping the document tree into LaTeX files. List of tuples
 # (source start file, target name, title, author, documentclass [howto/manual]).
 latex_documents = [
-  ('index', 'ConcurrentDataStructuresinC.tex', u'Concurrent Data Structures in C++ Documentation',
+  ('index', 'ConcurrentDataStructuresinC.tex', u'Concurrent Data Structures in C++',
    u'CSInParallel Project', 'manual'),
 ]
 
@@ -216,7 +223,7 @@ latex_documents = [
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
 man_pages = [
-    ('index', 'concurrentdatastructuresinc', u'Concurrent Data Structures in C++ Documentation',
+    ('index', 'concurrentdatastructuresinc', u'Concurrent Data Structures in C++',
      [u'CSInParallel Project'], 1)
 ]
 
@@ -230,7 +237,7 @@ man_pages = [
 # (source start file, target name, title, author,
 #  dir menu entry, description, category)
 texinfo_documents = [
-  ('index', 'ConcurrentDataStructuresinC', u'Concurrent Data Structures in C++ Documentation',
+  ('index', 'ConcurrentDataStructuresinC', u'Concurrent Data Structures in C++',
    u'CSInParallel Project', 'ConcurrentDataStructuresinC', 'One line description of project.',
    'Miscellaneous'),
 ]

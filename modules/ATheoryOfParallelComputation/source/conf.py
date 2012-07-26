@@ -193,7 +193,7 @@ latex_elements = {
 # Grouping the document tree into LaTeX files. List of tuples
 # (source start file, target name, title, author, documentclass [howto/manual]).
 latex_documents = [
-  ('index', 'ATheoryofParallelComputation.tex', u'A Theory of Parallel Computation Documentation',
+  ('index', 'ATheoryofParallelComputation.tex', u'A Theory of Parallel Computation',
    u'CSInParallel Project', 'manual'),
 ]
 
@@ -223,7 +223,7 @@ latex_documents = [
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
 man_pages = [
-    ('index', 'atheoryofparallelcomputation', u'A Theory of Parallel Computation Documentation',
+    ('index', 'atheoryofparallelcomputation', u'A Theory of Parallel Computation',
      [u'CSInParallel Project'], 1)
 ]
 
@@ -237,7 +237,7 @@ man_pages = [
 # (source start file, target name, title, author,
 #  dir menu entry, description, category)
 texinfo_documents = [
-  ('index', 'ATheoryofParallelComputation', u'A Theory of Parallel Computation Documentation',
+  ('index', 'ATheoryofParallelComputation', u'A Theory of Parallel Computation',
    u'CSInParallel Project', 'ATheoryofParallelComputation', 'One line description of project.',
    'Miscellaneous'),
 ]

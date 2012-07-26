@@ -193,7 +193,7 @@ latex_elements = {
 # Grouping the document tree into LaTeX files. List of tuples
 # (source start file, target name, title, author, documentclass [howto/manual]).
 latex_documents = [
-  ('index', 'Multi-coreProgrammingUsingThreadingBuildingBlocks.tex', u'Multi-core Programming Using Threading Building Blocks Documentation',
+  ('index', 'Multi-coreProgrammingUsingThreadingBuildingBlocks.tex', u'Multi-core Programming Using Threading Building Blocks',
    u'CSInParallel Project', 'manual'),
 ]
 
@@ -223,7 +223,7 @@ latex_documents = [
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
 man_pages = [
-    ('index', 'multi-coreprogrammingusingthreadingbuildingblocks', u'Multi-core Programming Using Threading Building Blocks Documentation',
+    ('index', 'multi-coreprogrammingusingthreadingbuildingblocks', u'Multi-core Programming Using Threading Building Blocks',
      [u'CSInParallel Project'], 1)
 ]
 
@@ -237,7 +237,7 @@ man_pages = [
 # (source start file, target name, title, author,
 #  dir menu entry, description, category)
 texinfo_documents = [
-  ('index', 'Multi-coreProgrammingUsingThreadingBuildingBlocks', u'Multi-core Programming Using Threading Building Blocks Documentation',
+  ('index', 'Multi-coreProgrammingUsingThreadingBuildingBlocks', u'Multi-core Programming Using Threading Building Blocks',
    u'CSInParallel Project', 'Multi-coreProgrammingUsingThreadingBuildingBlocks', 'One line description of project.',
    'Miscellaneous'),
 ]

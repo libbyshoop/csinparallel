@@ -192,7 +192,7 @@ latex_elements = {
 # Grouping the document tree into LaTeX files. List of tuples
 # (source start file, target name, title, author, documentclass [howto/manual]).
 latex_documents = [
-  ('index', 'ParallelSorting.tex', u'Parallel Sorting Documentation',
+  ('index', 'ParallelSorting.tex', u'Parallel Sorting',
    u'CSInParallel Project', 'manual'),
 ]
 
@@ -222,7 +222,7 @@ latex_documents = [
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
 man_pages = [
-    ('index', 'parallelsorting', u'Parallel Sorting Documentation',
+    ('index', 'parallelsorting', u'Parallel Sorting',
      [u'CSInParallel Project'], 1)
 ]
 
@@ -236,7 +236,7 @@ man_pages = [
 # (source start file, target name, title, author,
 #  dir menu entry, description, category)
 texinfo_documents = [
-  ('index', 'ParallelSorting', u'Parallel Sorting Documentation',
+  ('index', 'ParallelSorting', u'Parallel Sorting',
    u'CSInParallel Project', 'ParallelSorting', 'One line description of project.',
    'Miscellaneous'),
 ]
