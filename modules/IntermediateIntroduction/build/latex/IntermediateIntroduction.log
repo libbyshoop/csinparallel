@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-1.40.10 (TeX Live 2009/Debian) (format=pdflatex 2011.7.11)  16 JUL 2012 14:29
+This is pdfTeX, Version 3.1415926-1.40.10 (TeX Live 2009/Debian) (format=pdflatex 2011.7.11)  26 JUL 2012 15:00
 entering extended mode
  %&-line parsing enabled.
 **IntermediateIntroduction.tex
@@ -849,9 +849,12 @@ LaTeX Font Info:    Font shape `T1/phv/bx/n' in size <17.28> not available
 (Font)              Font shape `T1/phv/b/n' tried instead on input line 109.
  [1
 
-{/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map}] [2
+{/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map}]
 
-] (./IntermediateIntroduction.toc
+Package Fancyhdr Warning: \fancyfoot's `E' option without twoside option is use
+less on input line 109.
+
+(./IntermediateIntroduction.toc
 LaTeX Font Info:    Font shape `T1/ptm/bx/n' in size <10> not available
 (Font)              Font shape `T1/ptm/b/n' tried instead on input line 2.
 )
@@ -859,7 +862,10 @@ LaTeX Font Info:    Font shape `T1/ptm/bx/n' in size <10> not available
 \openout7 = `IntermediateIntroduction.toc'.
 
 
-Adding blank page after the table of contents.
+
+Package Fancyhdr Warning: \fancyfoot's `E' option without twoside option is use
+less on input line 109.
+
 LaTeX Font Info:    Font shape `T1/phv/bx/n' in size <10> not available
 (Font)              Font shape `T1/phv/b/n' tried instead on input line 109.
 pdfTeX warning (ext4): destination with the same identifier (name{page.i}) has 
@@ -869,48 +875,84 @@ been already used, duplicate ignored
 l.109 \tableofcontents
                        [1
 
-]pdfTeX warning (ext4): destination with the same identifier (name{page.ii}) ha
-s been already used, duplicate ignored
-<to be read again> 
-                   \relax 
-l.109 \tableofcontents
-                       [2]
+
+]
+
+Package Fancyhdr Warning: \fancyfoot's `E' option without twoside option is use
+less on input line 109.
+
+
+Package Fancyhdr Warning: \fancyfoot's `E' option without twoside option is use
+less on input line 109.
+
+
+Package Fancyhdr Warning: \fancyhead's `E' option without twoside option is use
+less on input line 109.
+
 Chapter 1.
 LaTeX Font Info:    Font shape `T1/phv/bx/n' in size <14.4> not available
 (Font)              Font shape `T1/phv/b/n' tried instead on input line 114.
+<MooresLaw.png, id=61, 1003.75pt x 902.37125pt>
+File: MooresLaw.png Graphic file (type png)
+ <use MooresLaw.png>
+File: MooresLaw.png Graphic file (type png)
+
+<use MooresLaw.png>
+
+Package Fancyhdr Warning: \fancyfoot's `E' option without twoside option is use
+less on input line 179.
+
 [1
 
 
-] [2]
+] [2 <./MooresLaw.png>] [3]
 Chapter 2.
-LaTeX Font Info:    Try loading font information for TS1+ptm on input line 245.
+LaTeX Font Info:    Try loading font information for TS1+ptm on input line 251.
 
 (/usr/share/texmf-texlive/tex/latex/psnfss/ts1ptm.fd
 File: ts1ptm.fd 2001/06/04 font definitions for TS1/ptm.
-) [3
+)
 
-] [4]
+Package Fancyhdr Warning: \fancyfoot's `E' option without twoside option is use
+less on input line 272.
+
+[4
+
+] [5]
 Chapter 3.
-[5
 
-] [6
+Package Fancyhdr Warning: \fancyfoot's `E' option without twoside option is use
+less on input line 371.
+
+[6
 
 ]
 Chapter 4.
-(./IntermediateIntroduction.ind [7] [8
+(./IntermediateIntroduction.ind
 
-] [9
+Package Fancyhdr Warning: \fancyfoot's `E' option without twoside option is use
+less on input line 1.
+
+[7
+
+]
+
+Package Fancyhdr Warning: \fancyfoot's `E' option without twoside option is use
+less on input line 39.
+
+[8
+
 
 
 ]) (./IntermediateIntroduction.aux) ) 
 Here is how much of TeX's memory you used:
- 7916 strings out of 495061
- 107902 string characters out of 1182621
- 194649 words of memory out of 3000000
- 10866 multiletter control sequences out of 15000+50000
- 55570 words of font info for 58 fonts, out of 3000000 for 9000
+ 7922 strings out of 495061
+ 108006 string characters out of 1182621
+ 194638 words of memory out of 3000000
+ 10872 multiletter control sequences out of 15000+50000
+ 54410 words of font info for 57 fonts, out of 3000000 for 9000
  29 hyphenation exceptions out of 8191
- 45i,16n,45p,790b,381s stack positions out of 5000i,500n,10000p,200000b,50000s
+ 45i,16n,45p,790b,375s stack positions out of 5000i,500n,10000p,200000b,50000s
 {/usr/share/texmf-texlive/fonts/enc/dvips/
 base/8r.enc}</usr/share/texmf-texlive/fonts/type1/public/amsfonts/cm/cmmi10.pfb
 ></usr/share/texmf-texlive/fonts/type1/public/amsfonts/cm/cmmi5.pfb></usr/share
@@ -918,13 +960,13 @@ base/8r.enc}</usr/share/texmf-texlive/fonts/type1/public/amsfonts/cm/cmmi10.pfb
 ve/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/share/texmf-texlive/fonts/typ
 e1/public/amsfonts/cm/cmr7.pfb></usr/share/texmf-texlive/fonts/type1/public/ams
 fonts/cm/cmsy10.pfb></usr/share/texmf-texlive/fonts/type1/urw/helvetic/uhvb8a.p
-fb></usr/share/texmf-texlive/fonts/type1/urw/helvetic/uhvbo8a.pfb></usr/share/t
-exmf-texlive/fonts/type1/urw/helvetic/uhvr8a.pfb></usr/share/texmf-texlive/font
-s/type1/urw/times/utmb8a.pfb></usr/share/texmf-texlive/fonts/type1/urw/times/ut
-mr8a.pfb></usr/share/texmf-texlive/fonts/type1/urw/times/utmri8a.pfb>
-Output written on IntermediateIntroduction.pdf (13 pages, 149096 bytes).
+fb></usr/share/texmf-texlive/fonts/type1/urw/helvetic/uhvr8a.pfb></usr/share/te
+xmf-texlive/fonts/type1/urw/times/utmb8a.pfb></usr/share/texmf-texlive/fonts/ty
+pe1/urw/times/utmr8a.pfb></usr/share/texmf-texlive/fonts/type1/urw/times/utmri8
+a.pfb>
+Output written on IntermediateIntroduction.pdf (10 pages, 196704 bytes).
 PDF statistics:
- 185 PDF objects out of 1000 (max. 8388607)
- 41 named destinations out of 1000 (max. 500000)
- 73 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 177 PDF objects out of 1000 (max. 8388607)
+ 40 named destinations out of 1000 (max. 500000)
+ 78 words of extra memory for PDF output out of 10000 (max. 10000000)
 

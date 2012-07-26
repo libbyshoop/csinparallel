@@ -4,12 +4,12 @@
 \indexentry{thread|textbf}{1}
 \indexentry{sequential programming|textbf}{1}
 \indexentry{concurrent programming|textbf}{1}
-\indexentry{multi-core computing|textbf}{2}
-\indexentry{distributed computing|textbf}{2}
-\indexentry{data parallelism|textbf}{2}
-\indexentry{task parallelism|textbf}{2}
-\indexentry{shared memory multiprocessing|textbf}{2}
-\indexentry{cluster|textbf}{2}
-\indexentry{grid computing|textbf}{2}
-\indexentry{cloud computing|textbf}{2}
-\indexentry{SETI@home|textbf}{2}
+\indexentry{multi-core computing|textbf}{3}
+\indexentry{distributed computing|textbf}{3}
+\indexentry{data parallelism|textbf}{3}
+\indexentry{task parallelism|textbf}{3}
+\indexentry{shared memory multiprocessing|textbf}{3}
+\indexentry{cluster|textbf}{3}
+\indexentry{grid computing|textbf}{3}
+\indexentry{cloud computing|textbf}{3}
+\indexentry{SETI@home|textbf}{3}

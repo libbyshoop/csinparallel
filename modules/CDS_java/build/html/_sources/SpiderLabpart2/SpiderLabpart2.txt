@@ -1,8 +1,9 @@
-Improving the ‘Spider’
-----------------------
+********************
+Improving the Spider
+********************
 
 First Question: How much work is there?
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+#######################################
 
 Once you have a completed working spider, let’s examine how much
 work it has to do.  Try some experiments in which you continue
@@ -18,7 +19,7 @@ maxUrls, report on how much work is left to do.  How quickly is our
 Spider overloaded with work?
 
 Multiple Spiders to the rescue
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+##############################
 
 Now let’s examine how we can use multiple spiders working at the
 same time on this problem.  Your instructor will take a moment to
@@ -40,7 +41,7 @@ RunConcurrentSpider.  Then each new ‘Runnable’ ConcurrentSpider
 will receive a reference to that class of shared data structures.
 
 First try:  share our original data structures
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+##############################################
 
 We are gong to try this process in 2 steps, so you will first look
 at the ‘first version’, where we will try to share the original
@@ -71,7 +72,7 @@ anything.  Can you tell if you get the same results each time?
 	You will make the SharedSpiderData1 class.
 
 Second try: concurrent data structures
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+######################################
 
 Your instructor will discuss an important improvement in class and
 share come more code with you.

@@ -27,15 +27,12 @@ import sys, os
 # coming with Sphinx (named 'sphinx.ext.*') or your custom ones.
 extensions = ['sphinx.ext.pngmath']
 
-
 if 'Darwin' in os.uname()[0]:
 	pngmath_latex = '/usr/local/texlive/2011/bin/x86_64-darwin/latex'
 	pngmath_dvipng = '/usr/local/texlive/2011/bin/x86_64-darwin/dvipng'
 elif 'Linux' in os.uname()[0]:
 	pngmath_latex = '/usr/bin/latex'
 	pngmath_dvipng = '/usr/bin/dvipng'
-
-#extensions = ['sphinx.ext.jsmath']
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']
@@ -50,7 +47,7 @@ source_suffix = '.rst'
 master_doc = 'index'
 
 # General information about the project.
-project = u'Programming with Multiple Cores'
+project = u'Multicore Programming with OpenMP'
 copyright = u'This work is licensed under a Creative Commons Attribution-ShareAlike 3.0 Unported License'
 
 # The version info for the project you're documenting, acts as replacement for
@@ -113,7 +110,7 @@ html_theme = 'default'
 
 # The name for this set of Sphinx documents.  If None, it defaults to
 # "<project> v<release> documentation".
-html_title = 'Programming with Multiple Cores'
+html_title = 'Multicore Programming with OpenMP'
 
 # A shorter title for the navigation bar.  Default is the same as html_title.
 #html_short_title = None
@@ -196,7 +193,7 @@ latex_elements = {
 # Grouping the document tree into LaTeX files. List of tuples
 # (source start file, target name, title, author, documentclass [howto/manual]).
 latex_documents = [
-  ('index', 'ProgrammingwithMultipleCores.tex', u'Programming with Multiple Cores',
+  ('index', 'ProgrammingwithMultipleCores.tex', u'Multicore Programming with OpenMP',
    u'CSInParallel Project', 'manual'),
 ]
 
@@ -226,7 +223,7 @@ latex_documents = [
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
 man_pages = [
-    ('index', 'programmingwithmultiplecores', u'Programming with Multiple Cores',
+    ('index', 'programmingwithmultiplecores', u'Multicore Programming with OpenMP',
      [u'CSInParallel Project'], 1)
 ]
 
@@ -240,7 +237,7 @@ man_pages = [
 # (source start file, target name, title, author,
 #  dir menu entry, description, category)
 texinfo_documents = [
-  ('index', 'ProgrammingwithMultipleCores', u'Programming with Multiple Cores',
+  ('index', 'ProgrammingwithMultipleCores', u'Multicore Programming with OpenMP',
    u'CSInParallel Project', 'ProgrammingwithMultipleCores', 'CSInParallel project.',
    'Miscellaneous'),
 ]

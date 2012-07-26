@@ -47,7 +47,7 @@ source_suffix = '.rst'
 master_doc = 'index'
 
 # General information about the project.
-project = u'Dining Philosophers'
+project = u'The Dining Philosophers Problem'
 copyright = u'This work is licensed under a Creative Commons Attribution-ShareAlike 3.0 Unported License'
 
 # The version info for the project you're documenting, acts as replacement for
@@ -110,7 +110,7 @@ html_theme = 'default'
 
 # The name for this set of Sphinx documents.  If None, it defaults to
 # "<project> v<release> documentation".
-html_title = 'Dining Philosophers'
+html_title = 'The Dining Philosophers Problem'
 
 # A shorter title for the navigation bar.  Default is the same as html_title.
 #html_short_title = None
@@ -193,7 +193,7 @@ latex_elements = {
 # Grouping the document tree into LaTeX files. List of tuples
 # (source start file, target name, title, author, documentclass [howto/manual]).
 latex_documents = [
-  ('index', 'DiningPhilosophers.tex', u'Dining Philosophers Documentation',
+  ('index', 'DiningPhilosophers.tex', u'The Dining Philosophers Problem',
    u'CSInParallel Project', 'manual'),
 ]
 
@@ -223,7 +223,7 @@ latex_documents = [
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
 man_pages = [
-    ('index', 'diningphilosophers', u'Dining Philosophers Documentation',
+    ('index', 'diningphilosophers', u'The Dining Philosophers Problem',
      [u'CSInParallel Project'], 1)
 ]
 
@@ -237,7 +237,7 @@ man_pages = [
 # (source start file, target name, title, author,
 #  dir menu entry, description, category)
 texinfo_documents = [
-  ('index', 'DiningPhilosophers', u'Dining Philosophers Documentation',
+  ('index', 'DiningPhilosophers', u'The Dining Philosophers Problem',
    u'CSInParallel Project', 'DiningPhilosophers', 'One line description of project.',
    'Miscellaneous'),
 ]

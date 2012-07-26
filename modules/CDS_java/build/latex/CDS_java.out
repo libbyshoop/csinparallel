@@ -1,6 +1,6 @@
-\BOOKMARK [0][-]{chapter.1}{One Crawler}{}
+\BOOKMARK [0][-]{chapter.1}{A Single-process Web Crawler, or Spider}{}
 \BOOKMARK [1][-]{section.1.1}{To Start With}{chapter.1}
-\BOOKMARK [0][-]{chapter.2}{URL Spider}{}
+\BOOKMARK [0][-]{chapter.2}{Using Multiple Processes}{}
 \BOOKMARK [1][-]{section.2.1}{Environment}{chapter.2}
 \BOOKMARK [1][-]{section.2.2}{Executing sequentially}{chapter.2}
 \BOOKMARK [1][-]{section.2.3}{One spider}{chapter.2}
@@ -8,7 +8,7 @@
 \BOOKMARK [1][-]{section.2.5}{Multiple Spider `threads'}{chapter.2}
 \BOOKMARK [1][-]{section.2.6}{Key point: locking}{chapter.2}
 \BOOKMARK [1][-]{section.2.7}{How to do this in Java}{chapter.2}
-\BOOKMARK [0][-]{chapter.3}{Improving the \217Spider\220}{}
+\BOOKMARK [0][-]{chapter.3}{Improving the Spider}{}
 \BOOKMARK [1][-]{section.3.1}{First Question: How much work is there?}{chapter.3}
 \BOOKMARK [1][-]{section.3.2}{Multiple Spiders to the rescue}{chapter.3}
 \BOOKMARK [1][-]{section.3.3}{First try: \040share our original data structures}{chapter.3}

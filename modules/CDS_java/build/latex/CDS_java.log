@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-1.40.10 (TeX Live 2009/Debian) (format=pdflatex 2011.7.11)  13 JUL 2012 16:42
+This is pdfTeX, Version 3.1415926-1.40.10 (TeX Live 2009/Debian) (format=pdflatex 2011.7.11)  26 JUL 2012 14:45
 entering extended mode
  %&-line parsing enabled.
 **CDS_java.tex
@@ -905,7 +905,7 @@ File: ts1ptm.fd 2001/06/04 font definitions for TS1/ptm.
 )
 
 Package Fancyhdr Warning: \fancyfoot's `E' option without twoside option is use
-less on input line 175.
+less on input line 170.
 
 [1
 
@@ -950,18 +950,18 @@ less on input line 500.
 ] (./CDS_java.ind) [7] (./CDS_java.aux) ) 
 Here is how much of TeX's memory you used:
  7961 strings out of 495061
- 108127 string characters out of 1182621
- 191433 words of memory out of 3000000
+ 108188 string characters out of 1182621
+ 191545 words of memory out of 3000000
  10908 multiletter control sequences out of 15000+50000
  52139 words of font info for 57 fonts, out of 3000000 for 9000
  29 hyphenation exceptions out of 8191
- 45i,12n,45p,298b,449s stack positions out of 5000i,500n,10000p,200000b,50000s
+ 45i,11n,45p,298b,449s stack positions out of 5000i,500n,10000p,200000b,50000s
 {/usr/share/texmf-texlive/fonts/enc/dv
 ips/base/8r.enc}</usr/share/texmf-texlive/fonts/type1/urw/courier/ucrr8a.pfb></
 usr/share/texmf-texlive/fonts/type1/urw/helvetic/uhvb8a.pfb></usr/share/texmf-t
 exlive/fonts/type1/urw/times/utmb8a.pfb></usr/share/texmf-texlive/fonts/type1/u
 rw/times/utmr8a.pfb>
-Output written on CDS_java.pdf (9 pages, 153035 bytes).
+Output written on CDS_java.pdf (9 pages, 153432 bytes).
 PDF statistics:
  163 PDF objects out of 1000 (max. 8388607)
  38 named destinations out of 1000 (max. 500000)

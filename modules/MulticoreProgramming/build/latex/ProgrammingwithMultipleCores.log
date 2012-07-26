@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-1.40.10 (TeX Live 2009/Debian) (format=pdflatex 2011.7.11)  13 JUL 2012 09:53
+This is pdfTeX, Version 3.1415926-1.40.10 (TeX Live 2009/Debian) (format=pdflatex 2011.7.11)  26 JUL 2012 15:17
 entering extended mode
  %&-line parsing enabled.
 **ProgrammingwithMultipleCores.tex
@@ -986,8 +986,8 @@ Overfull \hbox (14.79999pt too wide) in paragraph at lines 805--805
 (./ProgrammingwithMultipleCores.aux) ) 
 Here is how much of TeX's memory you used:
  7976 strings out of 495061
- 109303 string characters out of 1182621
- 197025 words of memory out of 3000000
+ 109305 string characters out of 1182621
+ 197027 words of memory out of 3000000
  10913 multiletter control sequences out of 15000+50000
  57976 words of font info for 66 fonts, out of 3000000 for 9000
  29 hyphenation exceptions out of 8191
@@ -1003,7 +1003,7 @@ sr/share/texmf-texlive/fonts/type1/urw/courier/ucrro8a.pfb></usr/share/texmf-te
 xlive/fonts/type1/urw/helvetic/uhvb8a.pfb></usr/share/texmf-texlive/fonts/type1
 /urw/times/utmb8a.pfb></usr/share/texmf-texlive/fonts/type1/urw/times/utmr8a.pf
 b></usr/share/texmf-texlive/fonts/type1/urw/times/utmri8a.pfb>
-Output written on ProgrammingwithMultipleCores.pdf (16 pages, 196295 bytes).
+Output written on ProgrammingwithMultipleCores.pdf (16 pages, 196331 bytes).
 PDF statistics:
  237 PDF objects out of 1000 (max. 8388607)
  44 named destinations out of 1000 (max. 500000)

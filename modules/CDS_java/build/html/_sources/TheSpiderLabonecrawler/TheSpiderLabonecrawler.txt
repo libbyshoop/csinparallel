@@ -1,6 +1,6 @@
-***********
-One Crawler
-***********
+***************************************
+A Single-process Web Crawler, or Spider
+***************************************
 
 The World Wide web is aptly named when you consider the URL links
 found in pages.  One page can have many links in it that take a

@@ -3,8 +3,8 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-Distributed Memory Programming
-==============================
+Distributed Computing Fundamentals
+===================================
 
 .. toctree::
    :maxdepth: 1

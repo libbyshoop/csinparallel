@@ -47,7 +47,7 @@ source_suffix = '.rst'
 master_doc = 'index'
 
 # General information about the project.
-project = u'Intermediate Introduction to Parallel Computing'
+project = u'Parallel Computing Concepts'
 copyright = u'This work is licensed under a Creative Commons Attribution-ShareAlike 3.0 Unported License'
 
 # The version info for the project you're documenting, acts as replacement for
@@ -110,7 +110,7 @@ html_theme = 'default'
 
 # The name for this set of Sphinx documents.  If None, it defaults to
 # "<project> v<release> documentation".
-html_title = 'Intermediate Introduction to Parallel Computing'
+html_title = 'Parallel Computing Concepts'
 
 # A shorter title for the navigation bar.  Default is the same as html_title.
 #html_short_title = None
@@ -177,6 +177,9 @@ htmlhelp_basename = 'IntermediateIntroductiondoc'
 # -- Options for LaTeX output --------------------------------------------------
 
 latex_elements = {
+
+'releasename': '', 'classoptions': ',openany,oneside', 'babel' : '\\usepackage[english]{babel}'
+
 # The paper size ('letterpaper' or 'a4paper').
 #'papersize': 'letterpaper',
 
@@ -190,7 +193,7 @@ latex_elements = {
 # Grouping the document tree into LaTeX files. List of tuples
 # (source start file, target name, title, author, documentclass [howto/manual]).
 latex_documents = [
-  ('index', 'IntermediateIntroduction.tex', u'Intermediate Introduction to Parallel Computing',
+  ('index', 'IntermediateIntroduction.tex', u'Parallel Computing Concepts',
    u'CSInParallel Project', 'manual'),
 ]
 
@@ -220,7 +223,7 @@ latex_documents = [
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
 man_pages = [
-    ('index', 'intermediateintroduction', u'Intermediate Introduction to Parallel Computing',
+    ('index', 'intermediateintroduction', u'Parallel Computing Concepts',
      [u'CSInParallel Project'], 1)
 ]
 
@@ -234,7 +237,7 @@ man_pages = [
 # (source start file, target name, title, author,
 #  dir menu entry, description, category)
 texinfo_documents = [
-  ('index', 'IntermediateIntroduction', u'Intermediate Introduction to Parallel Computing',
+  ('index', 'IntermediateIntroduction', u'Parallel Computing Concepts',
    u'CSInParallel Project', 'IntermediateIntroduction', 'One line description of project.',
    'Miscellaneous'),
 ]

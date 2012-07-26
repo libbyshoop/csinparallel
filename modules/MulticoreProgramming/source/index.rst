@@ -3,8 +3,8 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-Programming with multiple cores
-===============================
+Multicore Programming with OpenMP
+==================================
 
 .. toctree::
    :maxdepth: 1
