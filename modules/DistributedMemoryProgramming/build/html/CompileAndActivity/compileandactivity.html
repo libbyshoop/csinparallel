@@ -25,7 +25,6 @@
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
-    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <link rel="top" title="Distributed Computing Fundamentals" href="../index.html" />
     <link rel="next" title="Decomposition and Activities" href="../DecompositionAndActivity/DecompositionAndActivity.html" />
     <link rel="prev" title="MPI Communications" href="../MPICommunication/MPICommunication.html" /> 
@@ -85,11 +84,11 @@
 </div>
 </div>
 <div class="section" id="activity-1-what-is-my">
-<h2>Activity 1: What is my <span class="math">\({\pi}\)</span> ?<a class="headerlink" href="#activity-1-what-is-my" title="Permalink to this headline">¶</a></h2>
-<p>In this activity, we are going to compute <span class="math">\({\pi}\)</span> using integration. We have formula:</p>
+<h2>Activity 1: What is my <img class="math" src="../_images/math/186d9d976137aae10566722f246f64338c4bba0f.png" alt="{\pi}"/> ?<a class="headerlink" href="#activity-1-what-is-my" title="Permalink to this headline">¶</a></h2>
+<p>In this activity, we are going to compute <img class="math" src="../_images/math/186d9d976137aae10566722f246f64338c4bba0f.png" alt="{\pi}"/> using integration. We have formula:</p>
 <div class="math">
-\[\int_0^1 \frac{4}{1 + x^2} dx = {\pi}\]</div>
-<p>Therefore, we can compute the area under the curve to get the value of the integral.</p>
+<p><img src="../_images/math/c866da7aec308a4f735d6db2e0f244bfbc806f94.png" alt="\int_0^1 \frac{4}{1 + x^2} dx = {\pi}"/></p>
+</div><p>Therefore, we can compute the area under the curve to get the value of the integral.</p>
 <img alt="graph" class="align-center" src="../_images/graph.png" style="width: 300px; height: 150px;" />
 <p class="centered">
 <strong>Figure 4: Graph for function</strong></p><table class="docutils field-list" frame="void" rules="none">
@@ -105,7 +104,7 @@
 </li>
 <li><p class="first">Then you want to let each process know the <strong>number of bins</strong> you are using. Therefore, you need to broadcast the <strong>number of bins</strong> to all processes in our MPI_COMM_WORLD. You should use <strong>MPI_Bcast</strong> to broadcast the <strong>number of bins</strong>. You are asked to complete this part of the code.</p>
 </li>
-<li><p class="first">Now we are ready to ask each process compute their task. We want to evaluate the integral of <span class="math">\(\frac {4}{1 + x^2}\)</span> from <em>0</em> to <em>1</em>, and we can do so by finding the sum of all bins from <em>0</em> to <em>1</em>. Each bin is approximately <span class="math">\(\frac {1}{n} * \frac {4}{1 + x^2}\)</span> (<strong>n</strong> is the number of bins). We are iterating over the number of bins, and we start from <em>0</em>; therefore, to find the center of each bin, we need to add <em>+ 0.5</em> to variable <em>i</em>. Moreover, in the <strong>for loop</strong>, we ask the rank <em>0</em> to compute the first bin, the (nprocs) bin, and so on, rank <em>1</em> to compute the second bin, the (nprocs + 1) bin, and so on, ..., as long as value of <em>i</em> is less than <strong>n</strong>. Suppose that there are <em>p</em> processes, then these <em>p</em> processes will take the first <em>p</em> bins, where process whose rank is 0 takes <em>1st</em> bin, process whose rank is 1 takes <em>2nd</em> bin, and so on. If there are any bins left, process whose rank is 1 takes <em>pth</em> bin, and so on. This can be done by using the following piece of code:</p>
+<li><p class="first">Now we are ready to ask each process compute their task. We want to evaluate the integral of <img class="math" src="../_images/math/97e7dc8cab2aaeafad5b9ab9b02e7ed2eb0f4dad.png" alt="\frac {4}{1 + x^2}"/> from <em>0</em> to <em>1</em>, and we can do so by finding the sum of all bins from <em>0</em> to <em>1</em>. Each bin is approximately <img class="math" src="../_images/math/c87576c3f1fb23b1ea9c3d278a6fd0b12dfd1e06.png" alt="\frac {1}{n} * \frac {4}{1 + x^2}"/> (<strong>n</strong> is the number of bins). We are iterating over the number of bins, and we start from <em>0</em>; therefore, to find the center of each bin, we need to add <em>+ 0.5</em> to variable <em>i</em>. Moreover, in the <strong>for loop</strong>, we ask the rank <em>0</em> to compute the first bin, the (nprocs) bin, and so on, rank <em>1</em> to compute the second bin, the (nprocs + 1) bin, and so on, ..., as long as value of <em>i</em> is less than <strong>n</strong>. Suppose that there are <em>p</em> processes, then these <em>p</em> processes will take the first <em>p</em> bins, where process whose rank is 0 takes <em>1st</em> bin, process whose rank is 1 takes <em>2nd</em> bin, and so on. If there are any bins left, process whose rank is 1 takes <em>pth</em> bin, and so on. This can be done by using the following piece of code:</p>
 <div class="highlight-c"><div class="highlight"><pre><span class="cm">/* Calculating for each process */</span>
 <span class="n">step</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">/</span> <span class="p">(</span><span class="kt">double</span><span class="p">)</span> <span class="n">n</span><span class="p">;</span>
 <span class="n">sum</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">;</span>
@@ -118,7 +117,7 @@
 </pre></div>
 </div>
 </li>
-<li><p class="first">When all processes have finished their computations, their results are stored in <strong>mypi</strong>. Therefore, we can reduce all their results into one result, which is the value of <span class="math">\({\pi}\)</span>. Your task is to complete this part by using MPI_Reduce.</p>
+<li><p class="first">When all processes have finished their computations, their results are stored in <strong>mypi</strong>. Therefore, we can reduce all their results into one result, which is the value of <img class="math" src="../_images/math/186d9d976137aae10566722f246f64338c4bba0f.png" alt="{\pi}"/>. Your task is to complete this part by using MPI_Reduce.</p>
 </li>
 </ul>
 </td>
@@ -215,7 +214,7 @@
   <ul>
 <li><a class="reference internal" href="#">Compiling and Activites</a><ul>
 <li><a class="reference internal" href="#compiling-an-mpi-program">Compiling an MPI program</a></li>
-<li><a class="reference internal" href="#activity-1-what-is-my">Activity 1: What is my <span class="math">\({\pi}\)</span> ?</a></li>
+<li><a class="reference internal" href="#activity-1-what-is-my">Activity 1: What is my <img class="math" src="../_images/math/186d9d976137aae10566722f246f64338c4bba0f.png" alt="{\pi}"/> ?</a></li>
 <li><a class="reference internal" href="#activity-2-vector-matrix-multiplication">Activity 2: Vector Matrix Multiplication</a></li>
 </ul>
 </li>

@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-1.40.10 (TeX Live 2009/Debian) (format=pdflatex 2011.7.11)  26 JUL 2012 14:48
+This is pdfTeX, Version 3.1415926-1.40.10 (TeX Live 2009/Debian) (format=pdflatex 2011.7.11)  26 JUL 2012 16:07
 entering extended mode
  %&-line parsing enabled.
 **DistributedComputingFundamentals.tex
@@ -915,7 +915,7 @@ File: SharedMemoryUMA.png Graphic file (type png)
  <use SharedMemoryUMA.png>
 
 Package Fancyhdr Warning: \fancyfoot's `E' option without twoside option is use
-less on input line 168.
+less on input line 167.
 
 [2
 
@@ -925,12 +925,12 @@ File: DistributedMemory.png Graphic file (type png)
 <use DistributedMemory.png>
 File: DistributedMemory.png Graphic file (type png)
  <use DistributedMemory.png> [3 <./SharedMemoryUMA.png (PNG copy)>]
-Overfull \hbox (14.79999pt too wide) in paragraph at lines 246--246
+Overfull \hbox (14.79999pt too wide) in paragraph at lines 244--244
  [] 
  []
 
 LaTeX Font Info:    Font shape `T1/phv/bx/n' in size <9> not available
-(Font)              Font shape `T1/phv/b/n' tried instead on input line 249.
+(Font)              Font shape `T1/phv/b/n' tried instead on input line 247.
 [4 <./DistributedMemory.png (PNG copy)>]
 Chapter 3.
 <LittleFe.jpg, id=128, 2601.72pt x 1734.48pt>
@@ -941,17 +941,17 @@ File: LittleFe.jpg Graphic file (type jpg)
 <use LittleFe.jpg>
 
 Package Fancyhdr Warning: \fancyfoot's `E' option without twoside option is use
-less on input line 265.
+less on input line 263.
 
 [5
 
 ]
-Overfull \hbox (14.79999pt too wide) in paragraph at lines 283--283
+Overfull \hbox (14.79999pt too wide) in paragraph at lines 281--281
  [] 
  []
 
 LaTeX Font Info:    Font shape `T1/phv/bx/n' in size <12> not available
-(Font)              Font shape `T1/phv/b/n' tried instead on input line 286.
+(Font)              Font shape `T1/phv/b/n' tried instead on input line 284.
 [6 <./LittleFe.jpg>]
 Chapter 4.
 <MPIstructure.png, id=140, 462.72874pt x 523.9575pt>
@@ -962,7 +962,7 @@ File: MPIstructure.png Graphic file (type png)
 <use MPIstructure.png>
 
 Package Fancyhdr Warning: \fancyfoot's `E' option without twoside option is use
-less on input line 334.
+less on input line 332.
 
 [7
 
@@ -972,19 +972,19 @@ File: MPI_COMM_WORLD.png Graphic file (type png)
 <use MPI_COMM_WORLD.png>
 File: MPI_COMM_WORLD.png Graphic file (type png)
  <use MPI_COMM_WORLD.png> [8 <./MPIstructure.png (PNG copy)>]
-LaTeX Font Info:    Try loading font information for T1+pcr on input line 351.
+LaTeX Font Info:    Try loading font information for T1+pcr on input line 349.
  (/usr/share/texmf-texlive/tex/latex/psnfss/t1pcr.fd
 File: t1pcr.fd 2001/06/04 font definitions for T1/pcr.
 ) [9 <./MPI_COMM_WORLD.png (PNG copy)>]
 LaTeX Font Info:    Font shape `T1/pcr/m/it' in size <9> not available
-(Font)              Font shape `T1/pcr/m/sl' tried instead on input line 391.
+(Font)              Font shape `T1/pcr/m/sl' tried instead on input line 389.
 LaTeX Font Info:    Font shape `T1/pcr/bx/n' in size <9> not available
-(Font)              Font shape `T1/pcr/b/n' tried instead on input line 394.
+(Font)              Font shape `T1/pcr/b/n' tried instead on input line 392.
  [10]
 Chapter 5.
 
 Package Fancyhdr Warning: \fancyfoot's `E' option without twoside option is use
-less on input line 513.
+less on input line 511.
 
 [11
 
@@ -997,19 +997,19 @@ File: collective.png Graphic file (type png)
 Chapter 6.
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `math shift' on input line 660.
+(hyperref)                removing `math shift' on input line 658.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `\pi' on input line 660.
+(hyperref)                removing `\pi' on input line 658.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `math shift' on input line 660.
+(hyperref)                removing `math shift' on input line 658.
 
 
 Package Fancyhdr Warning: \fancyfoot's `E' option without twoside option is use
-less on input line 668.
+less on input line 666.
 
 [15
 
@@ -1025,7 +1025,7 @@ File: vector_matrix_multi.png Graphic file (type png)
 <use vector_matrix_multi.png>
 File: vector_matrix_multi.png Graphic file (type png)
  <use vector_matrix_multi.png> [17 <./vector_matrix_multi.png (PNG copy)>]
-Underfull \hbox (badness 10000) in paragraph at lines 770--772
+Underfull \hbox (badness 10000) in paragraph at lines 768--770
 []\T1/ptm/m/n/10 To down-load the en-tire source code from www.public.asu.edu/~
 dstanzoi [3]: \T1/pcr/m/n/10 download
  []
@@ -1034,7 +1034,7 @@ dstanzoi [3]: \T1/pcr/m/n/10 download
 Chapter 7.
 
 Package Fancyhdr Warning: \fancyfoot's `E' option without twoside option is use
-less on input line 818.
+less on input line 816.
 
 [19
 
@@ -1047,7 +1047,7 @@ Here is how much of TeX's memory you used:
  10977 multiletter control sequences out of 15000+50000
  63579 words of font info for 73 fonts, out of 3000000 for 9000
  29 hyphenation exceptions out of 8191
- 45i,14n,49p,834b,536s stack positions out of 5000i,500n,10000p,200000b,50000s
+ 45i,14n,49p,1136b,536s stack positions out of 5000i,500n,10000p,200000b,50000s
 {/usr/share/texmf-texlive/fonts/enc/d
 vips/base/8r.enc}</usr/share/texmf-texlive/fonts/type1/public/amsfonts/cm/cmex1
 0.pfb></usr/share/texmf-texlive/fonts/type1/public/amsfonts/cm/cmmi10.pfb></usr
@@ -1062,7 +1062,7 @@ pe1/urw/courier/ucrro8a.pfb></usr/share/texmf-texlive/fonts/type1/urw/helvetic/
 uhvb8a.pfb></usr/share/texmf-texlive/fonts/type1/urw/times/utmb8a.pfb></usr/sha
 re/texmf-texlive/fonts/type1/urw/times/utmr8a.pfb></usr/share/texmf-texlive/fon
 ts/type1/urw/times/utmri8a.pfb>
-Output written on DistributedComputingFundamentals.pdf (25 pages, 1411811 bytes
+Output written on DistributedComputingFundamentals.pdf (25 pages, 1412903 bytes
 ).
 PDF statistics:
  305 PDF objects out of 1000 (max. 8388607)

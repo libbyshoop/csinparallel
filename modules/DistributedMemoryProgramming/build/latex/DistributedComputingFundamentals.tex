@@ -118,7 +118,7 @@ Before getting started with this module, please keep in mind that we assume you 
 
 \chapter{Introduction to Cluster}
 \label{IntroCluster/IntroCluster:introduction-to-cluster}\label{IntroCluster/IntroCluster::doc}
-\textbf{Definition}: ``A cluster is a type of parallel or distributed processing system, which consists of a collection of interconnected stand-alone computers cooperatively working together as a single, integrated computing resource.'' - by Rajkumar Buyya.
+\textbf{Definition}: A cluster is a type of parallel or distributed processing system, which consists of a collection of interconnected stand-alone computers cooperatively working together as a single, integrated computing resource. {[}1{]}
 
 A cluster is usually a linux-based operating system. Basically, a cluster has four major components:
 \begin{itemize}
@@ -147,10 +147,8 @@ Distributed Memory Model
 \end{itemize}
 
 General Characteristics of Shared Memory Model:
-\begin{quote}
-
-``
-\begin{itemize}
+\begin{description}
+\item[{``}] \leavevmode\begin{itemize}
 \item {} 
 Shared memory parallel computers vary widely, but generally have in common the ability for all processors to access all memory as global address space.
 
@@ -158,20 +156,19 @@ Shared memory parallel computers vary widely, but generally have in common the a
 Multiple processors can operate independently but share the same memory resources.
 
 \item {} 
-Changes in a memory location effected by one processor are visible to all other processors.'' {[}1{]}
+Changes in a memory location effected by one processor are visible to all other processors.'' {[}2{]}
 
 \end{itemize}
-\end{quote}
+
+\end{description}
 
 {\hfill\includegraphics{SharedMemoryUMA.png}\hfill}
 
-\begin{center}Figure 1: Shared Memory: Uniform Memory Access Obtained from www.computing.llnl.gov {[}2{]}
+\begin{center}Figure 1: Shared Memory: Uniform Memory Access Obtained from www.computing.llnl.gov {[}3{]}
 \end{center}
 General Characteristics of Distributed Memory Model:
-\begin{quote}
-
-``
-\begin{itemize}
+\begin{description}
+\item[{``}] \leavevmode\begin{itemize}
 \item {} 
 Distributed memory systems require a communication network to connect inter-processor memory.
 
@@ -182,14 +179,15 @@ Processors have their own local memory. Memory addresses in one processor do not
 Because each processor has its own local memory, it operates independently. Changes it makes to its local memory have no effect on the memory of other processors. Hence, the concept of cache coherency does not apply.
 
 \item {} 
-When a processor needs access to data in another processor, it is usually the task of the programmer to explicitly define how and when data is communicated. Synchronization between tasks is likewise the programmer's responsibility.'' {[}3{]}
+When a processor needs access to data in another processor, it is usually the task of the programmer to explicitly define how and when data is communicated. Synchronization between tasks is likewise the programmer's responsibility.'' {[}4{]}
 
 \end{itemize}
-\end{quote}
+
+\end{description}
 
 {\hfill\includegraphics{DistributedMemory.png}\hfill}
 
-\begin{center}Figure 2: Distributed Memory System Obtained from www.computing.llnl.gov {[}4{]}
+\begin{center}Figure 2: Distributed Memory System Obtained from www.computing.llnl.gov {[}5{]}
 \end{center}
 Some benefits of using clusters are:
 \begin{itemize}
@@ -236,7 +234,7 @@ E-commerce Applications
 
 \begin{itemize}
 \item {} 
-Please read \href{http://www.cloudbus.org/papers/ic\_cluster.pdf}{Cluster Computing: High-Performance, High-Availability, and High-Throughput Processing on a Network of Computers} {[}5{]}.
+Please read \href{http://www.cloudbus.org/papers/ic\_cluster.pdf}{Cluster Computing: High-Performance, High-Availability, and High-Throughput Processing on a Network of Computers} {[}6{]}.
 
 \item {} 
 Case Studies on Cluster Applications: read from page 16 - 22.
@@ -267,7 +265,7 @@ LittleFe is Linux-based operating system, which is provided by Bootable Cluster 
 
 \section{Selkie}
 \label{LocalClusterConfig/LocalClusterConfig:selkie}
-Selkie is a virtual cluster, which was built in summer 2011, at Macalester College by a computer science summer research group. The hardware platforms of Selkie are Apple iMacs, 16 mid-2010 models and 28 new mid-2011 models. Those iMacs machines are quad-core models, and 8 GB of RAM. The mid-2010 models have a 1 TB hard drive, and each of 2011-models have a 500 GB hard drive. VirtualBox product was used for virtual machines because VirtualBox runs on Mac OS X, and it is open source. The operating system configuration on each virtual machine is Ubuntu linix Server version 10.04.
+Selkie is a virtual cluster, which was built in summer 2011, at Macalester College by a computer science summer research group. Selkie currently consists of 17 computers, 16 of which are iMacs in the computer lab. Those iMacs machines are quad-core models, and 8 GB of RAM. Since these iMacs are used for other purposes as well, virtual machines have been set up as the guest operating system that is run inside a host operating system. VirtualBox product was used for virtual machines because VirtualBox runs on Mac OS X, and it is open source. The operating system configuration on each virtual machine is Ubuntu linix Server version 10.04. Each virtual machine uses 2 CPU cores and 4 GB of memory.
 \setbox0\vbox{
 \begin{minipage}{0.95\linewidth}
 \textbf{Recommended Reading:}
@@ -683,7 +681,7 @@ First, you need to initialize the MPI execution environment, define the size of 
 Then you want to let each process know the \textbf{number of bins} you are using. Therefore, you need to broadcast the \textbf{number of bins} to all processes in our MPI\_COMM\_WORLD. You should use \textbf{MPI\_Bcast} to broadcast the \textbf{number of bins}. You are asked to complete this part of the code.
 
 \item {} 
-Now we are ready to ask each process compute their task. We want to evaluate the integral of $\frac {4}{1 + x^2}$ from \emph{0} to \emph{1}, and we can do so by finding the sum of all bins from \emph{0} to \emph{1}. Each bin is approximately $\frac {1}{n} * \frac {4}{1 + x^2}$ (\textbf{n} is the number of bins). We are iterating over the number of bins, and we start from \emph{0}; therefore, to find the center of each bin, we need to add \emph{+ 0.5} to variable \emph{i}. Moreover, in the \textbf{for loop}, we ask the rank \emph{0} to compute the first bin, the (nprocs) bin, and so on, rank \emph{1} to compute the second bin, the (nprocs + 1) bin, and so on, ..., as long as value of \emph{i} is less than \textbf{n}. This can be done by using the following piece of code:
+Now we are ready to ask each process compute their task. We want to evaluate the integral of $\frac {4}{1 + x^2}$ from \emph{0} to \emph{1}, and we can do so by finding the sum of all bins from \emph{0} to \emph{1}. Each bin is approximately $\frac {1}{n} * \frac {4}{1 + x^2}$ (\textbf{n} is the number of bins). We are iterating over the number of bins, and we start from \emph{0}; therefore, to find the center of each bin, we need to add \emph{+ 0.5} to variable \emph{i}. Moreover, in the \textbf{for loop}, we ask the rank \emph{0} to compute the first bin, the (nprocs) bin, and so on, rank \emph{1} to compute the second bin, the (nprocs + 1) bin, and so on, ..., as long as value of \emph{i} is less than \textbf{n}. Suppose that there are \emph{p} processes, then these \emph{p} processes will take the first \emph{p} bins, where process whose rank is 0 takes \emph{1st} bin, process whose rank is 1 takes \emph{2nd} bin, and so on. If there are any bins left, process whose rank is 1 takes \emph{pth} bin, and so on. This can be done by using the following piece of code:
 
 \begin{Verbatim}[commandchars=\\\{\}]
 \PYG{c+cm}{/* Calculating for each process */}
