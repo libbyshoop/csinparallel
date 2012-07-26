@@ -1,0 +1,13 @@
+\select@language {english}
+\contentsline {chapter}{\numberline {1}Prerequisites}{2}{chapter.1}
+\contentsline {chapter}{\numberline {2}Introduction to Heterogeneous Computing}{3}{chapter.2}
+\contentsline {paragraph}{References}{3}{paragraph*.3}
+\contentsline {chapter}{\numberline {3}Coding and Compiling a Heterogeneous Program}{4}{chapter.3}
+\contentsline {section}{\numberline {3.1}Heterogeneous Program: Hello World}{4}{section.3.1}
+\contentsline {section}{\numberline {3.2}Compiling a Heterogeneous Program}{5}{section.3.2}
+\contentsline {subsection}{\numberline {3.2.1}Timing a Heterogeneous CUDA and MPI}{5}{subsection.3.2.1}
+\contentsline {subsection}{\numberline {3.2.2}Activity 1: Vector Addition}{6}{subsection.3.2.2}
+\contentsline {chapter}{\numberline {4}Activities}{9}{chapter.4}
+\contentsline {section}{\numberline {4.1}Activity 2: Vector Matrix Multiplication}{9}{section.4.1}
+\contentsline {section}{\numberline {4.2}Activity 3: Matrix Multiplication}{12}{section.4.2}
+\contentsline {chapter}{\numberline {5}The Three Musketeers}{16}{chapter.5}

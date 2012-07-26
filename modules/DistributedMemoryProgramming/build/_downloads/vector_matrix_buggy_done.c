@@ -1,9 +1,6 @@
-/**
-* In this activity, we will using MPI_Bcast, MPI_Scatter, and MPI_Gather. Also, we will see the
-* limitations of using collective communication. We want you to try running this MPI program
-* on LittleFe by using different number of processes. Try to come up with some ideas of what
-* going on.
-**/
+/*********************************************************************************
+* This activity illustrates the use of MPI_Bcast, MPI_Scatter, and MPI_Gather. 
+**********************************************************************************/
 
 #include "mpi.h"
 #include <stdio.h>
@@ -41,8 +38,10 @@ int main(int argc, char *argv[]) {
 
         /* Initialize Matrix and Vector */
         for(i=0; i < WIDTH; i++) {
+            // Change here if you want to use random integer
             vector[i] = 1;
             for(j = 0; j < WIDTH; j++) {
+                // Change here if you want to use random integer
                 matrix[i][j] = 1;
             }
         }

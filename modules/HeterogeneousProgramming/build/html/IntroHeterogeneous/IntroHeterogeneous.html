@@ -8,7 +8,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Introduction to Heterogeneous Computing &mdash; Heterogeneous Computing</title>
+    <title>Introduction to Heterogeneous Computing &mdash; Heterogeneous Computing Fundamentals</title>
     
     <link rel="stylesheet" href="../_static/default.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
@@ -26,7 +26,7 @@
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
     <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
-    <link rel="top" title="Heterogeneous Computing" href="../index.html" />
+    <link rel="top" title="Heterogeneous Computing Fundamentals" href="../index.html" />
     <link rel="next" title="Coding and Compiling a Heterogeneous Program" href="../CodingAndCompiling/CodingAndCompiling.html" />
     <link rel="prev" title="Prerequisites" href="../Prerequisites/Prerequisites.html" /> 
   </head>
@@ -43,7 +43,7 @@
         <li class="right" >
           <a href="../Prerequisites/Prerequisites.html" title="Prerequisites"
              accesskey="P">previous</a> |</li>
-        <li><a href="../index.html">Heterogeneous Computing</a> &raquo;</li> 
+        <li><a href="../index.html">Heterogeneous Computing Fundamentals</a> &raquo;</li> 
       </ul>
     </div>  
 
@@ -58,12 +58,19 @@
 <p>It turns out that we can produce a new parallel programming model that combines MPI and CUDA together. The idea is that we use MPI to distribute work among nodes, each of which uses CUDA to work on its task. In order for this to work, we need to keep in mind that we need to have a cluster or something similar, where each node contains GPUs capable of doing CUDA computation.</p>
 <img alt="Heteregeneous Programming Model: CUDA and MPI" class="align-center" src="../_images/cudampi.png" style="width: 500px; height: 230px;" />
 <p class="centered">
-<strong>Figure 1: Heterogeneous Programming Model: CUDA and MPI from cacuda.googlecode.com [1]</strong></p><div class="admonition-todo admonition" id="index-0">
-<p class="first admonition-title">Todo</p>
-<p class="last">Please Do Your Reading: <a class="reference external" href="http://www.hipc.org/hipc2009/documents/HIPCSS09Papers/1569247597.pdf">On the Comparative Performance of Parallel Algorithms on Small GPU/CUDA Clusters</a></p>
+<strong>Figure 1: Heterogeneous Programming Model: CUDA and MPI from cacuda.googlecode.com [1]</strong></p><div class="topic">
+<p class="topic-title first">Recommended Reading</p>
+<ul class="simple">
+<li>Please Do Your Reading: <a class="reference external" href="http://www.hipc.org/hipc2009/documents/HIPCSS09Papers/1569247597.pdf">On the Comparative Performance of Parallel Algorithms on Small GPU/CUDA Clusters</a></li>
+</ul>
 </div>
 <p class="rubric">References</p>
-<p>[1] <a class="reference external" href="http://cacuda.googlecode.com/files/CaCUDA.pdf">http://cacuda.googlecode.com/files/CaCUDA.pdf</a></p>
+<table class="docutils footnote" frame="void" id="id1" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label">[1]</td><td><a class="reference external" href="http://cacuda.googlecode.com/files/CaCUDA.pdf">http://cacuda.googlecode.com/files/CaCUDA.pdf</a></td></tr>
+</tbody>
+</table>
 </div>
 
 
@@ -110,7 +117,7 @@
         <li class="right" >
           <a href="../Prerequisites/Prerequisites.html" title="Prerequisites"
              >previous</a> |</li>
-        <li><a href="../index.html">Heterogeneous Computing</a> &raquo;</li> 
+        <li><a href="../index.html">Heterogeneous Computing Fundamentals</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">

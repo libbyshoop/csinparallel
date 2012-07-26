@@ -46,9 +46,11 @@ int main(int argc, char *argv[] ) {
     if (rank == 0) {
     /* Initialize Matrix and Vector */
         for(i = 0; i < ROWS; i++) {
-            vector[i] = 10;
+            // change here to use random integer
+            vector[i] = 1;
             for(j = 0; j < COLS; j++) {
-                matrix[i][j] = 10;
+                // change here to use random integer
+                matrix[i][j] = 1;
             }
         }
 

@@ -22,7 +22,7 @@ LittleFe is Linux-based operating system, which is provided by Bootable Cluster 
 Selkie
 ------
 
-Selkie is a virtual cluster, which was built in summer 2011, at Macalester College by a computer science summer research group. The hardware platforms of Selkie are Apple iMacs, 16 mid-2010 models and 28 new mid-2011 models. Those iMacs machines are quad-core models, and 8 GB of RAM. The mid-2010 models have a 1 TB hard drive, and each of 2011-models have a 500 GB hard drive. VirtualBox product was used for virtual machines because VirtualBox runs on Mac OS X, and it is open source. The operating system configuration on each virtual machine is Ubuntu linix Server version 10.04. 
+Selkie is a virtual cluster, which was built in summer 2011, at Macalester College by a computer science summer research group. Selkie currently consists of 17 computers, 16 of which are iMacs in the computer lab. Those iMacs machines are quad-core models, and 8 GB of RAM. Since these iMacs are used for other purposes as well, virtual machines have been set up as the guest operating system that is run inside a host operating system. VirtualBox product was used for virtual machines because VirtualBox runs on Mac OS X, and it is open source. The operating system configuration on each virtual machine is Ubuntu linix Server version 10.04. Each virtual machine uses 2 CPU cores and 4 GB of memory.
 
 .. topic:: Recommended Reading:
 

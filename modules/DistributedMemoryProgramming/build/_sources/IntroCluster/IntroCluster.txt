@@ -1,7 +1,7 @@
 Introduction to Cluster
 =======================
 
-**Definition**: "A cluster is a type of parallel or distributed processing system, which consists of a collection of interconnected stand-alone computers cooperatively working together as a single, integrated computing resource." - by Rajkumar Buyya.
+**Definition**: A cluster is a type of parallel or distributed processing system, which consists of a collection of interconnected stand-alone computers cooperatively working together as a single, integrated computing resource. [1]
 
 A cluster is usually a linux-based operating system. Basically, a cluster has four major components:
 	
@@ -17,13 +17,12 @@ In order to prepare for what you will be working on, you should have a good unde
 
 General Characteristics of Shared Memory Model:
 	
-	"
-	
+"
 	- Shared memory parallel computers vary widely, but generally have in common the ability for all processors to access all memory as global address space.
 	
 	- Multiple processors can operate independently but share the same memory resources.
 	
-	- Changes in a memory location effected by one processor are visible to all other processors." [1]
+	- Changes in a memory location effected by one processor are visible to all other processors." [2]
 
 .. image:: images/SharedMemoryUMA.png
 	:width: 350px
@@ -31,19 +30,18 @@ General Characteristics of Shared Memory Model:
 	:height: 250px
 	:alt: MPI Structure
 
-.. centered:: Figure 1: Shared Memory: Uniform Memory Access Obtained from www.computing.llnl.gov [2]
+.. centered:: Figure 1: Shared Memory: Uniform Memory Access Obtained from www.computing.llnl.gov [3]
 
 General Characteristics of Distributed Memory Model:
 
-	"
-
+"	
 	- Distributed memory systems require a communication network to connect inter-processor memory.
 	
 	- Processors have their own local memory. Memory addresses in one processor do not map to another processor, so there is no concept of global address space across all processors.
 	
 	- Because each processor has its own local memory, it operates independently. Changes it makes to its local memory have no effect on the memory of other processors. Hence, the concept of cache coherency does not apply.
 	
-	- When a processor needs access to data in another processor, it is usually the task of the programmer to explicitly define how and when data is communicated. Synchronization between tasks is likewise the programmer's responsibility." [3]
+	- When a processor needs access to data in another processor, it is usually the task of the programmer to explicitly define how and when data is communicated. Synchronization between tasks is likewise the programmer's responsibility." [4]
 
 .. image:: images/DistributedMemory.png
 	:width: 450px
@@ -51,7 +49,7 @@ General Characteristics of Distributed Memory Model:
 	:height: 200px
 	:alt: MPI Structure
 
-.. centered:: Figure 2: Distributed Memory System Obtained from www.computing.llnl.gov [4]
+.. centered:: Figure 2: Distributed Memory System Obtained from www.computing.llnl.gov [5]
 
 Some benefits of using clusters are:
 
@@ -71,18 +69,18 @@ There are many applications of clustering such as:
 
 .. topic:: Recommended Reading:
 	
-	* Please read `Cluster Computing: High-Performance, High-Availability, and High-Throughput Processing on a Network of Computers <http://www.cloudbus.org/papers/ic_cluster.pdf>`_ [5]. 
+	* Please read `Cluster Computing: High-Performance, High-Availability, and High-Throughput Processing on a Network of Computers <http://www.cloudbus.org/papers/ic_cluster.pdf>`_ [6]. 
 
 	* Case Studies on Cluster Applications: read from page 16 - 22.
-
 
 In order to use a cluster effectively, we need to have some programming environments such as Message Passing Interface (MPI), and OpenMP, etc. In this module, we will be learning about MPI on distributed memory cluster.
 
 
 .. rubric:: References
 
-.. [1] https://computing.llnl.gov/tutorials/parallel_comp/#SharedMemory
+.. [1] Rajkumar Buyya, "High Performance Cluster Computing: Systems and Architectures", Vol. 1, 1/e, Prentice Hall PTR, NJ, 1999.
 .. [2] https://computing.llnl.gov/tutorials/parallel_comp/#SharedMemory
-.. [3] https://computing.llnl.gov/tutorials/parallel_comp/#DistributedMemory
+.. [3] https://computing.llnl.gov/tutorials/parallel_comp/#SharedMemory
 .. [4] https://computing.llnl.gov/tutorials/parallel_comp/#DistributedMemory
-.. [5] Chee Shin Yeo, Rajkumar Buyya, Hossein Pourreza, Rasit Eskicioglu, Peter Graham, and Frank Sommers, "Cluster Computing: High-Performance, High-Availability, and High-Throughput Processing on a Network of Computers", in Handbook of Nature-Inspired and Innovative Computing: Integrating Classical Models with Emerging Technologies, chapter 16, page 521 - 551, 2006
+.. [5] https://computing.llnl.gov/tutorials/parallel_comp/#DistributedMemory
+.. [6] Chee Shin Yeo, Rajkumar Buyya, Hossein Pourreza, Rasit Eskicioglu, Peter Graham, and Frank Sommers, "Cluster Computing: High-Performance, High-Availability, and High-Throughput Processing on a Network of Computers", in Handbook of Nature-Inspired and Innovative Computing: Integrating Classical Models with Emerging Technologies, chapter 16, page 521 - 551, 2006
