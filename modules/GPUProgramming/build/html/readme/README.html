@@ -1,0 +1,355 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>How to make a new module? &mdash; GPU Programming</title>
+    
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="top" title="GPU Programming" href="../index.html" />
+    <link rel="prev" title="Ray Tracing and Constant Memory" href="../RTACM/RTACM.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../RTACM/RTACM.html" title="Ray Tracing and Constant Memory"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../index.html">GPU Programming</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="how-to-make-a-new-module">
+<h1>How to make a new module?<a class="headerlink" href="#how-to-make-a-new-module" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="creating-a-module-using-sphinx">
+<h2>Creating a Module using Sphinx<a class="headerlink" href="#creating-a-module-using-sphinx" title="Permalink to this headline">¶</a></h2>
+<p>Open up a terminal and type in following command:</p>
+<div class="highlight-python"><pre>$ cd ~/github/csinparallel/modules
+
+~/github/csinparallel/modules$ sphinx-quickstart</pre>
+</div>
+<p>And then follow the following answers.</p>
+<div class="highlight-python"><pre>&gt; Root path for the documentation [.]: The name of your module
+
+&gt; Separate source and build directories (y/N) [n]: y
+
+&gt; Name prefix for templates and static dir [_]: defualt
+
+&gt; Project name: Name of the module (e.g. GPU Programming or Distributed Memory Programming)
+
+&gt; Author name(s): CSInParallel Project
+
+&gt; Project version: 1
+
+&gt; Project release [1]: 1
+
+&gt; Source file suffix [.rst]: defualt
+
+&gt; Name of your master document (without suffix) [index]: defualt
+
+&gt; Do you want to use the epub builder (y/N) [n]: defualt
+
+&gt; autodoc: automatically insert docstrings from modules (y/N) [n]: defualt
+
+&gt; doctest: automatically test code snippets in doctest blocks (y/N) [n]: defualt
+
+&gt; intersphinx: link between Sphinx documentation of different projects (y/N) [n]: defualt
+
+&gt; todo: write "todo" entries that can be shown or hidden on build (y/N) [n]: defualt
+
+&gt; coverage: checks for documentation coverage (y/N) [n]: defualt
+
+&gt; pngmath: include math, rendered as PNG images (y/N) [n]: y
+
+&gt; mathjax: include math, rendered in the browser by MathJax (y/N) [n]: defualt
+
+&gt; ifconfig: conditional inclusion of content based on config values (y/N) [n]: defualt
+
+&gt; viewcode: include links to the source code of documented Python objects (y/N) [n]: defualt
+
+&gt; Create Makefile? (Y/n) [y]: defualt
+
+&gt; Create Windows command file? (Y/n) [y]:n</pre>
+</div>
+</div>
+<div class="section" id="modify-the-conf-py-file">
+<h2>Modify the conf.py File<a class="headerlink" href="#modify-the-conf-py-file" title="Permalink to this headline">¶</a></h2>
+<ol class="arabic simple">
+<li>go to /github/csinparallel/modules/YourModuleName/source</li>
+<li>Open up the conf.py file and make the following changes</li>
+</ol>
+<ul>
+<li><p class="first">Change</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">extentions</span> <span class="o">=</span> <span class="p">[</span><span class="s">&#39;sphinx.ext.pngmath&#39;</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>to following:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">extensions</span> <span class="o">=</span> <span class="p">[</span><span class="s">&#39;sphinx.ext.pngmath&#39;</span><span class="p">]</span>
+
+<span class="k">if</span> <span class="s">&#39;Darwin&#39;</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">uname</span><span class="p">()[</span><span class="mi">0</span><span class="p">]:</span>
+        <span class="n">pngmath_latex</span> <span class="o">=</span> <span class="s">&#39;/usr/local/texlive/2011/bin/x86_64-darwin/latex&#39;</span>
+        <span class="n">pngmath_dvipng</span> <span class="o">=</span> <span class="s">&#39;/usr/local/texlive/2011/bin/x86_64-darwin/dvipng&#39;</span>
+<span class="k">elif</span> <span class="s">&#39;Linux&#39;</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">uname</span><span class="p">()[</span><span class="mi">0</span><span class="p">]:</span>
+        <span class="n">pngmath_latex</span> <span class="o">=</span> <span class="s">&#39;/usr/bin/latex&#39;</span>
+        <span class="n">pngmath_dvipng</span> <span class="o">=</span> <span class="s">&#39;/usr/bin/dvipng&#39;</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">Change</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">copyright</span> <span class="o">=</span> <span class="s">u&#39;2012, CSInParallel&#39;</span>
+</pre></div>
+</div>
+<p>to following</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">copyright</span> <span class="o">=</span> <span class="s">u&#39;This work is licensed under a Creative Commons Attribution-ShareAlike 3.0 Unported License&#39;</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">Comment out</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">version</span> <span class="o">=</span> <span class="s">&#39;1&#39;</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">Comment out</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">release</span> <span class="o">=</span> <span class="s">&#39;1&#39;</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">Comment in and then change</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">html_title</span> <span class="o">=</span> <span class="bp">None</span>
+</pre></div>
+</div>
+<p>to following</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">html_title</span> <span class="o">=</span> <span class="s">&#39;Your Module Name&#39;</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">Comment in and then change</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">html_logo</span> <span class="o">=</span> <span class="bp">None</span>
+</pre></div>
+</div>
+<p>to following</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">html_logo</span> <span class="o">=</span> <span class="s">&#39;../../../images/CSInParallel200wide.png&#39;</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">Comment in and then change</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">html_show_sourcelink</span> <span class="o">=</span> <span class="bp">True</span>
+</pre></div>
+</div>
+<p>to following</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">html_show_sourcelink</span> <span class="o">=</span> <span class="bp">False</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">Add following to</p>
+<div class="highlight-python"><pre>'releasename': '', 'classoptions': ',openany,oneside', 'babel' : '\\usepackage[english]{babel}'</pre>
+</div>
+<p>to</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">latex_elements</span> <span class="o">=</span> <span class="p">{</span>
+
+<span class="c"># The paper size (&#39;letterpaper&#39; or &#39;a4paper&#39;).</span>
+<span class="c">#&#39;papersize&#39;: &#39;letterpaper&#39;,</span>
+
+<span class="c"># The font size (&#39;10pt&#39;, &#39;11pt&#39; or &#39;12pt&#39;).</span>
+<span class="c">#&#39;pointsize&#39;: &#39;10pt&#39;,</span>
+
+<span class="c"># Additional stuff for the LaTeX preamble.</span>
+<span class="c">#&#39;preamble&#39;: &#39;&#39;,</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">Find the following</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">latex_documents</span> <span class="o">=</span> <span class="p">[</span>
+  <span class="p">(</span><span class="s">&#39;index&#39;</span><span class="p">,</span> <span class="s">&#39;GPUProgramming.tex&#39;</span><span class="p">,</span> <span class="s">u&#39;GPU Programming&#39;</span><span class="p">,</span>
+   <span class="s">u&#39;CSInParallel Project&#39;</span><span class="p">,</span> <span class="s">&#39;manual&#39;</span><span class="p">),</span>
+<span class="p">]</span>
+</pre></div>
+</div>
+<p>and delete the word &#8220;Documentation&#8221;</p>
+</li>
+<li><p class="first">Find the following</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">man_pages</span> <span class="o">=</span> <span class="p">[</span>
+   <span class="p">(</span><span class="s">&#39;index&#39;</span><span class="p">,</span> <span class="s">&#39;YourModuleName&#39;</span><span class="p">,</span> <span class="s">u&#39;Your Module Name Documentation&#39;</span><span class="p">,</span>
+    <span class="p">[</span><span class="s">u&#39;CSInParallel Project&#39;</span><span class="p">],</span> <span class="mi">1</span><span class="p">)</span>
+<span class="p">]</span>
+</pre></div>
+</div>
+<p>and delete the word &#8220;Documentation&#8221;</p>
+</li>
+<li><p class="first">Find the following</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">texinfo_documents</span> <span class="o">=</span> <span class="p">[</span>
+  <span class="p">(</span><span class="s">&#39;index&#39;</span><span class="p">,</span> <span class="s">&#39;GPUProgramming&#39;</span><span class="p">,</span> <span class="s">u&#39;GPU Programming&#39;</span><span class="p">,</span>
+   <span class="s">u&#39;CSInParallel Project&#39;</span><span class="p">,</span> <span class="s">&#39;GPUProgramming&#39;</span><span class="p">,</span> <span class="s">&#39;One line description of project.&#39;</span><span class="p">,</span>
+   <span class="s">&#39;Miscellaneous&#39;</span><span class="p">),</span>
+<span class="p">]</span>
+</pre></div>
+</div>
+<p>and delete the word &#8220;Documentation&#8221;</p>
+</li>
+</ul>
+</div>
+<div class="section" id="modify-the-index-rst-file">
+<h2>Modify the index.rst File<a class="headerlink" href="#modify-the-index-rst-file" title="Permalink to this headline">¶</a></h2>
+<ol class="arabic simple">
+<li>go to /github/csinparallel/modules/YourModuleName/source</li>
+<li>open up the index.rst file and make the following changes</li>
+</ol>
+<ul>
+<li><p class="first">Delete &#8220;Welcome to YourModuleName&#8217;s documentation!&#8221; and change it &#8220;Your Module Name&#8221;</p>
+</li>
+<li><p class="first">Delete &#8220;Contents&#8221;</p>
+</li>
+<li><p class="first">Change the</p>
+<div class="highlight-python"><pre>:maxdepth: 2</pre>
+</div>
+<p>to</p>
+<div class="highlight-python"><pre>:maxdepth: 1</pre>
+</div>
+</li>
+<li><p class="first">Delete</p>
+<div class="highlight-python"><pre>Indices and tables
+==============================</pre>
+</div>
+</li>
+<li><p class="first">Comment out the refs like</p>
+<div class="highlight-python"><pre>.. comment
+        * :ref:`genindex`
+        * :ref:`modindex`
+        * :ref:`search`</pre>
+</div>
+</li>
+</ul>
+</div>
+<div class="section" id="modify-the-makefile-file">
+<h2>Modify the Makefile file<a class="headerlink" href="#modify-the-makefile-file" title="Permalink to this headline">¶</a></h2>
+<ol class="arabic simple">
+<li>go to /github/csinparallel/modules/YourModuleName</li>
+<li>open up makefile file in an editor and make the following changes</li>
+</ol>
+<ul class="simple">
+<li>find latexpdf entry</li>
+<li>add &#8220;tar -czf $(BUILDDIR)/latex.tar.gz $(BUILDDIR)/latex&#8221;(without quote sign) after &#8220;$(MAKE) -C $(BUILDDIR)/latex all-pdf&#8221;</li>
+<li>make sure you pressed a tab to make the line you added to line up with others instead using a bunch of spaces!!</li>
+</ul>
+</div>
+<div class="section" id="using-your-own-template">
+<h2>Using your own template<a class="headerlink" href="#using-your-own-template" title="Permalink to this headline">¶</a></h2>
+<p>We made some modification on the html template. To be exact, we modified the default.css file and put in to the _static folder in source directory to let Sphinx use it when building html.</p>
+<p>We changed</p>
+<div class="highlight-python"><pre>tt {
+  background-color: #ecf0f3;
+  padding: 0 1px 0 1px;
+  font-size: 0.95em;
+}</pre>
+</div>
+<p>to the following</p>
+<div class="highlight-python"><pre>tt {
+    background-color: #ecf0f3;
+    padding: 0 1px 0 1px;
+    /*font-size: 1.35em;*/
+      font-family:"Lucida Console", Monaco, monospace;
+}</pre>
+</div>
+<p>You can also create your own template.</p>
+<div class="section" id="how-to-tell-sphinx-to-use-your-template">
+<h3>How to tell Sphinx to use your template<a class="headerlink" href="#how-to-tell-sphinx-to-use-your-template" title="Permalink to this headline">¶</a></h3>
+<ol class="arabic simple">
+<li>go to ~/github/csinparallel/modules/AnyExistingModule/source/_static</li>
+<li>you will see a default.css_t file.</li>
+<li>copy that file and put it into ~/github/csinparallel/modules/YourModuleName/source/_static</li>
+</ol>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../index.html">
+              <img class="logo" src="../_static/CSInParallel200wide.png" alt="Logo"/>
+            </a></p>
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">How to make a new module?</a><ul>
+<li><a class="reference internal" href="#creating-a-module-using-sphinx">Creating a Module using Sphinx</a></li>
+<li><a class="reference internal" href="#modify-the-conf-py-file">Modify the conf.py File</a></li>
+<li><a class="reference internal" href="#modify-the-index-rst-file">Modify the index.rst File</a></li>
+<li><a class="reference internal" href="#modify-the-makefile-file">Modify the Makefile file</a></li>
+<li><a class="reference internal" href="#using-your-own-template">Using your own template</a><ul>
+<li><a class="reference internal" href="#how-to-tell-sphinx-to-use-your-template">How to tell Sphinx to use your template</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="../RTACM/RTACM.html"
+                        title="previous chapter">Ray Tracing and Constant Memory</a></p>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../RTACM/RTACM.html" title="Ray Tracing and Constant Memory"
+             >previous</a> |</li>
+        <li><a href="../index.html">GPU Programming</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright This work is licensed under a Creative Commons Attribution-ShareAlike 3.0 Unported License.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>
