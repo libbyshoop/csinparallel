@@ -26,7 +26,7 @@ In this activity, we are going to compute vector-matrix multiplication in hybrid
 		}
 
 
-	* Then we need to have a function that calls the kernel function on the host. This function is to allocate memory for the matrix and vector on the device, copy matrix and vector from host to device, compute the vector matrix multiplication, and copy the result vector from device to the host. This function will be called in the MPI program. Your task is to call kernel function at **TO DO**. ::
+	* Then we need to have a function that calls the kernel function on the host. This function is to allocate memory for the matrix and vector on the device, copy matrix and vector from host to device, compute the vector matrix multiplication, and copy the result vector from device to host. This function will be called in the MPI program. Your task is to call kernel function at **TO DO**. ::
 
 		/* function on the host, CPU */
 		extern "C" void run_kernel(int *A, int *x, int *y, int width, int block_size) {
@@ -196,7 +196,7 @@ In this activity, we are going to compute matrix-matrix multiplication in hybrid
 			dP[row * width + col] = pvalue;
 		}
 
-	* Then we need to have a function that calls the kernel function on the host. This function is to allocate memory for the matrices on the device, copy matrices from host to device, compute the matrix multiplication, and copy the result matrix from device to the host. This function will be called in the MPI program. Your task is to call kernel function at **TO DO**. ::
+	* Then we need to have a function that calls the kernel function on the host. This function is to allocate memory for the matrices on the device, copy matrices from host to device, compute the matrix multiplication, and copy the result matrix from device to host. This function will be called in the MPI program. Your task is to call kernel function at **TO DO**. ::
 
 		/* function that you will call in mpi code */
 		extern "C" void MatrixMul(float* M, float* N, float* P, int width, int block_size) {
@@ -230,7 +230,7 @@ In this activity, we are going to compute matrix-matrix multiplication in hybrid
 
 :Comments on MPI Program:
 
-	* Now we can look at the MPI program. This MPI program is a revised version of the Matrix Mutiplication MPI program that was written by Blaise Barney. First we need to initialize the MPI execution environment, define the size of MPI_COMM_WORLD, and give a unique rank to each process. Then we ask the master to initialize the input matrices, divide these matrices, and send their pieces to each worker. ::
+	* Now we can look at the MPI program. This MPI program is a revised version of the Matrix Mutiplication MPI program that was written by Blaise Barney. First we need to initialize the MPI execution environment, define the size of MPI_COMM_WORLD, and give a unique rank to each process. Then we ask the master to initialize the input matrices, divide these matrices, and send their pieces to each worker. Your task is to complete the following code at **TO DO**. ::
 
 		/**************************** master task ************************************/
 		if (taskid == MASTER) {

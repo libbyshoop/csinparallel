@@ -4,7 +4,7 @@ Coding and Compiling a Heterogeneous Program
 Heterogeneous Program: Hello World
 **********************************
 
-Distributed memory computing and GPU computing are two different parallel programming models. In this section, you will learn how to put these two parallel models together, and that will speed up your running time. As always we will look at the **Hello World** program using hybrid CUDA and MPI model. In order to combine CUDA and MPI, we need to get their codes to communicate to each other during the compilation. Let's look at the **Hello World** program below.
+Distributed memory computing and GPU computing are two different parallel programming models. In this section, you will learn how to put these two parallel models together, and that will speed up your running time. As always we will look at the **Hello World** program using hybrid environment CUDA and MPI. In order to combine CUDA and MPI, we need to get their codes to communicate to each other during the compilation. Let's look at the **Hello World** program below.
 
 .. highlight:: c
 
@@ -44,11 +44,13 @@ To execute the executable file, **cudampi**, we can enter the following command 
 
 	mpirun -machinefile machines -x LD_LIBRARY_PATH -np #processes ./cudampi
 
+We use **-x** to export the environment variables to the remote nodes before executing program.
+
 Timing a Heterogeneous CUDA and MPI
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-	- In order to time your hybrid CUDA and MPI program, you just need to use MPI_Wtime() function as in an MPI program.
+	- In order to time a heterogeneous CUDA and MPI program, you just need to use MPI_Wtime() function as in an MPI program.
 
-	- We need to keep in mind that a heterogeneous CUDA and MPI program theoretically has lower running time than an MPI does; however, running time also depends on each node's properties such as memory. Copying data from a CPU to GPU may take a long period of time, which results in a much longer running time for a heterogeneous program. Therefore, you do not always get benefits from the heterogeneous programming model.
+	- We need to keep in mind that a heterogeneous CUDA and MPI program theoretically has a lower running time than an MPI does; however, running time also depends on each node's properties such as memory. Copying data from the host (CPU) to a device (GPU) may take a long period of time, which results in a much longer running time for a heterogeneous program. Therefore, you do not always get benefits from the heterogeneous programming model.
 
 
 Activity 1: Vector Addition
