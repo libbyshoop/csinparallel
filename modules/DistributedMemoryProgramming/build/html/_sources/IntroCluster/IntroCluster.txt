@@ -1,16 +1,14 @@
-Introduction to Cluster
-=======================
+Introduction to Cluster Computing
+==================================
 
-**Definition**: A cluster is a type of parallel or distributed processing system, which consists of a collection of interconnected stand-alone computers cooperatively working together as a single, integrated computing resource. [1]
+This course module is focused on distributed memory computing using a cluster of computers.
+This sextion is a brief overview of parallel systems and clusters, designed to get you in the frame of mind for the examples you will try on a cluster.
 
-A cluster is usually a linux-based operating system. Basically, a cluster has four major components:
-	
-	- Network is to provide communications between nodes and server.
-	- Each node has its own processor, memory, and storage.
-	- Server is to provide network services to the cluster.
-	- Gateway acts as a firewall between the outside world and the cluster.
 
-In order to prepare for what you will be working on, you should have a good understanding of parallel computer architectures. We are going to look at two parallel computer architectures: 
+First, two parallel programming models
+---------------------------------------
+
+To prepare for what you will be working on, you need a basic understanding of parallel computer architectures. In particular, it is useful to know the difference between these two parallel computer architectures: 
 
 	- Shared Memory Model
 	- Distributed Memory Model
@@ -32,16 +30,20 @@ General Characteristics of Shared Memory Model:
 
 .. centered:: Figure 1: Shared Memory: Uniform Memory Access Obtained from www.computing.llnl.gov [3]
 
-General Characteristics of Distributed Memory Model:
 
-"	
+The rest of this course module is primarily focused on the distributed memory model of computing, which is different from the shared memory model.
+
+According to [4], the general characteristics of Distributed Memory Model are:
+
+**"**	
 	- Distributed memory systems require a communication network to connect inter-processor memory.
 	
 	- Processors have their own local memory. Memory addresses in one processor do not map to another processor, so there is no concept of global address space across all processors.
 	
 	- Because each processor has its own local memory, it operates independently. Changes it makes to its local memory have no effect on the memory of other processors. Hence, the concept of cache coherency does not apply.
 	
-	- When a processor needs access to data in another processor, it is usually the task of the programmer to explicitly define how and when data is communicated. Synchronization between tasks is likewise the programmer's responsibility." [4]
+	- When a processor needs access to data in another processor, it is usually the task of the programmer to explicitly define how and when data is communicated. Synchronization between tasks is likewise the programmer's responsibility.
+**"** 
 
 .. image:: images/DistributedMemory.png
 	:width: 450px
@@ -50,6 +52,21 @@ General Characteristics of Distributed Memory Model:
 	:alt: MPI Structure
 
 .. centered:: Figure 2: Distributed Memory System Obtained from www.computing.llnl.gov [5]
+
+Clusters of Computers
+---------------------
+
+Distributed Memory systems often manifest themseleves in the form of clusters of computers networked together over a high-speed network. Clusters of workstations connected through a highspeed switch are often called beowulf clusters.  
+
+**Definition**: A cluster is a type of parallel or distributed processing system, which consists of a collection of interconnected stand-alone computers cooperatively working together as a single, integrated computing resource. [1]
+
+A cluster is usually a linux-based operating system. Basically, a cluster has four major components:
+	
+	- Network is to provide communications between nodes and server.
+	- Each node has its own processor, memory, and storage.
+	- Server is to provide network services to the cluster.
+	- Gateway acts as a firewall between the outside world and the cluster.
+
 
 Some benefits of using clusters are:
 

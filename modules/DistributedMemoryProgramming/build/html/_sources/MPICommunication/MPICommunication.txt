@@ -97,5 +97,10 @@ This function divides a message into equal contiguous parts and sends each part 
 
 This function collects distinct messages from each task in the communicator to a single task. This function is the reverse operation of MPI_Scatter. 
 
+Let's Try It
+-------------
+
+In the next section we will describe how to compile and run these examples so that you can try them.
+
 .. rubric:: References
 .. [1] https://computing.llnl.gov/tutorials/mpi/

@@ -1,6 +1,6 @@
-=======================
-Compiling and Activites
-=======================
+==================================
+Compiling and First Two Activites
+==================================
 
 .. highlight:: c
 
@@ -33,8 +33,45 @@ Moreover, you can also compile an MPI program without using **machines**, you ca
 
 .. note:: Please ask your instructor for instructions on how to log in onto your local machine.    
 
-Activity 1: What is my :math:`{\pi}` ?
+Try the simple examples
+------------------------
+
+Log into your cluster and make sure that you have the following example files in your account:
+
+Simplest Hello World Example:
+:download:`download hellompi.c <dist_example_code/hellompi.c>`
+
+Hello World by Sending messages:
+:download:`download example2.c <dist_example_code/example2.c>`
+
+You can specifically compile the simplest example like this: ::
+
+    mpicc -o hellompi hellompi.c
+
+To run it on your cluster using 3 processes, you can do this, assuming you also have a
+file called machines that describes your system: ::
+
+    mpirun -machinefile machines -np 3 ./hellompi
+
+Sepending on how many other people are using your cluster and how big it is, you can try
+different numbers of processes by changing the 3 above.
+
+Once that seems to be working for you, try the exammple 2, which uses sends and receives.
+
+.. note::
+
+    The procedure for compiling and running all of your mpi code will follow this format.
+
+
+
+Activity 1: Computing :math:`{\pi}` ?
 ---------------------------------------
+
+Download the source code to do this activity: 
+:download:`download mpi_pi_todo.c <mpi_pi_todo.c>`
+
+Have it open in an editor so that you can work on it.  Or at a minimum use your browser and right-click on the link above and choose to open it in a new browser window.
+
 
 In this activity, we are going to compute :math:`{\pi}` using integration. We have formula:
 
@@ -76,19 +113,23 @@ Therefore, we can compute the area under the curve to get the value of the integ
 
     * When all processes have finished their computations, their results are stored in **mypi**. Therefore, we can reduce all their results into one result, which is the value of :math:`{\pi}`. Your task is to complete this part by using MPI_Reduce. 
 
-To download the source code to do your activity: 
-:download:`download mpi_pi_todo.c <mpi_pi_todo.c>`
 
-To download the entire source code from www.mcs.anl.gov [1]:
+If you get stuck and want to move on, download the entire source code (originally from www.mcs.anl.gov [1]):
 :download:`download mpi_pi_done.c <mpi_pi_done.c>`
 
 
 Activity 2: Vector Matrix Multiplication
 ----------------------------------------	
 
-In this activity, we are going to compute vector matrix multiplication. This activity illustrates the use of MPI_Bcast, MPI_Scatter, and MPI_Gather to do this multiplication. First, we want you to complete this MPI program by filling codes at **TO DO**. After having completed this task, try to run this MPI program by using different number of processes. Try to explain yourself what is happening !
+To download the source code to do this activity: 
+:download:`download vector_matrix_todo.c <vector_matrix_buggy_todo.c>`
 
-I will explain how the vector matrix multiplication works. First, let's say we have a matrix *A*, and a vector *x* as below:  
+
+Have it open in an editor so that you can work on it.  Or at a minimum use your browser and right-click on the link above and choose to open it in a new browser window.
+
+In this activity, we are going to compute vector matrix multiplication. This activity illustrates the use of MPI_Bcast, MPI_Scatter, and MPI_Gather to do this multiplication. First, we want you to complete this MPI program by filling codes at **TO DO**. After having completed this task, try to run this MPI program by using different number of processes. Try to explain to yourself what is happening !
+
+Here is how the vector matrix multiplication works. First, let's say we have a matrix *A*, and a vector *x* as below:  
 
 .. image:: images/vector_matrix_multi.png
 	:width: 500px
@@ -129,10 +170,8 @@ This multiplication produces a new vector whose length is the number of rows of 
 
     * The last part you need to complete is to gather all result vectors in all processes, and store them in the output vector, called global_result vector. This will be our result vector. Moreover, we can print out the value of each element in the global_result vector, and then terminate the MPI execution environment.    
 
-To download the source code to do your activity: 
-:download:`download vector_matrix_todo.c <vector_matrix_buggy_todo.c>`
 
-To download the entire source code from www.public.asu.edu/~dstanzoi [3]:
+If you get stuck and wanto move on, download the entire source code (originally from www.public.asu.edu/~dstanzoi [3]):
 :download:`download vector_matrix_done.c <vector_matrix_buggy_done.c>`
 
 

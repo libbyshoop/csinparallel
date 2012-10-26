@@ -1,8 +1,8 @@
-============================
-Decomposition and Activities
-============================
+=========================================
+Decomposition and Two Advanced Activities
+=========================================
 
-Decomposition is a very important aspect to optimize the performance of parallel programming models. Decomposition is a way to divide up the task fairly; thus, each task can be distributed to each process. There are many ways to break up a task, and you should choose the way that the best suits your code. For instance, you should split your matrix by row, rather than by column if you want to compute matrix multiplication. Below is an example of decomposition method. You will see this method very often in your activities.
+Decomposition is a very important aspect of many parallel programs. Decomposition is a way to divide up the taske fairly across the data you need to compute over or the computation to be performed; thus, each task can be distributed to each process. There are many ways to break up a large task into smaller tasks, and you should choose the way that the best suits your problem. For instance, you might guess that splitting your matrix by rows and having each process work on a set of rows will work best for matrix multiplication. Below is an example of a decomposition method. You will see this type of pattern very often in parallel code.
 
 Example 3: Decompose the matrix by row
 **************************************
@@ -27,6 +27,12 @@ Example 3: Decompose the matrix by row
 
 Activity 3: Vector Matrix Multiplication Improved Version
 ---------------------------------------------------------
+
+To download the source code to do this activity: 
+:download:`download vector_matrix_todo.c <vector_matrix_imp_todo.c>`
+
+Have it open in an editor so that you can work on it.  Or at a minimum use your browser and right-click on the link above and choose to open it in a new browser window.
+
 
 In this activity, we will be using decomposition technique, MPI_Send, and MPI_Recv to 
 improve the efficiency and accuracy of vector matrix multiplication. We already seen that by using 
@@ -114,14 +120,19 @@ back to the master. Finally the master will receive results from workers, and co
         }
 
 
-To download the source code to do your activity: 
-:download:`download vector_matrix_todo.c <vector_matrix_imp_todo.c>`
 
-To download the entire source code:
+
+To download the entire source code (if you get stuck):
 :download:`download vector_matrix_done.c <vector_matrix_imp.c>`
 
 Activity 4: Matrix Multiplication
 ---------------------------------
+
+Download the source code to do this activity: 
+:download:`download matrix_multiplication_todo.c <matrix_multiplication_todo.c>`
+
+Have it open in an editor so that you can work on it.  Or at a minimum use your browser and right-click on the link above and choose to open it in a new browser window.
+
 
 In this activity, we want you to use decomposition technique, MPI_Send, and MPI_Recv in previous activities to complete the matrix multiplication program. If you have not seen matrix multiplication before, please click on `matrix multiplication <http://mathworld.wolfram.com/MatrixMultiplication.html>`_ to read how matrix multiplication works.
 
@@ -185,8 +196,7 @@ In this activity, we want you to use decomposition technique, MPI_Send, and MPI_
             printf("Received results from task %d\n",source);
         }
 
-To download the source code to do your activity: 
-:download:`download matrix_multiplication_todo.c <matrix_multiplication_todo.c>`
+
 
 To download the entire source code from computing.llnl.gov [1]:
 :download:`download matrix_multiplication.c <matrix_multiplication.c>`

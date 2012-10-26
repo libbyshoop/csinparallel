@@ -8,7 +8,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Introduction to Cluster &mdash; Distributed Computing Fundamentals</title>
+    <title>Introduction to Cluster Computing &mdash; Distributed Computing Fundamentals</title>
     
     <link rel="stylesheet" href="../_static/default.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
@@ -27,7 +27,7 @@
     <script type="text/javascript" src="../_static/doctools.js"></script>
     <link rel="top" title="Distributed Computing Fundamentals" href="../index.html" />
     <link rel="next" title="Local Cluster Configurations" href="../LocalClusterConfig/LocalClusterConfig.html" />
-    <link rel="prev" title="Prerequisites" href="../Prerequisites/Prerequisites.html" /> 
+    <link rel="prev" title="Instructor/Student Notes" href="../Prerequisites/Prerequisites.html" /> 
   </head>
   <body>
     <div class="related">
@@ -40,7 +40,7 @@
           <a href="../LocalClusterConfig/LocalClusterConfig.html" title="Local Cluster Configurations"
              accesskey="N">next</a> |</li>
         <li class="right" >
-          <a href="../Prerequisites/Prerequisites.html" title="Prerequisites"
+          <a href="../Prerequisites/Prerequisites.html" title="Instructor/Student Notes"
              accesskey="P">previous</a> |</li>
         <li><a href="../index.html">Distributed Computing Fundamentals</a> &raquo;</li> 
       </ul>
@@ -51,19 +51,13 @@
         <div class="bodywrapper">
           <div class="body">
             
-  <div class="section" id="introduction-to-cluster">
-<h1>Introduction to Cluster<a class="headerlink" href="#introduction-to-cluster" title="Permalink to this headline">¶</a></h1>
-<p><strong>Definition</strong>: A cluster is a type of parallel or distributed processing system, which consists of a collection of interconnected stand-alone computers cooperatively working together as a single, integrated computing resource. [1]</p>
-<p>A cluster is usually a linux-based operating system. Basically, a cluster has four major components:</p>
-<blockquote>
-<div><ul class="simple">
-<li>Network is to provide communications between nodes and server.</li>
-<li>Each node has its own processor, memory, and storage.</li>
-<li>Server is to provide network services to the cluster.</li>
-<li>Gateway acts as a firewall between the outside world and the cluster.</li>
-</ul>
-</div></blockquote>
-<p>In order to prepare for what you will be working on, you should have a good understanding of parallel computer architectures. We are going to look at two parallel computer architectures:</p>
+  <div class="section" id="introduction-to-cluster-computing">
+<h1>Introduction to Cluster Computing<a class="headerlink" href="#introduction-to-cluster-computing" title="Permalink to this headline">¶</a></h1>
+<p>This course module is focused on distributed memory computing using a cluster of computers.
+This sextion is a brief overview of parallel systems and clusters, designed to get you in the frame of mind for the examples you will try on a cluster.</p>
+<div class="section" id="first-two-parallel-programming-models">
+<h2>First, two parallel programming models<a class="headerlink" href="#first-two-parallel-programming-models" title="Permalink to this headline">¶</a></h2>
+<p>To prepare for what you will be working on, you need a basic understanding of parallel computer architectures. In particular, it is useful to know the difference between these two parallel computer architectures:</p>
 <blockquote>
 <div><ul class="simple">
 <li>Shared Memory Model</li>
@@ -82,20 +76,36 @@
 </dl>
 <img alt="MPI Structure" class="align-center" src="../_images/SharedMemoryUMA.png" style="width: 350px; height: 250px;" />
 <p class="centered">
-<strong>Figure 1: Shared Memory: Uniform Memory Access Obtained from www.computing.llnl.gov [3]</strong></p><p>General Characteristics of Distributed Memory Model:</p>
+<strong>Figure 1: Shared Memory: Uniform Memory Access Obtained from www.computing.llnl.gov [3]</strong></p><p>The rest of this course module is primarily focused on the distributed memory model of computing, which is different from the shared memory model.</p>
+<p>According to [4], the general characteristics of Distributed Memory Model are:</p>
 <dl class="docutils">
-<dt>&#8220;</dt>
+<dt><strong>&#8220;</strong></dt>
 <dd><ul class="first last simple">
 <li>Distributed memory systems require a communication network to connect inter-processor memory.</li>
 <li>Processors have their own local memory. Memory addresses in one processor do not map to another processor, so there is no concept of global address space across all processors.</li>
 <li>Because each processor has its own local memory, it operates independently. Changes it makes to its local memory have no effect on the memory of other processors. Hence, the concept of cache coherency does not apply.</li>
-<li>When a processor needs access to data in another processor, it is usually the task of the programmer to explicitly define how and when data is communicated. Synchronization between tasks is likewise the programmer&#8217;s responsibility.&#8221; [4]</li>
+<li>When a processor needs access to data in another processor, it is usually the task of the programmer to explicitly define how and when data is communicated. Synchronization between tasks is likewise the programmer&#8217;s responsibility.</li>
 </ul>
 </dd>
 </dl>
+<p><strong>&#8220;</strong></p>
 <img alt="MPI Structure" class="align-center" src="../_images/DistributedMemory.png" style="width: 450px; height: 200px;" />
 <p class="centered">
-<strong>Figure 2: Distributed Memory System Obtained from www.computing.llnl.gov [5]</strong></p><p>Some benefits of using clusters are:</p>
+<strong>Figure 2: Distributed Memory System Obtained from www.computing.llnl.gov [5]</strong></p></div>
+<div class="section" id="clusters-of-computers">
+<h2>Clusters of Computers<a class="headerlink" href="#clusters-of-computers" title="Permalink to this headline">¶</a></h2>
+<p>Distributed Memory systems often manifest themseleves in the form of clusters of computers networked together over a high-speed network. Clusters of workstations connected through a highspeed switch are often called beowulf clusters.</p>
+<p><strong>Definition</strong>: A cluster is a type of parallel or distributed processing system, which consists of a collection of interconnected stand-alone computers cooperatively working together as a single, integrated computing resource. [1]</p>
+<p>A cluster is usually a linux-based operating system. Basically, a cluster has four major components:</p>
+<blockquote>
+<div><ul class="simple">
+<li>Network is to provide communications between nodes and server.</li>
+<li>Each node has its own processor, memory, and storage.</li>
+<li>Server is to provide network services to the cluster.</li>
+<li>Gateway acts as a firewall between the outside world and the cluster.</li>
+</ul>
+</div></blockquote>
+<p>Some benefits of using clusters are:</p>
 <blockquote>
 <div><ul class="simple">
 <li>Inexpensive: Hardware and software of a cluster cost significantly much less than those of a supercomputer.</li>
@@ -161,6 +171,7 @@
 </tbody>
 </table>
 </div>
+</div>
 
 
           </div>
@@ -171,9 +182,18 @@
             <p class="logo"><a href="../index.html">
               <img class="logo" src="../_static/CSInParallel200wide.png" alt="Logo"/>
             </a></p>
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Introduction to Cluster Computing</a><ul>
+<li><a class="reference internal" href="#first-two-parallel-programming-models">First, two parallel programming models</a></li>
+<li><a class="reference internal" href="#clusters-of-computers">Clusters of Computers</a></li>
+</ul>
+</li>
+</ul>
+
   <h4>Previous topic</h4>
   <p class="topless"><a href="../Prerequisites/Prerequisites.html"
-                        title="previous chapter">Prerequisites</a></p>
+                        title="previous chapter">Instructor/Student Notes</a></p>
   <h4>Next topic</h4>
   <p class="topless"><a href="../LocalClusterConfig/LocalClusterConfig.html"
                         title="next chapter">Local Cluster Configurations</a></p>
@@ -204,7 +224,7 @@
           <a href="../LocalClusterConfig/LocalClusterConfig.html" title="Local Cluster Configurations"
              >next</a> |</li>
         <li class="right" >
-          <a href="../Prerequisites/Prerequisites.html" title="Prerequisites"
+          <a href="../Prerequisites/Prerequisites.html" title="Instructor/Student Notes"
              >previous</a> |</li>
         <li><a href="../index.html">Distributed Computing Fundamentals</a> &raquo;</li> 
       </ul>

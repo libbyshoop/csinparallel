@@ -56,17 +56,17 @@
 <div class="section" id="what-is-mpi">
 <h2>What is MPI ?<a class="headerlink" href="#what-is-mpi" title="Permalink to this headline">¶</a></h2>
 <p>Message Passing Interface (MPI) is a subroutine or a library for passing messages between processes in a distributed memory model. MPI is not a programming language. MPI is a programming model that is widely used for parallel programming in a cluster. In the cluster, the head node is known as the master, and the other nodes are known as the workers. By using MPI, programmers are able to divide up the task and distribute each task to each worker or to some specific workers. Thus, each node can work on its own task simultaneously.</p>
-<p>Since this is a small module, we will be focusing on only important and common MPI functions and techniques. For further study, there are a lot of free resources available on the internet.</p>
+<p>Since this is a small module, we will be focusing on only important and common MPI functions and techniques. For further study, there are a lot of free resources available on the Internet.</p>
 </div>
 <div class="section" id="why-mpi">
 <h2>Why MPI ?<a class="headerlink" href="#why-mpi" title="Permalink to this headline">¶</a></h2>
-<p>There are many reasons of using MPI as our parallel programming model:</p>
+<p>There are many reasons for using MPI as our parallel programming model:</p>
 <blockquote>
 <div><ul class="simple">
 <li>MPI is a standard message passing library, and it is supported on all high-performance computer platforms.</li>
-<li>MPI program is able to run on different platforms that support the MPI standard without changing your source codes.</li>
+<li>An MPI program is able to run on different platforms that support the MPI standard without changing your source codes.</li>
 <li>Because of its parallel features, programmers are able to work on a much larger problem size with the faster computation.</li>
-<li>There are many functions defined in MPI Library for our usage.</li>
+<li>There are many useful functions available in the MPI Library.</li>
 <li>A variety of implementations are available.</li>
 </ul>
 </div></blockquote>
@@ -77,13 +77,13 @@
 <div class="section" id="mpi-program-structure">
 <h3>MPI Program Structure<a class="headerlink" href="#mpi-program-structure" title="Permalink to this headline">¶</a></h3>
 <p>Like other programming languages you have seen, program that includes MPI library has its structure. The structure is shown in the figure below:</p>
-<img alt="MPI Structure" class="align-center" src="../_images/MPIstructure.png" style="width: 350px; height: 400px;" />
+<img alt="MPI Structure" class="align-center" src="../_images/MPIstructure.png" style="width: 550px; height: 400px;" />
 <p class="centered">
-<strong>Figure 3: MPI program structure Obtained from computing.llnl.gov [1]</strong></p><p>A MPI program is basically a C program with extending MPI library, SO DON’T BE SCARED. The program has two different parts, one is serial, and the other is parallel. Serial part contains variable declarations, etc., and the parallel part starts when MPI execution environment has been initialized, and ends when MPI_Finalize() has been called.</p>
+<strong>Figure 3: MPI program structure Obtained from computing.llnl.gov [1]</strong></p><p>A MPI program is basically a C program that uses the MPI library, SO DON’T BE SCARED. The program has two different parts, one is serial, and the other is parallel. The serial part contains variable declarations, etc., and the parallel part starts when MPI execution environment has been initialized, and ends when MPI_Finalize() has been called.</p>
 <p><strong>Communicator</strong>: a set of processes that have a valid rank of source or destination fields. The predefined communicator is MPI_COMM_WORLD, and we will be using this communicator all the time in this module. MPI_COMM_WORLD is a default communicator consisting all processes. Furthermore, a programmer can also define a new communicator, which has a smaller number of processes than MPI_COMM_WORLD does.</p>
 <img alt="MPI_COMM_WORLD" class="align-center" src="../_images/MPI_COMM_WORLD.png" style="width: 400px; height: 250px;" />
 <p class="centered">
-<strong>Figure 4: MPI_COMM_WORLD Obtained from computing.llnl.gov [2]</strong></p><p><strong>Processes</strong>: For this scope of knowledge, we just need to know that processes belong to the MPI_COMM_WORLD. If there are <em>p</em> processes, then each process is defined by its rank, which starts from <em>0</em> to <em>p - 1</em>. The master has the rank <em>0</em>.</p>
+<strong>Figure 4: MPI_COMM_WORLD Obtained from computing.llnl.gov [2]</strong></p><p><strong>Processes</strong>: For this module, we just need to know that processes belong to the MPI_COMM_WORLD. If there are <em>p</em> processes, then each process is defined by its rank, which starts from <em>0</em> to <em>p - 1</em>. The master has the rank <em>0</em>.</p>
 </div>
 <div class="section" id="some-common-functions">
 <h3>Some Common Functions:<a class="headerlink" href="#some-common-functions" title="Permalink to this headline">¶</a></h3>
@@ -141,10 +141,11 @@
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Comments:</th><td class="field-body">In this hello world program, it illustrates how to use some basic functions of MPI. First, it initializes the MPI execution environment. Then it prints &#8220;Hello world from process rank of number of processes&#8221;. Finally, it terminates the MPI execution environment.</td>
+<tr class="field-odd field"><th class="field-name">Comments:</th><td class="field-body">In this hello world program, it illustrates how to use some basic functions of MPI. First, it initializes the MPI execution environment. Then it prints &#8220;Hello world from process [rank] of [number of processes]&#8221;. Finally, it terminates the MPI execution environment.</td>
 </tr>
 </tbody>
 </table>
+<p>You should eventually try to compile and run this code on your cluster account. Before that, we will explain a bit more about communication between processes, showing you another &#8216;Hello World&#8217; Example.  Then we will show you how to compile and run these programs.</p>
 <p class="rubric">References</p>
 <table class="docutils footnote" frame="void" id="id1" rules="none">
 <colgroup><col class="label" /><col /></colgroup>

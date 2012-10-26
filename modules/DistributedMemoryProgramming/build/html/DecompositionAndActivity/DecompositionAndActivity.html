@@ -8,7 +8,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Decomposition and Activities &mdash; Distributed Computing Fundamentals</title>
+    <title>Decomposition and Two Advanced Activities &mdash; Distributed Computing Fundamentals</title>
     
     <link rel="stylesheet" href="../_static/default.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
@@ -26,7 +26,7 @@
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
     <link rel="top" title="Distributed Computing Fundamentals" href="../index.html" />
-    <link rel="prev" title="Compiling and Activites" href="../CompileAndActivity/compileandactivity.html" /> 
+    <link rel="prev" title="Compiling and First Two Activites" href="../CompileAndActivity/compileandactivity.html" /> 
   </head>
   <body>
     <div class="related">
@@ -36,7 +36,7 @@
           <a href="../genindex.html" title="General Index"
              accesskey="I">index</a></li>
         <li class="right" >
-          <a href="../CompileAndActivity/compileandactivity.html" title="Compiling and Activites"
+          <a href="../CompileAndActivity/compileandactivity.html" title="Compiling and First Two Activites"
              accesskey="P">previous</a> |</li>
         <li><a href="../index.html">Distributed Computing Fundamentals</a> &raquo;</li> 
       </ul>
@@ -47,9 +47,9 @@
         <div class="bodywrapper">
           <div class="body">
             
-  <div class="section" id="decomposition-and-activities">
-<h1>Decomposition and Activities<a class="headerlink" href="#decomposition-and-activities" title="Permalink to this headline">¶</a></h1>
-<p>Decomposition is a very important aspect to optimize the performance of parallel programming models. Decomposition is a way to divide up the task fairly; thus, each task can be distributed to each process. There are many ways to break up a task, and you should choose the way that the best suits your code. For instance, you should split your matrix by row, rather than by column if you want to compute matrix multiplication. Below is an example of decomposition method. You will see this method very often in your activities.</p>
+  <div class="section" id="decomposition-and-two-advanced-activities">
+<h1>Decomposition and Two Advanced Activities<a class="headerlink" href="#decomposition-and-two-advanced-activities" title="Permalink to this headline">¶</a></h1>
+<p>Decomposition is a very important aspect of many parallel programs. Decomposition is a way to divide up the taske fairly across the data you need to compute over or the computation to be performed; thus, each task can be distributed to each process. There are many ways to break up a large task into smaller tasks, and you should choose the way that the best suits your problem. For instance, you might guess that splitting your matrix by rows and having each process work on a set of rows will work best for matrix multiplication. Below is an example of a decomposition method. You will see this type of pattern very often in parallel code.</p>
 <div class="section" id="example-3-decompose-the-matrix-by-row">
 <h2>Example 3: Decompose the matrix by row<a class="headerlink" href="#example-3-decompose-the-matrix-by-row" title="Permalink to this headline">¶</a></h2>
 <div class="highlight-c"><div class="highlight"><pre><span class="n">averow</span> <span class="o">=</span> <span class="n">ROW</span><span class="o">/</span><span class="n">numworkers</span><span class="p">;</span>
@@ -76,6 +76,9 @@
 </table>
 <div class="section" id="activity-3-vector-matrix-multiplication-improved-version">
 <h3>Activity 3: Vector Matrix Multiplication Improved Version<a class="headerlink" href="#activity-3-vector-matrix-multiplication-improved-version" title="Permalink to this headline">¶</a></h3>
+<p>To download the source code to do this activity:
+<a class="reference download internal" href="../_downloads/vector_matrix_imp_todo.c"><tt class="xref download docutils literal"><span class="pre">download</span> <span class="pre">vector_matrix_todo.c</span></tt></a></p>
+<p>Have it open in an editor so that you can work on it.  Or at a minimum use your browser and right-click on the link above and choose to open it in a new browser window.</p>
 <p>In this activity, we will be using decomposition technique, MPI_Send, and MPI_Recv to
 improve the efficiency and accuracy of vector matrix multiplication. We already seen that by using
 MPI_Scatter, we do not get the right result if the length of vector is not divisible by
@@ -176,13 +179,14 @@ back to the master. Finally the master will receive results from workers, and co
 </tr>
 </tbody>
 </table>
-<p>To download the source code to do your activity:
-<a class="reference download internal" href="../_downloads/vector_matrix_imp_todo.c"><tt class="xref download docutils literal"><span class="pre">download</span> <span class="pre">vector_matrix_todo.c</span></tt></a></p>
-<p>To download the entire source code:
+<p>To download the entire source code (if you get stuck):
 <a class="reference download internal" href="../_downloads/vector_matrix_imp.c"><tt class="xref download docutils literal"><span class="pre">download</span> <span class="pre">vector_matrix_done.c</span></tt></a></p>
 </div>
 <div class="section" id="activity-4-matrix-multiplication">
 <h3>Activity 4: Matrix Multiplication<a class="headerlink" href="#activity-4-matrix-multiplication" title="Permalink to this headline">¶</a></h3>
+<p>Download the source code to do this activity:
+<a class="reference download internal" href="../_downloads/matrix_multiplication_todo.c"><tt class="xref download docutils literal"><span class="pre">download</span> <span class="pre">matrix_multiplication_todo.c</span></tt></a></p>
+<p>Have it open in an editor so that you can work on it.  Or at a minimum use your browser and right-click on the link above and choose to open it in a new browser window.</p>
 <p>In this activity, we want you to use decomposition technique, MPI_Send, and MPI_Recv in previous activities to complete the matrix multiplication program. If you have not seen matrix multiplication before, please click on <a class="reference external" href="http://mathworld.wolfram.com/MatrixMultiplication.html">matrix multiplication</a> to read how matrix multiplication works.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -256,8 +260,6 @@ back to the master. Finally the master will receive results from workers, and co
 </tr>
 </tbody>
 </table>
-<p>To download the source code to do your activity:
-<a class="reference download internal" href="../_downloads/matrix_multiplication_todo.c"><tt class="xref download docutils literal"><span class="pre">download</span> <span class="pre">matrix_multiplication_todo.c</span></tt></a></p>
 <p>To download the entire source code from computing.llnl.gov [1]:
 <a class="reference download internal" href="../_downloads/matrix_multiplication.c"><tt class="xref download docutils literal"><span class="pre">download</span> <span class="pre">matrix_multiplication.c</span></tt></a></p>
 <p class="rubric">References</p>
@@ -282,7 +284,7 @@ back to the master. Finally the master will receive results from workers, and co
             </a></p>
   <h3><a href="../index.html">Table Of Contents</a></h3>
   <ul>
-<li><a class="reference internal" href="#">Decomposition and Activities</a><ul>
+<li><a class="reference internal" href="#">Decomposition and Two Advanced Activities</a><ul>
 <li><a class="reference internal" href="#example-3-decompose-the-matrix-by-row">Example 3: Decompose the matrix by row</a><ul>
 <li><a class="reference internal" href="#activity-3-vector-matrix-multiplication-improved-version">Activity 3: Vector Matrix Multiplication Improved Version</a></li>
 <li><a class="reference internal" href="#activity-4-matrix-multiplication">Activity 4: Matrix Multiplication</a></li>
@@ -294,7 +296,7 @@ back to the master. Finally the master will receive results from workers, and co
 
   <h4>Previous topic</h4>
   <p class="topless"><a href="../CompileAndActivity/compileandactivity.html"
-                        title="previous chapter">Compiling and Activites</a></p>
+                        title="previous chapter">Compiling and First Two Activites</a></p>
 <div id="searchbox" style="display: none">
   <h3>Quick search</h3>
     <form class="search" action="../search.html" method="get">
@@ -319,7 +321,7 @@ back to the master. Finally the master will receive results from workers, and co
           <a href="../genindex.html" title="General Index"
              >index</a></li>
         <li class="right" >
-          <a href="../CompileAndActivity/compileandactivity.html" title="Compiling and Activites"
+          <a href="../CompileAndActivity/compileandactivity.html" title="Compiling and First Two Activites"
              >previous</a> |</li>
         <li><a href="../index.html">Distributed Computing Fundamentals</a> &raquo;</li> 
       </ul>
