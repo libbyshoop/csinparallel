@@ -8,6 +8,12 @@ In this chapter, we are going to look at two problems, one is vector-matrix mult
 Activity 2: Vector Matrix Multiplication
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Download the source code to do your activity: 
+
+	:download:`download CUDA program <vec_matrix_mul_todo.cu>`
+
+	:download:`download MPI program <vec_matrix_mul_todo.c>`
+
 In this activity, we are going to compute vector-matrix multiplication in hybrid environment MPI and CUDA. You might already see this problem before in the MPI module. If so, it will not be much different. The basic idea is we want to split the rows of the matrix, and ask the master to send some rows of the matrix and entire input vector to each worker. We then ask each worker to receive messages from the master, and each worker will call the CUDA function to do computation on their own GPU. Basically, on the GPU each thread will compute a new element of the vector. 
 
 :Comments on CUDA program:
@@ -153,18 +159,22 @@ In this activity, we are going to compute vector-matrix multiplication in hybrid
 		}
 
 
-Download the source code to do your activity: 
-	:download:`download CUDA program <vec_matrix_mul_todo.cu>`
 
-	:download:`download MPI program <vec_matrix_mul_todo.c>`
 
-Download the entire source code:
+If you get stuck, Download the entire source code:
+
 	:download:`download CUDA program <vec_matrix_mul.cu>`
 
 	:download:`download MPI program <vec_matrix_mul.c>`
 
 Activity 3: Matrix Multiplication
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Download the source code to do this activity: 
+	:download:`download CUDA program <matrix_mul_todo.cu>`
+
+	:download:`download MPI program <matrix_mul_todo.c>`
+
 
 In this activity, we are going to compute matrix-matrix multiplication in hybrid environment MPI and CUDA. The basic idea is we want to split the rows of the first matrix, and ask the master to send some rows of the first matrix and the entire second matrix to each worker. We then ask each worker to receive messages sent from the master, and each worker will call the CUDA function to do computation on their own GPU. 
 
@@ -310,12 +320,8 @@ In this activity, we are going to compute matrix-matrix multiplication in hybrid
 				printf("%6.2f   ", c[i][j]);
 		}
 
-Download the source code to do your activity: 
-	:download:`download CUDA program <matrix_mul_todo.cu>`
 
-	:download:`download MPI program <matrix_mul_todo.c>`
-
-Download the entire source code:
+If you get stuck, download the entire source code:
 	:download:`download CUDA program <matrix_mul.cu>`
 
 	:download:`download MPI program <matrix_mul.c>`

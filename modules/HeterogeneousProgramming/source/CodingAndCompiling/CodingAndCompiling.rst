@@ -56,7 +56,12 @@ Timing a Heterogeneous CUDA and MPI
 Activity 1: Vector Addition
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-In this activity, we are going to compute vector addition by using hybrid programming model, CUDA and MPI. Vector addition is very simple and easy. Suppose we have vector *A* and vector *B*, and both have the same length. To add vector *A* and *B*, we just add the corresponding elements of *A* and *B*. This results a new vector of the same length.
+Download the source code to do this activity: 
+	:download:`download CUDA program <vecadd_todo.cu>`
+
+	:download:`download MPI program <vecadd_todo.c>`
+
+In this activity, we are going to compute vector addition by using a hybrid programming model with CUDA and MPI. Vector addition is very simple and easy. Suppose we have vector *A* and vector *B*, and both have the same length. To add vector *A* and *B*, we just add the corresponding elements of *A* and *B*. This results a new vector of the same length.
 
 :Comments on CUDA Program:
 
@@ -198,12 +203,9 @@ In this activity, we are going to compute vector addition by using hybrid progra
 		printf("Successful !\n");
 
 
-Download the source code to do your activity: 
-	:download:`download CUDA program <vecadd_todo.cu>`
 
-	:download:`download MPI program <vecadd_todo.c>`
 
-Download the entire source code:
+If you get stuck, you can download the entire working source code:
 	:download:`download CUDA program <vecadd.cu>`
 
 	:download:`download MPI program <vecadd.c>`
