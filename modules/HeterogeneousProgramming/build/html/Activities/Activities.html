@@ -56,6 +56,11 @@
 <p>In this chapter, we are going to look at two problems, one is vector-matrix multiplication, and the other is matrix-matrix multiplication. We chose these problems because they are relatively easy to decompose, and not complicated.</p>
 <div class="section" id="activity-2-vector-matrix-multiplication">
 <h2>Activity 2: Vector Matrix Multiplication<a class="headerlink" href="#activity-2-vector-matrix-multiplication" title="Permalink to this headline">¶</a></h2>
+<p>Download the source code to do your activity:</p>
+<blockquote>
+<div><p><a class="reference download internal" href="../_downloads/vec_matrix_mul_todo.cu"><tt class="xref download docutils literal"><span class="pre">download</span> <span class="pre">CUDA</span> <span class="pre">program</span></tt></a></p>
+<p><a class="reference download internal" href="../_downloads/vec_matrix_mul_todo.c"><tt class="xref download docutils literal"><span class="pre">download</span> <span class="pre">MPI</span> <span class="pre">program</span></tt></a></p>
+</div></blockquote>
 <p>In this activity, we are going to compute vector-matrix multiplication in hybrid environment MPI and CUDA. You might already see this problem before in the MPI module. If so, it will not be much different. The basic idea is we want to split the rows of the matrix, and ask the master to send some rows of the matrix and entire input vector to each worker. We then ask each worker to receive messages from the master, and each worker will call the CUDA function to do computation on their own GPU. Basically, on the GPU each thread will compute a new element of the vector.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -77,7 +82,7 @@
 </pre></div>
 </div>
 </li>
-<li><p class="first">Then we need to have a function that calls the kernel function on the host. This function is to allocate memory for the matrix and vector on the device, copy matrix and vector from host to device, compute the vector matrix multiplication, and copy the result vector from device to the host. This function will be called in the MPI program. Your task is to call kernel function at <strong>TO DO</strong>.</p>
+<li><p class="first">Then we need to have a function that calls the kernel function on the host. This function is to allocate memory for the matrix and vector on the device, copy matrix and vector from host to device, compute the vector matrix multiplication, and copy the result vector from device to host. This function will be called in the MPI program. Your task is to call kernel function at <strong>TO DO</strong>.</p>
 <div class="highlight-c"><div class="highlight"><pre><span class="cm">/* function on the host, CPU */</span>
 <span class="k">extern</span> <span class="s">&quot;C&quot;</span> <span class="kt">void</span> <span class="n">run_kernel</span><span class="p">(</span><span class="kt">int</span> <span class="o">*</span><span class="n">A</span><span class="p">,</span> <span class="kt">int</span> <span class="o">*</span><span class="n">x</span><span class="p">,</span> <span class="kt">int</span> <span class="o">*</span><span class="n">y</span><span class="p">,</span> <span class="kt">int</span> <span class="n">width</span><span class="p">,</span> <span class="kt">int</span> <span class="n">block_size</span><span class="p">)</span> <span class="p">{</span>
 
@@ -215,19 +220,20 @@
 </tr>
 </tbody>
 </table>
-<dl class="docutils">
-<dt>Download the source code to do your activity:</dt>
-<dd><p class="first"><a class="reference download internal" href="../_downloads/vec_matrix_mul_todo.cu"><tt class="xref download docutils literal"><span class="pre">download</span> <span class="pre">CUDA</span> <span class="pre">program</span></tt></a></p>
-<p class="last"><a class="reference download internal" href="../_downloads/vec_matrix_mul_todo.c"><tt class="xref download docutils literal"><span class="pre">download</span> <span class="pre">MPI</span> <span class="pre">program</span></tt></a></p>
-</dd>
-<dt>Download the entire source code:</dt>
-<dd><p class="first"><a class="reference download internal" href="../_downloads/vec_matrix_mul.cu"><tt class="xref download docutils literal"><span class="pre">download</span> <span class="pre">CUDA</span> <span class="pre">program</span></tt></a></p>
-<p class="last"><a class="reference download internal" href="../_downloads/vec_matrix_mul.c"><tt class="xref download docutils literal"><span class="pre">download</span> <span class="pre">MPI</span> <span class="pre">program</span></tt></a></p>
-</dd>
-</dl>
+<p>If you get stuck, Download the entire source code:</p>
+<blockquote>
+<div><p><a class="reference download internal" href="../_downloads/vec_matrix_mul.cu"><tt class="xref download docutils literal"><span class="pre">download</span> <span class="pre">CUDA</span> <span class="pre">program</span></tt></a></p>
+<p><a class="reference download internal" href="../_downloads/vec_matrix_mul.c"><tt class="xref download docutils literal"><span class="pre">download</span> <span class="pre">MPI</span> <span class="pre">program</span></tt></a></p>
+</div></blockquote>
 </div>
 <div class="section" id="activity-3-matrix-multiplication">
 <h2>Activity 3: Matrix Multiplication<a class="headerlink" href="#activity-3-matrix-multiplication" title="Permalink to this headline">¶</a></h2>
+<dl class="docutils">
+<dt>Download the source code to do this activity:</dt>
+<dd><p class="first"><a class="reference download internal" href="../_downloads/matrix_mul_todo.cu"><tt class="xref download docutils literal"><span class="pre">download</span> <span class="pre">CUDA</span> <span class="pre">program</span></tt></a></p>
+<p class="last"><a class="reference download internal" href="../_downloads/matrix_mul_todo.c"><tt class="xref download docutils literal"><span class="pre">download</span> <span class="pre">MPI</span> <span class="pre">program</span></tt></a></p>
+</dd>
+</dl>
 <p>In this activity, we are going to compute matrix-matrix multiplication in hybrid environment MPI and CUDA. The basic idea is we want to split the rows of the first matrix, and ask the master to send some rows of the first matrix and the entire second matrix to each worker. We then ask each worker to receive messages sent from the master, and each worker will call the CUDA function to do computation on their own GPU.</p>
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
@@ -264,7 +270,7 @@
 </pre></div>
 </div>
 </li>
-<li><p class="first">Then we need to have a function that calls the kernel function on the host. This function is to allocate memory for the matrices on the device, copy matrices from host to device, compute the matrix multiplication, and copy the result matrix from device to the host. This function will be called in the MPI program. Your task is to call kernel function at <strong>TO DO</strong>.</p>
+<li><p class="first">Then we need to have a function that calls the kernel function on the host. This function is to allocate memory for the matrices on the device, copy matrices from host to device, compute the matrix multiplication, and copy the result matrix from device to host. This function will be called in the MPI program. Your task is to call kernel function at <strong>TO DO</strong>.</p>
 <div class="highlight-c"><div class="highlight"><pre><span class="cm">/* function that you will call in mpi code */</span>
 <span class="k">extern</span> <span class="s">&quot;C&quot;</span> <span class="kt">void</span> <span class="n">MatrixMul</span><span class="p">(</span><span class="kt">float</span><span class="o">*</span> <span class="n">M</span><span class="p">,</span> <span class="kt">float</span><span class="o">*</span> <span class="n">N</span><span class="p">,</span> <span class="kt">float</span><span class="o">*</span> <span class="n">P</span><span class="p">,</span> <span class="kt">int</span> <span class="n">width</span><span class="p">,</span> <span class="kt">int</span> <span class="n">block_size</span><span class="p">)</span> <span class="p">{</span>
 
@@ -302,7 +308,7 @@
 </tr>
 <tr class="field-even field"><th class="field-name" colspan="2">Comments on MPI Program:</th></tr>
 <tr class="field-even field"><td>&nbsp;</td><td class="field-body"><ul class="first last">
-<li><p class="first">Now we can look at the MPI program. This MPI program is a revised version of the Matrix Mutiplication MPI program that was written by Blaise Barney. First we need to initialize the MPI execution environment, define the size of MPI_COMM_WORLD, and give a unique rank to each process. Then we ask the master to initialize the input matrices, divide these matrices, and send their pieces to each worker.</p>
+<li><p class="first">Now we can look at the MPI program. This MPI program is a revised version of the Matrix Mutiplication MPI program that was written by Blaise Barney. First we need to initialize the MPI execution environment, define the size of MPI_COMM_WORLD, and give a unique rank to each process. Then we ask the master to initialize the input matrices, divide these matrices, and send their pieces to each worker. Your task is to complete the following code at <strong>TO DO</strong>.</p>
 <div class="highlight-c"><div class="highlight"><pre><span class="cm">/**************************** master task ************************************/</span>
 <span class="k">if</span> <span class="p">(</span><span class="n">taskid</span> <span class="o">==</span> <span class="n">MASTER</span><span class="p">)</span> <span class="p">{</span>
 
@@ -391,11 +397,7 @@
 </tbody>
 </table>
 <dl class="docutils">
-<dt>Download the source code to do your activity:</dt>
-<dd><p class="first"><a class="reference download internal" href="../_downloads/matrix_mul_todo.cu"><tt class="xref download docutils literal"><span class="pre">download</span> <span class="pre">CUDA</span> <span class="pre">program</span></tt></a></p>
-<p class="last"><a class="reference download internal" href="../_downloads/matrix_mul_todo.c"><tt class="xref download docutils literal"><span class="pre">download</span> <span class="pre">MPI</span> <span class="pre">program</span></tt></a></p>
-</dd>
-<dt>Download the entire source code:</dt>
+<dt>If you get stuck, download the entire source code:</dt>
 <dd><p class="first"><a class="reference download internal" href="../_downloads/matrix_mul.cu"><tt class="xref download docutils literal"><span class="pre">download</span> <span class="pre">CUDA</span> <span class="pre">program</span></tt></a></p>
 <p class="last"><a class="reference download internal" href="../_downloads/matrix_mul.c"><tt class="xref download docutils literal"><span class="pre">download</span> <span class="pre">MPI</span> <span class="pre">program</span></tt></a></p>
 </dd>

@@ -13,7 +13,7 @@
 
 
 \title{Heterogeneous Computing Fundamentals}
-\date{July 26, 2012}
+\date{October 25, 2012}
 \release{}
 \author{CSInParallel Project}
 \newcommand{\sphinxlogo}{}
@@ -31,72 +31,79 @@
     \PYG@it{\PYG@bf{\PYG@ff{#1}}}}}}}
 \def\PYG#1#2{\PYG@reset\PYG@toks#1+\relax+\PYG@do{#2}}
 
-\def\PYG@tok@gd{\def\PYG@tc##1{\textcolor[rgb]{0.63,0.00,0.00}{##1}}}
-\def\PYG@tok@gu{\let\PYG@bf=\textbf\def\PYG@tc##1{\textcolor[rgb]{0.50,0.00,0.50}{##1}}}
-\def\PYG@tok@gt{\def\PYG@tc##1{\textcolor[rgb]{0.00,0.25,0.82}{##1}}}
-\def\PYG@tok@gs{\let\PYG@bf=\textbf}
-\def\PYG@tok@gr{\def\PYG@tc##1{\textcolor[rgb]{1.00,0.00,0.00}{##1}}}
-\def\PYG@tok@cm{\let\PYG@it=\textit\def\PYG@tc##1{\textcolor[rgb]{0.25,0.50,0.56}{##1}}}
-\def\PYG@tok@vg{\def\PYG@tc##1{\textcolor[rgb]{0.73,0.38,0.84}{##1}}}
-\def\PYG@tok@m{\def\PYG@tc##1{\textcolor[rgb]{0.13,0.50,0.31}{##1}}}
-\def\PYG@tok@mh{\def\PYG@tc##1{\textcolor[rgb]{0.13,0.50,0.31}{##1}}}
-\def\PYG@tok@cs{\def\PYG@tc##1{\textcolor[rgb]{0.25,0.50,0.56}{##1}}\def\PYG@bc##1{\colorbox[rgb]{1.00,0.94,0.94}{##1}}}
-\def\PYG@tok@ge{\let\PYG@it=\textit}
-\def\PYG@tok@vc{\def\PYG@tc##1{\textcolor[rgb]{0.73,0.38,0.84}{##1}}}
-\def\PYG@tok@il{\def\PYG@tc##1{\textcolor[rgb]{0.13,0.50,0.31}{##1}}}
-\def\PYG@tok@go{\def\PYG@tc##1{\textcolor[rgb]{0.19,0.19,0.19}{##1}}}
-\def\PYG@tok@cp{\def\PYG@tc##1{\textcolor[rgb]{0.00,0.44,0.13}{##1}}}
-\def\PYG@tok@gi{\def\PYG@tc##1{\textcolor[rgb]{0.00,0.63,0.00}{##1}}}
-\def\PYG@tok@gh{\let\PYG@bf=\textbf\def\PYG@tc##1{\textcolor[rgb]{0.00,0.00,0.50}{##1}}}
-\def\PYG@tok@ni{\let\PYG@bf=\textbf\def\PYG@tc##1{\textcolor[rgb]{0.84,0.33,0.22}{##1}}}
-\def\PYG@tok@nl{\let\PYG@bf=\textbf\def\PYG@tc##1{\textcolor[rgb]{0.00,0.13,0.44}{##1}}}
-\def\PYG@tok@nn{\let\PYG@bf=\textbf\def\PYG@tc##1{\textcolor[rgb]{0.05,0.52,0.71}{##1}}}
-\def\PYG@tok@no{\def\PYG@tc##1{\textcolor[rgb]{0.38,0.68,0.84}{##1}}}
-\def\PYG@tok@na{\def\PYG@tc##1{\textcolor[rgb]{0.25,0.44,0.63}{##1}}}
-\def\PYG@tok@nb{\def\PYG@tc##1{\textcolor[rgb]{0.00,0.44,0.13}{##1}}}
-\def\PYG@tok@nc{\let\PYG@bf=\textbf\def\PYG@tc##1{\textcolor[rgb]{0.05,0.52,0.71}{##1}}}
-\def\PYG@tok@nd{\let\PYG@bf=\textbf\def\PYG@tc##1{\textcolor[rgb]{0.33,0.33,0.33}{##1}}}
-\def\PYG@tok@ne{\def\PYG@tc##1{\textcolor[rgb]{0.00,0.44,0.13}{##1}}}
-\def\PYG@tok@nf{\def\PYG@tc##1{\textcolor[rgb]{0.02,0.16,0.49}{##1}}}
-\def\PYG@tok@si{\let\PYG@it=\textit\def\PYG@tc##1{\textcolor[rgb]{0.44,0.63,0.82}{##1}}}
-\def\PYG@tok@s2{\def\PYG@tc##1{\textcolor[rgb]{0.25,0.44,0.63}{##1}}}
-\def\PYG@tok@vi{\def\PYG@tc##1{\textcolor[rgb]{0.73,0.38,0.84}{##1}}}
-\def\PYG@tok@nt{\let\PYG@bf=\textbf\def\PYG@tc##1{\textcolor[rgb]{0.02,0.16,0.45}{##1}}}
-\def\PYG@tok@nv{\def\PYG@tc##1{\textcolor[rgb]{0.73,0.38,0.84}{##1}}}
-\def\PYG@tok@s1{\def\PYG@tc##1{\textcolor[rgb]{0.25,0.44,0.63}{##1}}}
-\def\PYG@tok@gp{\let\PYG@bf=\textbf\def\PYG@tc##1{\textcolor[rgb]{0.78,0.36,0.04}{##1}}}
-\def\PYG@tok@sh{\def\PYG@tc##1{\textcolor[rgb]{0.25,0.44,0.63}{##1}}}
-\def\PYG@tok@ow{\let\PYG@bf=\textbf\def\PYG@tc##1{\textcolor[rgb]{0.00,0.44,0.13}{##1}}}
-\def\PYG@tok@sx{\def\PYG@tc##1{\textcolor[rgb]{0.78,0.36,0.04}{##1}}}
-\def\PYG@tok@bp{\def\PYG@tc##1{\textcolor[rgb]{0.00,0.44,0.13}{##1}}}
-\def\PYG@tok@c1{\let\PYG@it=\textit\def\PYG@tc##1{\textcolor[rgb]{0.25,0.50,0.56}{##1}}}
-\def\PYG@tok@kc{\let\PYG@bf=\textbf\def\PYG@tc##1{\textcolor[rgb]{0.00,0.44,0.13}{##1}}}
-\def\PYG@tok@c{\let\PYG@it=\textit\def\PYG@tc##1{\textcolor[rgb]{0.25,0.50,0.56}{##1}}}
-\def\PYG@tok@mf{\def\PYG@tc##1{\textcolor[rgb]{0.13,0.50,0.31}{##1}}}
-\def\PYG@tok@err{\def\PYG@bc##1{\fcolorbox[rgb]{1.00,0.00,0.00}{1,1,1}{##1}}}
-\def\PYG@tok@kd{\let\PYG@bf=\textbf\def\PYG@tc##1{\textcolor[rgb]{0.00,0.44,0.13}{##1}}}
-\def\PYG@tok@ss{\def\PYG@tc##1{\textcolor[rgb]{0.32,0.47,0.09}{##1}}}
-\def\PYG@tok@sr{\def\PYG@tc##1{\textcolor[rgb]{0.14,0.33,0.53}{##1}}}
-\def\PYG@tok@mo{\def\PYG@tc##1{\textcolor[rgb]{0.13,0.50,0.31}{##1}}}
-\def\PYG@tok@mi{\def\PYG@tc##1{\textcolor[rgb]{0.13,0.50,0.31}{##1}}}
-\def\PYG@tok@kn{\let\PYG@bf=\textbf\def\PYG@tc##1{\textcolor[rgb]{0.00,0.44,0.13}{##1}}}
-\def\PYG@tok@o{\def\PYG@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
-\def\PYG@tok@kr{\let\PYG@bf=\textbf\def\PYG@tc##1{\textcolor[rgb]{0.00,0.44,0.13}{##1}}}
-\def\PYG@tok@s{\def\PYG@tc##1{\textcolor[rgb]{0.25,0.44,0.63}{##1}}}
-\def\PYG@tok@kp{\def\PYG@tc##1{\textcolor[rgb]{0.00,0.44,0.13}{##1}}}
-\def\PYG@tok@w{\def\PYG@tc##1{\textcolor[rgb]{0.73,0.73,0.73}{##1}}}
-\def\PYG@tok@kt{\def\PYG@tc##1{\textcolor[rgb]{0.56,0.13,0.00}{##1}}}
-\def\PYG@tok@sc{\def\PYG@tc##1{\textcolor[rgb]{0.25,0.44,0.63}{##1}}}
-\def\PYG@tok@sb{\def\PYG@tc##1{\textcolor[rgb]{0.25,0.44,0.63}{##1}}}
-\def\PYG@tok@k{\let\PYG@bf=\textbf\def\PYG@tc##1{\textcolor[rgb]{0.00,0.44,0.13}{##1}}}
-\def\PYG@tok@se{\let\PYG@bf=\textbf\def\PYG@tc##1{\textcolor[rgb]{0.25,0.44,0.63}{##1}}}
-\def\PYG@tok@sd{\let\PYG@it=\textit\def\PYG@tc##1{\textcolor[rgb]{0.25,0.44,0.63}{##1}}}
+\expandafter\def\csname PYG@tok@gd\endcsname{\def\PYG@tc##1{\textcolor[rgb]{0.63,0.00,0.00}{##1}}}
+\expandafter\def\csname PYG@tok@gu\endcsname{\let\PYG@bf=\textbf\def\PYG@tc##1{\textcolor[rgb]{0.50,0.00,0.50}{##1}}}
+\expandafter\def\csname PYG@tok@gt\endcsname{\def\PYG@tc##1{\textcolor[rgb]{0.00,0.25,0.82}{##1}}}
+\expandafter\def\csname PYG@tok@gs\endcsname{\let\PYG@bf=\textbf}
+\expandafter\def\csname PYG@tok@gr\endcsname{\def\PYG@tc##1{\textcolor[rgb]{1.00,0.00,0.00}{##1}}}
+\expandafter\def\csname PYG@tok@cm\endcsname{\let\PYG@it=\textit\def\PYG@tc##1{\textcolor[rgb]{0.25,0.50,0.56}{##1}}}
+\expandafter\def\csname PYG@tok@vg\endcsname{\def\PYG@tc##1{\textcolor[rgb]{0.73,0.38,0.84}{##1}}}
+\expandafter\def\csname PYG@tok@m\endcsname{\def\PYG@tc##1{\textcolor[rgb]{0.13,0.50,0.31}{##1}}}
+\expandafter\def\csname PYG@tok@mh\endcsname{\def\PYG@tc##1{\textcolor[rgb]{0.13,0.50,0.31}{##1}}}
+\expandafter\def\csname PYG@tok@cs\endcsname{\def\PYG@tc##1{\textcolor[rgb]{0.25,0.50,0.56}{##1}}\def\PYG@bc##1{\setlength{\fboxsep}{0pt}\colorbox[rgb]{1.00,0.94,0.94}{\strut ##1}}}
+\expandafter\def\csname PYG@tok@ge\endcsname{\let\PYG@it=\textit}
+\expandafter\def\csname PYG@tok@vc\endcsname{\def\PYG@tc##1{\textcolor[rgb]{0.73,0.38,0.84}{##1}}}
+\expandafter\def\csname PYG@tok@il\endcsname{\def\PYG@tc##1{\textcolor[rgb]{0.13,0.50,0.31}{##1}}}
+\expandafter\def\csname PYG@tok@go\endcsname{\def\PYG@tc##1{\textcolor[rgb]{0.19,0.19,0.19}{##1}}}
+\expandafter\def\csname PYG@tok@cp\endcsname{\def\PYG@tc##1{\textcolor[rgb]{0.00,0.44,0.13}{##1}}}
+\expandafter\def\csname PYG@tok@gi\endcsname{\def\PYG@tc##1{\textcolor[rgb]{0.00,0.63,0.00}{##1}}}
+\expandafter\def\csname PYG@tok@gh\endcsname{\let\PYG@bf=\textbf\def\PYG@tc##1{\textcolor[rgb]{0.00,0.00,0.50}{##1}}}
+\expandafter\def\csname PYG@tok@ni\endcsname{\let\PYG@bf=\textbf\def\PYG@tc##1{\textcolor[rgb]{0.84,0.33,0.22}{##1}}}
+\expandafter\def\csname PYG@tok@nl\endcsname{\let\PYG@bf=\textbf\def\PYG@tc##1{\textcolor[rgb]{0.00,0.13,0.44}{##1}}}
+\expandafter\def\csname PYG@tok@nn\endcsname{\let\PYG@bf=\textbf\def\PYG@tc##1{\textcolor[rgb]{0.05,0.52,0.71}{##1}}}
+\expandafter\def\csname PYG@tok@no\endcsname{\def\PYG@tc##1{\textcolor[rgb]{0.38,0.68,0.84}{##1}}}
+\expandafter\def\csname PYG@tok@na\endcsname{\def\PYG@tc##1{\textcolor[rgb]{0.25,0.44,0.63}{##1}}}
+\expandafter\def\csname PYG@tok@nb\endcsname{\def\PYG@tc##1{\textcolor[rgb]{0.00,0.44,0.13}{##1}}}
+\expandafter\def\csname PYG@tok@nc\endcsname{\let\PYG@bf=\textbf\def\PYG@tc##1{\textcolor[rgb]{0.05,0.52,0.71}{##1}}}
+\expandafter\def\csname PYG@tok@nd\endcsname{\let\PYG@bf=\textbf\def\PYG@tc##1{\textcolor[rgb]{0.33,0.33,0.33}{##1}}}
+\expandafter\def\csname PYG@tok@ne\endcsname{\def\PYG@tc##1{\textcolor[rgb]{0.00,0.44,0.13}{##1}}}
+\expandafter\def\csname PYG@tok@nf\endcsname{\def\PYG@tc##1{\textcolor[rgb]{0.02,0.16,0.49}{##1}}}
+\expandafter\def\csname PYG@tok@si\endcsname{\let\PYG@it=\textit\def\PYG@tc##1{\textcolor[rgb]{0.44,0.63,0.82}{##1}}}
+\expandafter\def\csname PYG@tok@s2\endcsname{\def\PYG@tc##1{\textcolor[rgb]{0.25,0.44,0.63}{##1}}}
+\expandafter\def\csname PYG@tok@vi\endcsname{\def\PYG@tc##1{\textcolor[rgb]{0.73,0.38,0.84}{##1}}}
+\expandafter\def\csname PYG@tok@nt\endcsname{\let\PYG@bf=\textbf\def\PYG@tc##1{\textcolor[rgb]{0.02,0.16,0.45}{##1}}}
+\expandafter\def\csname PYG@tok@nv\endcsname{\def\PYG@tc##1{\textcolor[rgb]{0.73,0.38,0.84}{##1}}}
+\expandafter\def\csname PYG@tok@s1\endcsname{\def\PYG@tc##1{\textcolor[rgb]{0.25,0.44,0.63}{##1}}}
+\expandafter\def\csname PYG@tok@gp\endcsname{\let\PYG@bf=\textbf\def\PYG@tc##1{\textcolor[rgb]{0.78,0.36,0.04}{##1}}}
+\expandafter\def\csname PYG@tok@sh\endcsname{\def\PYG@tc##1{\textcolor[rgb]{0.25,0.44,0.63}{##1}}}
+\expandafter\def\csname PYG@tok@ow\endcsname{\let\PYG@bf=\textbf\def\PYG@tc##1{\textcolor[rgb]{0.00,0.44,0.13}{##1}}}
+\expandafter\def\csname PYG@tok@sx\endcsname{\def\PYG@tc##1{\textcolor[rgb]{0.78,0.36,0.04}{##1}}}
+\expandafter\def\csname PYG@tok@bp\endcsname{\def\PYG@tc##1{\textcolor[rgb]{0.00,0.44,0.13}{##1}}}
+\expandafter\def\csname PYG@tok@c1\endcsname{\let\PYG@it=\textit\def\PYG@tc##1{\textcolor[rgb]{0.25,0.50,0.56}{##1}}}
+\expandafter\def\csname PYG@tok@kc\endcsname{\let\PYG@bf=\textbf\def\PYG@tc##1{\textcolor[rgb]{0.00,0.44,0.13}{##1}}}
+\expandafter\def\csname PYG@tok@c\endcsname{\let\PYG@it=\textit\def\PYG@tc##1{\textcolor[rgb]{0.25,0.50,0.56}{##1}}}
+\expandafter\def\csname PYG@tok@mf\endcsname{\def\PYG@tc##1{\textcolor[rgb]{0.13,0.50,0.31}{##1}}}
+\expandafter\def\csname PYG@tok@err\endcsname{\def\PYG@bc##1{\setlength{\fboxsep}{0pt}\fcolorbox[rgb]{1.00,0.00,0.00}{1,1,1}{\strut ##1}}}
+\expandafter\def\csname PYG@tok@kd\endcsname{\let\PYG@bf=\textbf\def\PYG@tc##1{\textcolor[rgb]{0.00,0.44,0.13}{##1}}}
+\expandafter\def\csname PYG@tok@ss\endcsname{\def\PYG@tc##1{\textcolor[rgb]{0.32,0.47,0.09}{##1}}}
+\expandafter\def\csname PYG@tok@sr\endcsname{\def\PYG@tc##1{\textcolor[rgb]{0.14,0.33,0.53}{##1}}}
+\expandafter\def\csname PYG@tok@mo\endcsname{\def\PYG@tc##1{\textcolor[rgb]{0.13,0.50,0.31}{##1}}}
+\expandafter\def\csname PYG@tok@mi\endcsname{\def\PYG@tc##1{\textcolor[rgb]{0.13,0.50,0.31}{##1}}}
+\expandafter\def\csname PYG@tok@kn\endcsname{\let\PYG@bf=\textbf\def\PYG@tc##1{\textcolor[rgb]{0.00,0.44,0.13}{##1}}}
+\expandafter\def\csname PYG@tok@o\endcsname{\def\PYG@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\expandafter\def\csname PYG@tok@kr\endcsname{\let\PYG@bf=\textbf\def\PYG@tc##1{\textcolor[rgb]{0.00,0.44,0.13}{##1}}}
+\expandafter\def\csname PYG@tok@s\endcsname{\def\PYG@tc##1{\textcolor[rgb]{0.25,0.44,0.63}{##1}}}
+\expandafter\def\csname PYG@tok@kp\endcsname{\def\PYG@tc##1{\textcolor[rgb]{0.00,0.44,0.13}{##1}}}
+\expandafter\def\csname PYG@tok@w\endcsname{\def\PYG@tc##1{\textcolor[rgb]{0.73,0.73,0.73}{##1}}}
+\expandafter\def\csname PYG@tok@kt\endcsname{\def\PYG@tc##1{\textcolor[rgb]{0.56,0.13,0.00}{##1}}}
+\expandafter\def\csname PYG@tok@sc\endcsname{\def\PYG@tc##1{\textcolor[rgb]{0.25,0.44,0.63}{##1}}}
+\expandafter\def\csname PYG@tok@sb\endcsname{\def\PYG@tc##1{\textcolor[rgb]{0.25,0.44,0.63}{##1}}}
+\expandafter\def\csname PYG@tok@k\endcsname{\let\PYG@bf=\textbf\def\PYG@tc##1{\textcolor[rgb]{0.00,0.44,0.13}{##1}}}
+\expandafter\def\csname PYG@tok@se\endcsname{\let\PYG@bf=\textbf\def\PYG@tc##1{\textcolor[rgb]{0.25,0.44,0.63}{##1}}}
+\expandafter\def\csname PYG@tok@sd\endcsname{\let\PYG@it=\textit\def\PYG@tc##1{\textcolor[rgb]{0.25,0.44,0.63}{##1}}}
 
 \def\PYGZbs{\char`\\}
 \def\PYGZus{\char`\_}
 \def\PYGZob{\char`\{}
 \def\PYGZcb{\char`\}}
 \def\PYGZca{\char`\^}
+\def\PYGZam{\char`\&}
+\def\PYGZlt{\char`\<}
+\def\PYGZgt{\char`\>}
+\def\PYGZsh{\char`\#}
+\def\PYGZpc{\char`\%}
+\def\PYGZdl{\char`\$}
+\def\PYGZti{\char`\~}
 % for compatibility with earlier versions
 \def\PYGZat{@}
 \def\PYGZlb{[}
@@ -110,19 +117,41 @@
 \phantomsection\label{index::doc}
 
 
+This parallel computing module contains the following sections, which
+you can access subsequently by choosing `bext' in the upper or lower right
+corner of this document.
+
 Contents:
 
 
-\chapter{Prerequisites}
-\label{Prerequisites/Prerequisites:prerequisites}\label{Prerequisites/Prerequisites:heterogeneous-computing-fundamentals}\label{Prerequisites/Prerequisites::doc}
-Before getting started with this module, please keep in mind that we assume you have \textbf{sufficient knowledge with C programming with Message Passing Interface(MPI) and CUDA C.} If you are not familiar with MPI or CUDA C, please read the \textbf{GPU Computing module}, and \textbf{Distributed Memory Computing module}.
+\chapter{Instructor/Student Notes}
+\label{Prerequisites/Prerequisites:heterogeneous-computing-fundamentals}\label{Prerequisites/Prerequisites:instructor-student-notes}\label{Prerequisites/Prerequisites::doc}
+Heterogenous computing models are increasing in importance in parallel and distributed computing.
+This module shows students a way to combine distributed computing techniques on clusters of machines with GPU computing on individual nodes in the cluster.  The module contains background material and hands-on activities with partially-completed code segments and explanations of what students should try on their own to complete the task.
+
+
+\section{Prerequisites}
+\label{Prerequisites/Prerequisites:prerequisites}
+Before getting started with this module, please keep in mind that we assume you have \textbf{sufficient knowledge with C programming with Message Passing Interface(MPI) and CUDA C.} If you are not familiar with MPI or CUDA C, please read and try the activities in the \textbf{GPU Computing module}, and the \textbf{Distributed Computing Funcamentals module}.
+
+
+\section{Intended Level}
+\label{Prerequisites/Prerequisites:intended-level}
+This set of background information and activities for students to try is intended for an intermediate or advanced level, once students are fairly comfortable with their programming skills, particularly using C.  Because it build on two previous modules, it is likely that this module would end up as material for an advanced course, unless you intended to spend 3-4 weeks on parallel computing techniques in a computer organization course, for eample.
+
+The code examples (addition of vectors and matrix-vector multiplication) follow from similar examples in the previous modules listed above, so they may provide a way for students to see how the same problem can be solved using different hardware architectures.  Each example could be taught in serial versions first before having students work on these modules.
+
+
+\section{Cluster Resources}
+\label{Prerequisites/Prerequisites:cluster-resources}
+Instructors: The module called \textbf{Distributed Computing Funcamentals} contains information about cluster computing resources at Macalester College that we have used for this module.  However, you will need to provide information about how to access the cluster you wish to use for your students to try the code.
 
 
 \chapter{Introduction to Heterogeneous Computing}
 \label{IntroHeterogeneous/IntroHeterogeneous::doc}\label{IntroHeterogeneous/IntroHeterogeneous:introduction-to-heterogeneous-computing}
-You have already seen that you can decompose the task and distribute each smaller task to each worker, and let each node work simultaneously in an MPI program. Thus, it enables a programmer to work on a larger problem size, and reduce the computational time. Similarly, CUDA C is a GPU programming language, and is another parallel programming model. Our goal of this module is to program in the hybrid environment CUDA and MPI.
+You have already seen that you can decompose the task and distribute each smaller task to each worker, and let each node work simultaneously in an MPI program. Thus, it enables a programmer to work on a larger problem size, and reduce the computational time. Similarly, CUDA C is a GPU programming language, and provides another parallel programming model. Our goal of this module is to program in a hybrid environment, using CUDA and MPI.
 
-It turns out that we can produce a new parallel programming model that combines MPI and CUDA together. The idea is that we use MPI to distribute work among nodes, each of which uses CUDA to work on its task. In order for this to work, we need to keep in mind that we need to have a cluster or something similar, where each node contains GPUs capable of doing CUDA computation.
+It turns out that we can produce a new parallel programming model that combines MPI and CUDA together. The idea is that we use MPI to distribute work among nodes, each of which uses CUDA to work on its task. In order for this to work, we need to keep in mind that we need to have a cluster or something similar, where each node contains GPUs capable of doing CUDA computation. The Figure below illustrates the model for heterogeneous or hybrid programming.
 
 {\hfill\includegraphics{cudampi.png}\hfill}
 
@@ -135,7 +164,7 @@ It turns out that we can produce a new parallel programming model that combines 
 
 \begin{itemize}
 \item {} 
-Please Do Your Reading: \href{http://www.hipc.org/hipc2009/documents/HIPCSS09Papers/1569247597.pdf}{On the Comparative Performance of Parallel Algorithms on Small GPU/CUDA Clusters}
+Please read: \href{http://www.hipc.org/hipc2009/documents/HIPCSS09Papers/1569247597.pdf}{On the Comparative Performance of Parallel Algorithms on Small GPU/CUDA Clusters}
 
 \end{itemize}
 \end{minipage}}
@@ -148,20 +177,20 @@ Please Do Your Reading: \href{http://www.hipc.org/hipc2009/documents/HIPCSS09Pap
 
 \section{Heterogeneous Program: Hello World}
 \label{CodingAndCompiling/CodingAndCompiling:heterogeneous-program-hello-world}
-Distributed memory computing and GPU computing are two different parallel programming models. In this section, you will learn how to put these two parallel models together, and that will speed up your running time. As always we will look at the \textbf{Hello World} program using hybrid CUDA and MPI model. In order to combine CUDA and MPI, we need to get their codes to communicate to each other during the compilation. Let's look at the \textbf{Hello World} program below.
+Distributed memory computing and GPU computing are two different parallel programming models. In this section, you will learn how to put these two parallel models together, and that will speed up your running time. As always we will look at the \textbf{Hello World} program using hybrid environment CUDA and MPI. In order to combine CUDA and MPI, we need to get their codes to communicate to each other during the compilation. Let's look at the \textbf{Hello World} program below.
 
 \textbf{CUDA program}
 
 \begin{Verbatim}[commandchars=\\\{\},numbers=left,firstnumber=1,stepnumber=1]
-\PYG{c+cp}{\#}\PYG{c+cp}{include \textless{}stdio.h\textgreater{}}
-\PYG{c+cp}{\#}\PYG{c+cp}{include \textless{}cuda.h\textgreater{}}
+\PYG{c+cp}{\PYGZsh{}}\PYG{c+cp}{include \PYGZlt{}stdio.h\PYGZgt{}}
+\PYG{c+cp}{\PYGZsh{}}\PYG{c+cp}{include \PYGZlt{}cuda.h\PYGZgt{}}
 
 \PYG{c+cm}{/* kernel function for GPU */}
 \PYG{n}{\PYGZus{}\PYGZus{}global\PYGZus{}\PYGZus{}} \PYG{k+kt}{void} \PYG{n+nf}{kernel}\PYG{p}{(}\PYG{k+kt}{void}\PYG{p}{)} \PYG{p}{\PYGZob{}}
 \PYG{p}{\PYGZcb{}}
 
 \PYG{k}{extern} \PYG{l+s}{"}\PYG{l+s}{C}\PYG{l+s}{"} \PYG{k+kt}{void} \PYG{n}{hello}\PYG{p}{(}\PYG{k+kt}{void}\PYG{p}{)} \PYG{p}{\PYGZob{}}
-    \PYG{n}{kernel}\PYG{o}{\textless{}}\PYG{o}{\textless{}}\PYG{o}{\textless{}}\PYG{l+m+mi}{1}\PYG{p}{,} \PYG{l+m+mi}{1}\PYG{o}{\textgreater{}}\PYG{o}{\textgreater{}}\PYG{o}{\textgreater{}}\PYG{p}{(}\PYG{p}{)}\PYG{p}{;}
+    \PYG{n}{kernel}\PYG{o}{\PYGZlt{}}\PYG{o}{\PYGZlt{}}\PYG{o}{\PYGZlt{}}\PYG{l+m+mi}{1}\PYG{p}{,} \PYG{l+m+mi}{1}\PYG{o}{\PYGZgt{}}\PYG{o}{\PYGZgt{}}\PYG{o}{\PYGZgt{}}\PYG{p}{(}\PYG{p}{)}\PYG{p}{;}
     \PYG{n}{printf}\PYG{p}{(}\PYG{l+s}{"}\PYG{l+s}{Hello World !}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s}{"}\PYG{p}{)}\PYG{p}{;}
 \PYG{p}{\PYGZcb{}}
 \end{Verbatim}
@@ -169,9 +198,9 @@ Distributed memory computing and GPU computing are two different parallel progra
 \textbf{MPI program integrated with CUDA}
 
 \begin{Verbatim}[commandchars=\\\{\},numbers=left,firstnumber=1,stepnumber=1]
-\PYG{c+cp}{\#}\PYG{c+cp}{include \textless{}mpi.h\textgreater{}}
+\PYG{c+cp}{\PYGZsh{}}\PYG{c+cp}{include \PYGZlt{}mpi.h\PYGZgt{}}
 
-\PYG{c+cp}{\#}\PYG{c+cp}{define MAX 80    }\PYG{c+cm}{/* maximum characters for naming the node */}
+\PYG{c+cp}{\PYGZsh{}}\PYG{c+cp}{define MAX 80    }\PYG{c+cm}{/* maximum characters for naming the node */}
 
 \PYG{c+cm}{/* Declaring the CUDA function */}
 \PYG{k+kt}{void} \PYG{n}{hello}\PYG{p}{(}\PYG{p}{)}\PYG{p}{;}
@@ -182,16 +211,16 @@ Distributed memory computing and GPU computing are two different parallel progra
    \PYG{k+kt}{char} \PYG{n}{name}\PYG{p}{[}\PYG{n}{MAX}\PYG{p}{]}\PYG{p}{;}      \PYG{c+cm}{/* char array for storing the name of each node */}
 
    \PYG{c+cm}{/* Initializing the MPI execution environment */}
-   \PYG{n}{MPI\PYGZus{}Init}\PYG{p}{(}\PYG{o}{\&}\PYG{n}{argc}\PYG{p}{,} \PYG{o}{\&}\PYG{n}{argv}\PYG{p}{)}\PYG{p}{;}
-   \PYG{n}{MPI\PYGZus{}Comm\PYGZus{}rank}\PYG{p}{(}\PYG{n}{MPI\PYGZus{}COMM\PYGZus{}WORLD}\PYG{p}{,} \PYG{o}{\&}\PYG{n}{rank}\PYG{p}{)}\PYG{p}{;}
-   \PYG{n}{MPI\PYGZus{}Comm\PYGZus{}size}\PYG{p}{(}\PYG{n}{MPI\PYGZus{}COMM\PYGZus{}WORLD}\PYG{p}{,} \PYG{o}{\&}\PYG{n}{size}\PYG{p}{)}\PYG{p}{;}
-   \PYG{n}{MPI\PYGZus{}Get\PYGZus{}processor\PYGZus{}name}\PYG{p}{(}\PYG{n}{name}\PYG{p}{,} \PYG{o}{\&}\PYG{n}{len}\PYG{p}{)}\PYG{p}{;}
+   \PYG{n}{MPI\PYGZus{}Init}\PYG{p}{(}\PYG{o}{\PYGZam{}}\PYG{n}{argc}\PYG{p}{,} \PYG{o}{\PYGZam{}}\PYG{n}{argv}\PYG{p}{)}\PYG{p}{;}
+   \PYG{n}{MPI\PYGZus{}Comm\PYGZus{}rank}\PYG{p}{(}\PYG{n}{MPI\PYGZus{}COMM\PYGZus{}WORLD}\PYG{p}{,} \PYG{o}{\PYGZam{}}\PYG{n}{rank}\PYG{p}{)}\PYG{p}{;}
+   \PYG{n}{MPI\PYGZus{}Comm\PYGZus{}size}\PYG{p}{(}\PYG{n}{MPI\PYGZus{}COMM\PYGZus{}WORLD}\PYG{p}{,} \PYG{o}{\PYGZam{}}\PYG{n}{size}\PYG{p}{)}\PYG{p}{;}
+   \PYG{n}{MPI\PYGZus{}Get\PYGZus{}processor\PYGZus{}name}\PYG{p}{(}\PYG{n}{name}\PYG{p}{,} \PYG{o}{\PYGZam{}}\PYG{n}{len}\PYG{p}{)}\PYG{p}{;}
 
    \PYG{c+cm}{/* Call CUDA function */}
    \PYG{n}{hello}\PYG{p}{(}\PYG{p}{)}\PYG{p}{;}
 
    \PYG{c+cm}{/* Print the rank, size, and name of each node */}
-   \PYG{n}{printf}\PYG{p}{(}\PYG{l+s}{"}\PYG{l+s}{I am \%d of \%d on \%s}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s}{"}\PYG{p}{,} \PYG{n}{rank}\PYG{p}{,} \PYG{n}{size}\PYG{p}{,} \PYG{n}{name}\PYG{p}{)}\PYG{p}{;}
+   \PYG{n}{printf}\PYG{p}{(}\PYG{l+s}{"}\PYG{l+s}{I am \PYGZpc{}d of \PYGZpc{}d on \PYGZpc{}s}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s}{"}\PYG{p}{,} \PYG{n}{rank}\PYG{p}{,} \PYG{n}{size}\PYG{p}{,} \PYG{n}{name}\PYG{p}{)}\PYG{p}{;}
 
    \PYG{c+cm}{/*Terminating the MPI environment*/}
    \PYG{n}{MPI\PYGZus{}Finalize}\PYG{p}{(}\PYG{p}{)}\PYG{p}{;}
@@ -241,21 +270,30 @@ To execute the executable file, \textbf{cudampi}, we can enter the following com
 mpirun -machinefile machines -x LD\_LIBRARY\_PATH -np \#processes ./cudampi
 \end{Verbatim}
 
+We use \textbf{-x} to export the environment variables to the remote nodes before executing program.
+
 
 \subsection{Timing a Heterogeneous CUDA and MPI}
 \label{CodingAndCompiling/CodingAndCompiling:timing-a-heterogeneous-cuda-and-mpi}\begin{itemize}
 \item {} 
-In order to time your hybrid CUDA and MPI program, you just need to use MPI\_Wtime() function as in an MPI program.
+In order to time a heterogeneous CUDA and MPI program, you just need to use MPI\_Wtime() function as in an MPI program.
 
 \item {} 
-We need to keep in mind that a heterogeneous CUDA and MPI program theoretically has lower running time than an MPI does; however, running time also depends on each node's properties such as memory. Copying data from a CPU to GPU may take a long period of time, which results in a much longer running time for a heterogeneous program. Therefore, you do not always get benefits from the heterogeneous programming model.
+We need to keep in mind that a heterogeneous CUDA and MPI program theoretically has a lower running time than an MPI does; however, running time also depends on each node's properties such as memory. Copying data from the host (CPU) to a device (GPU) may take a long period of time, which results in a much longer running time for a heterogeneous program. Therefore, you do not always get benefits from the heterogeneous programming model.
 
 \end{itemize}
 
 
 \subsection{Activity 1: Vector Addition}
-\label{CodingAndCompiling/CodingAndCompiling:activity-1-vector-addition}
-In this activity, we are going to compute vector addition by using hybrid programming model, CUDA and MPI. Vector addition is very simple and easy. Suppose we have vector \emph{A} and vector \emph{B}, and both have the same length. To add vector \emph{A} and \emph{B}, we just add the corresponding elements of \emph{A} and \emph{B}. This results a new vector of the same length.
+\label{CodingAndCompiling/CodingAndCompiling:activity-1-vector-addition}\begin{description}
+\item[{Download the source code to do this activity:}] \leavevmode
+\code{download CUDA program}
+
+\code{download MPI program}
+
+\end{description}
+
+In this activity, we are going to compute vector addition by using a hybrid programming model with CUDA and MPI. Vector addition is very simple and easy. Suppose we have vector \emph{A} and vector \emph{B}, and both have the same length. To add vector \emph{A} and \emph{B}, we just add the corresponding elements of \emph{A} and \emph{B}. This results a new vector of the same length.
 \begin{quote}\begin{description}
 \item[{Comments on CUDA Program}] \leavevmode\begin{itemize}
 \item {} 
@@ -286,9 +324,9 @@ Another function in the CUDA program is \textbf{run\_kernel}, which works on the
         \PYG{k+kt}{int} \PYG{o}{*}\PYG{n}{dev\PYGZus{}a}\PYG{p}{,} \PYG{o}{*}\PYG{n}{dev\PYGZus{}b}\PYG{p}{,} \PYG{o}{*}\PYG{n}{dev\PYGZus{}c}\PYG{p}{;}
 
         \PYG{c+cm}{/* Allocate memory on the device */}
-        \PYG{n}{cudaMalloc}\PYG{p}{(}\PYG{p}{(}\PYG{k+kt}{void}\PYG{o}{*}\PYG{o}{*}\PYG{p}{)}\PYG{o}{\&}\PYG{n}{dev\PYGZus{}a}\PYG{p}{,} \PYG{k}{sizeof}\PYG{p}{(}\PYG{k+kt}{int}\PYG{p}{)}\PYG{o}{*}\PYG{n}{size}\PYG{p}{)}\PYG{p}{;}
-        \PYG{n}{cudaMalloc}\PYG{p}{(}\PYG{p}{(}\PYG{k+kt}{void}\PYG{o}{*}\PYG{o}{*}\PYG{p}{)}\PYG{o}{\&}\PYG{n}{dev\PYGZus{}b}\PYG{p}{,} \PYG{k}{sizeof}\PYG{p}{(}\PYG{k+kt}{int}\PYG{p}{)}\PYG{o}{*}\PYG{n}{size}\PYG{p}{)}\PYG{p}{;}
-        \PYG{n}{cudaMalloc}\PYG{p}{(}\PYG{p}{(}\PYG{k+kt}{void}\PYG{o}{*}\PYG{o}{*}\PYG{p}{)}\PYG{o}{\&}\PYG{n}{dev\PYGZus{}c}\PYG{p}{,} \PYG{k}{sizeof}\PYG{p}{(}\PYG{k+kt}{int}\PYG{p}{)}\PYG{o}{*}\PYG{n}{size}\PYG{p}{)}\PYG{p}{;}
+        \PYG{n}{cudaMalloc}\PYG{p}{(}\PYG{p}{(}\PYG{k+kt}{void}\PYG{o}{*}\PYG{o}{*}\PYG{p}{)}\PYG{o}{\PYGZam{}}\PYG{n}{dev\PYGZus{}a}\PYG{p}{,} \PYG{k}{sizeof}\PYG{p}{(}\PYG{k+kt}{int}\PYG{p}{)}\PYG{o}{*}\PYG{n}{size}\PYG{p}{)}\PYG{p}{;}
+        \PYG{n}{cudaMalloc}\PYG{p}{(}\PYG{p}{(}\PYG{k+kt}{void}\PYG{o}{*}\PYG{o}{*}\PYG{p}{)}\PYG{o}{\PYGZam{}}\PYG{n}{dev\PYGZus{}b}\PYG{p}{,} \PYG{k}{sizeof}\PYG{p}{(}\PYG{k+kt}{int}\PYG{p}{)}\PYG{o}{*}\PYG{n}{size}\PYG{p}{)}\PYG{p}{;}
+        \PYG{n}{cudaMalloc}\PYG{p}{(}\PYG{p}{(}\PYG{k+kt}{void}\PYG{o}{*}\PYG{o}{*}\PYG{p}{)}\PYG{o}{\PYGZam{}}\PYG{n}{dev\PYGZus{}c}\PYG{p}{,} \PYG{k}{sizeof}\PYG{p}{(}\PYG{k+kt}{int}\PYG{p}{)}\PYG{o}{*}\PYG{n}{size}\PYG{p}{)}\PYG{p}{;}
 
         \PYG{c+cm}{/* Copy vectors a and b from host to device */}
         \PYG{n}{cudaMemcpy}\PYG{p}{(}\PYG{n}{dev\PYGZus{}a}\PYG{p}{,} \PYG{n}{a}\PYG{p}{,} \PYG{k}{sizeof}\PYG{p}{(}\PYG{k+kt}{int}\PYG{p}{)}\PYG{o}{*}\PYG{n}{size}\PYG{p}{,} \PYG{n}{cudaMemcpyHostToDevice}\PYG{p}{)}\PYG{p}{;}
@@ -324,7 +362,7 @@ First we need to initialize the MPI execution environment, define the size of al
 \PYG{k}{if} \PYG{p}{(}\PYG{n}{rank} \PYG{o}{=}\PYG{o}{=} \PYG{n}{MASTER}\PYG{p}{)} \PYG{p}{\PYGZob{}}
         \PYG{c+cm}{/* Initializing both vectors in master */}
         \PYG{k+kt}{int} \PYG{n}{sum} \PYG{o}{=} \PYG{l+m+mi}{0}\PYG{p}{;}
-        \PYG{k}{for} \PYG{p}{(}\PYG{n}{i} \PYG{o}{=} \PYG{l+m+mi}{0}\PYG{p}{;} \PYG{n}{i} \PYG{o}{\textless{}} \PYG{n}{WIDTH}\PYG{p}{;} \PYG{n}{i}\PYG{o}{+}\PYG{o}{+}\PYG{p}{)} \PYG{p}{\PYGZob{}}
+        \PYG{k}{for} \PYG{p}{(}\PYG{n}{i} \PYG{o}{=} \PYG{l+m+mi}{0}\PYG{p}{;} \PYG{n}{i} \PYG{o}{\PYGZlt{}} \PYG{n}{WIDTH}\PYG{p}{;} \PYG{n}{i}\PYG{o}{+}\PYG{o}{+}\PYG{p}{)} \PYG{p}{\PYGZob{}}
                 \PYG{n}{arr\PYGZus{}a}\PYG{p}{[}\PYG{n}{i}\PYG{p}{]} \PYG{o}{=} \PYG{n}{i}\PYG{p}{;}
                 \PYG{n}{arr\PYGZus{}b}\PYG{p}{[}\PYG{n}{i}\PYG{p}{]} \PYG{o}{=} \PYG{n}{i}\PYG{o}{*}\PYG{n}{i}\PYG{p}{;}
         \PYG{p}{\PYGZcb{}}
@@ -333,21 +371,21 @@ First we need to initialize the MPI execution environment, define the size of al
 \PYG{c+cm}{        */}
         \PYG{n}{num\PYGZus{}worker} \PYG{o}{=} \PYG{n}{size} \PYG{o}{-} \PYG{l+m+mi}{1}\PYG{p}{;}
         \PYG{n}{ave\PYGZus{}size} \PYG{o}{=} \PYG{n}{WIDTH}\PYG{o}{/}\PYG{n}{num\PYGZus{}worker}\PYG{p}{;}    \PYG{c+cm}{/* finding the average size of task for a process */}
-        \PYG{n}{extra} \PYG{o}{=} \PYG{n}{WIDTH} \PYG{o}{\%} \PYG{n}{num\PYGZus{}worker}\PYG{p}{;}             \PYG{c+cm}{/* finding extra task for some processes*/}
+        \PYG{n}{extra} \PYG{o}{=} \PYG{n}{WIDTH} \PYG{o}{\PYGZpc{}} \PYG{n}{num\PYGZus{}worker}\PYG{p}{;}             \PYG{c+cm}{/* finding extra task for some processes*/}
         \PYG{n}{offset} \PYG{o}{=} \PYG{l+m+mi}{0}\PYG{p}{;}
         \PYG{n}{mtype} \PYG{o}{=} \PYG{n}{FROM\PYGZus{}MASTER}\PYG{p}{;}                    \PYG{c+cm}{/* message sends from master */}
 
         \PYG{c+cm}{/* Master sends each task to each worker */}
-        \PYG{k}{for} \PYG{p}{(}\PYG{n}{dest} \PYG{o}{=} \PYG{l+m+mi}{1}\PYG{p}{;} \PYG{n}{dest} \PYG{o}{\textless{}}\PYG{o}{=} \PYG{n}{num\PYGZus{}worker}\PYG{p}{;} \PYG{n}{dest}\PYG{o}{+}\PYG{o}{+}\PYG{p}{)} \PYG{p}{\PYGZob{}}
-                \PYG{n}{eles} \PYG{o}{=} \PYG{p}{(}\PYG{n}{dest} \PYG{o}{\textless{}}\PYG{o}{=} \PYG{n}{extra}\PYG{p}{)} \PYG{o}{?} \PYG{n}{ave\PYGZus{}size} \PYG{o}{+} \PYG{l+m+mi}{1}\PYG{o}{:} \PYG{n}{ave\PYGZus{}size}\PYG{p}{;}
-                \PYG{n}{MPI\PYGZus{}Send}\PYG{p}{(}\PYG{o}{\&}\PYG{n}{offset}\PYG{p}{,} \PYG{l+m+mi}{1}\PYG{p}{,} \PYG{n}{MPI\PYGZus{}INT}\PYG{p}{,} \PYG{n}{dest}\PYG{p}{,} \PYG{n}{mtype}\PYG{p}{,} \PYG{n}{MPI\PYGZus{}COMM\PYGZus{}WORLD}\PYG{p}{)}\PYG{p}{;}
-                \PYG{n}{MPI\PYGZus{}Send}\PYG{p}{(}\PYG{o}{\&}\PYG{n}{eles}\PYG{p}{,} \PYG{l+m+mi}{1}\PYG{p}{,} \PYG{n}{MPI\PYGZus{}INT}\PYG{p}{,} \PYG{n}{dest}\PYG{p}{,} \PYG{n}{mtype}\PYG{p}{,} \PYG{n}{MPI\PYGZus{}COMM\PYGZus{}WORLD}\PYG{p}{)}\PYG{p}{;}
+        \PYG{k}{for} \PYG{p}{(}\PYG{n}{dest} \PYG{o}{=} \PYG{l+m+mi}{1}\PYG{p}{;} \PYG{n}{dest} \PYG{o}{\PYGZlt{}}\PYG{o}{=} \PYG{n}{num\PYGZus{}worker}\PYG{p}{;} \PYG{n}{dest}\PYG{o}{+}\PYG{o}{+}\PYG{p}{)} \PYG{p}{\PYGZob{}}
+                \PYG{n}{eles} \PYG{o}{=} \PYG{p}{(}\PYG{n}{dest} \PYG{o}{\PYGZlt{}}\PYG{o}{=} \PYG{n}{extra}\PYG{p}{)} \PYG{o}{?} \PYG{n}{ave\PYGZus{}size} \PYG{o}{+} \PYG{l+m+mi}{1}\PYG{o}{:} \PYG{n}{ave\PYGZus{}size}\PYG{p}{;}
+                \PYG{n}{MPI\PYGZus{}Send}\PYG{p}{(}\PYG{o}{\PYGZam{}}\PYG{n}{offset}\PYG{p}{,} \PYG{l+m+mi}{1}\PYG{p}{,} \PYG{n}{MPI\PYGZus{}INT}\PYG{p}{,} \PYG{n}{dest}\PYG{p}{,} \PYG{n}{mtype}\PYG{p}{,} \PYG{n}{MPI\PYGZus{}COMM\PYGZus{}WORLD}\PYG{p}{)}\PYG{p}{;}
+                \PYG{n}{MPI\PYGZus{}Send}\PYG{p}{(}\PYG{o}{\PYGZam{}}\PYG{n}{eles}\PYG{p}{,} \PYG{l+m+mi}{1}\PYG{p}{,} \PYG{n}{MPI\PYGZus{}INT}\PYG{p}{,} \PYG{n}{dest}\PYG{p}{,} \PYG{n}{mtype}\PYG{p}{,} \PYG{n}{MPI\PYGZus{}COMM\PYGZus{}WORLD}\PYG{p}{)}\PYG{p}{;}
 
                 \PYG{c+c1}{// TO DO}
                 \PYG{c+c1}{// send a piece of each vector to each worker}
                 \PYG{c+c1}{// end TO DO}
 
-                \PYG{n}{printf}\PYG{p}{(}\PYG{l+s}{"}\PYG{l+s}{Master sent elements \%d to \%d to rank \%d}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s}{"}\PYG{p}{,} \PYG{n}{offset}\PYG{p}{,} \PYG{n}{offset} \PYG{o}{+} \PYG{n}{eles}\PYG{p}{,} \PYG{n}{dest}\PYG{p}{)}\PYG{p}{;}
+                \PYG{n}{printf}\PYG{p}{(}\PYG{l+s}{"}\PYG{l+s}{Master sent elements \PYGZpc{}d to \PYGZpc{}d to rank \PYGZpc{}d}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s}{"}\PYG{p}{,} \PYG{n}{offset}\PYG{p}{,} \PYG{n}{offset} \PYG{o}{+} \PYG{n}{eles}\PYG{p}{,} \PYG{n}{dest}\PYG{p}{)}\PYG{p}{;}
                 \PYG{n}{offset} \PYG{o}{+}\PYG{o}{=} \PYG{n}{eles}\PYG{p}{;}
         \PYG{p}{\PYGZcb{}}
 \PYG{p}{\PYGZcb{}}
@@ -362,7 +400,7 @@ Then we want all workers to receive the messages sent from master, and we call t
 \PYG{c+cm}{* each worker sends the result back to master node.}
 \PYG{c+cm}{*/}
 \PYG{c+cm}{/******************************* Workers **************************/}
-\PYG{k}{if} \PYG{p}{(}\PYG{n}{rank} \PYG{o}{\textgreater{}} \PYG{n}{MASTER}\PYG{p}{)} \PYG{p}{\PYGZob{}}
+\PYG{k}{if} \PYG{p}{(}\PYG{n}{rank} \PYG{o}{\PYGZgt{}} \PYG{n}{MASTER}\PYG{p}{)} \PYG{p}{\PYGZob{}}
         \PYG{n}{mtype} \PYG{o}{=} \PYG{n}{FROM\PYGZus{}MASTER}\PYG{p}{;}
         \PYG{n}{source} \PYG{o}{=} \PYG{n}{MASTER}\PYG{p}{;}
         \PYG{c+cm}{/* Receive data from master */}
@@ -371,7 +409,7 @@ Then we want all workers to receive the messages sent from master, and we call t
         \PYG{c+c1}{// receive the vectors sent from master}
         \PYG{c+c1}{// end TO DO}
 
-        \PYG{n}{MPI\PYGZus{}Get\PYGZus{}processor\PYGZus{}name}\PYG{p}{(}\PYG{n}{name}\PYG{p}{,} \PYG{o}{\&}\PYG{n}{len}\PYG{p}{)}\PYG{p}{;}
+        \PYG{n}{MPI\PYGZus{}Get\PYGZus{}processor\PYGZus{}name}\PYG{p}{(}\PYG{n}{name}\PYG{p}{,} \PYG{o}{\PYGZam{}}\PYG{n}{len}\PYG{p}{)}\PYG{p}{;}
 
         \PYG{c+cm}{/* Use kernel to compute the sum of element a and b */}
 
@@ -381,9 +419,9 @@ Then we want all workers to receive the messages sent from master, and we call t
 
         \PYG{c+cm}{/* send result back to the master */}
         \PYG{n}{mtype} \PYG{o}{=} \PYG{n}{FROM\PYGZus{}WORKER}\PYG{p}{;}
-        \PYG{n}{MPI\PYGZus{}Send}\PYG{p}{(}\PYG{o}{\&}\PYG{n}{offset}\PYG{p}{,} \PYG{l+m+mi}{1}\PYG{p}{,} \PYG{n}{MPI\PYGZus{}INT}\PYG{p}{,} \PYG{n}{MASTER}\PYG{p}{,} \PYG{n}{mtype}\PYG{p}{,} \PYG{n}{MPI\PYGZus{}COMM\PYGZus{}WORLD}\PYG{p}{)}\PYG{p}{;}
-        \PYG{n}{MPI\PYGZus{}Send}\PYG{p}{(}\PYG{o}{\&}\PYG{n}{eles}\PYG{p}{,} \PYG{l+m+mi}{1}\PYG{p}{,} \PYG{n}{MPI\PYGZus{}INT}\PYG{p}{,} \PYG{n}{MASTER}\PYG{p}{,} \PYG{n}{mtype}\PYG{p}{,} \PYG{n}{MPI\PYGZus{}COMM\PYGZus{}WORLD}\PYG{p}{)}\PYG{p}{;}
-        \PYG{n}{MPI\PYGZus{}Send}\PYG{p}{(}\PYG{o}{\&}\PYG{n}{arr\PYGZus{}c}\PYG{p}{,} \PYG{n}{eles}\PYG{p}{,} \PYG{n}{MPI\PYGZus{}INT}\PYG{p}{,} \PYG{n}{MASTER}\PYG{p}{,} \PYG{n}{mtype}\PYG{p}{,} \PYG{n}{MPI\PYGZus{}COMM\PYGZus{}WORLD}\PYG{p}{)}\PYG{p}{;}
+        \PYG{n}{MPI\PYGZus{}Send}\PYG{p}{(}\PYG{o}{\PYGZam{}}\PYG{n}{offset}\PYG{p}{,} \PYG{l+m+mi}{1}\PYG{p}{,} \PYG{n}{MPI\PYGZus{}INT}\PYG{p}{,} \PYG{n}{MASTER}\PYG{p}{,} \PYG{n}{mtype}\PYG{p}{,} \PYG{n}{MPI\PYGZus{}COMM\PYGZus{}WORLD}\PYG{p}{)}\PYG{p}{;}
+        \PYG{n}{MPI\PYGZus{}Send}\PYG{p}{(}\PYG{o}{\PYGZam{}}\PYG{n}{eles}\PYG{p}{,} \PYG{l+m+mi}{1}\PYG{p}{,} \PYG{n}{MPI\PYGZus{}INT}\PYG{p}{,} \PYG{n}{MASTER}\PYG{p}{,} \PYG{n}{mtype}\PYG{p}{,} \PYG{n}{MPI\PYGZus{}COMM\PYGZus{}WORLD}\PYG{p}{)}\PYG{p}{;}
+        \PYG{n}{MPI\PYGZus{}Send}\PYG{p}{(}\PYG{o}{\PYGZam{}}\PYG{n}{arr\PYGZus{}c}\PYG{p}{,} \PYG{n}{eles}\PYG{p}{,} \PYG{n}{MPI\PYGZus{}INT}\PYG{p}{,} \PYG{n}{MASTER}\PYG{p}{,} \PYG{n}{mtype}\PYG{p}{,} \PYG{n}{MPI\PYGZus{}COMM\PYGZus{}WORLD}\PYG{p}{)}\PYG{p}{;}
 \PYG{p}{\PYGZcb{}}
 \end{Verbatim}
 
@@ -393,16 +431,16 @@ We need to ask the master to receive the result vector sent from each worker. We
 \begin{Verbatim}[commandchars=\\\{\}]
 \PYG{c+cm}{/* Master receives the result from each worker */}
 \PYG{n}{mtype} \PYG{o}{=} \PYG{n}{FROM\PYGZus{}WORKER}\PYG{p}{;}
-\PYG{k}{for}\PYG{p}{(}\PYG{n}{i} \PYG{o}{=} \PYG{l+m+mi}{1}\PYG{p}{;} \PYG{n}{i} \PYG{o}{\textless{}}\PYG{o}{=} \PYG{n}{num\PYGZus{}worker}\PYG{p}{;} \PYG{n}{i}\PYG{o}{+}\PYG{o}{+}\PYG{p}{)} \PYG{p}{\PYGZob{}}
+\PYG{k}{for}\PYG{p}{(}\PYG{n}{i} \PYG{o}{=} \PYG{l+m+mi}{1}\PYG{p}{;} \PYG{n}{i} \PYG{o}{\PYGZlt{}}\PYG{o}{=} \PYG{n}{num\PYGZus{}worker}\PYG{p}{;} \PYG{n}{i}\PYG{o}{+}\PYG{o}{+}\PYG{p}{)} \PYG{p}{\PYGZob{}}
         \PYG{n}{source} \PYG{o}{=} \PYG{n}{i}\PYG{p}{;}
-        \PYG{n}{MPI\PYGZus{}Recv}\PYG{p}{(}\PYG{o}{\&}\PYG{n}{offset}\PYG{p}{,} \PYG{l+m+mi}{1}\PYG{p}{,} \PYG{n}{MPI\PYGZus{}INT}\PYG{p}{,} \PYG{n}{source}\PYG{p}{,} \PYG{n}{mtype}\PYG{p}{,} \PYG{n}{MPI\PYGZus{}COMM\PYGZus{}WORLD}\PYG{p}{,} \PYG{o}{\&}\PYG{n}{status}\PYG{p}{)}\PYG{p}{;}
-        \PYG{n}{MPI\PYGZus{}Recv}\PYG{p}{(}\PYG{o}{\&}\PYG{n}{eles}\PYG{p}{,} \PYG{l+m+mi}{1}\PYG{p}{,} \PYG{n}{MPI\PYGZus{}INT}\PYG{p}{,} \PYG{n}{source}\PYG{p}{,} \PYG{n}{mtype}\PYG{p}{,} \PYG{n}{MPI\PYGZus{}COMM\PYGZus{}WORLD}\PYG{p}{,} \PYG{o}{\&}\PYG{n}{status}\PYG{p}{)}\PYG{p}{;}
-        \PYG{n}{MPI\PYGZus{}Recv}\PYG{p}{(}\PYG{o}{\&}\PYG{n}{arr\PYGZus{}c}\PYG{p}{[}\PYG{n}{offset}\PYG{p}{]}\PYG{p}{,} \PYG{n}{eles}\PYG{p}{,} \PYG{n}{MPI\PYGZus{}INT}\PYG{p}{,} \PYG{n}{source}\PYG{p}{,} \PYG{n}{mtype}\PYG{p}{,} \PYG{n}{MPI\PYGZus{}COMM\PYGZus{}WORLD}\PYG{p}{,} \PYG{o}{\&}\PYG{n}{status}\PYG{p}{)}\PYG{p}{;}
-        \PYG{n}{printf}\PYG{p}{(}\PYG{l+s}{"}\PYG{l+s}{Received results from task \%d}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s}{"}\PYG{p}{,} \PYG{n}{source}\PYG{p}{)}\PYG{p}{;}
+        \PYG{n}{MPI\PYGZus{}Recv}\PYG{p}{(}\PYG{o}{\PYGZam{}}\PYG{n}{offset}\PYG{p}{,} \PYG{l+m+mi}{1}\PYG{p}{,} \PYG{n}{MPI\PYGZus{}INT}\PYG{p}{,} \PYG{n}{source}\PYG{p}{,} \PYG{n}{mtype}\PYG{p}{,} \PYG{n}{MPI\PYGZus{}COMM\PYGZus{}WORLD}\PYG{p}{,} \PYG{o}{\PYGZam{}}\PYG{n}{status}\PYG{p}{)}\PYG{p}{;}
+        \PYG{n}{MPI\PYGZus{}Recv}\PYG{p}{(}\PYG{o}{\PYGZam{}}\PYG{n}{eles}\PYG{p}{,} \PYG{l+m+mi}{1}\PYG{p}{,} \PYG{n}{MPI\PYGZus{}INT}\PYG{p}{,} \PYG{n}{source}\PYG{p}{,} \PYG{n}{mtype}\PYG{p}{,} \PYG{n}{MPI\PYGZus{}COMM\PYGZus{}WORLD}\PYG{p}{,} \PYG{o}{\PYGZam{}}\PYG{n}{status}\PYG{p}{)}\PYG{p}{;}
+        \PYG{n}{MPI\PYGZus{}Recv}\PYG{p}{(}\PYG{o}{\PYGZam{}}\PYG{n}{arr\PYGZus{}c}\PYG{p}{[}\PYG{n}{offset}\PYG{p}{]}\PYG{p}{,} \PYG{n}{eles}\PYG{p}{,} \PYG{n}{MPI\PYGZus{}INT}\PYG{p}{,} \PYG{n}{source}\PYG{p}{,} \PYG{n}{mtype}\PYG{p}{,} \PYG{n}{MPI\PYGZus{}COMM\PYGZus{}WORLD}\PYG{p}{,} \PYG{o}{\PYGZam{}}\PYG{n}{status}\PYG{p}{)}\PYG{p}{;}
+        \PYG{n}{printf}\PYG{p}{(}\PYG{l+s}{"}\PYG{l+s}{Received results from task \PYGZpc{}d}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s}{"}\PYG{p}{,} \PYG{n}{source}\PYG{p}{)}\PYG{p}{;}
 \PYG{p}{\PYGZcb{}}
 
 \PYG{c+cm}{/* checking the result on master */}
-\PYG{k}{for} \PYG{p}{(}\PYG{n}{i} \PYG{o}{=} \PYG{l+m+mi}{0}\PYG{p}{;} \PYG{n}{i} \PYG{o}{\textless{}} \PYG{n}{WIDTH}\PYG{p}{;} \PYG{n}{i} \PYG{o}{+}\PYG{o}{+}\PYG{p}{)} \PYG{p}{\PYGZob{}}
+\PYG{k}{for} \PYG{p}{(}\PYG{n}{i} \PYG{o}{=} \PYG{l+m+mi}{0}\PYG{p}{;} \PYG{n}{i} \PYG{o}{\PYGZlt{}} \PYG{n}{WIDTH}\PYG{p}{;} \PYG{n}{i} \PYG{o}{+}\PYG{o}{+}\PYG{p}{)} \PYG{p}{\PYGZob{}}
         \PYG{k}{if} \PYG{p}{(}\PYG{n}{arr\PYGZus{}c}\PYG{p}{[}\PYG{n}{i}\PYG{p}{]} \PYG{o}{!}\PYG{o}{=} \PYG{n}{arr\PYGZus{}a}\PYG{p}{[}\PYG{n}{i}\PYG{p}{]} \PYG{o}{+} \PYG{n}{arr\PYGZus{}b}\PYG{p}{[}\PYG{n}{i}\PYG{p}{]}\PYG{p}{)} \PYG{p}{\PYGZob{}}
                 \PYG{n}{printf}\PYG{p}{(}\PYG{l+s}{"}\PYG{l+s}{Failure !}\PYG{l+s}{"}\PYG{p}{)}\PYG{p}{;}
                 \PYG{k}{return} \PYG{l+m+mi}{0}\PYG{p}{;}
@@ -415,12 +453,7 @@ We need to ask the master to receive the result vector sent from each worker. We
 
 \end{description}\end{quote}
 \begin{description}
-\item[{Download the source code to do your activity:}] \leavevmode
-\code{download CUDA program}
-
-\code{download MPI program}
-
-\item[{Download the entire source code:}] \leavevmode
+\item[{If you get stuck, you can download the entire working source code:}] \leavevmode
 \code{download CUDA program}
 
 \code{download MPI program}
@@ -435,6 +468,14 @@ In this chapter, we are going to look at two problems, one is vector-matrix mult
 
 \section{Activity 2: Vector Matrix Multiplication}
 \label{Activities/Activities:activity-2-vector-matrix-multiplication}
+Download the source code to do your activity:
+\begin{quote}
+
+\code{download CUDA program}
+
+\code{download MPI program}
+\end{quote}
+
 In this activity, we are going to compute vector-matrix multiplication in hybrid environment MPI and CUDA. You might already see this problem before in the MPI module. If so, it will not be much different. The basic idea is we want to split the rows of the matrix, and ask the master to send some rows of the matrix and entire input vector to each worker. We then ask each worker to receive messages from the master, and each worker will call the CUDA function to do computation on their own GPU. Basically, on the GPU each thread will compute a new element of the vector.
 \begin{quote}\begin{description}
 \item[{Comments on CUDA program}] \leavevmode\begin{itemize}
@@ -447,7 +488,7 @@ First let's look at the kernel function in the CUDA program. We use one thread t
 
         \PYG{k+kt}{int} \PYG{n}{tid} \PYG{o}{=} \PYG{n}{blockIdx}\PYG{p}{.}\PYG{n}{y} \PYG{o}{*} \PYG{n}{block\PYGZus{}size} \PYG{o}{+} \PYG{n}{threadIdx}\PYG{p}{.}\PYG{n}{y}\PYG{p}{;}
         \PYG{k+kt}{int} \PYG{n}{entry} \PYG{o}{=} \PYG{l+m+mi}{0}\PYG{p}{;}
-        \PYG{k}{for} \PYG{p}{(}\PYG{k+kt}{int} \PYG{n}{i} \PYG{o}{=} \PYG{l+m+mi}{0}\PYG{p}{;} \PYG{n}{i} \PYG{o}{\textless{}} \PYG{n}{width}\PYG{p}{;} \PYG{n}{i}\PYG{o}{+}\PYG{o}{+}\PYG{p}{)} \PYG{p}{\PYGZob{}}
+        \PYG{k}{for} \PYG{p}{(}\PYG{k+kt}{int} \PYG{n}{i} \PYG{o}{=} \PYG{l+m+mi}{0}\PYG{p}{;} \PYG{n}{i} \PYG{o}{\PYGZlt{}} \PYG{n}{width}\PYG{p}{;} \PYG{n}{i}\PYG{o}{+}\PYG{o}{+}\PYG{p}{)} \PYG{p}{\PYGZob{}}
                 \PYG{n}{entry} \PYG{o}{+}\PYG{o}{=} \PYG{n}{A}\PYG{p}{[}\PYG{n}{tid} \PYG{o}{*} \PYG{n}{width} \PYG{o}{+} \PYG{n}{i}\PYG{p}{]} \PYG{o}{*} \PYG{n}{x}\PYG{p}{[}\PYG{n}{i}\PYG{p}{]}\PYG{p}{;}
         \PYG{p}{\PYGZcb{}}
         \PYG{n}{y}\PYG{p}{[}\PYG{n}{tid}\PYG{p}{]} \PYG{o}{=} \PYG{n}{entry}\PYG{p}{;}
@@ -455,7 +496,7 @@ First let's look at the kernel function in the CUDA program. We use one thread t
 \end{Verbatim}
 
 \item {} 
-Then we need to have a function that calls the kernel function on the host. This function is to allocate memory for the matrix and vector on the device, copy matrix and vector from host to device, compute the vector matrix multiplication, and copy the result vector from device to the host. This function will be called in the MPI program. Your task is to call kernel function at \textbf{TO DO}.
+Then we need to have a function that calls the kernel function on the host. This function is to allocate memory for the matrix and vector on the device, copy matrix and vector from host to device, compute the vector matrix multiplication, and copy the result vector from device to host. This function will be called in the MPI program. Your task is to call kernel function at \textbf{TO DO}.
 
 \begin{Verbatim}[commandchars=\\\{\}]
 \PYG{c+cm}{/* function on the host, CPU */}
@@ -469,9 +510,9 @@ Then we need to have a function that calls the kernel function on the host. This
         \PYG{k+kt}{int} \PYG{o}{*}\PYG{n}{dev\PYGZus{}A}\PYG{p}{,} \PYG{o}{*}\PYG{n}{dev\PYGZus{}x}\PYG{p}{,} \PYG{o}{*}\PYG{n}{dev\PYGZus{}y}\PYG{p}{;}
 
         \PYG{c+cm}{/* Allocate memory on GPU */}
-        \PYG{n}{cudaMalloc}\PYG{p}{(}\PYG{p}{(}\PYG{k+kt}{void}\PYG{o}{*}\PYG{o}{*}\PYG{p}{)}\PYG{o}{\&}\PYG{n}{dev\PYGZus{}A}\PYG{p}{,} \PYG{n}{matrix\PYGZus{}size}\PYG{p}{)}\PYG{p}{;}
-        \PYG{n}{cudaMalloc}\PYG{p}{(}\PYG{p}{(}\PYG{k+kt}{void}\PYG{o}{*}\PYG{o}{*}\PYG{p}{)}\PYG{o}{\&}\PYG{n}{dev\PYGZus{}x}\PYG{p}{,} \PYG{n}{vector\PYGZus{}size}\PYG{p}{)}\PYG{p}{;}
-        \PYG{n}{cudaMalloc}\PYG{p}{(}\PYG{p}{(}\PYG{k+kt}{void}\PYG{o}{*}\PYG{o}{*}\PYG{p}{)}\PYG{o}{\&}\PYG{n}{dev\PYGZus{}y}\PYG{p}{,} \PYG{n}{vector\PYGZus{}size}\PYG{p}{)}\PYG{p}{;}
+        \PYG{n}{cudaMalloc}\PYG{p}{(}\PYG{p}{(}\PYG{k+kt}{void}\PYG{o}{*}\PYG{o}{*}\PYG{p}{)}\PYG{o}{\PYGZam{}}\PYG{n}{dev\PYGZus{}A}\PYG{p}{,} \PYG{n}{matrix\PYGZus{}size}\PYG{p}{)}\PYG{p}{;}
+        \PYG{n}{cudaMalloc}\PYG{p}{(}\PYG{p}{(}\PYG{k+kt}{void}\PYG{o}{*}\PYG{o}{*}\PYG{p}{)}\PYG{o}{\PYGZam{}}\PYG{n}{dev\PYGZus{}x}\PYG{p}{,} \PYG{n}{vector\PYGZus{}size}\PYG{p}{)}\PYG{p}{;}
+        \PYG{n}{cudaMalloc}\PYG{p}{(}\PYG{p}{(}\PYG{k+kt}{void}\PYG{o}{*}\PYG{o}{*}\PYG{p}{)}\PYG{o}{\PYGZam{}}\PYG{n}{dev\PYGZus{}y}\PYG{p}{,} \PYG{n}{vector\PYGZus{}size}\PYG{p}{)}\PYG{p}{;}
 
         \PYG{c+cm}{/* Copy matrix and vector from CPU to GPU */}
         \PYG{n}{cudaMemcpy}\PYG{p}{(}\PYG{n}{dev\PYGZus{}A}\PYG{p}{,} \PYG{n}{A}\PYG{p}{,} \PYG{n}{matrix\PYGZus{}size}\PYG{p}{,} \PYG{n}{cudaMemcpyHostToDevice}\PYG{p}{)}\PYG{p}{;}
@@ -504,19 +545,19 @@ Now we can look at our MPI program with an addition of a CUDA function. First we
 
 \begin{Verbatim}[commandchars=\\\{\}]
 \PYG{c+cm}{/* Initialize MPI execution environment */}
-\PYG{n}{MPI\PYGZus{}Init}\PYG{p}{(}\PYG{o}{\&}\PYG{n}{argc}\PYG{p}{,} \PYG{o}{\&}\PYG{n}{argv}\PYG{p}{)}\PYG{p}{;}
-\PYG{n}{MPI\PYGZus{}Comm\PYGZus{}rank}\PYG{p}{(}\PYG{n}{MPI\PYGZus{}COMM\PYGZus{}WORLD}\PYG{p}{,} \PYG{o}{\&}\PYG{n}{rank}\PYG{p}{)}\PYG{p}{;}
-\PYG{n}{MPI\PYGZus{}Comm\PYGZus{}size}\PYG{p}{(}\PYG{n}{MPI\PYGZus{}COMM\PYGZus{}WORLD}\PYG{p}{,} \PYG{o}{\&}\PYG{n}{nprocs}\PYG{p}{)}\PYG{p}{;}
+\PYG{n}{MPI\PYGZus{}Init}\PYG{p}{(}\PYG{o}{\PYGZam{}}\PYG{n}{argc}\PYG{p}{,} \PYG{o}{\PYGZam{}}\PYG{n}{argv}\PYG{p}{)}\PYG{p}{;}
+\PYG{n}{MPI\PYGZus{}Comm\PYGZus{}rank}\PYG{p}{(}\PYG{n}{MPI\PYGZus{}COMM\PYGZus{}WORLD}\PYG{p}{,} \PYG{o}{\PYGZam{}}\PYG{n}{rank}\PYG{p}{)}\PYG{p}{;}
+\PYG{n}{MPI\PYGZus{}Comm\PYGZus{}size}\PYG{p}{(}\PYG{n}{MPI\PYGZus{}COMM\PYGZus{}WORLD}\PYG{p}{,} \PYG{o}{\PYGZam{}}\PYG{n}{nprocs}\PYG{p}{)}\PYG{p}{;}
 
-\PYG{n}{MPI\PYGZus{}Get\PYGZus{}processor\PYGZus{}name}\PYG{p}{(}\PYG{n}{name}\PYG{p}{,} \PYG{o}{\&}\PYG{n}{len}\PYG{p}{)}\PYG{p}{;}
+\PYG{n}{MPI\PYGZus{}Get\PYGZus{}processor\PYGZus{}name}\PYG{p}{(}\PYG{n}{name}\PYG{p}{,} \PYG{o}{\PYGZam{}}\PYG{n}{len}\PYG{p}{)}\PYG{p}{;}
 
 \PYG{c+cm}{/******************************* Master ***************************/}
 \PYG{k}{if} \PYG{p}{(}\PYG{n}{rank} \PYG{o}{=}\PYG{o}{=} \PYG{l+m+mi}{0}\PYG{p}{)} \PYG{p}{\PYGZob{}}
         \PYG{c+cm}{/* Initialize Matrix and Vector */}
-        \PYG{k}{for}\PYG{p}{(}\PYG{n}{i} \PYG{o}{=} \PYG{l+m+mi}{0}\PYG{p}{;} \PYG{n}{i} \PYG{o}{\textless{}} \PYG{n}{ROWS}\PYG{p}{;} \PYG{n}{i}\PYG{o}{+}\PYG{o}{+}\PYG{p}{)} \PYG{p}{\PYGZob{}}
+        \PYG{k}{for}\PYG{p}{(}\PYG{n}{i} \PYG{o}{=} \PYG{l+m+mi}{0}\PYG{p}{;} \PYG{n}{i} \PYG{o}{\PYGZlt{}} \PYG{n}{ROWS}\PYG{p}{;} \PYG{n}{i}\PYG{o}{+}\PYG{o}{+}\PYG{p}{)} \PYG{p}{\PYGZob{}}
                 \PYG{c+c1}{// change here to use random integer}
                 \PYG{n}{vector}\PYG{p}{[}\PYG{n}{i}\PYG{p}{]} \PYG{o}{=} \PYG{l+m+mi}{1}\PYG{p}{;}
-                \PYG{k}{for}\PYG{p}{(}\PYG{n}{j} \PYG{o}{=} \PYG{l+m+mi}{0}\PYG{p}{;} \PYG{n}{j} \PYG{o}{\textless{}} \PYG{n}{COLS}\PYG{p}{;} \PYG{n}{j}\PYG{o}{+}\PYG{o}{+}\PYG{p}{)} \PYG{p}{\PYGZob{}}
+                \PYG{k}{for}\PYG{p}{(}\PYG{n}{j} \PYG{o}{=} \PYG{l+m+mi}{0}\PYG{p}{;} \PYG{n}{j} \PYG{o}{\PYGZlt{}} \PYG{n}{COLS}\PYG{p}{;} \PYG{n}{j}\PYG{o}{+}\PYG{o}{+}\PYG{p}{)} \PYG{p}{\PYGZob{}}
                         \PYG{c+c1}{// change here to use random integer}
                         \PYG{n}{matrix}\PYG{p}{[}\PYG{n}{i}\PYG{p}{]}\PYG{p}{[}\PYG{n}{j}\PYG{p}{]} \PYG{o}{=} \PYG{l+m+mi}{1}\PYG{p}{;}
                 \PYG{p}{\PYGZcb{}}
@@ -526,19 +567,19 @@ Now we can look at our MPI program with an addition of a CUDA function. First we
 
         \PYG{c+cm}{/* divide the number of rows for each worker */}
         \PYG{n}{averow} \PYG{o}{=} \PYG{n}{ROWS}\PYG{o}{/}\PYG{n}{numworkers}\PYG{p}{;}
-        \PYG{n}{extra} \PYG{o}{=} \PYG{n}{ROWS}\PYG{o}{\%}\PYG{n}{numworkers}\PYG{p}{;}
+        \PYG{n}{extra} \PYG{o}{=} \PYG{n}{ROWS}\PYG{o}{\PYGZpc{}}\PYG{n}{numworkers}\PYG{p}{;}
         \PYG{n}{offset} \PYG{o}{=} \PYG{l+m+mi}{0}\PYG{p}{;}
         \PYG{n}{mtype} \PYG{o}{=} \PYG{n}{FROM\PYGZus{}MASTER}\PYG{p}{;}
 
         \PYG{c+cm}{/* Master sends smaller task to each worker */}
-        \PYG{k}{for}\PYG{p}{(}\PYG{n}{dest} \PYG{o}{=} \PYG{l+m+mi}{1}\PYG{p}{;} \PYG{n}{dest} \PYG{o}{\textless{}}\PYG{o}{=} \PYG{n}{numworkers}\PYG{p}{;} \PYG{n}{dest}\PYG{o}{+}\PYG{o}{+}\PYG{p}{)} \PYG{p}{\PYGZob{}}
-                \PYG{n}{rows} \PYG{o}{=} \PYG{p}{(}\PYG{n}{dest} \PYG{o}{\textless{}}\PYG{o}{=} \PYG{n}{extra}\PYG{p}{)} \PYG{o}{?} \PYG{n}{averow} \PYG{o}{+} \PYG{l+m+mi}{1} \PYG{o}{:} \PYG{n}{averow}\PYG{p}{;}
+        \PYG{k}{for}\PYG{p}{(}\PYG{n}{dest} \PYG{o}{=} \PYG{l+m+mi}{1}\PYG{p}{;} \PYG{n}{dest} \PYG{o}{\PYGZlt{}}\PYG{o}{=} \PYG{n}{numworkers}\PYG{p}{;} \PYG{n}{dest}\PYG{o}{+}\PYG{o}{+}\PYG{p}{)} \PYG{p}{\PYGZob{}}
+                \PYG{n}{rows} \PYG{o}{=} \PYG{p}{(}\PYG{n}{dest} \PYG{o}{\PYGZlt{}}\PYG{o}{=} \PYG{n}{extra}\PYG{p}{)} \PYG{o}{?} \PYG{n}{averow} \PYG{o}{+} \PYG{l+m+mi}{1} \PYG{o}{:} \PYG{n}{averow}\PYG{p}{;}
 
                 \PYG{c+c1}{// TO DO}
                 \PYG{c+c1}{// send each piece of matrix and entire vector to each worker}
                 \PYG{c+c1}{// end TO DO}
 
-                \PYG{n}{printf}\PYG{p}{(}\PYG{l+s}{"}\PYG{l+s}{Master sent elements \%d to \%d to rank \%d}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s}{"}\PYG{p}{,} \PYG{n}{offset}\PYG{p}{,} \PYG{n}{offset} \PYG{o}{+} \PYG{n}{rows}\PYG{p}{,} \PYG{n}{dest}\PYG{p}{)}\PYG{p}{;}
+                \PYG{n}{printf}\PYG{p}{(}\PYG{l+s}{"}\PYG{l+s}{Master sent elements \PYGZpc{}d to \PYGZpc{}d to rank \PYGZpc{}d}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s}{"}\PYG{p}{,} \PYG{n}{offset}\PYG{p}{,} \PYG{n}{offset} \PYG{o}{+} \PYG{n}{rows}\PYG{p}{,} \PYG{n}{dest}\PYG{p}{)}\PYG{p}{;}
                 \PYG{n}{offset} \PYG{o}{+}\PYG{o}{=} \PYG{n}{rows}\PYG{p}{;}
         \PYG{p}{\PYGZcb{}}
 \PYG{p}{\PYGZcb{}}
@@ -549,7 +590,7 @@ We need to ask all workers to receive the messages sent from the master. Then we
 
 \begin{Verbatim}[commandchars=\\\{\}]
 \PYG{c+cm}{/************************************** Workers *************************************/}
-\PYG{k}{if} \PYG{p}{(}\PYG{n}{rank} \PYG{o}{\textgreater{}} \PYG{l+m+mi}{0}\PYG{p}{)} \PYG{p}{\PYGZob{}}
+\PYG{k}{if} \PYG{p}{(}\PYG{n}{rank} \PYG{o}{\PYGZgt{}} \PYG{l+m+mi}{0}\PYG{p}{)} \PYG{p}{\PYGZob{}}
         \PYG{n}{mtype} \PYG{o}{=} \PYG{n}{FROM\PYGZus{}MASTER}\PYG{p}{;}
         \PYG{c+cm}{/* Each worker receives messages sent from the master*/}
 
@@ -557,7 +598,7 @@ We need to ask all workers to receive the messages sent from the master. Then we
         \PYG{c+c1}{// receive each piece of the matrix and vector sent from master}
         \PYG{c+c1}{// end TO DO}
 
-        \PYG{n}{printf}\PYG{p}{(}\PYG{l+s}{"}\PYG{l+s}{Worker rank \%d, \%s receives the messages}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s}{"}\PYG{p}{,} \PYG{n}{rank}\PYG{p}{,} \PYG{n}{name}\PYG{p}{)}\PYG{p}{;}
+        \PYG{n}{printf}\PYG{p}{(}\PYG{l+s}{"}\PYG{l+s}{Worker rank \PYGZpc{}d, \PYGZpc{}s receives the messages}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s}{"}\PYG{p}{,} \PYG{n}{rank}\PYG{p}{,} \PYG{n}{name}\PYG{p}{)}\PYG{p}{;}
 
         \PYG{c+cm}{/* use CUDA function to compute the the vector-matrix multiplication for each worker */}
         \PYG{c+c1}{// TO DO}
@@ -566,10 +607,10 @@ We need to ask all workers to receive the messages sent from the master. Then we
 
         \PYG{c+cm}{/* Each worker sends the result back to the master */}
         \PYG{n}{mtype} \PYG{o}{=} \PYG{n}{FROM\PYGZus{}WORKER}\PYG{p}{;}
-        \PYG{n}{MPI\PYGZus{}Send}\PYG{p}{(}\PYG{o}{\&}\PYG{n}{offset}\PYG{p}{,} \PYG{l+m+mi}{1}\PYG{p}{,} \PYG{n}{MPI\PYGZus{}INT}\PYG{p}{,} \PYG{n}{MASTER}\PYG{p}{,} \PYG{n}{mtype}\PYG{p}{,} \PYG{n}{MPI\PYGZus{}COMM\PYGZus{}WORLD}\PYG{p}{)}\PYG{p}{;}
-        \PYG{n}{MPI\PYGZus{}Send}\PYG{p}{(}\PYG{o}{\&}\PYG{n}{rows}\PYG{p}{,} \PYG{l+m+mi}{1}\PYG{p}{,} \PYG{n}{MPI\PYGZus{}INT}\PYG{p}{,} \PYG{n}{MASTER}\PYG{p}{,} \PYG{n}{mtype}\PYG{p}{,} \PYG{n}{MPI\PYGZus{}COMM\PYGZus{}WORLD}\PYG{p}{)}\PYG{p}{;}
-        \PYG{n}{MPI\PYGZus{}Send}\PYG{p}{(}\PYG{o}{\&}\PYG{n}{result}\PYG{p}{,} \PYG{n}{rows}\PYG{p}{,} \PYG{n}{MPI\PYGZus{}INT}\PYG{p}{,} \PYG{n}{MASTER}\PYG{p}{,} \PYG{n}{mtype}\PYG{p}{,} \PYG{n}{MPI\PYGZus{}COMM\PYGZus{}WORLD}\PYG{p}{)}\PYG{p}{;}
-        \PYG{n}{printf}\PYG{p}{(}\PYG{l+s}{"}\PYG{l+s}{Worker rank \%d, \%s sends the result to master }\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s}{"}\PYG{p}{,} \PYG{n}{rank}\PYG{p}{,} \PYG{n}{name}\PYG{p}{)}\PYG{p}{;}
+        \PYG{n}{MPI\PYGZus{}Send}\PYG{p}{(}\PYG{o}{\PYGZam{}}\PYG{n}{offset}\PYG{p}{,} \PYG{l+m+mi}{1}\PYG{p}{,} \PYG{n}{MPI\PYGZus{}INT}\PYG{p}{,} \PYG{n}{MASTER}\PYG{p}{,} \PYG{n}{mtype}\PYG{p}{,} \PYG{n}{MPI\PYGZus{}COMM\PYGZus{}WORLD}\PYG{p}{)}\PYG{p}{;}
+        \PYG{n}{MPI\PYGZus{}Send}\PYG{p}{(}\PYG{o}{\PYGZam{}}\PYG{n}{rows}\PYG{p}{,} \PYG{l+m+mi}{1}\PYG{p}{,} \PYG{n}{MPI\PYGZus{}INT}\PYG{p}{,} \PYG{n}{MASTER}\PYG{p}{,} \PYG{n}{mtype}\PYG{p}{,} \PYG{n}{MPI\PYGZus{}COMM\PYGZus{}WORLD}\PYG{p}{)}\PYG{p}{;}
+        \PYG{n}{MPI\PYGZus{}Send}\PYG{p}{(}\PYG{o}{\PYGZam{}}\PYG{n}{result}\PYG{p}{,} \PYG{n}{rows}\PYG{p}{,} \PYG{n}{MPI\PYGZus{}INT}\PYG{p}{,} \PYG{n}{MASTER}\PYG{p}{,} \PYG{n}{mtype}\PYG{p}{,} \PYG{n}{MPI\PYGZus{}COMM\PYGZus{}WORLD}\PYG{p}{)}\PYG{p}{;}
+        \PYG{n}{printf}\PYG{p}{(}\PYG{l+s}{"}\PYG{l+s}{Worker rank \PYGZpc{}d, \PYGZpc{}s sends the result to master }\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s}{"}\PYG{p}{,} \PYG{n}{rank}\PYG{p}{,} \PYG{n}{name}\PYG{p}{)}\PYG{p}{;}
 \PYG{p}{\PYGZcb{}}
 \end{Verbatim}
 
@@ -579,39 +620,42 @@ Finally, we need to ask the master to receive the result vector sent from each w
 \begin{Verbatim}[commandchars=\\\{\}]
 \PYG{c+cm}{/* Master receives the output from each worker*/}
 \PYG{n}{mtype} \PYG{o}{=} \PYG{n}{FROM\PYGZus{}WORKER}\PYG{p}{;}
-\PYG{k}{for} \PYG{p}{(}\PYG{n}{i} \PYG{o}{=} \PYG{l+m+mi}{1}\PYG{p}{;} \PYG{n}{i} \PYG{o}{\textless{}}\PYG{o}{=} \PYG{n}{numworkers}\PYG{p}{;} \PYG{n}{i}\PYG{o}{+}\PYG{o}{+}\PYG{p}{)} \PYG{p}{\PYGZob{}}
+\PYG{k}{for} \PYG{p}{(}\PYG{n}{i} \PYG{o}{=} \PYG{l+m+mi}{1}\PYG{p}{;} \PYG{n}{i} \PYG{o}{\PYGZlt{}}\PYG{o}{=} \PYG{n}{numworkers}\PYG{p}{;} \PYG{n}{i}\PYG{o}{+}\PYG{o}{+}\PYG{p}{)} \PYG{p}{\PYGZob{}}
         \PYG{n}{source} \PYG{o}{=} \PYG{n}{i}\PYG{p}{;}
-        \PYG{n}{MPI\PYGZus{}Recv}\PYG{p}{(}\PYG{o}{\&}\PYG{n}{offset}\PYG{p}{,} \PYG{l+m+mi}{1}\PYG{p}{,} \PYG{n}{MPI\PYGZus{}INT}\PYG{p}{,} \PYG{n}{source}\PYG{p}{,}\PYG{n}{mtype}\PYG{p}{,} \PYG{n}{MPI\PYGZus{}COMM\PYGZus{}WORLD}\PYG{p}{,} \PYG{o}{\&}\PYG{n}{status}\PYG{p}{)}\PYG{p}{;}
-        \PYG{n}{MPI\PYGZus{}Recv}\PYG{p}{(}\PYG{o}{\&}\PYG{n}{rows}\PYG{p}{,} \PYG{l+m+mi}{1}\PYG{p}{,} \PYG{n}{MPI\PYGZus{}INT}\PYG{p}{,} \PYG{n}{source}\PYG{p}{,} \PYG{n}{mtype}\PYG{p}{,} \PYG{n}{MPI\PYGZus{}COMM\PYGZus{}WORLD}\PYG{p}{,} \PYG{o}{\&}\PYG{n}{status}\PYG{p}{)}\PYG{p}{;}
-        \PYG{n}{MPI\PYGZus{}Recv}\PYG{p}{(}\PYG{o}{\&}\PYG{n}{result}\PYG{p}{[}\PYG{n}{offset}\PYG{p}{]}\PYG{p}{,} \PYG{n}{rows}\PYG{p}{,} \PYG{n}{MPI\PYGZus{}INT}\PYG{p}{,} \PYG{n}{source}\PYG{p}{,} \PYG{n}{mtype}\PYG{p}{,} \PYG{n}{MPI\PYGZus{}COMM\PYGZus{}WORLD}\PYG{p}{,} \PYG{o}{\&}\PYG{n}{status}\PYG{p}{)}\PYG{p}{;}
-        \PYG{n}{printf}\PYG{p}{(}\PYG{l+s}{"}\PYG{l+s}{Received results from task \%d}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s}{"}\PYG{p}{,} \PYG{n}{source}\PYG{p}{)}\PYG{p}{;}
+        \PYG{n}{MPI\PYGZus{}Recv}\PYG{p}{(}\PYG{o}{\PYGZam{}}\PYG{n}{offset}\PYG{p}{,} \PYG{l+m+mi}{1}\PYG{p}{,} \PYG{n}{MPI\PYGZus{}INT}\PYG{p}{,} \PYG{n}{source}\PYG{p}{,}\PYG{n}{mtype}\PYG{p}{,} \PYG{n}{MPI\PYGZus{}COMM\PYGZus{}WORLD}\PYG{p}{,} \PYG{o}{\PYGZam{}}\PYG{n}{status}\PYG{p}{)}\PYG{p}{;}
+        \PYG{n}{MPI\PYGZus{}Recv}\PYG{p}{(}\PYG{o}{\PYGZam{}}\PYG{n}{rows}\PYG{p}{,} \PYG{l+m+mi}{1}\PYG{p}{,} \PYG{n}{MPI\PYGZus{}INT}\PYG{p}{,} \PYG{n}{source}\PYG{p}{,} \PYG{n}{mtype}\PYG{p}{,} \PYG{n}{MPI\PYGZus{}COMM\PYGZus{}WORLD}\PYG{p}{,} \PYG{o}{\PYGZam{}}\PYG{n}{status}\PYG{p}{)}\PYG{p}{;}
+        \PYG{n}{MPI\PYGZus{}Recv}\PYG{p}{(}\PYG{o}{\PYGZam{}}\PYG{n}{result}\PYG{p}{[}\PYG{n}{offset}\PYG{p}{]}\PYG{p}{,} \PYG{n}{rows}\PYG{p}{,} \PYG{n}{MPI\PYGZus{}INT}\PYG{p}{,} \PYG{n}{source}\PYG{p}{,} \PYG{n}{mtype}\PYG{p}{,} \PYG{n}{MPI\PYGZus{}COMM\PYGZus{}WORLD}\PYG{p}{,} \PYG{o}{\PYGZam{}}\PYG{n}{status}\PYG{p}{)}\PYG{p}{;}
+        \PYG{n}{printf}\PYG{p}{(}\PYG{l+s}{"}\PYG{l+s}{Received results from task \PYGZpc{}d}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s}{"}\PYG{p}{,} \PYG{n}{source}\PYG{p}{)}\PYG{p}{;}
 \PYG{p}{\PYGZcb{}}
 
 \PYG{c+cm}{/* Master prints results */}
-\PYG{k}{for} \PYG{p}{(}\PYG{n}{i} \PYG{o}{=} \PYG{l+m+mi}{0}\PYG{p}{;} \PYG{n}{i} \PYG{o}{\textless{}} \PYG{n}{ROWS}\PYG{p}{;} \PYG{n}{i}\PYG{o}{+}\PYG{o}{+}\PYG{p}{)} \PYG{p}{\PYGZob{}}
-        \PYG{n}{printf}\PYG{p}{(}\PYG{l+s}{"}\PYG{l+s}{The element of output vector is: \%d}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s}{"}\PYG{p}{,} \PYG{n}{result}\PYG{p}{[}\PYG{n}{i}\PYG{p}{]}\PYG{p}{)}\PYG{p}{;}
+\PYG{k}{for} \PYG{p}{(}\PYG{n}{i} \PYG{o}{=} \PYG{l+m+mi}{0}\PYG{p}{;} \PYG{n}{i} \PYG{o}{\PYGZlt{}} \PYG{n}{ROWS}\PYG{p}{;} \PYG{n}{i}\PYG{o}{+}\PYG{o}{+}\PYG{p}{)} \PYG{p}{\PYGZob{}}
+        \PYG{n}{printf}\PYG{p}{(}\PYG{l+s}{"}\PYG{l+s}{The element of output vector is: \PYGZpc{}d}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s}{"}\PYG{p}{,} \PYG{n}{result}\PYG{p}{[}\PYG{n}{i}\PYG{p}{]}\PYG{p}{)}\PYG{p}{;}
 \PYG{p}{\PYGZcb{}}
 \end{Verbatim}
 
 \end{itemize}
 
 \end{description}\end{quote}
-\begin{description}
-\item[{Download the source code to do your activity:}] \leavevmode
+
+If you get stuck, Download the entire source code:
+\begin{quote}
+
 \code{download CUDA program}
 
 \code{download MPI program}
+\end{quote}
 
-\item[{Download the entire source code:}] \leavevmode
+
+\section{Activity 3: Matrix Multiplication}
+\label{Activities/Activities:activity-3-matrix-multiplication}\begin{description}
+\item[{Download the source code to do this activity:}] \leavevmode
 \code{download CUDA program}
 
 \code{download MPI program}
 
 \end{description}
 
-
-\section{Activity 3: Matrix Multiplication}
-\label{Activities/Activities:activity-3-matrix-multiplication}
 In this activity, we are going to compute matrix-matrix multiplication in hybrid environment MPI and CUDA. The basic idea is we want to split the rows of the first matrix, and ask the master to send some rows of the first matrix and the entire second matrix to each worker. We then ask each worker to receive messages sent from the master, and each worker will call the CUDA function to do computation on their own GPU.
 
 \begin{notice}{note}{Note:}
@@ -637,7 +681,7 @@ First let's look at the kernel function in the CUDA program. In this kernel func
         \PYG{c+c1}{// end TO DO}
 
         \PYG{k+kt}{float} \PYG{n}{pvalue} \PYG{o}{=} \PYG{l+m+mf}{0.0f}\PYG{p}{;}
-        \PYG{k}{for} \PYG{p}{(}\PYG{k+kt}{int} \PYG{n}{k} \PYG{o}{=} \PYG{l+m+mi}{0}\PYG{p}{;} \PYG{n}{k} \PYG{o}{\textless{}} \PYG{n}{width}\PYG{p}{;} \PYG{n}{k}\PYG{o}{+}\PYG{o}{+}\PYG{p}{)} \PYG{p}{\PYGZob{}}
+        \PYG{k}{for} \PYG{p}{(}\PYG{k+kt}{int} \PYG{n}{k} \PYG{o}{=} \PYG{l+m+mi}{0}\PYG{p}{;} \PYG{n}{k} \PYG{o}{\PYGZlt{}} \PYG{n}{width}\PYG{p}{;} \PYG{n}{k}\PYG{o}{+}\PYG{o}{+}\PYG{p}{)} \PYG{p}{\PYGZob{}}
                 \PYG{k+kt}{float} \PYG{n}{M\PYGZus{}elem} \PYG{o}{=} \PYG{n}{dM}\PYG{p}{[}\PYG{n}{row} \PYG{o}{*} \PYG{n}{width} \PYG{o}{+} \PYG{n}{k}\PYG{p}{]}\PYG{p}{;}
                 \PYG{k+kt}{float} \PYG{n}{N\PYGZus{}elem} \PYG{o}{=} \PYG{n}{dN}\PYG{p}{[}\PYG{n}{k} \PYG{o}{*} \PYG{n}{width} \PYG{o}{+} \PYG{n}{col}\PYG{p}{]}\PYG{p}{;}
                 \PYG{n}{pvalue} \PYG{o}{+}\PYG{o}{=} \PYG{n}{M\PYGZus{}elem} \PYG{o}{*} \PYG{n}{N\PYGZus{}elem}\PYG{p}{;}
@@ -647,7 +691,7 @@ First let's look at the kernel function in the CUDA program. In this kernel func
 \end{Verbatim}
 
 \item {} 
-Then we need to have a function that calls the kernel function on the host. This function is to allocate memory for the matrices on the device, copy matrices from host to device, compute the matrix multiplication, and copy the result matrix from device to the host. This function will be called in the MPI program. Your task is to call kernel function at \textbf{TO DO}.
+Then we need to have a function that calls the kernel function on the host. This function is to allocate memory for the matrices on the device, copy matrices from host to device, compute the matrix multiplication, and copy the result matrix from device to host. This function will be called in the MPI program. Your task is to call kernel function at \textbf{TO DO}.
 
 \begin{Verbatim}[commandchars=\\\{\}]
 \PYG{c+cm}{/* function that you will call in mpi code */}
@@ -657,14 +701,14 @@ Then we need to have a function that calls the kernel function on the host. This
         \PYG{k+kt}{float} \PYG{o}{*}\PYG{n}{dM}\PYG{p}{,} \PYG{o}{*}\PYG{n}{dN}\PYG{p}{,} \PYG{o}{*}\PYG{n}{dP}\PYG{p}{;}
 
         \PYG{c+c1}{// Allocate and Load M and N to device memory}
-        \PYG{n}{cudaMalloc}\PYG{p}{(}\PYG{o}{\&}\PYG{n}{dM}\PYG{p}{,} \PYG{n}{matrix\PYGZus{}size}\PYG{p}{)}\PYG{p}{;}
+        \PYG{n}{cudaMalloc}\PYG{p}{(}\PYG{o}{\PYGZam{}}\PYG{n}{dM}\PYG{p}{,} \PYG{n}{matrix\PYGZus{}size}\PYG{p}{)}\PYG{p}{;}
         \PYG{n}{cudaMemcpy}\PYG{p}{(}\PYG{n}{dM}\PYG{p}{,} \PYG{n}{M}\PYG{p}{,} \PYG{n}{matrix\PYGZus{}size}\PYG{p}{,} \PYG{n}{cudaMemcpyHostToDevice}\PYG{p}{)}\PYG{p}{;}
 
-        \PYG{n}{cudaMalloc}\PYG{p}{(}\PYG{o}{\&}\PYG{n}{dN}\PYG{p}{,} \PYG{n}{matrix\PYGZus{}size}\PYG{p}{)}\PYG{p}{;}
+        \PYG{n}{cudaMalloc}\PYG{p}{(}\PYG{o}{\PYGZam{}}\PYG{n}{dN}\PYG{p}{,} \PYG{n}{matrix\PYGZus{}size}\PYG{p}{)}\PYG{p}{;}
         \PYG{n}{cudaMemcpy}\PYG{p}{(}\PYG{n}{dN}\PYG{p}{,} \PYG{n}{N}\PYG{p}{,} \PYG{n}{matrix\PYGZus{}size}\PYG{p}{,} \PYG{n}{cudaMemcpyHostToDevice}\PYG{p}{)}\PYG{p}{;}
 
         \PYG{c+c1}{// Allocate P on device}
-        \PYG{n}{cudaMalloc}\PYG{p}{(}\PYG{o}{\&}\PYG{n}{dP}\PYG{p}{,} \PYG{n}{matrix\PYGZus{}size}\PYG{p}{)}\PYG{p}{;}
+        \PYG{n}{cudaMalloc}\PYG{p}{(}\PYG{o}{\PYGZam{}}\PYG{n}{dP}\PYG{p}{,} \PYG{n}{matrix\PYGZus{}size}\PYG{p}{)}\PYG{p}{;}
 
         \PYG{n}{dim3} \PYG{n}{dimGrid}\PYG{p}{(}\PYG{n}{width}\PYG{o}{/}\PYG{n}{block\PYGZus{}size}\PYG{p}{,} \PYG{n}{width}\PYG{o}{/}\PYG{n}{block\PYGZus{}size}\PYG{p}{)}\PYG{p}{;}
         \PYG{n}{dim3} \PYG{n}{dimBlock}\PYG{p}{(}\PYG{n}{block\PYGZus{}size}\PYG{p}{,} \PYG{n}{block\PYGZus{}size}\PYG{p}{)}\PYG{p}{;}
@@ -685,32 +729,32 @@ Then we need to have a function that calls the kernel function on the host. This
 
 \item[{Comments on MPI Program}] \leavevmode\begin{itemize}
 \item {} 
-Now we can look at the MPI program. This MPI program is a revised version of the Matrix Mutiplication MPI program that was written by Blaise Barney. First we need to initialize the MPI execution environment, define the size of MPI\_COMM\_WORLD, and give a unique rank to each process. Then we ask the master to initialize the input matrices, divide these matrices, and send their pieces to each worker.
+Now we can look at the MPI program. This MPI program is a revised version of the Matrix Mutiplication MPI program that was written by Blaise Barney. First we need to initialize the MPI execution environment, define the size of MPI\_COMM\_WORLD, and give a unique rank to each process. Then we ask the master to initialize the input matrices, divide these matrices, and send their pieces to each worker. Your task is to complete the following code at \textbf{TO DO}.
 
 \begin{Verbatim}[commandchars=\\\{\}]
 \PYG{c+cm}{/**************************** master task ************************************/}
 \PYG{k}{if} \PYG{p}{(}\PYG{n}{taskid} \PYG{o}{=}\PYG{o}{=} \PYG{n}{MASTER}\PYG{p}{)} \PYG{p}{\PYGZob{}}
 
         \PYG{c+cm}{/* Initializing both matrices on master node */}
-        \PYG{k}{for} \PYG{p}{(}\PYG{n}{i} \PYG{o}{=} \PYG{l+m+mi}{0}\PYG{p}{;} \PYG{n}{i} \PYG{o}{\textless{}} \PYG{n}{ROW\PYGZus{}A}\PYG{p}{;} \PYG{n}{i}\PYG{o}{+}\PYG{o}{+}\PYG{p}{)}
-                \PYG{k}{for} \PYG{p}{(}\PYG{n}{j} \PYG{o}{=} \PYG{l+m+mi}{0}\PYG{p}{;} \PYG{n}{j} \PYG{o}{\textless{}} \PYG{n}{COL\PYGZus{}A}\PYG{p}{;} \PYG{n}{j}\PYG{o}{+}\PYG{o}{+}\PYG{p}{)}
+        \PYG{k}{for} \PYG{p}{(}\PYG{n}{i} \PYG{o}{=} \PYG{l+m+mi}{0}\PYG{p}{;} \PYG{n}{i} \PYG{o}{\PYGZlt{}} \PYG{n}{ROW\PYGZus{}A}\PYG{p}{;} \PYG{n}{i}\PYG{o}{+}\PYG{o}{+}\PYG{p}{)}
+                \PYG{k}{for} \PYG{p}{(}\PYG{n}{j} \PYG{o}{=} \PYG{l+m+mi}{0}\PYG{p}{;} \PYG{n}{j} \PYG{o}{\PYGZlt{}} \PYG{n}{COL\PYGZus{}A}\PYG{p}{;} \PYG{n}{j}\PYG{o}{+}\PYG{o}{+}\PYG{p}{)}
                         \PYG{c+c1}{// change here to use random integer}
                         \PYG{n}{a}\PYG{p}{[}\PYG{n}{i}\PYG{p}{]}\PYG{p}{[}\PYG{n}{j}\PYG{p}{]}\PYG{o}{=} \PYG{l+m+mi}{1}\PYG{p}{;}
-        \PYG{k}{for} \PYG{p}{(}\PYG{n}{i} \PYG{o}{=} \PYG{l+m+mi}{0}\PYG{p}{;} \PYG{n}{i} \PYG{o}{\textless{}} \PYG{n}{COL\PYGZus{}A}\PYG{p}{;} \PYG{n}{i}\PYG{o}{+}\PYG{o}{+}\PYG{p}{)}
-                \PYG{k}{for} \PYG{p}{(}\PYG{n}{j} \PYG{o}{=} \PYG{l+m+mi}{0}\PYG{p}{;} \PYG{n}{j} \PYG{o}{\textless{}} \PYG{n}{COL\PYGZus{}B}\PYG{p}{;} \PYG{n}{j}\PYG{o}{+}\PYG{o}{+}\PYG{p}{)}
+        \PYG{k}{for} \PYG{p}{(}\PYG{n}{i} \PYG{o}{=} \PYG{l+m+mi}{0}\PYG{p}{;} \PYG{n}{i} \PYG{o}{\PYGZlt{}} \PYG{n}{COL\PYGZus{}A}\PYG{p}{;} \PYG{n}{i}\PYG{o}{+}\PYG{o}{+}\PYG{p}{)}
+                \PYG{k}{for} \PYG{p}{(}\PYG{n}{j} \PYG{o}{=} \PYG{l+m+mi}{0}\PYG{p}{;} \PYG{n}{j} \PYG{o}{\PYGZlt{}} \PYG{n}{COL\PYGZus{}B}\PYG{p}{;} \PYG{n}{j}\PYG{o}{+}\PYG{o}{+}\PYG{p}{)}
                         \PYG{c+c1}{// change here to use random integer}
                         \PYG{n}{b}\PYG{p}{[}\PYG{n}{i}\PYG{p}{]}\PYG{p}{[}\PYG{n}{j}\PYG{p}{]}\PYG{o}{=} \PYG{l+m+mi}{1}\PYG{p}{;}
 
         \PYG{c+cm}{/* Computing the average row and extra row for each process */}
         \PYG{n}{averow} \PYG{o}{=} \PYG{n}{ROW\PYGZus{}A}\PYG{o}{/}\PYG{n}{numworkers}\PYG{p}{;}
-        \PYG{n}{extra} \PYG{o}{=} \PYG{n}{ROW\PYGZus{}A}\PYG{o}{\%}\PYG{n}{numworkers}\PYG{p}{;}
+        \PYG{n}{extra} \PYG{o}{=} \PYG{n}{ROW\PYGZus{}A}\PYG{o}{\PYGZpc{}}\PYG{n}{numworkers}\PYG{p}{;}
         \PYG{n}{offset} \PYG{o}{=} \PYG{l+m+mi}{0}\PYG{p}{;}
         \PYG{n}{mtype} \PYG{o}{=} \PYG{n}{FROM\PYGZus{}MASTER}\PYG{p}{;}
 
         \PYG{c+cm}{/* Distributing the task to each worker */}
-        \PYG{k}{for} \PYG{p}{(}\PYG{n}{dest} \PYG{o}{=} \PYG{l+m+mi}{1}\PYG{p}{;} \PYG{n}{dest} \PYG{o}{\textless{}}\PYG{o}{=} \PYG{n}{numworkers}\PYG{p}{;} \PYG{n}{dest}\PYG{o}{+}\PYG{o}{+}\PYG{p}{)} \PYG{p}{\PYGZob{}}
-                \PYG{n}{rows} \PYG{o}{=} \PYG{p}{(}\PYG{n}{dest} \PYG{o}{\textless{}}\PYG{o}{=} \PYG{n}{extra}\PYG{p}{)} \PYG{o}{?} \PYG{n}{averow}\PYG{o}{+}\PYG{l+m+mi}{1} \PYG{o}{:} \PYG{n}{averow}\PYG{p}{;}
-                \PYG{n}{printf}\PYG{p}{(}\PYG{l+s}{"}\PYG{l+s}{Sending \%d rows to task \%d offset = \%d}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s}{"}\PYG{p}{,} \PYG{n}{rows}\PYG{p}{,} \PYG{n}{dest}\PYG{p}{,} \PYG{n}{offset}\PYG{p}{)}\PYG{p}{;}
+        \PYG{k}{for} \PYG{p}{(}\PYG{n}{dest} \PYG{o}{=} \PYG{l+m+mi}{1}\PYG{p}{;} \PYG{n}{dest} \PYG{o}{\PYGZlt{}}\PYG{o}{=} \PYG{n}{numworkers}\PYG{p}{;} \PYG{n}{dest}\PYG{o}{+}\PYG{o}{+}\PYG{p}{)} \PYG{p}{\PYGZob{}}
+                \PYG{n}{rows} \PYG{o}{=} \PYG{p}{(}\PYG{n}{dest} \PYG{o}{\PYGZlt{}}\PYG{o}{=} \PYG{n}{extra}\PYG{p}{)} \PYG{o}{?} \PYG{n}{averow}\PYG{o}{+}\PYG{l+m+mi}{1} \PYG{o}{:} \PYG{n}{averow}\PYG{p}{;}
+                \PYG{n}{printf}\PYG{p}{(}\PYG{l+s}{"}\PYG{l+s}{Sending \PYGZpc{}d rows to task \PYGZpc{}d offset = \PYGZpc{}d}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s}{"}\PYG{p}{,} \PYG{n}{rows}\PYG{p}{,} \PYG{n}{dest}\PYG{p}{,} \PYG{n}{offset}\PYG{p}{)}\PYG{p}{;}
 
                 \PYG{c+c1}{// TO DO}
                 \PYG{c+c1}{// send some rows of first matrix and entire second matrix to each worker}
@@ -726,7 +770,7 @@ We need to ask all workers to receive the messages sent from the master. Then we
 
 \begin{Verbatim}[commandchars=\\\{\}]
 \PYG{c+cm}{/**************************** worker task ************************************/}
-\PYG{k}{if} \PYG{p}{(}\PYG{n}{taskid} \PYG{o}{\textgreater{}} \PYG{n}{MASTER}\PYG{p}{)} \PYG{p}{\PYGZob{}}
+\PYG{k}{if} \PYG{p}{(}\PYG{n}{taskid} \PYG{o}{\PYGZgt{}} \PYG{n}{MASTER}\PYG{p}{)} \PYG{p}{\PYGZob{}}
 
         \PYG{c+cm}{/* Each receives task from master*/}
         \PYG{n}{mtype} \PYG{o}{=} \PYG{n}{FROM\PYGZus{}MASTER}\PYG{p}{;}
@@ -743,9 +787,9 @@ We need to ask all workers to receive the messages sent from the master. Then we
 
         \PYG{c+cm}{/* Each worker sends result back to the master */}
         \PYG{n}{mtype} \PYG{o}{=} \PYG{n}{FROM\PYGZus{}WORKER}\PYG{p}{;}
-        \PYG{n}{MPI\PYGZus{}Send}\PYG{p}{(}\PYG{o}{\&}\PYG{n}{offset}\PYG{p}{,} \PYG{l+m+mi}{1}\PYG{p}{,} \PYG{n}{MPI\PYGZus{}INT}\PYG{p}{,} \PYG{n}{MASTER}\PYG{p}{,} \PYG{n}{mtype}\PYG{p}{,} \PYG{n}{MPI\PYGZus{}COMM\PYGZus{}WORLD}\PYG{p}{)}\PYG{p}{;}
-        \PYG{n}{MPI\PYGZus{}Send}\PYG{p}{(}\PYG{o}{\&}\PYG{n}{rows}\PYG{p}{,} \PYG{l+m+mi}{1}\PYG{p}{,} \PYG{n}{MPI\PYGZus{}INT}\PYG{p}{,} \PYG{n}{MASTER}\PYG{p}{,} \PYG{n}{mtype}\PYG{p}{,} \PYG{n}{MPI\PYGZus{}COMM\PYGZus{}WORLD}\PYG{p}{)}\PYG{p}{;}
-        \PYG{n}{MPI\PYGZus{}Send}\PYG{p}{(}\PYG{o}{\&}\PYG{n}{c}\PYG{p}{,} \PYG{n}{rows}\PYG{o}{*}\PYG{n}{COL\PYGZus{}B}\PYG{p}{,} \PYG{n}{MPI\PYGZus{}FLOAT}\PYG{p}{,} \PYG{n}{MASTER}\PYG{p}{,} \PYG{n}{mtype}\PYG{p}{,} \PYG{n}{MPI\PYGZus{}COMM\PYGZus{}WORLD}\PYG{p}{)}\PYG{p}{;}
+        \PYG{n}{MPI\PYGZus{}Send}\PYG{p}{(}\PYG{o}{\PYGZam{}}\PYG{n}{offset}\PYG{p}{,} \PYG{l+m+mi}{1}\PYG{p}{,} \PYG{n}{MPI\PYGZus{}INT}\PYG{p}{,} \PYG{n}{MASTER}\PYG{p}{,} \PYG{n}{mtype}\PYG{p}{,} \PYG{n}{MPI\PYGZus{}COMM\PYGZus{}WORLD}\PYG{p}{)}\PYG{p}{;}
+        \PYG{n}{MPI\PYGZus{}Send}\PYG{p}{(}\PYG{o}{\PYGZam{}}\PYG{n}{rows}\PYG{p}{,} \PYG{l+m+mi}{1}\PYG{p}{,} \PYG{n}{MPI\PYGZus{}INT}\PYG{p}{,} \PYG{n}{MASTER}\PYG{p}{,} \PYG{n}{mtype}\PYG{p}{,} \PYG{n}{MPI\PYGZus{}COMM\PYGZus{}WORLD}\PYG{p}{)}\PYG{p}{;}
+        \PYG{n}{MPI\PYGZus{}Send}\PYG{p}{(}\PYG{o}{\PYGZam{}}\PYG{n}{c}\PYG{p}{,} \PYG{n}{rows}\PYG{o}{*}\PYG{n}{COL\PYGZus{}B}\PYG{p}{,} \PYG{n}{MPI\PYGZus{}FLOAT}\PYG{p}{,} \PYG{n}{MASTER}\PYG{p}{,} \PYG{n}{mtype}\PYG{p}{,} \PYG{n}{MPI\PYGZus{}COMM\PYGZus{}WORLD}\PYG{p}{)}\PYG{p}{;}
 \PYG{p}{\PYGZcb{}}
 \end{Verbatim}
 
@@ -755,21 +799,21 @@ Finally, we need to ask the master to receive the result matrix sent from each w
 \begin{Verbatim}[commandchars=\\\{\}]
 \PYG{c+cm}{/* Receive results from worker tasks */}
 \PYG{n}{mtype} \PYG{o}{=} \PYG{n}{FROM\PYGZus{}WORKER}\PYG{p}{;}
-\PYG{k}{for} \PYG{p}{(}\PYG{n}{i} \PYG{o}{=} \PYG{l+m+mi}{1}\PYG{p}{;} \PYG{n}{i} \PYG{o}{\textless{}}\PYG{o}{=} \PYG{n}{numworkers}\PYG{p}{;} \PYG{n}{i}\PYG{o}{+}\PYG{o}{+}\PYG{p}{)} \PYG{p}{\PYGZob{}}
+\PYG{k}{for} \PYG{p}{(}\PYG{n}{i} \PYG{o}{=} \PYG{l+m+mi}{1}\PYG{p}{;} \PYG{n}{i} \PYG{o}{\PYGZlt{}}\PYG{o}{=} \PYG{n}{numworkers}\PYG{p}{;} \PYG{n}{i}\PYG{o}{+}\PYG{o}{+}\PYG{p}{)} \PYG{p}{\PYGZob{}}
         \PYG{n}{source} \PYG{o}{=} \PYG{n}{i}\PYG{p}{;}
-        \PYG{n}{MPI\PYGZus{}Recv}\PYG{p}{(}\PYG{o}{\&}\PYG{n}{offset}\PYG{p}{,} \PYG{l+m+mi}{1}\PYG{p}{,} \PYG{n}{MPI\PYGZus{}INT}\PYG{p}{,} \PYG{n}{source}\PYG{p}{,} \PYG{n}{mtype}\PYG{p}{,} \PYG{n}{MPI\PYGZus{}COMM\PYGZus{}WORLD}\PYG{p}{,} \PYG{o}{\&}\PYG{n}{status}\PYG{p}{)}\PYG{p}{;}
-        \PYG{n}{MPI\PYGZus{}Recv}\PYG{p}{(}\PYG{o}{\&}\PYG{n}{rows}\PYG{p}{,} \PYG{l+m+mi}{1}\PYG{p}{,} \PYG{n}{MPI\PYGZus{}INT}\PYG{p}{,} \PYG{n}{source}\PYG{p}{,} \PYG{n}{mtype}\PYG{p}{,} \PYG{n}{MPI\PYGZus{}COMM\PYGZus{}WORLD}\PYG{p}{,} \PYG{o}{\&}\PYG{n}{status}\PYG{p}{)}\PYG{p}{;}
-        \PYG{n}{MPI\PYGZus{}Recv}\PYG{p}{(}\PYG{o}{\&}\PYG{n}{c}\PYG{p}{[}\PYG{n}{offset}\PYG{p}{]}\PYG{p}{[}\PYG{l+m+mi}{0}\PYG{p}{]}\PYG{p}{,} \PYG{n}{rows}\PYG{o}{*}\PYG{n}{COL\PYGZus{}B}\PYG{p}{,} \PYG{n}{MPI\PYGZus{}FLOAT}\PYG{p}{,} \PYG{n}{source}\PYG{p}{,} \PYG{n}{mtype}\PYG{p}{,} \PYG{n}{MPI\PYGZus{}COMM\PYGZus{}WORLD}\PYG{p}{,} \PYG{o}{\&}\PYG{n}{status}\PYG{p}{)}\PYG{p}{;}
-        \PYG{n}{printf}\PYG{p}{(}\PYG{l+s}{"}\PYG{l+s}{Received results from task \%d}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s}{"}\PYG{p}{,}\PYG{n}{source}\PYG{p}{)}\PYG{p}{;}
+        \PYG{n}{MPI\PYGZus{}Recv}\PYG{p}{(}\PYG{o}{\PYGZam{}}\PYG{n}{offset}\PYG{p}{,} \PYG{l+m+mi}{1}\PYG{p}{,} \PYG{n}{MPI\PYGZus{}INT}\PYG{p}{,} \PYG{n}{source}\PYG{p}{,} \PYG{n}{mtype}\PYG{p}{,} \PYG{n}{MPI\PYGZus{}COMM\PYGZus{}WORLD}\PYG{p}{,} \PYG{o}{\PYGZam{}}\PYG{n}{status}\PYG{p}{)}\PYG{p}{;}
+        \PYG{n}{MPI\PYGZus{}Recv}\PYG{p}{(}\PYG{o}{\PYGZam{}}\PYG{n}{rows}\PYG{p}{,} \PYG{l+m+mi}{1}\PYG{p}{,} \PYG{n}{MPI\PYGZus{}INT}\PYG{p}{,} \PYG{n}{source}\PYG{p}{,} \PYG{n}{mtype}\PYG{p}{,} \PYG{n}{MPI\PYGZus{}COMM\PYGZus{}WORLD}\PYG{p}{,} \PYG{o}{\PYGZam{}}\PYG{n}{status}\PYG{p}{)}\PYG{p}{;}
+        \PYG{n}{MPI\PYGZus{}Recv}\PYG{p}{(}\PYG{o}{\PYGZam{}}\PYG{n}{c}\PYG{p}{[}\PYG{n}{offset}\PYG{p}{]}\PYG{p}{[}\PYG{l+m+mi}{0}\PYG{p}{]}\PYG{p}{,} \PYG{n}{rows}\PYG{o}{*}\PYG{n}{COL\PYGZus{}B}\PYG{p}{,} \PYG{n}{MPI\PYGZus{}FLOAT}\PYG{p}{,} \PYG{n}{source}\PYG{p}{,} \PYG{n}{mtype}\PYG{p}{,} \PYG{n}{MPI\PYGZus{}COMM\PYGZus{}WORLD}\PYG{p}{,} \PYG{o}{\PYGZam{}}\PYG{n}{status}\PYG{p}{)}\PYG{p}{;}
+        \PYG{n}{printf}\PYG{p}{(}\PYG{l+s}{"}\PYG{l+s}{Received results from task \PYGZpc{}d}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s}{"}\PYG{p}{,}\PYG{n}{source}\PYG{p}{)}\PYG{p}{;}
 \PYG{p}{\PYGZcb{}}
 
 \PYG{c+cm}{/* Master prints results */}
 \PYG{n}{printf}\PYG{p}{(}\PYG{l+s}{"}\PYG{l+s}{******************************************************}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s}{"}\PYG{p}{)}\PYG{p}{;}
 \PYG{n}{printf}\PYG{p}{(}\PYG{l+s}{"}\PYG{l+s}{Result Matrix:}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s}{"}\PYG{p}{)}\PYG{p}{;}
-\PYG{k}{for} \PYG{p}{(}\PYG{n}{i} \PYG{o}{=} \PYG{l+m+mi}{0}\PYG{p}{;} \PYG{n}{i} \PYG{o}{\textless{}} \PYG{n}{ROW\PYGZus{}A}\PYG{p}{;} \PYG{n}{i}\PYG{o}{+}\PYG{o}{+}\PYG{p}{)} \PYG{p}{\PYGZob{}}
+\PYG{k}{for} \PYG{p}{(}\PYG{n}{i} \PYG{o}{=} \PYG{l+m+mi}{0}\PYG{p}{;} \PYG{n}{i} \PYG{o}{\PYGZlt{}} \PYG{n}{ROW\PYGZus{}A}\PYG{p}{;} \PYG{n}{i}\PYG{o}{+}\PYG{o}{+}\PYG{p}{)} \PYG{p}{\PYGZob{}}
         \PYG{n}{printf}\PYG{p}{(}\PYG{l+s}{"}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s}{"}\PYG{p}{)}\PYG{p}{;}
-        \PYG{k}{for} \PYG{p}{(}\PYG{n}{j} \PYG{o}{=} \PYG{l+m+mi}{0}\PYG{p}{;} \PYG{n}{j} \PYG{o}{\textless{}} \PYG{n}{COL\PYGZus{}B}\PYG{p}{;} \PYG{n}{j}\PYG{o}{+}\PYG{o}{+}\PYG{p}{)}
-                \PYG{n}{printf}\PYG{p}{(}\PYG{l+s}{"}\PYG{l+s}{\%6.2f   }\PYG{l+s}{"}\PYG{p}{,} \PYG{n}{c}\PYG{p}{[}\PYG{n}{i}\PYG{p}{]}\PYG{p}{[}\PYG{n}{j}\PYG{p}{]}\PYG{p}{)}\PYG{p}{;}
+        \PYG{k}{for} \PYG{p}{(}\PYG{n}{j} \PYG{o}{=} \PYG{l+m+mi}{0}\PYG{p}{;} \PYG{n}{j} \PYG{o}{\PYGZlt{}} \PYG{n}{COL\PYGZus{}B}\PYG{p}{;} \PYG{n}{j}\PYG{o}{+}\PYG{o}{+}\PYG{p}{)}
+                \PYG{n}{printf}\PYG{p}{(}\PYG{l+s}{"}\PYG{l+s}{\PYGZpc{}6.2f   }\PYG{l+s}{"}\PYG{p}{,} \PYG{n}{c}\PYG{p}{[}\PYG{n}{i}\PYG{p}{]}\PYG{p}{[}\PYG{n}{j}\PYG{p}{]}\PYG{p}{)}\PYG{p}{;}
 \PYG{p}{\PYGZcb{}}
 \end{Verbatim}
 
@@ -777,12 +821,7 @@ Finally, we need to ask the master to receive the result matrix sent from each w
 
 \end{description}\end{quote}
 \begin{description}
-\item[{Download the source code to do your activity:}] \leavevmode
-\code{download CUDA program}
-
-\code{download MPI program}
-
-\item[{Download the entire source code:}] \leavevmode
+\item[{If you get stuck, download the entire source code:}] \leavevmode
 \code{download CUDA program}
 
 \code{download MPI program}
@@ -792,7 +831,7 @@ Finally, we need to ask the master to receive the result matrix sent from each w
 
 \chapter{The Three Musketeers}
 \label{TheThreeMusketeers/TheThreeMusketeers::doc}\label{TheThreeMusketeers/TheThreeMusketeers:the-three-musketeers}
-Another Heterogeneous programming model that we can look at is the parallel programming technique that combines MPI, CUDA, and OpenMP. Each of the parallel programming model uses different resource for their computation. OpenMP works on Multicore CPUs, CUDA works on GPUs, and MPI works on distributed memory cluster. Therefore, if you have a cluster, whose nodes contain more than one core, and at least a GPU, you can try this parallel programming method. However, in this last section of the module we just want introduce the idea of having this hardcore parallelism.
+Another Heterogeneous programming model that we can look at is the parallel programming technique that combines MPI, CUDA, and OpenMP. Each of the parallel programming models uses different resource for their computation. OpenMP works on Multicore CPUs, CUDA works on GPUs, and MPI works on distributed memory cluster. Therefore, if you have a cluster, whose nodes contain more than one core, and at least a GPU, you can try this parallel programming method. However, in this last section of the module we just want introduce the idea of having this hardcore parallelism.
 \setbox0\vbox{
 \begin{minipage}{0.95\linewidth}
 \textbf{Recommended Reading}

@@ -55,7 +55,7 @@
 <h1>Coding and Compiling a Heterogeneous Program<a class="headerlink" href="#coding-and-compiling-a-heterogeneous-program" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="heterogeneous-program-hello-world">
 <h2>Heterogeneous Program: Hello World<a class="headerlink" href="#heterogeneous-program-hello-world" title="Permalink to this headline">¶</a></h2>
-<p>Distributed memory computing and GPU computing are two different parallel programming models. In this section, you will learn how to put these two parallel models together, and that will speed up your running time. As always we will look at the <strong>Hello World</strong> program using hybrid CUDA and MPI model. In order to combine CUDA and MPI, we need to get their codes to communicate to each other during the compilation. Let&#8217;s look at the <strong>Hello World</strong> program below.</p>
+<p>Distributed memory computing and GPU computing are two different parallel programming models. In this section, you will learn how to put these two parallel models together, and that will speed up your running time. As always we will look at the <strong>Hello World</strong> program using hybrid environment CUDA and MPI. In order to combine CUDA and MPI, we need to get their codes to communicate to each other during the compilation. Let&#8217;s look at the <strong>Hello World</strong> program below.</p>
 <p><strong>CUDA program</strong></p>
 <div class="highlight-c"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
  2
@@ -175,18 +175,25 @@
 <p>To execute the executable file, <strong>cudampi</strong>, we can enter the following command on the terminal:</p>
 <div class="highlight-c"><pre>mpirun -machinefile machines -x LD_LIBRARY_PATH -np #processes ./cudampi</pre>
 </div>
+<p>We use <strong>-x</strong> to export the environment variables to the remote nodes before executing program.</p>
 <div class="section" id="timing-a-heterogeneous-cuda-and-mpi">
 <h3>Timing a Heterogeneous CUDA and MPI<a class="headerlink" href="#timing-a-heterogeneous-cuda-and-mpi" title="Permalink to this headline">¶</a></h3>
 <blockquote>
 <div><ul class="simple">
-<li>In order to time your hybrid CUDA and MPI program, you just need to use MPI_Wtime() function as in an MPI program.</li>
-<li>We need to keep in mind that a heterogeneous CUDA and MPI program theoretically has lower running time than an MPI does; however, running time also depends on each node&#8217;s properties such as memory. Copying data from a CPU to GPU may take a long period of time, which results in a much longer running time for a heterogeneous program. Therefore, you do not always get benefits from the heterogeneous programming model.</li>
+<li>In order to time a heterogeneous CUDA and MPI program, you just need to use MPI_Wtime() function as in an MPI program.</li>
+<li>We need to keep in mind that a heterogeneous CUDA and MPI program theoretically has a lower running time than an MPI does; however, running time also depends on each node&#8217;s properties such as memory. Copying data from the host (CPU) to a device (GPU) may take a long period of time, which results in a much longer running time for a heterogeneous program. Therefore, you do not always get benefits from the heterogeneous programming model.</li>
 </ul>
 </div></blockquote>
 </div>
 <div class="section" id="activity-1-vector-addition">
 <h3>Activity 1: Vector Addition<a class="headerlink" href="#activity-1-vector-addition" title="Permalink to this headline">¶</a></h3>
-<p>In this activity, we are going to compute vector addition by using hybrid programming model, CUDA and MPI. Vector addition is very simple and easy. Suppose we have vector <em>A</em> and vector <em>B</em>, and both have the same length. To add vector <em>A</em> and <em>B</em>, we just add the corresponding elements of <em>A</em> and <em>B</em>. This results a new vector of the same length.</p>
+<dl class="docutils">
+<dt>Download the source code to do this activity:</dt>
+<dd><p class="first"><a class="reference download internal" href="../_downloads/vecadd_todo.cu"><tt class="xref download docutils literal"><span class="pre">download</span> <span class="pre">CUDA</span> <span class="pre">program</span></tt></a></p>
+<p class="last"><a class="reference download internal" href="../_downloads/vecadd_todo.c"><tt class="xref download docutils literal"><span class="pre">download</span> <span class="pre">MPI</span> <span class="pre">program</span></tt></a></p>
+</dd>
+</dl>
+<p>In this activity, we are going to compute vector addition by using a hybrid programming model with CUDA and MPI. Vector addition is very simple and easy. Suppose we have vector <em>A</em> and vector <em>B</em>, and both have the same length. To add vector <em>A</em> and <em>B</em>, we just add the corresponding elements of <em>A</em> and <em>B</em>. This results a new vector of the same length.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -343,11 +350,7 @@
 </tbody>
 </table>
 <dl class="docutils">
-<dt>Download the source code to do your activity:</dt>
-<dd><p class="first"><a class="reference download internal" href="../_downloads/vecadd_todo.cu"><tt class="xref download docutils literal"><span class="pre">download</span> <span class="pre">CUDA</span> <span class="pre">program</span></tt></a></p>
-<p class="last"><a class="reference download internal" href="../_downloads/vecadd_todo.c"><tt class="xref download docutils literal"><span class="pre">download</span> <span class="pre">MPI</span> <span class="pre">program</span></tt></a></p>
-</dd>
-<dt>Download the entire source code:</dt>
+<dt>If you get stuck, you can download the entire working source code:</dt>
 <dd><p class="first"><a class="reference download internal" href="../_downloads/vecadd.cu"><tt class="xref download docutils literal"><span class="pre">download</span> <span class="pre">CUDA</span> <span class="pre">program</span></tt></a></p>
 <p class="last"><a class="reference download internal" href="../_downloads/vecadd.c"><tt class="xref download docutils literal"><span class="pre">download</span> <span class="pre">MPI</span> <span class="pre">program</span></tt></a></p>
 </dd>

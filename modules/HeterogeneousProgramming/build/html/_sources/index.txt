@@ -6,6 +6,10 @@
 Heterogeneous Computing Fundamentals
 =====================================================
 
+This parallel computing module contains the following sections, which
+you can access subsequently by choosing 'bext' in the upper or lower right 
+corner of this document.
+
 Contents:
 
 .. toctree::

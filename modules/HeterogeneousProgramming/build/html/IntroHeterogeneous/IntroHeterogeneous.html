@@ -27,7 +27,7 @@
     <script type="text/javascript" src="../_static/doctools.js"></script>
     <link rel="top" title="Heterogeneous Computing Fundamentals" href="../index.html" />
     <link rel="next" title="Coding and Compiling a Heterogeneous Program" href="../CodingAndCompiling/CodingAndCompiling.html" />
-    <link rel="prev" title="Prerequisites" href="../Prerequisites/Prerequisites.html" /> 
+    <link rel="prev" title="Instructor/Student Notes" href="../Prerequisites/Prerequisites.html" /> 
   </head>
   <body>
     <div class="related">
@@ -40,7 +40,7 @@
           <a href="../CodingAndCompiling/CodingAndCompiling.html" title="Coding and Compiling a Heterogeneous Program"
              accesskey="N">next</a> |</li>
         <li class="right" >
-          <a href="../Prerequisites/Prerequisites.html" title="Prerequisites"
+          <a href="../Prerequisites/Prerequisites.html" title="Instructor/Student Notes"
              accesskey="P">previous</a> |</li>
         <li><a href="../index.html">Heterogeneous Computing Fundamentals</a> &raquo;</li> 
       </ul>
@@ -53,14 +53,14 @@
             
   <div class="section" id="introduction-to-heterogeneous-computing">
 <h1>Introduction to Heterogeneous Computing<a class="headerlink" href="#introduction-to-heterogeneous-computing" title="Permalink to this headline">¶</a></h1>
-<p>You have already seen that you can decompose the task and distribute each smaller task to each worker, and let each node work simultaneously in an MPI program. Thus, it enables a programmer to work on a larger problem size, and reduce the computational time. Similarly, CUDA C is a GPU programming language, and is another parallel programming model. Our goal of this module is to program in the hybrid environment CUDA and MPI.</p>
-<p>It turns out that we can produce a new parallel programming model that combines MPI and CUDA together. The idea is that we use MPI to distribute work among nodes, each of which uses CUDA to work on its task. In order for this to work, we need to keep in mind that we need to have a cluster or something similar, where each node contains GPUs capable of doing CUDA computation.</p>
+<p>You have already seen that you can decompose the task and distribute each smaller task to each worker, and let each node work simultaneously in an MPI program. Thus, it enables a programmer to work on a larger problem size, and reduce the computational time. Similarly, CUDA C is a GPU programming language, and provides another parallel programming model. Our goal of this module is to program in a hybrid environment, using CUDA and MPI.</p>
+<p>It turns out that we can produce a new parallel programming model that combines MPI and CUDA together. The idea is that we use MPI to distribute work among nodes, each of which uses CUDA to work on its task. In order for this to work, we need to keep in mind that we need to have a cluster or something similar, where each node contains GPUs capable of doing CUDA computation. The Figure below illustrates the model for heterogeneous or hybrid programming.</p>
 <img alt="Heteregeneous Programming Model: CUDA and MPI" class="align-center" src="../_images/cudampi.png" style="width: 500px; height: 230px;" />
 <p class="centered">
 <strong>Figure 1: Heterogeneous Programming Model: CUDA and MPI from cacuda.googlecode.com [1]</strong></p><div class="topic">
 <p class="topic-title first">Recommended Reading</p>
 <ul class="simple">
-<li>Please Do Your Reading: <a class="reference external" href="http://www.hipc.org/hipc2009/documents/HIPCSS09Papers/1569247597.pdf">On the Comparative Performance of Parallel Algorithms on Small GPU/CUDA Clusters</a></li>
+<li>Please read: <a class="reference external" href="http://www.hipc.org/hipc2009/documents/HIPCSS09Papers/1569247597.pdf">On the Comparative Performance of Parallel Algorithms on Small GPU/CUDA Clusters</a></li>
 </ul>
 </div>
 <p class="rubric">References</p>
@@ -83,7 +83,7 @@
             </a></p>
   <h4>Previous topic</h4>
   <p class="topless"><a href="../Prerequisites/Prerequisites.html"
-                        title="previous chapter">Prerequisites</a></p>
+                        title="previous chapter">Instructor/Student Notes</a></p>
   <h4>Next topic</h4>
   <p class="topless"><a href="../CodingAndCompiling/CodingAndCompiling.html"
                         title="next chapter">Coding and Compiling a Heterogeneous Program</a></p>
@@ -114,7 +114,7 @@
           <a href="../CodingAndCompiling/CodingAndCompiling.html" title="Coding and Compiling a Heterogeneous Program"
              >next</a> |</li>
         <li class="right" >
-          <a href="../Prerequisites/Prerequisites.html" title="Prerequisites"
+          <a href="../Prerequisites/Prerequisites.html" title="Instructor/Student Notes"
              >previous</a> |</li>
         <li><a href="../index.html">Heterogeneous Computing Fundamentals</a> &raquo;</li> 
       </ul>
