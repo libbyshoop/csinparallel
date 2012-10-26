@@ -62,7 +62,7 @@ background reading entitled
 (<strong>WMR</strong>) that enables you to formulate map-reduce computations and
 run them on an underlying <em>Hadoop</em> map-reduce system running on a
 cluster of computers.</p>
-<p>You will use WebMapReduce on a cluster of computers at St. Olaf
+<p>You will use WebMapReduce on a cluster of computers at Macalester
 College. You should access WebMapReduce now and register for a
 login by going to this URL on your web browser:</p>
 <p><a class="reference external" href="http://selkie.macalester.edu/wmr">http://selkie.macalester.edu/wmr</a></p>
@@ -152,7 +152,7 @@ puncuation characters from the input.</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">string</span>
 
 <span class="k">def</span> <span class="nf">mapper</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
-    <span class="n">counts</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+    <span class="n">counts</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>  <span class="c">#create a dictionary to hold words</span>
     <span class="n">words</span><span class="o">=</span><span class="n">key</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
     <span class="k">for</span> <span class="n">word</span> <span class="ow">in</span> <span class="n">words</span><span class="p">:</span>
         <span class="n">word</span> <span class="o">=</span> <span class="n">word</span><span class="o">.</span><span class="n">strip</span><span class="p">(</span><span class="n">string</span><span class="o">.</span><span class="n">punctuation</span><span class="p">)</span>
@@ -165,7 +165,8 @@ puncuation characters from the input.</p>
         <span class="n">Wmr</span><span class="o">.</span><span class="n">emit</span><span class="p">(</span><span class="n">foundword</span><span class="p">,</span> <span class="n">counts</span><span class="p">[</span><span class="n">foundword</span><span class="p">])</span>
 </pre></div>
 </div>
-<p>This code is available on moodle as <cite>wc\_comb\_mapper.py</cite>.</p>
+<p>This code is available <a class="reference download internal" href="../_downloads/wc_comb_mapper.py"><tt class="xref download docutils literal"><span class="pre">for</span> <span class="pre">download</span> <span class="pre">as</span> <span class="pre">wc_comb_mapper.py</span></tt></a>.
+You can use this file later when you wish to use it as your mapper in WMR.</p>
 <p>Let&#8217;s examine this code carefully. In line 1 we import the Python
 <tt class="docutils literal"><span class="pre">string</span></tt> package so that we can use its method for returning
 punctuation characters, found in line 7. Line 3 shows how all
@@ -198,7 +199,8 @@ are being interpreted as strings in line 14.</p>
 <blockquote>
 <div>def reducer(key, values): sum = 0 for count in values: sum +=
 int(count) Wmr.emit(key, sum)</div></blockquote>
-<p>This code is available on moodle as <tt class="docutils literal"><span class="pre">wcreducer.py</span></tt>.</p>
+<p>This code is available <a class="reference download internal" href="../_downloads/wcreducer.py"><tt class="xref download docutils literal"><span class="pre">for</span> <span class="pre">download</span> <span class="pre">as</span> <span class="pre">wcreducer.py</span></tt></a>.
+You can use this file later when you wish to use it as your reducer in WMR.</p>
 <p>The function <tt class="docutils literal"><span class="pre">reducer()</span></tt> is called once for each distinct key
 that appears among the key-value pairs emitted by the mapper, and
 that call processes all of the key-value pairs that use that key.
@@ -243,7 +245,7 @@ avoid spaces in the job name and make sure that it is more than 4
 characters long).</p>
 <p>Choose the Python3 language.</p>
 <p>For now, you can leave the number of map tasks and reduce tasks
-blank. This will let the system decide this for itself. You canhttp://selkie.macalester.edu/csinparallel/modules/DiningPhilosophers/source/Introduction/dining_philosophers_code.tar.gz
+blank. This will let the system decide this for itself. You can
 also leave the default choice of sorting alphabetically.</p>
 <p>Enter the input data, e.g., the fish lines above. You can use the
 ``Direct Input&#8221; option and enter that data in the text box
@@ -251,13 +253,15 @@ provided.</p>
 <p>Enter the mapper. It&#8217;s probably best to use se the ``Upload&#8221;
 option and navigate to a file that contains the mapper, which you
 have entered using an editor (this is more convenient for repeated
-runs). <strong>Beware:</strong> cutting and pasting your code from a pdf file or
+runs). Or you can use the file we provided in a link above.
+<strong>Beware:</strong> cutting and pasting your code from a pdf file or
 a web page or typing it into the `&#8217;direct&#8217; entry box for python
 code is a bit problematic, because the needed tabs in the code
 might not be preserved (although using spaces should work). Check
 that the appropriate radio button is clicked to indicate the source
 option you&#8217;re actually using.</p>
-<p>Also enter the reducer.</p>
+<p>Also enter the reducer.  Again, it&#8217;s easier to use the file provided
+with a link above.</p>
 <p>Click on the submit button.</p>
 <p>A page should appear indicating that the job started successfully.
 This page will refresh itself as it is working on the job to show
@@ -268,8 +272,8 @@ your output should match the illustration above, except that the
 punctuation should also be taken care of.</p>
 </div></blockquote>
 <p>If something doesn&#8217;t work as described here, the following section
-may help with troubleshooting. Read it next in any case so that you
-know what you can do when you work on your own new examples.</p>
+may help with troubleshooting. <em>Read it next in any case so that you
+know what you can do when you work on your own new examples.</em></p>
 </div>
 <div class="section" id="using-wmr-and-its-test-mode">
 <h2>Using WMR and its test mode<a class="headerlink" href="#using-wmr-and-its-test-mode" title="Permalink to this headline">¶</a></h2>

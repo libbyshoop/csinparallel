@@ -13,7 +13,7 @@ In this lab you will use a web-based program called `WebMapReduce`
 run them on an underlying *Hadoop* map-reduce system running on a
 cluster of computers.
 
-You will use WebMapReduce on a cluster of computers at St. Olaf
+You will use WebMapReduce on a cluster of computers at Macalester
 College. You should access WebMapReduce now and register for a
 login by going to this URL on your web browser:
 
@@ -129,7 +129,7 @@ puncuation characters from the input.
     import string
 
     def mapper(key, value):
-        counts = dict()
+        counts = dict()  #create a dictionary to hold words
         words=key.split()
         for word in words:
             word = word.strip(string.punctuation)
@@ -143,7 +143,8 @@ puncuation characters from the input.
 
 
 
-This code is available on moodle as `wc\\\_comb\\\_mapper.py`.
+This code is available :download:`for download as wc\_comb\_mapper.py <wc\_comb\_mapper.py>`.
+You can use this file later when you wish to use it as your mapper in WMR.
 
 Let's examine this code carefully. In line 1 we import the Python
 ``string`` package so that we can use its method for returning
@@ -185,7 +186,9 @@ A reducer function for solving the word-count problem is
 
 
 
-This code is available on moodle as ``wcreducer.py``.
+This code is available :download:`for download as wcreducer.py <wcreducer.py>`.
+You can use this file later when you wish to use it as your reducer in WMR.
+
 
 The function ``reducer()`` is called once for each distinct key
 that appears among the key-value pairs emitted by the mapper, and
@@ -240,7 +243,7 @@ carry out the following steps.
     Choose the Python3 language.
 
     For now, you can leave the number of map tasks and reduce tasks
-    blank. This will let the system decide this for itself. You canhttp://selkie.macalester.edu/csinparallel/modules/DiningPhilosophers/source/Introduction/dining_philosophers_code.tar.gz
+    blank. This will let the system decide this for itself. You can
     also leave the default choice of sorting alphabetically.
 
     Enter the input data, e.g., the fish lines above. You can use the
@@ -250,14 +253,16 @@ carry out the following steps.
     Enter the mapper. It's probably best to use se the \`\`Upload"
     option and navigate to a file that contains the mapper, which you
     have entered using an editor (this is more convenient for repeated
-    runs). **Beware:** cutting and pasting your code from a pdf file or
+    runs). Or you can use the file we provided in a link above.
+    **Beware:** cutting and pasting your code from a pdf file or
     a web page or typing it into the \`'direct' entry box for python
     code is a bit problematic, because the needed tabs in the code
     might not be preserved (although using spaces should work). Check
     that the appropriate radio button is clicked to indicate the source
     option you're actually using.
 
-    Also enter the reducer.
+    Also enter the reducer.  Again, it's easier to use the file provided 
+    with a link above.
 
     Click on the submit button.
 
@@ -272,8 +277,8 @@ carry out the following steps.
 
 
 If something doesn't work as described here, the following section
-may help with troubleshooting. Read it next in any case so that you
-know what you can do when you work on your own new examples.
+may help with troubleshooting. *Read it next in any case so that you
+know what you can do when you work on your own new examples.*
 
 Using WMR and its test mode
 ---------------------------
