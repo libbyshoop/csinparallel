@@ -5,7 +5,7 @@ Introduction
 ------------
 
 For this activity, you need to have read the accompanying
-background reading entitled
+background reading in the previous section entitled
 *Using Parallelism to Analyze Very Large Files: Google's MapReduce Paradigm*.
 
 In this lab you will use a web-based program called `WebMapReduce`
