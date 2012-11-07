@@ -31,15 +31,11 @@ in our class, the difference for the following example is really
 close to what you have already used. We will highlight the
 difference below.
 
-For later reference, you may want to check this documentation for
-WMR:
+For later reference, you may want to check this `documentation for
+WMR <http://webmapreduce.sourceforge.net/docs/using/index.html>`_.
 
-http://webmapreduce.sourceforge.net/docs/User_Guide/index.html
-
-This WMR user guide has images from the first version of WMR, but a
-great deal of the information about how to use it remains the same.
 For this activity, you should be able to follow along with the
-instructions and determine how to use WMR.
+instructions below and determine how to use WMR.
 
 An example of map-reduce computing with WMR: counting words
 -----------------------------------------------------------
@@ -124,23 +120,10 @@ Here is a Python3 mapper function for accomplishing this task using
 the WMR system. We also add the feature of stripping away
 puncuation characters from the input.
 
-.. sourcecode:: python
 
-    import string
-
-    def mapper(key, value):
-        counts = dict()  #create a dictionary to hold words
-        words=key.split()
-        for word in words:
-            word = word.strip(string.punctuation)
-            if word not in counts:
-                counts[word] = 1
-            else:
-                counts[word] += 1
-
-        for foundword in counts:
-            Wmr.emit(foundword, counts[foundword])
-
+.. literalinclude::  wc_comb_mapper.py
+    :linenos:
+    :language: python
 
 
 This code is available :download:`for download as wc_comb_mapper.py <wc_comb_mapper.py>`.
@@ -181,9 +164,10 @@ The reducer function
 
 A reducer function for solving the word-count problem is
 
-        def reducer(key, values): sum = 0 for count in values: sum +=
-        int(count) Wmr.emit(key, sum)
 
+.. literalinclude::  wcreducer.py
+    :linenos:
+    :language: python
 
 
 This code is available :download:`for download as wcreducer.py <wcreducer.py>`.
@@ -303,18 +287,16 @@ programs,and what to do if something goes wrong with your WMR job.
 -  You can test your mapper alone without using your reducer by
    using the *identity reducer*, which simply emits the same key-value
    pairs that it receives. Here is an implementation of the identity
-   reducer for Python:
+   reducer for Python (available :download:`for download as idreducer.py <idreducer.py>`):
 
-           def reducer(key, iter): for s in iter: Wmr.emit(key, s)
+  .. literalinclude:: idreducer.py
+    :linenos:
+    :language: python
 
 
 
-   (Available :download:`for download as idreducer.py <idreducer.py>`)
 
-   For example, if you use the word-count mapper
-   `wc\\\_comb\\\_mapper.py` with the identity reducer
-   ``idreducer.py``, then the "fish" data above should produce the
-   following output:
+  As an example, if you use the word-count mapper `wc_comb_mapper.py` with the identity reducer ``idreducer.py``, then the "fish" data above should produce the following output:
 
    ::
 
@@ -325,20 +307,19 @@ programs,and what to do if something goes wrong with your WMR job.
        Red 1
        Two 1
 
-   Observe that the output is sorted, due to the shuffling step.
-   However, this does show all the key-value pairs that result from
-   the word-count mapper.
+  Observe that the output is sorted, due to the shuffling step.
+  However, this does show all the key-value pairs that result from
+  the word-count mapper.
 
 -  Likewise, you can test your reducer alone without using your
    mapper by substituting the ``identity mapper``, which simply copies
    key-value pairs from lines of input data. Here is an implementation
    of the identity mapper in Python:
 
-   .. sourcecode:: python
-
-           def mapper(key, value):
-               Wmr.emit(key, value)
-
+   
+   .. literalinclude:: idmapper.py
+    :linenos:
+    :language: python
 
    (Available :download:`for download as idmapper.py <idmapper.py>`)
 
@@ -373,7 +354,7 @@ programs,and what to do if something goes wrong with your WMR job.
    from this choice shows you what both the mapper and reducer
    emitted, which can be helpful for debugging your code.
 
-   .. note:: `Do not use ``Test`` for large data`, but only to debug
+   .. note:: Do not use ``Test`` for large data, but only to debug
                your mappers and reducers. This option does *not* use cluster
                computing, so it cannot handle large data.
 

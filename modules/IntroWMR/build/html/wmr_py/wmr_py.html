@@ -76,13 +76,10 @@ although it expects Python3. Though we have been using Python 2.7
 in our class, the difference for the following example is really
 close to what you have already used. We will highlight the
 difference below.</p>
-<p>For later reference, you may want to check this documentation for
-WMR:</p>
-<p><a class="reference external" href="http://webmapreduce.sourceforge.net/docs/User_Guide/index.html">http://webmapreduce.sourceforge.net/docs/User_Guide/index.html</a></p>
-<p>This WMR user guide has images from the first version of WMR, but a
-great deal of the information about how to use it remains the same.
-For this activity, you should be able to follow along with the
-instructions and determine how to use WMR.</p>
+<p>For later reference, you may want to check this <a class="reference external" href="http://webmapreduce.sourceforge.net/docs/using/index.html">documentation for
+WMR</a>.</p>
+<p>For this activity, you should be able to follow along with the
+instructions below and determine how to use WMR.</p>
 </div>
 <div class="section" id="an-example-of-map-reduce-computing-with-wmr-counting-words">
 <h2>An example of map-reduce computing with WMR: counting words<a class="headerlink" href="#an-example-of-map-reduce-computing-with-wmr-counting-words" title="Permalink to this headline">¶</a></h2>
@@ -149,10 +146,23 @@ given word <em>w</em>, then produce the key-value pair (<em>w</em>, <em>sum</em>
 <p>Here is a Python3 mapper function for accomplishing this task using
 the WMR system. We also add the feature of stripping away
 puncuation characters from the input.</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">string</span>
+<div class="highlight-python"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14</pre></div></td><td class="code"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">string</span>
 
 <span class="k">def</span> <span class="nf">mapper</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
-    <span class="n">counts</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>  <span class="c">#create a dictionary to hold words</span>
+    <span class="n">counts</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
     <span class="n">words</span><span class="o">=</span><span class="n">key</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
     <span class="k">for</span> <span class="n">word</span> <span class="ow">in</span> <span class="n">words</span><span class="p">:</span>
         <span class="n">word</span> <span class="o">=</span> <span class="n">word</span><span class="o">.</span><span class="n">strip</span><span class="p">(</span><span class="n">string</span><span class="o">.</span><span class="n">punctuation</span><span class="p">)</span>
@@ -164,7 +174,7 @@ puncuation characters from the input.</p>
     <span class="k">for</span> <span class="n">foundword</span> <span class="ow">in</span> <span class="n">counts</span><span class="p">:</span>
         <span class="n">Wmr</span><span class="o">.</span><span class="n">emit</span><span class="p">(</span><span class="n">foundword</span><span class="p">,</span> <span class="n">counts</span><span class="p">[</span><span class="n">foundword</span><span class="p">])</span>
 </pre></div>
-</div>
+</td></tr></table></div>
 <p>This code is available <a class="reference download internal" href="../_downloads/wc_comb_mapper.py"><tt class="xref download docutils literal"><span class="pre">for</span> <span class="pre">download</span> <span class="pre">as</span> <span class="pre">wc_comb_mapper.py</span></tt></a>.
 You can use this file later when you wish to use it as your mapper in WMR.</p>
 <p>Let&#8217;s examine this code carefully. In line 1 we import the Python
@@ -196,9 +206,17 @@ are being interpreted as strings in line 14.</p>
 <div class="section" id="the-reducer-function">
 <h2>The reducer function<a class="headerlink" href="#the-reducer-function" title="Permalink to this headline">¶</a></h2>
 <p>A reducer function for solving the word-count problem is</p>
-<blockquote>
-<div>def reducer(key, values): sum = 0 for count in values: sum +=
-int(count) Wmr.emit(key, sum)</div></blockquote>
+<div class="highlight-python"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4
+5</pre></div></td><td class="code"><div class="highlight"><pre><span class="k">def</span> <span class="nf">reducer</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">values</span><span class="p">):</span>
+  <span class="nb">sum</span> <span class="o">=</span> <span class="mi">0</span>
+  <span class="k">for</span> <span class="n">count</span> <span class="ow">in</span> <span class="n">values</span><span class="p">:</span>
+    <span class="nb">sum</span> <span class="o">+=</span> <span class="nb">int</span><span class="p">(</span><span class="n">count</span><span class="p">)</span>
+  <span class="n">Wmr</span><span class="o">.</span><span class="n">emit</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="nb">sum</span><span class="p">)</span>
+</pre></div>
+</td></tr></table></div>
 <p>This code is available <a class="reference download internal" href="../_downloads/wcreducer.py"><tt class="xref download docutils literal"><span class="pre">for</span> <span class="pre">download</span> <span class="pre">as</span> <span class="pre">wcreducer.py</span></tt></a>.
 You can use this file later when you wish to use it as your reducer in WMR.</p>
 <p>The function <tt class="docutils literal"><span class="pre">reducer()</span></tt> is called once for each distinct key
@@ -279,9 +297,8 @@ know what you can do when you work on your own new examples.</em></p>
 <h2>Using WMR and its test mode<a class="headerlink" href="#using-wmr-and-its-test-mode" title="Permalink to this headline">¶</a></h2>
 <p>Here is some information about developing WMR map-reduce
 programs,and what to do if something goes wrong with your WMR job.</p>
-<ul>
-<li><p class="first">First, some reminders:</p>
 <ul class="simple">
+<li>First, some reminders:<ul>
 <li>At present, only the Python3 language is supported for providing
 only mapper and reducer functions in WMR programming. For us, this
 should not be any different than the Python 2 programming that
@@ -293,37 +310,43 @@ FileSystem&#8221; data generated from a prior map-reduce run.
 <em>Always check to see that the radio buttons select the data, mapper, and reduce resources you intend.</em></li>
 </ul>
 </li>
-<li><p class="first">You can test your mapper alone without using your reducer by
+<li>You can test your mapper alone without using your reducer by
 using the <em>identity reducer</em>, which simply emits the same key-value
 pairs that it receives. Here is an implementation of the identity
-reducer for Python:</p>
+reducer for Python (available <a class="reference download internal" href="../_downloads/idreducer.py"><tt class="xref download docutils literal"><span class="pre">for</span> <span class="pre">download</span> <span class="pre">as</span> <span class="pre">idreducer.py</span></tt></a>):</li>
+</ul>
 <blockquote>
-<div><p>def reducer(key, iter): for s in iter: Wmr.emit(key, s)</p>
-</div></blockquote>
-<p>(Available <a class="reference download internal" href="../_downloads/idreducer.py"><tt class="xref download docutils literal"><span class="pre">for</span> <span class="pre">download</span> <span class="pre">as</span> <span class="pre">idreducer.py</span></tt></a>)</p>
-<p>For example, if you use the word-count mapper
-<cite>wc\_comb\_mapper.py</cite> with the identity reducer
-<tt class="docutils literal"><span class="pre">idreducer.py</span></tt>, then the &#8220;fish&#8221; data above should produce the
-following output:</p>
-<div class="highlight-python"><pre>Blue    1
+<div><div class="highlight-python"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3</pre></div></td><td class="code"><div class="highlight"><pre><span class="k">def</span> <span class="nf">reducer</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="nb">iter</span><span class="p">):</span>
+    <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="nb">iter</span><span class="p">:</span>
+        <span class="n">Wmr</span><span class="o">.</span><span class="n">emit</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">s</span><span class="p">)</span>
+</pre></div>
+</td></tr></table></div>
+<p>As an example, if you use the word-count mapper <cite>wc_comb_mapper.py</cite> with the identity reducer <tt class="docutils literal"><span class="pre">idreducer.py</span></tt>, then the &#8220;fish&#8221; data above should produce the following output:</p>
+<blockquote>
+<div><div class="highlight-python"><pre>Blue    1
 fish    2
 fish    2
 One 1
 Red 1
 Two 1</pre>
 </div>
+</div></blockquote>
 <p>Observe that the output is sorted, due to the shuffling step.
 However, this does show all the key-value pairs that result from
 the word-count mapper.</p>
-</li>
+</div></blockquote>
+<ul>
 <li><p class="first">Likewise, you can test your reducer alone without using your
 mapper by substituting the <tt class="docutils literal"><span class="pre">identity</span> <span class="pre">mapper</span></tt>, which simply copies
 key-value pairs from lines of input data. Here is an implementation
 of the identity mapper in Python:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="k">def</span> <span class="nf">mapper</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+<div class="highlight-python"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2</pre></div></td><td class="code"><div class="highlight"><pre><span class="k">def</span> <span class="nf">mapper</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
     <span class="n">Wmr</span><span class="o">.</span><span class="n">emit</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
 </pre></div>
-</div>
+</td></tr></table></div>
 <p>(Available <a class="reference download internal" href="../_downloads/idmapper.py"><tt class="xref download docutils literal"><span class="pre">for</span> <span class="pre">download</span> <span class="pre">as</span> <span class="pre">idmapper.py</span></tt></a>)</p>
 <p>For example, you could enter a small amount of input data that you
 expect your mapper to produce, such as the <tt class="docutils literal"><span class="pre">TAB</span></tt>-separated
@@ -354,7 +377,7 @@ from this choice shows you what both the mapper and reducer
 emitted, which can be helpful for debugging your code.</p>
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
-<p class="last"><cite>Do not use ``Test`</cite> for large data`, but only to debug
+<p class="last">Do not use <tt class="docutils literal"><span class="pre">Test</span></tt> for large data, but only to debug
 your mappers and reducers. This option does <em>not</em> use cluster
 computing, so it cannot handle large data.</p>
 </div>
