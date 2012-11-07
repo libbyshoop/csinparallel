@@ -143,7 +143,7 @@ puncuation characters from the input.
 
 
 
-This code is available :download:`for download as wc\_comb\_mapper.py <wc\_comb\_mapper.py>`.
+This code is available :download:`for download as wc_comb_mapper.py <wc_comb_mapper.py>`.
 You can use this file later when you wish to use it as your mapper in WMR.
 
 Let's examine this code carefully. In line 1 we import the Python
@@ -169,7 +169,7 @@ break it into words. Then the loop in lines 6-11 goes word by word
 and strips punctuation and increments the count of that word.
 
 The loop in lines 13 and 14 is how we send the data off to the
-reducers. The WMR system for Python3 defines a class ``Wmr``that
+reducers. The WMR system for Python3 defines a class ``Wmr`` that
 includes a class method ``emit()`` for producing key-value pairs to
 be forwarded (via shuffling) to a reducer. ``Wmr.emit()`` requires
 two string arguments, so both `foundword` and `counts[foundword]`
@@ -309,7 +309,7 @@ programs,and what to do if something goes wrong with your WMR job.
 
 
 
-   (Available as ``idreducer.py``.)
+   (Available :download:`for download as idreducer.py <idreducer.py>`)
 
    For example, if you use the word-count mapper
    `wc\\\_comb\\\_mapper.py` with the identity reducer
@@ -340,8 +340,7 @@ programs,and what to do if something goes wrong with your WMR job.
                Wmr.emit(key, value)
 
 
-
-   (Available as ``idmapper.py``.)
+   (Available :download:`for download as idmapper.py <idmapper.py>`)
 
    For example, you could enter a small amount of input data that you
    expect your mapper to produce, such as the ``TAB``-separated

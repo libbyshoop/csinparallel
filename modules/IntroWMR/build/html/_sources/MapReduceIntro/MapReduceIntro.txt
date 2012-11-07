@@ -51,7 +51,7 @@ In map-reduce programming, a programmer provides two functions,
 called the *mapper* and the *reducer*, for carrying out a sequence
 of two computational stages on potentially vast quantities of data.
 A series of identical 'map' functions can be run on a large amount
-of input data in parallel, as shown in Figure mrconcept. The
+of input data in parallel, as shown in Figure 1. The
 results from these mapper processes, spread across many computers,
 are then sent to reduce functions, also spread across many
 computers. The most important concepts to remember are these:
@@ -75,7 +75,7 @@ computers. The most important concepts to remember are these:
 
     Figure 1: The concept behind how map functions can run in parallel and
     pass their results to reduce functions, whose results are output in
-    sorted order by the keys created by the reduce function.(mrconcept)
+    sorted order by the keys created by the reduce function.
 
 
 In a `map-reduce system`, which is made of of many computers
@@ -88,7 +88,7 @@ function can receive a complete set of key-value pairs
 *for a particular key*, and so that the reducer function is called
 for every key in sorted order. We will refer to this reorganization
 of key-value pairs between the mapper and reducer stages as
-*shuffling*. Figure mrstages illustrates the three steps of
+*shuffling*. Figure 2 illustrates the three steps of
 mapping, shuffling, and reducing.
 
 .. figure:: Figure2.png
@@ -100,7 +100,7 @@ mapping, shuffling, and reducing.
 
     Figure 2: How each computer in a cluster breaks up the work and runs
     mappers locally, then shuffles the key-value pair results by key and
-    sends the results for each key to other computers who run reducers.(mrstages)
+    sends the results for each key to other computers who run reducers.
 
 Before the mapper stage, a map-reduce system such as Hadoop breaks
 the entire input data up into portions, known as *splits*; each

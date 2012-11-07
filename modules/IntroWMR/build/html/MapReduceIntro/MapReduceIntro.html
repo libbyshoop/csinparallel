@@ -97,7 +97,7 @@ students in computer science courses to use.</p>
 called the <em>mapper</em> and the <em>reducer</em>, for carrying out a sequence
 of two computational stages on potentially vast quantities of data.
 A series of identical &#8216;map&#8217; functions can be run on a large amount
-of input data in parallel, as shown in Figure mrconcept. The
+of input data in parallel, as shown in Figure 1. The
 results from these mapper processes, spread across many computers,
 are then sent to reduce functions, also spread across many
 computers. The most important concepts to remember are these:</p>
@@ -113,7 +113,7 @@ consolidation of those pairs.</li>
 <img alt="alternate text" src="../_images/Figure1.jpg" style="width: 720px; height: 540px;" />
 <p class="caption">Figure 1: The concept behind how map functions can run in parallel and
 pass their results to reduce functions, whose results are output in
-sorted order by the keys created by the reduce function.(mrconcept)</p>
+sorted order by the keys created by the reduce function.</p>
 </div>
 <p>In a <cite>map-reduce system</cite>, which is made of of many computers
 working at the same time, some computers are assigned mapper tasks,
@@ -125,13 +125,13 @@ function can receive a complete set of key-value pairs
 <em>for a particular key</em>, and so that the reducer function is called
 for every key in sorted order. We will refer to this reorganization
 of key-value pairs between the mapper and reducer stages as
-<em>shuffling</em>. Figure mrstages illustrates the three steps of
+<em>shuffling</em>. Figure 2 illustrates the three steps of
 mapping, shuffling, and reducing.</p>
 <div class="align-center figure align-center">
 <img alt="alternate text" src="../_images/Figure2.png" style="width: 460px; height: 300px;" />
 <p class="caption">Figure 2: How each computer in a cluster breaks up the work and runs
 mappers locally, then shuffles the key-value pair results by key and
-sends the results for each key to other computers who run reducers.(mrstages)</p>
+sends the results for each key to other computers who run reducers.</p>
 </div>
 <p>Before the mapper stage, a map-reduce system such as Hadoop breaks
 the entire input data up into portions, known as <em>splits</em>; each

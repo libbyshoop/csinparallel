@@ -187,8 +187,8 @@ words.</p>
 break it into words. Then the loop in lines 6-11 goes word by word
 and strips punctuation and increments the count of that word.</p>
 <p>The loop in lines 13 and 14 is how we send the data off to the
-reducers. The WMR system for Python3 defines a class <tt class="docutils literal"><span class="pre">Wmr``that</span>
-<span class="pre">includes</span> <span class="pre">a</span> <span class="pre">class</span> <span class="pre">method</span> <span class="pre">``emit()</span></tt> for producing key-value pairs to
+reducers. The WMR system for Python3 defines a class <tt class="docutils literal"><span class="pre">Wmr</span></tt> that
+includes a class method <tt class="docutils literal"><span class="pre">emit()</span></tt> for producing key-value pairs to
 be forwarded (via shuffling) to a reducer. <tt class="docutils literal"><span class="pre">Wmr.emit()</span></tt> requires
 two string arguments, so both <cite>foundword</cite> and <cite>counts[foundword]</cite>
 are being interpreted as strings in line 14.</p>
@@ -300,7 +300,7 @@ reducer for Python:</p>
 <blockquote>
 <div><p>def reducer(key, iter): for s in iter: Wmr.emit(key, s)</p>
 </div></blockquote>
-<p>(Available as <tt class="docutils literal"><span class="pre">idreducer.py</span></tt>.)</p>
+<p>(Available <a class="reference download internal" href="../_downloads/idreducer.py"><tt class="xref download docutils literal"><span class="pre">for</span> <span class="pre">download</span> <span class="pre">as</span> <span class="pre">idreducer.py</span></tt></a>)</p>
 <p>For example, if you use the word-count mapper
 <cite>wc\_comb\_mapper.py</cite> with the identity reducer
 <tt class="docutils literal"><span class="pre">idreducer.py</span></tt>, then the &#8220;fish&#8221; data above should produce the
@@ -324,7 +324,7 @@ of the identity mapper in Python:</p>
     <span class="n">Wmr</span><span class="o">.</span><span class="n">emit</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>(Available as <tt class="docutils literal"><span class="pre">idmapper.py</span></tt>.)</p>
+<p>(Available <a class="reference download internal" href="../_downloads/idmapper.py"><tt class="xref download docutils literal"><span class="pre">for</span> <span class="pre">download</span> <span class="pre">as</span> <span class="pre">idmapper.py</span></tt></a>)</p>
 <p>For example, you could enter a small amount of input data that you
 expect your mapper to produce, such as the <tt class="docutils literal"><span class="pre">TAB</span></tt>-separated
 key-value pairs listed above from using the identity reducer. If

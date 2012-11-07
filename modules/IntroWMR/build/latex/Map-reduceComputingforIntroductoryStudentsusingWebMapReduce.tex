@@ -13,7 +13,7 @@
 
 
 \title{Map-reduce Computing for Introductory Students using WebMapReduce}
-\date{October 26, 2012}
+\date{November 07, 2012}
 \release{}
 \author{CSInParallel Project}
 \newcommand{\sphinxlogo}{}
@@ -169,7 +169,7 @@ In map-reduce programming, a programmer provides two functions,
 called the \emph{mapper} and the \emph{reducer}, for carrying out a sequence
 of two computational stages on potentially vast quantities of data.
 A series of identical `map' functions can be run on a large amount
-of input data in parallel, as shown in Figure mrconcept. The
+of input data in parallel, as shown in Figure 1. The
 results from these mapper processes, spread across many computers,
 are then sent to reduce functions, also spread across many
 computers. The most important concepts to remember are these:
@@ -192,7 +192,7 @@ consolidation of those pairs.
 \includegraphics{Figure1.jpg}
 \caption{Figure 1: The concept behind how map functions can run in parallel and
 pass their results to reduce functions, whose results are output in
-sorted order by the keys created by the reduce function.(mrconcept)}\end{figure}
+sorted order by the keys created by the reduce function.}\end{figure}
 
 In a \emph{map-reduce system}, which is made of of many computers
 working at the same time, some computers are assigned mapper tasks,
@@ -204,7 +204,7 @@ function can receive a complete set of key-value pairs
 \emph{for a particular key}, and so that the reducer function is called
 for every key in sorted order. We will refer to this reorganization
 of key-value pairs between the mapper and reducer stages as
-\emph{shuffling}. Figure mrstages illustrates the three steps of
+\emph{shuffling}. Figure 2 illustrates the three steps of
 mapping, shuffling, and reducing.
 \begin{figure}[htbp]
 \centering
@@ -213,7 +213,7 @@ mapping, shuffling, and reducing.
 \includegraphics{Figure2.png}
 \caption{Figure 2: How each computer in a cluster breaks up the work and runs
 mappers locally, then shuffles the key-value pair results by key and
-sends the results for each key to other computers who run reducers.(mrstages)}\end{figure}
+sends the results for each key to other computers who run reducers.}\end{figure}
 
 Before the mapper stage, a map-reduce system such as Hadoop breaks
 the entire input data up into portions, known as \emph{splits}; each
@@ -479,8 +479,8 @@ break it into words. Then the loop in lines 6-11 goes word by word
 and strips punctuation and increments the count of that word.
 
 The loop in lines 13 and 14 is how we send the data off to the
-reducers. The WMR system for Python3 defines a class \code{Wmr{}`{}`that
-includes a class method {}`{}`emit()} for producing key-value pairs to
+reducers. The WMR system for Python3 defines a class \code{Wmr} that
+includes a class method \code{emit()} for producing key-value pairs to
 be forwarded (via shuffling) to a reducer. \code{Wmr.emit()} requires
 two string arguments, so both \emph{foundword} and \emph{counts{[}foundword{]}}
 are being interpreted as strings in line 14.
@@ -623,7 +623,7 @@ reducer for Python:
 def reducer(key, iter): for s in iter: Wmr.emit(key, s)
 \end{quote}
 
-(Available as \code{idreducer.py}.)
+(Available \code{for download as idreducer.py})
 
 For example, if you use the word-count mapper
 \emph{wc\textbackslash{}\_comb\textbackslash{}\_mapper.py} with the identity reducer
@@ -654,7 +654,7 @@ of the identity mapper in Python:
     \PYG{n}{Wmr}\PYG{o}{.}\PYG{n}{emit}\PYG{p}{(}\PYG{n}{key}\PYG{p}{,} \PYG{n}{value}\PYG{p}{)}
 \end{Verbatim}
 
-(Available as \code{idmapper.py}.)
+(Available \code{for download as idmapper.py})
 
 For example, you could enter a small amount of input data that you
 expect your mapper to produce, such as the \code{TAB}-separated
