@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-2.4-1.40.13 (TeX Live 2012) (format=pdflatex 2012.6.30)  7 NOV 2012 13:54
+This is pdfTeX, Version 3.1415926-2.4-1.40.13 (TeX Live 2012) (format=pdflatex 2012.6.30)  7 NOV 2012 16:21
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -979,46 +979,44 @@ File: t1pcr.fd 2001/06/04 font definitions for T1/pcr.
 Chapter 2.
 
 Package Fancyhdr Warning: \fancyfoot's `E' option without twoside option is use
-less on input line 380.
+less on input line 377.
 
 [5
 
 ]
 LaTeX Font Info:    Font shape `T1/phv/bx/n' in size <12> not available
-(Font)              Font shape `T1/phv/b/n' tried instead on input line 409.
+(Font)              Font shape `T1/phv/b/n' tried instead on input line 405.
 LaTeX Font Info:    Font shape `T1/pcr/bx/n' in size <9> not available
-(Font)              Font shape `T1/pcr/b/n' tried instead on input line 440.
-LaTeX Font Info:    Font shape `T1/pcr/m/it' in size <9> not available
-(Font)              Font shape `T1/pcr/m/sl' tried instead on input line 443.
- [6] [7] [8] [9] [10]
+(Font)              Font shape `T1/pcr/b/n' tried instead on input line 436.
+ [6] [7] [8] [9] [10] [11]
 Chapter 3.
 
 Package Fancyhdr Warning: \fancyfoot's `E' option without twoside option is use
-less on input line 883.
+less on input line 885.
 
-[11
+[12
 
-] [12] [13] [14] [15] [16]
+] [13] [14] [15] [16] [17]
 (./Map-reduceComputingforIntroductoryStudentsusingWebMapReduce.ind)
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 1413.
- [17]
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 1413.
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 1415.
+ [18]
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 1415.
 
 (./Map-reduceComputingforIntroductoryStudentsusingWebMapReduce.aux)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 1413.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 1413.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 1415.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 1415.
 
 Package rerunfilecheck Info: File `Map-reduceComputingforIntroductoryStudentsus
 ingWebMapReduce.out' has not changed.
 (rerunfilecheck)             Checksum: C9F68E197A9308ED1ABD28C41602E26C;1378.
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 1413.
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 1415.
  ) 
 Here is how much of TeX's memory you used:
- 8929 strings out of 493488
- 125380 string characters out of 3141326
- 223426 words of memory out of 3000000
- 11961 multiletter control sequences out of 15000+200000
- 55254 words of font info for 64 fonts, out of 3000000 for 9000
+ 8928 strings out of 493488
+ 125365 string characters out of 3141326
+ 223427 words of memory out of 3000000
+ 11960 multiletter control sequences out of 15000+200000
+ 57239 words of font info for 64 fonts, out of 3000000 for 9000
  958 hyphenation exceptions out of 8191
  36i,12n,45p,410b,477s stack positions out of 5000i,500n,10000p,200000b,50000s
 {/usr/local/texlive/2012/texmf-dist/fonts/enc/dvips/base/8r.enc}</usr/local/t
@@ -1030,15 +1028,15 @@ ve/2012/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/local/texlive
 2012/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy7.pfb></usr/local/texlive/20
 12/texmf-dist/fonts/type1/urw/courier/ucrb8a.pfb></usr/local/texlive/2012/texmf
 -dist/fonts/type1/urw/courier/ucrr8a.pfb></usr/local/texlive/2012/texmf-dist/fo
-nts/type1/urw/courier/ucrro8a.pfb></usr/local/texlive/2012/texmf-dist/fonts/typ
-e1/urw/helvetic/uhvb8a.pfb></usr/local/texlive/2012/texmf-dist/fonts/type1/urw/
-times/utmb8a.pfb></usr/local/texlive/2012/texmf-dist/fonts/type1/urw/times/utmr
-8a.pfb></usr/local/texlive/2012/texmf-dist/fonts/type1/urw/times/utmri8a.pfb>
+nts/type1/urw/helvetic/uhvb8a.pfb></usr/local/texlive/2012/texmf-dist/fonts/typ
+e1/urw/times/utmb8a.pfb></usr/local/texlive/2012/texmf-dist/fonts/type1/urw/tim
+es/utmr8a.pfb></usr/local/texlive/2012/texmf-dist/fonts/type1/urw/times/utmri8a
+.pfb>
 Output written on Map-reduceComputingforIntroductoryStudentsusingWebMapReduce.p
-df (19 pages, 392430 bytes).
+df (20 pages, 385924 bytes).
 PDF statistics:
- 325 PDF objects out of 1000 (max. 8388607)
- 285 compressed objects within 3 object streams
- 90 named destinations out of 1000 (max. 500000)
+ 326 PDF objects out of 1000 (max. 8388607)
+ 286 compressed objects within 3 object streams
+ 91 named destinations out of 1000 (max. 500000)
  171 words of extra memory for PDF output out of 10000 (max. 10000000)
 

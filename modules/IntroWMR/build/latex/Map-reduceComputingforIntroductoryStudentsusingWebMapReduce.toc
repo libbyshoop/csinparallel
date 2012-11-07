@@ -10,21 +10,21 @@
 \contentsline {section}{\numberline {2.4}The reducer function}{7}{section.2.4}
 \contentsline {section}{\numberline {2.5}Running the example code on WebMapReduce}{8}{section.2.5}
 \contentsline {section}{\numberline {2.6}Using WMR and its test mode}{8}{section.2.6}
-\contentsline {section}{\numberline {2.7}Next Steps}{9}{section.2.7}
+\contentsline {section}{\numberline {2.7}Next Steps}{10}{section.2.7}
 \contentsline {section}{\numberline {2.8}Additional Notes}{10}{section.2.8}
-\contentsline {chapter}{\numberline {3}WebMapReduce Activities}{11}{chapter.3}
-\contentsline {section}{\numberline {3.1}Poker Hands}{11}{section.3.1}
-\contentsline {subsection}{\numberline {3.1.1}Activities}{12}{subsection.3.1.1}
-\contentsline {section}{\numberline {3.2}Car Information}{12}{section.3.2}
-\contentsline {subsection}{\numberline {3.2.1}Activities}{12}{subsection.3.2.1}
-\contentsline {section}{\numberline {3.3}Movie Data}{13}{section.3.3}
-\contentsline {subsection}{\numberline {3.3.1}Activities}{13}{subsection.3.3.1}
-\contentsline {section}{\numberline {3.4}Flight Data}{13}{section.3.4}
-\contentsline {subsection}{\numberline {3.4.1}Activities}{15}{subsection.3.4.1}
-\contentsline {section}{\numberline {3.5}Google N-Grams}{15}{section.3.5}
-\contentsline {subsection}{\numberline {3.5.1}1-Grams}{15}{subsection.3.5.1}
-\contentsline {subsubsection}{Activity}{16}{subsubsection*.3}
-\contentsline {subsubsection}{Activity}{16}{subsubsection*.4}
-\contentsline {subsubsection}{Do These}{16}{subsubsection*.5}
-\contentsline {section}{\numberline {3.6}Google Fusion Tables}{16}{section.3.6}
-\contentsline {section}{\numberline {3.7}Merging Tables}{17}{section.3.7}
+\contentsline {chapter}{\numberline {3}WebMapReduce Activities}{12}{chapter.3}
+\contentsline {section}{\numberline {3.1}Poker Hands}{12}{section.3.1}
+\contentsline {subsection}{\numberline {3.1.1}Activities}{13}{subsection.3.1.1}
+\contentsline {section}{\numberline {3.2}Car Information}{13}{section.3.2}
+\contentsline {subsection}{\numberline {3.2.1}Activities}{13}{subsection.3.2.1}
+\contentsline {section}{\numberline {3.3}Movie Data}{14}{section.3.3}
+\contentsline {subsection}{\numberline {3.3.1}Activities}{14}{subsection.3.3.1}
+\contentsline {section}{\numberline {3.4}Flight Data}{14}{section.3.4}
+\contentsline {subsection}{\numberline {3.4.1}Activities}{16}{subsection.3.4.1}
+\contentsline {section}{\numberline {3.5}Google N-Grams}{16}{section.3.5}
+\contentsline {subsection}{\numberline {3.5.1}1-Grams}{16}{subsection.3.5.1}
+\contentsline {subsubsection}{Activity}{17}{subsubsection*.3}
+\contentsline {subsubsection}{Activity}{17}{subsubsection*.4}
+\contentsline {subsubsection}{Do These}{17}{subsubsection*.5}
+\contentsline {section}{\numberline {3.6}Google Fusion Tables}{17}{section.3.6}
+\contentsline {section}{\numberline {3.7}Merging Tables}{18}{section.3.7}

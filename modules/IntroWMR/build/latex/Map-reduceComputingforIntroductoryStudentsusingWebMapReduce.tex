@@ -318,7 +318,7 @@ may become unavailable, leading to Hadoop failures.
 \section{Introduction}
 \label{wmr_py/wmr_py:introduction}
 For this activity, you need to have read the accompanying
-background reading entitled
+background reading in the previous section entitled
 \emph{Using Parallelism to Analyze Very Large Files: Google's MapReduce Paradigm}.
 
 In this lab you will use a web-based program called \emph{WebMapReduce}
@@ -344,15 +344,11 @@ in our class, the difference for the following example is really
 close to what you have already used. We will highlight the
 difference below.
 
-For later reference, you may want to check this documentation for
-WMR:
+For later reference, you may want to check this \href{http://webmapreduce.sourceforge.net/docs/using/index.html}{documentation for
+WMR}.
 
-\href{http://webmapreduce.sourceforge.net/docs/User\_Guide/index.html}{http://webmapreduce.sourceforge.net/docs/User\_Guide/index.html}
-
-This WMR user guide has images from the first version of WMR, but a
-great deal of the information about how to use it remains the same.
 For this activity, you should be able to follow along with the
-instructions and determine how to use WMR.
+instructions below and determine how to use WMR.
 
 
 \section{An example of map-reduce computing with WMR: counting words}
@@ -436,11 +432,11 @@ Here is a Python3 mapper function for accomplishing this task using
 the WMR system. We also add the feature of stripping away
 puncuation characters from the input.
 
-\begin{Verbatim}[commandchars=\\\{\}]
+\begin{Verbatim}[commandchars=\\\{\},numbers=left,firstnumber=1,stepnumber=1]
 \PYG{k+kn}{import} \PYG{n+nn}{string}
 
 \PYG{k}{def} \PYG{n+nf}{mapper}\PYG{p}{(}\PYG{n}{key}\PYG{p}{,} \PYG{n}{value}\PYG{p}{)}\PYG{p}{:}
-    \PYG{n}{counts} \PYG{o}{=} \PYG{n+nb}{dict}\PYG{p}{(}\PYG{p}{)}  \PYG{c}{\PYGZsh{}create a dictionary to hold words}
+    \PYG{n}{counts} \PYG{o}{=} \PYG{n+nb}{dict}\PYG{p}{(}\PYG{p}{)}
     \PYG{n}{words}\PYG{o}{=}\PYG{n}{key}\PYG{o}{.}\PYG{n}{split}\PYG{p}{(}\PYG{p}{)}
     \PYG{k}{for} \PYG{n}{word} \PYG{o+ow}{in} \PYG{n}{words}\PYG{p}{:}
         \PYG{n}{word} \PYG{o}{=} \PYG{n}{word}\PYG{o}{.}\PYG{n}{strip}\PYG{p}{(}\PYG{n}{string}\PYG{o}{.}\PYG{n}{punctuation}\PYG{p}{)}
@@ -489,11 +485,14 @@ are being interpreted as strings in line 14.
 \section{The reducer function}
 \label{wmr_py/wmr_py:the-reducer-function}
 A reducer function for solving the word-count problem is
-\begin{quote}
 
-def reducer(key, values): sum = 0 for count in values: sum +=
-int(count) Wmr.emit(key, sum)
-\end{quote}
+\begin{Verbatim}[commandchars=\\\{\},numbers=left,firstnumber=1,stepnumber=1]
+\PYG{k}{def} \PYG{n+nf}{reducer}\PYG{p}{(}\PYG{n}{key}\PYG{p}{,} \PYG{n}{values}\PYG{p}{)}\PYG{p}{:}
+  \PYG{n+nb}{sum} \PYG{o}{=} \PYG{l+m+mi}{0}
+  \PYG{k}{for} \PYG{n}{count} \PYG{o+ow}{in} \PYG{n}{values}\PYG{p}{:}
+    \PYG{n+nb}{sum} \PYG{o}{+}\PYG{o}{=} \PYG{n+nb}{int}\PYG{p}{(}\PYG{n}{count}\PYG{p}{)}
+  \PYG{n}{Wmr}\PYG{o}{.}\PYG{n}{emit}\PYG{p}{(}\PYG{n}{key}\PYG{p}{,} \PYG{n+nb}{sum}\PYG{p}{)}
+\end{Verbatim}
 
 This code is available \code{for download as wcreducer.py}.
 You can use this file later when you wish to use it as your reducer in WMR.
@@ -617,18 +616,19 @@ FileSystem'' data generated from a prior map-reduce run.
 You can test your mapper alone without using your reducer by
 using the \emph{identity reducer}, which simply emits the same key-value
 pairs that it receives. Here is an implementation of the identity
-reducer for Python:
+reducer for Python (available \code{for download as idreducer.py}):
+
+\end{itemize}
 \begin{quote}
 
-def reducer(key, iter): for s in iter: Wmr.emit(key, s)
-\end{quote}
+\begin{Verbatim}[commandchars=\\\{\},numbers=left,firstnumber=1,stepnumber=1]
+\PYG{k}{def} \PYG{n+nf}{reducer}\PYG{p}{(}\PYG{n}{key}\PYG{p}{,} \PYG{n+nb}{iter}\PYG{p}{)}\PYG{p}{:}
+    \PYG{k}{for} \PYG{n}{s} \PYG{o+ow}{in} \PYG{n+nb}{iter}\PYG{p}{:}
+        \PYG{n}{Wmr}\PYG{o}{.}\PYG{n}{emit}\PYG{p}{(}\PYG{n}{key}\PYG{p}{,} \PYG{n}{s}\PYG{p}{)}
+\end{Verbatim}
 
-(Available \code{for download as idreducer.py})
-
-For example, if you use the word-count mapper
-\emph{wc\textbackslash{}\_comb\textbackslash{}\_mapper.py} with the identity reducer
-\code{idreducer.py}, then the ``fish'' data above should produce the
-following output:
+As an example, if you use the word-count mapper \emph{wc\_comb\_mapper.py} with the identity reducer \code{idreducer.py}, then the ``fish'' data above should produce the following output:
+\begin{quote}
 
 \begin{Verbatim}[commandchars=\\\{\}]
 Blue    1
@@ -638,18 +638,20 @@ One 1
 Red 1
 Two 1
 \end{Verbatim}
+\end{quote}
 
 Observe that the output is sorted, due to the shuffling step.
 However, this does show all the key-value pairs that result from
 the word-count mapper.
-
+\end{quote}
+\begin{itemize}
 \item {} 
 Likewise, you can test your reducer alone without using your
 mapper by substituting the \code{identity mapper}, which simply copies
 key-value pairs from lines of input data. Here is an implementation
 of the identity mapper in Python:
 
-\begin{Verbatim}[commandchars=\\\{\}]
+\begin{Verbatim}[commandchars=\\\{\},numbers=left,firstnumber=1,stepnumber=1]
 \PYG{k}{def} \PYG{n+nf}{mapper}\PYG{p}{(}\PYG{n}{key}\PYG{p}{,} \PYG{n}{value}\PYG{p}{)}\PYG{p}{:}
     \PYG{n}{Wmr}\PYG{o}{.}\PYG{n}{emit}\PYG{p}{(}\PYG{n}{key}\PYG{p}{,} \PYG{n}{value}\PYG{p}{)}
 \end{Verbatim}
@@ -690,7 +692,7 @@ from this choice shows you what both the mapper and reducer
 emitted, which can be helpful for debugging your code.
 
 \begin{notice}{note}{Note:}
-\emph{Do not use {}`{}`Test{}`} for large data{}`, but only to debug
+Do not use \code{Test} for large data, but only to debug
 your mappers and reducers. This option does \emph{not} use cluster
 computing, so it cannot handle large data.
 \end{notice}
