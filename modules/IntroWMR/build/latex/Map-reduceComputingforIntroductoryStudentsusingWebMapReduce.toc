@@ -1,30 +1,40 @@
 \select@language {english}
-\contentsline {chapter}{\numberline {1}Using Parallelism to Analyze Very Large Files: Google's Map Reduce Paradigm}{1}{chapter.1}
-\contentsline {section}{\numberline {1.1}Introduction}{1}{section.1.1}
-\contentsline {section}{\numberline {1.2}Description of the MapReduce programming model}{1}{section.1.2}
-\contentsline {chapter}{\numberline {2}Using WebMapReduce (WMR)}{5}{chapter.2}
-\contentsline {section}{\numberline {2.1}Introduction}{5}{section.2.1}
-\contentsline {section}{\numberline {2.2}An example of map-reduce computing with WMR: counting words}{5}{section.2.2}
-\contentsline {subsection}{\numberline {2.2.1}Map-reduce plan}{6}{subsection.2.2.1}
-\contentsline {section}{\numberline {2.3}The mapper function}{6}{section.2.3}
-\contentsline {section}{\numberline {2.4}The reducer function}{7}{section.2.4}
-\contentsline {section}{\numberline {2.5}Running the example code on WebMapReduce}{8}{section.2.5}
-\contentsline {section}{\numberline {2.6}Using WMR and its test mode}{8}{section.2.6}
-\contentsline {section}{\numberline {2.7}Next Steps}{10}{section.2.7}
-\contentsline {section}{\numberline {2.8}Additional Notes}{10}{section.2.8}
-\contentsline {chapter}{\numberline {3}WebMapReduce Activities}{12}{chapter.3}
-\contentsline {section}{\numberline {3.1}Poker Hands}{12}{section.3.1}
-\contentsline {subsection}{\numberline {3.1.1}Activities}{13}{subsection.3.1.1}
-\contentsline {section}{\numberline {3.2}Car Information}{13}{section.3.2}
-\contentsline {subsection}{\numberline {3.2.1}Activities}{13}{subsection.3.2.1}
-\contentsline {section}{\numberline {3.3}Movie Data}{14}{section.3.3}
-\contentsline {subsection}{\numberline {3.3.1}Activities}{14}{subsection.3.3.1}
-\contentsline {section}{\numberline {3.4}Flight Data}{14}{section.3.4}
-\contentsline {subsection}{\numberline {3.4.1}Activities}{16}{subsection.3.4.1}
-\contentsline {section}{\numberline {3.5}Google N-Grams}{16}{section.3.5}
-\contentsline {subsection}{\numberline {3.5.1}1-Grams}{16}{subsection.3.5.1}
-\contentsline {subsubsection}{Activity}{17}{subsubsection*.3}
-\contentsline {subsubsection}{Activity}{17}{subsubsection*.4}
-\contentsline {subsubsection}{Do These}{17}{subsubsection*.5}
-\contentsline {section}{\numberline {3.6}Google Fusion Tables}{17}{section.3.6}
-\contentsline {section}{\numberline {3.7}Merging Tables}{18}{section.3.7}
+\contentsline {chapter}{\numberline {1}Using Parallelism to Analyze Very Large Files: Google's Map Reduce Paradigm}{2}{chapter.1}
+\contentsline {section}{\numberline {1.1}Introduction}{2}{section.1.1}
+\contentsline {section}{\numberline {1.2}Description of the MapReduce programming model}{2}{section.1.2}
+\contentsline {chapter}{\numberline {2}Using WebMapReduce (WMR)}{6}{chapter.2}
+\contentsline {section}{\numberline {2.1}Introduction}{6}{section.2.1}
+\contentsline {section}{\numberline {2.2}An example of map-reduce computing with WMR: counting words}{6}{section.2.2}
+\contentsline {subsection}{\numberline {2.2.1}Map-reduce plan}{7}{subsection.2.2.1}
+\contentsline {section}{\numberline {2.3}One System, Many Languages}{8}{section.2.3}
+\contentsline {section}{\numberline {2.4}The mapper function}{8}{section.2.4}
+\contentsline {section}{\numberline {2.5}The reducer function}{9}{section.2.5}
+\contentsline {section}{\numberline {2.6}Running the example code on WebMapReduce}{9}{section.2.6}
+\contentsline {section}{\numberline {2.7}Using WMR and its test mode}{10}{section.2.7}
+\contentsline {section}{\numberline {2.8}Next Steps}{12}{section.2.8}
+\contentsline {section}{\numberline {2.9}Additional Notes}{12}{section.2.9}
+\contentsline {chapter}{\numberline {3}Counting words with WebMapReduce (WMR): adding efficiency}{14}{chapter.3}
+\contentsline {section}{\numberline {3.1}Introduction}{14}{section.3.1}
+\contentsline {section}{\numberline {3.2}An improved word-count example}{14}{section.3.2}
+\contentsline {subsection}{\numberline {3.2.1}Map-reduce plan}{15}{subsection.3.2.1}
+\contentsline {section}{\numberline {3.3}The mapper function}{15}{section.3.3}
+\contentsline {section}{\numberline {3.4}The reducer function}{16}{section.3.4}
+\contentsline {section}{\numberline {3.5}Running the example code on WebMapReduce}{17}{section.3.5}
+\contentsline {section}{\numberline {3.6}Next Steps}{17}{section.3.6}
+\contentsline {section}{\numberline {3.7}Additional Notes}{18}{section.3.7}
+\contentsline {chapter}{\numberline {4}WebMapReduce Activities}{19}{chapter.4}
+\contentsline {section}{\numberline {4.1}Poker Hands}{19}{section.4.1}
+\contentsline {subsection}{\numberline {4.1.1}Activities}{20}{subsection.4.1.1}
+\contentsline {section}{\numberline {4.2}Car Information}{20}{section.4.2}
+\contentsline {subsection}{\numberline {4.2.1}Activities}{20}{subsection.4.2.1}
+\contentsline {section}{\numberline {4.3}Movie Data}{21}{section.4.3}
+\contentsline {subsection}{\numberline {4.3.1}Activities}{21}{subsection.4.3.1}
+\contentsline {section}{\numberline {4.4}Flight Data}{21}{section.4.4}
+\contentsline {subsection}{\numberline {4.4.1}Activities}{23}{subsection.4.4.1}
+\contentsline {section}{\numberline {4.5}Google N-Grams}{23}{section.4.5}
+\contentsline {subsection}{\numberline {4.5.1}1-Grams}{23}{subsection.4.5.1}
+\contentsline {subsubsection}{Activity}{24}{subsubsection*.3}
+\contentsline {subsubsection}{Activity}{24}{subsubsection*.4}
+\contentsline {subsubsection}{Do These}{24}{subsubsection*.5}
+\contentsline {section}{\numberline {4.6}Google Fusion Tables}{24}{section.4.6}
+\contentsline {section}{\numberline {4.7}Merging Tables}{25}{section.4.7}
