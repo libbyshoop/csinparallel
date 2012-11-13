@@ -5,6 +5,7 @@ def mapper(key, value):
     words=key.split()
     for word in words:
         word = word.strip(string.punctuation)
+        word = word.lower()
         if word not in counts:
             counts[word] = 1
         else:

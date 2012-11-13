@@ -1,0 +1,9 @@
+(define mapper 
+  (lambda (pair)
+    (map-words (string-tokenize (car pair)) (car pair))))
+
+(define map-words 
+  (lambda (words key)
+    (if (null? words) '() 
+	(cons (list (car words) key)
+	      (map-words (cdr words)))))) 

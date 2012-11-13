@@ -1,0 +1,11 @@
+(define mapper
+  (lambda (key val)
+    (emit-words (string-tokenize key))))
+
+(define emit-words
+  (lambda (words)
+    (if (null? words) #f
+        (begin
+          (wmr-emit (car words) "1")
+          (emit-words (cdr words))))))
+

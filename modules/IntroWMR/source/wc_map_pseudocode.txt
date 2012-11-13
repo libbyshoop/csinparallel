@@ -1,0 +1,20 @@
+# key is a single line from a file, which could be very long, such as whole book.
+# value is empty in this case, since this is the first mapper function
+# we are applying.
+#
+function mapper(key, value)
+	1) Create a dictionary or hash table called counts
+	(the keys in counts will be words found and the values will be counts of each word)
+
+	2) Take the key argument to this function, which is the line of text, and split it on whitespace
+	
+	3) For every word resulting from the split key line:
+			strip puntuation from the word
+			convert the word to lowercase
+			if the word is already a key in the counts dictionary, then
+				increment the value in the counts dictioanry by one
+			else
+				add the key, value pair of (word, 1) to the counts dictionary
+
+	4) For every word 'key' now in the dictionary
+			'emit' the (word, count) to the system for the reducers to handle

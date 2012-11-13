@@ -1,0 +1,9 @@
+(define reducer
+  (lambda (key val-stream)
+    (list (list key (sum val-stream)))))
+
+(define sum
+  (lambda (val-stream)
+    (if (stream-null? val-stream) 0
+         (+ (string->number (stream-car val-stream))
+              (sum (stream-cdr val-stream))))))

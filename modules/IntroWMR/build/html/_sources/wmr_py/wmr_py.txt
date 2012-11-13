@@ -1,61 +1,32 @@
-Using WebMapReduce (WMR)
-========================
+Counting words with WebMapReduce (WMR): adding efficiency
+=========================================================
 
 Introduction
 ------------
 
 For this activity, you need to have read the accompanying
-background reading in the previous section entitled
+background reading in the first section entitled
 *Using Parallelism to Analyze Very Large Files: Google's MapReduce Paradigm*.
+Also, you should have gone through the previous section
+where you learned to use WMR on a simple word-counting example.
 
-In this lab you will use a web-based program called `WebMapReduce`
-(**WMR**) that enables you to formulate map-reduce computations and
-run them on an underlying *Hadoop* map-reduce system running on a
-cluster of computers.
+WMR has several languages as options.  In this case we will
+demonstrate an improvement that can be made easily if you are using
+the Python language, because it has dictionaries, or hash maps,
+as a built-in data type.
 
-You will use WebMapReduce on a cluster of computers at Macalester
-College. You should access WebMapReduce now and register for a
-login by going to this URL on your web browser:
 
-http://selkie.macalester.edu/wmr
-
-Choose the link at the very upper right of this page that says
-'Register'. Use your Macalester email address as your login name,
-and provide the other information asked for. You choose your own
-password, so that you can remember it and have control of your
-account.
-
-WMR has several languages as options, and Python is one of them,
-although it expects Python3. Though we have been using Python 2.7
-in our class, the difference for the following example is really
-close to what you have already used. We will highlight the
-difference below.
-
-For later reference, you may want to check this `documentation for
-WMR <http://webmapreduce.sourceforge.net/docs/using/index.html>`_.
-
-For this activity, you should be able to follow along with the
-instructions below and determine how to use WMR.
-
-An example of map-reduce computing with WMR: counting words
+An improved word-count example
 -----------------------------------------------------------
 
-To program with map-reduce, you must first decide how to use
-mappers and reducers in order to accomplish your computational
-goal. The mapper function should take a line of input and decompose
-it somehow into key-value pairs; then the reducer should somehow
-condense or analyze all the key-value pairs having a common key,
-and produce a desired result.
-
-*The following example is small to illustrate how the process works.*
-In realistic applications, which you will try later in this
-activity and in homework, the input data is much larger (several to
-hundreds of Gigabytes) and is stored in the Hadoop system. You will
-go through the following exercise first to ensure that the code is
-working and that you understand how it works. Then you can move on
-to bigger files. This is the process you should go through when
-doing this kind of coding: work on small amounts of data first to
-ensure correctness of your code, then try larger amounts of data.
+As in the previous section, we will start with a small example
+as an illustration.  In this case we will describe an improvement in 
+which mappers do a bit more work by keeping counts of words it has
+encountered and then emitting each word and its total count to
+the system for the reducer processes to handle.  In a map-reduce system,
+it turns out to be useful to let the mappers do a fair amount of work,
+such as processing a whole book, since this is a reasonable task
+for a single process.
 
 As an example, consider the problem of counting how frequently each
 word appears in a collection of data. For example, if the input
@@ -64,7 +35,7 @@ data in a file is:
 ::
 
     One fish, Two fish,
-    Red fish, Blue fish.
+    Red Fish, Blue fish.
 
 then the output should be:
 
@@ -74,19 +45,29 @@ then the output should be:
     One 1
     Red 1
     Two 1
-    fish, 3
+    Fish, 1
+    fish, 2
     fish. 1
 
-As this output indicates, we did not make any attempt to trim
-punctuation characters in this first example. We will do so as we
-practice using WebMapReduce with the initial functions described
-below. (Note that the WebMapReduce system will sort the words
-according to the ASCII codes of the characters within words.)
+As this above output indicates, we did not make any attempt to trim
+punctuation characters.  If we were to
+make sure that we stripped punctuation and used lowercase characters
+for each word encountered, we would get this:
+
+::
+
+    blue 1
+    one 1
+    red 1
+    two 1
+    fish 4
+    
 
 What follows is a plan for the mapper and reducer functions. You
-should compare and note the similarity between these and your
+should compare and note the similarity between these and a
 sequential function for completing this same task on a single input
 file.
+
 
 Map-reduce plan
 ^^^^^^^^^^^^^^^
@@ -96,18 +77,21 @@ files, where a line ends with a newline charater. The mapper will
 produce one key-value pair (*w*, *count*) foreach word encountered
 in the input line that it is working on.
 
-Thus, on the above input, two mappers working together on each line
+Thus, on the above input, two mappers working together on each line,
+after removing punctuation from the end of words and converting the
+words to lowercase
 would emit the following combined output:
 
 ::
 
-    One 1
-    fish, 2
-    Two 1
-    Red 1
-    fish, 1
-    Blue 1
-    fish. 1
+    one 1
+    fish 2
+    two 1
+
+    red 1
+    fish 2
+    blue 1
+    
 
 The reducers will compute the sum of all the *count* values for a
 given word *w*, then produce the key-value pair (*w*, *sum*).
@@ -115,6 +99,30 @@ given word *w*, then produce the key-value pair (*w*, *sum*).
 
 The mapper function
 -------------------
+
+The pseudocode for the mapper looks like this::
+
+  # key is a single line from a file.
+  # value is empty in this case, since this is the first mapper function
+  # we are applying.
+  #
+  function mapper(key, value)
+    1) Create a dictionary or hash table called counts
+    (the keys in counts will be words found and the values will be counts of each word)
+
+    2) Take the key argument to this function, which is the line of text, 
+       and split it on whitespace
+    
+    3) For every word resulting from the split key line:
+        strip puntuation from the word
+        convert the word to lowercase
+        if the word is already a key in the counts dictionary, then
+          increment the value in the counts dictioanry by one
+        else
+          add the key, value pair of (word, 1) to the counts dictionary
+
+    4) For every word 'key' now in the dictionary
+        'emit' the (word, count) to the system for the reducers to handle
 
 Here is a Python3 mapper function for accomplishing this task using
 the WMR system. We also add the feature of stripping away
@@ -162,7 +170,23 @@ are being interpreted as strings in line 14.
 The reducer function
 --------------------
 
-A reducer function for solving the word-count problem is
+Pseudocode for a reducer for this problem is exactly the same as
+for the previous section and looks like this::
+
+  # key is a single word, values is a 'container' of counts that were
+  # gathered by the system from every mapper
+  #
+  function reducer(key, values)
+    
+    set a sum accumulator to zero
+
+    for each count in values
+      accumulate the sum by adding count to it
+
+    'emit' the (key, sum) pair
+
+
+A reducer function for solving the word-count problem in Python is
 
 
 .. literalinclude::  wcreducer.py
@@ -208,155 +232,11 @@ number of times that word appeared in *all* of the original data.
 Running the example code on WebMapReduce
 ----------------------------------------
 
-To run WMR with this combination of data, mapper, and reducer,
-carry out the following steps.
+If you have not registered a WMR account or tried the example in the previous section,
+do that first so that you are used to setting up a job in WMR.  You can runn
+the above mapper and reducer code files on the simple example above in 'Test'
+mode on WMR to ensure that they work.
 
-    In a browser, visit the WMR site at (if you don't already have it
-    open from registering):
-
-    http://selkie.macalester.edu/wmr
-
-    After you have registered, you can use your email address and
-    password to login. After successfully logging in, you are taken to
-    the WMR page where you can complete your work.
-
-    Enter a job name (perhaps involving your username, for uniqueness;
-    avoid spaces in the job name and make sure that it is more than 4
-    characters long).
-
-    Choose the Python3 language.
-
-    For now, you can leave the number of map tasks and reduce tasks
-    blank. This will let the system decide this for itself. You can
-    also leave the default choice of sorting alphabetically.
-
-    Enter the input data, e.g., the fish lines above. You can use the
-    \`\`Direct Input" option and enter that data in the text box
-    provided.
-
-    Enter the mapper. It's probably best to use se the \`\`Upload"
-    option and navigate to a file that contains the mapper, which you
-    have entered using an editor (this is more convenient for repeated
-    runs). Or you can use the file we provided in a link above.
-    **Beware:** cutting and pasting your code from a pdf file or
-    a web page or typing it into the \`'direct' entry box for python
-    code is a bit problematic, because the needed tabs in the code
-    might not be preserved (although using spaces should work). Check
-    that the appropriate radio button is clicked to indicate the source
-    option you're actually using.
-
-    Also enter the reducer.  Again, it's easier to use the file provided 
-    with a link above.
-
-    Click on the submit button.
-
-    A page should appear indicating that the job started successfully.
-    This page will refresh itself as it is working on the job to show
-    you progress.
-
-    Once the job runs to completion, you should see a Job Complete page.
-    This page will include your output. If you used the fish input,
-    your output should match the illustration above, except that the
-    punctuation should also be taken care of.
-
-
-If something doesn't work as described here, the following section
-may help with troubleshooting. *Read it next in any case so that you
-know what you can do when you work on your own new examples.*
-
-Using WMR and its test mode
----------------------------
-
-Here is some information about developing WMR map-reduce
-programs,and what to do if something goes wrong with your WMR job.
-
--  First, some reminders:
-
-   -  At present, only the Python3 language is supported for providing
-      only mapper and reducer functions in WMR programming. For us, this
-      should not be any different than the Python 2 programming that
-      we've been doing for this course, except for the use of the
-      iterator in the reducer, as described above.
-
-   -  At present, the WMR interface does not automatically reset radio
-      buttons for you when you upload a file or use \`Distributed
-      FileSystem" data generated from a prior map-reduce run.
-      *Always check to see that the radio buttons select the data, mapper, and reduce resources you intend.*
-
-
--  You can test your mapper alone without using your reducer by
-   using the *identity reducer*, which simply emits the same key-value
-   pairs that it receives. Here is an implementation of the identity
-   reducer for Python (available :download:`for download as idreducer.py <idreducer.py>`):
-
-  .. literalinclude:: idreducer.py
-    :linenos:
-    :language: python
-
-
-
-
-  As an example, if you use the word-count mapper `wc_comb_mapper.py` with the identity reducer ``idreducer.py``, then the "fish" data above should produce the following output:
-
-   ::
-
-       Blue    1
-       fish    2
-       fish    2
-       One 1
-       Red 1
-       Two 1
-
-  Observe that the output is sorted, due to the shuffling step.
-  However, this does show all the key-value pairs that result from
-  the word-count mapper.
-
--  Likewise, you can test your reducer alone without using your
-   mapper by substituting the ``identity mapper``, which simply copies
-   key-value pairs from lines of input data. Here is an implementation
-   of the identity mapper in Python:
-
-   
-   .. literalinclude:: idmapper.py
-    :linenos:
-    :language: python
-
-   (Available :download:`for download as idmapper.py <idmapper.py>`)
-
-   For example, you could enter a small amount of input data that you
-   expect your mapper to produce, such as the ``TAB``-separated
-   key-value pairs listed above from using the identity reducer. If
-   you then use the identity mapper ``idmapper.py`` with the
-   word-count reducer ``wcreducer.py`` you should get the following
-   output, which we would expect from each stage working:
-
-   ::
-
-       Blue    1
-       fish    4
-       One     1
-       Red     1
-       Two     1
-
-   *Note:* Use a ``TAB`` character to separate the key and value in
-   the input lines above. To kep a test case around, it is easier to
-   enter your data in an editor, then cut and paste to enter that data
-   in the text box. Alternatively, you can"Upload" a file that
-   contains the data.
-
--  Unfortunately, the current WMR system does *not* provide very
-   useful error messages in many cases. For example, if there's an
-   error in your Python code, no clue about that error can be passed
-   along in the current system.
-
--  In order to test or debug a mapper and reducer, you can use the
-   ``Test`` Button at the bottom of the WMR web page. The job output
-   from this choice shows you what both the mapper and reducer
-   emitted, which can be helpful for debugging your code.
-
-   .. note:: Do not use ``Test`` for large data, but only to debug
-               your mappers and reducers. This option does *not* use cluster
-               computing, so it cannot handle large data.
 
 
 Next Steps
@@ -366,11 +246,6 @@ Next Steps
 #. In WMR, you can choose to use your own input data files. Try
    choosing to 'browse' for a file, and using ``mobydick.txt`` as file
    input.
-
-#. You have likely noticed that capitalized words are treated
-   separately from lowercase words. Change your mapper to also convert
-   each word to lowercase before checking whether it is in the
-   dictionary.
 
 #. There are a large number of files of books from Project
    Gutenberg available on the Hadoop system underlying WebMapReduce.
@@ -388,9 +263,15 @@ Next Steps
 
 #. Next, you should try a collection of many books, each of which
    has no newline characters in them. In this case, each mapper 'task'
-   in Hadoop will work on one whole book (your dictionary of words per
+   in WMR;s underlying Hadoop system will work on one whole book (your dictionary of words per
    mapper will be for the whole book, and the mappers will be running
-   on many books at one time). In the Hadoop file system inside WMR we
+   on many books at one time). *This new version should run faster in principle
+   on the system by letting mappers do a bit of work and pass lass data
+   to the awaiting reducers.*  You might want to see if you can see a
+   'wall clock' time difference bewteen this version and the code
+   described in the previous section.
+
+   In the Hadoop file system inside WMR we
    have these datasets available for this:
 
        ===================================    ================
@@ -428,6 +309,8 @@ Next Steps
 
 Additional Notes
 ----------------
+
+These notes are repeated from the previous section.
 
 It is possible that input data files to mappers may be treated
 differently than as described in the above example. For example, a

@@ -1,0 +1,5 @@
+(define reducer
+  (lambda (key val-stream)
+    (if (stream-null? val-stream) '()
+         (cons (list key (stream-car val-stream))
+                   (reducer key (stream-cdr val-stream))))))

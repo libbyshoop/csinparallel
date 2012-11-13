@@ -1,0 +1,3 @@
+(define mapper
+  (lambda (key val)
+    (list (list key val))))
