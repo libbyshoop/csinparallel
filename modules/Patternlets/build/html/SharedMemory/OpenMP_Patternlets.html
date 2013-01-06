@@ -1,0 +1,617 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Shared Memory Parallel Patternlets in OpenMP &mdash; Parallel Patternlets</title>
+    
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="top" title="Parallel Patternlets" href="../index.html" />
+    <link rel="prev" title="Message Passing Parallel Patternlets" href="../MessagePassing/MPI_Patternlets.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../MessagePassing/MPI_Patternlets.html" title="Message Passing Parallel Patternlets"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../index.html">Parallel Patternlets</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="shared-memory-parallel-patternlets-in-openmp">
+<h1>Shared Memory Parallel Patternlets in OpenMP<a class="headerlink" href="#shared-memory-parallel-patternlets-in-openmp" title="Permalink to this headline">¶</a></h1>
+<p>When writing programs for shared-memory hardware with multiple cores,
+a programmer could use a
+low-level thread package, such as pthreads. An alternative is to use
+a compiler that processes OpenMP <em>pragmas</em>, which are compiler directives that
+enable the compiler to generate threaded code.</p>
+<p>The following are examples of C code with OpenMP pragmas
+The firrst three are basic illustrations to get used to the OpenMP pragmas.
+The rest illustrate how to implement particular patterns and what can
+go wrong when mutual exclusion is not properly ensured.</p>
+<div class="section" id="source-code">
+<h2>Source Code<a class="headerlink" href="#source-code" title="Permalink to this headline">¶</a></h2>
+<p>Please download all examples from this tarball:
+<a class="reference download internal" href="../_downloads/patternlets2.tgz"><tt class="xref download docutils literal"><span class="pre">patternlets.tgz</span></tt></a></p>
+<p>A C code file for each example below can be found in subdirectories of the OpneMP directory,
+along with a makefile.</p>
+</div>
+<div class="section" id="the-omp-parallel-pragma">
+<h2>0. The OMP parallel pragma<a class="headerlink" href="#the-omp-parallel-pragma" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-c"><div class="highlight"><pre><span class="cm">/* simpleParallel.c</span>
+<span class="cm"> * ... illustrates the use of OpenMP&#39;s parallel directive...</span>
+<span class="cm"> *</span>
+<span class="cm"> * Joel Adams, Calvin College, at November 2009.</span>
+<span class="cm"> *</span>
+<span class="cm"> * Usage: ./simpleParallel </span>
+<span class="cm"> * Compile &amp; run, uncomment the pragma, recompile &amp; run, compare.</span>
+<span class="cm"> */</span>
+
+<span class="cp">#include &lt;stdio.h&gt;</span>
+<span class="cp">#include &lt;omp.h&gt;</span>
+<span class="cp">#include &lt;stdlib.h&gt;</span>
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span><span class="o">**</span> <span class="n">argv</span><span class="p">)</span> <span class="p">{</span>
+
+    <span class="n">printf</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\n\n</span><span class="s">Before...</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">);</span>
+
+<span class="c1">//    #pragma omp parallel </span>
+    <span class="n">printf</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\n</span><span class="s">During...&quot;</span><span class="p">);</span>
+
+    <span class="n">printf</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\n\n</span><span class="s">After...</span><span class="se">\n\n</span><span class="s">&quot;</span><span class="p">);</span>
+
+    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="hello-world-default-number-of-openmp-threads">
+<h2>1. Hello, World: default number of OpenMP threads<a class="headerlink" href="#hello-world-default-number-of-openmp-threads" title="Permalink to this headline">¶</a></h2>
+<p>Note how there are OpenMP functions to
+obtain a thread number and the total number of threads.
+When the pragma is uncommented, note what the default number of threads
+is.</p>
+<div class="highlight-c"><div class="highlight"><pre><span class="cm">/* parallelHello.c</span>
+<span class="cm"> * ... illustrates the use of two basic OpenMP commands...</span>
+<span class="cm"> *</span>
+<span class="cm"> * Joel Adams, Calvin College, at November 2009.</span>
+<span class="cm"> *</span>
+<span class="cm"> * Usage: ./parallelHello</span>
+<span class="cm"> * Compile &amp; run, uncomment pragma, recompile &amp; run, compare results</span>
+<span class="cm"> */</span>
+
+<span class="cp">#include &lt;stdio.h&gt;</span>
+<span class="cp">#include &lt;omp.h&gt;</span>
+<span class="cp">#include &lt;stdlib.h&gt;</span>
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span><span class="o">**</span> <span class="n">argv</span><span class="p">)</span> <span class="p">{</span>
+
+<span class="c1">//    #pragma omp parallel </span>
+    <span class="p">{</span>
+        <span class="kt">int</span> <span class="n">rank</span>  <span class="o">=</span> <span class="n">omp_get_thread_num</span><span class="p">();</span>
+        <span class="kt">int</span> <span class="n">numThreads</span> <span class="o">=</span> <span class="n">omp_get_num_threads</span><span class="p">();</span>
+        <span class="n">printf</span><span class="p">(</span><span class="s">&quot;Hello from thread %d of %d</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">rank</span><span class="p">,</span> <span class="n">numThreads</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="hello-world">
+<h2>2. Hello, World<a class="headerlink" href="#hello-world" title="Permalink to this headline">¶</a></h2>
+<p>Here we enter the number of threads to use on the command line.</p>
+<div class="highlight-c"><div class="highlight"><pre><span class="cm">/* parallelHello2.c</span>
+<span class="cm"> * ... illustrates the use of two basic OpenMP commands</span>
+<span class="cm"> * 	using the commandline to control the number of threads...</span>
+<span class="cm"> *</span>
+<span class="cm"> * Joel Adams, Calvin College, at November 2009.</span>
+<span class="cm"> *</span>
+<span class="cm"> * Usage: ./parallelHello2 [numThreads]</span>
+<span class="cm"> * Compile &amp; run with no commandline arg, rerun with different commandline args</span>
+<span class="cm"> */</span>
+
+
+
+<span class="cp">#include &lt;stdio.h&gt;</span>
+<span class="cp">#include &lt;omp.h&gt;</span>
+<span class="cp">#include &lt;stdlib.h&gt;</span>
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span><span class="o">**</span> <span class="n">argv</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kt">int</span> <span class="n">rank</span><span class="p">,</span> <span class="n">numThreads</span><span class="p">;</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="n">argc</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">omp_set_num_threads</span><span class="p">(</span> <span class="n">atoi</span><span class="p">(</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="cp">#pragma omp parallel </span>
+    <span class="p">{</span>
+        <span class="n">rank</span>  <span class="o">=</span> <span class="n">omp_get_thread_num</span><span class="p">();</span>
+        <span class="n">numThreads</span> <span class="o">=</span> <span class="n">omp_get_num_threads</span><span class="p">();</span>
+        <span class="n">printf</span><span class="p">(</span><span class="s">&quot;Hello from thread %d of %d</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">rank</span><span class="p">,</span> <span class="n">numThreads</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="master-worker-implementation-strategy">
+<h2>3. Master-Worker Implementation Strategy<a class="headerlink" href="#master-worker-implementation-strategy" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-c"><div class="highlight"><pre><span class="cm">/* masterWorker.c</span>
+<span class="cm"> * ... illustrates the master-worker pattern in OpenMP</span>
+<span class="cm"> *</span>
+<span class="cm"> * Joel Adams, Calvin College, November 2009.</span>
+<span class="cm"> * Usage: ./masterWorker</span>
+<span class="cm"> * Exercise: </span>
+<span class="cm"> * - Compile and run as is.</span>
+<span class="cm"> * - Uncomment #pragma directive, re-compile and re-run</span>
+<span class="cm"> * - Compare and trace the different executions.</span>
+<span class="cm"> */</span>
+
+<span class="cp">#include &lt;stdio.h&gt;</span>
+<span class="cp">#include &lt;omp.h&gt;</span>
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span><span class="o">**</span> <span class="n">argv</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kt">int</span> <span class="n">id</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">numThreads</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span>
+
+<span class="c1">//    #pragma omp parallel</span>
+    <span class="p">{</span>
+        <span class="n">id</span> <span class="o">=</span> <span class="n">omp_get_thread_num</span><span class="p">();</span>
+        <span class="n">numThreads</span> <span class="o">=</span> <span class="n">omp_get_num_threads</span><span class="p">();</span>
+
+        <span class="k">if</span> <span class="p">(</span> <span class="n">id</span> <span class="o">==</span> <span class="mi">0</span> <span class="p">)</span> <span class="p">{</span>  <span class="c1">// thread with ID 0 is master</span>
+            <span class="n">printf</span><span class="p">(</span><span class="s">&quot;Greetings from the master, # %d of %d threads</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span>
+			    <span class="n">id</span><span class="p">,</span> <span class="n">numThreads</span><span class="p">);</span>
+        <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>          <span class="c1">// threads with IDs &gt; 0 are workers</span>
+            <span class="n">printf</span><span class="p">(</span><span class="s">&quot;Greetings from a worker, # %d of %d threads</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span>
+			    <span class="n">id</span><span class="p">,</span> <span class="n">numThreads</span><span class="p">);</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+
+    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="shared-data-pattern-blocking-of-threads-in-a-parallel-for-loop">
+<h2>4. Shared Data Pattern:  blocking of threads in a parallel for loop<a class="headerlink" href="#shared-data-pattern-blocking-of-threads-in-a-parallel-for-loop" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-c"><div class="highlight"><pre><span class="cm">/* parallelForBlocks.c</span>
+<span class="cm"> * ... illustrates the use of OpenMP&#39;s default parallel for loop</span>
+<span class="cm"> *  	in which threads iterate through blocks of the index range</span>
+<span class="cm"> *	(cache-beneficial when accessing adjacent memory locations).</span>
+<span class="cm"> *</span>
+<span class="cm"> * Joel Adams, Calvin College, at November 2009.</span>
+<span class="cm"> * Usage: ./parallelForBlocks [numThreads]</span>
+<span class="cm"> * Exercise</span>
+<span class="cm"> */</span>
+
+<span class="cp">#include &lt;stdio.h&gt;</span>
+<span class="cp">#include &lt;omp.h&gt;</span>
+<span class="cp">#include &lt;stdlib.h&gt;</span>
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span><span class="o">**</span> <span class="n">argv</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kt">int</span> <span class="n">rank</span><span class="p">,</span> <span class="n">i</span><span class="p">;</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="n">argc</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">omp_set_num_threads</span><span class="p">(</span> <span class="n">atoi</span><span class="p">(</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="cp">#pragma omp parallel for private(rank, i) </span>
+    <span class="k">for</span> <span class="p">(</span><span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="mi">8</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">rank</span>  <span class="o">=</span> <span class="n">omp_get_thread_num</span><span class="p">();</span>
+        <span class="n">printf</span><span class="p">(</span><span class="s">&quot;Thread %d performed iteration %d</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> 
+                 <span class="n">rank</span><span class="p">,</span> <span class="n">i</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="shared-data-pattern-striping-of-threads-in-a-parallel-for-loop">
+<h2>5. Shared Data Pattern:  striping of threads in a parallel for loop<a class="headerlink" href="#shared-data-pattern-striping-of-threads-in-a-parallel-for-loop" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-c"><div class="highlight"><pre><span class="cm">/* parallelForStripes.c</span>
+<span class="cm"> * ... illustrates how to make OpenMP map threads to </span>
+<span class="cm"> *	parallel for-loop iterations in &#39;stripes&#39; instead of blocks</span>
+<span class="cm"> *	(use only when not accesssing memory).</span>
+<span class="cm"> *</span>
+<span class="cm"> * Joel Adams, Calvin College, at November 2009.</span>
+<span class="cm"> *</span>
+<span class="cm"> * Usage: ./parallelForStripes [numThreads]</span>
+<span class="cm"> */</span>
+
+<span class="cp">#include &lt;stdio.h&gt;</span>
+<span class="cp">#include &lt;omp.h&gt;</span>
+<span class="cp">#include &lt;stdlib.h&gt;</span>
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span><span class="o">**</span> <span class="n">argv</span><span class="p">)</span> <span class="p">{</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="n">argc</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">omp_set_num_threads</span><span class="p">(</span> <span class="n">atoi</span><span class="p">(</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="cp">#pragma omp parallel</span>
+    <span class="p">{</span>
+        <span class="kt">int</span> <span class="n">rank</span>  <span class="o">=</span> <span class="n">omp_get_thread_num</span><span class="p">();</span>
+        <span class="kt">int</span> <span class="n">numThreads</span> <span class="o">=</span> <span class="n">omp_get_num_threads</span><span class="p">();</span>
+        <span class="kt">int</span> <span class="n">i</span><span class="p">;</span>
+        <span class="k">for</span> <span class="p">(</span><span class="n">i</span> <span class="o">=</span> <span class="n">rank</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="mi">8</span><span class="p">;</span> <span class="n">i</span> <span class="o">+=</span> <span class="n">numThreads</span><span class="p">)</span> <span class="p">{</span>
+            <span class="n">printf</span><span class="p">(</span><span class="s">&quot;Thread %d performed iteration %d</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> 
+                     <span class="n">rank</span><span class="p">,</span> <span class="n">i</span><span class="p">);</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+
+    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="shared-data-pattern-parallel-for-loop-needs-non-shared-private-variables">
+<h2>6. Shared Data Pattern: Parallel-for-loop needs non-shared, private variables<a class="headerlink" href="#shared-data-pattern-parallel-for-loop-needs-non-shared-private-variables" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-c"><div class="highlight"><pre><span class="cm">/* private.c</span>
+<span class="cm"> * ... illustrates why private variables are needed with OpenMP&#39;s parallel for loop</span>
+<span class="cm"> *</span>
+<span class="cm"> * Joel Adams, Calvin College, at November 2009.</span>
+<span class="cm"> * Usage: ./private </span>
+<span class="cm"> * Exercise: </span>
+<span class="cm"> * - Run, noting that the serial program produces correct results</span>
+<span class="cm"> * - Uncomment line A, recompile/run and compare</span>
+<span class="cm"> * - Recomment line A, uncomment line B, recompile/run and compare</span>
+<span class="cm"> */</span>
+
+<span class="cp">#include &lt;stdio.h&gt;</span>
+<span class="cp">#include &lt;omp.h&gt;</span>
+<span class="cp">#include &lt;stdlib.h&gt;</span>
+
+<span class="cp">#define SIZE 100</span>
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span><span class="o">**</span> <span class="n">argv</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kt">int</span> <span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">,</span> <span class="n">ok</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+    <span class="kt">int</span> <span class="n">m</span><span class="p">[</span><span class="n">SIZE</span><span class="p">][</span><span class="n">SIZE</span><span class="p">];</span>
+
+    <span class="c1">// set all array entries to 1</span>
+<span class="c1">//    #pragma omp parallel for                     // A</span>
+<span class="c1">//    #pragma omp parallel for private(j)          // B</span>
+    <span class="k">for</span> <span class="p">(</span><span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">SIZE</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">for</span> <span class="p">(</span><span class="n">j</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">j</span> <span class="o">&lt;</span> <span class="n">SIZE</span><span class="p">;</span> <span class="n">j</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+            <span class="n">m</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+
+    <span class="c1">// test (without using threads)</span>
+    <span class="k">for</span> <span class="p">(</span><span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">SIZE</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">for</span> <span class="p">(</span><span class="n">j</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">j</span> <span class="o">&lt;</span> <span class="n">SIZE</span><span class="p">;</span> <span class="n">j</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span> <span class="n">m</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span> <span class="o">!=</span> <span class="mi">1</span> <span class="p">)</span> <span class="p">{</span>
+                <span class="n">printf</span><span class="p">(</span><span class="s">&quot;Element [%d,%d] not set... </span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">);</span>
+                <span class="n">ok</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+
+    <span class="k">if</span> <span class="p">(</span> <span class="n">ok</span> <span class="p">)</span> <span class="p">{</span>
+        <span class="n">printf</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\n</span><span class="s">All elements correctly set to 1</span><span class="se">\n\n</span><span class="s">&quot;</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="race-condition-missing-the-mutual-exclusion-patterm">
+<h2>7. Race Condition: missing the mutual exclusion patterm<a class="headerlink" href="#race-condition-missing-the-mutual-exclusion-patterm" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-c"><div class="highlight"><pre><span class="cm">/* atomic.c</span>
+<span class="cm"> * ... illustrates a race condition when multiple threads write to a shared variable</span>
+<span class="cm"> *  (and explores OpenMP private variables and atomic operations).</span>
+<span class="cm"> *</span>
+<span class="cm"> * Joel Adams (Calvin College), November 2009.</span>
+<span class="cm"> * Usage: ./atomic</span>
+<span class="cm"> * Exercise:</span>
+<span class="cm"> *  - Compile and run 10 times; note that it always produces the final balance 0</span>
+<span class="cm"> *  - To parallelize, uncomment A1+A2, recompile and rerun, compare results</span>
+<span class="cm"> *  - Try 1: recomment A1+A2, uncomment B1+B2, recompile/run, compare</span>
+<span class="cm"> *  - To fix: recomment B1+B2, uncomment A1+A2, C1+C2, recompile and rerun, compare</span>
+<span class="cm"> */</span>
+
+<span class="cp">#include&lt;stdio.h&gt;</span>
+<span class="cp">#include&lt;omp.h&gt;</span>
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">const</span> <span class="kt">int</span> <span class="n">REPS</span> <span class="o">=</span> <span class="mi">1000000</span><span class="p">;</span>
+    <span class="kt">int</span> <span class="n">i</span><span class="p">;</span>
+    <span class="kt">double</span> <span class="n">balance</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">;</span>
+  
+    <span class="n">printf</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\n</span><span class="s">Your starting bank account balance is %0.2f</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">balance</span><span class="p">);</span>
+
+    <span class="c1">// simulate many deposits</span>
+<span class="c1">//    #pragma omp parallel for                      // A1</span>
+<span class="c1">//    #pragma omp parallel for private(balance)     // B1</span>
+    <span class="k">for</span> <span class="p">(</span><span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">REPS</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+<span class="c1">//        #pragma omp atomic                        // C1</span>
+        <span class="n">balance</span> <span class="o">+=</span> <span class="mf">10.0</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="n">printf</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\n</span><span class="s">After %d $10 deposits, your balance is %0.2f</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> 
+		<span class="n">REPS</span><span class="p">,</span> <span class="n">balance</span><span class="p">);</span>
+
+    <span class="c1">// simulate the same number of withdrawals</span>
+<span class="c1">//    #pragma omp parallel for                      // A2</span>
+<span class="c1">//    #pragma omp parallel for private(balance)     // B2</span>
+    <span class="k">for</span> <span class="p">(</span><span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">REPS</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+<span class="c1">//        #pragma omp atomic                          // C2</span>
+        <span class="n">balance</span> <span class="o">-=</span> <span class="mf">10.0</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="c1">// balance should be zero</span>
+    <span class="n">printf</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\n</span><span class="s">After %d $10 withdrawals, your balance is %0.2f</span><span class="se">\n\n</span><span class="s">&quot;</span><span class="p">,</span> 
+            <span class="n">REPS</span><span class="p">,</span> <span class="n">balance</span><span class="p">);</span>
+
+    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="mutual-exclusion-two-ways-to-ensure">
+<h2>8. Mutual Exclusion: two ways to ensure<a class="headerlink" href="#mutual-exclusion-two-ways-to-ensure" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-c"><div class="highlight"><pre><span class="cm">/* critical.c</span>
+<span class="cm"> * ... fixes a race condition when multiple threads write to a shared variable</span>
+<span class="cm"> *  	using the OpenMP critical directive.</span>
+<span class="cm"> *</span>
+<span class="cm"> * Joel Adams (Calvin College), November 2009.</span>
+<span class="cm"> * Usage: ./critical</span>
+<span class="cm"> * Exercise:</span>
+<span class="cm"> *  - Compile and run several times; note that it always produces the final balance 0</span>
+<span class="cm"> *  - Comment out A1+A2; recompile/run and note incorrect result</span>
+<span class="cm"> *  - To fix: uncomment B1a+B1b+B1c, B2a+B2b+B2c, recompile and rerun, compare</span>
+<span class="cm"> */</span>
+
+<span class="cp">#include&lt;stdio.h&gt;</span>
+<span class="cp">#include&lt;omp.h&gt;</span>
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">const</span> <span class="kt">int</span> <span class="n">REPS</span> <span class="o">=</span> <span class="mi">1000000</span><span class="p">;</span>
+    <span class="kt">int</span> <span class="n">i</span><span class="p">;</span>
+    <span class="kt">double</span> <span class="n">balance</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">;</span>
+  
+    <span class="n">printf</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\n</span><span class="s">Your starting bank account balance is %0.2f</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">balance</span><span class="p">);</span>
+
+    <span class="c1">// simulate many deposits</span>
+    <span class="cp">#pragma omp parallel for</span>
+    <span class="k">for</span> <span class="p">(</span><span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">REPS</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+        <span class="cp">#pragma omp atomic                          </span><span class="c1">// A1</span>
+<span class="c1">//        #pragma omp critical                      // B1a</span>
+<span class="c1">//        {                                         // B1b</span>
+        <span class="n">balance</span> <span class="o">+=</span> <span class="mf">10.0</span><span class="p">;</span>
+<span class="c1">//        }                                         // B1c</span>
+    <span class="p">}</span>
+
+    <span class="n">printf</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\n</span><span class="s">After %d $10 deposits, your balance is %0.2f</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> 
+		<span class="n">REPS</span><span class="p">,</span> <span class="n">balance</span><span class="p">);</span>
+
+    <span class="c1">// simulate the same number of withdrawals</span>
+    <span class="cp">#pragma omp parallel for</span>
+    <span class="k">for</span> <span class="p">(</span><span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">REPS</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+        <span class="cp">#pragma omp atomic                          </span><span class="c1">// A2</span>
+<span class="c1">//        #pragma omp critical                      // B2a</span>
+<span class="c1">//        {                                         // B2b</span>
+        <span class="n">balance</span> <span class="o">-=</span> <span class="mf">10.0</span><span class="p">;</span>
+<span class="c1">//        }                                         // B2c</span>
+  <span class="p">}</span>
+
+    <span class="c1">// balance should be zero</span>
+    <span class="n">printf</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\n</span><span class="s">After %d $10 withdrawals, your balance is %0.2f</span><span class="se">\n\n</span><span class="s">&quot;</span><span class="p">,</span> 
+		<span class="n">REPS</span><span class="p">,</span> <span class="n">balance</span><span class="p">);</span>
+
+    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="mutual-exclusion-pattern-compare-performance">
+<h2>9.  Mutual Exclusion Pattern: compare performance<a class="headerlink" href="#mutual-exclusion-pattern-compare-performance" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-c"><div class="highlight"><pre><span class="cm">/* critical.c</span>
+<span class="cm"> * ... compares the performance of OpenMP&#39;s critical and atomic directives</span>
+<span class="cm"> *</span>
+<span class="cm"> * Joel Adams (Calvin College), November 2009.</span>
+<span class="cm"> * Usage: ./critical</span>
+<span class="cm"> * Exercise:</span>
+<span class="cm"> *  - Compile, run, compare times for critical vs. atomic</span>
+<span class="cm"> *  - Compute how much more costly critical is than atomic, on average</span>
+<span class="cm"> *  - Create an expression setting a shared variable that atomic cannot handle (research)</span>
+<span class="cm"> */</span>
+
+<span class="cp">#include&lt;stdio.h&gt;</span>
+<span class="cp">#include&lt;omp.h&gt;</span>
+
+<span class="kt">void</span> <span class="nf">print</span><span class="p">(</span><span class="kt">char</span><span class="o">*</span> <span class="n">label</span><span class="p">,</span> <span class="kt">int</span> <span class="n">reps</span><span class="p">,</span> <span class="kt">double</span> <span class="n">balance</span><span class="p">,</span> <span class="kt">double</span> <span class="n">total</span><span class="p">,</span> <span class="kt">double</span> <span class="n">average</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">printf</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\n</span><span class="s">After %d $10 deposits using &#39;%s&#39;: \</span>
+<span class="s">            </span><span class="se">\n\t</span><span class="s">- balance = %0.2f, \</span>
+<span class="s">            </span><span class="se">\n\t</span><span class="s">- total time = %0.12f, \</span>
+<span class="s">            </span><span class="se">\n\t</span><span class="s">- average time per deposit = %0.12f</span><span class="se">\n\n</span><span class="s">&quot;</span><span class="p">,</span> 
+               <span class="n">reps</span><span class="p">,</span> <span class="n">label</span><span class="p">,</span> <span class="n">balance</span><span class="p">,</span> <span class="n">total</span><span class="p">,</span> <span class="n">average</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">const</span> <span class="kt">int</span> <span class="n">REPS</span> <span class="o">=</span> <span class="mi">1000000</span><span class="p">;</span>
+    <span class="kt">int</span> <span class="n">i</span><span class="p">;</span>
+    <span class="kt">double</span> <span class="n">balance</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span>
+           <span class="n">startTime</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span> 
+           <span class="n">stopTime</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span>
+           <span class="n">totalTime</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">;</span>
+  
+    <span class="n">printf</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\n</span><span class="s">Your starting bank account balance is %0.2f</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">balance</span><span class="p">);</span>
+
+    <span class="c1">// simulate many deposits using atomic</span>
+    <span class="n">startTime</span> <span class="o">=</span> <span class="n">omp_get_wtime</span><span class="p">();</span>
+    <span class="cp">#pragma omp parallel for </span>
+    <span class="k">for</span> <span class="p">(</span><span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">REPS</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+        <span class="cp">#pragma omp atomic</span>
+        <span class="n">balance</span> <span class="o">+=</span> <span class="mf">10.0</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="n">stopTime</span> <span class="o">=</span> <span class="n">omp_get_wtime</span><span class="p">();</span>
+    <span class="n">totalTime</span> <span class="o">=</span> <span class="n">stopTime</span> <span class="o">-</span> <span class="n">startTime</span><span class="p">;</span>
+    <span class="n">print</span><span class="p">(</span><span class="s">&quot;atomic&quot;</span><span class="p">,</span> <span class="n">REPS</span><span class="p">,</span> <span class="n">balance</span><span class="p">,</span> <span class="n">totalTime</span><span class="p">,</span> <span class="n">totalTime</span><span class="o">/</span><span class="n">REPS</span><span class="p">);</span>
+
+
+    <span class="c1">// simulate the same number of deposits using critical</span>
+    <span class="n">balance</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="n">startTime</span> <span class="o">=</span> <span class="n">omp_get_wtime</span><span class="p">();</span>
+    <span class="cp">#pragma omp parallel for </span>
+    <span class="k">for</span> <span class="p">(</span><span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">REPS</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+         <span class="cp">#pragma omp critical</span>
+         <span class="p">{</span>
+             <span class="n">balance</span> <span class="o">+=</span> <span class="mf">10.0</span><span class="p">;</span>
+         <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="n">stopTime</span> <span class="o">=</span> <span class="n">omp_get_wtime</span><span class="p">();</span>
+    <span class="n">totalTime</span> <span class="o">=</span> <span class="n">stopTime</span> <span class="o">-</span> <span class="n">startTime</span><span class="p">;</span>
+    <span class="n">print</span><span class="p">(</span><span class="s">&quot;critical&quot;</span><span class="p">,</span> <span class="n">REPS</span><span class="p">,</span> <span class="n">balance</span><span class="p">,</span> <span class="n">totalTime</span><span class="p">,</span> <span class="n">totalTime</span><span class="o">/</span><span class="n">REPS</span><span class="p">);</span>
+
+    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="task-decomposition-pattern-using-openmp-section-directive">
+<h2>10. Task Decomposition Pattern using OpenMP section directive<a class="headerlink" href="#task-decomposition-pattern-using-openmp-section-directive" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-c"><div class="highlight"><pre><span class="cm">/* sections.c</span>
+<span class="cm"> * ... illustrates the use of OpenMP&#39;s parallel section/sections directives...</span>
+<span class="cm"> * Joel Adams, Calvin College, at November 2009.</span>
+<span class="cm"> */</span>
+
+<span class="cp">#include &lt;stdio.h&gt;</span>
+<span class="cp">#include &lt;omp.h&gt;</span>
+<span class="cp">#include &lt;stdlib.h&gt;</span>
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span><span class="o">**</span> <span class="n">argv</span><span class="p">)</span> <span class="p">{</span>
+
+    <span class="n">printf</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\n</span><span class="s">Before...</span><span class="se">\n\n</span><span class="s">&quot;</span><span class="p">);</span>
+
+    <span class="cp">#pragma omp parallel sections num_threads(4)</span>
+    <span class="p">{</span>
+        <span class="cp">#pragma omp section </span>
+        <span class="p">{</span>
+            <span class="n">printf</span><span class="p">(</span><span class="s">&quot;Section A performed by thread %d</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> 
+                    <span class="n">omp_get_thread_num</span><span class="p">()</span> <span class="p">);</span> 
+        <span class="p">}</span>
+        <span class="cp">#pragma omp section </span>
+        <span class="p">{</span>
+            <span class="n">printf</span><span class="p">(</span><span class="s">&quot;Section B performed by thread %d</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span>
+                    <span class="n">omp_get_thread_num</span><span class="p">()</span> <span class="p">);</span> 
+        <span class="p">}</span>
+        <span class="cp">#pragma omp section</span>
+        <span class="p">{</span>
+            <span class="n">printf</span><span class="p">(</span><span class="s">&quot;Section C performed by thread %d</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span>
+                    <span class="n">omp_get_thread_num</span><span class="p">()</span> <span class="p">);</span> 
+        <span class="p">}</span>
+        <span class="cp">#pragma omp section </span>
+        <span class="p">{</span>
+                <span class="n">printf</span><span class="p">(</span><span class="s">&quot;Section D performed by thread %d</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> 
+                         <span class="n">omp_get_thread_num</span><span class="p">()</span> <span class="p">);</span> 
+        <span class="p">}</span>
+    <span class="p">}</span>
+
+    <span class="n">printf</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\n</span><span class="s">After...</span><span class="se">\n\n</span><span class="s">&quot;</span><span class="p">);</span>
+
+    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../index.html">
+              <img class="logo" src="../_static/CSInParallel200wide.png" alt="Logo"/>
+            </a></p>
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Shared Memory Parallel Patternlets in OpenMP</a><ul>
+<li><a class="reference internal" href="#source-code">Source Code</a></li>
+<li><a class="reference internal" href="#the-omp-parallel-pragma">0. The OMP parallel pragma</a></li>
+<li><a class="reference internal" href="#hello-world-default-number-of-openmp-threads">1. Hello, World: default number of OpenMP threads</a></li>
+<li><a class="reference internal" href="#hello-world">2. Hello, World</a></li>
+<li><a class="reference internal" href="#master-worker-implementation-strategy">3. Master-Worker Implementation Strategy</a></li>
+<li><a class="reference internal" href="#shared-data-pattern-blocking-of-threads-in-a-parallel-for-loop">4. Shared Data Pattern:  blocking of threads in a parallel for loop</a></li>
+<li><a class="reference internal" href="#shared-data-pattern-striping-of-threads-in-a-parallel-for-loop">5. Shared Data Pattern:  striping of threads in a parallel for loop</a></li>
+<li><a class="reference internal" href="#shared-data-pattern-parallel-for-loop-needs-non-shared-private-variables">6. Shared Data Pattern: Parallel-for-loop needs non-shared, private variables</a></li>
+<li><a class="reference internal" href="#race-condition-missing-the-mutual-exclusion-patterm">7. Race Condition: missing the mutual exclusion patterm</a></li>
+<li><a class="reference internal" href="#mutual-exclusion-two-ways-to-ensure">8. Mutual Exclusion: two ways to ensure</a></li>
+<li><a class="reference internal" href="#mutual-exclusion-pattern-compare-performance">9.  Mutual Exclusion Pattern: compare performance</a></li>
+<li><a class="reference internal" href="#task-decomposition-pattern-using-openmp-section-directive">10. Task Decomposition Pattern using OpenMP section directive</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="../MessagePassing/MPI_Patternlets.html"
+                        title="previous chapter">Message Passing Parallel Patternlets</a></p>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../MessagePassing/MPI_Patternlets.html" title="Message Passing Parallel Patternlets"
+             >previous</a> |</li>
+        <li><a href="../index.html">Parallel Patternlets</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright This work is licensed under a Creative Commons Attribution-ShareAlike 3.0 Unported License.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>
