@@ -58,6 +58,10 @@ enable the compiler to generate threaded code.</p>
 The firrst three are basic illustrations to get used to the OpenMP pragmas.
 The rest illustrate how to implement particular patterns and what can
 go wrong when mutual exclusion is not properly ensured.</p>
+<p>Note: by default OpenMP uses the <strong>Thread Pool</strong> pattern of concurrent execution.
+OpenMP programs initialze a group of threads to be used by a given program
+(often called a pool of threads).  These threads will execute concurrently
+during portions of the code specified by the programmer.</p>
 <div class="section" id="source-code">
 <h2>Source Code<a class="headerlink" href="#source-code" title="Permalink to this headline">¶</a></h2>
 <p>Please download all examples from this tarball:
@@ -67,7 +71,32 @@ along with a makefile.</p>
 </div>
 <div class="section" id="the-omp-parallel-pragma">
 <h2>0. The OMP parallel pragma<a class="headerlink" href="#the-omp-parallel-pragma" title="Permalink to this headline">¶</a></h2>
-<div class="highlight-c"><div class="highlight"><pre><span class="cm">/* simpleParallel.c</span>
+<p>The <cite>omp parallel</cite> pragma on line 18, when uncommented, tells the compiler to
+fork a set of threads to execute that particular line of code.</p>
+<div class="highlight-c"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24</pre></div></td><td class="code"><div class="highlight"><pre><span class="cm">/* simpleParallel.c</span>
 <span class="cm"> * ... illustrates the use of OpenMP&#39;s parallel directive...</span>
 <span class="cm"> *</span>
 <span class="cm"> * Joel Adams, Calvin College, at November 2009.</span>
@@ -92,15 +121,39 @@ along with a makefile.</p>
     <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
 <span class="p">}</span>
 </pre></div>
-</div>
+</td></tr></table></div>
 </div>
 <div class="section" id="hello-world-default-number-of-openmp-threads">
 <h2>1. Hello, World: default number of OpenMP threads<a class="headerlink" href="#hello-world-default-number-of-openmp-threads" title="Permalink to this headline">¶</a></h2>
 <p>Note how there are OpenMP functions to
 obtain a thread number and the total number of threads.
 When the pragma is uncommented, note what the default number of threads
-is.</p>
-<div class="highlight-c"><div class="highlight"><pre><span class="cm">/* parallelHello.c</span>
+is.  Here the threads are forked and execute the block of code insode the
+curly braces on lines 18 through 20.</p>
+<div class="highlight-c"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24</pre></div></td><td class="code"><div class="highlight"><pre><span class="cm">/* parallelHello.c</span>
 <span class="cm"> * ... illustrates the use of two basic OpenMP commands...</span>
 <span class="cm"> *</span>
 <span class="cm"> * Joel Adams, Calvin College, at November 2009.</span>
@@ -125,7 +178,7 @@ is.</p>
     <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
 <span class="p">}</span>
 </pre></div>
-</div>
+</td></tr></table></div>
 </div>
 <div class="section" id="hello-world">
 <h2>2. Hello, World<a class="headerlink" href="#hello-world" title="Permalink to this headline">¶</a></h2>
@@ -203,8 +256,8 @@ is.</p>
 </pre></div>
 </div>
 </div>
-<div class="section" id="shared-data-pattern-blocking-of-threads-in-a-parallel-for-loop">
-<h2>4. Shared Data Pattern:  blocking of threads in a parallel for loop<a class="headerlink" href="#shared-data-pattern-blocking-of-threads-in-a-parallel-for-loop" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="shared-data-decomposition-pattern-blocking-of-threads-in-a-parallel-for-loop">
+<h2>4. Shared Data Decomposition Pattern:  blocking of threads in a parallel for loop<a class="headerlink" href="#shared-data-decomposition-pattern-blocking-of-threads-in-a-parallel-for-loop" title="Permalink to this headline">¶</a></h2>
 <div class="highlight-c"><div class="highlight"><pre><span class="cm">/* parallelForBlocks.c</span>
 <span class="cm"> * ... illustrates the use of OpenMP&#39;s default parallel for loop</span>
 <span class="cm"> *  	in which threads iterate through blocks of the index range</span>
@@ -238,8 +291,8 @@ is.</p>
 </pre></div>
 </div>
 </div>
-<div class="section" id="shared-data-pattern-striping-of-threads-in-a-parallel-for-loop">
-<h2>5. Shared Data Pattern:  striping of threads in a parallel for loop<a class="headerlink" href="#shared-data-pattern-striping-of-threads-in-a-parallel-for-loop" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="shared-data-decomposition-pattern-striping-of-threads-in-a-parallel-for-loop">
+<h2>5. Shared Data Decomposition Pattern:  striping of threads in a parallel for loop<a class="headerlink" href="#shared-data-decomposition-pattern-striping-of-threads-in-a-parallel-for-loop" title="Permalink to this headline">¶</a></h2>
 <div class="highlight-c"><div class="highlight"><pre><span class="cm">/* parallelForStripes.c</span>
 <span class="cm"> * ... illustrates how to make OpenMP map threads to </span>
 <span class="cm"> *	parallel for-loop iterations in &#39;stripes&#39; instead of blocks</span>
@@ -276,8 +329,146 @@ is.</p>
 </pre></div>
 </div>
 </div>
+<div class="section" id="collective-communication-reduction">
+<h2>6. Collective Communication: Reduction<a class="headerlink" href="#collective-communication-reduction" title="Permalink to this headline">¶</a></h2>
+<p>Once processes have performed independent concurrent computations, possibly
+on some portion of decomposed data, it is quite commen to then <em>reduce</em>
+those individual computations into one value. In this example, an array of randomly assigned integers represents a set of shred data. All values
+in the array are summed together by using the OpenMP
+parallel for pragma with the <cite>reduction(+:sum)</cite> clause on the variable <strong>sum</strong>,
+which is computed in line 61.</p>
+<div class="highlight-c"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64</pre></div></td><td class="code"><div class="highlight"><pre><span class="cm">/* reduction.c</span>
+<span class="cm"> * ... illustrates the OpenMP parallel-for loop&#39;s reduction clause</span>
+<span class="cm"> *</span>
+<span class="cm"> * Joel Adams, Calvin College, at November 2009.</span>
+<span class="cm"> *</span>
+<span class="cm"> * Usage: ./reduction </span>
+<span class="cm"> * Exercise:</span>
+<span class="cm"> * - Compile and run.  Note that correct output is produced.</span>
+<span class="cm"> * - Uncomment #pragma in function parallelSum() </span>
+<span class="cm"> *    but leave its reduction clause commented out</span>
+<span class="cm"> * - Recompile and rerun.  Note that correct output is NOT produced.</span>
+<span class="cm"> * - Uncomment &#39;reduction(+:sum)&#39; clause of #pragma in parallelSum()</span>
+<span class="cm"> * - Recompile and rerun.  Note that correct output is produced again.</span>
+<span class="cm"> */</span>
+
+<span class="cp">#include &lt;stdio.h&gt;</span>
+<span class="cp">#include &lt;omp.h&gt;</span>
+<span class="cp">#include &lt;stdlib.h&gt;</span>
+<span class="cp">#include &lt;assert.h&gt;</span>
+
+<span class="kt">void</span> <span class="n">initialize</span><span class="p">(</span><span class="kt">int</span><span class="o">*</span> <span class="n">a</span><span class="p">,</span> <span class="kt">int</span> <span class="n">n</span><span class="p">);</span>
+<span class="kt">int</span> <span class="n">sequentialSum</span><span class="p">(</span><span class="kt">int</span><span class="o">*</span> <span class="n">a</span><span class="p">,</span> <span class="kt">int</span> <span class="n">n</span><span class="p">);</span>
+<span class="kt">int</span> <span class="n">parallelSum</span><span class="p">(</span><span class="kt">int</span><span class="o">*</span> <span class="n">a</span><span class="p">,</span> <span class="kt">int</span> <span class="n">n</span><span class="p">);</span>
+
+<span class="cp">#define SIZE 1000000</span>
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span><span class="o">**</span> <span class="n">argv</span><span class="p">)</span> <span class="p">{</span>
+   <span class="kt">int</span> <span class="n">array</span><span class="p">[</span><span class="n">SIZE</span><span class="p">];</span>
+
+   <span class="n">initialize</span><span class="p">(</span><span class="n">array</span><span class="p">,</span> <span class="n">SIZE</span><span class="p">);</span>
+   <span class="n">assert</span><span class="p">(</span> <span class="n">sequentialSum</span><span class="p">(</span><span class="n">array</span><span class="p">,</span> <span class="n">SIZE</span><span class="p">)</span> <span class="o">==</span> <span class="n">parallelSum</span><span class="p">(</span><span class="n">array</span><span class="p">,</span> <span class="n">SIZE</span><span class="p">)</span> <span class="p">);</span>
+   <span class="n">printf</span><span class="p">(</span><span class="s">&quot;Sequential and parallel functions produced the same result</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">);</span>
+
+   <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span> 
+
+<span class="c1">// fill array with random values</span>
+<span class="kt">void</span> <span class="nf">initialize</span><span class="p">(</span><span class="kt">int</span><span class="o">*</span> <span class="n">a</span><span class="p">,</span> <span class="kt">int</span> <span class="n">n</span><span class="p">)</span> <span class="p">{</span>
+   <span class="kt">int</span> <span class="n">i</span><span class="p">;</span>
+   <span class="k">for</span> <span class="p">(</span><span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">n</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+      <span class="n">a</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">rand</span><span class="p">()</span> <span class="o">%</span> <span class="mi">1000</span><span class="p">;</span>
+   <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="c1">// sum the array sequentially</span>
+<span class="kt">int</span> <span class="nf">sequentialSum</span><span class="p">(</span><span class="kt">int</span><span class="o">*</span> <span class="n">a</span><span class="p">,</span> <span class="kt">int</span> <span class="n">n</span><span class="p">)</span> <span class="p">{</span>
+   <span class="kt">int</span> <span class="n">sum</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+   <span class="kt">int</span> <span class="n">i</span><span class="p">;</span>
+   <span class="k">for</span> <span class="p">(</span><span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">n</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+      <span class="n">sum</span> <span class="o">+=</span> <span class="n">a</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+   <span class="p">}</span>
+   <span class="k">return</span> <span class="n">sum</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="c1">// sum the array using multiple threads</span>
+<span class="kt">int</span> <span class="nf">parallelSum</span><span class="p">(</span><span class="kt">int</span><span class="o">*</span> <span class="n">a</span><span class="p">,</span> <span class="kt">int</span> <span class="n">n</span><span class="p">)</span> <span class="p">{</span>
+   <span class="kt">int</span> <span class="n">sum</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+   <span class="kt">int</span> <span class="n">i</span><span class="p">;</span>
+<span class="c1">//   #pragma omp parallel for // reduction(+:sum)</span>
+   <span class="k">for</span> <span class="p">(</span><span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">n</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+      <span class="n">sum</span> <span class="o">+=</span> <span class="n">a</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+   <span class="p">}</span>
+   <span class="k">return</span> <span class="n">sum</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</td></tr></table></div>
+</div>
 <div class="section" id="shared-data-pattern-parallel-for-loop-needs-non-shared-private-variables">
-<h2>6. Shared Data Pattern: Parallel-for-loop needs non-shared, private variables<a class="headerlink" href="#shared-data-pattern-parallel-for-loop-needs-non-shared-private-variables" title="Permalink to this headline">¶</a></h2>
+<h2>7. Shared Data Pattern: Parallel-for-loop needs non-shared, private variables<a class="headerlink" href="#shared-data-pattern-parallel-for-loop-needs-non-shared-private-variables" title="Permalink to this headline">¶</a></h2>
 <div class="highlight-c"><div class="highlight"><pre><span class="cm">/* private.c</span>
 <span class="cm"> * ... illustrates why private variables are needed with OpenMP&#39;s parallel for loop</span>
 <span class="cm"> *</span>
@@ -328,7 +519,7 @@ is.</p>
 </div>
 </div>
 <div class="section" id="race-condition-missing-the-mutual-exclusion-patterm">
-<h2>7. Race Condition: missing the mutual exclusion patterm<a class="headerlink" href="#race-condition-missing-the-mutual-exclusion-patterm" title="Permalink to this headline">¶</a></h2>
+<h2>8. Race Condition: missing the mutual exclusion patterm<a class="headerlink" href="#race-condition-missing-the-mutual-exclusion-patterm" title="Permalink to this headline">¶</a></h2>
 <div class="highlight-c"><div class="highlight"><pre><span class="cm">/* atomic.c</span>
 <span class="cm"> * ... illustrates a race condition when multiple threads write to a shared variable</span>
 <span class="cm"> *  (and explores OpenMP private variables and atomic operations).</span>
@@ -381,7 +572,7 @@ is.</p>
 </div>
 </div>
 <div class="section" id="mutual-exclusion-two-ways-to-ensure">
-<h2>8. Mutual Exclusion: two ways to ensure<a class="headerlink" href="#mutual-exclusion-two-ways-to-ensure" title="Permalink to this headline">¶</a></h2>
+<h2>9. Mutual Exclusion: two ways to ensure<a class="headerlink" href="#mutual-exclusion-two-ways-to-ensure" title="Permalink to this headline">¶</a></h2>
 <div class="highlight-c"><div class="highlight"><pre><span class="cm">/* critical.c</span>
 <span class="cm"> * ... fixes a race condition when multiple threads write to a shared variable</span>
 <span class="cm"> *  	using the OpenMP critical directive.</span>
@@ -437,7 +628,7 @@ is.</p>
 </div>
 </div>
 <div class="section" id="mutual-exclusion-pattern-compare-performance">
-<h2>9.  Mutual Exclusion Pattern: compare performance<a class="headerlink" href="#mutual-exclusion-pattern-compare-performance" title="Permalink to this headline">¶</a></h2>
+<h2>10.  Mutual Exclusion Pattern: compare performance<a class="headerlink" href="#mutual-exclusion-pattern-compare-performance" title="Permalink to this headline">¶</a></h2>
 <div class="highlight-c"><div class="highlight"><pre><span class="cm">/* critical.c</span>
 <span class="cm"> * ... compares the performance of OpenMP&#39;s critical and atomic directives</span>
 <span class="cm"> *</span>
@@ -502,7 +693,7 @@ is.</p>
 </div>
 </div>
 <div class="section" id="task-decomposition-pattern-using-openmp-section-directive">
-<h2>10. Task Decomposition Pattern using OpenMP section directive<a class="headerlink" href="#task-decomposition-pattern-using-openmp-section-directive" title="Permalink to this headline">¶</a></h2>
+<h2>11. Task Decomposition Pattern using OpenMP section directive<a class="headerlink" href="#task-decomposition-pattern-using-openmp-section-directive" title="Permalink to this headline">¶</a></h2>
 <div class="highlight-c"><div class="highlight"><pre><span class="cm">/* sections.c</span>
 <span class="cm"> * ... illustrates the use of OpenMP&#39;s parallel section/sections directives...</span>
 <span class="cm"> * Joel Adams, Calvin College, at November 2009.</span>
@@ -566,13 +757,14 @@ is.</p>
 <li><a class="reference internal" href="#hello-world-default-number-of-openmp-threads">1. Hello, World: default number of OpenMP threads</a></li>
 <li><a class="reference internal" href="#hello-world">2. Hello, World</a></li>
 <li><a class="reference internal" href="#master-worker-implementation-strategy">3. Master-Worker Implementation Strategy</a></li>
-<li><a class="reference internal" href="#shared-data-pattern-blocking-of-threads-in-a-parallel-for-loop">4. Shared Data Pattern:  blocking of threads in a parallel for loop</a></li>
-<li><a class="reference internal" href="#shared-data-pattern-striping-of-threads-in-a-parallel-for-loop">5. Shared Data Pattern:  striping of threads in a parallel for loop</a></li>
-<li><a class="reference internal" href="#shared-data-pattern-parallel-for-loop-needs-non-shared-private-variables">6. Shared Data Pattern: Parallel-for-loop needs non-shared, private variables</a></li>
-<li><a class="reference internal" href="#race-condition-missing-the-mutual-exclusion-patterm">7. Race Condition: missing the mutual exclusion patterm</a></li>
-<li><a class="reference internal" href="#mutual-exclusion-two-ways-to-ensure">8. Mutual Exclusion: two ways to ensure</a></li>
-<li><a class="reference internal" href="#mutual-exclusion-pattern-compare-performance">9.  Mutual Exclusion Pattern: compare performance</a></li>
-<li><a class="reference internal" href="#task-decomposition-pattern-using-openmp-section-directive">10. Task Decomposition Pattern using OpenMP section directive</a></li>
+<li><a class="reference internal" href="#shared-data-decomposition-pattern-blocking-of-threads-in-a-parallel-for-loop">4. Shared Data Decomposition Pattern:  blocking of threads in a parallel for loop</a></li>
+<li><a class="reference internal" href="#shared-data-decomposition-pattern-striping-of-threads-in-a-parallel-for-loop">5. Shared Data Decomposition Pattern:  striping of threads in a parallel for loop</a></li>
+<li><a class="reference internal" href="#collective-communication-reduction">6. Collective Communication: Reduction</a></li>
+<li><a class="reference internal" href="#shared-data-pattern-parallel-for-loop-needs-non-shared-private-variables">7. Shared Data Pattern: Parallel-for-loop needs non-shared, private variables</a></li>
+<li><a class="reference internal" href="#race-condition-missing-the-mutual-exclusion-patterm">8. Race Condition: missing the mutual exclusion patterm</a></li>
+<li><a class="reference internal" href="#mutual-exclusion-two-ways-to-ensure">9. Mutual Exclusion: two ways to ensure</a></li>
+<li><a class="reference internal" href="#mutual-exclusion-pattern-compare-performance">10.  Mutual Exclusion Pattern: compare performance</a></li>
+<li><a class="reference internal" href="#task-decomposition-pattern-using-openmp-section-directive">11. Task Decomposition Pattern using OpenMP section directive</a></li>
 </ul>
 </li>
 </ul>

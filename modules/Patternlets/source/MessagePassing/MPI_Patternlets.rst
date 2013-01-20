@@ -42,13 +42,15 @@ First let us illustrate the basic components of an MPI program.
 .. literalinclude:: ../patternlets/MPI/02.sendRecv/sendRecv.c
     :language: c
 
-3. Task Decomposition: on *slices* using parallel-for
+3. Data Decomposition: on *slices* using parallel-for
 *********************************************************************
+
+In this example, the data being decomposed in simply the set of integeres from zero to 15, inclusive.
 
 .. literalinclude:: ../patternlets/MPI/03.parallelForSlices/parallelForSlices.c
     :language: c
 
-4. Task Decomposition: on *blocks* using parallel-for
+4. Data Decomposition: on *blocks* using parallel-for
 *******************************************************
 
 This is a basic example that does not yet include a data array, though
@@ -67,8 +69,8 @@ created by a single *master* node.
 .. literalinclude:: ../patternlets/MPI/05.bcast/bcast.c
     :language: c
 
-6. Reduction
-*****************************
+6. Collective Communication: Reduction
+**************************************
 
 Once processes have performed independent concurrent computations, possibly
 on some portion of decomposed data, it is quite commen to then *reduce*
@@ -80,8 +82,8 @@ MPI_MAX in the following code.
 .. literalinclude:: ../patternlets/MPI/06.reduce/reduce.c
     :language: c
 
-7. Scatter: message-passing data decomposition
-***********************************************
+7. Collective communication: Scatter for message-passing data decomposition
+****************************************************************************
 
 If processes can independently work on portions of a larger data array
 using the geometric data decomposition pattern,
@@ -91,8 +93,8 @@ a copy of its portion of the array.
 .. literalinclude:: ../patternlets/MPI/07.scatter/scatter.c
     :language: c
 
-8. Gather:  message-passing data decomposition
-***********************************************
+8. Collective communication: Gather for message-passing data decomposition
+***************************************************************************
 
 If processes can independently work on portions of a larger data array
 using the geometric data decomposition pattern,

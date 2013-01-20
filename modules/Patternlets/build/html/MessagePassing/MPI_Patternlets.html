@@ -175,8 +175,9 @@ along with a makefile and an example of how to execute the program.</p>
 </pre></div>
 </div>
 </div>
-<div class="section" id="task-decomposition-on-slices-using-parallel-for">
-<h2>3. Task Decomposition: on <em>slices</em> using parallel-for<a class="headerlink" href="#task-decomposition-on-slices-using-parallel-for" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="data-decomposition-on-slices-using-parallel-for">
+<h2>3. Data Decomposition: on <em>slices</em> using parallel-for<a class="headerlink" href="#data-decomposition-on-slices-using-parallel-for" title="Permalink to this headline">¶</a></h2>
+<p>In this example, the data being decomposed in simply the set of integeres from zero to 15, inclusive.</p>
 <div class="highlight-c"><div class="highlight"><pre><span class="cm">/* parallelForSlices.c</span>
 <span class="cm"> * ... illustrates the parallel for loop pattern in MPI </span>
 <span class="cm"> *	in which processes perform the loop&#39;s iterations in &#39;slices&#39; </span>
@@ -207,8 +208,8 @@ along with a makefile and an example of how to execute the program.</p>
 </pre></div>
 </div>
 </div>
-<div class="section" id="task-decomposition-on-blocks-using-parallel-for">
-<h2>4. Task Decomposition: on <em>blocks</em> using parallel-for<a class="headerlink" href="#task-decomposition-on-blocks-using-parallel-for" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="data-decomposition-on-blocks-using-parallel-for">
+<h2>4. Data Decomposition: on <em>blocks</em> using parallel-for<a class="headerlink" href="#data-decomposition-on-blocks-using-parallel-for" title="Permalink to this headline">¶</a></h2>
 <p>This is a basic example that does not yet include a data array, though
 it would typically be used when each process would be working on a portion
 of an array that could have been looped over in a sequential solution.</p>
@@ -301,8 +302,8 @@ created by a single <em>master</em> node.</p>
 </pre></div>
 </div>
 </div>
-<div class="section" id="reduction">
-<h2>6. Reduction<a class="headerlink" href="#reduction" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="collective-communication-reduction">
+<h2>6. Collective Communication: Reduction<a class="headerlink" href="#collective-communication-reduction" title="Permalink to this headline">¶</a></h2>
 <p>Once processes have performed independent concurrent computations, possibly
 on some portion of decomposed data, it is quite commen to then <em>reduce</em>
 those individual computations into one value.  This example shows a simple
@@ -345,8 +346,8 @@ MPI_MAX in the following code.</p>
 </pre></div>
 </div>
 </div>
-<div class="section" id="scatter-message-passing-data-decomposition">
-<h2>7. Scatter: message-passing data decomposition<a class="headerlink" href="#scatter-message-passing-data-decomposition" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="collective-communication-scatter-for-message-passing-data-decomposition">
+<h2>7. Collective communication: Scatter for message-passing data decomposition<a class="headerlink" href="#collective-communication-scatter-for-message-passing-data-decomposition" title="Permalink to this headline">¶</a></h2>
 <p>If processes can independently work on portions of a larger data array
 using the geometric data decomposition pattern,
 the scatter patternlet can be used to ensure that each process receives
@@ -387,8 +388,8 @@ a copy of its portion of the array.</p>
 </pre></div>
 </div>
 </div>
-<div class="section" id="gather-message-passing-data-decomposition">
-<h2>8. Gather:  message-passing data decomposition<a class="headerlink" href="#gather-message-passing-data-decomposition" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="collective-communication-gather-for-message-passing-data-decomposition">
+<h2>8. Collective communication: Gather for message-passing data decomposition<a class="headerlink" href="#collective-communication-gather-for-message-passing-data-decomposition" title="Permalink to this headline">¶</a></h2>
 <p>If processes can independently work on portions of a larger data array
 using the geometric data decomposition pattern,
 the gather patternlet can be used to ensure that each process sends
@@ -455,12 +456,12 @@ a copy of its portion of the array back to the root, or master process.</p>
 <li><a class="reference internal" href="#hello-world">0. Hello, World</a></li>
 <li><a class="reference internal" href="#the-master-worker-implementation-strategy-pattern">1. The Master-Worker Implementation Strategy Pattern</a></li>
 <li><a class="reference internal" href="#send-receive-basic-message-passing-pattern">2. Send-Receive (basic message passing pattern)</a></li>
-<li><a class="reference internal" href="#task-decomposition-on-slices-using-parallel-for">3. Task Decomposition: on <em>slices</em> using parallel-for</a></li>
-<li><a class="reference internal" href="#task-decomposition-on-blocks-using-parallel-for">4. Task Decomposition: on <em>blocks</em> using parallel-for</a></li>
+<li><a class="reference internal" href="#data-decomposition-on-slices-using-parallel-for">3. Data Decomposition: on <em>slices</em> using parallel-for</a></li>
+<li><a class="reference internal" href="#data-decomposition-on-blocks-using-parallel-for">4. Data Decomposition: on <em>blocks</em> using parallel-for</a></li>
 <li><a class="reference internal" href="#broadcast-a-special-form-of-message-passing">5. Broadcast: a special form of message passing</a></li>
-<li><a class="reference internal" href="#reduction">6. Reduction</a></li>
-<li><a class="reference internal" href="#scatter-message-passing-data-decomposition">7. Scatter: message-passing data decomposition</a></li>
-<li><a class="reference internal" href="#gather-message-passing-data-decomposition">8. Gather:  message-passing data decomposition</a></li>
+<li><a class="reference internal" href="#collective-communication-reduction">6. Collective Communication: Reduction</a></li>
+<li><a class="reference internal" href="#collective-communication-scatter-for-message-passing-data-decomposition">7. Collective communication: Scatter for message-passing data decomposition</a></li>
+<li><a class="reference internal" href="#collective-communication-gather-for-message-passing-data-decomposition">8. Collective communication: Gather for message-passing data decomposition</a></li>
 </ul>
 </li>
 </ul>
