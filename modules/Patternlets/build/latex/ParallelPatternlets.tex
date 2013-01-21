@@ -173,7 +173,7 @@ First let us illustrate the basic components of an MPI program.
 \begin{Verbatim}[commandchars=\\\{\}]
 \PYG{c+cm}{/* hello.c}
 \PYG{c+cm}{ * ... illustrates the use of the basic MPI commands...}
-\PYG{c+cm}{ * Joel Adams, Calvin College, at November 2009.}
+\PYG{c+cm}{ * Joel Adams, Calvin College, November 2009.}
 \PYG{c+cm}{ */}
 
 \PYG{c+cp}{\PYGZsh{}}\PYG{c+cp}{include \PYGZlt{}stdio.h\PYGZgt{}}
@@ -203,7 +203,7 @@ First let us illustrate the basic components of an MPI program.
 \begin{Verbatim}[commandchars=\\\{\}]
 \PYG{c+cm}{/* masterServer.c}
 \PYG{c+cm}{ * ... illustrates the basic master-worker pattern in MPI ...}
-\PYG{c+cm}{ * Joel Adams, Calvin College, at November 2009.}
+\PYG{c+cm}{ * Joel Adams, Calvin College, November 2009.}
 \PYG{c+cm}{ */}
 
 \PYG{c+cp}{\PYGZsh{}}\PYG{c+cp}{include \PYGZlt{}stdio.h\PYGZgt{}}
@@ -237,7 +237,7 @@ First let us illustrate the basic components of an MPI program.
 \begin{Verbatim}[commandchars=\\\{\}]
 \PYG{c+cm}{/* sendRecv.c}
 \PYG{c+cm}{ * ... illustrates the use of the MPI\PYGZus{}Send() and MPI\PYGZus{}Recv() commands...}
-\PYG{c+cm}{ * Joel Adams, Calvin College, at November 2009.}
+\PYG{c+cm}{ * Joel Adams, Calvin College, November 2009.}
 \PYG{c+cm}{ */}
 
 \PYG{c+cp}{\PYGZsh{}}\PYG{c+cp}{include \PYGZlt{}stdio.h\PYGZgt{}}
@@ -289,7 +289,7 @@ In this example, the data being decomposed in simply the set of integeres from z
 \PYG{c+cm}{ *	in which processes perform the loop's iterations in 'slices' }
 \PYG{c+cm}{ *	(simple, and useful when loop iterations do not access}
 \PYG{c+cm}{ *	 memory/cache locations) ...}
-\PYG{c+cm}{ * Joel Adams, Calvin College, at November 2009.}
+\PYG{c+cm}{ * Joel Adams, Calvin College, November 2009.}
 \PYG{c+cm}{ */}
 
 \PYG{c+cp}{\PYGZsh{}}\PYG{c+cp}{include \PYGZlt{}stdio.h\PYGZgt{}}
@@ -325,7 +325,7 @@ of an array that could have been looped over in a sequential solution.
 \PYG{c+cm}{ * ... illustrates the parallel for loop pattern in MPI }
 \PYG{c+cm}{ *	in which processes perform the loop's iterations in 'blocks' }
 \PYG{c+cm}{ *	(preferable when loop iterations do access memory/cache locations) ...}
-\PYG{c+cm}{ * Joel Adams, Calvin College, at November 2009.}
+\PYG{c+cm}{ * Joel Adams, Calvin College, November 2009.}
 \PYG{c+cm}{ */}
 
 \PYG{c+cp}{\PYGZsh{}}\PYG{c+cp}{include \PYGZlt{}stdio.h\PYGZgt{}}
@@ -368,7 +368,7 @@ created by a single \emph{master} node.
 \begin{Verbatim}[commandchars=\\\{\}]
 \PYG{c+cm}{/* bcast.c}
 \PYG{c+cm}{ * ... illustrates the use of MPI\PYGZus{}Bcast()...}
-\PYG{c+cm}{ * Joel Adams, Calvin College, at November 2009.}
+\PYG{c+cm}{ * Joel Adams, Calvin College, November 2009.}
 \PYG{c+cm}{ */}
 
 \PYG{c+cp}{\PYGZsh{}}\PYG{c+cp}{include \PYGZlt{}mpi.h\PYGZgt{}}
@@ -424,7 +424,7 @@ MPI\_MAX in the following code.
 \begin{Verbatim}[commandchars=\\\{\}]
 \PYG{c+cm}{/* reduce.c}
 \PYG{c+cm}{ * ... illustrates the use of MPI\PYGZus{}Reduce()...}
-\PYG{c+cm}{ * Joel Adams, Calvin College, at November 2009.}
+\PYG{c+cm}{ * Joel Adams, Calvin College, November 2009.}
 \PYG{c+cm}{ */}
 
 \PYG{c+cp}{\PYGZsh{}}\PYG{c+cp}{include \PYGZlt{}mpi.h\PYGZgt{}}
@@ -468,7 +468,7 @@ a copy of its portion of the array.
 \begin{Verbatim}[commandchars=\\\{\}]
 \PYG{c+cm}{/* scatter.c}
 \PYG{c+cm}{ * ... illustrates the use of MPI\PYGZus{}Scatter()...}
-\PYG{c+cm}{ * Joel Adams, Calvin College, at November 2009.}
+\PYG{c+cm}{ * Joel Adams, Calvin College, November 2009.}
 \PYG{c+cm}{ */}
 
 \PYG{c+cp}{\PYGZsh{}}\PYG{c+cp}{include \PYGZlt{}mpi.h\PYGZgt{}}
@@ -595,7 +595,7 @@ fork a set of threads to execute that particular line of code.
 \PYG{c+cm}{/* simpleParallel.c}
 \PYG{c+cm}{ * ... illustrates the use of OpenMP's parallel directive...}
 \PYG{c+cm}{ *}
-\PYG{c+cm}{ * Joel Adams, Calvin College, at November 2009.}
+\PYG{c+cm}{ * Joel Adams, Calvin College, November 2009.}
 \PYG{c+cm}{ *}
 \PYG{c+cm}{ * Usage: ./simpleParallel }
 \PYG{c+cm}{ * Compile \PYGZam{} run, uncomment the pragma, recompile \PYGZam{} run, compare.}
@@ -631,7 +631,7 @@ curly braces on lines 18 through 20.
 \PYG{c+cm}{/* parallelHello.c}
 \PYG{c+cm}{ * ... illustrates the use of two basic OpenMP commands...}
 \PYG{c+cm}{ *}
-\PYG{c+cm}{ * Joel Adams, Calvin College, at November 2009.}
+\PYG{c+cm}{ * Joel Adams, Calvin College, November 2009.}
 \PYG{c+cm}{ *}
 \PYG{c+cm}{ * Usage: ./parallelHello}
 \PYG{c+cm}{ * Compile \PYGZam{} run, uncomment pragma, recompile \PYGZam{} run, compare results}
@@ -664,7 +664,7 @@ Here we enter the number of threads to use on the command line.
 \PYG{c+cm}{ * ... illustrates the use of two basic OpenMP commands}
 \PYG{c+cm}{ * 	using the commandline to control the number of threads...}
 \PYG{c+cm}{ *}
-\PYG{c+cm}{ * Joel Adams, Calvin College, at November 2009.}
+\PYG{c+cm}{ * Joel Adams, Calvin College, November 2009.}
 \PYG{c+cm}{ *}
 \PYG{c+cm}{ * Usage: ./parallelHello2 [numThreads]}
 \PYG{c+cm}{ * Compile \PYGZam{} run with no commandline arg, rerun with different commandline args}
@@ -742,7 +742,7 @@ Here we enter the number of threads to use on the command line.
 \PYG{c+cm}{ *  	in which threads iterate through blocks of the index range}
 \PYG{c+cm}{ *	(cache-beneficial when accessing adjacent memory locations).}
 \PYG{c+cm}{ *}
-\PYG{c+cm}{ * Joel Adams, Calvin College, at November 2009.}
+\PYG{c+cm}{ * Joel Adams, Calvin College, November 2009.}
 \PYG{c+cm}{ * Usage: ./parallelForBlocks [numThreads]}
 \PYG{c+cm}{ * Exercise}
 \PYG{c+cm}{ */}
@@ -778,7 +778,7 @@ Here we enter the number of threads to use on the command line.
 \PYG{c+cm}{ *	parallel for-loop iterations in 'stripes' instead of blocks}
 \PYG{c+cm}{ *	(use only when not accesssing memory).}
 \PYG{c+cm}{ *}
-\PYG{c+cm}{ * Joel Adams, Calvin College, at November 2009.}
+\PYG{c+cm}{ * Joel Adams, Calvin College, November 2009.}
 \PYG{c+cm}{ *}
 \PYG{c+cm}{ * Usage: ./parallelForStripes [numThreads]}
 \PYG{c+cm}{ */}
@@ -822,7 +822,7 @@ which is computed in line 61.
 \PYG{c+cm}{/* reduction.c}
 \PYG{c+cm}{ * ... illustrates the OpenMP parallel-for loop's reduction clause}
 \PYG{c+cm}{ *}
-\PYG{c+cm}{ * Joel Adams, Calvin College, at November 2009.}
+\PYG{c+cm}{ * Joel Adams, Calvin College, November 2009.}
 \PYG{c+cm}{ *}
 \PYG{c+cm}{ * Usage: ./reduction }
 \PYG{c+cm}{ * Exercise:}
@@ -892,7 +892,7 @@ which is computed in line 61.
 \PYG{c+cm}{/* private.c}
 \PYG{c+cm}{ * ... illustrates why private variables are needed with OpenMP's parallel for loop}
 \PYG{c+cm}{ *}
-\PYG{c+cm}{ * Joel Adams, Calvin College, at November 2009.}
+\PYG{c+cm}{ * Joel Adams, Calvin College, November 2009.}
 \PYG{c+cm}{ * Usage: ./private }
 \PYG{c+cm}{ * Exercise: }
 \PYG{c+cm}{ * - Run, noting that the serial program produces correct results}
@@ -945,7 +945,7 @@ which is computed in line 61.
 \PYG{c+cm}{ * ... illustrates a race condition when multiple threads write to a shared variable}
 \PYG{c+cm}{ *  (and explores OpenMP private variables and atomic operations).}
 \PYG{c+cm}{ *}
-\PYG{c+cm}{ * Joel Adams (Calvin College), November 2009.}
+\PYG{c+cm}{ * Joel Adams, Calvin College, November 2009.}
 \PYG{c+cm}{ * Usage: ./atomic}
 \PYG{c+cm}{ * Exercise:}
 \PYG{c+cm}{ *  - Compile and run 10 times; note that it always produces the final balance 0}
@@ -999,7 +999,7 @@ which is computed in line 61.
 \PYG{c+cm}{ * ... fixes a race condition when multiple threads write to a shared variable}
 \PYG{c+cm}{ *  	using the OpenMP critical directive.}
 \PYG{c+cm}{ *}
-\PYG{c+cm}{ * Joel Adams (Calvin College), November 2009.}
+\PYG{c+cm}{ * Joel Adams, Calvin College, November 2009.}
 \PYG{c+cm}{ * Usage: ./critical}
 \PYG{c+cm}{ * Exercise:}
 \PYG{c+cm}{ *  - Compile and run several times; note that it always produces the final balance 0}
@@ -1055,7 +1055,7 @@ which is computed in line 61.
 \PYG{c+cm}{/* critical.c}
 \PYG{c+cm}{ * ... compares the performance of OpenMP's critical and atomic directives}
 \PYG{c+cm}{ *}
-\PYG{c+cm}{ * Joel Adams (Calvin College), November 2009.}
+\PYG{c+cm}{ * Joel Adams, Calvin College, November 2009.}
 \PYG{c+cm}{ * Usage: ./critical}
 \PYG{c+cm}{ * Exercise:}
 \PYG{c+cm}{ *  - Compile, run, compare times for critical vs. atomic}
@@ -1120,7 +1120,7 @@ which is computed in line 61.
 \begin{Verbatim}[commandchars=\\\{\}]
 \PYG{c+cm}{/* sections.c}
 \PYG{c+cm}{ * ... illustrates the use of OpenMP's parallel section/sections directives...}
-\PYG{c+cm}{ * Joel Adams, Calvin College, at November 2009.}
+\PYG{c+cm}{ * Joel Adams, Calvin College, November 2009.}
 \PYG{c+cm}{ */}
 
 \PYG{c+cp}{\PYGZsh{}}\PYG{c+cp}{include \PYGZlt{}stdio.h\PYGZgt{}}
