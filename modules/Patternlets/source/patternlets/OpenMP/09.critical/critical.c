@@ -2,7 +2,7 @@
  * ... fixes a race condition when multiple threads write to a shared variable
  *  	using the OpenMP critical directive.
  *
- * Joel Adams (Calvin College), November 2009.
+ * Joel Adams, Calvin College, November 2009.
  * Usage: ./critical
  * Exercise:
  *  - Compile and run several times; note that it always produces the final balance 0

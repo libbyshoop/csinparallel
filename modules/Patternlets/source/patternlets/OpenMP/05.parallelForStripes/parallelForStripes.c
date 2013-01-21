@@ -3,7 +3,7 @@
  *	parallel for-loop iterations in 'stripes' instead of blocks
  *	(use only when not accesssing memory).
  *
- * Joel Adams, Calvin College, at November 2009.
+ * Joel Adams, Calvin College, November 2009.
  *
  * Usage: ./parallelForStripes [numThreads]
  */

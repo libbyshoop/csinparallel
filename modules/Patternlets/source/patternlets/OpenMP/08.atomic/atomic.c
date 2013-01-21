@@ -2,7 +2,7 @@
  * ... illustrates a race condition when multiple threads write to a shared variable
  *  (and explores OpenMP private variables and atomic operations).
  *
- * Joel Adams (Calvin College), November 2009.
+ * Joel Adams, Calvin College, November 2009.
  * Usage: ./atomic
  * Exercise:
  *  - Compile and run 10 times; note that it always produces the final balance 0

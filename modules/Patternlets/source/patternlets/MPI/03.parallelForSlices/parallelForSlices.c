@@ -3,7 +3,7 @@
  *	in which processes perform the loop's iterations in 'slices' 
  *	(simple, and useful when loop iterations do not access
  *	 memory/cache locations) ...
- * Joel Adams, Calvin College, at November 2009.
+ * Joel Adams, Calvin College, November 2009.
  */
 
 #include <stdio.h>

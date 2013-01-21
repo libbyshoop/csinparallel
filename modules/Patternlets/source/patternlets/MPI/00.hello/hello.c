@@ -1,6 +1,6 @@
 /* hello.c
  * ... illustrates the use of the basic MPI commands...
- * Joel Adams, Calvin College, at November 2009.
+ * Joel Adams, Calvin College, November 2009.
  */
 
 #include <stdio.h>

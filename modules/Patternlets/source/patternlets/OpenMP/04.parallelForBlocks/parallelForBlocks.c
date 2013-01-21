@@ -3,7 +3,7 @@
  *  	in which threads iterate through blocks of the index range
  *	(cache-beneficial when accessing adjacent memory locations).
  *
- * Joel Adams, Calvin College, at November 2009.
+ * Joel Adams, Calvin College, November 2009.
  * Usage: ./parallelForBlocks [numThreads]
  * Exercise
  */

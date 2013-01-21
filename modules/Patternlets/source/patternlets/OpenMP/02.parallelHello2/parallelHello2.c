@@ -2,7 +2,7 @@
  * ... illustrates the use of two basic OpenMP commands
  * 	using the commandline to control the number of threads...
  *
- * Joel Adams, Calvin College, at November 2009.
+ * Joel Adams, Calvin College, November 2009.
  *
  * Usage: ./parallelHello2 [numThreads]
  * Compile & run with no commandline arg, rerun with different commandline args

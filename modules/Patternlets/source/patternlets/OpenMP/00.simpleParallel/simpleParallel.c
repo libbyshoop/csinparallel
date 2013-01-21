@@ -1,7 +1,7 @@
 /* simpleParallel.c
  * ... illustrates the use of OpenMP's parallel directive...
  *
- * Joel Adams, Calvin College, at November 2009.
+ * Joel Adams, Calvin College, November 2009.
  *
  * Usage: ./simpleParallel 
  * Compile & run, uncomment the pragma, recompile & run, compare.

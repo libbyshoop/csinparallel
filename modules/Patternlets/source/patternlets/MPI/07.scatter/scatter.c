@@ -1,6 +1,6 @@
 /* scatter.c
  * ... illustrates the use of MPI_Scatter()...
- * Joel Adams, Calvin College, at November 2009.
+ * Joel Adams, Calvin College, November 2009.
  */
 
 #include <mpi.h>

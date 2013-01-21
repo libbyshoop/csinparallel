@@ -1,6 +1,6 @@
 /* sendRecv.c
  * ... illustrates the use of the MPI_Send() and MPI_Recv() commands...
- * Joel Adams, Calvin College, at November 2009.
+ * Joel Adams, Calvin College, November 2009.
  */
 
 #include <stdio.h>

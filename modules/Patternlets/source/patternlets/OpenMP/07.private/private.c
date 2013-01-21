@@ -1,7 +1,7 @@
 /* private.c
  * ... illustrates why private variables are needed with OpenMP's parallel for loop
  *
- * Joel Adams, Calvin College, at November 2009.
+ * Joel Adams, Calvin College, November 2009.
  * Usage: ./private 
  * Exercise: 
  * - Run, noting that the serial program produces correct results

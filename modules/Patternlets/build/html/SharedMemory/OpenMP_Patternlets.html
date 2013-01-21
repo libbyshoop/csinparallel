@@ -53,7 +53,11 @@
 a programmer could use a
 low-level thread package, such as pthreads. An alternative is to use
 a compiler that processes OpenMP <em>pragmas</em>, which are compiler directives that
-enable the compiler to generate threaded code.</p>
+enable the compiler to generate threaded code.  Whereas pthreads uses an <strong>explicit</strong>
+multithreading mosel in which the programmer must explicitly create and manage threads,
+OpenMP uses an <strong>implicit</strong> multithreading model in which the library handles
+thread creation and management, thus making the programmer&#8217;s task much simpler and
+less error-prone.</p>
 <p>The following are examples of C code with OpenMP pragmas
 The firrst three are basic illustrations to get used to the OpenMP pragmas.
 The rest illustrate how to implement particular patterns and what can
@@ -65,8 +69,8 @@ during portions of the code specified by the programmer.</p>
 <div class="section" id="source-code">
 <h2>Source Code<a class="headerlink" href="#source-code" title="Permalink to this headline">¶</a></h2>
 <p>Please download all examples from this tarball:
-<a class="reference download internal" href="../_downloads/patternlets2.tgz"><tt class="xref download docutils literal"><span class="pre">patternlets.tgz</span></tt></a></p>
-<p>A C code file for each example below can be found in subdirectories of the OpneMP directory,
+<a class="reference download internal" href="../_downloads/patternlets1.tgz"><tt class="xref download docutils literal"><span class="pre">patternlets.tgz</span></tt></a></p>
+<p>A C code file for each example below can be found in subdirectories of the OpenMP directory,
 along with a makefile.</p>
 </div>
 <div class="section" id="the-omp-parallel-pragma">
@@ -99,7 +103,7 @@ fork a set of threads to execute that particular line of code.</p>
 24</pre></div></td><td class="code"><div class="highlight"><pre><span class="cm">/* simpleParallel.c</span>
 <span class="cm"> * ... illustrates the use of OpenMP&#39;s parallel directive...</span>
 <span class="cm"> *</span>
-<span class="cm"> * Joel Adams, Calvin College, at November 2009.</span>
+<span class="cm"> * Joel Adams, Calvin College, November 2009.</span>
 <span class="cm"> *</span>
 <span class="cm"> * Usage: ./simpleParallel </span>
 <span class="cm"> * Compile &amp; run, uncomment the pragma, recompile &amp; run, compare.</span>
@@ -156,7 +160,7 @@ curly braces on lines 18 through 20.</p>
 24</pre></div></td><td class="code"><div class="highlight"><pre><span class="cm">/* parallelHello.c</span>
 <span class="cm"> * ... illustrates the use of two basic OpenMP commands...</span>
 <span class="cm"> *</span>
-<span class="cm"> * Joel Adams, Calvin College, at November 2009.</span>
+<span class="cm"> * Joel Adams, Calvin College, November 2009.</span>
 <span class="cm"> *</span>
 <span class="cm"> * Usage: ./parallelHello</span>
 <span class="cm"> * Compile &amp; run, uncomment pragma, recompile &amp; run, compare results</span>
@@ -187,7 +191,7 @@ curly braces on lines 18 through 20.</p>
 <span class="cm"> * ... illustrates the use of two basic OpenMP commands</span>
 <span class="cm"> * 	using the commandline to control the number of threads...</span>
 <span class="cm"> *</span>
-<span class="cm"> * Joel Adams, Calvin College, at November 2009.</span>
+<span class="cm"> * Joel Adams, Calvin College, November 2009.</span>
 <span class="cm"> *</span>
 <span class="cm"> * Usage: ./parallelHello2 [numThreads]</span>
 <span class="cm"> * Compile &amp; run with no commandline arg, rerun with different commandline args</span>
@@ -263,7 +267,7 @@ curly braces on lines 18 through 20.</p>
 <span class="cm"> *  	in which threads iterate through blocks of the index range</span>
 <span class="cm"> *	(cache-beneficial when accessing adjacent memory locations).</span>
 <span class="cm"> *</span>
-<span class="cm"> * Joel Adams, Calvin College, at November 2009.</span>
+<span class="cm"> * Joel Adams, Calvin College, November 2009.</span>
 <span class="cm"> * Usage: ./parallelForBlocks [numThreads]</span>
 <span class="cm"> * Exercise</span>
 <span class="cm"> */</span>
@@ -298,7 +302,7 @@ curly braces on lines 18 through 20.</p>
 <span class="cm"> *	parallel for-loop iterations in &#39;stripes&#39; instead of blocks</span>
 <span class="cm"> *	(use only when not accesssing memory).</span>
 <span class="cm"> *</span>
-<span class="cm"> * Joel Adams, Calvin College, at November 2009.</span>
+<span class="cm"> * Joel Adams, Calvin College, November 2009.</span>
 <span class="cm"> *</span>
 <span class="cm"> * Usage: ./parallelForStripes [numThreads]</span>
 <span class="cm"> */</span>
@@ -333,7 +337,7 @@ curly braces on lines 18 through 20.</p>
 <h2>6. Collective Communication: Reduction<a class="headerlink" href="#collective-communication-reduction" title="Permalink to this headline">¶</a></h2>
 <p>Once processes have performed independent concurrent computations, possibly
 on some portion of decomposed data, it is quite commen to then <em>reduce</em>
-those individual computations into one value. In this example, an array of randomly assigned integers represents a set of shred data. All values
+those individual computations into one value. In this example, an array of randomly assigned integers represents a set of shared data. All values
 in the array are summed together by using the OpenMP
 parallel for pragma with the <cite>reduction(+:sum)</cite> clause on the variable <strong>sum</strong>,
 which is computed in line 61.</p>
@@ -403,7 +407,7 @@ which is computed in line 61.</p>
 64</pre></div></td><td class="code"><div class="highlight"><pre><span class="cm">/* reduction.c</span>
 <span class="cm"> * ... illustrates the OpenMP parallel-for loop&#39;s reduction clause</span>
 <span class="cm"> *</span>
-<span class="cm"> * Joel Adams, Calvin College, at November 2009.</span>
+<span class="cm"> * Joel Adams, Calvin College, November 2009.</span>
 <span class="cm"> *</span>
 <span class="cm"> * Usage: ./reduction </span>
 <span class="cm"> * Exercise:</span>
@@ -472,7 +476,7 @@ which is computed in line 61.</p>
 <div class="highlight-c"><div class="highlight"><pre><span class="cm">/* private.c</span>
 <span class="cm"> * ... illustrates why private variables are needed with OpenMP&#39;s parallel for loop</span>
 <span class="cm"> *</span>
-<span class="cm"> * Joel Adams, Calvin College, at November 2009.</span>
+<span class="cm"> * Joel Adams, Calvin College, November 2009.</span>
 <span class="cm"> * Usage: ./private </span>
 <span class="cm"> * Exercise: </span>
 <span class="cm"> * - Run, noting that the serial program produces correct results</span>
@@ -524,7 +528,7 @@ which is computed in line 61.</p>
 <span class="cm"> * ... illustrates a race condition when multiple threads write to a shared variable</span>
 <span class="cm"> *  (and explores OpenMP private variables and atomic operations).</span>
 <span class="cm"> *</span>
-<span class="cm"> * Joel Adams (Calvin College), November 2009.</span>
+<span class="cm"> * Joel Adams, Calvin College, November 2009.</span>
 <span class="cm"> * Usage: ./atomic</span>
 <span class="cm"> * Exercise:</span>
 <span class="cm"> *  - Compile and run 10 times; note that it always produces the final balance 0</span>
@@ -577,7 +581,7 @@ which is computed in line 61.</p>
 <span class="cm"> * ... fixes a race condition when multiple threads write to a shared variable</span>
 <span class="cm"> *  	using the OpenMP critical directive.</span>
 <span class="cm"> *</span>
-<span class="cm"> * Joel Adams (Calvin College), November 2009.</span>
+<span class="cm"> * Joel Adams, Calvin College, November 2009.</span>
 <span class="cm"> * Usage: ./critical</span>
 <span class="cm"> * Exercise:</span>
 <span class="cm"> *  - Compile and run several times; note that it always produces the final balance 0</span>
@@ -632,7 +636,7 @@ which is computed in line 61.</p>
 <div class="highlight-c"><div class="highlight"><pre><span class="cm">/* critical.c</span>
 <span class="cm"> * ... compares the performance of OpenMP&#39;s critical and atomic directives</span>
 <span class="cm"> *</span>
-<span class="cm"> * Joel Adams (Calvin College), November 2009.</span>
+<span class="cm"> * Joel Adams, Calvin College, November 2009.</span>
 <span class="cm"> * Usage: ./critical</span>
 <span class="cm"> * Exercise:</span>
 <span class="cm"> *  - Compile, run, compare times for critical vs. atomic</span>
@@ -696,7 +700,7 @@ which is computed in line 61.</p>
 <h2>11. Task Decomposition Pattern using OpenMP section directive<a class="headerlink" href="#task-decomposition-pattern-using-openmp-section-directive" title="Permalink to this headline">¶</a></h2>
 <div class="highlight-c"><div class="highlight"><pre><span class="cm">/* sections.c</span>
 <span class="cm"> * ... illustrates the use of OpenMP&#39;s parallel section/sections directives...</span>
-<span class="cm"> * Joel Adams, Calvin College, at November 2009.</span>
+<span class="cm"> * Joel Adams, Calvin College, November 2009.</span>
 <span class="cm"> */</span>
 
 <span class="cp">#include &lt;stdio.h&gt;</span>

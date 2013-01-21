@@ -1,6 +1,6 @@
 /* sections.c
  * ... illustrates the use of OpenMP's parallel section/sections directives...
- * Joel Adams, Calvin College, at November 2009.
+ * Joel Adams, Calvin College, November 2009.
  */
 
 #include <stdio.h>

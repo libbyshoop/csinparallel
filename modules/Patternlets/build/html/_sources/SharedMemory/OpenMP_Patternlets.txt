@@ -6,7 +6,11 @@ When writing programs for shared-memory hardware with multiple cores,
 a programmer could use a
 low-level thread package, such as pthreads. An alternative is to use
 a compiler that processes OpenMP *pragmas*, which are compiler directives that
-enable the compiler to generate threaded code.
+enable the compiler to generate threaded code.  Whereas pthreads uses an **explicit**
+multithreading mosel in which the programmer must explicitly create and manage threads,
+OpenMP uses an **implicit** multithreading model in which the library handles
+thread creation and management, thus making the programmer's task much simpler and
+less error-prone.
 
 The following are examples of C code with OpenMP pragmas
 The firrst three are basic illustrations to get used to the OpenMP pragmas.
@@ -24,7 +28,7 @@ Source Code
 Please download all examples from this tarball: 
 :download:`patternlets.tgz <../patternlets.tgz>`
 
-A C code file for each example below can be found in subdirectories of the OpneMP directory,
+A C code file for each example below can be found in subdirectories of the OpenMP directory,
 along with a makefile.
 
 0. The OMP parallel pragma
@@ -87,7 +91,7 @@ Here we enter the number of threads to use on the command line.
 
 Once processes have performed independent concurrent computations, possibly
 on some portion of decomposed data, it is quite commen to then *reduce*
-those individual computations into one value. In this example, an array of randomly assigned integers represents a set of shred data. All values
+those individual computations into one value. In this example, an array of randomly assigned integers represents a set of shared data. All values
 in the array are summed together by using the OpenMP
 parallel for pragma with the `reduction(+:sum)` clause on the variable **sum**,
 which is computed in line 61.

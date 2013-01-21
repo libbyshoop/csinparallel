@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-2.4-1.40.13 (TeX Live 2012) (format=pdflatex 2012.6.30)  20 JAN 2013 12:21
+This is pdfTeX, Version 3.1415926-2.4-1.40.13 (TeX Live 2012) (format=pdflatex 2012.6.30)  21 JAN 2013 09:52
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -952,50 +952,50 @@ less on input line 146.
 ]
 Chapter 2.
 LaTeX Font Info:    Font shape `T1/phv/bx/n' in size <12> not available
-(Font)              Font shape `T1/phv/b/n' tried instead on input line 159.
+(Font)              Font shape `T1/phv/b/n' tried instead on input line 160.
 LaTeX Font Info:    Font shape `T1/pcr/m/it' in size <9> not available
-(Font)              Font shape `T1/pcr/m/sl' tried instead on input line 173.
+(Font)              Font shape `T1/pcr/m/sl' tried instead on input line 174.
 LaTeX Font Info:    Font shape `T1/pcr/bx/n' in size <9> not available
-(Font)              Font shape `T1/pcr/b/n' tried instead on input line 181.
+(Font)              Font shape `T1/pcr/b/n' tried instead on input line 182.
 
 Package Fancyhdr Warning: \fancyfoot's `E' option without twoside option is use
-less on input line 197.
+less on input line 198.
 
 [3
 
 ] [4]
 LaTeX Font Info:    Font shape `T1/phv/bx/it' in size <12> not available
-(Font)              Font shape `T1/phv/b/it' tried instead on input line 281.
+(Font)              Font shape `T1/phv/b/it' tried instead on input line 282.
 LaTeX Font Info:    Font shape `T1/phv/b/it' in size <12> not available
-(Font)              Font shape `T1/phv/b/sl' tried instead on input line 281.
- [5] [6] [7] [8] [9] [10] [11] [12] [13] [14]
-Overfull \vbox (0.86151pt too high) detected at line 933
+(Font)              Font shape `T1/phv/b/sl' tried instead on input line 282.
+ [5] [6] [7] [8] [9] [10] [11] [12] [13]
+Underfull \vbox (badness 1033) detected at line 886
  []
 
-[15] [16] [17]
-Underfull \vbox (badness 6316) detected at line 1110
+[14] [15] [16] [17]
+Underfull \vbox (badness 6316) detected at line 1115
  []
 
 [18] (./ParallelPatternlets.ind)
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 1163.
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 1168.
  [19]
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 1163.
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 1168.
  (./ParallelPatternlets.aux)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 1163.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 1163.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 1168.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 1168.
 
 Package rerunfilecheck Info: File `ParallelPatternlets.out' has not changed.
-(rerunfilecheck)             Checksum: BA839C94D94ABD30EC9FAB5CD41EDCCA;262.
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 1163.
+(rerunfilecheck)             Checksum: 3DF667633266FDBF9141E410C7D1506F;272.
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 1168.
  ) 
 Here is how much of TeX's memory you used:
  8832 strings out of 493488
- 124325 string characters out of 3141326
- 225915 words of memory out of 3000000
+ 124336 string characters out of 3141326
+ 225925 words of memory out of 3000000
  11908 multiletter control sequences out of 15000+200000
  60518 words of font info for 67 fonts, out of 3000000 for 9000
  958 hyphenation exceptions out of 8191
- 36i,11n,45p,549b,405s stack positions out of 5000i,500n,10000p,200000b,50000s
+ 36i,12n,45p,549b,405s stack positions out of 5000i,500n,10000p,200000b,50000s
 {/usr/local/texlive/2012/texmf-dist/fonts/enc/dvips/base/8r.enc}</usr/local/t
 exlive/2012/texmf-dist/fonts/type1/urw/courier/ucrb8a.pfb></usr/local/texlive/2
 012/texmf-dist/fonts/type1/urw/courier/ucrr8a.pfb></usr/local/texlive/2012/texm
@@ -1005,7 +1005,7 @@ ype1/urw/helvetic/uhvbo8a.pfb></usr/local/texlive/2012/texmf-dist/fonts/type1/u
 rw/times/utmb8a.pfb></usr/local/texlive/2012/texmf-dist/fonts/type1/urw/times/u
 tmr8a.pfb></usr/local/texlive/2012/texmf-dist/fonts/type1/urw/times/utmri8a.pfb
 >
-Output written on ParallelPatternlets.pdf (21 pages, 135934 bytes).
+Output written on ParallelPatternlets.pdf (21 pages, 137152 bytes).
 PDF statistics:
  189 PDF objects out of 1000 (max. 8388607)
  156 compressed objects within 2 object streams

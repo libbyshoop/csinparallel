@@ -1,6 +1,6 @@
 /* masterServer.c
  * ... illustrates the basic master-worker pattern in MPI ...
- * Joel Adams, Calvin College, at November 2009.
+ * Joel Adams, Calvin College, November 2009.
  */
 
 #include <stdio.h>

@@ -6,7 +6,8 @@ Parallel programs contain *patterns*:  code that recurs over and over again
 in solutions to many problems.  The following examples show very simple
 examples of small portions of
 these patterns that can be combined to solve a problem.  These C code examples use the
-Message Passing Interface (MPI) library, which is suitable for use on a cluster
+Message Passing Interface (MPI) library, which is suitable for use on either a
+single pultiprocessor machine or a cluster
 of machines.
 
 Source Code

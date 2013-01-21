@@ -57,12 +57,13 @@
 in solutions to many problems.  The following examples show very simple
 examples of small portions of
 these patterns that can be combined to solve a problem.  These C code examples use the
-Message Passing Interface (MPI) library, which is suitable for use on a cluster
+Message Passing Interface (MPI) library, which is suitable for use on either a
+single pultiprocessor machine or a cluster
 of machines.</p>
 <div class="section" id="source-code">
 <h2>Source Code<a class="headerlink" href="#source-code" title="Permalink to this headline">¶</a></h2>
 <p>Please download all examples from this tarball:
-<a class="reference download internal" href="../_downloads/patternlets1.tgz"><tt class="xref download docutils literal"><span class="pre">patternlets.tgz</span></tt></a></p>
+<a class="reference download internal" href="../_downloads/patternlets.tgz"><tt class="xref download docutils literal"><span class="pre">patternlets.tgz</span></tt></a></p>
 <p>A C code file for each example below can be found in subdirectories of the MPI directory,
 along with a makefile and an example of how to execute the program.</p>
 </div>
@@ -71,7 +72,7 @@ along with a makefile and an example of how to execute the program.</p>
 <p>First let us illustrate the basic components of an MPI program.</p>
 <div class="highlight-c"><div class="highlight"><pre><span class="cm">/* hello.c</span>
 <span class="cm"> * ... illustrates the use of the basic MPI commands...</span>
-<span class="cm"> * Joel Adams, Calvin College, at November 2009.</span>
+<span class="cm"> * Joel Adams, Calvin College, November 2009.</span>
 <span class="cm"> */</span>
 
 <span class="cp">#include &lt;stdio.h&gt;</span>
@@ -100,7 +101,7 @@ along with a makefile and an example of how to execute the program.</p>
 <h2>1. The Master-Worker Implementation Strategy Pattern<a class="headerlink" href="#the-master-worker-implementation-strategy-pattern" title="Permalink to this headline">¶</a></h2>
 <div class="highlight-c"><div class="highlight"><pre><span class="cm">/* masterServer.c</span>
 <span class="cm"> * ... illustrates the basic master-worker pattern in MPI ...</span>
-<span class="cm"> * Joel Adams, Calvin College, at November 2009.</span>
+<span class="cm"> * Joel Adams, Calvin College, November 2009.</span>
 <span class="cm"> */</span>
 
 <span class="cp">#include &lt;stdio.h&gt;</span>
@@ -133,7 +134,7 @@ along with a makefile and an example of how to execute the program.</p>
 <h2>2. Send-Receive (basic message passing pattern)<a class="headerlink" href="#send-receive-basic-message-passing-pattern" title="Permalink to this headline">¶</a></h2>
 <div class="highlight-c"><div class="highlight"><pre><span class="cm">/* sendRecv.c</span>
 <span class="cm"> * ... illustrates the use of the MPI_Send() and MPI_Recv() commands...</span>
-<span class="cm"> * Joel Adams, Calvin College, at November 2009.</span>
+<span class="cm"> * Joel Adams, Calvin College, November 2009.</span>
 <span class="cm"> */</span>
 
 <span class="cp">#include &lt;stdio.h&gt;</span>
@@ -183,7 +184,7 @@ along with a makefile and an example of how to execute the program.</p>
 <span class="cm"> *	in which processes perform the loop&#39;s iterations in &#39;slices&#39; </span>
 <span class="cm"> *	(simple, and useful when loop iterations do not access</span>
 <span class="cm"> *	 memory/cache locations) ...</span>
-<span class="cm"> * Joel Adams, Calvin College, at November 2009.</span>
+<span class="cm"> * Joel Adams, Calvin College, November 2009.</span>
 <span class="cm"> */</span>
 
 <span class="cp">#include &lt;stdio.h&gt;</span>
@@ -217,7 +218,7 @@ of an array that could have been looped over in a sequential solution.</p>
 <span class="cm"> * ... illustrates the parallel for loop pattern in MPI </span>
 <span class="cm"> *	in which processes perform the loop&#39;s iterations in &#39;blocks&#39; </span>
 <span class="cm"> *	(preferable when loop iterations do access memory/cache locations) ...</span>
-<span class="cm"> * Joel Adams, Calvin College, at November 2009.</span>
+<span class="cm"> * Joel Adams, Calvin College, November 2009.</span>
 <span class="cm"> */</span>
 
 <span class="cp">#include &lt;stdio.h&gt;</span>
@@ -258,7 +259,7 @@ of an array that could have been looped over in a sequential solution.</p>
 created by a single <em>master</em> node.</p>
 <div class="highlight-c"><div class="highlight"><pre><span class="cm">/* bcast.c</span>
 <span class="cm"> * ... illustrates the use of MPI_Bcast()...</span>
-<span class="cm"> * Joel Adams, Calvin College, at November 2009.</span>
+<span class="cm"> * Joel Adams, Calvin College, November 2009.</span>
 <span class="cm"> */</span>
 
 <span class="cp">#include &lt;mpi.h&gt;</span>
@@ -312,7 +313,7 @@ In this example, MPI, has built-in computations, indicated by MPI_SUM and
 MPI_MAX in the following code.</p>
 <div class="highlight-c"><div class="highlight"><pre><span class="cm">/* reduce.c</span>
 <span class="cm"> * ... illustrates the use of MPI_Reduce()...</span>
-<span class="cm"> * Joel Adams, Calvin College, at November 2009.</span>
+<span class="cm"> * Joel Adams, Calvin College, November 2009.</span>
 <span class="cm"> */</span>
 
 <span class="cp">#include &lt;mpi.h&gt;</span>
@@ -354,7 +355,7 @@ the scatter patternlet can be used to ensure that each process receives
 a copy of its portion of the array.</p>
 <div class="highlight-c"><div class="highlight"><pre><span class="cm">/* scatter.c</span>
 <span class="cm"> * ... illustrates the use of MPI_Scatter()...</span>
-<span class="cm"> * Joel Adams, Calvin College, at November 2009.</span>
+<span class="cm"> * Joel Adams, Calvin College, November 2009.</span>
 <span class="cm"> */</span>
 
 <span class="cp">#include &lt;mpi.h&gt;</span>

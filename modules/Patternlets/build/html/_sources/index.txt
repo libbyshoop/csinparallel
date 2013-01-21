@@ -11,7 +11,7 @@ patterns often used in
 programs employing parallelism.  The examples are separated between
 two major *coordination patterns*: 
 	
-	1. message passing used on clusters of distributed computers, and 
+	1. message passing used on single multiprocessor machines or clusters of distributed computers, and 
 	2. mutual exclusion between threads executing concurrently on a single shared memory system.  
 
 Both sets of examples are illustrated
@@ -21,13 +21,13 @@ a C library called MPI (Message Passing Interface).  The mutual Exclusion/shared
 examples use the OpenMP library.
 
 Source Code
-************
+===========
 
 Please download all examples from this tarball: 
 :download:`patternlets.tgz <patternlets.tgz>`
 
-Contents:
-**********
+Patternlet Examples
+===================
 
 .. toctree::
 	:maxdepth: 1

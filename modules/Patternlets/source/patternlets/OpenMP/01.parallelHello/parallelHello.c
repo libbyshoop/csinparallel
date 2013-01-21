@@ -1,7 +1,7 @@
 /* parallelHello.c
  * ... illustrates the use of two basic OpenMP commands...
  *
- * Joel Adams, Calvin College, at November 2009.
+ * Joel Adams, Calvin College, November 2009.
  *
  * Usage: ./parallelHello
  * Compile & run, uncomment pragma, recompile & run, compare results

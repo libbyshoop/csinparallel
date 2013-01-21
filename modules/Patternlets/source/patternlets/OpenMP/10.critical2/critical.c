@@ -1,7 +1,7 @@
 /* critical.c
  * ... compares the performance of OpenMP's critical and atomic directives
  *
- * Joel Adams (Calvin College), November 2009.
+ * Joel Adams, Calvin College, November 2009.
  * Usage: ./critical
  * Exercise:
  *  - Compile, run, compare times for critical vs. atomic

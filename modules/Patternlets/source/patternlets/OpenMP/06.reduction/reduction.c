@@ -1,7 +1,7 @@
 /* reduction.c
  * ... illustrates the OpenMP parallel-for loop's reduction clause
  *
- * Joel Adams, Calvin College, at November 2009.
+ * Joel Adams, Calvin College, November 2009.
  *
  * Usage: ./reduction 
  * Exercise:

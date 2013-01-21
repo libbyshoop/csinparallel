@@ -13,7 +13,7 @@
 
 
 \title{Parallel Patternlets}
-\date{January 20, 2013}
+\date{January 21, 2013}
 \release{}
 \author{CSinParallel Project}
 \newcommand{\sphinxlogo}{}
@@ -123,7 +123,7 @@ programs employing parallelism.  The examples are separated between
 two major \emph{coordination patterns}:
 \begin{enumerate}
 \item {} 
-message passing used on clusters of distributed computers, and
+message passing used on single multiprocessor machines or clusters of distributed computers, and
 
 \item {} 
 mutual exclusion between threads executing concurrently on a single shared memory system.
@@ -143,8 +143,8 @@ Please download all examples from this tarball:
 \code{patternlets.tgz}
 
 
-\chapter{Contents:}
-\label{index:contents}
+\chapter{Patternlet Examples}
+\label{index:patternlet-examples}
 
 \section{Message Passing Parallel Patternlets}
 \label{MessagePassing/MPI_Patternlets:message-passing-parallel-patternlets}\label{MessagePassing/MPI_Patternlets::doc}
@@ -152,7 +152,8 @@ Parallel programs contain \emph{patterns}:  code that recurs over and over again
 in solutions to many problems.  The following examples show very simple
 examples of small portions of
 these patterns that can be combined to solve a problem.  These C code examples use the
-Message Passing Interface (MPI) library, which is suitable for use on a cluster
+Message Passing Interface (MPI) library, which is suitable for use on either a
+single pultiprocessor machine or a cluster
 of machines.
 
 
@@ -559,7 +560,11 @@ When writing programs for shared-memory hardware with multiple cores,
 a programmer could use a
 low-level thread package, such as pthreads. An alternative is to use
 a compiler that processes OpenMP \emph{pragmas}, which are compiler directives that
-enable the compiler to generate threaded code.
+enable the compiler to generate threaded code.  Whereas pthreads uses an \textbf{explicit}
+multithreading mosel in which the programmer must explicitly create and manage threads,
+OpenMP uses an \textbf{implicit} multithreading model in which the library handles
+thread creation and management, thus making the programmer's task much simpler and
+less error-prone.
 
 The following are examples of C code with OpenMP pragmas
 The firrst three are basic illustrations to get used to the OpenMP pragmas.
@@ -577,7 +582,7 @@ during portions of the code specified by the programmer.
 Please download all examples from this tarball:
 \code{patternlets.tgz}
 
-A C code file for each example below can be found in subdirectories of the OpneMP directory,
+A C code file for each example below can be found in subdirectories of the OpenMP directory,
 along with a makefile.
 
 
@@ -808,7 +813,7 @@ Here we enter the number of threads to use on the command line.
 \label{SharedMemory/OpenMP_Patternlets:collective-communication-reduction}
 Once processes have performed independent concurrent computations, possibly
 on some portion of decomposed data, it is quite commen to then \emph{reduce}
-those individual computations into one value. In this example, an array of randomly assigned integers represents a set of shred data. All values
+those individual computations into one value. In this example, an array of randomly assigned integers represents a set of shared data. All values
 in the array are summed together by using the OpenMP
 parallel for pragma with the \emph{reduction(+:sum)} clause on the variable \textbf{sum},
 which is computed in line 61.

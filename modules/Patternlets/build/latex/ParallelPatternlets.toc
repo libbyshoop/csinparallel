@@ -1,6 +1,6 @@
 \select@language {english}
 \contentsline {chapter}{\numberline {1}Source Code}{2}{chapter.1}
-\contentsline {chapter}{\numberline {2}Contents:}{3}{chapter.2}
+\contentsline {chapter}{\numberline {2}Patternlet Examples}{3}{chapter.2}
 \contentsline {section}{\numberline {2.1}Message Passing Parallel Patternlets}{3}{section.2.1}
 \contentsline {subsection}{\numberline {2.1.1}Source Code}{3}{subsection.2.1.1}
 \contentsline {subsection}{\numberline {2.1.2}0. Hello, World}{3}{subsection.2.1.2}
@@ -20,7 +20,7 @@
 \contentsline {subsection}{\numberline {2.2.5}3. Master-Worker Implementation Strategy}{12}{subsection.2.2.5}
 \contentsline {subsection}{\numberline {2.2.6}4. Shared Data Decomposition Pattern: blocking of threads in a parallel for loop}{12}{subsection.2.2.6}
 \contentsline {subsection}{\numberline {2.2.7}5. Shared Data Decomposition Pattern: striping of threads in a parallel for loop}{13}{subsection.2.2.7}
-\contentsline {subsection}{\numberline {2.2.8}6. Collective Communication: Reduction}{13}{subsection.2.2.8}
+\contentsline {subsection}{\numberline {2.2.8}6. Collective Communication: Reduction}{14}{subsection.2.2.8}
 \contentsline {subsection}{\numberline {2.2.9}7. Shared Data Pattern: Parallel-for-loop needs non-shared, private variables}{15}{subsection.2.2.9}
 \contentsline {subsection}{\numberline {2.2.10}8. Race Condition: missing the mutual exclusion patterm}{16}{subsection.2.2.10}
 \contentsline {subsection}{\numberline {2.2.11}9. Mutual Exclusion: two ways to ensure}{17}{subsection.2.2.11}
