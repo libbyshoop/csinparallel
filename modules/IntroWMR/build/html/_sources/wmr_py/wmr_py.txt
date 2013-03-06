@@ -269,7 +269,8 @@ Next Steps
    on the system by letting mappers do a bit of work and pass lass data
    to the awaiting reducers.*  You might want to see if you can see a
    'wall clock' time difference bewteen this version and the code
-   described in the previous section.
+   described in the previous section.  Keep in mind, however, that
+   the time to run depends on how many other users are also using the system.
 
    In the Hadoop file system inside WMR we
    have these datasets available for this:

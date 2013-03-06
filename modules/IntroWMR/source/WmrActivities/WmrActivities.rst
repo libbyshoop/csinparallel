@@ -145,12 +145,21 @@ Next, we're going to look at movie rating data. The information on
 movie ratings was gathered by a University of Minnesota research
 group called Movie Lens. The data set contains information on
 10,000,054 different ratings, including 10,681 different movies and
-71,567 different users (uploaded to **/shared/MovieLens**). Unlike the previous two datasets, this
+71,567 different users (uploaded to **/shared/MovieLens2**). Unlike the previous two datasets, this
 dataset is arranged into tab-separated lists. Each line contains:
 
 ::
 
-    MovieId    UserId   Rating   Timestamp
+    MovieId    UserId   Rating   Date
+
+For eample, one line of the data looks like this:
+
+::
+
+  71567 2338  2 1998-12-01
+
+**Note:** The ratings range in values from 1 to five in 0.5 increments,
+so consider the ratings to be of data type 'float'.
 
 Before we start playing with the data, let's recall the differences
 between using a tab-separated list and a comma-separated list. The
@@ -188,6 +197,10 @@ Activities
 #. Find the average rating that each user gives to movies.
 
 #. Find the number of movies given each of the five ratings.
+
+#. Find the average rating per year
+
+#. Find the average rating in July of each year
 
 Flight Data
 ------------
