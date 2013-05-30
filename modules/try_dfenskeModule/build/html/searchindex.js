@@ -1,0 +1,1 @@
+Search.setIndex({envversion:42,terms:{},objtypes:{},objnames:{},filenames:["index"],titles:["Try Dfenske Module"],objects:{},titleterms:{"try":0,modul:0,dfensk:0}})
