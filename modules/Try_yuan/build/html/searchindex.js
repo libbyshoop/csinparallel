@@ -1,0 +1,1 @@
+Search.setIndex({envversion:42,terms:{content:0},objtypes:{},objnames:{},filenames:["index"],titles:["Welcome to Try_yuan&#8217;s documentation!"],objects:{},titleterms:{try_yuan:0,document:0,welcom:0}})
