@@ -21,7 +21,7 @@ And then follow the following answers.
 
   > Separate source and build directories (y/N) [n]: y
 
-  > Name prefix for templates and static dir [_]: defualt
+  > Name prefix for templates and static dir [_]: [hit enter]
 
   > Project name: Name of the module (e.g. GPU Programming or Distributed Memory Programming)
 
@@ -31,33 +31,33 @@ And then follow the following answers.
 
   > Project release [1]: 1
 
-  > Source file suffix [.rst]: defualt
+  > Source file suffix [.rst]: [hit enter]
 
-  > Name of your master document (without suffix) [index]: defualt
+  > Name of your master document (without suffix) [index]: [hit enter]
 
-  > Do you want to use the epub builder (y/N) [n]: defualt
+  > Do you want to use the epub builder (y/N) [n]: [hit enter]
 
-  > autodoc: automatically insert docstrings from modules (y/N) [n]: defualt
+  > autodoc: automatically insert docstrings from modules (y/N) [n]: [hit enter]
 
-  > doctest: automatically test code snippets in doctest blocks (y/N) [n]: defualt
+  > doctest: automatically test code snippets in doctest blocks (y/N) [n]: [hit enter]
 
-  > intersphinx: link between Sphinx documentation of different projects (y/N) [n]: defualt
+  > intersphinx: link between Sphinx documentation of different projects (y/N) [n]: [hit enter]
 
-  > todo: write "todo" entries that can be shown or hidden on build (y/N) [n]: defualt
+  > todo: write "todo" entries that can be shown or hidden on build (y/N) [n]: [hit enter]
  
-  > coverage: checks for documentation coverage (y/N) [n]: defualt
+  > coverage: checks for documentation coverage (y/N) [n]: [hit enter]
  
   > pngmath: include math, rendered as PNG images (y/N) [n]: y
 
-  > mathjax: include math, rendered in the browser by MathJax (y/N) [n]: defualt
+  > mathjax: include math, rendered in the browser by MathJax (y/N) [n]: [hit enter]
 
-  > ifconfig: conditional inclusion of content based on config values (y/N) [n]: defualt 
+  > ifconfig: conditional inclusion of content based on config values (y/N) [n]: [hit enter] 
 
-  > viewcode: include links to the source code of documented Python objects (y/N) [n]: defualt
+  > viewcode: include links to the source code of documented Python objects (y/N) [n]: [hit enter]
 
-  > Create Makefile? (Y/n) [y]: defualt
+  > Create Makefile? (Y/n) [y]: [hit enter]
 
-  > Create Windows command file? (Y/n) [y]:n
+  > Create Windows command file? (Y/n) [y]:y
 
 Modify the conf.py File
 #######################
