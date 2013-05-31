@@ -66,6 +66,18 @@ Modify the conf.py File
 
 #. Open up the conf.py file and make the following changes
 
+* Change 
+
+  :: 
+
+    import sys, os
+   
+  to following:
+  
+  ::
+  
+    import sys, os, platform
+
 * Change
 
   :: 
@@ -78,12 +90,15 @@ Modify the conf.py File
 
     extensions = ['sphinx.ext.pngmath']
 
-    if 'Darwin' in os.uname()[0]:
+    if 'Darwin' in platform.uname()[0]:
 	    pngmath_latex = '/usr/local/texlive/2011/bin/x86_64-darwin/latex'
 	    pngmath_dvipng = '/usr/local/texlive/2011/bin/x86_64-darwin/dvipng'
-    elif 'Linux' in os.uname()[0]:
+    elif 'Linux' in platform.uname()[0]:
 	    pngmath_latex = '/usr/bin/latex'
 	    pngmath_dvipng = '/usr/bin/dvipng'
+    elif 'Windows' in platform.uname()[0]:
+            pngmath_latex = ''
+            pngmath_dvipng = ''
 
 * Change 
 
@@ -119,7 +134,7 @@ Modify the conf.py File
 
   ::
    
-    html_title = 'Your Module Name'
+    html_title = 'Your Module Name' (including the single quotation marks)
 
 * Comment in and then change 
 
@@ -131,7 +146,7 @@ Modify the conf.py File
 
   ::
 
-    html_logo = '../../../images/CSInParallel200wide.png'
+    html_logo = '../../../images/CSInParallel200wide.png' (including the single quotation marks)
 
 * Comment in and then change 
 
@@ -145,7 +160,7 @@ Modify the conf.py File
 
     html_show_sourcelink = False
 
-* Add following to 
+* Add following
 
   ::
 
@@ -251,10 +266,43 @@ Modify the Makefile file
 
 * make sure you pressed a tab to make the line you added to line up with others instead using a bunch of spaces!!
 
+Build the html
+##############
+
+In your linux or mac terminal, or your windows command line, go to your module's root directory.
+
+$ cd ~/github/csinparallel/modules/yourmodulename
+
+Then excute make html command
+
+$ make html
+
+This will build the html using our modified conf.py, index.rst and Makefile files.
+
 Using your own template
 #######################
 
-We made some modification on the html template. To be exact, we modified the default.css file and put in to the _static folder in source directory to let Sphinx use it when building html.
+1. The default template is defined in the defualt.css file. You can access this file by cd into its directory.
+
+$ cd ~/github/csinparallel/modules/YourModuleName/build/html/_static
+
+2. In order to use your own template, you have to create a default.css_t file and put it into the following directory.
+
+$ cd ~/github/csinparallel/modules/YourModuleName/source/_static
+
+For all existing modules, we made some small changes to the template. You will find details at the end of the section. If you would like to use our template, you can copy the defualt.css_t from any existing modules and put it into the above directory of your module. Just go through the follwoing steps.
+
+	1. go to ~/github/csinparallel/modules/AnyExistingModule/source/_static
+	
+	2. you will see a default.css_t file. 
+
+	3. copy that file and put it into ~/github/csinparallel/modules/YourModuleName/source/_static
+
+Note that the extention is css_t, not css, you have to make sure you have css_t in extension, not filename.
+
+Note that We recommnand you take the defualt.css and modify it to create your own template.
+
+3. About the changes we made
 
 We changed
 
@@ -276,18 +324,6 @@ to the following
       /*font-size: 1.35em;*/
 	font-family:"Lucida Console", Monaco, monospace;
   }
-
-You can also create your own template. 
-
-How to tell Sphinx to use your template
-***************************************
-
-1. go to ~/github/csinparallel/modules/AnyExistingModule/source/_static
-
-2. you will see a default.css_t file. 
-
-3. copy that file and put it into ~/github/csinparallel/modules/YourModuleName/source/_static
-
 
 
 
