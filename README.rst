@@ -11,7 +11,7 @@ We recommand:
 
 gedit, sublime, vim, emacs
 
-We know that won't working:
+We know that won't work:
 
 notepad++ (possible "numpy" issue)
 
