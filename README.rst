@@ -271,11 +271,15 @@ Build the html
 
 In your linux or mac terminal, or your windows command line, go to your module's root directory.
 
-$ cd ~/github/csinparallel/modules/yourmodulename
+::
+  
+  $ cd ~/github/csinparallel/modules/yourmodulename
 
 Then excute make html command
 
-$ make html
+::
+
+  ~/github/csinparallel/modules/yourmodulename$ make html
 
 This will build the html using our modified conf.py, index.rst and Makefile files.
 
@@ -284,11 +288,15 @@ Using your own template
 
 1. The default template is defined in the defualt.css file. You can access this file by cd into its directory.
 
-$ cd ~/github/csinparallel/modules/YourModuleName/build/html/_static
+::
+
+  $ cd ~/github/csinparallel/modules/YourModuleName/build/html/_static
 
 2. In order to use your own template, you have to create a default.css_t file and put it into the following directory.
 
-$ cd ~/github/csinparallel/modules/YourModuleName/source/_static
+::
+
+  $ cd ~/github/csinparallel/modules/YourModuleName/source/_static
 
 For all existing modules, we made some small changes to the template. You will find details at the end of the section. If you would like to use our template, you can copy the defualt.css_t from any existing modules and put it into the above directory of your module. Just go through the follwoing steps.
 
