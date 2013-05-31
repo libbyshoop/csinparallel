@@ -2,6 +2,19 @@
 How to make a new module?
 *************************
 
+Choosing editors that likes Python
+##################################
+
+Some editors does not like the formatting of .py files and .rst files.
+
+We recommand:
+
+gedit, sublime, vim, emacs
+
+We know that won't working:
+
+notepad++ (possible "numpy" issue)
+
 Creating a Module using Sphinx
 ##############################
 
@@ -78,27 +91,27 @@ Modify the conf.py File
   
     import sys, os, platform
 
-* Change
+* Most module editors will not need to create Latex versions of the module. If you are not making latex versions, skip this step. If you really want to make latex versions, you can change
 
   :: 
 
     extentions = ['sphinx.ext.pngmath'] 
 
-  to following:
+  to the following (these tex paths are different for every computer, you will have to find our yours):
 
   ::
 
     extensions = ['sphinx.ext.pngmath']
 
     if 'Darwin' in platform.uname()[0]:
-	    pngmath_latex = '/usr/local/texlive/2011/bin/x86_64-darwin/latex'
-	    pngmath_dvipng = '/usr/local/texlive/2011/bin/x86_64-darwin/dvipng'
+	    pngmath_latex = ''
+	    pngmath_dvipng = ''
     elif 'Linux' in platform.uname()[0]:
-	    pngmath_latex = '/usr/bin/latex'
-	    pngmath_dvipng = '/usr/bin/dvipng'
+	    pngmath_latex = ''
+	    pngmath_dvipng = ''
     elif 'Windows' in platform.uname()[0]:
             pngmath_latex = ''
-            pngmath_dvipng = ''
+            pngmath_dvipng = ''  
 
 * Change 
 
