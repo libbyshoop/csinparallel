@@ -1,9 +1,0 @@
-(define mapper
-  (lambda (key val)
-    (map-words (string-tokenize key) "1")))
-
-(define map-words
-  (lambda (words count)
-    (if (null? words) '()
-         (cons (list (car words) count)
-             (map-words (cdr words) count)))))

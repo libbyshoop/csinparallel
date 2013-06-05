@@ -1,3 +1,0 @@
-(define mapper
-  (lambda (pair)
-    car pair))
