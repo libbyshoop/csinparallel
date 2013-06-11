@@ -3,20 +3,21 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-Welcome to Documentation for Developers's documentation!
+Documentation for Developers
 ========================================================
 
-Contents:
-
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 1
+
+   softwaresetup/softwaresetup
+   creatingnewmodule/modulesetup
+   furthersetup/furthersetup
+   newmoduletemplate/newmoduletemplate
+
+.. comment
+	* :ref:`genindex`
+	* :ref:`modindex`
+	* :ref:`search`
 
 
-
-Indices and tables
-==================
-
-* :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`
 
