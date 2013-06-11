@@ -2,18 +2,12 @@
 How to make a new module?
 *************************
 
-Choosing editors that likes Python
-##################################
+Choosing editors that like Python
+#################################
 
-Some editors does not like the formatting of .py files and .rst files.
+Some editors does not like the formatting of .py files and .rst files (notepad++).
 
-We recommand:
-
-gedit, sublime, vim, emacs
-
-We know that won't work:
-
-notepad++ (possible "numpy" issue)
+Known to be safe: gedit, sublime, vim, emacs
 
 Creating a Module using Sphinx
 ##############################
@@ -30,19 +24,19 @@ And then follow the following answers.
 
 ::
 
-  > Root path for the documentation [.]: The name of your module
+  > Root path for the documentation [.]: YourModuleNameInCamelCase
 
   > Separate source and build directories (y/N) [n]: y
 
   > Name prefix for templates and static dir [_]: [hit enter]
 
-  > Project name: Name of the module (e.g. GPU Programming or Distributed Memory Programming)
+  > Project name: Name of the module in plain English (e.g. GPU Programming or Distributed Memory Programming)
 
   > Author name(s): CSInParallel Project
 
   > Project version: 1
 
-  > Project release [1]: 1
+  > Project release [1]: [hit enter]
 
   > Source file suffix [.rst]: [hit enter]
 
@@ -60,7 +54,7 @@ And then follow the following answers.
  
   > coverage: checks for documentation coverage (y/N) [n]: [hit enter]
  
-  > pngmath: include math, rendered as PNG images (y/N) [n]: y
+  > pngmath: include math, rendered as PNG images (y/N) [n]: **y**
 
   > mathjax: include math, rendered in the browser by MathJax (y/N) [n]: [hit enter]
 
@@ -70,7 +64,7 @@ And then follow the following answers.
 
   > Create Makefile? (Y/n) [y]: [hit enter]
 
-  > Create Windows command file? (Y/n) [y]:y
+  > Create Windows command file? (Y/n) [y]: [hit enter]
 
 Modify the conf.py File
 #######################
@@ -279,6 +273,7 @@ Modify the Makefile file
 
 * make sure you pressed a tab to make the line you added to line up with others instead using a bunch of spaces!!
 
+
 Build the html
 ##############
 
@@ -319,9 +314,9 @@ For all existing modules, we made some small changes to the template. You will f
 
 	3. copy that file and put it into ~/github/csinparallel/modules/YourModuleName/source/_static
 
-Note that the extention is css_t, not css, you have to make sure you have css_t in extension, not filename.
+:note: Note that the extention is css_t, not css - you have to make sure you have css_t in the extension, not the filename.
 
-Note that We recommnand you take the defualt.css and modify it to create your own template.
+We recommend you take the default.css and modify it to create your own template.
 
 3. About the changes we made
 
