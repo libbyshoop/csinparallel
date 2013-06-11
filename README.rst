@@ -1,11 +1,11 @@
-*************************
-How to make a new module?
-*************************
+************************
+How to make a new module
+************************
 
-Choosing editors that like Python
-#################################
+Choosing editors that play nice with Python
+###########################################
 
-Some editors does not like the formatting of .py files and .rst files (notepad++).
+Some editors (notepad++) do not like the formatting of .py files and .rst files.
 
 Known to be safe: gedit, sublime, vim, emacs
 
