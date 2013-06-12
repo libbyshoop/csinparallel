@@ -4,7 +4,7 @@
    contain the root `toctree` directive.
 
 Documentation for Developers
-========================================================
+============================
 
 .. toctree::
    :maxdepth: 1
@@ -13,6 +13,7 @@ Documentation for Developers
    creatingnewmodule/modulesetup
    furthersetup/furthersetup
    newmoduletemplate/newmoduletemplate
+   modulechecklist/modulechecklist
 
 .. comment
 	* :ref:`genindex`
