@@ -13,6 +13,7 @@ Documentation for Developers
    creatingnewmodule/modulesetup
    furthersetup/furthersetup
    newmoduletemplate/newmoduletemplate
+   components/components
    modulechecklist/modulechecklist
 
 .. comment

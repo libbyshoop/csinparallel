@@ -14,4 +14,26 @@ If you've already developed a module or two, here is a cheat sheet to help you m
 in the latexpdf script.
 
 - Your **conf.py** file should have been edited by ``confscript.py``. 
-	:Warning: If you're not sure, open this file and check rather than just running it again. An easy check is to see if the ``html_logo`` field is filled.
+
+- You should have a **default.css_t** file in ``/modules/YourModuleName/source/_static/`` that has either been copied from an existing module or has had the following changes made manually.
+
+This
+
+.. code-block:: css
+	
+	tt {
+  		background-color: #ecf0f3;
+  		padding: 0 1px 0 1px;
+  		font-size: 0.95em;
+	}
+
+has been changed to this:
+
+.. code-block:: css
+	
+	tt {
+  		background-color: #ecf0f3;
+  		padding: 0 1px 0 1px;
+  		/*font-size: 0.95em;*/
+  		font-family:"Lucida Console", Monaco, monospace;
+	}

@@ -3,6 +3,8 @@
 from __future__ import print_function
 import sys, fileinput
 
+
+
 modname = raw_input("Please enter your module's name: ")
 projdes = raw_input("Describe your module in one sentence: ")
 
@@ -28,7 +30,7 @@ commentout = dict(version=r'1',release=r'1')
 latex_el = r"""'releasename': '', 'classoptions': ',openany,oneside', 'babel' : '\\usepackage[english]{babel}'
 }"""
 
-for line in fileinput.input(inplace=1):
+for line in fileinput.input("conf.py", inplace=1):
     entry, sep, value = line.partition(" = ")
     if entry.isspace() or 'import' in entry:
         print(line)
