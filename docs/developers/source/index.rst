@@ -12,14 +12,13 @@ Documentation for Developers
    softwaresetup/softwaresetup
    creatingnewmodule/modulesetup
    furthersetup/furthersetup
+   modulechecklist/modulechecklist
    newmoduletemplate/newmoduletemplate
    components/components
-   modulechecklist/modulechecklist
+   
 
 .. comment
 	* :ref:`genindex`
 	* :ref:`modindex`
 	* :ref:`search`
-
-
 

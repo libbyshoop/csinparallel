@@ -109,3 +109,34 @@ Another Subheading: Adding Visuals
 
 **Equations** also fall under visuals. You can insert clips from screenshots as images or figures if you like, or you can type standard ``LaTeX`` expressions like this: 
 ``:math:`<expression>``` (substituting your own expression for <expression> but keeping the backticks).
+
+Resources/For Further Reading
+#############################
+
+Official `Sphinx documentation`_: super long, but does have a search box and a nice table of contents.
+
+The official `quick reference guide`_, from the docutils sourceforce archive.
+
+A *very* simple `cheat sheet`_, but gives a quick reference to making tables.
+
+A `longer guide`_, written up in Sphinx (so it looks like this page, but much more comprehensive).
+
+`A tutorial from OpenMDAO`_, another project using Sphinx to generate its documentation.
+
+`A ReST tutorial`_ put together by a staff member at the Swiss Federal Institute of Technology; contains lots of useful information about graphing extensions.
+
+.. _Sphinx documentation: http://sphinx-doc.org/
+
+.. _quick reference guide: http://docutils.sourceforge.net/docs/user/rst/quickref.html
+
+.._cheat sheet: http://matplotlib.org/sampledoc/cheatsheet.html
+
+.. _longer guide: http://openalea.gforge.inria.fr/doc/openalea/doc/_build/html/source/sphinx/rest_syntax.html
+
+.. _A tutorial from OpenMDAO: http://openmdao.org/docs/documenting/sphinx.html
+
+.. _A ReST tutorial: http://people.ee.ethz.ch/~creller/web/tricks/reST.html
+
+
+.. comment
+	http://www.nsf.gov/awardsearch/showAward?AWD_ID=0942190&HistoricalAwards=false
