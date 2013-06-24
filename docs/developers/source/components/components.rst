@@ -2,6 +2,8 @@
 Components of a Module
 **********************
 
+Sphinx, check. Github, check. CSS, check. Now...what actually goes in a module? Here are descriptions of the various sections, organized by what's expected of developers, what gets done by CSinParallel, and what could go either way or be shared.
+
 Author's Responsibilities
 #########################
 
@@ -50,23 +52,37 @@ Anticipated sticky spots for students or things that took longer than you might 
 Create supporting exercises
 ***************************
 
+If you've got ideas for in-class activities, homework assignments, or quiz/exam questions, write them up!
 
 Shared responsibilities
 #######################
 
 Determine metadata from controlled vocabulary
 *********************************************
+These tags are used to search the list of existing modules. If you'd like to add a term, contact rab@stolaf.edu or shoop@macalester.edu.
 
-See the csinparallel website for a list - it's long!
+- Languages Supported: Scheme, Python, C++, C, Java, Any 
+
+- Relevant Parallel Computing Concepts: Data Parallelism, Task Parallelism, Message Passing, Shared Memory, Distributed
+
+- Recommended Teaching Level: Introductory, Intermediate, Advanced, Any 
+
+- Possible Course Use: Introduction to Computer Science, Hardware Design, Software Design, Algorithm Design, Parallel Computing Systems, Programming Languages 
 
 Create assessment questions
 ***************************
 
+How will students demonstrate that they've learned what you expect them to learn? Writing learning objectives may have inspired thoughts in this area; if not, CSinParallel writers can lend a hand.
+
 Create publication-quality content on csinparallel github repo
 **************************************************************
 
+Again, a shared responsibility - if you've already got material that's ready to go or you have time to flesh out your own outlines, excellent. If not, we can help you out.
+
 Maintenance
 ***********
+
+Will you have time to keep an eye on your module and make sure that the content doesn't get outdated when the next version of a language is released?
 
 CSinParallel responsibilities
 #############################
