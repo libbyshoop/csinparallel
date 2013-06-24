@@ -129,7 +129,7 @@ A `longer guide`_, written up in Sphinx (so it looks like this page, but much mo
 
 .. _quick reference guide: http://docutils.sourceforge.net/docs/user/rst/quickref.html
 
-.._cheat sheet: http://matplotlib.org/sampledoc/cheatsheet.html
+.. _cheat sheet: http://matplotlib.org/sampledoc/cheatsheet.html
 
 .. _longer guide: http://openalea.gforge.inria.fr/doc/openalea/doc/_build/html/source/sphinx/rest_syntax.html
 

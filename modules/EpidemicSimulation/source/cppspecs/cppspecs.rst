@@ -32,7 +32,7 @@ Represents a particular disease.
 
 .. glossary::
 	State Variables:
-		- ``duration``, an integer representing duration of illness
+		- ``duration``, an integer representing duration of illness, in six-hour periods
 
 		- ``radius``, a float representing the radius of transmission
 

@@ -8,13 +8,15 @@ Simulating in Go
 Structure
 ---------
 
-Go is a language developed to combine features of C/C++ and Python with intuitive concurrency. If you've written either of those before, a lot of this should look familiar!
+Go is a language developed to combine features of C/C++ and Python with intuitive concurrency. If you've written either of those before, a lot of this should look familiar! If you're new to codewriting or get really stuck, check out a simple `tour`_ of the language.
 
 This is short enough to put all the code in one file, so start with ``package main``. Then, similar to ``import`` in Python or ``#include`` in C/C++, `import`_ ``fmt`` (format - used for printing things out), ``math`` (we'll need this to find square roots), and ``math/rand`` (to generate random numbers).
 
 As you'll see if you click the link above, though, Go will give you an error if you include anything you're not using, so your code won't run until you're using all three of those libraries. If you want to test along the way, just comment out lines you're not using yet. 
 
 And you're off! Follow the specs below to code up an epidemic in Go; if you get stuck, there are some links to check out below.
+
+.. _tour: http://tour.golang.org/#1
 
 .. _import: http://golangtutorials.blogspot.com/2011/05/early-syntax-errors-and-other-minor.html
 
@@ -43,14 +45,14 @@ Represents a particular disease.
 
 .. glossary::
 	Variables:
-		- ``duration``, an integer representing duration of illness
+		- ``duration``, an integer representing duration of illness, in six-hour periods
 
 		- ``radius``, a float64 representing the radius of transmission
 
 		- ``contagiousness``, a float64 representing the likelihood of a transmission occurring if a person is within the infection radius 
 
-Struct Person
--------------
+Person
+``````
 
 Represents an individual human being.
 
@@ -128,7 +130,7 @@ Methods associated with a struct are written like this:
 			- Return: none
 
 Simulating an Epidemic
-######################
+**********************
 
 .. glossary::
 	Initial parameters:
@@ -170,17 +172,22 @@ Simulating an Epidemic
 Parallelizing
 -------------
 
-- Go provides simple options for parallelization using goroutines. Briefly, a goroutine is a function that can run simultaneously, or concurrently, with other sections of code. Goroutines can be thought of similarly to threads, although they are not exactly synonymous. A Go program may use thousands of goroutines since they are very lightweight and are managed behind the scenes. If a programmer writes code thinking of goroutines as threads considering race conditions and deadlock, they will most likely be successful
+- Go provides simple options for parallelization using *goroutines*. Briefly, a goroutine is a function that can run simultaneously, or concurrently, with other sections of code. Goroutines can be thought of similarly to threads, although they are not exactly synonymous. A Go program may use thousands of goroutines since they are very lightweight and are managed behind the scenes. If you write Go code thinking of goroutines as threads - considering race conditions and deadlock - you will most likely be successful.
 
-- When using goroutines, it is important to be able to communicate between goroutines. This is accomplished by channels which can be thought of as conveyor belts. Information is put in the channel by one goroutine and taken out by another. They can also be compared to work queues since information can be added to and removed from by multiple parties. Channels can convey any data type of information including structs and are also used buffered or unbuffered.
+- It is important to be able to communicate between goroutines. This is accomplished by *channels*\ , which can be thought of as conveyor belts. Information is put in the channel by one goroutine and taken out by another (and can be added/removed by multiple parties). You can set up a channel to convey information of any data type (including structs) and to be buffered or unbuffered.
 
-- The Sync library provides an easy method to ensure concurrency and timing of goroutines. This package defines the type WaitGroup which manages the threads that should be executed loosely as a group. This is accomplished by a few methods defined for a WaitGroup such as add() and done(). As goroutines are created, add() should be called which will increment a counter (of goroutines) within the WaitGroup. When a goroutine has finished executing, call Done() which will decrement the counter. There is a blocking method called Wait() that will block until the counter reaches 0 signifying that all threads have finished executing. Other options include Locks which mimic a physical lock that can be open and closed by goroutines, but we did not pursue these for our simulation
+- The `Sync`_ library provides an easy set of tools to ensure concurrency and correct timing of goroutines. This package defines the type ``WaitGroup``, which manages the threads that should be executed loosely as a group. As goroutines are created, ``Add()`` should be called, which will increment a counter (of goroutines) within the ``WaitGroup``. When a goroutine has finished executing, call ``Done()`` to decrement the counter. ``Wait()`` will block until the counter reaches 0, signifying that all threads have finished executing. 
 
-- To parallelize the go simulation we used several (in fact, hundreds) goroutines to divide up the computation of the simulation. The parallelization can be likened to parallelizing loops with OpenMP. Within a for loop, create a new goroutine to execute the body of the loop for each iteration. The body of the loop will need to be defined in a function and the appropriate variables pass (by reference if needed).
+	:note: Go's Sync library also includes Locks that goroutines can open and close. Feel free to pursue them as an extension; our focus here is on thread blocking and waiting, which are more in line with MPI/OpenMP concurrency styles.
 
-- To communicate and share information between goroutines, create a channel used to share and store infected people. As goroutines identify people as infected, they add the person to the channel. Different goroutines should later remove people from the channel and compare the distance between all susceptible people and this infected individual. 
+- To parallelize the go simulation we can use several (or, in fact, hundreds of) goroutines to divide up the computation, similar to parallelizing loops with OpenMP. Within a ``for`` loop, create a new goroutine to execute the body of the loop for each iteration. The body of the loop will need to be defined in a function and the appropriate variables passed (by reference if needed).
 
-- Unfortunately if a channel is empty for too long, it will close. To ensure all infected people are added to the channel a blocking mechanism is necesary. Use a WaitGroup and add all goroutines that are involved in searching for infected persons. Call Wait() in the WaitGroup before beginning to remove people from the channel. When the last of these goroutines have finished their search and have called Done(), the call to Wait() will finish blocking and the program will continue execution.
+- To communicate and share information between goroutines, create a channel used to share and store infected ``Person``\ s. As goroutines identify individuals as infected, they add them to the channel. Different goroutines should later each remove an individual from the channel and compare the distance between all susceptible others and the infected individual. 
+
+.. warning::
+	If a channel is empty for too long, it will close. To ensure that all infected people are added to the channel, a blocking mechanism is necesary. Use a ``WaitGroup`` and ``Add()`` all goroutines that are involved in searching for infected ``Person``\ s. Call ``Wait()`` in the ``WaitGroup`` before beginning to remove individuals from the channel. When the last of these goroutines have finished their search and have called ``Done()``, the call to ``Wait()`` will finish blocking and the program will continue execution.
+
+.. _Sync: http://golang.org/pkg/sync/
 
 Resources
 ---------

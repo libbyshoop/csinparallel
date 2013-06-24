@@ -4,7 +4,6 @@ Introduction
 
 The field of epidemiology is the study of infectious diseases, and mathematical models are often used by epidemiologists to describe or predict the spread of disease. Here we present a simplified model of an infectious disease which is *contagious*, meaning spread from person to person.
 
-
 The model describes a specific population and the current state of health of each member of the population. These states can include *susceptible* (having the potential to get sick), *infected* (actively sick and able to spread the infection to others), and *recovered* (no longer sick and incapable of getting sick again). Based on these three states of health, the model is called the *SIR model*. 
 
 :note: This implementation does not consider the case where an individual dies from the disease; more sophisticated implementations of the SIR model consider this case along with other factors left out here (such as immunity, treatment, or births or non-epidemic related deaths in the population during the modeled time). You can read about more complex models `here`_.

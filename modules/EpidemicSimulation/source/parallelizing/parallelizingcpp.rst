@@ -7,9 +7,22 @@ Once you've got a functional sequential epidemic model, take a look at some of t
 OpenMP
 ######
 
-- parallelize the ``for`` loop which loops through ``Population``
+OpenMP gives us a set of preprocessor directives that can be used to run multiple threads. If you've never used it before, there's a great `tutorial`_ available through UIUC called Introduction to OpenMP. Otherwise, the links below can provide more specific guidance or a syntax refresher for those already familiar with OpenMP.
 
-- when the final conditions are evaluated, perform a reduction to count the number of Infected, Susceptible, and Recovered ``Person``\ s. 
+- Use ``#pragma omp parallel for`` to parallelize the ``for`` loop which loops through ``Population``. Experiment with setting different numbers of threads! `More information`_.
+
+- When the final conditions are evaluated, perform a `reduction`_ to count the number of Infected, Susceptible, and Recovered ``Person``\ s. 
+
+.. _tutorial: http://www.citutor.org/
+
+.. _More information: http://msdn.microsoft.com/en-us/library/6z19s8e0.aspx
+
+.. _reduction: http://msdn.microsoft.com/en-us/library/2etkydkz.aspx
+
+
+
+.. comment
+	inserting bookmark here as the place I need to come back to
 
 
 MPI

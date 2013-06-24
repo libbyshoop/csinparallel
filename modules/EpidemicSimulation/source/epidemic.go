@@ -110,7 +110,7 @@ func main() {
   numByState[Infected]=initialInfected
   numByState[Recovered]=0
 
-  //This is how to print to standard out. The elements to be printed appear in parentheses, separated by commas.
+  //This is how to print to standard out: call fmt.Println, and the elements to be printed appear in parentheses, separated by commas.
   fmt.Println("Starting with " , numPersons , " people, of whom are \n \t Susceptible: " , numByState[Susceptible] , "\n \t Infected: " , numByState[Infected] , "\n \t Recovered: " , numByState[Recovered])
 
 

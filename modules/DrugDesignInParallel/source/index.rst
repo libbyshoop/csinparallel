@@ -14,7 +14,6 @@ Drug Design in Parallel
    go/go
    hadoop/hadoop
    evaluation/evaluation
-   lookingahead/lookingahead
 
 .. comment
 	* :ref:`genindex`
