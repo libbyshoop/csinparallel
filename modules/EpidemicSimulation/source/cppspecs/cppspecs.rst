@@ -131,9 +131,13 @@ Simulating an Epidemic
 	Procedures:
 		- Set up your preferred type of loop to run the following ``numIterations`` times:
 
-				- For each member of ``Population``, call ``timeStep()``. If the member is infected, check its position against every susceptible member of ``Population``, and, if the distance between the two is less than ``radius``, use ``contagiousness`` to determine whether transmission occurs.
+			- For each member of ``Population``	
+				
+				- Call ``timeStep()``
 
-				- Count the number of Susceptible, Infected, and Recovered members of ``Population``, and compare to the initial parameters.
+				- If the member is infected, check its position against every susceptible member of ``Population``, and, if the distance between the two is less than ``radius``, use ``contagiousness`` to determine whether transmission occurs.
+
+		- Count the number of Susceptible, Infected, and Recovered members of ``Population``, and print them out to compare to the initial parameters.
 
 
 .. _enum: http://www.cplusplus.com/doc/tutorial/other_data_types/

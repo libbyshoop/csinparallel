@@ -61,7 +61,7 @@ Bolded answers require the user to type something, not just hit enter.
 Modifying the conf.py File
 ##########################
 
-In ``/GitHub/csinparallel/modules/YourModuleName/source``, run the configuration script. To do this, copy the file :download:`confscript.py <confscript.py>` into this folder and double click on it, or enter ``python confscript.py`` into a terminal or command line.  Follow the directions to enter your module's name (in plain English) and a short description when prompted.
+In ``/GitHub/csinparallel/modules/YourModuleName/source``, run the configuration script. To do this, copy the file :download:`confscript.py <confscript.py>` into this folder, and double click on it or enter ``python confscript.py`` into a terminal or command line.  Follow the directions to enter your module's name (in plain English) and a short description when prompted.
 
 Optional: Enabling LaTeX
 ************************

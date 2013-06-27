@@ -11,19 +11,21 @@ Epidemic Simulation
 
    intro/intro
    cppspecs/cppspecs
-   parallelizing/parallelizingcpp
-   parallelizing/parallelizingseqgocode
-   parallelizing/parallelizinggowalkthrough
-   parallelizing/parallelizingadvanced
+   parallelizing/openmpandmpi
+   parallelizing/gowalkthrough
+   parallelizing/seqgocode1
+   parallelizing/seqgocode2
+   parallelizing/portingcpptogo
    testing/testing
 
-Note on this module: there are three different versions of instructions for parallelizing in Go. 
+Note on this module: there are four different versions of instructions for parallelizing in Go. 
 
-   - The first gives sequential Go code, thoroughly commented for both Go style and the program's overall logic, and simply asks students to parallelize it. This could be used in conjunction with the C++ version or not, as desired.
+   - The first gives fairly detailed Go specs and a walkthrough for writing them up, directed at students who have either Python or C++ experience and haven't necessarily written a C++ version of this code already. A more thorough set of parallelizing directions follows.
 
-   - The second gives pretty detailed specs and a walkthrough for writing them up, directed at students who have either Python or C++ experience and haven't necessarily written a C++ version of this code already (and then a more thorough set of parallelizing directions). 
+   - The second and thrid give sequential Go code, thoroughly commented for both Go style and the program's overall logic, and simply ask students to parallelize it (gocode1 is the thorough instructions from the full walkthrough; gocode2 is for more advanced students). These could be used in conjunction with the C++ version or not, as desired.
 
-   - The third version is for students with some programming experience who are porting their existing C++ code into Go; it merely highlights some key structural and syntactic differences between the two languages and then lists resources for figuring out the rest.
+   
+   - The fourth version is for students with some programming experience who are porting their existing C++ code into Go; it merely highlights some key structural and syntactic differences between the two languages and then lists resources for figuring out the rest.
 
 .. comment
 	* :ref:`genindex`

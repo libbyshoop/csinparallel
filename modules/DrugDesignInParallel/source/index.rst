@@ -19,5 +19,3 @@ Drug Design in Parallel
 	* :ref:`genindex`
 	* :ref:`modindex`
 	* :ref:`search`
-
-

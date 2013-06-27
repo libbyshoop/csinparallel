@@ -1,12 +1,14 @@
-/* Go code for CSinParallel, last updated 6-18-13 */
+/* Go code for CSinParallel's Epidemic Simulation module
+Last updated 6-26-13 */
 
 //This is how all Go programs begin.
 package main
 
-import "fmt" //short for format; needed to print to screen
-import "math/rand" //for generating random numbers
-import "math" //for square root function
-
+import ( "fmt" //short for format; needed to print to screen
+		"math/rand" //for generating random numbers
+		"time" //for seeding the random function
+		"math" )//for square root function
+		
 //In Go, the type is optional and comes after the name.
 const width int = 10000
 const height int = 10000
@@ -25,6 +27,7 @@ type Infection struct {
   radius, contagiousness float64 //multiple variables of the same type can simply be collapsed like this
 }
 
+//another struct!
 type Person struct {
 	x, y, state, infectedPeriod int
 }
@@ -65,8 +68,7 @@ type Person struct {
 		p.move()
 		if p.infectedPeriod > 0 {
 			p.infectedPeriod--
-		//because Go uses newlines to decide where to put semicolons, the bracket style below
-	    //is necessary for if-else statements
+		//because Go uses newlines to decide where to put semicolons, the bracket style below (else on the same line as the previous bracket) is necessary for if-else statements
 		} else if p.infectedPeriod == 0 && p.state == Infected {
 			p.updateState(Recovered)
 		}
@@ -74,6 +76,7 @@ type Person struct {
 
 //Implicit typecasting isn't done, even between ints and floats,
 // so in order to take the square root of an integer we have to cast it to a float first.
+//However, we can give the type of all of our parameters at once, as shown below.
 func distance(m, n, a, b int) float64 {
 	ret := math.Sqrt(float64((a-m)*(a-m)+(b-n)*(b-n)))
 	return ret
@@ -81,72 +84,64 @@ func distance(m, n, a, b int) float64 {
 
 func main() {
 
-  const numPersons = 10000
-  const initialInfected = 1700
-  const numIterations = 100
+	//parameters for the simulation: the number of people, how many should initially be infected, and how many six-hour periods to run for
+	const numPersons = 20000
+	const initialInfected = 200
+	const numIterations = 200
+  
+	//seeding random with the current time (converted to Unix time, so it returns a floating-point number of seconds passed since 1/1/70). Otherwise we'd get the same outputs each time we run the simulation!
+	rand.Seed(time.Now().Unix()) 
 
-  //arrays are declared with the number of items before the type
-  //and numPersons had to be constant to be the size of the array
-  var Population [numPersons]Person
+	//Go primarily uses slices rather than arrays, which are created like this
+	Population := make([]Person, numPersons)
 
-  //for loops look like this! := says to create and then initialize the variable,
-  //and no parentheses are needed around the loop controls
-  //However, the body must be between brackets, even when it's only one line long
-  //And finally, i++, not ++i
-  for i:=0; i<numPersons; i++ { Population[i].init() }
+	//for loops look like this! := says to create and then initialize the variable,
+	//and no parentheses are needed around the loop controls
+	//However, the body must be between brackets, even when it's only one line long
+	//And finally, i++, not ++i
+	for i:=0; i<numPersons; i++ { Population[i].init() }
 
-  //rather than writing a constructor, we can simply pass in values for the variables
-  //and they are assigned in the order they appear in the struct's definition
-  influenza := Infection{5,10,.55}
+	//rather than writing a constructor, we can simply pass in values for the variables
+	//and they are assigned in the order they appear in the struct's definition
+	influenza := Infection{28,45,.5}
 
-  for i := 0; i<initialInfected; i++ {
-	Population[i].infectWith(influenza)
+	for i := 0; i<initialInfected; i++ {
+		Population[i].infectWith(influenza)
 	}
 	
-  //this is an array for keeping track of the number of Persons in each of the states of health	
-  var numByState [3]int	
-  //Here we set (and then print) each of their initial values
-  numByState[Susceptible]=numPersons-initialInfected
-  numByState[Infected]=initialInfected
-  numByState[Recovered]=0
+	//This is how to print to standard out: call fmt.Println, and the elements to be printed appear in parentheses, separated by commas.
+	//Spaces are automatically added between elements, and the same formatting characters apply in Go as in C++/Python
+	fmt.Println("\nStarting with" , numPersons , "people, of whom are\n\tSusceptible:" , numPersons-initialInfected , "\n\tInfected:" , initialInfected , "\n\tRecovered: 0\n")
 
-  //This is how to print to standard out. The elements to be printed appear in parentheses, separated by commas.
-  fmt.Println("Starting with " , numPersons , " people, of whom are \n \t Susceptible: " , numByState[Susceptible] , "\n \t Infected: " , numByState[Infected] , "\n \t Recovered: " , numByState[Recovered])
+	//Here is the body of the simulation.
+	//Outermost loop: run the whole thing numIterations times.
+	for h := 0; h<numIterations; h++ {
 
-
-  //Here is the body of the simulation.
-  //Outermost loop: run the whole thing numIterations times.
-  for h := 0; h<numIterations; h++ {
-  
-    //Reset the counts of the number of people in each state.
-    for g := 0; g<3; g++ {
-      numByState[g]=0
-    }
-
-    //For each Person in the array
-    for i := 0; i<numPersons; i++ {
-      //move, and if they're sick, decrease how much longer they'll be sick.
-      Population[i].timeStep();
-      //And if they are sick, for every other person in the array
-      if (Population[i].isInfected()) {
-        for j:=0; j<numPersons; j++ {
-		  if j==i {
-			continue //excluding the already-sick person from reinfecting himself
-		}
-		//if the people are sufficiently near each other and the second Person is susceptible
-          if (distance(Population[i].x,Population[i].y,Population[j].x,Population[j].y) < influenza.radius && Population[j].isSusceptible()) {
-            //use the contagiousness factor to determine whether transmission occurs
-            if (rand.Intn(100) <= int(influenza.contagiousness*100)) {
-              Population[j].infectWith(influenza)
+		//For each Person in the array
+		for i := 0; i<numPersons; i++ {
+			//move, and if they're sick, decrease how much longer they'll be sick.
+			Population[i].timeStep()
+			//And if they are sick, for every other person in the array
+			if (Population[i].isInfected()) {
+				for j:=0; j<numPersons; j++ {
+					//if the people are sufficiently near each other and the second Person is susceptible
+					if (Population[j].isSusceptible() && distance(Population[i].x,Population[i].y,Population[j].x,Population[j].y) < influenza.radius ) {
+						//use the contagiousness factor to determine whether transmission occurs
+						if (rand.Intn(100) <= int(influenza.contagiousness*100)) {
+							Population[j].infectWith(influenza)
+						}
+					}
+				}
 			}
-		  }
-        }
-      }
-      //Finally, add this Person to the count for the state he is in
-      numByState[Population[i].state]++
-    }
-
-  //And print those stats to standard out before beginning the next iteration.
-  fmt.Println("Number of persons \n \t Susceptible: " , numByState[Susceptible] , "\n \t Infected: " , numByState[Infected] , "\n \t Recovered: " , numByState[Recovered])
-  
-  }
+		}
+	}
+	
+	//After simulation is complete, count up the number of people in each category and print them out.
+	//We'll use an array to keep track of them, since the states correspond nicely to array indices
+	var numByState [3]int
+	for i:= 0; i<numPersons; i++ {
+		numByState[Population[i].state]++
+	}
+	fmt.Println("Finished! After" , numIterations/4, "days...\nNumber of persons\n\tSusceptible:" , numByState[Susceptible] , "\n\tInfected:" , numByState[Infected] , "\n\tRecovered:" , numByState[Recovered])
+	  
+}
