@@ -4,7 +4,7 @@ Go Solution
 
 Google’s Go language makes it possible to program with implicitly launched threads, and its channel feature enables simplified thread-safe processing of shared data.
  
-We will compare the “map” stage in the Go implementation :download:`dd_go.go <code/dd_go.go>` to the “map” stage in the Boost thread code :download:`dd_boost.cpp <code/dd_boost.cpp>`. The segment of ``main()`` in ``dd_go.go`` that implements the “map” stage appears below.
+We will compare the “map” stage in the Go implementation :download:`dd_go.go <code/dd_go.go>` to the “map” stage in the Boost thread code :download:`dd_boost.cpp <code/dd_boost.cpp>`. The segment of ``main()`` in :download:`dd_go.go <code/dd_go.go>` that implements the “map” stage appears below.
  
 	.. code-block:: go
 		:emphasize-lines: 1,3,6,8
@@ -20,9 +20,9 @@ We will compare the “map” stage in the Go implementation :download:`dd_go.go
 			}()
 		}
  
-Instead of a vector of ``Pair`` as in ``dd_boost.cpp``\ , the Go implementation creates a channel object called ``pairs`` for communicating ``Pair`` objects through message passing. The “map” stage will send ``Pair``\ s into the channel ``pairs``, and the sorting stage will receive those ``Pair``\ s from that same channel. In effect, that channel ``pairs`` behaves like a queue, in which the ``send`` operation functions like ``push_back`` and the receive operation acts like ``pop``. 
+Instead of a vector of ``Pair`` as in :download:`dd_boost.cpp <code/dd_boost.cpp>` , the Go implementation creates a *channel* object called ``pairs`` for communicating ``Pair`` objects through message passing. The “map” stage will send ``Pair``\ s into the channel ``pairs``, and the sorting stage will receive those ``Pair``\ s from that same channel. In effect, channel ``pairs`` behaves like a queue, in which the send operation (\ ``<-``\ ) functions like ``push_back`` and the receive operation (also ``<-``, but with the channel on the right side; not shown in the snippet above) acts like ``pop``. 
 
-The Boost implementation allocates an array ``pool`` of threads, then has each thread call ``do_Map()`` in order to carry out that thread’s work in the “map” stage. The following code from ``dd_boost.cpp`` accomplishes these operations.
+The Boost implementation allocated an array ``pool`` of threads, then had each thread call ``do_Map()`` in order to carry out that thread’s work in the “map” stage. The following code from :download:`dd_boost.cpp <code/dd_boost.cpp>` accomplished these operations.
 
 	.. code-block:: cpp
 		:emphasize-lines: 1-3
@@ -42,9 +42,9 @@ Instead of explicitly constructing and storing threads, the Go implementation us
 					…
 			}()
  
-This ``go`` statement launches threads that each execute an (anonymous) function to do their work, i.e., carry out the (omitted) instructions indicated by the ellipses … (in essence, these instructions carry out the work corresponding to ``do_Maps``). 
+This ``go`` statement launches threads that each execute an (anonymous) function to do their work, i.e., carry out the (omitted) instructions indicated by the ellipses … (in essence, these instructions carry out the work corresponding to ``do_Maps``). Note that we could also have defined that as a function ``foo()`` elsewhere and called it this way (i.e., ``go foo()``\ ), but Go is able to employ anonymous functions because it is garbage-collected.
 
-In the Boost threads implementation, the threads must retrieve ligand values repeatedly from a queue  ligands  then append that retrieved ligand and its score to the vector ``pairs``\ . The methods ``do_Maps()`` and ``Map()`` accomplish these steps; their code is equivalent to the following.
+In the Boost threads implementation, the threads must retrieve ligand values repeatedly from a queue ``ligands`` and then append the retrieved ligand and its score to the vector ``pairs``\ . The methods ``do_Maps()`` and ``Map()`` in our Boost implementation accomplish these steps; their code could be combined into something like this.
 
 	.. code-block:: cpp
 		:emphasize-lines: 4-5
@@ -75,13 +75,19 @@ Here, a goroutine obtains its ligand work tasks from a channel ``ligands`` (crea
 Further Notes
 #############
 
-- The use of Go’s channel feature made some key parts of the Go code more concise, as seen above.  For example, highlighted sections above show that we needed fewer lines of (arguably) less complex code to process a ligand and produce a ``Pair`` in the Go code than in the Boost threads code.  Also, the Go runtime manages thread creation implicitly, somewhat like OpenMP, whereas we must allocate and manage Boost threads explicitly. 
+- The use of Go’s channel feature made some key parts of the Go code more concise, as seen above. For example, highlighted sections above show that we needed fewer lines of (arguably) less complex code to process a ligand and produce a ``Pair`` in the Go code than in the Boost threads code. Also, the Go runtime manages thread creation implicitly, somewhat like OpenMP, whereas we must allocate and manage Boost threads explicitly.
 
 - Using channels also simplified the synchronization logic in our Go implementation. 
 
-	- We used (thread-safe) Go channels in place of the task queue ``tasks`` and the vector of ``Pair`` pairs  to manage the flow of our data.  Reasoning with the ``send`` and ``receive`` operations on channels is at least as easy as reasoning about queue and vector operations.
+	- We used (thread-safe) Go channels in place of the task queue ``tasks`` and the vector of Pair ``pairs`` to manage the flow of our data. Reasoning with the send and receive operations on channels is at least as easy as reasoning about queue and vector operations.
 	
-	- The Boost implementation used TBB ``concurrent_bounded_queue`` instead of ``concurrent_queue`` because of the availability of a blocking ``pop()`` operation, so that one could modify ``dd_boost.cpp`` to include dynamic ligand generation in a straightforward and correct way, and used a value ``SENTINEL`` to detect when ligands were actually exhausted.   Go channels provide these features in a simpler and readily understood way. 
+	- The Boost implementation used TBB ``concurrent_bounded_queue`` instead of ``concurrent_queue`` because of the availability of a blocking ``pop()`` operation, so that one could modify :download:`dd_boost.cpp <code/dd_boost.cpp>` to include dynamic ligand generation in a straightforward and correct way, and used a value ``SENTINEL`` to detect when ligands were actually exhausted. Go channels provide these features in a simpler and readily understood way. 
 
-- Just after the “map” stage, the Go implementation stores all ``Pair``\ s in the channel ``pairs`` into an array for sorting. We cannot store into that array directly during the parallel “map” stage, since that array is not thread-safe.
+- Just after the “map” stage, the Go implementation stores all Pairs in the channel ``pairs`` into an array for sorting. We cannot store into that array directly during the parallel “map” stage, since that array is not thread-safe.
 
+Questions for exploration
+#########################
+
+- Compile and run :download:`dd_go.go <code/dd_go.go>`, and compare its performance to :download:`dd_serial.cpp <code/dd_serial.cpp>` and to other parallel implementations.
+
+- For further ideas, see exercises for other parallel implementations.

@@ -18,7 +18,7 @@ var (
 )
 
 type Pair struct {
-        score  int
+        score int
         ligand []byte
 }
 
