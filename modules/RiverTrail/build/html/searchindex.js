@@ -1,0 +1,1 @@
+Search.setIndex({objects:{},terms:{rivertrail:0,content:0,mapreduc:0,welcom:0,document:0},objtypes:{},titles:["Welcome to MapReduce with RiverTrail&#8217;s documentation!"],objnames:{},filenames:["index"]})
