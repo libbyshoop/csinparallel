@@ -1,0 +1,34 @@
+About Vectorization
+===================
+
+Introduction
+------------
+
+Especially in scientific computing, there are many instances where the same operation is being performed on an entire data set or subset. In these instances, it is often useful to apply the same operation to multiple pieces of data in parallel. This is often referred to as vectorization.
+
+What is Vectorization
+---------------------
+
+Vectorization is the act of applying the same instruction to multiple pieces of data in parallel. This is often referred to a *Single instruction, multiple data* (SIMD). Consider the following ``for`` loop::
+
+    for(i=0; i<= MAX; i++)
+        c[i] = a[i] + b[i];
+
+On a normal processor, this is implemented as follows.
+
+.. image:: ScalarAddition.png
+..
+    :width: 100px
+    :align: left
+    :height: 100px
+    :alt: alt-text
+..
+    :figclass:none
+    Caption (if we use the figure directive)
+
+Note all the wasted, unused memory locations.
+
+Whene compiled on a vector processor, the same for loop above is implemented as follows:
+
+.. image:: VectorAddition.png
+
