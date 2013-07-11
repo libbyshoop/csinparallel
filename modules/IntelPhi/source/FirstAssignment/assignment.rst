@@ -39,58 +39,52 @@ Then logout of the Phi::
 
      exit
 
-Using the Trapezoid demo on the Xeon
+Using the Trapezoid Demo on the Xeon
 ------------------------------------
 
 Download the following code and copy it into yourCopy the trapezoid code from the phiDemo directory to your subdirectory
-and switch to that directory and list the contents
+and switch to that directory and list the contents::
 
--  ``cp -r ~/phiDemo/trap .``
--  ``cd trap``
--  ``ls``
+    cp -r ~/phiDemo/trap .
+    cd trap
+    ls
 
-This contains a correct version of trap.C that was produced in lab5 and
-a Make file
-
--  Look at both files and note that we are using the intel C++ compiler
-   instead of GCC
+This contains a correct version of trap.C, which calculates Pi using trapezoids,and a Make file.  Look at both files and note that we are using the intel C++ compiler instead of GCC
 
 Build trap on xeon1 and perform some trial runs, keeping track of the
-runtimes, with varying numbers of threads
+runtimes, with varying numbers of threads::
 
--  ``make``
--  ``time ./trap 1``
--  ``time ./trap 2``
--  ``time ./trap 32``
--  The xeon1 machine has 2 CPUs with 8 cores (16 threads) each
+    make
+    time ./trap 1
+    time ./trap 2
+    time ./trap 32
 
-Build trap to run natively on the Phi and move the executable there
+.. tip:: The xeon1 machine has 2 CPUs with 8 cores (16 threads) each
 
-make phi
+Using the Trapezoid Demo on the Phi
+-----------------------------------
 
-scp trap mic0:username/.
+Now, let's build trap to run natively on the Phi and move the executable there.
 
--  Using your username as the directory
+First, compile it on the Xeon for the Phi with ``make phi``.  Then run ``scp trap mic0:<username>/`` to copy it to the Phi, where ``<username>`` is your user name.
 
-SSH into the Phi and run trial runs there, keeping track of the
-runtimes, with varying numbers of threads
+Then SSH into the Phi and run trial runs there, keeping track of the
+runtimes, with varying numbers of threads::
 
--  ``ssh mic0``
--  ``cd username``
--  ``time ./trap 1``
--  ``time ./trap 61``
--  ``time ./trap 244``
--  The Phi coprocessor has 61 cores and can run a total of 244 threads
--  ***Note:** Typically, the Phi does not have the OpenMP runtime
-   library. This needs to be copied to the Phi and added to the
-   ``LD_LIBRARY_PATH`` environment variable. This has already been done
-   for the ``rab-s01`` account and you can see the Phi version of the
-   runtime library in the ``~/libs`` directory on the Phi.*
+    ssh mic0
+    cd username
+    time ./trap 1
+    time ./trap 61
+    time ./trap 244
+
+.. tip::  The Phi coprocessor has 61 cores and can run a total of 244 threads
+
+.. note:: Typically, the Phi does not have the OpenMP runtime library. This needs to be copied to the Phi and added to the ``LD_LIBRARY_PATH`` environment variable. This has already been done for the ``rab-s01`` account and you can see the Phi version of the runtime library in the ``~/libs`` directory on the Phi.*
 
 Compare the speedups achieved on xeon1 (a traditional multicore
 computer) and the Phi coprocessor
 
--  Note: xeon1 has a 2.60 GHz clock speed and the Phi has a 1.053 GHz
+.. tip::  xeon1 has a 2.60 GHz clock speed and the Phi has a 1.053 GHz
    clock speed
 
 Optional: Test on the MTL which has 4 CPUS with 10 cores (20 threads)
@@ -101,9 +95,8 @@ from previous labs to the Phi and try them
 
 -  Look at the trap Makefile for how to compile for the Phi using icc
 
-Offloading sections of code to the Phi
-
-Example
+Offloading Sections of Code to the Phi
+--------------------------------------
 
 Copy the example offload code to your directory
 

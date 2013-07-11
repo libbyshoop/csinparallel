@@ -67,7 +67,7 @@
 </div>
 <p>Make a subdirectory for yourself using your username and go to that
 directory:</p>
-<div class="highlight-python"><pre>mkdir username
+<div class="highlight-python"><pre>mkdir &lt;username&gt;
 cd username</pre>
 </div>
 </div>
@@ -78,61 +78,61 @@ cd username</pre>
 </div>
 <p>If this does not work, use <tt class="docutils literal"><span class="pre">ssh</span> <span class="pre">172.31.1.1</span></tt>.  The terminal prompt should look like this: <tt class="docutils literal"><span class="pre">[rab-s01&#64;xeon1-mic0</span> <span class="pre">rab-s01]$</span></tt>.</p>
 <p>On the Phi, create a subdirectory for yourself using your username:</p>
-<div class="highlight-python"><pre>mkdir username</pre>
+<div class="highlight-python"><pre>mkdir &lt;username&gt;</pre>
 </div>
-<p>Logout of the Phi:</p>
+<p>Then logout of the Phi:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="nb">exit</span>
 </pre></div>
 </div>
-<p>Copy the trapezoid code from the phiDemo directory to your subdirectory
-and switch to that directory and list the contents</p>
-<ul class="simple">
-<li><tt class="docutils literal"><span class="pre">cp</span> <span class="pre">-r</span> <span class="pre">~/phiDemo/trap</span> <span class="pre">.</span></tt></li>
-<li><tt class="docutils literal"><span class="pre">cd</span> <span class="pre">trap</span></tt></li>
-<li><tt class="docutils literal"><span class="pre">ls</span></tt></li>
-</ul>
-<p>This contains a correct version of trap.C that was produced in lab5 and
-a Make file</p>
-<ul class="simple">
-<li>Look at both files and note that we are using the intel C++ compiler
-instead of GCC</li>
-</ul>
+</div>
+<div class="section" id="using-the-trapezoid-demo-on-the-xeon">
+<h2>Using the Trapezoid Demo on the Xeon<a class="headerlink" href="#using-the-trapezoid-demo-on-the-xeon" title="Permalink to this headline">¶</a></h2>
+<p>Download the following code and copy it into yourCopy the trapezoid code from the phiDemo directory to your subdirectory
+and switch to that directory and list the contents:</p>
+<div class="highlight-python"><pre>cp -r ~/phiDemo/trap .
+cd trap
+ls</pre>
+</div>
+<p>This contains a correct version of trap.C, which calculates Pi using trapezoids,and a Make file.  Look at both files and note that we are using the intel C++ compiler instead of GCC</p>
 <p>Build trap on xeon1 and perform some trial runs, keeping track of the
-runtimes, with varying numbers of threads</p>
-<ul class="simple">
-<li><tt class="docutils literal"><span class="pre">make</span></tt></li>
-<li><tt class="docutils literal"><span class="pre">time</span> <span class="pre">./trap</span> <span class="pre">1</span></tt></li>
-<li><tt class="docutils literal"><span class="pre">time</span> <span class="pre">./trap</span> <span class="pre">2</span></tt></li>
-<li><tt class="docutils literal"><span class="pre">time</span> <span class="pre">./trap</span> <span class="pre">32</span></tt></li>
-<li>The xeon1 machine has 2 CPUs with 8 cores (16 threads) each</li>
-</ul>
-<p>Build trap to run natively on the Phi and move the executable there</p>
-<p>make phi</p>
-<p>scp trap mic0:username/.</p>
-<ul class="simple">
-<li>Using your username as the directory</li>
-</ul>
-<p>SSH into the Phi and run trial runs there, keeping track of the
-runtimes, with varying numbers of threads</p>
-<ul class="simple">
-<li><tt class="docutils literal"><span class="pre">ssh</span> <span class="pre">mic0</span></tt></li>
-<li><tt class="docutils literal"><span class="pre">cd</span> <span class="pre">username</span></tt></li>
-<li><tt class="docutils literal"><span class="pre">time</span> <span class="pre">./trap</span> <span class="pre">1</span></tt></li>
-<li><tt class="docutils literal"><span class="pre">time</span> <span class="pre">./trap</span> <span class="pre">61</span></tt></li>
-<li><tt class="docutils literal"><span class="pre">time</span> <span class="pre">./trap</span> <span class="pre">244</span></tt></li>
-<li>The Phi coprocessor has 61 cores and can run a total of 244 threads</li>
-<li><strong>*Note:</strong> Typically, the Phi does not have the OpenMP runtime
-library. This needs to be copied to the Phi and added to the
-<tt class="docutils literal"><span class="pre">LD_LIBRARY_PATH</span></tt> environment variable. This has already been done
-for the <tt class="docutils literal"><span class="pre">rab-s01</span></tt> account and you can see the Phi version of the
-runtime library in the <tt class="docutils literal"><span class="pre">~/libs</span></tt> directory on the Phi.*</li>
-</ul>
+runtimes, with varying numbers of threads:</p>
+<div class="highlight-python"><pre>make
+time ./trap 1
+time ./trap 2
+time ./trap 32</pre>
+</div>
+<div class="admonition tip">
+<p class="first admonition-title">Tip</p>
+<p class="last">The xeon1 machine has 2 CPUs with 8 cores (16 threads) each</p>
+</div>
+</div>
+<div class="section" id="using-the-trapezoid-demo-on-the-phi">
+<h2>Using the Trapezoid Demo on the Phi<a class="headerlink" href="#using-the-trapezoid-demo-on-the-phi" title="Permalink to this headline">¶</a></h2>
+<p>Now, let&#8217;s build trap to run natively on the Phi and move the executable there.</p>
+<p>First, compile it on the Xeon for the Phi with <tt class="docutils literal"><span class="pre">make</span> <span class="pre">phi</span></tt>.  Then run <tt class="docutils literal"><span class="pre">scp</span> <span class="pre">trap</span> <span class="pre">mic0:&lt;username&gt;/</span></tt> to copy it to the Phi, where <tt class="docutils literal"><span class="pre">&lt;username&gt;</span></tt> is your user name.</p>
+<p>Then SSH into the Phi and run trial runs there, keeping track of the
+runtimes, with varying numbers of threads:</p>
+<div class="highlight-python"><pre>ssh mic0
+cd username
+time ./trap 1
+time ./trap 61
+time ./trap 244</pre>
+</div>
+<div class="admonition tip">
+<p class="first admonition-title">Tip</p>
+<p class="last">The Phi coprocessor has 61 cores and can run a total of 244 threads</p>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Typically, the Phi does not have the OpenMP runtime library. This needs to be copied to the Phi and added to the <tt class="docutils literal"><span class="pre">LD_LIBRARY_PATH</span></tt> environment variable. This has already been done for the <tt class="docutils literal"><span class="pre">rab-s01</span></tt> account and you can see the Phi version of the runtime library in the <tt class="docutils literal"><span class="pre">~/libs</span></tt> directory on the Phi.*</p>
+</div>
 <p>Compare the speedups achieved on xeon1 (a traditional multicore
 computer) and the Phi coprocessor</p>
-<ul class="simple">
-<li>Note: xeon1 has a 2.60 GHz clock speed and the Phi has a 1.053 GHz
-clock speed</li>
-</ul>
+<div class="admonition tip">
+<p class="first admonition-title">Tip</p>
+<p class="last">xeon1 has a 2.60 GHz clock speed and the Phi has a 1.053 GHz
+clock speed</p>
+</div>
 <p>Optional: Test on the MTL which has 4 CPUS with 10 cores (20 threads)
 each</p>
 <p>Optional: copy other OpenMP programs, such as the sieve of eratosthenes,
@@ -140,8 +140,9 @@ from previous labs to the Phi and try them</p>
 <ul class="simple">
 <li>Look at the trap Makefile for how to compile for the Phi using icc</li>
 </ul>
-<p>Offloading sections of code to the Phi</p>
-<p>Example</p>
+</div>
+<div class="section" id="offloading-sections-of-code-to-the-phi">
+<h2>Offloading Sections of Code to the Phi<a class="headerlink" href="#offloading-sections-of-code-to-the-phi" title="Permalink to this headline">¶</a></h2>
 <p>Copy the example offload code to your directory</p>
 <ul class="simple">
 <li>cp -r ~/phiDemo/offload .</li>
@@ -182,6 +183,9 @@ and search for offload for documentation on the offload pragma</li>
 <li><a class="reference internal" href="#">Using the Intel Phi</a><ul>
 <li><a class="reference internal" href="#setup-on-the-mtl">Setup on the MTL</a></li>
 <li><a class="reference internal" href="#setup-on-the-phi-coprocessor">Setup on the Phi coprocessor</a></li>
+<li><a class="reference internal" href="#using-the-trapezoid-demo-on-the-xeon">Using the Trapezoid Demo on the Xeon</a></li>
+<li><a class="reference internal" href="#using-the-trapezoid-demo-on-the-phi">Using the Trapezoid Demo on the Phi</a></li>
+<li><a class="reference internal" href="#offloading-sections-of-code-to-the-phi">Offloading Sections of Code to the Phi</a></li>
 </ul>
 </li>
 </ul>
