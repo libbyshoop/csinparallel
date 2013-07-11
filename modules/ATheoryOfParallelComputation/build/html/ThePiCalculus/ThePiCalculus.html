@@ -100,7 +100,11 @@
 </li>
 <li><p class="first">Besides these operations, there is one constant process 0 that does nothing. For example, we might write <img class="math" src="../_images/math/0ad21a1213fc1e4a7639cfbc4df8cf3ab167ab63.png" alt="\bar{c} \langle x \rangle . 0"/> for a process that sends one message across a channel <em>c</em>, then does nothing more.</p>
 </li>
-<li><p class="first">Observe that all of the operations have to do with entire processes or with communication among processes. For example, there are no arithmetic operations such as multiplication, nor any operations related to applying (i.e., calling) functions, nor a way to store values in memory (assignment). The <img class="math" src="../_images/math/f2ca003a7da0de4994b4733e203b74ff52d42553.png" alt="\pi"/>-calculus is entirely concerned with communication among processes that are executing in parallel.</p>
+</ul>
+<div class="section" id="pi-calculus-and-parallelism">
+<h2>Pi-calculus and Parallelism<a class="headerlink" href="#pi-calculus-and-parallelism" title="Permalink to this headline">¶</a></h2>
+<blockquote>
+<div><p>Observe that all of the operations have to do with entire processes or with communication among processes. For example, there are no arithmetic operations such as multiplication, nor any operations related to applying (i.e., calling) functions, nor a way to store values in memory (assignment). The <img class="math" src="../_images/math/f2ca003a7da0de4994b4733e203b74ff52d42553.png" alt="\pi"/>-calculus is entirely concerned with communication among processes that are executing in parallel.</p>
 <p>However, a theory of sequential processes, such as automata or the <img class="math" src="../_images/math/ce4588fd900d02afcbd260bc07f54cce49a7dc4a.png" alt="\lambda"/>-calculus, can be used in conjunction with <img class="math" src="../_images/math/f2ca003a7da0de4994b4733e203b74ff52d42553.png" alt="\pi"/>-calculus in order to model both the parallelism of communication and sequential algorithms that take place between communication events.</p>
 <p>In our examples, we will use an informal notation for the sequential aspects of a process for readability and convenience, but we will use the <img class="math" src="../_images/math/f2ca003a7da0de4994b4733e203b74ff52d42553.png" alt="\pi"/>-calculus formalism carefully in matters of parallelism and communication between processes.</p>
 <p>Here is an example that models parallel computation using the <img class="math" src="../_images/math/f2ca003a7da0de4994b4733e203b74ff52d42553.png" alt="\pi"/>-calculus operators.</p>
@@ -153,13 +157,11 @@
 <p><img src="../_images/math/3b7f1235b6a2dba22e3b9567f8806780c2535c57.png" alt="!{\it incr}(c,x).\overline{\it c}\langle x+1 \rangle.{0}\quad |\quad (\nu{\it a})\big(\overline{\it incr}\langle a,17 \rangle.{0}\ |\ {\it a}(y).{P}\big)"/></p>
 </div></li>
 </ul>
-</li>
-<li><p class="first"><a class="reference external" href="http://en.wikipedia.org/wiki/Pi-calculus#Structural_congruence">Structural congruence</a>, an equivalence relation on <img class="math" src="../_images/math/f2ca003a7da0de4994b4733e203b74ff52d42553.png" alt="\pi"/>-calculus expressions</p>
-</li>
-<li><p class="first"><a class="reference external" href="http://en.wikipedia.org/wiki/Pi-calculus#Reduction_semantics">Reduction</a>, the &#8220;calculus rules&#8221; for <img class="math" src="../_images/math/f2ca003a7da0de4994b4733e203b74ff52d42553.png" alt="\pi"/>-calculus.</p>
-</li>
-<li><p class="first">We can now use the definition of structural congruence and the reduction rules to give a formal proof that our <img class="math" src="../_images/math/f2ca003a7da0de4994b4733e203b74ff52d42553.png" alt="\pi"/>-calculus model of an <em>incr</em> remote procedure call service produces the results we desired for it.</p>
-</li>
+</div></blockquote>
+<ul class="simple">
+<li><a class="reference external" href="http://en.wikipedia.org/wiki/Pi-calculus#Structural_congruence">Structural congruence</a>, an equivalence relation on <img class="math" src="../_images/math/f2ca003a7da0de4994b4733e203b74ff52d42553.png" alt="\pi"/>-calculus expressions</li>
+<li><a class="reference external" href="http://en.wikipedia.org/wiki/Pi-calculus#Reduction_semantics">Reduction</a>, the &#8220;calculus rules&#8221; for <img class="math" src="../_images/math/f2ca003a7da0de4994b4733e203b74ff52d42553.png" alt="\pi"/>-calculus.</li>
+<li>We can now use the definition of structural congruence and the reduction rules to give a formal proof that our <img class="math" src="../_images/math/f2ca003a7da0de4994b4733e203b74ff52d42553.png" alt="\pi"/>-calculus model of an <em>incr</em> remote procedure call service produces the results we desired for it.</li>
 </ul>
 <div class="topic">
 <p class="topic-title first">Verify</p>
@@ -204,7 +206,7 @@
 </div></div>
 <p>In this proof, we started with the <img class="math" src="../_images/math/f2ca003a7da0de4994b4733e203b74ff52d42553.png" alt="\pi"/>-calculus expression for the server and the <img class="math" src="../_images/math/f2ca003a7da0de4994b4733e203b74ff52d42553.png" alt="\pi"/>-calculus expression for the client <em>before</em> RPC, running in parallel. We ended with that same server we began with, and with a client process P <em>after</em> RPC that has every occurrence of y replaced by 18 &#8211; as desired.</p>
 <div class="section" id="exercises">
-<h2>Exercises<a class="headerlink" href="#exercises" title="Permalink to this headline">¶</a></h2>
+<h3>Exercises<a class="headerlink" href="#exercises" title="Permalink to this headline">¶</a></h3>
 <ol class="arabic simple">
 <li>If <em>a</em> does not appear in <em>P</em>, show that the last line above is structurally congruent to <img class="math" src="../_images/math/5742ab33595a13cd1cc2ee325f67741c0af9e04c.png" alt="!\textit{incr}(c,x).\bar{c}\langle x+1 \rangle.0 \quad | \quad P[y/18]"/>. Give a formal proof segment using the axioms and reduction rules.</li>
 <li>Prove the following facts, using formal proofs from axiom and reduction rules, as in the verification of the RPC server above.</li>
@@ -256,6 +258,7 @@
 </div></blockquote>
 </div>
 </div>
+</div>
 
 
           </div>
@@ -269,7 +272,10 @@
   <h3><a href="../index.html">Table Of Contents</a></h3>
   <ul>
 <li><a class="reference internal" href="#">The pi-calculus, informally</a><ul>
+<li><a class="reference internal" href="#pi-calculus-and-parallelism">Pi-calculus and Parallelism</a><ul>
 <li><a class="reference internal" href="#exercises">Exercises</a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>

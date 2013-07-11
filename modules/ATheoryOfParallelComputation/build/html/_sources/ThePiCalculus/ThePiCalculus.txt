@@ -50,7 +50,11 @@ The pi-calculus, informally
 
 * Besides these operations, there is one constant process 0 that does nothing. For example, we might write :math:`\bar{c} \langle x \rangle . 0` for a process that sends one message across a channel *c*, then does nothing more.
 
-* Observe that all of the operations have to do with entire processes or with communication among processes. For example, there are no arithmetic operations such as multiplication, nor any operations related to applying (i.e., calling) functions, nor a way to store values in memory (assignment). The :math:`\pi`-calculus is entirely concerned with communication among processes that are executing in parallel.
+####################################
+Pi-calculus and Parallelism
+####################################
+
+  Observe that all of the operations have to do with entire processes or with communication among processes. For example, there are no arithmetic operations such as multiplication, nor any operations related to applying (i.e., calling) functions, nor a way to store values in memory (assignment). The :math:`\pi`-calculus is entirely concerned with communication among processes that are executing in parallel.
 
   However, a theory of sequential processes, such as automata or the :math:`\lambda`-calculus, can be used in conjunction with :math:`\pi`-calculus in order to model both the parallelism of communication and sequential algorithms that take place between communication events.
 

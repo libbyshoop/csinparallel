@@ -2,21 +2,33 @@
 Background
 **********
 
+#######
+History
+#######
+
 * DFAs, NFAs, pushdown automata, Turing machines... All are mathematical entities that model computation. These abstract systems have concrete, practical applications in computer science (CS).
 
   For example, deterministic finite automata (DFAs) are associated with regular expressions, which computer   programs that involve pattern matching frequently rely on. Also, knowing theoretical results such as the inability of any computation to determine whether or not another computation will stop (Halting Problem) can keeps programmers from attempting to write impossible computer programs.
 
 * Automata represent one approach to mathematically modeling computation. There are others.
 
-  For example, the mathematical logician Alonzo Church created a formalism of computation based on functions in the 1930s, called the *:math:`\lambda`-calculus*. The key notion in this approach is an operator (i.e., function) called :math:`\lambda` that is capable of generating other functions.
+  For example, the mathematical logician Alonzo Church created a formalism of computation based on functions in the 1930s, called the :math:`\lambda`-calculus. The key notion in this approach is an operator (i.e., function) called :math:`\lambda` that is capable of generating other functions.
 
   One of the earliest high-level programming languages, LISP (for LISt Processing language, 1959), is a practical computer implementation of the :math:`\lambda`-calculus. LISP was designed originally for research in *artificial intelligence (AI)*, a field in CS that perpetually seeks to extend the capabilities of computers to carry out tasks that humans can do. Scheme and Clojure are some contemporary programming languages descended from the original LISP, and and other widely used "functional" programming languages such as ML and Haskell are based on the :math:`\lambda`-calculus. Programmers use these languages to develop useful applications, and researchers use them to explore new frontiers in computing.
+
+##################################
+How :math:`\lambda`-calculus Works
+##################################
 
 * From a theoretical viewpoint, the :math:`\lambda`-calculus embodies all essential features of functional computation. This holds because the relationship between "inputs" (domain values in Mathematics, arguments/parameters in programming) and "outputs" (range values in Math, return values in programming) from functions expresses everything in a purely functional system of computations (no "state changes"), and :math:`\lambda`-calculus is the mathematical theory of functions considered entirely according to their "inputs" and "outputs."
 
   In fact, it can be proven that any other foundation for *functional* computation, such as Turing machines (which can express any type of computation), will have exactly the same expressive power for functional computation as the :math:`\lambda`-calculus [Pierce 95].
 
 * However, all of the computational models we've mentioned so far (Turing machines, :math:`\lambda`-calculus, etc.) are for *sequential computations* only. This means that we assume only a single computational entity. Until a few years ago, it was reasonable to assume that only one computational processor would be available for most computations, because most computers had only one computational circuit for carrying out instructions.
+
+############################
+The Influence of Parallelism
+############################
 
 * Nowadays, retailers sell only *multi-core* computers (i.e., computers having multiple circuits for carrying out instructions) on the commodity market, and hardware manufacturers such as Intel and AMD no longer produce chips with only one computational processor. This results from computer engineering having reached certain limitations on performance for individual processors (related to electrical power consumption, access to computer memory, and parallel speedup capabilities with a single processor).
 
