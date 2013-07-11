@@ -4,7 +4,7 @@ Using Vectorization
 Setup
 -----
 
-Download the code to be modified :download:`cdms_vector.cpp <cdms_vector.cpp>` and some data to compute with, :download:`data2.txt <data2.txt>`. This data is a table of data about particle position and motion. Columns 13, 14, and 15 represent the normalized momentum of a detected particle in the x, y, and z directions.
+Download the code to be modified :download:`cdms_vector.cpp <cdms_vector.cpp>` and some data to compute with, :download:`data2.txt <data2.txt>` and copy it onto the Phi. This data is a table of data about particle position and motion. Columns 13, 14, and 15 represent the normalized momentum of a detected particle in the x, y, and z directions.
 
 Modifying the Existing Code
 ---------------------------------

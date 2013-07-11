@@ -9,7 +9,7 @@ from sys import exit
 if not color_terminal():
     nocolor()
 
-options = json.load(open("../../csinparallel_conf.json"))
+options = json.load(open("./csinparallel_conf.json"))
 
 try:
     qs.ask_user(options)
