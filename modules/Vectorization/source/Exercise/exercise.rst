@@ -33,6 +33,8 @@ Second, compile with vectorization by allowing auto-vectorization to occur::
 
     icpc -std=c99 -vec-report2 cdms_vec.cpp -o cdms_vec
 
+.. note:: TODO: Should we somehow *use* the vector report here? I never actually have.
+
 Now run both of those executables, noting the run times::
 
     % ./cdms_novec

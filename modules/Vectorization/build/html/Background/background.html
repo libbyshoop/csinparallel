@@ -26,8 +26,8 @@
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
     <link rel="top" title="Vectorization" href="../index.html" />
-    <link rel="next" title="Using Vectorization" href="../Exercise/exercise.html" />
-    <link rel="prev" title="Welcome to Vectorization with the Intel Compiler’s documentation!" href="../index.html" /> 
+    <link rel="next" title="Improving Performance" href="../ImprovingPerformance/improve.html" />
+    <link rel="prev" title="Welcome to Vectorization with the Intel Compiler" href="../index.html" /> 
   </head>
   <body>
     <div class="related">
@@ -37,10 +37,10 @@
           <a href="../genindex.html" title="General Index"
              accesskey="I">index</a></li>
         <li class="right" >
-          <a href="../Exercise/exercise.html" title="Using Vectorization"
+          <a href="../ImprovingPerformance/improve.html" title="Improving Performance"
              accesskey="N">next</a> |</li>
         <li class="right" >
-          <a href="../index.html" title="Welcome to Vectorization with the Intel Compiler’s documentation!"
+          <a href="../index.html" title="Welcome to Vectorization with the Intel Compiler"
              accesskey="P">previous</a> |</li>
         <li><a href="../index.html">Vectorization</a> &raquo;</li> 
       </ul>
@@ -68,6 +68,16 @@
 <p>Note all the wasted, unused memory locations.</p>
 <p>Whene compiled on a vector processor, the same for loop above is implemented as follows:</p>
 <img alt="../_images/VectorAddition.png" src="../_images/VectorAddition.png" />
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">TODO: Do we want to put in a section that is a bit more hardware-focussed</p>
+</div>
+</div>
+<div class="section" id="using-vectorization">
+<h2>Using Vectorization<a class="headerlink" href="#using-vectorization" title="Permalink to this headline">¶</a></h2>
+<p>Vectorizing existing code is usually straightforward. At its simplest, vectorization does not require complicated data structures or an extensive library. Even without any changes to existing code, the Intel C++ may automatically add vectorized instructions where it can detect that doing so will not change the operation of the code (there are no data dependencies or race conditions). It can provide you feedback about what it has vectorized, what not, and why.</p>
+<p>Often, however, either more code can be vectorized or the code can be vectorized more efficiently if you use various techniques to modify the computation slightly.</p>
+<p>Also, Vectorization integrates easily with other, higher-level forms of parallelism, such as message-passing or shared memory.</p>
 </div>
 </div>
 
@@ -85,16 +95,17 @@
 <li><a class="reference internal" href="#">About Vectorization</a><ul>
 <li><a class="reference internal" href="#introduction">Introduction</a></li>
 <li><a class="reference internal" href="#what-is-vectorization">What is Vectorization</a></li>
+<li><a class="reference internal" href="#using-vectorization">Using Vectorization</a></li>
 </ul>
 </li>
 </ul>
 
   <h4>Previous topic</h4>
   <p class="topless"><a href="../index.html"
-                        title="previous chapter">Welcome to Vectorization with the Intel Compiler&#8217;s documentation!</a></p>
+                        title="previous chapter">Welcome to Vectorization with the Intel Compiler</a></p>
   <h4>Next topic</h4>
-  <p class="topless"><a href="../Exercise/exercise.html"
-                        title="next chapter">Using Vectorization</a></p>
+  <p class="topless"><a href="../ImprovingPerformance/improve.html"
+                        title="next chapter">Improving Performance</a></p>
 <div id="searchbox" style="display: none">
   <h3>Quick search</h3>
     <form class="search" action="../search.html" method="get">
@@ -119,10 +130,10 @@
           <a href="../genindex.html" title="General Index"
              >index</a></li>
         <li class="right" >
-          <a href="../Exercise/exercise.html" title="Using Vectorization"
+          <a href="../ImprovingPerformance/improve.html" title="Improving Performance"
              >next</a> |</li>
         <li class="right" >
-          <a href="../index.html" title="Welcome to Vectorization with the Intel Compiler’s documentation!"
+          <a href="../index.html" title="Welcome to Vectorization with the Intel Compiler"
              >previous</a> |</li>
         <li><a href="../index.html">Vectorization</a> &raquo;</li> 
       </ul>
