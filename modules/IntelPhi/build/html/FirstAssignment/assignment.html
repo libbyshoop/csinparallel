@@ -143,29 +143,20 @@ from previous labs to the Phi and try them</p>
 </div>
 <div class="section" id="offloading-sections-of-code-to-the-phi">
 <h2>Offloading Sections of Code to the Phi<a class="headerlink" href="#offloading-sections-of-code-to-the-phi" title="Permalink to this headline">¶</a></h2>
-<p>Copy the example offload code to your directory</p>
-<ul class="simple">
-<li>cp -r ~/phiDemo/offload .</li>
-</ul>
-<p>Examine the file offload.C</p>
-<ul class="simple">
-<li>Note the offload pragma</li>
-</ul>
-<p>Run the makefile and try the code</p>
+<p>Copy the example offload code to your directory with following command:</p>
+<div class="highlight-python"><pre>cp -r ~/phiDemo/offload .</pre>
+</div>
+<p>Examine the file offload.C.  Note the offload pragma.</p>
+<p>Now run the makefile and try the code</p>
 <ul class="simple">
 <li>It prints the available threads first on the host machine and then on
 the Phi coprocessor</li>
 </ul>
-<p>Modifying trap.C</p>
-<ul class="simple">
-<li>Modify your trap.C to run on the host machine but offload the
-parallel portion to the Phi</li>
-<li>Add an offload pragma</li>
-<li>See <a class="reference external" href="http://software.intel.com/sites/products/documentation/doclib/stdxe/2013/composerxe/compiler/cpp-lin/index.htm">this
-page</a>
-and search for offload for documentation on the offload pragma</li>
-</ul>
-<p><a class="reference external" href="/cwis_policies/personal_disclaimer.html">*Disclaimer*</a></p>
+</div>
+<div class="section" id="modifying-trap-c">
+<h2>Modifying trap.C<a class="headerlink" href="#modifying-trap-c" title="Permalink to this headline">¶</a></h2>
+<p>Modify your trap.C to run on the host machine but offload the parallel portion to the Phi. To do so, add an offload pragma
+.. hint:: See <a class="reference external" href="http://software.intel.com/sites/products/documentation/doclib/stdxe/2013/composerxe/compiler/cpp-lin/index.htm">this page</a> and search for offload for documentation on the offload pragma</p>
 </div>
 </div>
 
@@ -186,6 +177,7 @@ and search for offload for documentation on the offload pragma</li>
 <li><a class="reference internal" href="#using-the-trapezoid-demo-on-the-xeon">Using the Trapezoid Demo on the Xeon</a></li>
 <li><a class="reference internal" href="#using-the-trapezoid-demo-on-the-phi">Using the Trapezoid Demo on the Phi</a></li>
 <li><a class="reference internal" href="#offloading-sections-of-code-to-the-phi">Offloading Sections of Code to the Phi</a></li>
+<li><a class="reference internal" href="#modifying-trap-c">Modifying trap.C</a></li>
 </ul>
 </li>
 </ul>

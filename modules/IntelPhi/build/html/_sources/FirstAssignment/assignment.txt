@@ -98,26 +98,20 @@ from previous labs to the Phi and try them
 Offloading Sections of Code to the Phi
 --------------------------------------
 
-Copy the example offload code to your directory
+Copy the example offload code to your directory with following command::
 
--  cp -r ~/phiDemo/offload .
+   cp -r ~/phiDemo/offload .
 
-Examine the file offload.C
+Examine the file offload.C.  Note the offload pragma.
 
--  Note the offload pragma
-
-Run the makefile and try the code
+Now run the makefile and try the code
 
 -  It prints the available threads first on the host machine and then on
    the Phi coprocessor
 
 Modifying trap.C
+----------------
 
--  Modify your trap.C to run on the host machine but offload the
-   parallel portion to the Phi
--  Add an offload pragma
--  See `this
-   page <http://software.intel.com/sites/products/documentation/doclib/stdxe/2013/composerxe/compiler/cpp-lin/index.htm>`_
-   and search for offload for documentation on the offload pragma
+Modify your trap.C to run on the host machine but offload the parallel portion to the Phi. To do so, add an offload pragma
+.. hint:: See `this page <http://software.intel.com/sites/products/documentation/doclib/stdxe/2013/composerxe/compiler/cpp-lin/index.htm>`_ and search for offload for documentation on the offload pragma
 
-`*Disclaimer* </cwis_policies/personal_disclaimer.html>`_
