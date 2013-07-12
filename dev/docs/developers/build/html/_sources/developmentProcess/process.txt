@@ -43,8 +43,7 @@ Here is an example, with git commands, where 'ls-dev' is the name for a branch t
 of the csinparallel repository resides.
 
 When developing a module, you will checkout off the develop branch
-of the csinparallel repository
-
+of the csinparallel repository:
 ::
 	git checkout -b ls-dev develop
 
@@ -58,6 +57,7 @@ in the repository),
 
 .. note:: These above steps can be done with the github client tool by committing and doing 'sync' operations, or using the command line.  Below are the command-line equivalents. See also: the `git manual pages <http://git-htmldocs.googlecode.com/git/git.html>`_ and `this git tutorial <http://www.atlassian.com/git/tutorial>`_.
 
+From the command line:
 ::
 	git add <file or directory>
 	git commit 
@@ -70,19 +70,15 @@ Eventually, you will want to place your work on the develop branch so that
 other people you are working with will be able to see it on a web server. The next few steps describe this. *Use the command line for this set of steps.*
 
 With this next command, go back to the develop branch:
-
 ::
-
 	git checkout develop
 
 From the develop branch, merge your sub-branch changes:
 ::
-
 	git merge --no-ff ls-dev
 	
 Push the changes back up to github on the develop branch:
 ::
-
 	git push origin develop
 
 

@@ -87,11 +87,9 @@ The way of work is the following:</p>
 <p>Here is an example, with git commands, where &#8216;ls-dev&#8217; is the name for a branch to develop from. This assumes your are in the directory where your clone copy
 of the csinparallel repository resides.</p>
 <p>When developing a module, you will checkout off the develop branch
-of the csinparallel repository</p>
-<dl class="docutils">
-<dt>::</dt>
-<dd>git checkout -b ls-dev develop</dd>
-</dl>
+of the csinparallel repository:</p>
+<div class="highlight-python"><pre>git checkout -b ls-dev develop</pre>
+</div>
 <p>Now you can do your work:</p>
 <ul class="simple">
 <li>commit to your branch as you go along,</li>
@@ -103,14 +101,14 @@ of the csinparallel repository</p>
 <p class="first admonition-title">Note</p>
 <p class="last">These above steps can be done with the github client tool by committing and doing &#8216;sync&#8217; operations, or using the command line.  Below are the command-line equivalents. See also: the <a class="reference external" href="http://git-htmldocs.googlecode.com/git/git.html">git manual pages</a> and <a class="reference external" href="http://www.atlassian.com/git/tutorial">this git tutorial</a>.</p>
 </div>
-<dl class="docutils">
-<dt>::</dt>
-<dd><p class="first">git add &lt;file or directory&gt;
-git commit</p>
-<p>git pull develop</p>
-<p class="last">git push origin ls-dev</p>
-</dd>
-</dl>
+<p>From the command line:</p>
+<div class="highlight-python"><pre>git add &lt;file or directory&gt;
+git commit
+
+git pull develop
+
+git push origin ls-dev</pre>
+</div>
 <p>Eventually, you will want to place your work on the develop branch so that
 other people you are working with will be able to see it on a web server. The next few steps describe this. <em>Use the command line for this set of steps.</em></p>
 <p>With this next command, go back to the develop branch:</p>
