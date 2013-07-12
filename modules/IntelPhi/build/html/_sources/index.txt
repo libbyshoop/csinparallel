@@ -13,6 +13,7 @@ Contents:
 
    FirstAssignment/assignment
    Architecture/architecture
+   AdvancedUsage/advanced
 
 
 .. comment

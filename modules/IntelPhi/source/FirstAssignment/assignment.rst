@@ -1,3 +1,5 @@
+.. _sect-Using_Intel_Phi:
+
 Using the Intel Phi
 ===================
 
