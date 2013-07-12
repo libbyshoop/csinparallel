@@ -79,6 +79,7 @@ runtimes, with varying numbers of threads::
 
 .. tip::  The Phi coprocessor has 61 cores and can run a total of 244 threads
 
+
 .. note:: Typically, the Phi does not have the OpenMP runtime library. This needs to be copied to the Phi and added to the ``LD_LIBRARY_PATH`` environment variable. This has already been done for the ``rab-s01`` account and you can see the Phi version of the runtime library in the ``~/libs`` directory on the Phi.*
 
 Compare the speedups achieved on xeon1 (a traditional multicore

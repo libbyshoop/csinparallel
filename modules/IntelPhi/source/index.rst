@@ -12,6 +12,7 @@ Contents:
    :maxdepth: 1
 
    FirstAssignment/assignment
+   Architecture/architecture
 
 
 .. comment
