@@ -1,5 +1,5 @@
 Using River Trail to Parallelize Javascript
-==========================================
+=============================================
 
 Installing River Trail and Firebug
 --------------------------------------------

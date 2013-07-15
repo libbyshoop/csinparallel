@@ -49,146 +49,81 @@
             
   <div class="section" id="using-river-trail-to-parallelize-javascript">
 <h1>Using River Trail to Parallelize Javascript<a class="headerlink" href="#using-river-trail-to-parallelize-javascript" title="Permalink to this headline">¶</a></h1>
-<div class="section" id="installing-river-trail">
-<h2>Installing River Trail<a class="headerlink" href="#installing-river-trail" title="Permalink to this headline">¶</a></h2>
-<p>On a Windows 7 or OS X machine, open Firefox, and check the version. This can be a public machine that you do not have administrative access to.</p>
-<div class="section" id="on-windows">
-<h3>On Windows<a class="headerlink" href="#on-windows" title="Permalink to this headline">¶</a></h3>
-<p>A. On windows, first download and install <a class="reference external" href="http://software.intel.com/en-us/vcsource/tools/opencl-sdk">the intel OpenCL
+<div class="section" id="installing-river-trail-and-firebug">
+<h2>Installing River Trail and Firebug<a class="headerlink" href="#installing-river-trail-and-firebug" title="Permalink to this headline">¶</a></h2>
+<p>The River Trail  project provides prebuilt binaries for Windows and Mac OS X. The project does not provide binaries for Linux, although with some difficulty one can build a version for Linux.</p>
+<p>On a Windows 7 or OS X machine, open Firefox, and note the version. For OS X, this can be a public machine that you do not have administrative access to.</p>
+<p>For Windows, you need to first download and install <a class="reference external" href="http://software.intel.com/en-us/vcsource/tools/opencl-sdk">the intel OpenCL
 sdk</a></p>
-<p>Then install <a class="reference external" href="https://github.com/RiverTrail/RiverTrail/wiki/downloads">the River Trail
+<p>Then, on either operating system, install <a class="reference external" href="https://github.com/RiverTrail/RiverTrail/wiki/downloads">the River Trail
 Plugin</a>
-appropriate for your version of firefox</p>
-<p>(if you are on nightly, you may have to downgrade to version 20)</p>
-<p>Then move on to step 2</p>
-<p>B. On OSX you only need to install the firefox plugin for
-<a class="reference external" href="https://github.com/RiverTrail/RiverTrail/wiki/downloads">River Trail</a></p>
-<p>Go to step 2</p>
-<p>C. If you are on linux, you can try compiling the plugin yourself, but
-thats tricky...</p>
-<ol class="arabic simple" start="2">
-<li>Install firebug: <a class="reference external" href="https://getfirebug.com/">https://getfirebug.com/</a></li>
-</ol>
-<p>This is web development debugger and general purpose console tool</p>
-<p>It should install the proper version on its own</p>
-<p>This is needed to do code timings the nice way</p>
-<ol class="arabic simple" start="3">
-<li>Open the <a class="reference external" href="http://rivertrail.github.io/interactive/">interpreter</a></li>
-</ol>
-<p>Make sure that the right hand window has the text “Enabling Parallel
-Mode” to be sure
-that the addon and opencl lib are installed correctly</p>
-<p>4. Try each of the example statements from the left-hand window to get a
-feel for each call</p>
-<p>Note constructor function for ParallelArray</p>
-<p>The example uses a literal for the array it changes to ParallelArray</p>
-<p>but you can use something like:</p>
-<p>var a = [0,2,4,5,6]; //if you want to</p>
-<p>var b = new ParallelArray(a);</p>
-<p>Note the reduce call at the bottom which calls a function ‘sum’ to sum
-all elements</p>
-<p>Check out the
-<a class="reference external" href="https://github.com/RiverTrail/RiverTrail/wiki/ParallelArray">documentation</a>
-for an explanation of each arg (scroll down for methods)</p>
-<p>5. Download the lab exercise from the emails I sent out to the cs300
-alias:</p>
-<p>There should be two files in one email:</p>
-<p>1 HTML file which has a super simple interface</p>
-<p>If you aren’t running this on a webserver, you need to add a protocol to
-the</p>
-<p>jquery include, change:</p>
-<p>&lt;script
-src=&#8221;//ajax.googleapis.com/ajax/libs/jquery/2.0.0/jquery.min.js&#8221;&gt;&lt;/script&gt;</p>
-<p>to</p>
-<p>&lt;script
-src=&#8221;<a class="reference external" href="http://ajax.googleapis.com/ajax/libs/jquery/2.0.0/jquery.min.js">http://ajax.googleapis.com/ajax/libs/jquery/2.0.0/jquery.min.js</a>&#8220;&gt;&lt;/script&gt;</p>
-<ol class="arabic simple" start="2">
-<li>A javascript file to modify</li>
-</ol>
-<p>Download these into the same dir, and unzip them(if they are zipped)</p>
-<p>Then there should also be a series of datafiles in another email:</p>
-<p>Each contains a different number of lines from the movData Movielens
-dataset</p>
-<p>6. Open the html file in firefox, and try pasting a paragraph or more of
-text into the input box</p>
-<ol class="upperalpha simple">
-<li>Then click the ‘Run Word Count’ button and see the results</li>
-</ol>
-<p>B.Now open the MapRedux.js file in an editor, and look at the function
-‘p’</p>
-<p>Note the calls to create a new ParallelArray, to map, and then the
-reduce call</p>
+appropriate for your version of Firefox.</p>
+<p>Now, install firebug: <a class="reference external" href="https://getfirebug.com/">https://getfirebug.com/</a>. This is a web development debugger and general purpose console tool. It should install the proper version on its own. It is needed to do code timings the nice way.</p>
+</div>
+<div class="section" id="first-experimenting">
+<h2>First Experimenting<a class="headerlink" href="#first-experimenting" title="Permalink to this headline">¶</a></h2>
+<p>Now open the <a class="reference external" href="http://rivertrail.github.io/interactive/">interpreter</a>. Make sure that the right hand window has the text “Enabling Parallel Mode” to be sure that the add-on and OpenCL library are installed correctly.</p>
+<p>Now, try each of the example statements from the left-hand window to get a
+feel for each call.  Note constructor function for ParallelArray.</p>
+<p>The example uses a literal for the array it changes to ParallelArray but you can use something like:</p>
+<div class="highlight-python"><pre>var a = [0,2,4,5,6]; //if you want to
+var b = new ParallelArray(a);</pre>
+</div>
+<p>Note the reduce call at the bottom of the example statements which calls a function &#8216;sum&#8217; to sum all elements.  Check out the <a class="reference external" href="https://github.com/RiverTrail/RiverTrail/wiki/ParallelArray">documentation</a> for an explanation of each argument (scroll down for methods).</p>
+</div>
+<div class="section" id="download-for-the-lab-exercise">
+<h2>Download for the Lab Exercise<a class="headerlink" href="#download-for-the-lab-exercise" title="Permalink to this headline">¶</a></h2>
+<p>You will need to download two files. One, <a class="reference download internal" href="../_downloads/ts.html"><tt class="xref download docutils literal"><span class="pre">ts.html</span></tt></a>, is an HTML file which has a super simple interface. The other, <a class="reference download internal" href="../_downloads/MapRedux.js"><tt class="xref download docutils literal"><span class="pre">MapRedux.js</span></tt></a>, is a Javascript file to modify.  Download these into the same directory.</p>
+<p>Also, download <a class="reference download internal" href="../_downloads/data.zip"><tt class="xref download docutils literal"><span class="pre">data.zip</span></tt></a>, a zip file which contains three data files.  Each contains a different number of lines from the movData Movielens dataset.</p>
+</div>
+<div class="section" id="timing-word-count">
+<h2>Timing Word Count<a class="headerlink" href="#timing-word-count" title="Permalink to this headline">¶</a></h2>
+<p>Open the html file in Firefox, and try pasting a paragraph or more of text into the input box. Then click the &#8216;Run Word Count&#8217; button and see the results.</p>
+<p>Now open the MapRedux.js file in an editor, and look at the function
+<tt class="docutils literal"><span class="pre">p</span></tt>. Note the calls to create a new ParallelArray, to map, and then the
+reduce call.</p>
 <p>In a README.txt file:</p>
-<p>Copy the call to ‘scatter’,</p>
-<p>and using the documentation, explain what this function is doing.</p>
-<p>In your readme, also explain how this is different than reduce</p>
-<ol class="upperalpha simple" start="3">
-<li>Now lets add some timing code</li>
-</ol>
+<p>Copy the call to &#8216;scatter&#8217; and, using <a class="reference external" href="https://github.com/RiverTrail/RiverTrail/blob/master/tutorial/RiverTrail-tutorial.pdf?raw=true">the documentation</a>, explain what this function is doing.</p>
+<p>In your README, also explain how this is different than reduce</p>
+<p>Now lets add some timing code.</p>
 <p>When you have firebug installed you can add a timer with a name like so:</p>
-<p>console.time(“timerName”)</p>
+<div class="highlight-python"><pre>console.time(“timerName”)</pre>
+</div>
 <p>and close the timer like this:</p>
-<p>console.timeEnd(“timerName”)</p>
-<p>Add the timer code around the calls to map and scatter</p>
-<p>assign the return of console.timeEnd(“timerName”) to a variable like
-this:</p>
-<p>var timed = console.timeEnd(“timerName”) to a variable</p>
-<p>Then add that variable to the output string (see comments for hints)</p>
-<p>rstr += ‘&lt;p&gt;’+timed+’&lt;/p&gt;’;</p>
-<ol class="upperalpha simple" start="4">
-<li>With the timing code in place, test inputs of various sizes</li>
-</ol>
-<p>copy the word count, and time in ms to your readme</p>
-<p>do 3 runs:</p>
-<p>one with a paragraph</p>
-<p>one with about a page</p>
-<p>one with several pages</p>
-<ol class="arabic simple" start="7">
-<li>Now lets try the average rating function</li>
-</ol>
-<p>A. Open one of the movie lense text files, copy everything, and paste it
-into the input box</p>
-<p>Hit the ‘Run Average’ button, and view the results</p>
-<p>This gives us how long it took total, but doesn’t tell us how many
-ratings there were</p>
-<p>B. In the function ‘q’, read the comments to get a feel for what is
-happening</p>
-<p>Then go to the for-in loop</p>
-<p>Find the line where we add the data for each id to an output string</p>
-<p>Add another table-data element within the row</p>
-<p>(after the &lt;/td&gt; but before &lt;/tr&gt;)</p>
-<p>containing the number of ratings for that id,</p>
-<p>‘&lt;td&gt;’+aValueLikeRatings.length+’&lt;/td&gt;’</p>
-<p>Dont forget to balance the rows (see comment)</p>
-<p>This gives you the number of ratings per id, lets add total number of
+<div class="highlight-python"><pre>console.timeEnd(“timerName”)</pre>
+</div>
+<p>Add the timer code around the calls to <tt class="docutils literal"><span class="pre">map</span></tt> and <tt class="docutils literal"><span class="pre">scatter</span></tt> and assign the return of console.timeEnd(“timerName”) to a variable like this:</p>
+<div class="highlight-python"><pre>var timed = console.timeEnd(“timerName”) to a variable</pre>
+</div>
+<p>Then add that variable to the output string (see comments for hints):</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">rstr</span> <span class="o">+=</span> <span class="s">&#39;&lt;p&gt;&#39;</span><span class="o">+</span><span class="n">timed</span><span class="o">+</span><span class="s">&#39;&lt;/p&gt;&#39;</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>Now, with the timing code in place, test inputs of various sizes. Copy the word count, and time in ms to your README.  Do 3 runs: one with a paragraph, one with about a page, and one with several pages.</p>
+</div>
+<div class="section" id="average-rating-by-user">
+<h2>Average Rating by User<a class="headerlink" href="#average-rating-by-user" title="Permalink to this headline">¶</a></h2>
+<p>Open one of the movie lens text files, copy everything, and paste it
+into the input box.</p>
+<p>Hit the &#8216;Run Average&#8217; button, and view the results. This gives us how long it took total, but it does not tell us how many ratings there were.</p>
+<p>Now look in the function <tt class="docutils literal"><span class="pre">q</span></tt> and read the comments to get a feel for what is
+happening. Then go to the for-in loop and find the line where we add the data for each id to an output string.</p>
+<p>Add another table-data element within the row (after the &lt;/td&gt; but before &lt;/tr&gt;) containing the number of ratings for that id:</p>
+<div class="highlight-python"><pre>&lt;td&gt;+aValueLikeRatings.length+&lt;/td&gt;</pre>
+</div>
+<p>Do not forget to balance the rows (see comment).</p>
+<p>This gives you the number of ratings per id, lets you add the total number of
 ratings</p>
-<p>You can skip this if you like, it will match the number of lines</p>
-<p>declare a var outside the for-in</p>
-<p>var collecta = 0;</p>
-<p>within the for-in</p>
-<p>collecta += ratings.length;</p>
-<p>Add this in a &lt;p&gt; before the table (like the timer)</p>
-<p>Now time each of the different sized files</p>
-<p>Copy the time, and the number of ratings into your readme</p>
-<ol class="upperalpha simple" start="3">
-<li>Now lets get average rating per movie, instead of by user-id</li>
-</ol>
-<p>In the for loop that copies bigArr into smArr,</p>
-<p>we add keys to an object when they don’t already exist (bucketing)</p>
-<p>when the key does exist, we add the rating for that key to a string</p>
-<p>This gives unique keys, with their accompanying values</p>
+<p>If you like, you can print the number of lines.  Declare a var outside the for-in, <tt class="docutils literal"><span class="pre">var</span> <span class="pre">collecta</span> <span class="pre">=</span> <span class="pre">0;</span></tt> and within the for-in, insert <tt class="docutils literal"><span class="pre">collecta</span> <span class="pre">+=</span> <span class="pre">ratings.length;</span></tt>. Add this in a &lt;p&gt; before the table (like the timer).</p>
+<p>Now time each of the different sized files. Copy the time, and the number of ratings into your README.</p>
+</div>
+<div class="section" id="average-rating-per-movie">
+<h2>Average Rating per Movie<a class="headerlink" href="#average-rating-per-movie" title="Permalink to this headline">¶</a></h2>
+<p>In the for loop that copies bigArr into smArr, we add keys to an object when they don&#8217;t already exist (bucketing). When the key does exist, we add the rating for that key to a string. This gives unique keys, with their accompanying values</p>
 <p>Note the ordering of the values</p>
 <p>Change the operation to add the movie-id to the object instead of
-user-id</p>
-<p>think smArr[j+1] instead of smArr[j]....</p>
-<p>rerun your datasets, and record times</p>
+user-id. Think smArr[j+1] instead of smArr[j].  Rerun your datasets, and record times.</p>
 <p>Are the times different? If so, why do you think it was different?</p>
-<ol class="arabic simple" start="8">
-<li>Submit your readme and MapRedux.js to hwsubmit.cs300</li>
-</ol>
-<p>Also email to <a class="reference external" href="mailto:blackhan&#37;&#52;&#48;stolaf&#46;edu">blackhan<span>&#64;</span>stolaf<span>&#46;</span>edu</a> with
-your system config (cores, ram, os)</p>
-</div>
 </div>
 </div>
 
@@ -204,10 +139,12 @@ your system config (cores, ram, os)</p>
   <h3><a href="../index.html">Table Of Contents</a></h3>
   <ul>
 <li><a class="reference internal" href="#">Using River Trail to Parallelize Javascript</a><ul>
-<li><a class="reference internal" href="#installing-river-trail">Installing River Trail</a><ul>
-<li><a class="reference internal" href="#on-windows">On Windows</a></li>
-</ul>
-</li>
+<li><a class="reference internal" href="#installing-river-trail-and-firebug">Installing River Trail and Firebug</a></li>
+<li><a class="reference internal" href="#first-experimenting">First Experimenting</a></li>
+<li><a class="reference internal" href="#download-for-the-lab-exercise">Download for the Lab Exercise</a></li>
+<li><a class="reference internal" href="#timing-word-count">Timing Word Count</a></li>
+<li><a class="reference internal" href="#average-rating-by-user">Average Rating by User</a></li>
+<li><a class="reference internal" href="#average-rating-per-movie">Average Rating per Movie</a></li>
 </ul>
 </li>
 </ul>
