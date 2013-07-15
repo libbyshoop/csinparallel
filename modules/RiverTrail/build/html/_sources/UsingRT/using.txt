@@ -1,12 +1,18 @@
-RiverTrail Parallel Javascript
+Using River Trail to Parallelize Javascript
+==========================================
 
-1. On your personal machine (windows 7 or osx), or a St. Olaf Imac Lab
-machine (on the mac side), open firefox, and check the version:
+Installing River Trail
+----------------------
+
+On a Windows 7 or OS X machine, open Firefox, and check the version. This can be a public machine that you do not have administrative access to.
+
+On Windows
+""""""""""
 
 A. On windows, first download and install `the intel OpenCL
 sdk <http://software.intel.com/en-us/vcsource/tools/opencl-sdk>`_
 
-Then install `the RiverTrail
+Then install `the River Trail
 Plugin <https://github.com/RiverTrail/RiverTrail/wiki/downloads>`_
 appropriate for your version of firefox
 
@@ -15,7 +21,7 @@ appropriate for your version of firefox
 Then move on to step 2
 
 B. On OSX you only need to install the firefox plugin for
-`RiverTrail <https://github.com/RiverTrail/RiverTrail/wiki/downloads>`_
+`River Trail <https://github.com/RiverTrail/RiverTrail/wiki/downloads>`_
 
 Go to step 2
 

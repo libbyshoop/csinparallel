@@ -1,0 +1,242 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Using River Trail to Parallelize Javascript &mdash; MapReduce with River Trail</title>
+    
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="top" title="MapReduce with River Trail" href="../index.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li><a href="../index.html">MapReduce with River Trail</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="using-river-trail-to-parallelize-javascript">
+<h1>Using River Trail to Parallelize Javascript<a class="headerlink" href="#using-river-trail-to-parallelize-javascript" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="installing-river-trail">
+<h2>Installing River Trail<a class="headerlink" href="#installing-river-trail" title="Permalink to this headline">¶</a></h2>
+<p>On a Windows 7 or OS X machine, open Firefox, and check the version. This can be a public machine that you do not have administrative access to.</p>
+<div class="section" id="on-windows">
+<h3>On Windows<a class="headerlink" href="#on-windows" title="Permalink to this headline">¶</a></h3>
+<p>A. On windows, first download and install <a class="reference external" href="http://software.intel.com/en-us/vcsource/tools/opencl-sdk">the intel OpenCL
+sdk</a></p>
+<p>Then install <a class="reference external" href="https://github.com/RiverTrail/RiverTrail/wiki/downloads">the River Trail
+Plugin</a>
+appropriate for your version of firefox</p>
+<p>(if you are on nightly, you may have to downgrade to version 20)</p>
+<p>Then move on to step 2</p>
+<p>B. On OSX you only need to install the firefox plugin for
+<a class="reference external" href="https://github.com/RiverTrail/RiverTrail/wiki/downloads">River Trail</a></p>
+<p>Go to step 2</p>
+<p>C. If you are on linux, you can try compiling the plugin yourself, but
+thats tricky...</p>
+<ol class="arabic simple" start="2">
+<li>Install firebug: <a class="reference external" href="https://getfirebug.com/">https://getfirebug.com/</a></li>
+</ol>
+<p>This is web development debugger and general purpose console tool</p>
+<p>It should install the proper version on its own</p>
+<p>This is needed to do code timings the nice way</p>
+<ol class="arabic simple" start="3">
+<li>Open the <a class="reference external" href="http://rivertrail.github.io/interactive/">interpreter</a></li>
+</ol>
+<p>Make sure that the right hand window has the text “Enabling Parallel
+Mode” to be sure
+that the addon and opencl lib are installed correctly</p>
+<p>4. Try each of the example statements from the left-hand window to get a
+feel for each call</p>
+<p>Note constructor function for ParallelArray</p>
+<p>The example uses a literal for the array it changes to ParallelArray</p>
+<p>but you can use something like:</p>
+<p>var a = [0,2,4,5,6]; //if you want to</p>
+<p>var b = new ParallelArray(a);</p>
+<p>Note the reduce call at the bottom which calls a function ‘sum’ to sum
+all elements</p>
+<p>Check out the
+<a class="reference external" href="https://github.com/RiverTrail/RiverTrail/wiki/ParallelArray">documentation</a>
+for an explanation of each arg (scroll down for methods)</p>
+<p>5. Download the lab exercise from the emails I sent out to the cs300
+alias:</p>
+<p>There should be two files in one email:</p>
+<p>1 HTML file which has a super simple interface</p>
+<p>If you aren’t running this on a webserver, you need to add a protocol to
+the</p>
+<p>jquery include, change:</p>
+<p>&lt;script
+src=&#8221;//ajax.googleapis.com/ajax/libs/jquery/2.0.0/jquery.min.js&#8221;&gt;&lt;/script&gt;</p>
+<p>to</p>
+<p>&lt;script
+src=&#8221;<a class="reference external" href="http://ajax.googleapis.com/ajax/libs/jquery/2.0.0/jquery.min.js">http://ajax.googleapis.com/ajax/libs/jquery/2.0.0/jquery.min.js</a>&#8220;&gt;&lt;/script&gt;</p>
+<ol class="arabic simple" start="2">
+<li>A javascript file to modify</li>
+</ol>
+<p>Download these into the same dir, and unzip them(if they are zipped)</p>
+<p>Then there should also be a series of datafiles in another email:</p>
+<p>Each contains a different number of lines from the movData Movielens
+dataset</p>
+<p>6. Open the html file in firefox, and try pasting a paragraph or more of
+text into the input box</p>
+<ol class="upperalpha simple">
+<li>Then click the ‘Run Word Count’ button and see the results</li>
+</ol>
+<p>B.Now open the MapRedux.js file in an editor, and look at the function
+‘p’</p>
+<p>Note the calls to create a new ParallelArray, to map, and then the
+reduce call</p>
+<p>In a README.txt file:</p>
+<p>Copy the call to ‘scatter’,</p>
+<p>and using the documentation, explain what this function is doing.</p>
+<p>In your readme, also explain how this is different than reduce</p>
+<ol class="upperalpha simple" start="3">
+<li>Now lets add some timing code</li>
+</ol>
+<p>When you have firebug installed you can add a timer with a name like so:</p>
+<p>console.time(“timerName”)</p>
+<p>and close the timer like this:</p>
+<p>console.timeEnd(“timerName”)</p>
+<p>Add the timer code around the calls to map and scatter</p>
+<p>assign the return of console.timeEnd(“timerName”) to a variable like
+this:</p>
+<p>var timed = console.timeEnd(“timerName”) to a variable</p>
+<p>Then add that variable to the output string (see comments for hints)</p>
+<p>rstr += ‘&lt;p&gt;’+timed+’&lt;/p&gt;’;</p>
+<ol class="upperalpha simple" start="4">
+<li>With the timing code in place, test inputs of various sizes</li>
+</ol>
+<p>copy the word count, and time in ms to your readme</p>
+<p>do 3 runs:</p>
+<p>one with a paragraph</p>
+<p>one with about a page</p>
+<p>one with several pages</p>
+<ol class="arabic simple" start="7">
+<li>Now lets try the average rating function</li>
+</ol>
+<p>A. Open one of the movie lense text files, copy everything, and paste it
+into the input box</p>
+<p>Hit the ‘Run Average’ button, and view the results</p>
+<p>This gives us how long it took total, but doesn’t tell us how many
+ratings there were</p>
+<p>B. In the function ‘q’, read the comments to get a feel for what is
+happening</p>
+<p>Then go to the for-in loop</p>
+<p>Find the line where we add the data for each id to an output string</p>
+<p>Add another table-data element within the row</p>
+<p>(after the &lt;/td&gt; but before &lt;/tr&gt;)</p>
+<p>containing the number of ratings for that id,</p>
+<p>‘&lt;td&gt;’+aValueLikeRatings.length+’&lt;/td&gt;’</p>
+<p>Dont forget to balance the rows (see comment)</p>
+<p>This gives you the number of ratings per id, lets add total number of
+ratings</p>
+<p>You can skip this if you like, it will match the number of lines</p>
+<p>declare a var outside the for-in</p>
+<p>var collecta = 0;</p>
+<p>within the for-in</p>
+<p>collecta += ratings.length;</p>
+<p>Add this in a &lt;p&gt; before the table (like the timer)</p>
+<p>Now time each of the different sized files</p>
+<p>Copy the time, and the number of ratings into your readme</p>
+<ol class="upperalpha simple" start="3">
+<li>Now lets get average rating per movie, instead of by user-id</li>
+</ol>
+<p>In the for loop that copies bigArr into smArr,</p>
+<p>we add keys to an object when they don’t already exist (bucketing)</p>
+<p>when the key does exist, we add the rating for that key to a string</p>
+<p>This gives unique keys, with their accompanying values</p>
+<p>Note the ordering of the values</p>
+<p>Change the operation to add the movie-id to the object instead of
+user-id</p>
+<p>think smArr[j+1] instead of smArr[j]....</p>
+<p>rerun your datasets, and record times</p>
+<p>Are the times different? If so, why do you think it was different?</p>
+<ol class="arabic simple" start="8">
+<li>Submit your readme and MapRedux.js to hwsubmit.cs300</li>
+</ol>
+<p>Also email to <a class="reference external" href="mailto:blackhan&#37;&#52;&#48;stolaf&#46;edu">blackhan<span>&#64;</span>stolaf<span>&#46;</span>edu</a> with
+your system config (cores, ram, os)</p>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../index.html">
+              <img class="logo" src="../_static/CSInParallel200wide.png" alt="Logo"/>
+            </a></p>
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Using River Trail to Parallelize Javascript</a><ul>
+<li><a class="reference internal" href="#installing-river-trail">Installing River Trail</a><ul>
+<li><a class="reference internal" href="#on-windows">On Windows</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li><a href="../index.html">MapReduce with River Trail</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright This work is licensed under a Creative Commons Attribution-ShareAlike 3.0 Unported License.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>
