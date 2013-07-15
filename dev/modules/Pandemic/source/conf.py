@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 #
-# MapReduce with RiverTrail documentation build configuration file, created by
-# sphinx-quickstart on Tue Jul  2 16:59:40 2013.
+# Pandemic Exemplar (for those with some experience) documentation build configuration file, created by
+# sphinx-quickstart on Wed Jul  3 12:30:31 2013.
 #
 # This file is execfile()d with the current directory set to its containing dir.
 #
@@ -27,6 +27,16 @@ import sys, os, platform
 # coming with Sphinx (named 'sphinx.ext.*') or your custom ones.
 extensions = ['sphinx.ext.pngmath']
 
+if 'Darwin' in platform.uname()[0]:
+        pngmath_latex = '/usr/local/texlive/2011/bin/x86_64-darwin//latex'
+        pngmath_dvipng = '/usr/local/texlive/2011/bin/x86_64-darwin//dvipng'
+elif 'Linux' in platform.uname()[0]:
+        pngmath_latex = ''
+        pngmath_dvipng = ''
+elif 'Windows' in platform.uname()[0]:
+        pngmath_latex = ''
+        pngmath_dvipng = ''
+
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']
 
@@ -40,7 +50,7 @@ source_suffix = '.rst'
 master_doc = 'index'
 
 # General information about the project.
-project = u'MapReduce with RiverTrail'
+project = u'Pandemic Exemplar (for those with some experience)'
 copyright = u'This work is licensed under a Creative Commons Attribution-ShareAlike 3.0 Unported License'
 
 # The version info for the project you're documenting, acts as replacement for
@@ -103,14 +113,14 @@ html_theme = 'default'
 
 # The name for this set of Sphinx documents.  If None, it defaults to
 # "<project> v<release> documentation".
-html_title = 'MapReduce with River Trail'
+html_title = 'Pandemic Exemplar (for those with some experience)'
 
 # A shorter title for the navigation bar.  Default is the same as html_title.
 #html_short_title = None
 
 # The name of an image file (relative to this directory) to place at the top
 # of the sidebar.
-html_logo = '../../../images/CSInParallel200wide.png'
+html_logo = '../../../images/CSInParallel200wide.png' 
 
 # The name of an image file (within the static path) to use as favicon of the
 # docs.  This file should be a Windows icon file (.ico) being 16x16 or 32x32
@@ -164,12 +174,13 @@ html_show_sourcelink = False
 #html_file_suffix = None
 
 # Output file base name for HTML help builder.
-htmlhelp_basename = 'MapReducewithRiverTraildoc'
+htmlhelp_basename = 'PandemicExemplarforthosewithsomeexperiencedoc'
 
 
 # -- Options for LaTeX output --------------------------------------------------
 
 latex_elements = {
+'releasename': '', 'classoptions': ',openany,oneside', 'babel' : '\\usepackage[english]{babel}'
 # The paper size ('letterpaper' or 'a4paper').
 #'papersize': 'letterpaper',
 
@@ -183,8 +194,8 @@ latex_elements = {
 # Grouping the document tree into LaTeX files. List of tuples
 # (source start file, target name, title, author, documentclass [howto/manual]).
 latex_documents = [
-  ('index', 'MapReducewithRiverTrail.tex', u'MapReduce with RiverTrail Documentation',
-   u'CSInParallelProject', 'manual'),
+  ('index', 'PandemicExemplarforthosewithsomeexperience.tex', u'Pandemic Exemplar (for those with some experience) Documentation',
+   u'CSinParallel Project', 'manual'),
 ]
 
 # The name of an image file (relative to this directory) to place at the top of
@@ -213,8 +224,8 @@ latex_documents = [
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
 man_pages = [
-    ('index', 'mapreducewithrivertrail', u'MapReduce with RiverTrail',
-     [u'CSInParallelProject'], 1)
+    ('index', 'pandemicexemplarforthosewithsomeexperience', u'Pandemic Exemplar (for those with some experience)',
+     [u'CSinParallel Project'], 1)
 ]
 
 # If true, show URL addresses after external links.
@@ -227,8 +238,8 @@ man_pages = [
 # (source start file, target name, title, author,
 #  dir menu entry, description, category)
 texinfo_documents = [
-  ('index', 'MapReducewithRiverTrail', u'MapReduce with RiverTrail',
-   u'CSInParallelProject', 'MapReducewithRiverTrail', 'One line description of project.',
+  ('index', 'PandemicExemplarforthosewithsomeexperience', u'Pandemic Exemplar (for those with some experience)',
+   u'CSinParallel Project', 'PandemicExemplarforthosewithsomeexperience', 'One line description of project.',
    'Miscellaneous'),
 ]
 
