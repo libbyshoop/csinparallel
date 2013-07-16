@@ -1,0 +1,188 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Example Programs and Labs &mdash; CUDA Game of Life</title>
+    
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="top" title="CUDA Game of Life" href="../index.html" />
+    <link rel="prev" title="Pieces of the Puzzle" href="../PiecesOfThePuzzle/PiecesOfThePuzzle.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../PiecesOfThePuzzle/PiecesOfThePuzzle.html" title="Pieces of the Puzzle"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../index.html">CUDA Game of Life</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="example-programs-and-labs">
+<h1>Example Programs and Labs<a class="headerlink" href="#example-programs-and-labs" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="contents">
+<h2>Contents<a class="headerlink" href="#contents" title="Permalink to this headline">¶</a></h2>
+<ul>
+<li><p class="first"><a class="reference internal" href="#example-programs">Example Programs</a></p>
+</li>
+<li><dl class="first docutils">
+<dt><a class="reference internal" href="#labs">Labs</a></dt>
+<dd><ul class="first last simple">
+<li><a class="reference internal" href="#cuda-fying-the-game-of-life">CUDA-fying the Game of Life</a></li>
+<li><a class="reference internal" href="#the-cross-over-point">The Cross-Over Point</a></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><p class="first"><a class="reference internal" href="#resources">Resources</a></p>
+</li>
+</ul>
+<div class="section" id="example-programs">
+<h3>Example Programs<a class="headerlink" href="#example-programs" title="Permalink to this headline">¶</a></h3>
+<p>We&#8217;ve written a small collection of concise and well-commented examples of CUDA programs. They are listed in order of increasing complexity. An educator could use these as a basis for lab exercises by presenting them with some parts removed and prompting the student to finish the program.</p>
+<blockquote>
+<div><ol class="arabic simple">
+<li><a class="reference external" href="http://legacy.lclark.edu/~jmache/parallel/CUDA/examples/addition.cu">addition.cu</a></li>
+<li><a class="reference external" href="http://legacy.lclark.edu/~jmache/parallel/CUDA/examples/vector_addition.cu">vector_addition.cu</a>: A complete and slightly more complex (than the inline example on this page) vector addition program that shows how to use a 1-dimensional form of tiling to accomodate vectors that don&#8217;t fit inside a single block.</li>
+<li><a class="reference external" href="http://legacy.lclark.edu/~jmache/parallel/CUDA/examples/matrix_multiplication.cu">matrix_multiplication.cu</a>: This demonstrates the use of 2D grids and blocks, and tiling. It includes a reference CPU matrix-multiplication implementation along with the CUDA implementation. The use of shared memory is left out; the addition of shared memory use could be an exercise.</li>
+</ol>
+</div></blockquote>
+</div>
+<div class="section" id="labs">
+<h3>Labs<a class="headerlink" href="#labs" title="Permalink to this headline">¶</a></h3>
+<p>Try these labs after you learn more about CUDA syntax and usage in class or from some other resource. The labs are in no particular order, but the Game of Life lab is probably more challenging than the other one. Instructors should feel free to contact Chris M. for a working solution to the Game of Life lab.</p>
+</div>
+</div>
+<div class="section" id="cuda-fying-the-game-of-life">
+<h2>CUDA-fying the Game of Life<a class="headerlink" href="#cuda-fying-the-game-of-life" title="Permalink to this headline">¶</a></h2>
+<p>Practice putting all of the CUDA-pieces together by converting a serial Game of Life implementation into one that uses CUDA. You can start by using gol.c, a CPU-only implementation, as a base for writing your CUDA-enabled version. This is a good lab to apply a technique you may have learned called &#8220;tiling&#8221;.</p>
+<hr class="docutils" />
+<p><strong>Tip</strong></p>
+<p><a class="reference external" href="http://legacy.lclark.edu/~jmache/parallel/CUDA/labs/Game-of-Life/gol.c">gol.c</a> uses X to draw the Game of Life board. If you can&#8217;t use X or don&#8217;t have the Xlib libraries, use <a class="reference external" href="http://legacy.lclark.edu/~jmache/parallel/CUDA/labs/Game-of-Life/gol_textual.c">gol_textual.c</a> instead. That version prints the board to the console &#8211; no fancy graphical display.</p>
+</div>
+<hr class="docutils" />
+<div class="section" id="the-cross-over-point">
+<h2>The Cross-Over Point<a class="headerlink" href="#the-cross-over-point" title="Permalink to this headline">¶</a></h2>
+<p>CUDA really shines when given problems involving lots of data, but for small problems, using CUDA can be slower than a pure CPU solution. Since it can be difficult to get a feel for how large a problem needs to be before using the GPU becomes useful, this lab encourages you to find the &#8220;crossover point&#8221; for vector addition. Specifically: how large do the vectors need to be for the speed of GPU vector addition to eclipse the speed of CPU vector addition?</p>
+<p>Modify the <a class="reference external" href="http://legacy.lclark.edu/~jmache/parallel/CUDA/examples/vector_addition.cu">vector_addition.cu</a> example to time how long it takes the CPU and GPU vector addition functions to operate on vectors of different magnitudes. Find (roughly) what magnitude constitutes the cross-over point for this problem on your system.</p>
+<hr class="docutils" />
+<p><strong>Tip</strong></p>
+<blockquote>
+<div><ul class="simple">
+<li>For a high-resolution wall clock, use the <tt class="docutils literal"><span class="pre">gettimeofday</span></tt> function by including <tt class="docutils literal"><span class="pre">sys/time.h</span></tt>.</li>
+<li>In some C implementations, large arrays should be allocated with <tt class="docutils literal"><span class="pre">malloc</span></tt> instead of implicitly (like <tt class="docutils literal"><span class="pre">int</span> <span class="pre">foo[3]</span></tt>) to avoid segmentation faults.</li>
+</ul>
+</div></blockquote>
+<hr class="docutils" />
+<div class="section" id="resources">
+<h3>Resources<a class="headerlink" href="#resources" title="Permalink to this headline">¶</a></h3>
+<dl class="docutils">
+<dt><em>CUDA, Supercomputing for the Masses</em></dt>
+<dd><p class="first">&lt;<a class="reference external" href="http://drdobbs.com/high-performance-computing/207200659">http://drdobbs.com/high-performance-computing/207200659</a>&gt;</p>
+<p class="last">A comprehensive twenty part tutorial series for the CUDA API that covers everything from basic memory management to details like OpenGL interoperability. These tutorials are easy to read and come with source code examples.</p>
+</dd>
+<dt><em>Programming Massively Parallel Processors: A Hands-on Approach</em> by David Kirk and Wen-mei W. Hwu</dt>
+<dd>This book is a good resource on CUDA chip architecture. Programming Massively Parallel Processors is not as easy to read as the tutorial series on the Dr. Dobbs site, and does not have coverage of specific CUDA Toolkit features. The book also comes with a set of labs. In our experience, we found the labs either too easy or frustratingly hard. The difficulty came from the fact that some labs depend on information from following chapters or from trying to understand the skeleton code provided with each lab.</dd>
+</dl>
+<p><em>CUDA By Example: An Introduction to General-Purpose GPU Programming</em> by Jason Sanders and Edward Kandrot</p>
+<dl class="docutils">
+<dt><em>NVIDIA CUDA C Programming Guide Version 4.0</em></dt>
+<dd><p class="first">&lt;<a class="reference external" href="http://developer.download.nvidia.com/compute/DevZone/docs/html/C/doc/CUDA_C_Programming_Guide.pdf">http://developer.download.nvidia.com/compute/DevZone/docs/html/C/doc/CUDA_C_Programming_Guide.pdf</a>&gt;</p>
+<p class="last">The CUDA C Programming Guide is a great resource for finding answers to specific questions. Therefore it is highly recommended to have a copy on hand as you begin your exploration of CUDA. Unfortunately, the programming guide does not provide a curriculum from which you can learn the CUDA language. The programming guide does come with many code examples which proved valuable in our learning process. The programming guide is more of a reference than a textbook.</p>
+</dd>
+</dl>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../index.html">
+              <img class="logo" src="../_static/CSInParallel200wide.png" alt="Logo"/>
+            </a></p>
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Example Programs and Labs</a><ul>
+<li><a class="reference internal" href="#contents">Contents</a><ul>
+<li><a class="reference internal" href="#example-programs">Example Programs</a></li>
+<li><a class="reference internal" href="#labs">Labs</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#cuda-fying-the-game-of-life">CUDA-fying the Game of Life</a></li>
+<li><a class="reference internal" href="#the-cross-over-point">The Cross-Over Point</a><ul>
+<li><a class="reference internal" href="#resources">Resources</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="../PiecesOfThePuzzle/PiecesOfThePuzzle.html"
+                        title="previous chapter">Pieces of the Puzzle</a></p>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../PiecesOfThePuzzle/PiecesOfThePuzzle.html" title="Pieces of the Puzzle"
+             >previous</a> |</li>
+        <li><a href="../index.html">CUDA Game of Life</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright This work is licensed under a Creative Commons Attribution-ShareAlike 3.0 Unported License.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2b1.
+    </div>
+  </body>
+</html>
