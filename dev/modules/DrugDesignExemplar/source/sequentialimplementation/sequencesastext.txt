@@ -1,9 +1,0 @@
-|        l c a :r:`c x` e :r:`t` q v i :r:`v` g
-|              :r:`c x   t` b c r :r:`v`
-
-
-|        l :r:`c` a c :r:`x` e :r:`t` q v i  :r:`v` g
-|         :r:`c     x   t` r b c  :r:`v`
-
-
-Can't get the formatting right, so I just took screenshots from the google doc - but I'll return to this when I'm better at Sphinx, because the screenshots don't look that good.
