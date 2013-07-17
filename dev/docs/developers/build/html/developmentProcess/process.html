@@ -1,0 +1,205 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>The CSinParallel Module Development Process &mdash; Documentation for Developers</title>
+    
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+    <link rel="top" title="Documentation for Developers" href="../index.html" />
+    <link rel="next" title="New Module Template" href="../newmoduletemplate/newmoduletemplate.html" />
+    <link rel="prev" title="Editing Your New Module" href="../furthersetup/furthersetup.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../newmoduletemplate/newmoduletemplate.html" title="New Module Template"
+             accesskey="N">next</a></li>
+        <li class="right" >
+          <a href="../furthersetup/furthersetup.html" title="Editing Your New Module"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../index.html">Documentation for Developers</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="the-csinparallel-module-development-process">
+<h1>The CSinParallel Module Development Process<a class="headerlink" href="#the-csinparallel-module-development-process" title="Permalink to this headline">¶</a></h1>
+<p>Developers will work from the csinparallel github repository.  You will need to
+contact a project leader if you are not yet set up as a collaborator on this repository.
+You can <a class="reference external" href="https://github.com/libbyshoop/csinparallel">visit the project on github</a>.
+You will see there the following directory structure:</p>
+<div class="highlight-python"><pre>csinparallel/modules/_____Module Name Here_______/source
+                                                 /build
+            /images
+            /docs
+            /dev/modules/_____Module Name Here_______/source
+                                                     /build
+                /images
+                /docs
+            /README.rst</pre>
+</div>
+<p>Modules that are ready for production will be in the top directory shown above.
+Modules that are under development will be under the directory named &#8216;dev&#8217;.</p>
+<dl class="docutils">
+<dt>The central repo on github.com holds two main branches</dt>
+<dd><ol class="first last arabic simple">
+<li>master :     origin/master</li>
+<li>develop :    origin/develop</li>
+</ol>
+</dd>
+</dl>
+<div class="section" id="development-process">
+<h2>Development Process<a class="headerlink" href="#development-process" title="Permalink to this headline">¶</a></h2>
+<p><strong>ALL</strong> work on modules, both new ones and updates, should be done on the develop branch.
+The way of work is the following:</p>
+<ul class="simple">
+<li>cd to your directory where you&#8217;ve cloned the project repository.</li>
+<li>Switch your local copy to the develop brnach.</li>
+<li>Checkout a new branch of the develop branch with -b option and choose a name for your branch.</li>
+</ul>
+<p>Here is an example, with git commands, where &#8216;ls-dev&#8217; is the name for a branch to develop from. This assumes your are in the directory where your clone copy
+of the csinparallel repository resides.</p>
+<p>When developing a module, you will checkout off the develop branch
+of the csinparallel repository:</p>
+<div class="highlight-python"><pre>git checkout -b ls-dev develop</pre>
+</div>
+<p>Now you can do your work:</p>
+<ul class="simple">
+<li>commit to your branch as you go along,</li>
+<li>occasionally push up to github on your branch off develop (so you are saving a copy</li>
+</ul>
+<p>in the repository),
+- and occasionally pull down other&#8217;s work from the develop branch and merge it with yours.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">These above steps can be done with the github client tool by committing and doing &#8216;sync&#8217; operations, or using the command line.  Below are the command-line equivalents. See also: the <a class="reference external" href="http://git-htmldocs.googlecode.com/git/git.html">git manual pages</a> and <a class="reference external" href="http://www.atlassian.com/git/tutorial">this git tutorial</a>.</p>
+</div>
+<p>From the command line:</p>
+<div class="highlight-python"><pre>git add &lt;file or directory&gt;
+git commit
+
+git pull develop
+
+git push origin ls-dev</pre>
+</div>
+<p>Eventually, you will want to place your work on the develop branch so that
+other people you are working with will be able to see it on a web server. The next few steps describe this. <em>Use the command line for this set of steps.</em></p>
+<p>With this next command, go back to the develop branch:</p>
+<div class="highlight-python"><pre>git checkout develop</pre>
+</div>
+<p>From the develop branch, merge your sub-branch changes:</p>
+<div class="highlight-python"><pre>git merge --no-ff ls-dev</pre>
+</div>
+<p>Push the changes back up to github on the develop branch:</p>
+<div class="highlight-python"><pre>git push origin develop</pre>
+</div>
+<p>The &#8216;develop&#8217; branch can be housed on a web server separately from
+the master branch.  This will be updated on a regular basis so that
+developers can share their resulting work woth others.  We envision this
+site should be password protected for developer access.</p>
+<p>The master branch will be updated <strong>only by csinparallel personnel</strong>.
+The master branch will contain the production modules
+and those files that are in the develop branch when we update it.</p>
+</div>
+<div class="section" id="an-example-of-a-restructuredtext-document">
+<h2>An example of a reStructuredText document<a class="headerlink" href="#an-example-of-a-restructuredtext-document" title="Permalink to this headline">¶</a></h2>
+<p>The next section contains a .rst file that shows many of the tags and formatting characters that your will likely need for creating a chapter page of a module.</p>
+</div>
+<div class="section" id="csinparallel-production-version-creation">
+<h2>CSinParallel production version creation<a class="headerlink" href="#csinparallel-production-version-creation" title="Permalink to this headline">¶</a></h2>
+<p>When a module on the develop branch is ready for production, we will:</p>
+<ul class="simple">
+<li>checkout a sub-branch of the develop branch</li>
+<li>&#8216;git move&#8217; the module from the &#8216;dev&#8217; directory to the csinparallel/modules directory</li>
+<li>build all the versions needed (html, latex, pdf, word)</li>
+<li>commit and push the new module in its new location</li>
+<li>switch to the master branch</li>
+<li>merge the develop branch into the master branch</li>
+<li>push the changes up to the master branch</li>
+<li>update the official web site containing csinparallel modules (including removal ofthe &#8216;dev&#8217; subdirectory)</li>
+</ul>
+</div>
+<div class="section" id="other-notes">
+<h2>Other Notes<a class="headerlink" href="#other-notes" title="Permalink to this headline">¶</a></h2>
+<p>We will <em>not</em> use .gitignore to ignore the build directory in github.
+Instead, developers will be able to push their build subdirectories
+into the &#8216;dev&#8217; subdirectory.  These can then be used immediately on the
+development web servers for the project.</p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../index.html">
+              <img class="logo" src="../_static/CSInParallel200wide.png" alt="Logo"/>
+            </a></p>
+<h3><a href="../index.html">Table Of Contents</a></h3>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../softwaresetup/softwaresetup.html">What You&#8217;ll Need to Get Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../creatingnewmodule/modulesetup.html">Setting Up A New Module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../furthersetup/furthersetup.html">Editing Your New Module</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="">The CSinParallel Module Development Process</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../newmoduletemplate/newmoduletemplate.html">New Module Template</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../modulechecklist/modulechecklist.html">Checklist: Reminders for Experienced Module Creators</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../components/components.html">Components of a Module</a></li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="../furthersetup/furthersetup.html"
+                        title="previous chapter">Editing Your New Module</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="../newmoduletemplate/newmoduletemplate.html"
+                        title="next chapter">New Module Template</a></p>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../newmoduletemplate/newmoduletemplate.html" title="New Module Template"
+             >next</a></li>
+        <li class="right" >
+          <a href="../furthersetup/furthersetup.html" title="Editing Your New Module"
+             >previous</a> |</li>
+        <li><a href="../index.html">Documentation for Developers</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright This work is licensed under a Creative Commons Attribution-ShareAlike 3.0 Unported License.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>
