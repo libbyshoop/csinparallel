@@ -1,0 +1,125 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Pi Using Numerical Integration: CUDA &mdash; Pi Using Numerical Integration: CUDA</title>
+    
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="Pi Using Numerical Integration: CUDA" href="#" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li><a href="#">Pi Using Numerical Integration: CUDA</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="pi-using-numerical-integration-cuda">
+<h1>Pi Using Numerical Integration: CUDA<a class="headerlink" href="#pi-using-numerical-integration-cuda" title="Permalink to this headline">¶</a></h1>
+<p>Several implementations have a reduction operator that can combine partial results in log(n) time. CUDA has a more complicated memory model, namely a group of blocks,  each containing a group of synchronizable threads. Each thread gets its work as with shared and distributed memory, with a slight difference being the division of labor needing to be first  transferred from CPU memory to shared CUDA memory. The CUDA thread also has parallel reduce of thread results within a block. The reduction becomes starved of actual work, with only one thread performing the final add, but is overall done in log(n) time, so it is still a win. The block results are then transferred from CUDA memory to CPU memory, where a final linear reduction is performed.  There is a <a class="reference external" href="https://code.google.com/p/eapf-tech-pack-practicum/source/browse/trunk/pi_integration/pi_area_cuda.cu">sample implementation</a> available.</p>
+<div class="section" id="further-exploration">
+<h2>Further Exploration<a class="headerlink" href="#further-exploration" title="Permalink to this headline">¶</a></h2>
+<blockquote>
+<div><ul class="simple">
+<li>The code uses 32 blocks per grid and 256 threads per block. Must these numbers be used? What are advantages/disadvantages of changing them? Is the ratio between theses numbers significant?</li>
+<li>This code uses floats. What differences do you see with the other area under the curve codes? How can you affect any differences while still using floats? Can you use doubles with CUDA? If so, how do you test when you can?</li>
+<li>The x values in pi_area_serial.c are calculated by repeatedly adding the width of each rectangle. How would it change the results to instead calculate x as is done in the code snippet above?</li>
+<li>There is a coalescing of thread values within a block by repeated passes that starve down to an effective length of 1. Was this a wise choice? Why wasn’t the same technique used for all threads at once, and not just block by block for the threads within that block?</li>
+</ul>
+</div></blockquote>
+</div>
+<div class="section" id="complete-code">
+<h2>Complete Code<a class="headerlink" href="#complete-code" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-python"><pre>/*  calculating pi via area under the curve
+ *  This code uses an algorithm fairly easily ported to all parallel methods.
+ *  Since it calculates pi, it is easy to verify that results are correct.
+ *  It can also be used to explore accuracy of results and techniques for managing error.
+ */
+
+#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+#include &lt;cuda.h&gt;
+
+
+#define NUMRECT 10000000
+
+
+/*  students learn in grammar school that the area of a circle is pi*radius*radius.</pre>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="#">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Pi Using Numerical Integration: CUDA</a><ul>
+<li><a class="reference internal" href="#further-exploration">Further Exploration</a></li>
+<li><a class="reference internal" href="#complete-code">Complete Code</a></li>
+</ul>
+</li>
+</ul>
+
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li><a href="#">Pi Using Numerical Integration: CUDA</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright This work is licensed under a Creative Commons Attribution-ShareAlike 3.0 Unported License.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2b1.
+    </div>
+  </body>
+</html>

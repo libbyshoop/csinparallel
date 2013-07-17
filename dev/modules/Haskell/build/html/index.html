@@ -1,0 +1,166 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Pi Using Numerical Integration: Haskell &mdash; Pi Using Numerical Integration: Haskell</title>
+    
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="Pi Using Numerical Integration: Haskell" href="#" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li><a href="#">Pi Using Numerical Integration: Haskell</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="pi-using-numerical-integration-haskell">
+<h1>Pi Using Numerical Integration: Haskell<a class="headerlink" href="#pi-using-numerical-integration-haskell" title="Permalink to this headline">¶</a></h1>
+<p>Haskell is a functional programming language that was created in the 1980&#8217;s. It is a static, strongly-typed language which incorporates automatic type reference. It also has built-in parallel interfaces that can make it easier to implement parallel programming. To show the Haskell implementation, we will compare the sequential implementation and the data-parallel implementation.</p>
+<div class="section" id="sequential-riemann">
+<h2>Sequential Riemann<a class="headerlink" href="#sequential-riemann" title="Permalink to this headline">¶</a></h2>
+<p>The program will take an argument for the number of partitions and return
+an estimation of pi. It will do this by the method of right-handed Riemann
+rectangle summation. To implement this sum we do the following. First we
+create a list that has an appropriate dx based on the number of partitions the
+user inputs. We then multiply dx by twice the height of the right hand point to
+get the area of our rectangle. We then add up all of the area of the rectangles
+to get our approximation.</p>
+<div class="highlight-python"><pre>-- Equation for the upper hemisphere of the unit circle
+
+circle :: Double -&gt; Double
+circle x = sqrt (abs(1 - x^2))
+
+-- Calculate the area of a right-handed Riemann rectangle
+
+area :: Double -&gt; Double -&gt; Double
+area x1 x2 = (x2 - x1) * circle x2
+
+-- Recursively add the areas of the Riemann rectangles
+
+estimate (x:[]) = 0
+estimate (x:y:xs) = (area x y) + estimate (y:xs)</pre>
+</div>
+</div>
+<div class="section" id="parallel-riemann">
+<h2>Parallel Riemann<a class="headerlink" href="#parallel-riemann" title="Permalink to this headline">¶</a></h2>
+<p>The parallel version is almost identical code, using a similar recursive function
+to add the areas of the Riemann rectangles. The primary difference comes from
+the insertion of the <strong>par</strong> and <strong>pseq</strong> functions. In our parallel estimation of pi, <strong>par</strong>
+is calculating <em>smaller</em>, and <strong>pseq</strong> is calculating <em>larger</em> at the same time. <em>larger</em>
+makes a recursive call to <strong>parEstimate</strong>, giving us another smaller section to
+begin executing in parallel. This essentially gives us a cascading sum of parallel
+computations of the areas of the Riemann rectangles. Once <em>larger</em> &#8211;with the
+recursive smallers&#8211; is finally complete, larger and smaller are added together,
+resulting in pi.</p>
+<div class="highlight-python"><pre>import Control.Parallel
+
+-- Equation for the upper hemisphere of the unit circle
+
+circle :: Double -&gt; Double
+circle x = sqrt (abs(1 - x^2))
+
+-- Calculate the area of a right-handed Riemann rectangle
+
+area :: Double -&gt; Double -&gt; Double
+area x1 x2 = (x2 - x1) * circle x2
+
+-- Recursively add the areas of the Riemann rectangles
+
+parEstimate :: [Double] -&gt; Double
+parEstimate (x:[]) = 0
+parEstimate (x:y:[]) = area x y
+parEstimate (x:y:xs) =
+smaller `par` (larger `pseq` smaller + larger)
+  where smaller = area x y
+larger = parEstimate (y:xs)</pre>
+</div>
+</div>
+<div class="section" id="further-exploration">
+<h2>Further Exploration<a class="headerlink" href="#further-exploration" title="Permalink to this headline">¶</a></h2>
+<blockquote>
+<div><ul class="simple">
+<li>Try building and running both the sequential and the parallelized implementations of the Riemann sum in Haskell. Compare the timing results you collected for the sequential program to the time performance of this parallel program using various numbers of threads.  Does the parallel program perform better?  Is the speed up as much as you would expect?  If not, can you hypothesize why?</li>
+</ul>
+</div></blockquote>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="#">
+              <img class="logo" src="_static/CSInParallel200wide.png" alt="Logo"/>
+            </a></p>
+  <h3><a href="#">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Pi Using Numerical Integration: Haskell</a><ul>
+<li><a class="reference internal" href="#sequential-riemann">Sequential Riemann</a></li>
+<li><a class="reference internal" href="#parallel-riemann">Parallel Riemann</a></li>
+<li><a class="reference internal" href="#further-exploration">Further Exploration</a></li>
+</ul>
+</li>
+</ul>
+
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li><a href="#">Pi Using Numerical Integration: Haskell</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright This work is licensed under a Creative Commons Attribution-ShareAlike 3.0 Unported License.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2b1.
+    </div>
+  </body>
+</html>

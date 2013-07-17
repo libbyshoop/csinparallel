@@ -1,0 +1,248 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>The Lab &mdash; CUDA for C Novices</title>
+    
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="top" title="CUDA for C Novices" href="../index.html" />
+    <link rel="next" title="Add Vectors Example" href="../addVectors/addVectors.html" />
+    <link rel="prev" title="CUDA For C Novices" href="../index.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../addVectors/addVectors.html" title="Add Vectors Example"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="../index.html" title="CUDA For C Novices"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../index.html">CUDA for C Novices</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="the-lab">
+<h1>The Lab<a class="headerlink" href="#the-lab" title="Permalink to this headline">¶</a></h1>
+<p>In this lab, you’ll be examining some of the factors that affect the
+performance of programs that use the graphics processing unit (GPU). In
+particular, you’ll see the cost of transferring data back and forth to
+the graphics card and how the different threads are joined together.
+We’ll see the good side of GPU programming (that it can make programs
+faster) tomorrow in lecture.</p>
+<p>I encourage you to work with someone else for this lab;
+having fewer programs running will make the timing experiments more
+accurate and I think having a partner will help with all the new
+material (at least that way, you can both be lost together...).</p>
+<div class="section" id="cuda">
+<h2>CUDA<a class="headerlink" href="#cuda" title="Permalink to this headline">¶</a></h2>
+<p>To begin, you need to get onto a system with a graphics card. Once you have a terminal open, you need to add two lines to a configuration file so that you can use the compiler for CUDA. For this you need a text editor. Begin by opening your .cshrc file. If you are using emacs, begin by typing</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">emacs</span> <span class="o">.</span><span class="n">cshrc</span>
+</pre></div>
+</div>
+<p>This file is a configuration file used by tcsh, which is your <em>shell</em>,
+the program that you’re typing commands into. This file is read every
+time the shell starts. Add the following lines:</p>
+<div class="highlight-python"><pre>set path=(${path} /usr/local/cuda/bin)
+setenv LD_LIBRARY_PATH /usr/local/cuda/lib64</pre>
+</div>
+<p>Once you’re done with that, close your text editor by hitting Control-X followed by
+<tt class="docutils literal"><span class="pre">Control-C</span></tt> (abbreviated <tt class="docutils literal"><span class="pre">C-x</span> <span class="pre">C-c</span></tt>). You’ll be asked if you want to save the
+file; answer yes.</p>
+<p>As mentioned above, the .cshrc file is run automatically when the shell
+starts, but you want to run it now. To do this, simply type</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">source</span> <span class="o">.</span><span class="n">cshrc</span>
+</pre></div>
+</div>
+<p>(You won’t have to do this step (or edit the .chsrc file) in the future
+because the shell runs the file every time it starts up.) If it works,
+you’ll just get another prompt. if you get any error
+messages, that means something went wrong with the step.</p>
+<p>Now we can start actually working with CUDA code. We’ll begin with a
+program which add
+two vectors. Copy the code into your directory from either the links on the home page of this module, or the text on the &#8216;Add Vectors&#8217; page of the module.</p>
+<p>Let’s begin by compiling this program:</p>
+<div class="highlight-python"><pre>nvcc -o addVectors addVectors.cu</pre>
+</div>
+<p><tt class="docutils literal"><span class="pre">nvcc</span></tt> is the name of the compiler for CUDA, the <tt class="docutils literal"><span class="pre">-o</span> <span class="pre">addVectors</span></tt> part is
+telling the compiler that you’d like to create an executable called
+“addVectors”, and the last part is the name of the file to compile. If
+you get any error messages, this probably means that there
+is a problem with your .cshrc or with copying the file. Once you’ve
+successfully compiled, you can run the program with the following:</p>
+<div class="highlight-python"><pre>./addVectors</pre>
+</div>
+<p>You should get a printout with a time and a list of even numbers from 0
+to 18.</p>
+<p>Now let’s examine the code itself. Open the file. If you are using emacs, do this by typing</p>
+<div class="highlight-python"><pre>emacs addVectors.cu</pre>
+</div>
+<p>The file will display better if you put the program you are using
+to edit the file into the mode for C programs. In emacs, do this by hitting
+<tt class="docutils literal"><span class="pre">Escape-X</span></tt> and then typing in <tt class="docutils literal"><span class="pre">c-mode</span></tt> (enter). You’ll see the first part of
+the last word at the bottom of the screen (sort of status bar) change
+from “Text” to “C”.</p>
+<p>Right near the top of the file is the definition of the function kernel:</p>
+<div class="highlight-python"><pre>__global__ void kernel(int* res, int* a, int* b) {
+  //function that runs on GPU to do the addition
+  //sets res[i] = a[i] + b[i]; each thread is responsible for one value of i
+
+  int thread_id = threadIdx.x + blockIdx.x*blockDim.x;
+  if(thread_id &lt; N) {
+    res[thread_id] = a[thread_id] + b[thread_id];
+  }
+}</pre>
+</div>
+<p>This mostly looks like Java except for some details of the top line.
+<tt class="docutils literal"><span class="pre">int\*</span></tt> is (for our purposes) equivalent to <tt class="docutils literal"><span class="pre">int[]</span></tt> in Java and the
+<tt class="docutils literal"><span class="pre">__global__</span></tt> part denotes this function as a kernel that can run on
+the GPU. The first line of code in the function body sets <tt class="docutils literal"><span class="pre">thread_id</span></tt> as
+a unique identifier for each thread. Its value is calculated as the
+number of the thread within its block (<tt class="docutils literal"><span class="pre">threadIdx.x</span></tt>) plus the product of
+its block number (<tt class="docutils literal"><span class="pre">blockIdx.x</span></tt>) and the size of each block (<tt class="docutils literal"><span class="pre">blockDim.x</span></tt>);
+recall that threads are organized into blocks to simplify the
+bookkeeping for the tremendous number of threads in CUDA programs. The
+id value is then used as the index into the arrays so that each thread
+performs exactly one of the additions in the array sum.</p>
+<p>Next, let’s modify the CUDA code. Begin by changing the value of N
+in the setting of the array length (right above the declaration of
+<tt class="docutils literal"><span class="pre">kernel</span></tt>. In order for the program to take a measureable amount of time,
+set this to 1 million (1000000). Since we don’t want to actually see the
+vector sum (one million numbers would make quite a mess for output), go
+down to the “verify results” part of the code (2nd to last “paragraph”
+of code in the file). Change this for loop to only print if it finds an
+index <tt class="docutils literal"><span class="pre">i</span></tt> such that <tt class="docutils literal"><span class="pre">res[i]</span> <span class="pre">!=</span> <span class="pre">a[i]+b[i]</span></tt>, i.e. the program has failed to
+correctly add the vectors.</p>
+<p>Once you’ve made these changes, it’s time to exit the editor and
+recompile the program. To exit emacs, type <tt class="docutils literal"><span class="pre">C-x</span> <span class="pre">C-c</span></tt> again. Then type the
+same compilation command as before (the one with <tt class="docutils literal"><span class="pre">nvcc</span></tt>). Now when you run
+the program, there shouldn’t be any output other than the time, which
+will be significantly larger (about 4 milliseconds).</p>
+<p>Let’s see how this time breaks down between the data transfer between
+the main system (call the <em>host</em>) and the graphics card. Open the file
+again and we’ll comment out the line that calls the kernel. To file this
+line, we’ll use the search function in the text editor. If you&#8217;re in emacs, type Control-s (<tt class="docutils literal"><span class="pre">C-s</span></tt>) and
+then type <tt class="docutils literal"><span class="pre">kernel</span></tt>. The cursor will jump to the first place that this
+string appears in the file, which is the kernel’s definition. Hit <tt class="docutils literal"><span class="pre">C-s</span></tt>
+again to move to the next occurrence. This still isn’t the line so hit
+it again. This is the correct line to terminate the search by hitting
+enter.</p>
+<p>Now comment out this line and the “verify” paragraph (down a couple of
+paragraphs). Then exit the text editor, recompile, and run the program again. The
+program is now transferring the data back and forth, but not actually
+performing the addition. You’ll see that the running time hasn’t changed
+much. This program spends most of its time transferring data because the
+computation does very little to each piece of data and can do that part
+in parallel.</p>
+<p>To see this another way, open the file again and uncomment the kernel
+call and the verify paragraph. Then comment out the lines that transfer
+the data to the GPU; these are in the paragraph commented as
+<em>“transfer a and b to the GPU”</em> (use the search function to find it). Then
+modify the kernel to use <tt class="docutils literal"><span class="pre">thread_id</span></tt> instead of <tt class="docutils literal"><span class="pre">a[thread_id]</span></tt> and
+<tt class="docutils literal"><span class="pre">b[thread_id]</span></tt>. (The program initializes <tt class="docutils literal"><span class="pre">a[i]</span></tt> and <tt class="docutils literal"><span class="pre">b[i]</span></tt> to both be <tt class="docutils literal"><span class="pre">i</span></tt>; see
+the “set up contents of a and b” paragraph.) The resulting program
+should be equivalent to the original one except that instead of having
+the CPU initialize the vectors and then copy them to the graphics card,
+the graphics card is using its knowledge of their value to compute the
+sum, thus avoiding the first data transfer. Recompile and rerun this
+program; now the time is considerably less than the 4 milliseconds we
+started with. (We’re no longer copying the two vectors, which are each a
+million entries long...)</p>
+<p>If you have additional time, copy the file <tt class="docutils literal"><span class="pre">divergence.cu</span></tt> from the home page. This file
+contains two kernels, creatively named <tt class="docutils literal"><span class="pre">kernel_1</span></tt> and <tt class="docutils literal"><span class="pre">kernel_2</span></tt>. Examine
+them and verify that they produce the same result. The running
+time is quite different however; change the call in <tt class="docutils literal"><span class="pre">main</span></tt> and look at the
+difference in running time. This is caused by the fact that CUDA threads
+operate in lockstep; each thread in a warp spends time for each instruction that
+<em>any</em> thread in that warp wants to execute.</p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../index.html">
+              <img class="logo" src="../_static/CSInParallel200wide.png" alt="Logo"/>
+            </a></p>
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">The Lab</a><ul>
+<li><a class="reference internal" href="#cuda">CUDA</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="../index.html"
+                        title="previous chapter">CUDA For C Novices</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="../addVectors/addVectors.html"
+                        title="next chapter">Add Vectors Example</a></p>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../addVectors/addVectors.html" title="Add Vectors Example"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="../index.html" title="CUDA For C Novices"
+             >previous</a> |</li>
+        <li><a href="../index.html">CUDA for C Novices</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright This work is licensed under a Creative Commons Attribution-ShareAlike 3.0 Unported License.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2b1.
+    </div>
+  </body>
+</html>
