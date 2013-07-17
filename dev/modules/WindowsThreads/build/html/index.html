@@ -1,0 +1,136 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Pi Using Numerical Integration: Windows Threads &mdash; Pi Using Numerical Integration: Windows Threads</title>
+    
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="Pi Using Numerical Integration: Windows Threads" href="#" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li><a href="#">Pi Using Numerical Integration: Windows Threads</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="pi-using-numerical-integration-windows-threads">
+<h1>Pi Using Numerical Integration: Windows Threads<a class="headerlink" href="#pi-using-numerical-integration-windows-threads" title="Permalink to this headline">¶</a></h1>
+<p>An implementation of the area computation with the Windows threads (Win32 threads) explicit threading model is shown here. There is not much difference between this version and the Pthreads version. Both spawn threads, assign those threads some portion of the rectangles, compute and sum the rectangle areas, and update the shared summation variable. The main thread blocks until all threads have terminated (via WaitForMultipleObjects()).</p>
+<p>The difference in algorithms used is how the rectangles are distributed to threads. In this version, the beginning and ending index values of the original iteration range are computed within each thread. These begin and end indices are used as for-loop bounds. The number of rectangles each thread will handle is computed by dividing the number of rectangles by the number of threads; the index values are found by multiplying this ratio by the thread number and the thread number + 1. For 1000 rectangles and four threads, the first thread (myNum == 0) will start with rectangle 0 and finish with rectangle 249 (&lt; (myNum+1) * (1000/4)) for a total of 250 rectangles for each thread.</p>
+<p>The one caveat that must be addressed with this method of dividing loop iterations is when the number of rectangles (NUM_RECT) is not divisible by the number of threads (NUMTHREADS). For example, if the number of rectangles to use were 10000019 (a prime number), dividing by any number of threads will leave some iterations left out of the computation when computing the iteration bounds as described above. For instance, if executing on 4 threads, three iterations would remain unattached to a thread. Thus, to account for any “leftover” iterations, the remainder are added to the last thread by setting the end variable to be the explicit number of rectangles. If the time to compute a single iteration is significant, this distribution scheme could lead to load imbalance and an alternate method of iteration assignment should be used.</p>
+<div class="highlight-python"><pre>#include &lt;windows.h&gt;
+#include &lt;stdio.h&gt;
+#include &lt;math.h&gt;
+
+#define NUM_RECT 10000000
+#define NUMTHREADS 4
+
+double gPi = 0.0;
+CRITICAL_SECTION gCS;
+
+DWORD WINAPI Area(LPVOID pArg) {
+            int myNum = *((int *)pArg);
+            double h = 2.0 / NUM_RECT;
+            double partialSum = 0.0, x;  // local to each thread
+            int begin =  myNum  * (NUM_RECT / NUMTHREADS);
+            int end   = (myNum+1) * (NUM_RECT / NUMTHREADS);
+            if (nyNum == (NUMTHREADS-1)) end = NUM_RECT;
+            for ( int i = begin; i &lt; end; ++i ){ //compute rectangles in range
+                  x = -1 + (i + 0.5f) * h;
+                  partialSum += sqrt(1.0f - x*x) * h;
+            }
+            EnterCriticalSection(&amp;gCS);
+            gPi += partialSum;  // add partial to global final answer
+            LeaveCriticalSection(&amp;gCS);
+            return 0;
+}
+int main(int argc, char **argv) {
+            HANDLE threadHandles[NUMTHREADS];
+            int tNum[NUMTHREADS];
+            InitializeCriticalSection(&amp;gCS);
+        for ( int i = 0; i &lt; NUMTHREADS; ++i ){
+                tNum[i] = i;
+                threadHandles[i] = CreateThread( NULL,  // Security attributes
+                                     0,   // Stack size
+                                           Area,   // Thread function
+                                          (LPVOID)&amp;tNum[i],// Data for Area()
+                                           0,       // Thread start mode
+                                           NULL);   // Returned thread ID
+   }
+   WaitForMultipleObjects(NUMTHREADS, threadHandles, TRUE, INFINITE);
+   gPi * = 2.0;
+   DeleteCriticalSection(&amp;gCS)
+   printf("Computed value of Pi:  %12.9f\n", gPi );
+}</pre>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="#">
+              <img class="logo" src="_static/CSInParallel200wide.png" alt="Logo"/>
+            </a></p>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li><a href="#">Pi Using Numerical Integration: Windows Threads</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright This work is licensed under a Creative Commons Attribution-ShareAlike 3.0 Unported License.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2b1.
+    </div>
+  </body>
+</html>
