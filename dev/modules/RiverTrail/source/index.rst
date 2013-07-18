@@ -11,8 +11,8 @@ Contents:
 .. toctree::
    :maxdepth: 1
    
-   UsingRT/using
    Introduction/intro
+   UsingRT/using
 
 
 
