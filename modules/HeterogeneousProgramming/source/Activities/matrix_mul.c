@@ -27,14 +27,15 @@ void MatrixMul(float *dM, float *dN, float *dP, int width, int block_size);
 int main (int argc, char *argv[]) {
 
     int numtasks,              /* number of tasks in partition */
-        rank,                  /* a task identifier */
+        taskid,                /* a task identifier */
         numworkers,            /* number of worker tasks */
         source,                /* task id of message source */
         dest,                  /* task id of message destination */
         mtype,                 /* message type */
         rows,                  /* rows of matrix A sent to each worker */
         averow, extra, offset, /* used to determine rows sent to each worker */
-        i, j, k, rc;           /* variables for loops */
+        i, j, k,               /* variables for loops */
+        errorCode = 1;         /* error code initialized for MPI_Abort */
 
     float a[ROW_A][COL_A],           /* matrix A for multiplication */
           b[COL_A][COL_B],           /* matrix B for multiplication */
