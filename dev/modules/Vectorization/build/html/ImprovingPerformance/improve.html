@@ -1,0 +1,189 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Improving Performance &mdash; Vectorization</title>
+    
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="top" title="Vectorization" href="../index.html" />
+    <link rel="next" title="Using Vectorization" href="../Exercise/exercise.html" />
+    <link rel="prev" title="About Vectorization" href="../Background/background.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../Exercise/exercise.html" title="Using Vectorization"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="../Background/background.html" title="About Vectorization"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../index.html">Vectorization</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="improving-performance">
+<h1>Improving Performance<a class="headerlink" href="#improving-performance" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="pointer-aliasing">
+<h2>Pointer Aliasing<a class="headerlink" href="#pointer-aliasing" title="Permalink to this headline">¶</a></h2>
+<p>If the compiler sees two pointers to the same memory location, it may skip vectorizing the loop if it sees an opportunity for race conditions.</p>
+<p>Removing pointer aliasing helps ensure that loop dependencies between iterations do not exist.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">TODO: Give example</p>
+</div>
+</div>
+<div class="section" id="aligning-data">
+<h2>Aligning Data<a class="headerlink" href="#aligning-data" title="Permalink to this headline">¶</a></h2>
+<p>By aligning the data on 16 byte boundaries in memory, the compiler can use faster aligned load instructions.</p>
+<p>One keyword that can be used in the <tt class="docutils literal"><span class="pre">__attribute__</span></tt> keyword:</p>
+<div class="highlight-python"><pre>float array[30] __attribute___((aligned(base, [offset])));</pre>
+</div>
+<p>One can also use the macro <tt class="docutils literal"><span class="pre">pragma</span> <span class="pre">vector</span> <span class="pre">aligned</span></tt> before the vectorizable loop to get maximum speedup from data alignment.</p>
+</div>
+<div class="section" id="function-inlining">
+<h2>Function Inlining<a class="headerlink" href="#function-inlining" title="Permalink to this headline">¶</a></h2>
+<p>By enabling the &#8220;interprocedural optimization&#8221; option, the compiler may be able to further optimize through automatic function inling.</p>
+<p>This is enabled with the <em>-ipo</em> compiler flag.</p>
+</div>
+<div class="section" id="non-contiguous-memory-acccess">
+<h2>Non-Contiguous Memory Acccess<a class="headerlink" href="#non-contiguous-memory-acccess" title="Permalink to this headline">¶</a></h2>
+<p>Loops with non-unit stride or indirect addressing may be inefficient to vectorize:</p>
+<div class="highlight-python"><pre>for (int i=0; i &lt; SIZE; i+=2)
+    b[i] += a[i] * x[index[i]]</pre>
+</div>
+<p>With contiguous memory access, multiple consecutive ints, floats or doubles can be loaded simultaneously.</p>
+</div>
+<div class="section" id="data-dependencies">
+<h2>Data Dependencies<a class="headerlink" href="#data-dependencies" title="Permalink to this headline">¶</a></h2>
+<p>Vectorization is possible when changing the order of operations in a loop does not change the result. For example, Read after Write, as in <tt class="docutils literal"><span class="pre">for</span> <span class="pre">(j=1,</span> <span class="pre">j&lt;MAX;</span> <span class="pre">j++)</span> <span class="pre">A[j]</span> <span class="pre">=</span> <span class="pre">A[j</span> <span class="pre">-</span> <span class="pre">1]</span> <span class="pre">+</span> <span class="pre">1;</span></tt> cannot be vectorized. On the other hand, Write after Read, for example <tt class="docutils literal"><span class="pre">for</span> <span class="pre">(j=1;</span> <span class="pre">j</span> <span class="pre">&lt;</span> <span class="pre">MAX;</span> <span class="pre">j++)</span> <span class="pre">A[j-1]</span> <span class="pre">=</span> <span class="pre">A[j]</span> <span class="pre">+</span> <span class="pre">1;</span></tt> can be vectorized.</p>
+<p>In this loop, &#8220;No iteration with a higher value of j can complete before an iteration with a lower value of j, so vectorization is safe&#8221; &#8211; despite that this sort of loop is not usually parallelizable.</p>
+</div>
+<div class="section" id="loops-pointers-and-data-structures-do-s-and-don-ts">
+<h2>Loops, Pointers, and Data Structures: Do&#8217;s and Don&#8217;ts<a class="headerlink" href="#loops-pointers-and-data-structures-do-s-and-don-ts" title="Permalink to this headline">¶</a></h2>
+<p>One should avoid:</p>
+<ul class="simple">
+<li>Complex or variable termination conditions for loops</li>
+<li><tt class="docutils literal"><span class="pre">switch</span></tt>, <tt class="docutils literal"><span class="pre">goto</span></tt>, or <tt class="docutils literal"><span class="pre">return</span></tt> statements in loops</li>
+<li>Function calls</li>
+</ul>
+<p>One should use:</p>
+<ul class="simple">
+<li>The loop index as the array index when possible</li>
+<li>Array notation instead of pointers or separately incremented indices</li>
+<li>A structure of arrays instead of an array of structures.</li>
+</ul>
+</div>
+<div class="section" id="pragmas">
+<h2>Pragmas<a class="headerlink" href="#pragmas" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-python"><div class="highlight"><pre><span class="c">#pragma ivdep</span>
+</pre></div>
+</div>
+<p>This tells the compiler to ignore <em>potential</em> data dependencies - it will not ignore proven ones.:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="c"># pragma vector always</span>
+</pre></div>
+</div>
+<p>This tells the compiler to always vectorize a loop if is is safe, even if it is not efficient.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="c">#pragma novector</span>
+</pre></div>
+</div>
+<p>This tells the compiler not to vectorize the following loop.</p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../index.html">
+              <img class="logo" src="../_static/CSInParallel200wide.png" alt="Logo"/>
+            </a></p>
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Improving Performance</a><ul>
+<li><a class="reference internal" href="#pointer-aliasing">Pointer Aliasing</a></li>
+<li><a class="reference internal" href="#aligning-data">Aligning Data</a></li>
+<li><a class="reference internal" href="#function-inlining">Function Inlining</a></li>
+<li><a class="reference internal" href="#non-contiguous-memory-acccess">Non-Contiguous Memory Acccess</a></li>
+<li><a class="reference internal" href="#data-dependencies">Data Dependencies</a></li>
+<li><a class="reference internal" href="#loops-pointers-and-data-structures-do-s-and-don-ts">Loops, Pointers, and Data Structures: Do&#8217;s and Don&#8217;ts</a></li>
+<li><a class="reference internal" href="#pragmas">Pragmas</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="../Background/background.html"
+                        title="previous chapter">About Vectorization</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="../Exercise/exercise.html"
+                        title="next chapter">Using Vectorization</a></p>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../Exercise/exercise.html" title="Using Vectorization"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="../Background/background.html" title="About Vectorization"
+             >previous</a> |</li>
+        <li><a href="../index.html">Vectorization</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright This work is licensed under a Creative Commons Attribution-ShareAlike 3.0 Unported License..
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>

@@ -9,7 +9,7 @@ Motivation
 
 However, since about 2005, it has been impossible to achieve such performance improvements by making larger and faster single CPU circuits. Instead, the industry has created *multi-core* CPUs – single chips that contain multiple circuits for carrying out instructions (cores) per chip. 
 
-The number of cores per CPU chip is growing exponentially, in order to maintain the exponential growth curve of Moore's Law. But most **software** has been designed for single cores.
+The number of cores per CPU chip is growing exponentially, in order to maintain the exponential growth curve of Moore's Law. But most **software** has been designed for single cores. This is all illustrated in Figure 1.1 below.
 
 .. figure:: MooresLaw.png
     :width: 1000px
@@ -39,7 +39,7 @@ Some pairs of terms
 
 :Comments:
 
-	Thus, parallelism takes place in hardware, whereas concurrency takes place in software. Operating systems must use concurrency, since they must manage multiple processes that are abstractly executing at the same time--and can physically execute at the same time, given parallel hardware (and a capable OS).
+	Thus, parallelism takes place in hardware, whereas concurrency takes place in software. Operating systems must use concurrency, since they must manage multiple processes that are abstractly executing at the same time--and can physically execute at the same time, given parallel hardware.
 
 .. glossary::
      process
@@ -51,7 +51,7 @@ Some pairs of terms
 
 :Comments:
 
-	Every process has at least one thread of execution, defined by that process's program counter. If there are multiple threads within a process, they share resources such as the process's memory allocation. This reduces the computational overhead for switching among threads (also called *lightweight processes*), and enables efficient sharing of resources (e.g., communication through shared memory locations).
+	Every process has at least one thread of execution, defined by that process's program counter. If there are multiple threads within a process, they share resources such as the process's memory allocation. This reduces the computational overhead for switching among threads (which are also called *lightweight processes*), and enables efficient sharing of resources (e.g., communication through shared memory locations).
 
 .. glossary::
      sequential programming
@@ -75,7 +75,7 @@ Some pairs of terms
 
 :Comments:
 
-	Both of these types of computing may be present in the same system (as in our MistRider and Helios clusters). 
+	Both of these types of computing may be present in the same system (as in St. Olaf's `MistRider and Helios clusters`_: distributed systems of multicore machines). 
 
 .. glossary::
      data parallelism
@@ -113,36 +113,4 @@ Some pairs of terms
 
 	Although multi-core processors are driving the movement to introduce more parallelism in CS courses, distributed computing concepts also merit study. For example, Intel's recently announced 48-core chip for research behaves like a distributed system with regards to interactions between its cache memories. 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+.. _`MistRider and Helios clusters`: http://devel.cs.stolaf.edu/projects/bw/wiki.real/index.php/Main_Page

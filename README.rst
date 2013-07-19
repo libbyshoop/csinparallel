@@ -1,6 +1,13 @@
-*************************
-How to make a new module?
-*************************
+************************
+How to make a new module
+************************
+
+Choosing editors that play nice with Python
+###########################################
+
+Some editors (notepad++) do not like the formatting of .py files and .rst files.
+
+Known to be safe: gedit, sublime, vim, emacs
 
 Creating a Module using Sphinx
 ##############################
@@ -17,47 +24,47 @@ And then follow the following answers.
 
 ::
 
-  > Root path for the documentation [.]: The name of your module
+  > Root path for the documentation [.]: YourModuleNameInCamelCase
 
   > Separate source and build directories (y/N) [n]: y
 
-  > Name prefix for templates and static dir [_]: defualt
+  > Name prefix for templates and static dir [_]: [hit enter]
 
-  > Project name: Name of the module (e.g. GPU Programming or Distributed Memory Programming)
+  > Project name: Name of the module in plain English (e.g. GPU Programming or Distributed Memory Programming)
 
   > Author name(s): CSInParallel Project
 
   > Project version: 1
 
-  > Project release [1]: 1
+  > Project release [1]: [hit enter]
 
-  > Source file suffix [.rst]: defualt
+  > Source file suffix [.rst]: [hit enter]
 
-  > Name of your master document (without suffix) [index]: defualt
+  > Name of your master document (without suffix) [index]: [hit enter]
 
-  > Do you want to use the epub builder (y/N) [n]: defualt
+  > Do you want to use the epub builder (y/N) [n]: [hit enter]
 
-  > autodoc: automatically insert docstrings from modules (y/N) [n]: defualt
+  > autodoc: automatically insert docstrings from modules (y/N) [n]: [hit enter]
 
-  > doctest: automatically test code snippets in doctest blocks (y/N) [n]: defualt
+  > doctest: automatically test code snippets in doctest blocks (y/N) [n]: [hit enter]
 
-  > intersphinx: link between Sphinx documentation of different projects (y/N) [n]: defualt
+  > intersphinx: link between Sphinx documentation of different projects (y/N) [n]: [hit enter]
 
-  > todo: write "todo" entries that can be shown or hidden on build (y/N) [n]: defualt
+  > todo: write "todo" entries that can be shown or hidden on build (y/N) [n]: [hit enter]
  
-  > coverage: checks for documentation coverage (y/N) [n]: defualt
+  > coverage: checks for documentation coverage (y/N) [n]: [hit enter]
  
-  > pngmath: include math, rendered as PNG images (y/N) [n]: y
+  > pngmath: include math, rendered as PNG images (y/N) [n]: **y**
 
-  > mathjax: include math, rendered in the browser by MathJax (y/N) [n]: defualt
+  > mathjax: include math, rendered in the browser by MathJax (y/N) [n]: [hit enter]
 
-  > ifconfig: conditional inclusion of content based on config values (y/N) [n]: defualt 
+  > ifconfig: conditional inclusion of content based on config values (y/N) [n]: [hit enter] 
 
-  > viewcode: include links to the source code of documented Python objects (y/N) [n]: defualt
+  > viewcode: include links to the source code of documented Python objects (y/N) [n]: [hit enter]
 
-  > Create Makefile? (Y/n) [y]: defualt
+  > Create Makefile? (Y/n) [y]: [hit enter]
 
-  > Create Windows command file? (Y/n) [y]:n
+  > Create Windows command file? (Y/n) [y]: [hit enter]
 
 Modify the conf.py File
 #######################
@@ -66,24 +73,39 @@ Modify the conf.py File
 
 #. Open up the conf.py file and make the following changes
 
-* Change
+* Change 
+
+  :: 
+
+    import sys, os
+   
+  to following:
+  
+  ::
+  
+    import sys, os, platform
+
+* Most module editors will not need to create Latex versions of the module. If you are not making latex versions, skip this step. If you really want to make latex versions, you can change
 
   :: 
 
     extentions = ['sphinx.ext.pngmath'] 
 
-  to following:
+  to the following (these tex paths are different for every computer, you will have to find our yours):
 
   ::
 
     extensions = ['sphinx.ext.pngmath']
 
-    if 'Darwin' in os.uname()[0]:
-	    pngmath_latex = '/usr/local/texlive/2011/bin/x86_64-darwin/latex'
-	    pngmath_dvipng = '/usr/local/texlive/2011/bin/x86_64-darwin/dvipng'
-    elif 'Linux' in os.uname()[0]:
-	    pngmath_latex = '/usr/bin/latex'
-	    pngmath_dvipng = '/usr/bin/dvipng'
+    if 'Darwin' in platform.uname()[0]:
+	    pngmath_latex = ''
+	    pngmath_dvipng = ''
+    elif 'Linux' in platform.uname()[0]:
+	    pngmath_latex = ''
+	    pngmath_dvipng = ''
+    elif 'Windows' in platform.uname()[0]:
+            pngmath_latex = ''
+            pngmath_dvipng = ''  
 
 * Change 
 
@@ -119,7 +141,7 @@ Modify the conf.py File
 
   ::
    
-    html_title = 'Your Module Name'
+    html_title = 'Your Module Name' (including the single quotation marks)
 
 * Comment in and then change 
 
@@ -131,7 +153,7 @@ Modify the conf.py File
 
   ::
 
-    html_logo = '../../../images/CSInParallel200wide.png'
+    html_logo = '../../../images/CSInParallel200wide.png' (including the single quotation marks)
 
 * Comment in and then change 
 
@@ -145,7 +167,7 @@ Modify the conf.py File
 
     html_show_sourcelink = False
 
-* Add following to 
+* Add following
 
   ::
 
@@ -251,10 +273,52 @@ Modify the Makefile file
 
 * make sure you pressed a tab to make the line you added to line up with others instead using a bunch of spaces!!
 
+
+Build the html
+##############
+
+In your linux or mac terminal, or your windows command line, go to your module's root directory.
+
+::
+  
+  $ cd ~/github/csinparallel/modules/yourmodulename
+
+Then excute make html command
+
+::
+
+  ~/github/csinparallel/modules/yourmodulename$ make html
+
+This will build the html using our modified conf.py, index.rst and Makefile files.
+
 Using your own template
 #######################
 
-We made some modification on the html template. To be exact, we modified the default.css file and put in to the _static folder in source directory to let Sphinx use it when building html.
+1. The default template is defined in the defualt.css file. You can access this file by cd into its directory.
+
+::
+
+  $ cd ~/github/csinparallel/modules/YourModuleName/build/html/_static
+
+2. In order to use your own template, you have to create a default.css_t file and put it into the following directory.
+
+::
+
+  $ cd ~/github/csinparallel/modules/YourModuleName/source/_static
+
+For all existing modules, we made some small changes to the template. You will find details at the end of the section. If you would like to use our template, you can copy the defualt.css_t from any existing modules and put it into the above directory of your module. Just go through the follwoing steps.
+
+	1. go to ~/github/csinparallel/modules/AnyExistingModule/source/_static
+	
+	2. you will see a default.css_t file. 
+
+	3. copy that file and put it into ~/github/csinparallel/modules/YourModuleName/source/_static
+
+:note: Note that the extention is css_t, not css - you have to make sure you have css_t in the extension, not the filename.
+
+We recommend you take the default.css and modify it to create your own template.
+
+3. About the changes we made
 
 We changed
 
@@ -276,18 +340,6 @@ to the following
       /*font-size: 1.35em;*/
 	font-family:"Lucida Console", Monaco, monospace;
   }
-
-You can also create your own template. 
-
-How to tell Sphinx to use your template
-***************************************
-
-1. go to ~/github/csinparallel/modules/AnyExistingModule/source/_static
-
-2. you will see a default.css_t file. 
-
-3. copy that file and put it into ~/github/csinparallel/modules/YourModuleName/source/_static
-
 
 
 

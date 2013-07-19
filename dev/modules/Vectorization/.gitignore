@@ -1,0 +1,7 @@
+[a-w][a-z]
+*.un~
+Session.vim
+.netrwhist
+*~
+*.swp
+data2.txt

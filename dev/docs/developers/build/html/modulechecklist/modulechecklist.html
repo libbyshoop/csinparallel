@@ -1,0 +1,135 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Checklist: Reminders for Experienced Module Creators &mdash; Documentation for Developers</title>
+    
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+    <link rel="top" title="Documentation for Developers" href="../index.html" />
+    <link rel="next" title="Components of a Module" href="../components/components.html" />
+    <link rel="prev" title="New Module Template" href="../newmoduletemplate/newmoduletemplate.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../components/components.html" title="Components of a Module"
+             accesskey="N">next</a></li>
+        <li class="right" >
+          <a href="../newmoduletemplate/newmoduletemplate.html" title="New Module Template"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../index.html">Documentation for Developers</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="checklist-reminders-for-experienced-module-creators">
+<h1>Checklist: Reminders for Experienced Module Creators<a class="headerlink" href="#checklist-reminders-for-experienced-module-creators" title="Permalink to this headline">¶</a></h1>
+<p>If you&#8217;ve already developed a module or two, here is a cheat sheet to help you make sure you&#8217;ve made all the important changes.</p>
+<ul>
+<li><p class="first">Your <strong>index.rst</strong> file should be titled with the name of the module, have a toctree maxdepth of 1, not contain the word Contents, and have the refs commented out.</p>
+</li>
+<li><p class="first">Your <strong>Makefile</strong> should have</p>
+<div class="highlight-python"><pre>$(MAKE) -C $(BUILDDIR)/latex all-pdf
+tar -czf $(BUILDDIR)/latex.tar.gz $(BUILDDIR)/latex</pre>
+</div>
+</li>
+</ul>
+<p>in the latexpdf script.</p>
+<ul class="simple">
+<li>Your <strong>conf.py</strong> file should have been edited by <tt class="docutils literal"><span class="pre">confscript.py</span></tt>.</li>
+<li>You should have a <strong>default.css_t</strong> file in <tt class="docutils literal"><span class="pre">/modules/YourModuleName/source/_static/</span></tt> that has either been copied from an existing module or has had the following changes made manually.</li>
+</ul>
+<p>This</p>
+<div class="highlight-css"><div class="highlight"><pre><span class="nt">tt</span> <span class="p">{</span>
+        <span class="k">background-color</span><span class="o">:</span> <span class="m">#ecf0f3</span><span class="p">;</span>
+        <span class="k">padding</span><span class="o">:</span> <span class="m">0</span> <span class="m">1px</span> <span class="m">0</span> <span class="m">1px</span><span class="p">;</span>
+        <span class="k">font-size</span><span class="o">:</span> <span class="m">0.95em</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>has been changed to this:</p>
+<div class="highlight-css"><div class="highlight"><pre><span class="nt">tt</span> <span class="p">{</span>
+        <span class="k">background-color</span><span class="o">:</span> <span class="m">#ecf0f3</span><span class="p">;</span>
+        <span class="k">padding</span><span class="o">:</span> <span class="m">0</span> <span class="m">1px</span> <span class="m">0</span> <span class="m">1px</span><span class="p">;</span>
+        <span class="c">/*font-size: 0.95em;*/</span>
+        <span class="k">font-family</span><span class="o">:</span><span class="s2">&quot;Lucida Console&quot;</span><span class="o">,</span> <span class="n">Monaco</span><span class="o">,</span> <span class="k">monospace</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../index.html">
+              <img class="logo" src="../_static/CSInParallel200wide.png" alt="Logo"/>
+            </a></p>
+<h3><a href="../index.html">Table Of Contents</a></h3>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../softwaresetup/softwaresetup.html">What You&#8217;ll Need to Get Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../creatingnewmodule/modulesetup.html">Setting Up A New Module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../furthersetup/furthersetup.html">Editing Your New Module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../developmentProcess/process.html">The CSinParallel Module Development Process</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../newmoduletemplate/newmoduletemplate.html">New Module Template</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="">Checklist: Reminders for Experienced Module Creators</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../components/components.html">Components of a Module</a></li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="../newmoduletemplate/newmoduletemplate.html"
+                        title="previous chapter">New Module Template</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="../components/components.html"
+                        title="next chapter">Components of a Module</a></p>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../components/components.html" title="Components of a Module"
+             >next</a></li>
+        <li class="right" >
+          <a href="../newmoduletemplate/newmoduletemplate.html" title="New Module Template"
+             >previous</a> |</li>
+        <li><a href="../index.html">Documentation for Developers</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright This work is licensed under a Creative Commons Attribution-ShareAlike 3.0 Unported License.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>

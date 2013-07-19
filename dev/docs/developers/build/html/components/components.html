@@ -1,0 +1,179 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Components of a Module &mdash; Documentation for Developers</title>
+    
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+    <link rel="top" title="Documentation for Developers" href="../index.html" />
+    <link rel="prev" title="Checklist: Reminders for Experienced Module Creators" href="../modulechecklist/modulechecklist.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../modulechecklist/modulechecklist.html" title="Checklist: Reminders for Experienced Module Creators"
+             accesskey="P">previous</a></li>
+        <li><a href="../index.html">Documentation for Developers</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="components-of-a-module">
+<h1>Components of a Module<a class="headerlink" href="#components-of-a-module" title="Permalink to this headline">¶</a></h1>
+<p>Sphinx, check. Github, check. CSS, check. You can create the content of the module
+that can be used by instructors for courses. However, there are more elements to a module, some of which a module author/developer is responsible for, and some of which the CSinParallel project is responsible for, and some of which is a joint effort.</p>
+<p>Here are descriptions of the various module elements, organized by what&#8217;s expected of developers, what gets done by CSinParallel, and what could go either way or be shared.</p>
+<div class="section" id="author-s-responsibilities">
+<h2>Author&#8217;s Responsibilities<a class="headerlink" href="#author-s-responsibilities" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="title">
+<h3>Title<a class="headerlink" href="#title" title="Permalink to this headline">¶</a></h3>
+<p>Unless you started with this page, you&#8217;ve had to enter a title for your module in several places. If you did start here, check out the list of existing modules to see what kinds of titles they tend to have (and to make sure you&#8217;re not duplicating an existing one!).</p>
+</div>
+<div class="section" id="summary">
+<h3>Summary<a class="headerlink" href="#summary" title="Permalink to this headline">¶</a></h3>
+<p>Used on the website, this is a short description of the content, language, objectives, and length of your module. See the list of modules on the website for examples.</p>
+</div>
+<div class="section" id="context-for-use">
+<h3>Context for Use<a class="headerlink" href="#context-for-use" title="Permalink to this headline">¶</a></h3>
+<p>Where would you teach this module? Consider the following: what course or level? with what other topics? in what kind of setting (lab, classroom, independent reading)? what technology and background knowledge would students need?</p>
+</div>
+<div class="section" id="learning-objectives">
+<h3>Learning objectives<a class="headerlink" href="#learning-objectives" title="Permalink to this headline">¶</a></h3>
+<p>What do you want students to <em>know</em> and <em>be able to do</em> by the end of each lesson and after completing the module? How will you <em>assess</em> whether they&#8217;ve gained these competencies?</p>
+<dl class="docutils">
+<dt>With those things in mind, write objectives with <strong>active, measurable</strong> language. For example, rather than <em>Students will be more knowledgeable about race conditions,</em> here are some more useful alternatives:</dt>
+<dd><ul class="first last simple">
+<li>Students will <strong>identify</strong> race conditions in provided code.</li>
+<li>Students will orally <strong>define</strong> and <strong>give an example</strong> of a race condition to a classmate.</li>
+<li>Students will <strong>describe</strong> (and/or <strong>implement</strong>) a safer alternative to code containing potential race conditions.</li>
+</ul>
+</dd>
+</dl>
+<p>The level of proficiency you expect of students is at your discretion, given their expertise and time constraints. Measurable doesn&#8217;t necessarily have to mean a lengthier or more involved project: <a class="reference external" href="http://uwf.edu/cutla/SLO/ActionWords.pdf">here</a> is a list of action verbs for each stage of <a class="reference external" href="http://en.wikipedia.org/wiki/Bloom's_Taxonomy">Bloom&#8217;s Taxonomy</a>.</p>
+</div>
+<div class="section" id="create-module-content">
+<h3>Create module content<a class="headerlink" href="#create-module-content" title="Permalink to this headline">¶</a></h3>
+<p>Initially, this can be in any format. We can assist you from there to make publication-quality versions using sphinx by creating .rst files, or you can get started on this yourself.  A <a class="reference external" href="http://johnmacfarlane.net/pandoc/">tool called pandoc</a> works quite well for converting your original content into a .rst file that you can work with.</p>
+<p>For the actual .rst files, see the previous template section for eaxamples of rst formatting. How exactly you format your content depends on who you envision the audience being: are you creating material students would interact with directly, or that instructors would absorb and teach from?</p>
+</div>
+<div class="section" id="write-teaching-notes-and-tips">
+<h3>Write teaching notes and tips<a class="headerlink" href="#write-teaching-notes-and-tips" title="Permalink to this headline">¶</a></h3>
+<p>Anticipated sticky spots for students or things that took longer than you might think? Useful things to know about the software involved? Metaphors you&#8217;ve successfully used to explain the content? Jot it all down - the less other instructors have to try to read your mind or reinvent the wheel, the more everyone benefits.</p>
+</div>
+<div class="section" id="create-supporting-exercises">
+<h3>Create supporting exercises<a class="headerlink" href="#create-supporting-exercises" title="Permalink to this headline">¶</a></h3>
+<p>If you&#8217;ve got ideas for in-class activities, homework assignments, or quiz/exam questions, write them up!</p>
+</div>
+</div>
+<div class="section" id="shared-responsibilities">
+<h2>Shared responsibilities<a class="headerlink" href="#shared-responsibilities" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="determine-metadata-from-controlled-vocabulary">
+<h3>Determine metadata from controlled vocabulary<a class="headerlink" href="#determine-metadata-from-controlled-vocabulary" title="Permalink to this headline">¶</a></h3>
+<p>These tags are used to search the list of existing modules. If you&#8217;d like to add a term, contact <a class="reference external" href="mailto:rab&#37;&#52;&#48;stolaf&#46;edu">rab<span>&#64;</span>stolaf<span>&#46;</span>edu</a> or <a class="reference external" href="mailto:shoop&#37;&#52;&#48;macalester&#46;edu">shoop<span>&#64;</span>macalester<span>&#46;</span>edu</a>.</p>
+<ul class="simple">
+<li>Languages Supported: Scheme, Python, C++, C, Java, Any</li>
+<li>Relevant Parallel Computing Concepts: Data Parallelism, Task Parallelism, Message Passing, Shared Memory, Distributed</li>
+<li>Recommended Teaching Level: Introductory, Intermediate, Advanced, Any</li>
+<li>Possible Course Use: Introduction to Computer Science, Hardware Design, Software Design, Algorithm Design, Parallel Computing Systems, Programming Languages</li>
+</ul>
+</div>
+<div class="section" id="create-assessment-questions">
+<h3>Create assessment questions<a class="headerlink" href="#create-assessment-questions" title="Permalink to this headline">¶</a></h3>
+<p>How will students demonstrate that they&#8217;ve learned what you expect them to learn? Writing learning objectives may have inspired thoughts in this area; if not, CSinParallel writers can lend a hand.</p>
+</div>
+<div class="section" id="create-publication-quality-content-on-csinparallel-github-repo">
+<h3>Create publication-quality content on csinparallel github repo<a class="headerlink" href="#create-publication-quality-content-on-csinparallel-github-repo" title="Permalink to this headline">¶</a></h3>
+<p>Again, a shared responsibility - if you&#8217;ve already got material that&#8217;s ready to go or you have time to flesh out your own outlines, excellent. If not, we can help you out.</p>
+</div>
+<div class="section" id="maintenance">
+<h3>Maintenance<a class="headerlink" href="#maintenance" title="Permalink to this headline">¶</a></h3>
+<p>Will you have time to keep an eye on your module and make sure that the content doesn&#8217;t get outdated when the next version of a language is released?</p>
+</div>
+</div>
+<div class="section" id="csinparallel-responsibilities">
+<h2>CSinParallel responsibilities<a class="headerlink" href="#csinparallel-responsibilities" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="publish-onto-csinparallel-org">
+<h3>Publish onto csinparallel.org<a class="headerlink" href="#publish-onto-csinparallel-org" title="Permalink to this headline">¶</a></h3>
+<p>We will usually take care of final publication of your module onto csinparallel.org.  As you make changes over time (to the github version on the master branch), these will be seen when we update the web server holding the latest version of the master branch.</p>
+</div>
+<div class="section" id="test-and-review-curation">
+<h3>Test and review; curation<a class="headerlink" href="#test-and-review-curation" title="Permalink to this headline">¶</a></h3>
+<p>We will be glad to assist with review and curation of the module content, and testing it out to make sure that it seems to be ready for classroom use.</p>
+</div>
+<div class="section" id="develop-assessment-instruments">
+<h3>Develop assessment instruments<a class="headerlink" href="#develop-assessment-instruments" title="Permalink to this headline">¶</a></h3>
+<p>As part of the CSinParallel project, we will assess most modules as they are used by
+instructors in courses.  We will develop assessment instruments for this purpose.</p>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../index.html">
+              <img class="logo" src="../_static/CSInParallel200wide.png" alt="Logo"/>
+            </a></p>
+<h3><a href="../index.html">Table Of Contents</a></h3>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../softwaresetup/softwaresetup.html">What You&#8217;ll Need to Get Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../creatingnewmodule/modulesetup.html">Setting Up A New Module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../furthersetup/furthersetup.html">Editing Your New Module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../developmentProcess/process.html">The CSinParallel Module Development Process</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../newmoduletemplate/newmoduletemplate.html">New Module Template</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../modulechecklist/modulechecklist.html">Checklist: Reminders for Experienced Module Creators</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="">Components of a Module</a></li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="../modulechecklist/modulechecklist.html"
+                        title="previous chapter">Checklist: Reminders for Experienced Module Creators</a></p>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../modulechecklist/modulechecklist.html" title="Checklist: Reminders for Experienced Module Creators"
+             >previous</a></li>
+        <li><a href="../index.html">Documentation for Developers</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright This work is licensed under a Creative Commons Attribution-ShareAlike 3.0 Unported License.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>

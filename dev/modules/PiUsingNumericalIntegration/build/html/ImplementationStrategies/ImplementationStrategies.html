@@ -1,0 +1,193 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Implementation Strategies &mdash; Pi Using Numerical Integration</title>
+    
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="top" title="Pi Using Numerical Integration" href="../index.html" />
+    <link rel="next" title="Looking Ahead: Parallel Patterns" href="../ParallelPatterns/ParallelPatterns.html" />
+    <link rel="prev" title="Introduction" href="../Introduction/Introduction.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../ParallelPatterns/ParallelPatterns.html" title="Looking Ahead: Parallel Patterns"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="../Introduction/Introduction.html" title="Introduction"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../index.html">Pi Using Numerical Integration</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="implementation-strategies">
+<h1>Implementation Strategies<a class="headerlink" href="#implementation-strategies" title="Permalink to this headline">¶</a></h1>
+<p>We provide several sample implementations below. The choice you make among these computations depends not only on which parallel platforms you have access to but also on various computational factors such as the size of your computation.</p>
+<div class="section" id="a-sequential-implementation">
+<h2>A Sequential Implementation<a class="headerlink" href="#a-sequential-implementation" title="Permalink to this headline">¶</a></h2>
+<p>We will develop and discuss parallel solutions to our pi-as-area problem in other modules. For now, we will present sequential code for a solution, as a reference point for the parallel solutions.</p>
+<p>As suggested above, we can use a simple programming loop to add the areas of all the rectangles, as in the following C language code. The following loop carries out the bulk of the computation by adding the areas of all the rectangles. Here,  numRect  represents the number of rectangles.:</p>
+<div class="highlight-python"><pre>sum = 0;
+width = 2.0 / numRect;
+for ( i = 0; i &lt; numRect; i++ ) {
+        x = -1 + ( i + 0.5 ) * width;
+        sum += sqrt( 1 - x * x ) * width;
+}
+pi = sum*2.0;</pre>
+</div>
+<p>In this code segment, sum , pi , and x are floating-point variables, where x represents an x value that determines the height of a rectangle, and we use the more self-explanatory names width and numRect in place of the symbols h and N in our mathematical explanation.</p>
+<p>The program <a class="reference external" href="http://code.google.com/p/eapf-tech-pack-practicum/source/browse/trunk/pi_integration/pi_area_serial.c">pi_area_serial.c</a> implements the algorithmic strategy as outlined above in C++ language sequentially, i.e., with no (programmer-level) parallelism</p>
+<dl class="docutils">
+<dt><em>Further Exploration</em>:</dt>
+<dd><ul class="first last simple">
+<li>The default number of rectangles is 10 million.  Time a run of the program with that default number of rectangles, then use the program’s optional command-line argument to compare with the timing for other rectangle counts, such as 100 million, 1 billion, 100,000, etc.  Do these timings vary as you might expect?</li>
+<li>Are there any anomalies if you start from a small number of rectangle counts and keep doubling it? If so how do you explain them?</li>
+<li>The x values in pi_area_serial.c are calculated by repeatedly adding the width of each rectangle. How would it change the results to instead calculate x as is done in the code snippet above?</li>
+</ul>
+</dd>
+</dl>
+<p>Here is an alternative approach to computing the value of x for each rectangle:</p>
+<div class="highlight-python"><pre>sum = 0;
+ width = 2.0 / numRect;
+x = -1 + width/2;
+for ( i = 0; i &lt; numRect; i++ ) {
+     x += width;
+     sum += sqrt( 1 - x * x ) * width;
+}
+pi = sum*2.0;</pre>
+</div>
+<p>Could there be a difference in the resulting value of π if we use this approach rather than the original approach for computing x ? Explain.</p>
+<p>Complete listing of <a class="reference external" href="http://code.google.com/p/eapf-tech-pack-practicum/source/browse/trunk/pi_integration/pi_area_serial.c">pi_area_serial.c</a>:</p>
+<div class="highlight-python"><pre>/* Estimate pi as twice the area under a semicircle
+ Command-line arguments (optional, default values below).
+ 1. first command line arg is integer number of rectangles to use
+ WARNING: minimal error checking is performed on this command-line arg */
+
+#include &lt;stdio.h&gt;
+#include &lt;math.h&gt;
+#include &lt;stdlib.h&gt;
+
+#define NUM_RECTANGLES 10000000;        /* default number of rectangles */
+
+int main(int argc, char** argv) {
+    double width;       /* width of a rectangle subinterval */
+    double x;           /* an x_i value for determining height of rectangle */
+    double sum;         /* accumulates areas all rectangles so far */
+    long numRect = NUM_RECTANGLES;       /* number of rectangles */
+    long i;             /* loop control */
+
+/* parse command-line arguments, if any */
+if (argc &gt; 1)
+   numRect = strtol(argv[1], NULL, 10);
+if (numRect &lt;= 0) {
+   printf("Error in command-line argument\n");
+   return 1; /* indicates error exit */
+}
+
+/* compute the estimate */
+
+sum = 0;
+width = 2.0 / numRect;
+for ( i = 0; i &lt; numRect; i++ ) {
+     x = -1 + ( i + 0.5 ) * width;
+     sum += sqrt( 1 - x * x ) * width;
+  }
+  pi = sum*2.0;
+  printf("With n = %d rectangles, ", numRect);
+  printf("the estimate of pi is %.20g\n", sum);
+  return 0;
+}</pre>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../index.html">
+              <img class="logo" src="../_static/CSInParallel200wide.png" alt="Logo"/>
+            </a></p>
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Implementation Strategies</a><ul>
+<li><a class="reference internal" href="#a-sequential-implementation">A Sequential Implementation</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="../Introduction/Introduction.html"
+                        title="previous chapter">Introduction</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="../ParallelPatterns/ParallelPatterns.html"
+                        title="next chapter">Looking Ahead: Parallel Patterns</a></p>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../ParallelPatterns/ParallelPatterns.html" title="Looking Ahead: Parallel Patterns"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="../Introduction/Introduction.html" title="Introduction"
+             >previous</a> |</li>
+        <li><a href="../index.html">Pi Using Numerical Integration</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright This work is licensed under a Creative Commons Attribution-ShareAlike 3.0 Unported License.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2b1.
+    </div>
+  </body>
+</html>
