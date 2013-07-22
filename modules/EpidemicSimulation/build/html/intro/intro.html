@@ -1,0 +1,139 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Introduction &mdash; Epidemic Simulation</title>
+    
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+    <link rel="top" title="Epidemic Simulation" href="../index.html" />
+    <link rel="next" title="A Sequential Implementation: C++ Specs" href="../cppspecs/cppspecs.html" />
+    <link rel="prev" title="Epidemic Simulation" href="../index.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../cppspecs/cppspecs.html" title="A Sequential Implementation: C++ Specs"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="../index.html" title="Epidemic Simulation"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../index.html">Epidemic Simulation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="introduction">
+<h1>Introduction<a class="headerlink" href="#introduction" title="Permalink to this headline">¶</a></h1>
+<p>The field of epidemiology is the study of infectious diseases, and mathematical models are often used by epidemiologists to describe or predict the spread of disease. Here we present a simplified model of an infectious disease which is <em>contagious</em>, meaning spread from person to person.</p>
+<p>The model describes a specific population and the current state of health of each member of the population. Possible states are <strong>susceptible</strong> (having the potential to get sick), <strong>infected</strong> (actively sick and able to spread the infection to others), <strong>recovered</strong> (no longer sick and incapable of getting sick again), and <strong>dead</strong> (no longer moving or spreading the infection). Based on the first three states of health, the model is called the <em>SIR model</em>.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">note:</th><td class="field-body">This implementation ignores many facets of a real epidemic that would be considered in more sophisticated implementations, such as immunity, treatment, and births or non-epidemic related deaths in the population. You can read about more complex models <a class="reference external" href="http://en.wikipedia.org/wiki/Epidemic_model">here</a>.</td>
+</tr>
+</tbody>
+</table>
+<p>The population starts out with an initial number infected. Associated with the particular infection being modeled are a <em>radius of transmission</em>, <em>contagiousness factor</em>, <em>deadliness factor</em>, and <em>duration of illness</em>.</p>
+<blockquote>
+<div><dl class="glossary docutils">
+<dt id="term-radius-of-transmission">radius of transmission:</dt>
+<dd>distance within which a susceptible individual must be from an infected individual to become infected</dd>
+</dl>
+<dl class="glossary docutils">
+<dt id="term-contagiousness-factor">contagiousness factor:</dt>
+<dd>when a susceptible individual is within an infected individual’s radius of transmission, the percent chance that transmission will occur from person to person and the susceptible individual will become infected</dd>
+</dl>
+<dl class="glossary docutils">
+<dt id="term-deadliness-factor">deadliness factor:</dt>
+<dd>the percent chance that an infected individual will die</dd>
+</dl>
+<dl class="glossary docutils">
+<dt id="term-duration-of-illness"><span id="term-the-length-of-time-an-infected-individual-remains-sick-and-able-to-transmit-the-disease"></span>duration of illness:<br />the length of time an infected individual remains sick and able to transmit the disease</dt>
+<dd></dd>
+</dl>
+</div></blockquote>
+<p>These factors influence the spread of infectious disease and, as such, are the parameters used to control the mathematical model. We use Monte Carlo simulation techniques (running a simulation over and over again) to approximate this SIR model and thereby gather information on how a disease would progress through a population.</p>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../index.html">
+              <img class="logo" src="../_static/CSInParallel200wide.png" alt="Logo"/>
+            </a></p>
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="../index.html"
+                        title="previous chapter">Epidemic Simulation</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="../cppspecs/cppspecs.html"
+                        title="next chapter">A Sequential Implementation: C++ Specs</a></p>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../cppspecs/cppspecs.html" title="A Sequential Implementation: C++ Specs"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="../index.html" title="Epidemic Simulation"
+             >previous</a> |</li>
+        <li><a href="../index.html">Epidemic Simulation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright This work is licensed under a Creative Commons Attribution-ShareAlike 3.0 Unported License.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2b1.
+    </div>
+  </body>
+</html>

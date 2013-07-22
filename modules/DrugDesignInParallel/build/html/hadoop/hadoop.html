@@ -1,0 +1,223 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Hadoop Solution &mdash; Drug Design in Parallel</title>
+    
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+    <link rel="top" title="Drug Design in Parallel" href="../index.html" />
+    <link rel="next" title="Evaluating the Implementations" href="../evaluation/evaluation.html" />
+    <link rel="prev" title="Go Solution" href="../go/go.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../evaluation/evaluation.html" title="Evaluating the Implementations"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="../go/go.html" title="Go Solution"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../index.html">Drug Design in Parallel</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="hadoop-solution">
+<h1>Hadoop Solution<a class="headerlink" href="#hadoop-solution" title="Permalink to this headline">¶</a></h1>
+<p>Hadoop is an open-source framework for data-intensive scalable map-reduce computation. Originally developed by Yahoo! engineers and now an Apache project, Hadoop supports petascale computations in a reasonable amount of time (given sufficiently large cluster resources), and is used in numerous production web-service enterprises. The code <a class="reference download internal" href="../_downloads/dd_hadoop1.java"><tt class="xref download docutils literal"><span class="pre">dd_hadoop.java</span></tt></a> implements a solution to our problem for the Hadoop map-reduce framework, which is capable of data-intensive scalable computing.</p>
+<p>In our previous examples, we have modified the coding of a map-reduce framework represented by the C++ method <tt class="docutils literal"><span class="pre">MR::run()</span></tt> in order to create implementations with various parallelization technologies. Hadoop provides a powerful implementation of such a framework, with optimizations for large-scale data, adaptive scheduling of tasks, automated recovery from failures (which will likely occur when using many nodes for lengthy computations), and an extensive system for reusable configuration of jobs. To use Hadoop, one needs only provide <tt class="docutils literal"><span class="pre">Map()</span></tt>, <tt class="docutils literal"><span class="pre">Reduce()</span></tt>, configuration options, and the desired data.  This framework-based strategy makes it convenient for Hadoop programmers to create and launch effective, scalably large computations.</p>
+<p>Therefore, we will compare definitions of <tt class="docutils literal"><span class="pre">Map()</span></tt> and <tt class="docutils literal"><span class="pre">Reduce()</span></tt> found in the serial implementation <a class="reference download internal" href="../_downloads/dd_serial3.cpp"><tt class="xref download docutils literal"><span class="pre">dd_serial.cpp</span></tt></a> to the corresponding definitions in a Hadoop implementation <a class="reference download internal" href="../_downloads/dd_hadoop1.java"><tt class="xref download docutils literal"><span class="pre">dd_hadoop.java</span></tt></a>. The serial implementations for our simplified problem are quite simple:</p>
+<blockquote>
+<div><div class="highlight-java"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11</pre></div></td><td class="code"><div class="highlight"><pre><span class="hll"><span class="kt">void</span> <span class="nl">MR:</span><span class="o">:</span><span class="n">Map</span><span class="o">(</span><span class="kd">const</span> <span class="n">string</span> <span class="o">&amp;</span><span class="n">ligand</span><span class="o">,</span> <span class="n">vector</span><span class="o">&lt;</span><span class="n">Pair</span><span class="o">&gt;</span> <span class="o">&amp;</span><span class="n">pairs</span><span class="o">)</span> <span class="o">{</span>
+</span>        <span class="n">Pair</span> <span class="nf">p</span><span class="o">(</span><span class="nl">Help:</span><span class="o">:</span><span class="n">score</span><span class="o">(</span><span class="n">ligand</span><span class="o">.</span><span class="na">c_str</span><span class="o">(),</span> <span class="n">protein</span><span class="o">.</span><span class="na">c_str</span><span class="o">()),</span> <span class="n">ligand</span><span class="o">);</span>
+        <span class="n">pairs</span><span class="o">.</span><span class="na">push_back</span><span class="o">(</span><span class="n">p</span><span class="o">);</span>
+<span class="o">}</span>
+
+<span class="hll"><span class="kt">int</span> <span class="nl">MR:</span><span class="o">:</span><span class="n">Reduce</span><span class="o">(</span><span class="kt">int</span> <span class="n">key</span><span class="o">,</span> <span class="kd">const</span> <span class="n">vector</span><span class="o">&lt;</span><span class="n">Pair</span><span class="o">&gt;</span> <span class="o">&amp;</span><span class="n">pairs</span><span class="o">,</span> <span class="kt">int</span> <span class="n">index</span><span class="o">,</span> <span class="n">string</span> <span class="o">&amp;</span><span class="n">values</span><span class="o">)</span> <span class="o">{</span>
+</span>        <span class="k">while</span> <span class="o">(</span><span class="n">index</span> <span class="o">&lt;</span> <span class="n">pairs</span><span class="o">.</span><span class="na">size</span><span class="o">()</span> <span class="o">&amp;&amp;</span> <span class="n">pairs</span><span class="o">[</span><span class="n">index</span><span class="o">].</span><span class="na">key</span> <span class="o">==</span> <span class="n">key</span><span class="o">)</span> <span class="o">{</span>
+                <span class="n">values</span> <span class="o">+=</span> <span class="n">pairs</span><span class="o">[</span><span class="n">index</span><span class="o">++].</span><span class="na">val</span> <span class="o">+</span> <span class="s">&quot; &quot;</span><span class="o">;</span>
+        <span class="o">}</span>
+        <span class="k">return</span> <span class="n">index</span><span class="o">;</span>
+<span class="o">}</span>
+</pre></div>
+</td></tr></table></div>
+</div></blockquote>
+<p>Here, <tt class="docutils literal"><span class="pre">Map()</span></tt> has two arguments, a ligand to compare to the target protein and an STL vector <tt class="docutils literal"><span class="pre">pairs</span></tt> of key-value pairs. A call to <tt class="docutils literal"><span class="pre">Map()</span></tt> appends a pair consisting of that ligand’s score (as key) and that ligand itself (as value) to the vector <tt class="docutils literal"><span class="pre">pairs</span></tt>. Our <tt class="docutils literal"><span class="pre">Reduce()</span></tt> function extracts all the key-value pairs from the (now sorted) vector <tt class="docutils literal"><span class="pre">pairs</span></tt> having a given key (i.e., score). It then appends a string consisting of all those values (i.e., ligands) to an array <tt class="docutils literal"><span class="pre">values</span></tt>. The argument <tt class="docutils literal"><span class="pre">index</span></tt> and the return value are used by <tt class="docutils literal"><span class="pre">MR::run()</span></tt> in order to manage progress through the vector <tt class="docutils literal"><span class="pre">pairs</span></tt>(our multi-threaded implementations have identical <tt class="docutils literal"><span class="pre">Map()</span></tt> and <tt class="docutils literal"><span class="pre">Reduce()</span></tt> methods, except that a thread-safe vector type is used for <tt class="docutils literal"><span class="pre">pairs</span></tt>). In brief, <tt class="docutils literal"><span class="pre">Map()</span></tt> receives <tt class="docutils literal"><span class="pre">ligand</span></tt> values and produces pairs, and <tt class="docutils literal"><span class="pre">Reduce()</span></tt> receives pairs and produces consolidated results in <tt class="docutils literal"><span class="pre">values</span></tt>.</p>
+<p>In Hadoop, we define the “map” and “reduce” operations as Java methods <tt class="docutils literal"><span class="pre">Map.map()</span></tt> and <tt class="docutils literal"><span class="pre">Reduce.reduce()</span></tt>. Here are definitions of those methods from :download: <cite>dd_hadoop.java &lt;code/dd_hadoop.java&gt;</cite>:</p>
+<blockquote>
+<div><div class="highlight-java"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16</pre></div></td><td class="code"><div class="highlight"><pre><span class="hll"><span class="kd">public</span> <span class="kt">void</span> <span class="nf">map</span><span class="o">(</span><span class="n">LongWritable</span> <span class="n">key</span><span class="o">,</span> <span class="n">Text</span> <span class="n">value</span><span class="o">,</span> <span class="n">OutputCollector</span><span class="o">&lt;</span><span class="n">IntWritable</span><span class="o">,</span> <span class="n">Text</span><span class="o">&gt;</span> <span class="n">output</span><span class="o">,</span> <span class="n">Reporter</span> <span class="n">reporter</span><span class="o">)</span>
+</span>                <span class="kd">throws</span> <span class="n">IOException</span> <span class="o">{</span>
+        <span class="n">String</span> <span class="n">ligand</span> <span class="o">=</span> <span class="n">value</span><span class="o">.</span><span class="na">toString</span><span class="o">();</span>
+        <span class="n">output</span><span class="o">.</span><span class="na">collect</span><span class="o">(</span><span class="k">new</span> <span class="n">IntWritable</span><span class="o">(</span><span class="n">score</span><span class="o">(</span><span class="n">ligand</span><span class="o">,</span> <span class="n">protein</span><span class="o">)),</span> <span class="n">value</span><span class="o">);</span>
+<span class="o">}</span>
+
+                <span class="o">...</span>
+
+<span class="hll"><span class="kd">public</span> <span class="kt">void</span> <span class="nf">reduce</span><span class="o">(</span><span class="n">IntWritable</span> <span class="n">key</span><span class="o">,</span> <span class="n">Iterator</span><span class="o">&lt;</span><span class="n">Text</span><span class="o">&gt;</span> <span class="n">values</span><span class="o">,</span> <span class="n">OutputCollector</span><span class="o">&lt;</span><span class="n">IntWritable</span><span class="o">,</span> <span class="n">Text</span><span class="o">&gt;</span> <span class="n">output</span><span class="o">,</span> <span class="n">Reporter</span> <span class="n">reporter</span><span class="o">)</span>
+</span>                <span class="kd">throws</span> <span class="n">IOException</span> <span class="o">{</span>
+        <span class="n">String</span> <span class="n">result</span> <span class="o">=</span> <span class="k">new</span> <span class="n">String</span><span class="o">(</span><span class="s">&quot;&quot;</span><span class="o">);</span>
+        <span class="k">while</span> <span class="o">(</span><span class="n">values</span><span class="o">.</span><span class="na">hasNext</span><span class="o">())</span> <span class="o">{</span>
+                <span class="n">result</span> <span class="o">+=</span> <span class="n">values</span><span class="o">.</span><span class="na">next</span><span class="o">().</span><span class="na">toString</span><span class="o">()</span> <span class="o">+</span> <span class="s">&quot; &quot;</span><span class="o">;</span>
+        <span class="o">}</span>
+        <span class="n">output</span><span class="o">.</span><span class="na">collect</span><span class="o">(</span><span class="n">key</span><span class="o">,</span> <span class="k">new</span> <span class="n">Text</span><span class="o">(</span><span class="n">result</span><span class="o">));</span>
+<span class="o">}</span>
+</pre></div>
+</td></tr></table></div>
+</div></blockquote>
+<p>In brief, our Hadoop implementation’s <tt class="docutils literal"><span class="pre">map()</span></tt> receives a key and a value, and produces pairs to the <tt class="docutils literal"><span class="pre">OutputCollector</span></tt> argument <tt class="docutils literal"><span class="pre">output</span></tt>, and <tt class="docutils literal"><span class="pre">reduce()</span></tt> receives a key and an iterator of values and produces consolidated results in an <tt class="docutils literal"><span class="pre">OutputCollector</span></tt> argument (also named <tt class="docutils literal"><span class="pre">output</span></tt>). In Hadoop, the values from key-value pairs sent to a particular call of <tt class="docutils literal"><span class="pre">reduce()</span></tt> are provided in an <em>iterator</em> rather than a vector or array, since there may be too many values to hold in memory with very large scale data. Likewise, the <tt class="docutils literal"><span class="pre">OutputCollector</span></tt> type can handle arbitrarily many key-value pairs.</p>
+<div class="section" id="further-notes">
+<h2>Further Notes<a class="headerlink" href="#further-notes" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li>The Hadoop types <tt class="docutils literal"><span class="pre">Text</span></tt>, <tt class="docutils literal"><span class="pre">LongWritable</span></tt>,  and <tt class="docutils literal"><span class="pre">IntWritable</span></tt> represent text and integer values in formats that can be communicated through Hadoop’s framework stages. Also, the method <tt class="docutils literal"><span class="pre">OutputCollector.collect()</span></tt> adds a key-value pair to an OutputCollector instance like <tt class="docutils literal"><span class="pre">output</span></tt>.</li>
+<li><em>Note on scalability:</em> Our <tt class="docutils literal"><span class="pre">reduce()</span></tt> method consolidates all the ligands with a given score into a single string (transmitted as <tt class="docutils literal"><span class="pre">Text</span></tt>), but this appending of strings does not scale to very large data. If, for example, trillions of ligand strings are possible, then <tt class="docutils literal"><span class="pre">reduce()</span></tt> must be revised. For example, one might use a trivial reducer that will produce a fresh key-value pair for each score and ligand, effectively copying key-value pairs to the same key-value pairs. Automatic sorting services provided by Hadoop between the “map” and “reduce” stages will ensure that the output produced by the “reduce” stage is sorted by the <tt class="docutils literal"><span class="pre">key</span></tt> argument for calls to <tt class="docutils literal"><span class="pre">reduce()</span></tt>. Since those <tt class="docutils literal"><span class="pre">key</span></tt> arguments are scores for ligands in our application, this automatic sorting by <tt class="docutils literal"><span class="pre">key</span></tt> makes it simpler to identify the ligands with large scores from key-value pairs produced by that trivial reducer.</li>
+</ul>
+</div>
+<div class="section" id="questions-for-exploration">
+<h2>Questions for exploration<a class="headerlink" href="#questions-for-exploration" title="Permalink to this headline">¶</a></h2>
+<ul>
+<li><p class="first">Try running the example <a class="reference download internal" href="../_downloads/dd_hadoop1.java"><tt class="xref download docutils literal"><span class="pre">dd_hadoop.java</span></tt></a> on a system with Hadoop installed.</p>
+<blockquote>
+<div><ul class="simple">
+<li>This code does not generate data for the “map” stage, so you will have to produce your own randomly generated ligands, perhaps capturing the output from <tt class="docutils literal"><span class="pre">Generate_tasks()</span></tt> for one of the other implementations.</li>
+<li>Once you have a data set, you must place it where your Hadoop application can find it.  One ordinarily does this by uploading that data to the Hadoop Distributed File System (HDFS), which is typically tuned for handling very large data (e.g., unusually large block size and data stored on multiple disks for fault tolerance).</li>
+<li>Rename the source file to <tt class="docutils literal"><span class="pre">DDHadoop.java</span></tt> (if necessary) before attempting to compile. After compiling the code, packaging it into a <a class="reference external" href="http://en.wikipedia.org/wiki/JAR_(file_format)">.jar</a> file, and submitting that Hadoop job, you will probably notice that running the Hadoop job takes far more time than any of our other implementations (including sequential), while producing the same results. This is because the I/O overhead used to launch a Hadoop job dominates the computation time for small-scale data. However, with data measured in terabytes of petabytes, it prepares for effective computations in reasonable time (see <a class="reference external" href="http://home.wlu.edu/~whaleyt/classes/parallel/topics/amdahl.html">Amdahl&#8217;s law</a>).</li>
+<li>Hadoop typically places the output from processing in a specified directory on the HDFS. By default, if the “map” stage generates relatively few key-value pairs, a single thread/process performs <tt class="docutils literal"><span class="pre">reduce()</span></tt> calls in the “reduce” stage, yielding a single output file (typically named <tt class="docutils literal"><span class="pre">part-00000</span></tt>).</li>
+</ul>
+</div></blockquote>
+</li>
+<li><p class="first">Modify <a class="reference download internal" href="../_downloads/dd_hadoop1.java"><tt class="xref download docutils literal"><span class="pre">dd_hadoop.java</span></tt></a> to use a trivial reducer instead of a reducer that concatenates ligand strings. Compare the output generated with a trivial reducer to the output generated by <a class="reference download internal" href="../_downloads/dd_hadoop1.java"><tt class="xref download docutils literal"><span class="pre">dd_hadoop.java</span></tt></a>.</p>
+</li>
+<li><p class="first">Research the configuration change(s) necessary in order to compute with multiple <tt class="docutils literal"><span class="pre">reduce()</span></tt> threads/processes at the “reduce” stage. Note that each such thread or process produces its own output file <tt class="docutils literal"><span class="pre">part-NNNNN</span></tt>. Examine those output files, and note that they are sorted by the <tt class="docutils literal"><span class="pre">key</span></tt> argument for <tt class="docutils literal"><span class="pre">reduce()</span></tt> within each output file.</p>
+</li>
+<li><p class="first">Would it be possible to scale one of our other implementations to compute with terabytes of data in a reasonable amount of time? Consider issues such as managing such large data, number of threads/nodes required for reasonable elapsed time, capacity of data structures, etc. Are some implementations more scalable than others?</p>
+</li>
+<li><p class="first">For further ideas, see exercises for other parallel implementations.</p>
+</li>
+</ul>
+</div>
+<div class="section" id="readings-about-map-reduce-frameworks-and-hadoop">
+<h2>Readings about map-reduce frameworks and Hadoop<a class="headerlink" href="#readings-about-map-reduce-frameworks-and-hadoop" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><a class="reference external" href="http://labs.google.com/papers/mapreduce.html">[Dean and Ghemawat, 2004]</a>  J. Dean and S. Ghemawat. MapReduce: Simplified data processing on large clusters, 2004.</li>
+<li><a class="reference external" href="http://hadoop.apache.org/core/">[Hadoop]</a>  Apache Software Foundation. Hadoop.</li>
+<li>[White, 2011]  T. White, Hadoop:  The definitive guide, O’Reilly, 2nd edition, 2011.</li>
+</ul>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../index.html">
+              <img class="logo" src="../_static/CSInParallel200wide.png" alt="Logo"/>
+            </a></p>
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Hadoop Solution</a><ul>
+<li><a class="reference internal" href="#further-notes">Further Notes</a></li>
+<li><a class="reference internal" href="#questions-for-exploration">Questions for exploration</a></li>
+<li><a class="reference internal" href="#readings-about-map-reduce-frameworks-and-hadoop">Readings about map-reduce frameworks and Hadoop</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="../go/go.html"
+                        title="previous chapter">Go Solution</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="../evaluation/evaluation.html"
+                        title="next chapter">Evaluating the Implementations</a></p>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../evaluation/evaluation.html" title="Evaluating the Implementations"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="../go/go.html" title="Go Solution"
+             >previous</a> |</li>
+        <li><a href="../index.html">Drug Design in Parallel</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright This work is licensed under a Creative Commons Attribution-ShareAlike 3.0 Unported License.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2b1.
+    </div>
+  </body>
+</html>

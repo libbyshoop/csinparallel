@@ -1,0 +1,349 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>MIMD, TTAS, and Other Alphabet Soup &mdash; Spinlocks and Contention</title>
+    
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+    <link rel="top" title="Spinlocks and Contention" href="../index.html" />
+    <link rel="next" title="Part Two: A Couple of Other Ideas" href="../part2/part2.html" />
+    <link rel="prev" title="Spinlocks and Contention" href="../index.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../part2/part2.html" title="Part Two: A Couple of Other Ideas"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="../index.html" title="Spinlocks and Contention"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../index.html">Spinlocks and Contention</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="mimd-ttas-and-other-alphabet-soup">
+<h1>MIMD, TTAS, and Other Alphabet Soup<a class="headerlink" href="#mimd-ttas-and-other-alphabet-soup" title="Permalink to this headline">¶</a></h1>
+<p>If you&#8217;ve done any study of concurrency or locks, you&#8217;ve probably been looking at simpler models that were accurate (none of it was untrue) but idealized (so some things were left out). In this module we transition to the &#8220;real&#8221; world and look at the kinds of protocols you might actually use. These models are necessarily more <em>complicated</em>, in the sense of having more details and exceptions and things to remember, but not necessarily more <em>complex</em>, in the sense of encompassing deeper ideas. We are still going to focus on issues that are important - that is, things that matter for all kinds of platforms and applications and thereby become obsolete less quickly.</p>
+<div class="section" id="background-kinds-of-architectures">
+<h2>Background: Kinds of Architectures<a class="headerlink" href="#background-kinds-of-architectures" title="Permalink to this headline">¶</a></h2>
+<p>We can classify processors by how they manage data and instruction streams. A single-instruction, single-data stream (SISD) architecture is just a uniprocessor. A few years ago, single-instruction multiple-data stream (SIMD) architectures were popular - for example, the Connection Machine CM2. These vector processors have fallen out of favor with desktop machines, at least for the time being, although they are still used for multimedia applications. Instead, most modern multiprocessors provide <em>multiple instruction streams</em>, meaning that processors execute independent sequences of instructions, and <em>multiple data streams</em>, meaning that processors issue independent sequences of memory reads and writes. Such architectures are usually called MIMD.</p>
+<p>There are two basic kinds of MIMD architectures. In a <em>shared bus</em> architecture, processors and memory are connected by a shared broadcast medium called a bus (like a tiny Ethernet). Both the processors and the memory controller can broadcast on the bus. Only one processor (or memory) can broadcast on the bus at a time, but all processors (and memory) can listen. Bus-based architectures are the most common today because they are easy to build.
+The principal things that affect performance are <em>contention for the memory</em> (usually, not all the processors can get at the same memory location at the same times, and if they try, they will have to queue up) and <em>contention for the communication medium</em> (if everyone wants to communicate at the same time, or to the same processor, then the processors will have to wait for one another). Finally, there is a growing <em>communication latency</em>, the time it takes for a processor to communicate with memory or with another processor.</p>
+<a class="reference internal image-reference" href="../_images/mimdarchs.png"><img alt="Diagram showing memory in shared-bus and distributed architectures." class="align-center" src="../_images/mimdarchs.png" style="width: 429.8px; height: 189.0px;" /></a>
+</div>
+<div class="section" id="revisiting-mutual-exclusion">
+<h2>Revisiting Mutual Exclusion<a class="headerlink" href="#revisiting-mutual-exclusion" title="Permalink to this headline">¶</a></h2>
+<p>When programming uniprocessors, one can generally ignore the exact structure and properties of the underlying system. Unfortunately, multiprocessor programming has yet to reach that state, and at present it is crucial that the programmer understand the properties and limitations of the underlying machine architecture. This will be our goal in this module. We revisit the familiar mutual exclusion problem, this time with the aim of devising mutual exclusion protocols that work well on today’s multiprocessors. Our goals are as follows:</p>
+<blockquote>
+<div><ul class="simple">
+<li>Think of performance, not just correctness and progress</li>
+<li>Begin to understand how performance depends on our software properly utilizing the multiprocessor machine’s hardware</li>
+<li>Get to know a collection of locking algorithms</li>
+</ul>
+</div></blockquote>
+<div class="section" id="when-you-can-t-get-a-lock">
+<h3>When You Can&#8217;t Get a Lock<a class="headerlink" href="#when-you-can-t-get-a-lock" title="Permalink to this headline">¶</a></h3>
+<p>Any mutual exclusion protocol poses the question: what do you do if you cannot acquire the lock? There are two alternatives. If you keep trying, the lock is called a <em>spin lock</em>, and repeatedly testing the lock is called <em>spinning</em> or <em>busy-waiting</em>(we will use these terms interchangeably). The <a class="reference external" href="http://en.wikipedia.org/wiki/Peterson's_algorithm#Filter_algorithm:_Peterson.27s_algorithm_for_N_processes">filter</a> and <a class="reference external" href="http://en.wikipedia.org/wiki/Lamport's_bakery_algorithm#Algorithm">bakery</a> algorithms are spin-locks. Spinning is sensible when you expect the lock delay to be short. For obvious reasons, spinning makes sense only on multiprocessors.</p>
+<p>The alternative to spinning or busy-waiting is to suspend yourself and ask the operating system&#8217;s scheduler to schedule another thread on your processor, which is sometimes called <em>blocking</em>. Java’s built-in synchronization is blocking. Because switching from one thread to another is expensive, blocking makes sense only if you expect the lock delay to be long. Many operating systems mix both strategies, spinning for a short time and then blocking.</p>
+<div class="section" id="spinlocks">
+<h4>Spinlocks<a class="headerlink" href="#spinlocks" title="Permalink to this headline">¶</a></h4>
+<a class="reference internal image-reference" href="../_images/spinlocks1.png"><img alt="Basic spin lock, part 1." class="align-center" src="../_images/spinlocks1.png" style="width: 450.75px; height: 261.75px;" /></a>
+<p>With spin locks, synchronization usually looks like this: some set of threads <em>contend</em> for the lock. One of them <em>acquires</em> it, and the others spin. The winner enters the critical section, does its job, and <em>releases</em> the lock on exit.</p>
+<a class="reference internal image-reference" href="../_images/spinlocks2.png"><img alt="Basic spin lock, part 2." class="align-center" src="../_images/spinlocks2.png" style="width: 485.6px; height: 252.8px;" /></a>
+<p>There is extra delay just to get through the lock itself: the lock introduces sequential bottleneck, effectively negating the parallelism.</p>
+<a class="reference internal image-reference" href="../_images/spinlocks3.png"><img alt="Basic spin lock, part 3." class="align-center" src="../_images/spinlocks3.png" style="width: 412.5px; height: 253.5px;" /></a>
+<p>The lock suffers from <em>contention</em>. Contention occurs when multiple threads try to acquire a lock at the same time. <em>High contention</em> means there are many such threads, and <em>low contention</em> means the opposite.</p>
+<p>Note that sequential bottleneck and contention are <strong>distinct phenomena</strong>. Our goal is to understand how contention works, and to develop a set of techniques that can avoid or alleviate it. These techniques provide a useful toolkit for all kinds of synchronization problems. We are not trying to resolve the sequential bottleneck in this module; we are only looking at ways to manage contention and busy-wait more efficiently.</p>
+</div>
+<div class="section" id="test-and-set">
+<h4>Test-and-Set<a class="headerlink" href="#test-and-set" title="Permalink to this headline">¶</a></h4>
+<p>The test-and-set machine instruction operates on a single memory word which holds a binary value (either true or false). <tt class="docutils literal"><span class="pre">testAndSet()</span></tt> atomically stores <em>true</em> in that word and returns the word&#8217;s previous value, <em>swapping</em> the value <em>true</em> for the word&#8217;s current value.  <tt class="docutils literal"><span class="pre">lock()</span></tt> calls <tt class="docutils literal"><span class="pre">testAndSet()</span></tt> until it returns false (thereby indicating that the lock was free); you can reset the word just by writing false to it. Note in Java TAS is called <tt class="docutils literal"><span class="pre">getAndSet()</span></tt>, and we will use the terms interchangeably.</p>
+<p>Here, we implement <tt class="docutils literal"><span class="pre">getAndSet()</span></tt> using Java&#8217;s AtomicBoolean class, which is provided as part of Java’s standard library of atomic primitives and can be thought of as a box holding a Boolean value. <tt class="docutils literal"><span class="pre">getAndSet()</span></tt> swaps a Boolean value with the current contents of the box.</p>
+<div class="highlight-java"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9</pre></div></td><td class="code"><div class="highlight"><pre><span class="kd">public</span> <span class="kd">class</span> <span class="nc">AtomicBoolean</span> <span class="o">{</span>
+        <span class="kt">boolean</span> <span class="n">value</span><span class="o">;</span>
+
+        <span class="kd">public</span> <span class="kd">synchronized</span> <span class="kt">boolean</span> <span class="nf">getAndSet</span><span class="o">(</span><span class="kt">boolean</span> <span class="n">newValue</span><span class="o">)</span> <span class="o">{</span>
+                <span class="kt">boolean</span> <span class="n">prior</span> <span class="o">=</span> <span class="n">value</span><span class="o">;</span>
+                <span class="n">value</span> <span class="o">=</span> <span class="n">newValue</span><span class="o">;</span>
+                <span class="k">return</span> <span class="n">prior</span><span class="o">;</span>
+        <span class="o">}</span>
+<span class="o">}</span>
+</pre></div>
+</td></tr></table></div>
+<p>At first, this seems ideal for implementing a spin lock. The lock is free when the word&#8217;s value is false, and busy when it is true. If we call <tt class="docutils literal"><span class="pre">getAndSet(true)</span></tt>, then we have a test-and-set.</p>
+<div class="highlight-java"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2</pre></div></td><td class="code"><div class="highlight"><pre><span class="n">AtomicBoolean</span> <span class="n">lock</span> <span class="o">=</span> <span class="k">new</span> <span class="n">AtomicBoolean</span><span class="o">(</span><span class="kc">false</span><span class="o">)</span>
+<span class="kt">boolean</span> <span class="n">prior</span> <span class="o">=</span> <span class="n">lock</span><span class="o">.</span><span class="na">getAndSet</span><span class="o">(</span><span class="kc">true</span><span class="o">)</span>
+</pre></div>
+</td></tr></table></div>
+<p>Here it is in more detail. The lock is just an <tt class="docutils literal"><span class="pre">AtomicBoolean</span></tt> initialized to false. The <tt class="docutils literal"><span class="pre">lock()</span></tt> method repeatedly applies <tt class="docutils literal"><span class="pre">testAndSet()</span></tt> to the location until that instruction returns false (that is, until the lock is free). The <tt class="docutils literal"><span class="pre">unlock()</span></tt> method simply writes the value false to that word.</p>
+<div class="highlight-java"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11</pre></div></td><td class="code"><div class="highlight"><pre><span class="kd">class</span> <span class="nc">TASlock</span> <span class="o">{</span>
+        <span class="n">AtomicBoolean</span> <span class="n">state</span> <span class="o">=</span> <span class="k">new</span> <span class="n">AtomicBoolean</span><span class="o">(</span><span class="kc">false</span><span class="o">);</span>
+
+        <span class="kt">void</span> <span class="nf">lock</span><span class="o">()</span> <span class="o">{</span>
+        <span class="k">while</span> <span class="o">(</span><span class="n">state</span><span class="o">.</span><span class="na">getAndSet</span><span class="o">(</span><span class="kc">true</span><span class="o">))</span> <span class="o">{}</span>
+        <span class="o">}</span>
+
+        <span class="kt">void</span> <span class="nf">unlock</span><span class="o">()</span> <span class="o">{</span>
+        <span class="n">state</span><span class="o">.</span><span class="na">set</span><span class="o">(</span><span class="kc">false</span><span class="o">);</span>
+        <span class="o">}</span>
+<span class="o">}</span>
+</pre></div>
+</td></tr></table></div>
+<p>We call real world space complexity the “footprint”, and by using <tt class="docutils literal"><span class="pre">testAndSet()</span></tt> we are able to reduce the footprint from linear (as in the filter and bakery locks) to constant. Because it uses an atomic <a class="reference external" href="http://en.wikipedia.org/wiki/Read%E2%80%93modify%E2%80%93write">RMW</a> operation, an <em>n</em>-thread spinlock uses O(1) space.</p>
+<p>Let’s do an experiment on a real machine. Take <em>n</em> threads and have them collectively acquire a lock, increment a counter, and release the lock. Have them do it collectively, say, one million times. Before we look at any curves, let’s try to reason about how long it <em>should</em> take them.</p>
+<div class="align-center figure">
+<a class="reference internal image-reference" href="../_images/idealgraph.png"><img alt="Graph showing how long TAS should take, in theory." src="../_images/idealgraph.png" style="width: 240.0px; height: 168.0px;" /></a>
+<p class="caption">Ideally the curve should stay flat. Why? Because we have a sequential bottleneck so no matter how many threads we add running in parallel, we will not get any speedup (remember <a class="reference external" href="http://en.wikipedia.org/wiki/Amdahl's_law">Amdahl</a>’s law).</p>
+</div>
+<div class="align-center figure">
+<a class="reference internal image-reference" href="../_images/actualgraph.png"><img alt="Graph showing how long TAS actually takes." src="../_images/actualgraph.png" style="width: 296.4px; height: 189.05px;" /></a>
+<p class="caption">However, the curve for TAS lock looks like this. In fact, if you do the experiment you have to give up because it takes so long beyond a certain number of processors. What is happening?</p>
+</div>
+</div>
+<div class="section" id="test-and-test-and-set">
+<h4>Test-and-test-and-set<a class="headerlink" href="#test-and-test-and-set" title="Permalink to this headline">¶</a></h4>
+<p>Let’s try a slightly different approach. Instead of repeatedly trying to test-and-set the lock, let’s split the locking method into two phases. In the <em>lurking</em> phase, we wait until the lock looks like it’s free, spinning while read returns true. When it’s free, we <em>pounce</em>, attempting to acquire the lock by a call to test-and-set. If we win, we’re in, and if we lose, we go back to lurking. It looks like this:</p>
+<div class="highlight-java"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11</pre></div></td><td class="code"><div class="highlight"><pre><span class="kd">class</span> <span class="nc">TTASlock</span> <span class="o">{</span>
+        <span class="n">AtomicBoolean</span> <span class="n">state</span> <span class="o">=</span> <span class="k">new</span> <span class="n">AtomicBoolean</span><span class="o">(</span><span class="kc">false</span><span class="o">);</span>
+
+        <span class="kt">void</span> <span class="nf">lock</span><span class="o">()</span> <span class="o">{</span>
+                <span class="k">while</span> <span class="o">(</span><span class="kc">true</span><span class="o">)</span> <span class="o">{</span>
+                        <span class="k">while</span> <span class="o">(</span><span class="n">state</span><span class="o">.</span><span class="na">get</span><span class="o">())</span> <span class="o">{}</span>
+<span class="hll">                        <span class="k">if</span> <span class="o">(!</span><span class="n">state</span><span class="o">.</span><span class="na">getAndSet</span><span class="o">(</span><span class="kc">true</span><span class="o">))</span>
+</span><span class="hll">                <span class="k">return</span><span class="o">;</span>
+</span>                <span class="o">}</span>
+        <span class="o">}</span>
+<span class="o">}</span>
+</pre></div>
+</td></tr></table></div>
+<p>The highlighted lines are key steps: first we spin on the value, repeatedly reading it until it looks like the lock is free. We don’t try to modify it, we just read it. As soon as it looks like the lock is free, we call <tt class="docutils literal"><span class="pre">getAndSet(true)</span></tt> to try to acquire it. If we are first and we succeed, the <tt class="docutils literal"><span class="pre">lock()</span></tt> method returns, and otherwise, if someone else got there before us, we go back to lurking (repeatedly rereading the variable).</p>
+<div class="align-center figure">
+<a class="reference internal image-reference" href="../_images/ttasgraph.png"><img alt="Timing of TAS vs TTAS vs ideal." src="../_images/ttasgraph.png" style="width: 298.0px; height: 184.0px;" /></a>
+<p class="caption">The difference is dramatic. The TTAS lock performs much better than the TAS lock, but still much worse than we expected from an ideal lock.</p>
+</div>
+<p>There are two mysteries here: why is the TTAS lock so good (that is, so much better than TAS), and why is it so bad (so much worse than ideal)?</p>
+<p>We would expect the TAS and TTAS locks to be the same - after all, they are <em>logically</em> equivalent programs. In fact, they are equivalent with respect to <em>correctness</em> (they both work), but very different with respect to performance. The problem here is that the shared memory abstraction is broken with respect to <em>performance</em> - we need a more detailed model. If you don’t understand the underlying architecture, you will never understand why your reasonable-looking programs are so slow.</p>
+</div>
+</div>
+</div>
+<div class="section" id="multiprocessor-architecture-part-2">
+<h2>Multiprocessor Architecture, part 2<a class="headerlink" href="#multiprocessor-architecture-part-2" title="Permalink to this headline">¶</a></h2>
+<p>We&#8217;re going to do a more thorough review. Here is an example bus-based multiprocessor architecture.</p>
+<a class="reference internal image-reference" href="../_images/busbasedarch1.png"><img alt="Bus-based architectures." class="align-center" src="../_images/busbasedarch1.png" style="width: 247.6px; height: 150.0px;" /></a>
+<p>The processors share a memory that has a high latency (say, 50 to 100 cycles) to read or write a value. This means that while you are waiting for the memory to respond, you can execute that many instructions.</p>
+<a class="reference internal image-reference" href="../_images/busbasedarch2.png"><img alt="Bus-based architectures." class="align-center" src="../_images/busbasedarch2.png" style="width: 251.6px; height: 169.2px;" /></a>
+<p>Processors communicate with the memory and with one another over a shared bus. The bus is a broadcast medium, meaning that only one processor at a time can send a message, although everyone can (and does!) passively listen.</p>
+<a class="reference internal image-reference" href="../_images/busbasedarch3.png"><img alt="Bus-based architectures." class="align-center" src="../_images/busbasedarch3.png" style="width: 253.6px; height: 180.8px;" /></a>
+<p>Each processor has a <em>cache</em>, a small high-speed memory where the processor keeps data likely to be of interest. A cache access typically requires one or two machine cycles, while a memory access typically requires many machine cycles. Technology trends are making this contrast more extreme: although both processor cycle times and memory access times are becoming faster, the cycle times are improving faster than the memory access times, so cache performance is critical to the overall performance of a multiprocessor architecture.</p>
+<a class="reference internal image-reference" href="../_images/busbasedarch4.png"><img alt="Bus-based architectures." class="align-center" src="../_images/busbasedarch4.png" style="width: 285.2px; height: 215.6px;" /></a>
+<p>If a processor finds data in its cache, then it doesn’t have to go all the way to memory. This is a very good thing, which we call a <em>cache hit</em>. If the processor doesn’t find what it wants in its cache, then we have a <em>cache miss</em>, which is very time-consuming. How well a synchronization protocol or concurrent algorithm performs is largely determined by its cache behavior: how many hits and misses.</p>
+<p>Here is one thing that can happen when a processor issues a load request.</p>
+<a class="reference internal image-reference" href="../_images/issueloadrequest1.png"><img alt="The processor issues a load request." class="align-center" src="../_images/issueloadrequest1.png" style="width: 247.2px; height: 144.0px;" /></a>
+<p>It broadcasts a message asking for the data it needs. Notice that while it is broadcasting, no one else can use the bus.</p>
+<a class="reference internal image-reference" href="../_images/issueloadrequest2.png"><img alt="The processor issues a load request." class="align-center" src="../_images/issueloadrequest2.png" style="width: 277.6px; height: 181.6px;" /></a>
+<p>In this case, the memory responds to the request, also over the bus.</p>
+<a class="reference internal image-reference" href="../_images/memoryresponds.png"><img alt="Memory responds." class="align-center" src="../_images/memoryresponds.png" style="width: 284.0px; height: 142.4px;" /></a>
+<p>Now suppose another processor issues a load request for the same data.</p>
+<a class="reference internal image-reference" href="../_images/issueloadrequest3.png"><img alt="A second request." class="align-center" src="../_images/issueloadrequest3.png" style="width: 245.6px; height: 183.2px;" /></a>
+<p>It broadcasts its request over the bus.</p>
+<a class="reference internal image-reference" href="../_images/issueloadrequest4.png"><img alt="A second request." class="align-center" src="../_images/issueloadrequest4.png" style="width: 244.8px; height: 182.4px;" /></a>
+<p>This time, however, the request is picked up by the first processor, which has the data in its cache. Usually, when a processor has the data cached, it, rather than the memory, will respond to load requests.</p>
+<a class="reference internal image-reference" href="../_images/otherprocessoranswers1.png"><img alt="The other processor answers." class="align-center" src="../_images/otherprocessoranswers1.png" style="width: 269.6px; height: 173.6px;" /></a>
+<p>The processor puts the data on the bus.</p>
+<a class="reference internal image-reference" href="../_images/otherprocessoranswers2.png"><img alt="The other processor answers." class="align-center" src="../_images/otherprocessoranswers2.png" style="width: 276.8px; height: 180.8px;" /></a>
+<p>Now both processors have the same data cached.</p>
+<a class="reference internal image-reference" href="../_images/samedata.png"><img alt="Same data!" class="align-center" src="../_images/samedata.png" style="width: 247.2px; height: 147.2px;" /></a>
+<p>Now what happens if the red processor decides to modify the cached data?</p>
+<a class="reference internal image-reference" href="../_images/datamodified1.png"><img alt="Data modified." class="align-center" src="../_images/datamodified1.png" style="width: 245.6px; height: 141.6px;" /></a>
+<p>It changes the copy in its cache (from blue to white).</p>
+<a class="reference internal image-reference" href="../_images/datamodified2.png"><img alt="Data modified." class="align-center" src="../_images/datamodified2.png" style="width: 246.4px; height: 143.2px;" /></a>
+<p>Now we have a problem: the data cached at the red processor disagrees with the same copy of that memory location stored both at the other processors and in the memory itself.</p>
+<a class="reference internal image-reference" href="../_images/datamodified3.png"><img alt="Data modified." class="align-center" src="../_images/datamodified3.png" style="width: 276.0px; height: 152.0px;" /></a>
+<p>So now we have lots of copies of data: an original copy in memory and cached copies at processors. When one processor modifies its own copy, what do we do with the others? How do we avoid confusion? The problem of keeping track of multiple copies of the same data is called the cache coherence problem, and ways to accomplish it are called cache coherence protocols.</p>
+<p>Warning: This is <em>still</em> a simplification. Real cache coherence protocols can be very complex. For example, modern multiprocessors have multi-level caches, where each processor has an on-chip level-one (L1) cache, and clusters of processors share a level-two (L2) cache. The L2 cache is on-chip in some modern architectures, and off chip in others, a detail that greatly changes the observed performance. We are going to avoid going into too much detail here, though, because the basic principles don&#8217;t depend on that level of detail.</p>
+<div class="section" id="write-back-caches">
+<h3>Write-Back Caches<a class="headerlink" href="#write-back-caches" title="Permalink to this headline">¶</a></h3>
+<p>One way to solve the problem is with a write-back coherence protocol. An invalidation message is sent out when the value is first modified, instructing the other processors to discard that value from their caches (a non-trivial protocol). Once the processor has invalidated the other cached values, it can make subsequent modifications without further bus traffic. A value that has been modified in the cache but not written back is called <em>dirty</em>. If the processor needs to use the cache for another value, or if another processor wants it, however, it must remember to write back any dirty values.</p>
+<p>Cache entries therefore now have three states: invalid (contains raw seething bits!), valid (can read but not write), and dirty (data has been modified). If the cache is invalid, then its contents are meaningless. If it is valid, then the processor can read the value, but does not have permission to write it because it may be cached elsewhere. If the value is dirty, then the processor has modified the value and is intercepting other load requests for it.  It must be written back before that cache can be reused.</p>
+<p>To see an example, let&#8217;s rewind back to the moment when the red processor updated its cached data.</p>
+<a class="reference internal image-reference" href="../_images/cachecoherence1.png"><img alt="Data modified." class="align-center" src="../_images/cachecoherence1.png" style="width: 244.8px; height: 142.4px;" /></a>
+<p>It broadcasts an <em>invalidation</em> message warning the other processors to invalidate, or discard, their cached copies of that data.</p>
+<a class="reference internal image-reference" href="../_images/cachecoherence2.png"><img alt="Data modified." class="align-center" src="../_images/cachecoherence2.png" style="width: 246.4px; height: 184.0px;" /></a>
+<p>When the other processors hear the invalidation message, they set their caches to the <em>invalid</em> state.</p>
+<a class="reference internal image-reference" href="../_images/cachecoherence3.png"><img alt="Data modified." class="align-center" src="../_images/cachecoherence3.png" style="width: 276.0px; height: 180.0px;" /></a>
+<p>From this point on, the red processor can update that data value without causing any bus traffic, because it knows that it has the only cached copy. This is much more efficient than a write-through cache because it produces much less bus traffic.</p>
+<a class="reference internal image-reference" href="../_images/cachecoherence4.png"><img alt="Data modified." class="align-center" src="../_images/cachecoherence4.png" style="width: 297.6px; height: 185.6px;" /></a>
+<p>Finally, there is no need to update memory until the processor wants to use that cache space for something else. Any other processor that asks for the data will get it from the red processor.</p>
+<a class="reference internal image-reference" href="../_images/cachecoherence5.png"><img alt="Data modified." class="align-center" src="../_images/cachecoherence5.png" style="width: 260.8px; height: 147.2px;" /></a>
+<p>If another processor wants the data, it asks for it over the bus.</p>
+<a class="reference internal image-reference" href="../_images/cachecoherence6.png"><img alt="Data modified." class="align-center" src="../_images/cachecoherence6.png" style="width: 245.6px; height: 148.8px;" /></a>
+<p>And the owner responds by sending the data over.</p>
+<a class="reference internal image-reference" href="../_images/cachecoherence7.png"><img alt="Data modified." class="align-center" src="../_images/cachecoherence7.png" style="width: 244.0px; height: 178.4px;" /></a>
+<p>That leaves us here.</p>
+<a class="reference internal image-reference" href="../_images/cachecoherence8.png"><img alt="Data modified." class="align-center" src="../_images/cachecoherence8.png" style="width: 275.2px; height: 151.2px;" /></a>
+<p>Note that optimizing a spin lock is not a simple question, because we have to figure out exactly what we want to optimize: whether it’s the bus bandwidth used by spinning threads, the latency of lock acquisition or release, or whether we mostly care about uncontended locks.</p>
+</div>
+<div class="section" id="solving-the-mystery">
+<h3>Solving the Mystery<a class="headerlink" href="#solving-the-mystery" title="Permalink to this headline">¶</a></h3>
+<p>We now consider how the simple test-and-set algorithm performs using a bus-based write-back cache (the most common case in practice). Each <tt class="docutils literal"><span class="pre">testAndSet()</span></tt> call goes over the bus, and since all of the waiting threads are continually using the bus, all threads, even those not waiting for the lock, must wait to use the bus for each memory access. Even worse, the test-and-set call invalidates all cached copies of the lock, so every spinning thread encounters a cache miss almost every time, and has to use the bus to fetch the new, but unchanged value. Adding insult to injury, when the thread holding the lock tries to release it, it may be delayed waiting to use the bus that is monopolized by the spinners. We now understand why the TAS lock performs so poorly.</p>
+<p>Now consider the behavior of the TTAS lock algorithm while the lock is held by a thread A. The first time thread B reads the lock it takes a cache miss, forcing B to block while the value is loaded into B&#8217;s cache. As long as A holds the lock, B repeatedly rereads the value...but each time, B hits in its cache (finding the desired value). B thus produces no bus traffic, and does not slow down other threads&#8217; memory accesses. Moreover, a thread that releases a lock is not delayed by threads spinning on that lock. However, there is a problem when the lock is released: false is written to the lock variable, which invalidates all of the cached copies. Each thread then takes a cache miss, rereads the new value, or calls <tt class="docutils literal"><span class="pre">getAndSet()</span></tt> more or less simultaneously, producing a storm of bus traffic.</p>
+<p>Again, let&#8217;s break it down visually. While the lock is held, all the contenders spin in their caches, rereading cached data without causing any bus traffic.</p>
+<a class="reference internal image-reference" href="../_images/localspinning1.png"><img alt="Local spinning." class="align-center" src="../_images/localspinning1.png" style="width: 244.8px; height: 144.0px;" /></a>
+<p>Things deteriorate, however, when the lock is released. The lock holder releases the lock by writing false to the lock variable…</p>
+<a class="reference internal image-reference" href="../_images/localspinning2.png"><img alt="Local spinning." class="align-center" src="../_images/localspinning2.png" style="width: 244.8px; height: 141.6px;" /></a>
+<p>… which immediately invalidates the spinners&#8217; cached copies. Each one takes a cache miss, rereads the new value...</p>
+<a class="reference internal image-reference" href="../_images/allmiss.png"><img alt="Everyone takes a cache miss." class="align-center" src="../_images/allmiss.png" style="width: 244.8px; height: 143.2px;" /></a>
+<p>and they all (more-or-less simultaneously) call test-and-set to acquire the lock. The first to succeed invalidates the others, who must then reread the value, causing a storm of bus traffic.</p>
+<a class="reference internal image-reference" href="../_images/allcalltas.png"><img alt="Everyone calls TAS." class="align-center" src="../_images/allcalltas.png" style="width: 244.0px; height: 143.2px;" /></a>
+<p>Eventually, the processors quiesce or settle down once again to local spinning (this could explain why the TTAS lock takes longer than the ideal lock). So how long does this take?</p>
+<div class="section" id="measuring-quiescence-time">
+<h4>Measuring Quiescence Time<a class="headerlink" href="#measuring-quiescence-time" title="Permalink to this headline">¶</a></h4>
+<a class="reference internal image-reference" href="../_images/andersonexper.png"><img alt="Quiescence experiment." class="align-center" src="../_images/andersonexper.png" style="width: 559.8px; height: 180.0px;" /></a>
+<p>This is the classical experiment conducted by Anderson. We decrease <strong>X</strong> until the bus-intensive operations in <strong>Y</strong> interleave with the quiescing of the lock release operation, at which point we will see a drop in throughput or an increase in latency.</p>
+<p>In the critical section, ops X run, then ops Y. As long as quiescence time is less than X, there is no drop in performance. By gradually varying X, can determine the exact time to quiesce.</p>
+<p>Quiescence time for TTAS is shown below, alone...</p>
+<a class="reference internal image-reference" href="../_images/ttasgraph.png"><img alt="Quiescence experiment results." class="align-center" src="../_images/ttasgraph.png" style="width: 238.0px; height: 147.2px;" /></a>
+<p>...and in comparison to both TAS and the ideal graph.</p>
+<a class="reference internal image-reference" href="../_images/ttascompgraph.png"><img alt="Quiescence experiment results." class="align-center" src="../_images/ttascompgraph.png" style="width: 241.6px; height: 179.2px;" /></a>
+<p>So now we understand why the TTAS lock performs much better than the TAS lock, but still much worse than an ideal lock. Mystery explained!</p>
+</div>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../index.html">
+              <img class="logo" src="../_static/CSInParallel200wide.png" alt="Logo"/>
+            </a></p>
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">MIMD, TTAS, and Other Alphabet Soup</a><ul>
+<li><a class="reference internal" href="#background-kinds-of-architectures">Background: Kinds of Architectures</a></li>
+<li><a class="reference internal" href="#revisiting-mutual-exclusion">Revisiting Mutual Exclusion</a><ul>
+<li><a class="reference internal" href="#when-you-can-t-get-a-lock">When You Can&#8217;t Get a Lock</a><ul>
+<li><a class="reference internal" href="#spinlocks">Spinlocks</a></li>
+<li><a class="reference internal" href="#test-and-set">Test-and-Set</a></li>
+<li><a class="reference internal" href="#test-and-test-and-set">Test-and-test-and-set</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#multiprocessor-architecture-part-2">Multiprocessor Architecture, part 2</a><ul>
+<li><a class="reference internal" href="#write-back-caches">Write-Back Caches</a></li>
+<li><a class="reference internal" href="#solving-the-mystery">Solving the Mystery</a><ul>
+<li><a class="reference internal" href="#measuring-quiescence-time">Measuring Quiescence Time</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="../index.html"
+                        title="previous chapter">Spinlocks and Contention</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="../part2/part2.html"
+                        title="next chapter">Part Two: A Couple of Other Ideas</a></p>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../part2/part2.html" title="Part Two: A Couple of Other Ideas"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="../index.html" title="Spinlocks and Contention"
+             >previous</a> |</li>
+        <li><a href="../index.html">Spinlocks and Contention</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright This work is licensed under a Creative Commons Attribution-ShareAlike 3.0 Unported License.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2b1.
+    </div>
+  </body>
+</html>

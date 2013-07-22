@@ -1,0 +1,246 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Boost Threads Solution &mdash; Drug Design in Parallel</title>
+    
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+    <link rel="top" title="Drug Design in Parallel" href="../index.html" />
+    <link rel="next" title="Go Solution" href="../go/go.html" />
+    <link rel="prev" title="OpenMP Solution" href="../openmp/openmp.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../go/go.html" title="Go Solution"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="../openmp/openmp.html" title="OpenMP Solution"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../index.html">Drug Design in Parallel</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="boost-threads-solution">
+<h1>Boost Threads Solution<a class="headerlink" href="#boost-threads-solution" title="Permalink to this headline">¶</a></h1>
+<p>In the OpenMP implementation above, the OpenMP runtime system implicitly creates and manages threads for us. The implementation <a class="reference download internal" href="../_downloads/dd_boost.cpp"><tt class="xref download docutils literal"><span class="pre">dd_boost.cpp</span></tt></a> parallelizes the computationally expensive <tt class="docutils literal"><span class="pre">Map()</span></tt> stage by using Boost threads (precursors of the new C++11 standard threads) instead of OpenMP. This requires us to explicitly create and manage our own threads, using a master-worker parallel programming pattern driven by <tt class="docutils literal"><span class="pre">tasks</span></tt>, a task queue produced by <tt class="docutils literal"><span class="pre">Generate_tasks()</span></tt>.</p>
+<p>We will examine the Boost threads implementation <a class="reference download internal" href="../_downloads/dd_boost.cpp"><tt class="xref download docutils literal"><span class="pre">dd_boost.cpp</span></tt></a> by comparing it to the sequential implementation <a class="reference download internal" href="../_downloads/dd_serial.cpp"><tt class="xref download docutils literal"><span class="pre">dd_serial.cpp</span></tt></a>.</p>
+<p>The main routine for map-reduce computing in both implementations is <tt class="docutils literal"><span class="pre">MR::run()</span></tt>, and this routine is identical in the two except for the “map” stage and for the Boost version handling an extra argument <tt class="docutils literal"><span class="pre">nthreads</span></tt>. In the serial implementation, the “map” stage simply removes elements from the task queue and calls <tt class="docutils literal"><span class="pre">Map()</span></tt> for each such element, via the following code.</p>
+<blockquote>
+<div><div class="highlight-cpp"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4</pre></div></td><td class="code"><div class="highlight"><pre><span class="k">while</span> <span class="p">(</span><span class="o">!</span><span class="n">tasks</span><span class="p">.</span><span class="n">empty</span><span class="p">())</span> <span class="p">{</span>
+<span class="hll">        <span class="n">Map</span><span class="p">(</span><span class="n">tasks</span><span class="p">.</span><span class="n">front</span><span class="p">(),</span> <span class="n">pairs</span><span class="p">);</span>
+</span>        <span class="n">tasks</span><span class="p">.</span><span class="n">pop</span><span class="p">();</span>
+<span class="p">}</span>
+</pre></div>
+</td></tr></table></div>
+</div></blockquote>
+<p>However, the Boost threads implementation of the “map” stage creates an array <tt class="docutils literal"><span class="pre">pool</span></tt> of Boost threads to perform the calls to <tt class="docutils literal"><span class="pre">Map()</span></tt>, then waits for those threads to complete their work by calling the <tt class="docutils literal"><span class="pre">join()</span></tt> method for each thread:</p>
+<blockquote>
+<div><div class="highlight-cpp"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4
+5
+6
+7
+8</pre></div></td><td class="code"><div class="highlight"><pre><span class="hll"><span class="n">boost</span><span class="o">::</span><span class="kr">thread</span> <span class="o">*</span><span class="n">pool</span> <span class="o">=</span> <span class="k">new</span> <span class="n">boost</span><span class="o">::</span><span class="kr">thread</span><span class="p">[</span><span class="n">nthreads</span><span class="p">];</span>
+</span><span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>  <span class="n">i</span> <span class="o">&lt;</span> <span class="n">nthreads</span><span class="p">;</span>  <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+<span class="hll">        <span class="n">pool</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">boost</span><span class="o">::</span><span class="kr">thread</span><span class="p">(</span><span class="n">boost</span><span class="o">::</span><span class="n">bind</span><span class="p">(</span><span class="o">&amp;</span><span class="n">MR</span><span class="o">::</span><span class="n">do_Maps</span><span class="p">,</span> <span class="k">this</span><span class="p">));</span>
+</span><span class="p">}</span>
+
+<span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>  <span class="n">i</span> <span class="o">&lt;</span> <span class="n">nthreads</span><span class="p">;</span>  <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+<span class="hll">        <span class="n">pool</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">join</span><span class="p">();</span>
+</span><span class="p">}</span>
+</pre></div>
+</td></tr></table></div>
+</div></blockquote>
+<p>In this snippet from the Boost implementation, we define the function <tt class="docutils literal"><span class="pre">MR::do_Maps()</span></tt> for performing calls to <tt class="docutils literal"><span class="pre">Map()</span></tt>:</p>
+<blockquote>
+<div><div class="highlight-cpp"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9</pre></div></td><td class="code"><div class="highlight"><pre><span class="kt">void</span> <span class="n">MR</span><span class="o">::</span><span class="n">do_Maps</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">string</span> <span class="n">lig</span><span class="p">;</span>
+<span class="hll">        <span class="n">tasks</span><span class="p">.</span><span class="n">pop</span><span class="p">(</span><span class="n">lig</span><span class="p">);</span>
+</span>        <span class="k">while</span> <span class="p">(</span><span class="n">lig</span> <span class="o">!=</span> <span class="n">SENTINEL</span><span class="p">)</span> <span class="p">{</span>
+<span class="hll">                <span class="n">Map</span><span class="p">(</span><span class="n">lig</span><span class="p">,</span> <span class="n">pairs</span><span class="p">);</span>
+</span>                <span class="n">tasks</span><span class="p">.</span><span class="n">pop</span><span class="p">(</span><span class="n">lig</span><span class="p">);</span>
+        <span class="p">}</span>
+        <span class="n">tasks</span><span class="p">.</span><span class="n">push</span><span class="p">(</span><span class="n">SENTINEL</span><span class="p">);</span>  <span class="c1">// restore end marker for another thread</span>
+<span class="p">}</span>
+</pre></div>
+</td></tr></table></div>
+</div></blockquote>
+<p>This method <tt class="docutils literal"><span class="pre">do_Maps()</span></tt> serves as the “main program” for each thread, and that method repeatedly pops a new ligand string <tt class="docutils literal"><span class="pre">lig</span></tt> from the task queue, and calls <tt class="docutils literal"><span class="pre">Map()</span></tt> with <tt class="docutils literal"><span class="pre">lig</span></tt> until it encounters the end marker <tt class="docutils literal"><span class="pre">SENTINEL</span></tt>.</p>
+<p>Since multiple threads may access the shared task queue <tt class="docutils literal"><span class="pre">tasks</span></tt> at the same time, that task queue must be thread-safe, so we defined it using a TBB container:</p>
+<blockquote>
+<div><tt class="docutils literal"><span class="pre">tbb::concurrent_bounded_queue&lt;string&gt;</span> <span class="pre">tasks;</span></tt></div></blockquote>
+<p>We chose <tt class="docutils literal"><span class="pre">tbb::concurrent_bounded_queue</span></tt> instead of <tt class="docutils literal"><span class="pre">tbb::concurrent_queue</span></tt> because the bounded type offers a blocking <tt class="docutils literal"><span class="pre">pop()</span></tt> method, which will cause a thread to wait until work becomes available in the queue; also, we do not anticipate a need for a task queue of unbounded size. Blocking on the task queue isn’t actually necessary for our simplified application, because all the tasks are generated before any of the threads begin operating on those tasks. However, this blocking strategy supports a <em>dynamic</em> task queue, in which new tasks can be added to the queue while other tasks are being processed, a requirement that often arises in other applications.</p>
+<div class="section" id="further-notes">
+<h2>Further Notes<a class="headerlink" href="#further-notes" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li>The <tt class="docutils literal"><span class="pre">SENTINEL</span></tt> task value indicates that no more tasks remain. Each thread consumes one <tt class="docutils literal"><span class="pre">SENTINEL</span></tt> from the task queue so it can know when to exit, and adds one <tt class="docutils literal"><span class="pre">SENTINEL</span></tt> to the task queue just before that thread exits, which then enables another thread to finish.</li>
+<li>As with <a class="reference download internal" href="../_downloads/dd_omp.cpp"><tt class="xref download docutils literal"><span class="pre">dd_omp.cpp</span></tt></a>, the Boost threads implementation uses a thread-safe vector (<tt class="docutils literal"><span class="pre">tbb::concurrent_vector&lt;Pair&gt;</span> <span class="pre">pairs;</span></tt>) for storing the key-value pairs produced by calls to <tt class="docutils literal"><span class="pre">Map()</span></tt>, since multiple threads might access that shared vector at the same time.</li>
+</ul>
+</div>
+<div class="section" id="questions-for-exploration">
+<h2>Questions for exploration<a class="headerlink" href="#questions-for-exploration" title="Permalink to this headline">¶</a></h2>
+<ul>
+<li><p class="first">Compile and run <a class="reference download internal" href="../_downloads/dd_boost.cpp"><tt class="xref download docutils literal"><span class="pre">dd_boost.cpp</span></tt></a>, and compare its performance to <a class="reference download internal" href="../_downloads/dd_serial.cpp"><tt class="xref download docutils literal"><span class="pre">dd_serial.cpp</span></tt></a> and to other parallel implementations.</p>
+</li>
+<li><p class="first"><em>Concurrent task queue:</em> consider the “map” stage in our sequential implementation <a class="reference download internal" href="../_downloads/dd_serial.cpp"><tt class="xref download docutils literal"><span class="pre">dd_serial.cpp</span></tt></a>, which uses an STL container instead of a TBB container for the task queue <tt class="docutils literal"><span class="pre">tasks</span></tt>:</p>
+<blockquote>
+<div><div class="highlight-cpp"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4</pre></div></td><td class="code"><div class="highlight"><pre><span class="k">while</span> <span class="p">(</span><span class="o">!</span><span class="n">tasks</span><span class="p">.</span><span class="n">empty</span><span class="p">())</span> <span class="p">{</span>
+        <span class="n">Map</span><span class="p">(</span><span class="n">tasks</span><span class="p">.</span><span class="n">front</span><span class="p">(),</span> <span class="n">pairs</span><span class="p">);</span>
+        <span class="n">tasks</span><span class="p">.</span><span class="n">pop</span><span class="p">();</span>
+<span class="p">}</span>
+</pre></div>
+</td></tr></table></div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<ul>
+<li><p class="first">TBB container classes <tt class="docutils literal"><span class="pre">tbb::concurrent_queue</span></tt> and <tt class="docutils literal"><span class="pre">tbb::concurrent_bounded_queue</span></tt> do not provide a method <tt class="docutils literal"><span class="pre">front()</span></tt>. Instead, they provide a method <tt class="docutils literal"><span class="pre">try_pop()</span></tt> (with one argument). It works as follows: if the queue is empty, it returns immediately (non-blocking) without making any changes. If the queue is non-empty, it removes the first element from the queue and assigns it to the argument. This accomplishes the work of an STL <tt class="docutils literal"><span class="pre">queue</span></tt>’s <tt class="docutils literal"><span class="pre">front()</span></tt> and <tt class="docutils literal"><span class="pre">pop()</span></tt> methods in a single operation. Describe a parallel computing scenario in which a single (atomic) operation <tt class="docutils literal"><span class="pre">try_pop()</span></tt> is preferable to separate operations <tt class="docutils literal"><span class="pre">front()</span></tt> and <tt class="docutils literal"><span class="pre">pop()</span></tt>, and explain why we should prefer it.</p>
+</li>
+<li><p class="first">Given that we choose a TBB queue container for the type of <tt class="docutils literal"><span class="pre">tasks</span></tt>, would it be safe to have multiple threads execute the following code (which more closely mirrors our sequential operation)?</p>
+<blockquote>
+<div><div class="highlight-cpp"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4
+5</pre></div></td><td class="code"><div class="highlight"><pre><span class="n">string</span> <span class="n">lig</span><span class="p">;</span>
+<span class="k">while</span> <span class="p">(</span><span class="o">!</span><span class="n">tasks</span><span class="p">.</span><span class="n">empty</span><span class="p">())</span> <span class="p">{</span>
+        <span class="n">tasks</span><span class="p">.</span><span class="n">try_pop</span><span class="p">(</span><span class="n">lig</span><span class="p">);</span>
+        <span class="n">Map</span><span class="p">(</span><span class="n">lig</span><span class="p">,</span> <span class="n">pairs</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+</td></tr></table></div>
+</div></blockquote>
+</li>
+</ul>
+<p class="last">If it <em>is</em> safe, explain how you know it is so.  If something can go wrong with this code, describe a scenario in which it fails to behave correctly.</p>
+</div>
+</div></blockquote>
+</li>
+<li><p class="first">The purpose of <tt class="docutils literal"><span class="pre">SENTINEL</span></tt> in our Boost threads implementation is to insure that every (non-<tt class="docutils literal"><span class="pre">SENTINEL</span></tt>) element in the task queue <tt class="docutils literal"><span class="pre">tasks</span></tt> is processed by some thread, and that all threads terminate (return from <tt class="docutils literal"><span class="pre">do_Maps()</span></tt>) when no more (non-<tt class="docutils literal"><span class="pre">SENTINEL</span></tt>) elements are available. Verify that this goal is achieved in <tt class="docutils literal"><span class="pre">dd_boost.cpp</span></tt>, or describe a scenario in which the goal fails.</p>
+</li>
+<li><p class="first">Revise <a class="reference download internal" href="../_downloads/dd_boost.cpp"><tt class="xref download docutils literal"><span class="pre">dd_boost.cpp</span></tt></a> to use a <tt class="docutils literal"><span class="pre">tbb::concurrent_queue</span></tt> container instead of a <tt class="docutils literal"><span class="pre">tbb::concurrent_bounded_queue</span></tt> container for the task queue <tt class="docutils literal"><span class="pre">tasks</span></tt>.</p>
+<blockquote>
+<div><div class="admonition note">
+<p class="first admonition-title">Note</p>
+<ul class="last simple">
+<li><tt class="docutils literal"><span class="pre">tbb::concurrent_queue</span></tt> does not provide the blocking method <tt class="docutils literal"><span class="pre">pop()</span></tt> used in <tt class="docutils literal"><span class="pre">dd_boost.cpp</span></tt>, so some other synchronization strategy will be required.</li>
+<li>However, in our simplified problem, the task queue <tt class="docutils literal"><span class="pre">tasks</span></tt> doesn’t change during the “map” stage, so threads may finish once <tt class="docutils literal"><span class="pre">tasks</span></tt> becomes empty.</li>
+<li>Be sure to understand the concurrent task queue exercise above (italicized) before attempting this exercise.</li>
+<li>Is a <tt class="docutils literal"><span class="pre">SENTINEL</span></tt> value needed for your solution?</li>
+</ul>
+</div>
+</div></blockquote>
+</li>
+<li><p class="first">For further ideas, see exercises for other parallel implementations.</p>
+</li>
+</ul>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../index.html">
+              <img class="logo" src="../_static/CSInParallel200wide.png" alt="Logo"/>
+            </a></p>
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Boost Threads Solution</a><ul>
+<li><a class="reference internal" href="#further-notes">Further Notes</a></li>
+<li><a class="reference internal" href="#questions-for-exploration">Questions for exploration</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="../openmp/openmp.html"
+                        title="previous chapter">OpenMP Solution</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="../go/go.html"
+                        title="next chapter">Go Solution</a></p>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../go/go.html" title="Go Solution"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="../openmp/openmp.html" title="OpenMP Solution"
+             >previous</a> |</li>
+        <li><a href="../index.html">Drug Design in Parallel</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright This work is licensed under a Creative Commons Attribution-ShareAlike 3.0 Unported License.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2b1.
+    </div>
+  </body>
+</html>

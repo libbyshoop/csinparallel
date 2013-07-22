@@ -1,0 +1,217 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Go Solution &mdash; Drug Design in Parallel</title>
+    
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+    <link rel="top" title="Drug Design in Parallel" href="../index.html" />
+    <link rel="next" title="Hadoop Solution" href="../hadoop/hadoop.html" />
+    <link rel="prev" title="Boost Threads Solution" href="../boostthreads/boostthreads.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../hadoop/hadoop.html" title="Hadoop Solution"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="../boostthreads/boostthreads.html" title="Boost Threads Solution"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../index.html">Drug Design in Parallel</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="go-solution">
+<h1>Go Solution<a class="headerlink" href="#go-solution" title="Permalink to this headline">¶</a></h1>
+<p>Google’s Go language makes it possible to program with implicitly launched threads, and its channel feature enables simplified thread-safe processing of shared data.</p>
+<p>We will compare the “map” stage in the Go implementation <a class="reference download internal" href="../_downloads/dd_go1.go"><tt class="xref download docutils literal"><span class="pre">dd_go.go</span></tt></a> to the “map” stage in the Boost thread code <a class="reference download internal" href="../_downloads/dd_boost2.cpp"><tt class="xref download docutils literal"><span class="pre">dd_boost.cpp</span></tt></a>. The segment of <tt class="docutils literal"><span class="pre">main()</span></tt> in <a class="reference download internal" href="../_downloads/dd_go1.go"><tt class="xref download docutils literal"><span class="pre">dd_go.go</span></tt></a> that implements the “map” stage appears below.</p>
+<blockquote>
+<div><div class="highlight-go"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9</pre></div></td><td class="code"><div class="highlight"><pre><span class="hll"><span class="nx">pairs</span> <span class="o">:=</span> <span class="nb">make</span><span class="p">(</span><span class="kd">chan</span> <span class="nx">Pair</span><span class="p">,</span> <span class="mi">1024</span><span class="p">)</span>
+</span><span class="k">for</span> <span class="nx">i</span> <span class="o">:=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">i</span> <span class="p">&lt;</span> <span class="o">*</span><span class="nx">nCPU</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span> <span class="p">{</span>
+<span class="hll"><span class="k">go</span> <span class="kd">func</span><span class="p">()</span> <span class="p">{</span>
+</span>                <span class="nx">p</span> <span class="o">:=</span> <span class="p">[]</span><span class="nb">byte</span><span class="p">(</span><span class="o">*</span><span class="nx">protein</span><span class="p">)</span>
+                <span class="k">for</span> <span class="nx">l</span> <span class="o">:=</span> <span class="k">range</span> <span class="nx">ligands</span> <span class="p">{</span>
+<span class="hll">                        <span class="nx">pairs</span> <span class="o">&lt;-</span> <span class="nx">Pair</span><span class="p">{</span><span class="nx">score</span><span class="p">(</span><span class="nx">l</span><span class="p">,</span> <span class="nx">p</span><span class="p">),</span> <span class="nx">l</span><span class="p">}</span>
+</span>                <span class="p">}</span>
+<span class="hll">        <span class="p">}()</span>
+</span><span class="p">}</span>
+</pre></div>
+</td></tr></table></div>
+</div></blockquote>
+<p>Instead of a vector of <tt class="docutils literal"><span class="pre">Pair</span></tt> as in <a class="reference download internal" href="../_downloads/dd_boost2.cpp"><tt class="xref download docutils literal"><span class="pre">dd_boost.cpp</span></tt></a> , the Go implementation creates a <em>channel</em> object called <tt class="docutils literal"><span class="pre">pairs</span></tt> for communicating <tt class="docutils literal"><span class="pre">Pair</span></tt> objects through message passing. The “map” stage will send <tt class="docutils literal"><span class="pre">Pair</span></tt>s into the channel <tt class="docutils literal"><span class="pre">pairs</span></tt>, and the sorting stage will receive those <tt class="docutils literal"><span class="pre">Pair</span></tt>s from that same channel. In effect, channel <tt class="docutils literal"><span class="pre">pairs</span></tt> behaves like a queue, in which the send operation (<tt class="docutils literal"><span class="pre">&lt;-</span></tt>) functions like <tt class="docutils literal"><span class="pre">push_back</span></tt> and the receive operation (also <tt class="docutils literal"><span class="pre">&lt;-</span></tt>, but with the channel on the right side; not shown in the snippet above) acts like <tt class="docutils literal"><span class="pre">pop</span></tt>.</p>
+<p>The Boost implementation allocated an array <tt class="docutils literal"><span class="pre">pool</span></tt> of threads, then had each thread call <tt class="docutils literal"><span class="pre">do_Map()</span></tt> in order to carry out that thread’s work in the “map” stage. The following code from <a class="reference download internal" href="../_downloads/dd_boost2.cpp"><tt class="xref download docutils literal"><span class="pre">dd_boost.cpp</span></tt></a> accomplished these operations.</p>
+<blockquote>
+<div><div class="highlight-cpp"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3</pre></div></td><td class="code"><div class="highlight"><pre><span class="hll"><span class="n">boost</span><span class="o">::</span><span class="kr">thread</span> <span class="o">*</span><span class="n">pool</span> <span class="o">=</span> <span class="k">new</span> <span class="n">boost</span><span class="o">::</span><span class="kr">thread</span><span class="p">[</span><span class="n">nthreads</span><span class="p">];</span>
+</span><span class="hll"><span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>  <span class="n">i</span> <span class="o">&lt;</span> <span class="n">nthreads</span><span class="p">;</span>  <span class="n">i</span><span class="o">++</span><span class="p">)</span>
+</span><span class="hll">        <span class="n">pool</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">boost</span><span class="o">::</span><span class="kr">thread</span><span class="p">(</span><span class="n">boost</span><span class="o">::</span><span class="n">bind</span><span class="p">(</span><span class="o">&amp;</span><span class="n">MR</span><span class="o">::</span><span class="n">do_Maps</span><span class="p">,</span> <span class="k">this</span><span class="p">));</span>
+</span></pre></div>
+</td></tr></table></div>
+</div></blockquote>
+<p>Instead of explicitly constructing and storing threads, the Go implementation uses the construct</p>
+<blockquote>
+<div><div class="highlight-go"><pre>go func() {
+                        …
+        }()</pre>
+</div>
+</div></blockquote>
+<p>This <tt class="docutils literal"><span class="pre">go</span></tt> statement launches threads that each execute an (anonymous) function to do their work, i.e., carry out the (omitted) instructions indicated by the ellipses … (in essence, these instructions carry out the work corresponding to <tt class="docutils literal"><span class="pre">do_Maps</span></tt>). Note that we could also have defined that as a function <tt class="docutils literal"><span class="pre">foo()</span></tt> elsewhere and called it this way (i.e., <tt class="docutils literal"><span class="pre">go</span> <span class="pre">foo()</span></tt>), but Go is able to employ anonymous functions because it is garbage-collected.</p>
+<p>In the Boost threads implementation, the threads must retrieve ligand values repeatedly from a queue <tt class="docutils literal"><span class="pre">ligands</span></tt> and then append the retrieved ligand and its score to the vector <tt class="docutils literal"><span class="pre">pairs</span></tt>. The methods <tt class="docutils literal"><span class="pre">do_Maps()</span></tt> and <tt class="docutils literal"><span class="pre">Map()</span></tt> in our Boost implementation accomplish these steps; their code could be combined into something like this.</p>
+<blockquote>
+<div><div class="highlight-cpp"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4
+5
+6
+7
+8</pre></div></td><td class="code"><div class="highlight"><pre><span class="n">string</span> <span class="n">lig</span><span class="p">;</span>
+<span class="n">tasks</span><span class="p">.</span><span class="n">pop</span><span class="p">(</span><span class="n">lig</span><span class="p">);</span>
+<span class="k">while</span> <span class="p">(</span><span class="n">lig</span> <span class="o">!=</span> <span class="n">SENTINEL</span><span class="p">)</span> <span class="p">{</span>
+<span class="hll">        <span class="n">Pair</span> <span class="n">p</span><span class="p">(</span><span class="n">Help</span><span class="o">::</span><span class="n">score</span><span class="p">(</span><span class="n">ligand</span><span class="p">.</span><span class="n">c_str</span><span class="p">(),</span> <span class="n">protein</span><span class="p">.</span><span class="n">c_str</span><span class="p">()),</span> <span class="n">ligand</span><span class="p">);</span>
+</span><span class="hll">        <span class="n">pairs</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">p</span><span class="p">);</span>
+</span>        <span class="n">tasks</span><span class="p">.</span><span class="n">pop</span><span class="p">(</span><span class="n">lig</span><span class="p">);</span>
+<span class="p">}</span>
+<span class="n">tasks</span><span class="p">.</span><span class="n">push</span><span class="p">(</span><span class="n">SENTINEL</span><span class="p">);</span>  <span class="c1">// restore end marker for another thread</span>
+</pre></div>
+</td></tr></table></div>
+</div></blockquote>
+<p>In comparison, the goroutines (threads) in the Go implementation carry out the following code.</p>
+<blockquote>
+<div><div class="highlight-go"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4</pre></div></td><td class="code"><div class="highlight"><pre><span class="nx">p</span> <span class="o">:=</span> <span class="p">[]</span><span class="nb">byte</span><span class="p">(</span><span class="o">*</span><span class="nx">protein</span><span class="p">)</span>
+        <span class="k">for</span> <span class="nx">l</span> <span class="o">:=</span> <span class="k">range</span> <span class="nx">ligands</span> <span class="p">{</span>
+<span class="hll">                <span class="nx">pairs</span> <span class="o">&lt;-</span> <span class="nx">Pair</span><span class="p">{</span><span class="nx">score</span><span class="p">(</span><span class="nx">l</span><span class="p">,</span> <span class="nx">p</span><span class="p">),</span> <span class="nx">l</span><span class="p">}</span>
+</span>        <span class="p">}</span>
+</pre></div>
+</td></tr></table></div>
+</div></blockquote>
+<p>Here, a goroutine obtains its ligand work tasks from a channel <tt class="docutils literal"><span class="pre">ligands</span></tt> (created and filled during the “task generation” stage), similarly to the work queue <tt class="docutils literal"><span class="pre">tasks</span></tt> in the Boost threads implementation. Also, that ligand and its score are sent to the channel <tt class="docutils literal"><span class="pre">pairs</span></tt> discussed above.</p>
+<div class="section" id="further-notes">
+<h2>Further Notes<a class="headerlink" href="#further-notes" title="Permalink to this headline">¶</a></h2>
+<ul>
+<li><p class="first">The use of Go’s channel feature made some key parts of the Go code more concise, as seen above. For example, highlighted sections above show that we needed fewer lines of (arguably) less complex code to process a ligand and produce a <tt class="docutils literal"><span class="pre">Pair</span></tt> in the Go code than in the Boost threads code. Also, the Go runtime manages thread creation implicitly, somewhat like OpenMP, whereas we must allocate and manage Boost threads explicitly.</p>
+</li>
+<li><p class="first">Using channels also simplified the synchronization logic in our Go implementation.</p>
+<blockquote>
+<div><ul class="simple">
+<li>We used (thread-safe) Go channels in place of the task queue <tt class="docutils literal"><span class="pre">tasks</span></tt> and the vector of Pair <tt class="docutils literal"><span class="pre">pairs</span></tt> to manage the flow of our data. Reasoning with the send and receive operations on channels is at least as easy as reasoning about queue and vector operations.</li>
+<li>The Boost implementation used TBB <tt class="docutils literal"><span class="pre">concurrent_bounded_queue</span></tt> instead of <tt class="docutils literal"><span class="pre">concurrent_queue</span></tt> because of the availability of a blocking <tt class="docutils literal"><span class="pre">pop()</span></tt> operation, so that one could modify <a class="reference download internal" href="../_downloads/dd_boost2.cpp"><tt class="xref download docutils literal"><span class="pre">dd_boost.cpp</span></tt></a> to include dynamic ligand generation in a straightforward and correct way, and used a value <tt class="docutils literal"><span class="pre">SENTINEL</span></tt> to detect when ligands were actually exhausted. Go channels provide these features in a simpler and readily understood way.</li>
+</ul>
+</div></blockquote>
+</li>
+<li><p class="first">Just after the “map” stage, the Go implementation stores all Pairs in the channel <tt class="docutils literal"><span class="pre">pairs</span></tt> into an array for sorting. We cannot store into that array directly during the parallel “map” stage, since that array is not thread-safe.</p>
+</li>
+</ul>
+</div>
+<div class="section" id="questions-for-exploration">
+<h2>Questions for exploration<a class="headerlink" href="#questions-for-exploration" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li>Compile and run <a class="reference download internal" href="../_downloads/dd_go1.go"><tt class="xref download docutils literal"><span class="pre">dd_go.go</span></tt></a>, and compare its performance to <a class="reference download internal" href="../_downloads/dd_serial2.cpp"><tt class="xref download docutils literal"><span class="pre">dd_serial.cpp</span></tt></a> and to other parallel implementations.</li>
+<li>For further ideas, see exercises for other parallel implementations.</li>
+</ul>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../index.html">
+              <img class="logo" src="../_static/CSInParallel200wide.png" alt="Logo"/>
+            </a></p>
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Go Solution</a><ul>
+<li><a class="reference internal" href="#further-notes">Further Notes</a></li>
+<li><a class="reference internal" href="#questions-for-exploration">Questions for exploration</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="../boostthreads/boostthreads.html"
+                        title="previous chapter">Boost Threads Solution</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="../hadoop/hadoop.html"
+                        title="next chapter">Hadoop Solution</a></p>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../hadoop/hadoop.html" title="Hadoop Solution"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="../boostthreads/boostthreads.html" title="Boost Threads Solution"
+             >previous</a> |</li>
+        <li><a href="../index.html">Drug Design in Parallel</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright This work is licensed under a Creative Commons Attribution-ShareAlike 3.0 Unported License.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2b1.
+    </div>
+  </body>
+</html>

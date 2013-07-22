@@ -1,0 +1,451 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Parallelizing with Go: Detailed Specs &mdash; Epidemic Simulation</title>
+    
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+    <link rel="top" title="Epidemic Simulation" href="../index.html" />
+    <link rel="next" title="Parallelizing Sequential Go Code: Beginner" href="seqgocode1.html" />
+    <link rel="prev" title="Parallelizing the C++ Code" href="openmpandmpi.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="seqgocode1.html" title="Parallelizing Sequential Go Code: Beginner"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="openmpandmpi.html" title="Parallelizing the C++ Code"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../index.html">Epidemic Simulation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="parallelizing-with-go-detailed-specs">
+<h1>Parallelizing with Go: Detailed Specs<a class="headerlink" href="#parallelizing-with-go-detailed-specs" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="simulating-in-go">
+<h2>Simulating in Go<a class="headerlink" href="#simulating-in-go" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="structure">
+<h3>Structure<a class="headerlink" href="#structure" title="Permalink to this headline">¶</a></h3>
+<p>Go is a language developed to combine features of C/C++ and Python with intuitive concurrency. If you&#8217;ve written either of those before, a lot of this should look familiar! If you&#8217;re new to codewriting or get really stuck, check out a simple <a class="reference external" href="http://tour.golang.org/#1">tour</a> of the language.</p>
+<p>This is short enough to put all the code in one file, so start with <tt class="docutils literal"><span class="pre">package</span> <span class="pre">main</span></tt>. Then, similar to <tt class="docutils literal"><span class="pre">import</span></tt> in Python or <tt class="docutils literal"><span class="pre">#include</span></tt> in C/C++, <a class="reference external" href="http://golangtutorials.blogspot.com/2011/05/early-syntax-errors-and-other-minor.html">import</a> <tt class="docutils literal"><span class="pre">fmt</span></tt> (format - used for printing things out), <tt class="docutils literal"><span class="pre">math</span></tt> (we&#8217;ll need this to find square roots), <tt class="docutils literal"><span class="pre">math/rand</span></tt> (to generate random numbers), and <tt class="docutils literal"><span class="pre">time</span></tt> (to seed our random number generator).</p>
+<p>As you&#8217;ll see if you click the link above, though, Go will give you an error if you include anything you&#8217;re not using, so your code won&#8217;t run until you&#8217;re using all three of those libraries. If you want to test along the way, just comment out lines you&#8217;re not using yet.</p>
+<p>And you&#8217;re off! Follow the specs below to code up an epidemic in Go; if you get stuck, there are some links to check out below.</p>
+<div class="section" id="at-global-scope">
+<h4>At Global Scope<a class="headerlink" href="#at-global-scope" title="Permalink to this headline">¶</a></h4>
+<dl class="glossary docutils">
+<dt id="term-width-height">width &amp; height:</dt>
+<dd><strong>constant</strong> integers representing the dimensions of your simulated world - these are parameters to play with!</dd>
+</dl>
+<dl class="glossary docutils">
+<dt id="term-list-of-states-susceptible-infected-recovered-dead">list of states: Susceptible, Infected, Recovered, Dead</dt>
+<dd>Like enums in C++, or like using range() in Python to refer to an item from a list by its position in the list, Go allows you to hook words up with numbers with the keyword <tt class="docutils literal"><span class="pre">iota</span></tt> (see <a class="reference external" href="http://rosettacode.org/wiki/Enumerations#Go">example</a>).</dd>
+</dl>
+</div>
+<div class="section" id="structs">
+<h4>Structs<a class="headerlink" href="#structs" title="Permalink to this headline">¶</a></h4>
+<p>Go doesn&#8217;t have classes with methods the way Python and C++ do, but it does have structs which can have functions associated with them. Structs are declared <tt class="docutils literal"><span class="pre">type</span> <span class="pre">&lt;name&gt;</span> <span class="pre">struct</span> <span class="pre">{}</span></tt>, with your chosen name in place of <tt class="docutils literal"><span class="pre">&lt;name&gt;</span></tt>; variables are likewise declared by name and <em>then</em> type (i.e. <tt class="docutils literal"><span class="pre">duration</span> <span class="pre">int</span></tt>).</p>
+<div class="section" id="infection">
+<h5>Infection<a class="headerlink" href="#infection" title="Permalink to this headline">¶</a></h5>
+<p>Represents a particular disease.</p>
+<dl class="glossary docutils">
+<dt id="term-variables">Variables:</dt>
+<dd><ul class="first last simple">
+<li><tt class="docutils literal"><span class="pre">duration</span></tt>, an integer representing duration of illness, in six-hour periods</li>
+<li><tt class="docutils literal"><span class="pre">radius</span></tt>, a float64 representing the radius of transmission</li>
+<li><tt class="docutils literal"><span class="pre">contagiousness</span></tt>, a float64 representing the likelihood of a transmission occurring if a person is within the infection radius</li>
+<li><tt class="docutils literal"><span class="pre">deadliness</span></tt>, a float64 representing an individual&#8217;s likelihood of dying of a disease</li>
+</ul>
+</dd>
+</dl>
+</div>
+<div class="section" id="person">
+<h5>Person<a class="headerlink" href="#person" title="Permalink to this headline">¶</a></h5>
+<p>Represents an individual human being.</p>
+<dl class="glossary docutils">
+<dt id="term-state-variables">State Variables:</dt>
+<dd><ul class="first last simple">
+<li><tt class="docutils literal"><span class="pre">x</span></tt> and <tt class="docutils literal"><span class="pre">y</span></tt>, two integers representing the Person’s 2D position</li>
+<li><tt class="docutils literal"><span class="pre">state</span></tt>, a integer identifying what state of health the Person is in</li>
+<li><tt class="docutils literal"><span class="pre">infectedPeriod</span></tt>, an integer representing the units of time required before a Person makes a full recovery.</li>
+</ul>
+</dd>
+</dl>
+<p>Methods associated with a struct are written like this:</p>
+<blockquote>
+<div><div class="highlight-go"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3</pre></div></td><td class="code"><div class="highlight"><pre><span class="kd">func</span> <span class="p">(</span><span class="nx">p</span> <span class="o">*</span><span class="nx">Person</span><span class="p">)</span> <span class="nx">updateState</span><span class="p">(</span><span class="nx">s</span> <span class="kt">int</span><span class="p">)</span> <span class="kt">bool</span> <span class="p">{</span>
+        <span class="nx">p</span><span class="p">.</span><span class="nx">state</span> <span class="p">=</span> <span class="nx">s</span>
+<span class="p">}</span>
+</pre></div>
+</td></tr></table></div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">After <tt class="docutils literal"><span class="pre">func</span></tt> the struct to which the function is associated in included in parentheses. The asterisk before <tt class="docutils literal"><span class="pre">Person</span></tt> indicates that the object itself should be acted on rather than a copy of it - this looks like a C++ pointer but is more similar to passing by reference. If there is a return value, its type is indicated at the end of the function declaration; if the function is void, no return type is given.</p>
+</div>
+</div></blockquote>
+<dl class="glossary docutils">
+<dt id="term-associated-methods">Associated methods:</dt>
+<dd><ul class="first last">
+<li><dl class="first docutils">
+<dt><tt class="docutils literal"><span class="pre">init</span></tt></dt>
+<dd><ul class="first last simple">
+<li>Since Go doesn&#8217;t have constructors, the easiest way to initialize instances of a struct seems to be with a function.</li>
+<li>Arguments: none</li>
+<li>State change: <tt class="docutils literal"><span class="pre">x</span></tt> is set to a random integer between zero and <tt class="docutils literal"><span class="pre">width</span></tt> and <tt class="docutils literal"><span class="pre">y</span></tt> is set to a random integer between zero and height <tt class="docutils literal"><span class="pre">height</span></tt>; <tt class="docutils literal"><span class="pre">state</span></tt> is set to Susceptible and <tt class="docutils literal"><span class="pre">infectedPeriod</span></tt> to 0</li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><p class="first"><tt class="docutils literal"><span class="pre">isInfected</span></tt></p>
+<blockquote>
+<div><ul class="simple">
+<li>Arguments: none</li>
+<li>State change: none</li>
+<li>Return: a boolean value which is <tt class="docutils literal"><span class="pre">true</span></tt> if the person is Infected and <tt class="docutils literal"><span class="pre">false</span></tt> otherwise</li>
+</ul>
+</div></blockquote>
+</li>
+<li><p class="first"><tt class="docutils literal"><span class="pre">isSusceptible</span></tt></p>
+<blockquote>
+<div><ul class="simple">
+<li>Arguments: none</li>
+<li>State change: none</li>
+<li>Return: a boolean value which is <tt class="docutils literal"><span class="pre">true</span></tt> if the person is Susceptible and <tt class="docutils literal"><span class="pre">false</span></tt> otherwise</li>
+</ul>
+</div></blockquote>
+</li>
+<li><p class="first"><tt class="docutils literal"><span class="pre">updateState</span></tt></p>
+<blockquote>
+<div><ul class="simple">
+<li>Arguments: <tt class="docutils literal"><span class="pre">s</span> <span class="pre">int</span></tt></li>
+<li>State change: <tt class="docutils literal"><span class="pre">state</span></tt> is set to <tt class="docutils literal"><span class="pre">s</span></tt></li>
+<li>Return: none</li>
+</ul>
+</div></blockquote>
+</li>
+<li><p class="first"><tt class="docutils literal"><span class="pre">infectWith</span></tt></p>
+<blockquote>
+<div><ul class="simple">
+<li>Arguments: <tt class="docutils literal"><span class="pre">i</span> <span class="pre">Infection</span></tt></li>
+<li>State change: <tt class="docutils literal"><span class="pre">state</span></tt> is set to Infected and <tt class="docutils literal"><span class="pre">infectedPeriod</span></tt> is set to <tt class="docutils literal"><span class="pre">i</span></tt>&#8216;s <tt class="docutils literal"><span class="pre">duration</span></tt></li>
+<li>Return: none</li>
+</ul>
+</div></blockquote>
+</li>
+<li><p class="first"><tt class="docutils literal"><span class="pre">move</span></tt></p>
+<blockquote>
+<div><ul class="simple">
+<li>Arguments: none</li>
+<li>State change: location is randomly changed by 0, 1, or 2 units in the x direction and y direction</li>
+</ul>
+<div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<p class="last">The mod function has no effect on negative numbers. This is a problem if the position variables become negative. An easy way to solve this problem is to add width before you mod by width. Your code might look something like <tt class="docutils literal"><span class="pre">x</span> <span class="pre">=</span> <span class="pre">(x</span> <span class="pre">+</span> <span class="pre">(rand.Intn(5)</span> <span class="pre">-</span> <span class="pre">2</span> <span class="pre">+</span> <span class="pre">width)</span> <span class="pre">%</span> <span class="pre">width;</span></tt> (and similarly with <tt class="docutils literal"><span class="pre">y</span></tt>).</p>
+</div>
+<ul class="simple">
+<li>Return: none</li>
+</ul>
+</div></blockquote>
+</li>
+<li><p class="first"><tt class="docutils literal"><span class="pre">timeStep</span></tt></p>
+<blockquote>
+<div><ul>
+<li><p class="first">Arguments: inf Infection</p>
+</li>
+<li><p class="first">State change: <tt class="docutils literal"><span class="pre">move()</span></tt> is called. If the Person is infected...</p>
+<blockquote>
+<div><ul class="simple">
+<li>if <tt class="docutils literal"><span class="pre">infectedPeriod</span></tt> has reached zero, update <tt class="docutils literal"><span class="pre">state</span></tt> to <tt class="docutils literal"><span class="pre">Recovered</span></tt></li>
+<li>if <tt class="docutils literal"><span class="pre">infectedPeriod</span></tt> is greater than zero, use <tt class="docutils literal"><span class="pre">inf</span></tt>&#8216;s <tt class="docutils literal"><span class="pre">deadliness</span></tt> to determine whether the Person lives or dies</li>
+<li>otherwise, decrement infectedPeriod</li>
+</ul>
+</div></blockquote>
+</li>
+<li><p class="first">Return: none</p>
+</li>
+</ul>
+</div></blockquote>
+</li>
+</ul>
+</dd>
+</dl>
+</div>
+</div>
+<div class="section" id="simulating-an-epidemic">
+<h4>Simulating an Epidemic<a class="headerlink" href="#simulating-an-epidemic" title="Permalink to this headline">¶</a></h4>
+<dl class="glossary docutils">
+<dt id="term-initial-parameters">Initial parameters:</dt>
+<dd><ul class="first simple">
+<li><tt class="docutils literal"><span class="pre">numPersons</span></tt>, an integer representing the number of persons in the simulation</li>
+<li><tt class="docutils literal"><span class="pre">initialInfected</span></tt>, an integer representing the number of persons who are initially infected.</li>
+<li><tt class="docutils literal"><span class="pre">numIterations</span></tt>, an integer representing how many iterations the simulation runs for</li>
+<li><tt class="docutils literal"><span class="pre">Population</span></tt>, an <a class="reference external" href="http://www.golang-book.com/6#section2">slice</a> (similar to an array) of type <tt class="docutils literal"><span class="pre">Person</span></tt> of size <tt class="docutils literal"><span class="pre">numPersons</span></tt>, with the first <tt class="docutils literal"><span class="pre">initialInfected</span></tt> members set to Infected</li>
+</ul>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p>You&#8217;ll probably want to use a loop to call <tt class="docutils literal"><span class="pre">init()</span></tt> on each of the members and then to infect the first <tt class="docutils literal"><span class="pre">initialInfected</span></tt> of them. Go doesn&#8217;t have <tt class="docutils literal"><span class="pre">while</span></tt> loops, but the syntax of <tt class="docutils literal"><span class="pre">for</span></tt> loops is like this (lack of parentheses; <tt class="docutils literal"><span class="pre">:=</span></tt> for initializing a new variable, and <tt class="docutils literal"><span class="pre">i++</span></tt> rather than <tt class="docutils literal"><span class="pre">++i</span></tt>):</p>
+<blockquote class="last">
+<div><div class="highlight-go"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3</pre></div></td><td class="code"><div class="highlight"><pre><span class="k">for</span> <span class="nx">i</span> <span class="o">:=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">i</span><span class="p">&lt;</span><span class="nx">initialInfected</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span> <span class="p">{</span>
+        <span class="o">...</span>
+<span class="p">}</span>
+</pre></div>
+</td></tr></table></div>
+</div></blockquote>
+</div>
+<ul class="last simple">
+<li><tt class="docutils literal"><span class="pre">disease</span></tt>, an instance of an infection with the parameters of your choice (see the bottom of <a class="reference external" href="http://golangtutorials.blogspot.com/2011/06/structs-in-go-instead-of-classes-in.html">this page</a> for examples of initializing a struct)</li>
+</ul>
+</dd>
+</dl>
+<dl class="glossary docutils">
+<dt id="term-procedures">Procedures:</dt>
+<dd><ul class="first last">
+<li><p class="first">Start by adding <tt class="docutils literal"><span class="pre">&quot;sync&quot;</span></tt> to your list of packages to import!</p>
+</li>
+<li><p class="first">Next, seed the random object (<tt class="docutils literal"><span class="pre">random.Seed()</span></tt>) with the current time - otherwise it starts with the same seed every time and gives the same results. We&#8217;re going to pass the Unix time value of the current time (<tt class="docutils literal"><span class="pre">time.Now()Unix()</span></tt>) - this gives us a floating-point number of seconds that changes every time the program runs.</p>
+</li>
+<li><p class="first">Set up a loop to run the following <tt class="docutils literal"><span class="pre">numIterations</span></tt> times:</p>
+<blockquote>
+<div><ul>
+<li><p class="first">Loop through <tt class="docutils literal"><span class="pre">Population</span></tt> and call <tt class="docutils literal"><span class="pre">timeStep()</span></tt> on each member</p>
+</li>
+<li><p class="first">If the member is infected, check its position against every susceptible member of <tt class="docutils literal"><span class="pre">Population</span></tt> and find the distance between them (here is a reminder of the <a class="reference external" href="http://math.about.com/library/bldistance.htm">distance formula</a>; the square root function is <tt class="docutils literal"><span class="pre">math.Sqrt()</span></tt>).</p>
+<blockquote>
+<div><ul class="simple">
+<li>If the distance between the two is less than <tt class="docutils literal"><span class="pre">radius</span></tt>, use <tt class="docutils literal"><span class="pre">contagiousness</span></tt> to determine whether transmission occurs ( one possibility: transmission occurs if a random integer between zero and a hundred is less than <tt class="docutils literal"><span class="pre">contagiousness*100</span></tt>)</li>
+</ul>
+</div></blockquote>
+</li>
+<li><p class="first">Count the number of Susceptible, Infected, and Recovered members of <tt class="docutils literal"><span class="pre">Population</span></tt>, and print the data to the screen (<tt class="docutils literal"><span class="pre">fmt.Println()</span></tt>)</p>
+</li>
+</ul>
+</div></blockquote>
+</li>
+</ul>
+</dd>
+</dl>
+</div>
+</div>
+<div class="section" id="parallelizing">
+<h3>Parallelizing<a class="headerlink" href="#parallelizing" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="background">
+<h4>Background<a class="headerlink" href="#background" title="Permalink to this headline">¶</a></h4>
+<ul class="simple">
+<li>Go provides simple options for parallelization using <em>goroutines</em>. A <a class="reference external" href="http://golangtutorials.blogspot.com/2011/06/goroutines.html">goroutine</a> is a function that can run simultaneously, or concurrently, with other sections of code; they can be thought of similarly to threads, although they are not exactly synonymous. A Go program may use thousands of goroutines since they are very lightweight and are managed behind the scenes. If you write Go code thinking of goroutines as threads - considering race conditions and deadlock - you will most likely be successful.</li>
+<li>It is important to be able to communicate between goroutines. This is accomplished with <a class="reference external" href="http://golangtutorials.blogspot.com/2011/06/channels-in-go.html">channels</a>, which can be thought of as conveyor belts. Information is put in the channel by one goroutine and taken out by another. They are also similar to work queues in that information can be added and removed by multiple parties. Channels can convey information of any data type (including structs) and can also be buffered or unbuffered (meaning their capacity can be specified so they run asynchronously).</li>
+<li>The <a class="reference external" href="http://golang.org/pkg/sync/">Sync</a> library provides an easy set of tools to ensure concurrency and correct timing of goroutines. This package defines the type <tt class="docutils literal"><span class="pre">WaitGroup</span></tt>, which manages the threads that should be executed loosely as a group. As goroutines are created, <tt class="docutils literal"><span class="pre">Add()</span></tt> should be called, which will increment a counter (of goroutines) within the <tt class="docutils literal"><span class="pre">WaitGroup</span></tt>. When a goroutine has finished executing, call <tt class="docutils literal"><span class="pre">Done()</span></tt> to decrement the counter. <tt class="docutils literal"><span class="pre">Wait()</span></tt> will block until the counter reaches 0, signifying that all threads have finished executing. We&#8217;ll use this to keep our channel open while we put infected individuals in it so that other goroutines don&#8217;t start removing them too soon!</li>
+</ul>
+</div>
+<div class="section" id="give-it-a-shot">
+<h4>Give it a shot!<a class="headerlink" href="#give-it-a-shot" title="Permalink to this headline">¶</a></h4>
+<ul class="simple">
+<li>Start by making a WaitGroup (in library <tt class="docutils literal"><span class="pre">sync</span></tt>) at global scale and a <a class="reference external" href="https://gobyexample.com/channel-buffering">buffered channel</a> of type <tt class="docutils literal"><span class="pre">Person</span></tt> with capacity <tt class="docutils literal"><span class="pre">numPersons</span></tt> within <tt class="docutils literal"><span class="pre">main()</span></tt>.</li>
+<li>No changes should be necessary to the code for seeding the rand() function, creating the <tt class="docutils literal"><span class="pre">Population</span></tt> slice, initializing its members, creating an instance of an Infection, and infecting the first <tt class="docutils literal"><span class="pre">initialInfected</span></tt> individuals with it.</li>
+<li>We can&#8217;t parallelize the outermost loop - each iteration depends on the one before it, so they can&#8217;t run concurrently - but we can parallelize what happens within each iteration. Split the body of that loop into something like this:</li>
+</ul>
+<dl class="glossary docutils">
+<dt id="term-7">Procedures:</dt>
+<dd><ul class="first last">
+<li><p class="first"><tt class="docutils literal"><span class="pre">collectInfected</span></tt></p>
+<blockquote>
+<div><ul>
+<li><p class="first">Arguments:</p>
+<blockquote>
+<div><ul class="simple">
+<li><tt class="docutils literal"><span class="pre">Population</span></tt>, a pointer to your <tt class="docutils literal"><span class="pre">[]Person</span></tt> slice</li>
+<li><tt class="docutils literal"><span class="pre">i</span></tt>, the integer index of the person being checked</li>
+<li><tt class="docutils literal"><span class="pre">infectedchan</span></tt>, the channel for holding infected individuals</li>
+</ul>
+</div></blockquote>
+</li>
+<li><p class="first">State change:</p>
+<blockquote>
+<div><ul class="simple">
+<li>If the individual is infected, add it to the channel.</li>
+<li><tt class="docutils literal"><span class="pre">Done()</span></tt> is called on the WaitGroup to say that this goroutine has finished its task</li>
+</ul>
+</div></blockquote>
+</li>
+<li><p class="first">Return: none</p>
+</li>
+</ul>
+</div></blockquote>
+</li>
+<li><p class="first"><tt class="docutils literal"><span class="pre">iterateThruInfected</span></tt></p>
+<blockquote>
+<div><ul>
+<li><p class="first">Arguments:</p>
+<blockquote>
+<div><ul class="simple">
+<li><tt class="docutils literal"><span class="pre">Population</span></tt>, a pointer to your <tt class="docutils literal"><span class="pre">Person</span></tt> slice</li>
+<li><tt class="docutils literal"><span class="pre">infectedchan</span></tt>, the channel for holding infected individuals</li>
+<li>the infection of your choice</li>
+</ul>
+</div></blockquote>
+</li>
+<li><p class="first">State change:</p>
+<blockquote>
+<div><ul class="simple">
+<li><a class="reference external" href="http://golangtutorials.blogspot.com/2011/06/channels-in-go-range-and-select.html">using keyword</a> <tt class="docutils literal"><span class="pre">range</span></tt>, for every <tt class="docutils literal"><span class="pre">Person</span></tt> in the channel, determine whether anyone susceptible is near them and then whether transmission occurs (but make this infection process a separate function, as described below, so that a different goroutine can handle each person)</li>
+</ul>
+</div></blockquote>
+</li>
+<li><p class="first">Return: none</p>
+</li>
+</ul>
+</div></blockquote>
+</li>
+<li><p class="first"><tt class="docutils literal"><span class="pre">infectNeighbors</span></tt></p>
+<blockquote>
+<div><ul>
+<li><p class="first">Arguments:</p>
+<blockquote>
+<div><ul class="simple">
+<li><tt class="docutils literal"><span class="pre">Population</span></tt>, a pointer to your <tt class="docutils literal"><span class="pre">Person</span></tt> slice</li>
+<li>the infection of your choice</li>
+<li><tt class="docutils literal"><span class="pre">p</span></tt>, the infected individual</li>
+</ul>
+</div></blockquote>
+</li>
+<li><p class="first">State change: For each <tt class="docutils literal"><span class="pre">Person</span></tt> in <tt class="docutils literal"><span class="pre">Population</span></tt>, if the individual is susceptible and sufficiently close to <tt class="docutils literal"><span class="pre">p</span></tt>, use the disease&#8217;s contagiousness to determine whether transmission occurs</p>
+</li>
+<li><p class="first">Return: none</p>
+</li>
+</ul>
+</div></blockquote>
+</li>
+</ul>
+</dd>
+</dl>
+<ul class="simple">
+<li>After calling <tt class="docutils literal"><span class="pre">timeStep()</span></tt> on each person, call <tt class="docutils literal"><span class="pre">Add(1)</span></tt> on the WaitGroup`` and then call <tt class="docutils literal"><span class="pre">go</span> <span class="pre">collectInfected(i,</span> <span class="pre">&amp;Population,</span> <span class="pre">infectedchan)</span></tt> to launch a new goroutine to handle the individual.</li>
+<li>After this loop, call <tt class="docutils literal"><span class="pre">Wait()</span></tt> on the WaitGroup to block until all of the goroutines examining individuals have finished.</li>
+<li>Next, call <tt class="docutils literal"><span class="pre">iterateThruInfected</span></tt> with the correct parameters to handle the rest of this iteration!</li>
+<li>Counting up the individuals in each state at the end of the simulation is a quick process, but feel free to parallelize it for as a bonus challenge.</li>
+</ul>
+</div>
+</div>
+<div class="section" id="resources">
+<h3>Resources<a class="headerlink" href="#resources" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li>Official Go <a class="reference external" href="http://golang.org/pkg/">source code</a></li>
+<li>If you&#8217;ve got some C++ knowledge, <a class="reference external" href="https://code.google.com/p/go-wiki/wiki/GoForCPPProgrammers">these hints</a> on Go for C++ programmers will probably help.</li>
+<li>For Python programmers, <a class="reference external" href="http://s3.amazonaws.com/golangweekly/go_for_pythonistas.pdf">here</a> some slides from a relevant talk (link opens a PDF).</li>
+<li>To just start from scratch (or to look up a particular topic), check out this <a class="reference external" href="http://www.golang-book.com/">introductory book</a>.</li>
+</ul>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../index.html">
+              <img class="logo" src="../_static/CSInParallel200wide.png" alt="Logo"/>
+            </a></p>
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Parallelizing with Go: Detailed Specs</a><ul>
+<li><a class="reference internal" href="#simulating-in-go">Simulating in Go</a><ul>
+<li><a class="reference internal" href="#structure">Structure</a><ul>
+<li><a class="reference internal" href="#at-global-scope">At Global Scope</a></li>
+<li><a class="reference internal" href="#structs">Structs</a><ul>
+<li><a class="reference internal" href="#infection">Infection</a></li>
+<li><a class="reference internal" href="#person">Person</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#simulating-an-epidemic">Simulating an Epidemic</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#parallelizing">Parallelizing</a><ul>
+<li><a class="reference internal" href="#background">Background</a></li>
+<li><a class="reference internal" href="#give-it-a-shot">Give it a shot!</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#resources">Resources</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="openmpandmpi.html"
+                        title="previous chapter">Parallelizing the C++ Code</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="seqgocode1.html"
+                        title="next chapter">Parallelizing Sequential Go Code: Beginner</a></p>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="seqgocode1.html" title="Parallelizing Sequential Go Code: Beginner"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="openmpandmpi.html" title="Parallelizing the C++ Code"
+             >previous</a> |</li>
+        <li><a href="../index.html">Epidemic Simulation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright This work is licensed under a Creative Commons Attribution-ShareAlike 3.0 Unported License.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2b1.
+    </div>
+  </body>
+</html>

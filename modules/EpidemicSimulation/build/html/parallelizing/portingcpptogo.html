@@ -1,0 +1,169 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Porting C++ Code to Go &mdash; Epidemic Simulation</title>
+    
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+    <link rel="top" title="Epidemic Simulation" href="../index.html" />
+    <link rel="prev" title="Parallelizing Sequential Go Code: Advanced" href="seqgocode2.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="seqgocode2.html" title="Parallelizing Sequential Go Code: Advanced"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../index.html">Epidemic Simulation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="porting-c-code-to-go">
+<h1>Porting C++ Code to Go<a class="headerlink" href="#porting-c-code-to-go" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="simulating-in-go">
+<h2>Simulating in Go<a class="headerlink" href="#simulating-in-go" title="Permalink to this headline">¶</a></h2>
+<p>Go is a C-like language developed to do concurrency intuitively. Below are some key differences between the two as well as an introduction to parallelizing Go code (and resources to figure out the rest!).</p>
+<div class="section" id="code-structure">
+<h3>Code Structure<a class="headerlink" href="#code-structure" title="Permalink to this headline">¶</a></h3>
+<p>There are not classes in the Go language, but there are structs which can be instantiated like objects in C++. Special functions called <em>methods</em> which are defined outside of the struct can be called on the instance of the struct.</p>
+<p>Such a function would look like this:</p>
+<blockquote>
+<div><div class="highlight-go"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3</pre></div></td><td class="code"><div class="highlight"><pre><span class="kd">func</span> <span class="p">(</span><span class="nx">p</span> <span class="o">*</span><span class="nx">Person</span><span class="p">)</span> <span class="nx">updateState</span><span class="p">(</span><span class="nx">s</span> <span class="kt">int</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">p</span><span class="p">.</span><span class="nx">state</span> <span class="p">=</span> <span class="nx">s</span>
+<span class="p">}</span>
+</pre></div>
+</td></tr></table></div>
+</div></blockquote>
+<p>After <tt class="docutils literal"><span class="pre">func</span></tt> the struct to which the function is associated in included in parentheses. <strong>If you wish to modify the instance of the struct, use a pointer.</strong></p>
+<p>Go doesn&#8217;t have <tt class="docutils literal"><span class="pre">while</span></tt> loops, but the syntax of <tt class="docutils literal"><span class="pre">for</span></tt> loops is like this (lack of parentheses; <tt class="docutils literal"><span class="pre">:=</span></tt> for initializing a new variable, and <tt class="docutils literal"><span class="pre">i++</span></tt> rather than <tt class="docutils literal"><span class="pre">++i</span></tt>):</p>
+<blockquote>
+<div><div class="highlight-go"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3</pre></div></td><td class="code"><div class="highlight"><pre><span class="k">for</span> <span class="nx">i</span> <span class="o">:=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">i</span><span class="p">&lt;</span><span class="nx">initialInfected</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span> <span class="p">{</span>
+        <span class="o">...</span>
+<span class="p">}</span>
+</pre></div>
+</td></tr></table></div>
+</div></blockquote>
+<p>Finally, there are not enums, so declare const global variables instead.</p>
+<p>For further help, check out <a class="reference external" href="https://code.google.com/p/go-wiki/wiki/GoForCPPProgrammers">these hints</a> on Go for C++ programmers. You also may want to consult the <a class="reference external" href="http://golang.org/pkg/">documentation</a>, this <a class="reference external" href="http://golangtutorials.blogspot.com/2011/05/table-of-contents.html">brief tutorial</a>, a <a class="reference external" href="https://gobyexample.com/">set of examples by topic</a>, and a longer <a class="reference external" href="http://www.golang-book.com/">introductory book</a>. These resources and a search engine will have you writing Go code in no time.</p>
+</div>
+<div class="section" id="parallelizing">
+<h3>Parallelizing<a class="headerlink" href="#parallelizing" title="Permalink to this headline">¶</a></h3>
+<ul>
+<li><p class="first">Go provides simple options for parallelization using <em>goroutines</em>. A <a class="reference external" href="http://golangtutorials.blogspot.com/2011/06/goroutines.html">goroutine</a> is a function that can run simultaneously, or concurrently, with other sections of code; they can be thought of similarly to threads, although they are not exactly synonymous. A Go program may use thousands of goroutines since they are very lightweight and are managed behind the scenes. If you write Go code thinking of goroutines as threads - considering race conditions and deadlock - you will most likely be successful.</p>
+</li>
+<li><p class="first">It is important to be able to communicate between goroutines. This is accomplished with <a class="reference external" href="http://www.golang-book.com/10#section2">channels</a>, which can be thought of as conveyor belts. Information is put in the channel by one goroutine and taken out by another. They are also similar to work queues in that information can be added and removed by multiple parties. Channels can convey information of any data type (including structs) and can also be buffered or unbuffered (meaning their capacity can be specified so they run asynchronously).</p>
+</li>
+<li><p class="first">The <a class="reference external" href="http://golang.org/pkg/sync/">Sync</a> library provides an easy set of tools to ensure concurrency and correct timing of goroutines. This package defines the type <tt class="docutils literal"><span class="pre">WaitGroup</span></tt>, which manages the threads that should be executed loosely as a group. As goroutines are created, <tt class="docutils literal"><span class="pre">Add()</span></tt> should be called, which will increment a counter (of goroutines) within the <tt class="docutils literal"><span class="pre">WaitGroup</span></tt>. When a goroutine has finished executing, call <tt class="docutils literal"><span class="pre">Done()</span></tt> to decrement the counter. <tt class="docutils literal"><span class="pre">Wait()</span></tt> will block until the counter reaches 0, signifying that all threads have finished executing.</p>
+<blockquote>
+<div><div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Go&#8217;s Sync library also includes Locks that goroutines can open and close. Feel free to pursue them as an extension; our focus here is on thread blocking and waiting, which are more in line with MPI/OpenMP concurrency styles.</p>
+</div>
+</div></blockquote>
+</li>
+<li><p class="first">To parallelize the Go simulation we can use goroutines to divide up the computation, similar to parallelizing loops with OpenMP. Within a <tt class="docutils literal"><span class="pre">for</span></tt> loop, create a new goroutine to execute the body of the loop for each iteration. The body of the loop will need to be defined in a function and the appropriate variables passed (by reference if needed). Note that each iteration depends on the one before, so entire iterations cannot be run in parallel, but a separate goroutine can handle calling <tt class="docutils literal"><span class="pre">timeStep()</span></tt> on each <tt class="docutils literal"><span class="pre">Person</span></tt> and determining whether he is infected, and other goroutines can handle infecting the neighbors of each infected <tt class="docutils literal"><span class="pre">Person</span></tt>.</p>
+</li>
+<li><p class="first">To communicate between your goroutines, create a channel used to share and store infected <tt class="docutils literal"><span class="pre">Person</span></tt>s. As goroutines identify individuals as infected, they add them to the channel. In a separate function, different goroutines should later (<a class="reference external" href="http://golangtutorials.blogspot.com/2011/06/channels-in-go-range-and-select.html">using keyword</a> <tt class="docutils literal"><span class="pre">range</span></tt>) each remove an individual from the channel and compare the distance between all susceptible others and the infected individual.</p>
+<blockquote>
+<div><div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<p class="last">If a channel is empty for too long, it will close. To prevent people from being removed faster than they&#8217;re being put in (and therefore the channel becoming empty and closing before all infected people are added), a blocking mechanism is necesary. Before calling the (parallelized) function that puts infected people into the channel, <tt class="docutils literal"><span class="pre">Add(1)</span></tt> to your WaitGroup, and then before beginning to remove individuals from the channel, call <tt class="docutils literal"><span class="pre">Wait()</span></tt> to ensure that the removal step doesn&#8217;t begin before the inserting step has ended. Each goroutine checking to see if a <tt class="docutils literal"><span class="pre">Person</span></tt> is infected should call <tt class="docutils literal"><span class="pre">Done()</span></tt> before returning. Once they all have, the program will resume execution with the instruction after the <tt class="docutils literal"><span class="pre">Wait()</span></tt>.</p>
+</div>
+</div></blockquote>
+</li>
+</ul>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../index.html">
+              <img class="logo" src="../_static/CSInParallel200wide.png" alt="Logo"/>
+            </a></p>
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Porting C++ Code to Go</a><ul>
+<li><a class="reference internal" href="#simulating-in-go">Simulating in Go</a><ul>
+<li><a class="reference internal" href="#code-structure">Code Structure</a></li>
+<li><a class="reference internal" href="#parallelizing">Parallelizing</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="seqgocode2.html"
+                        title="previous chapter">Parallelizing Sequential Go Code: Advanced</a></p>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="seqgocode2.html" title="Parallelizing Sequential Go Code: Advanced"
+             >previous</a> |</li>
+        <li><a href="../index.html">Epidemic Simulation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright This work is licensed under a Creative Commons Attribution-ShareAlike 3.0 Unported License.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2b1.
+    </div>
+  </body>
+</html>

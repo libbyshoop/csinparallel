@@ -1,0 +1,136 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Parallelizing the C++ Code &mdash; Epidemic Simulation</title>
+    
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+    <link rel="top" title="Epidemic Simulation" href="../index.html" />
+    <link rel="next" title="Parallelizing with Go: Detailed Specs" href="gowalkthrough.html" />
+    <link rel="prev" title="A Sequential Implementation: C++ Specs" href="../cppspecs/cppspecs.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="gowalkthrough.html" title="Parallelizing with Go: Detailed Specs"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="../cppspecs/cppspecs.html" title="A Sequential Implementation: C++ Specs"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../index.html">Epidemic Simulation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="parallelizing-the-c-code">
+<h1>Parallelizing the C++ Code<a class="headerlink" href="#parallelizing-the-c-code" title="Permalink to this headline">¶</a></h1>
+<p>Once you&#8217;ve got a functional sequential epidemic model, take a look at some of these strategies for making it run in parallel. This page describes parallelizing your sequential code by adding OpenMP and MPI code to it. Try running versions of the code that just implement one or the other, then try a hybrid that includes both!</p>
+<div class="section" id="openmp">
+<h2>OpenMP<a class="headerlink" href="#openmp" title="Permalink to this headline">¶</a></h2>
+<p>OpenMP gives us a set of preprocessor directives that can be used to run multiple threads. If you&#8217;ve never used it before, there&#8217;s a great <a class="reference external" href="http://www.citutor.org/">tutorial</a> available through UIUC called Introduction to OpenMP. Otherwise, the links below can provide more specific guidance or a syntax refresher for those already familiar with OpenMP.</p>
+<ul class="simple">
+<li>Use <tt class="docutils literal"><span class="pre">#pragma</span> <span class="pre">omp</span> <span class="pre">parallel</span> <span class="pre">for</span></tt> to parallelize the <tt class="docutils literal"><span class="pre">for</span></tt> loop that loops through <tt class="docutils literal"><span class="pre">Population</span></tt>. Experiment with setting different numbers of threads! <a class="reference external" href="http://msdn.microsoft.com/en-us/library/6z19s8e0.aspx">More information</a>.</li>
+<li>When the final conditions are evaluated, perform a <a class="reference external" href="http://msdn.microsoft.com/en-us/library/2etkydkz.aspx">reduction</a> to count the number of Infected, Susceptible, and Recovered <tt class="docutils literal"><span class="pre">Person</span></tt>s.</li>
+</ul>
+</div>
+<div class="section" id="mpi">
+<h2>MPI<a class="headerlink" href="#mpi" title="Permalink to this headline">¶</a></h2>
+<p>MPI specifies a set of directives for doing shared-memory concurrency using message passing. The link above also contains a very thorough tutorial on MPI.</p>
+<ul class="simple">
+<li>Divide <tt class="docutils literal"><span class="pre">Population</span></tt> equally among the number of threads being used. Similarly, infect the first <tt class="docutils literal"><span class="pre">initialInfected</span></tt> of them equally across the threads.</li>
+<li>Have each thread determine the position of each infected <tt class="docutils literal"><span class="pre">Person</span></tt> on that thread. Send the position information of the infected <tt class="docutils literal"><span class="pre">Person</span></tt>s to all other threads. Use an <tt class="docutils literal"><span class="pre">Allgather</span></tt> MPI function call to collect position arrays from each thread to be stored on a larger position array. This larger position array is present on each thread and holds the positions of each infected person (see more <a class="reference external" href="http://www.mpitutorial.com/mpi-scatter-gather-and-allgather/">details here</a>).</li>
+<li>Run through the simulation on each thread as normal, but using the larger position array to check the position of each susceptible <tt class="docutils literal"><span class="pre">Person</span></tt> against the position of each infected person.</li>
+</ul>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../index.html">
+              <img class="logo" src="../_static/CSInParallel200wide.png" alt="Logo"/>
+            </a></p>
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Parallelizing the C++ Code</a><ul>
+<li><a class="reference internal" href="#openmp">OpenMP</a></li>
+<li><a class="reference internal" href="#mpi">MPI</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="../cppspecs/cppspecs.html"
+                        title="previous chapter">A Sequential Implementation: C++ Specs</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="gowalkthrough.html"
+                        title="next chapter">Parallelizing with Go: Detailed Specs</a></p>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="gowalkthrough.html" title="Parallelizing with Go: Detailed Specs"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="../cppspecs/cppspecs.html" title="A Sequential Implementation: C++ Specs"
+             >previous</a> |</li>
+        <li><a href="../index.html">Epidemic Simulation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright This work is licensed under a Creative Commons Attribution-ShareAlike 3.0 Unported License.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2b1.
+    </div>
+  </body>
+</html>

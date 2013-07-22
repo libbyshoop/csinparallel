@@ -1,0 +1,250 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>A Sequential Solution &mdash; Drug Design Exemplar</title>
+    
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="shortcut icon" href="../_static/favicon2.ico"/>
+    <link rel="top" title="Drug Design Exemplar" href="../index.html" />
+    <link rel="prev" title="Introduction" href="../intro/intro.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../intro/intro.html" title="Introduction"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../index.html">Drug Design Exemplar</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="a-sequential-solution">
+<h1>A Sequential Solution<a class="headerlink" href="#a-sequential-solution" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="problem-definition">
+<h2>Problem Definition<a class="headerlink" href="#problem-definition" title="Permalink to this headline">¶</a></h2>
+<p>Working with actual ligand and protein data is beyond the scope of this example, so we will represent the computation by a simpler string-based comparison.</p>
+<p>Specifically, we simplify the computation as follows:</p>
+<blockquote>
+<div><ul class="simple">
+<li>Proteins and ligands will be represented as (randomly-generated) character strings.</li>
+<li>The docking-problem computation will be represented by comparing a ligand string <tt class="docutils literal"><span class="pre">L</span></tt> to a protein string <tt class="docutils literal"><span class="pre">P</span></tt>.  The score for a pair <tt class="docutils literal"><span class="pre">[L,</span> <span class="pre">P]</span></tt> will be the maximum number of matching characters among all possibilities when <tt class="docutils literal"><span class="pre">L</span></tt> is compared to <tt class="docutils literal"><span class="pre">P</span></tt>, moving from left to right, allowing possible insertions and deletions.  For example, if <tt class="docutils literal"><span class="pre">L</span></tt> is the string “cxtbcrv” and <tt class="docutils literal"><span class="pre">P</span></tt> is the string “lcacxtqvivg,” then the score is 4, arising from this comparison of <tt class="docutils literal"><span class="pre">L</span></tt> to a segment of <tt class="docutils literal"><span class="pre">P</span></tt>:</li>
+</ul>
+<div class="align-center figure align-center">
+<a class="reference internal image-reference" href="../_images/seq1.jpg"><img alt="the two sequences, with c x t v aligned" src="../_images/seq1.jpg" style="width: 203px; height: 85px;" /></a>
+</div>
+</div></blockquote>
+<p>This is not the only comparison of that ligand to that protein that yields four matching characters. Another one is</p>
+<blockquote>
+<div><div class="align-center figure align-center">
+<a class="reference internal image-reference" href="../_images/seq2.jpg"><img alt="another alignment of c x t v in the two sequences" src="../_images/seq2.jpg" style="width: 182px; height: 65px;" /></a>
+</div>
+</div></blockquote>
+<p>However, there is no comparison that matches five characters while moving from left to right, so the score is 4.</p>
+</div>
+<div class="section" id="implementation">
+<h2>Implementation<a class="headerlink" href="#implementation" title="Permalink to this headline">¶</a></h2>
+<p>The example program <a class="reference download internal" href="../_downloads/dd_serial.cpp"><tt class="xref download docutils literal"><span class="pre">dd_serial.cpp</span></tt></a> provides a sequential C++ implementation of our simplified drug design problem.</p>
+<blockquote>
+<div><div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p>The program optionally accepts up to three command-line arguments:</p>
+<blockquote class="last">
+<div><ol class="arabic simple">
+<li>maximum length of the (randomly generated) ligand strings</li>
+<li>number of ligands generated</li>
+<li>protein string to which ligands will be compared</li>
+</ol>
+</div></blockquote>
+</div>
+</div></blockquote>
+<div class="section" id="the-code">
+<h3>The Code<a class="headerlink" href="#the-code" title="Permalink to this headline">¶</a></h3>
+<p>In this implementation, the class <tt class="docutils literal"><span class="pre">MR</span></tt> encapsulates the map-reduce steps <tt class="docutils literal"><span class="pre">Generate_tasks()</span></tt>, <tt class="docutils literal"><span class="pre">Map()</span></tt>, and <tt class="docutils literal"><span class="pre">Reduce()</span></tt> as private methods (member functions of the class), and a public method <tt class="docutils literal"><span class="pre">run()</span></tt> invokes those steps according to a map-reduce algorithmic strategy (see above for detailed explanation). We have highlighted calls to the methods representing map-reduce steps in the following code segment from <tt class="docutils literal"><span class="pre">MR::run()</span></tt>.</p>
+<blockquote>
+<div><div class="highlight-c++"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19</pre></div></td><td class="code"><div class="highlight"><pre><span class="hll"><span class="n">Generate_tasks</span><span class="p">(</span><span class="n">tasks</span><span class="p">);</span>
+</span><span class="c1">// assert -- tasks is non-empty</span>
+
+<span class="k">while</span> <span class="p">(</span><span class="o">!</span><span class="n">tasks</span><span class="p">.</span><span class="n">empty</span><span class="p">())</span> <span class="p">{</span>
+<span class="hll">  <span class="n">Map</span><span class="p">(</span><span class="n">tasks</span><span class="p">.</span><span class="n">front</span><span class="p">(),</span> <span class="n">pairs</span><span class="p">);</span>
+</span>  <span class="n">tasks</span><span class="p">.</span><span class="n">pop</span><span class="p">();</span>
+<span class="p">}</span>
+
+<span class="n">do_sort</span><span class="p">(</span><span class="n">pairs</span><span class="p">);</span>
+
+<span class="kt">int</span> <span class="n">next</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>  <span class="c1">// index of first unprocessed pair in pairs[]</span>
+<span class="k">while</span> <span class="p">(</span><span class="n">next</span> <span class="o">&lt;</span> <span class="n">pairs</span><span class="p">.</span><span class="n">size</span><span class="p">())</span> <span class="p">{</span>
+  <span class="n">string</span> <span class="n">values</span><span class="p">;</span>
+  <span class="n">values</span> <span class="o">=</span> <span class="s">&quot;&quot;</span><span class="p">;</span>
+  <span class="kt">int</span> <span class="n">key</span> <span class="o">=</span> <span class="n">pairs</span><span class="p">[</span><span class="n">next</span><span class="p">].</span><span class="n">key</span><span class="p">;</span>
+<span class="hll">  <span class="n">next</span> <span class="o">=</span> <span class="n">Reduce</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">pairs</span><span class="p">,</span> <span class="n">next</span><span class="p">,</span> <span class="n">values</span><span class="p">);</span>
+</span>  <span class="n">Pair</span> <span class="nf">p</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">values</span><span class="p">);</span>
+  <span class="n">results</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">p</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+</td></tr></table></div>
+</div></blockquote>
+</div>
+<div class="section" id="comments">
+<h3>Comments<a class="headerlink" href="#comments" title="Permalink to this headline">¶</a></h3>
+<ul>
+<li><p class="first">We use the <a class="reference external" href="http://www.cplusplus.com/reference/stl/">STL containers</a>  <tt class="docutils literal"><span class="pre">queue&lt;&gt;</span></tt>  and  <tt class="docutils literal"><span class="pre">vector&lt;&gt;</span></tt>  to hold the results from each of the map-reduce steps: namely, the task queue of ligands to process, the list key-value pairs produced by the <tt class="docutils literal"><span class="pre">Map()</span></tt> phase, and the list of resulting key-value pairs produced by calls to <tt class="docutils literal"><span class="pre">Reduce()</span></tt>. We define those container variables as data members in the class <tt class="docutils literal"><span class="pre">MR</span></tt>:</p>
+<blockquote>
+<div><p><tt class="docutils literal"><span class="pre">queue&lt;string&gt;</span> <span class="pre">tasks;</span></tt></p>
+<p><tt class="docutils literal"><span class="pre">vector&lt;Pair&gt;</span> <span class="pre">pairs,</span> <span class="pre">results;</span></tt></p>
+</div></blockquote>
+</li>
+<li><p class="first">Here, <tt class="docutils literal"><span class="pre">Pair</span></tt> is a struct representing key-value pairs with the desired types:</p>
+<div class="highlight-cpp"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4
+5</pre></div></td><td class="code"><div class="highlight"><pre><span class="k">struct</span> <span class="n">Pair</span> <span class="p">{</span>
+  <span class="kt">int</span> <span class="n">key</span><span class="p">;</span>
+  <span class="n">string</span> <span class="n">val</span><span class="p">;</span>
+  <span class="n">Pair</span><span class="p">(</span><span class="kt">int</span> <span class="n">k</span><span class="p">,</span> <span class="k">const</span> <span class="n">string</span> <span class="o">&amp;</span><span class="n">v</span><span class="p">)</span> <span class="p">{</span><span class="n">key</span><span class="o">=</span><span class="n">k</span><span class="p">;</span> <span class="n">val</span><span class="o">=</span><span class="n">v</span><span class="p">;}</span>
+<span class="p">};</span>
+</pre></div>
+</td></tr></table></div>
+</li>
+<li><p class="first">In the example code, <tt class="docutils literal"><span class="pre">Generate_tasks()</span></tt> merely produces <em>nligands</em> strings of random lower-case letters, each having a random length between 0 and <em>max_ligand</em>. The program stores those strings in a task queue named <tt class="docutils literal"><span class="pre">tasks</span></tt>.</p>
+</li>
+<li><p class="first">For each ligand in the task queue, the <tt class="docutils literal"><span class="pre">Map()</span></tt> function computes the match score from comparing a string representing that ligand to a global string representing a target protein, using the simplified match-scoring algorithm described above. <tt class="docutils literal"><span class="pre">Map()</span></tt> then yields a key-value pair consisting of that score and that ligand, respectively.</p>
+</li>
+<li><p class="first">The key-value pairs produced by all calls to <tt class="docutils literal"><span class="pre">Map()</span></tt> are sorted by key in order to group pairs with the same score. Then <tt class="docutils literal"><span class="pre">Reduce()</span></tt> is called once for each of those groups in order to yield a vector of <tt class="docutils literal"><span class="pre">Pairs</span></tt> consisting of a score <em>s</em> together with a list of all ligands whose best score was <em>s</em>.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Map-reduce frameworks such as the open-source Hadoop commonly use sorting to group values for a given key, as does our program. This has the additional benefit of producing sorted results from the reduce stage. Also, the staged processes of performing all <tt class="docutils literal"><span class="pre">Map()</span></tt> calls before sorting and of performing all <tt class="docutils literal"><span class="pre">Reduce()</span></tt> calls after the completion of sorting are also common among map-reduce frameworks.</p>
+</div>
+</li>
+<li><p class="first">The methods <tt class="docutils literal"><span class="pre">Generate_tasks()</span></tt>, <tt class="docutils literal"><span class="pre">Map()</span></tt>, and <tt class="docutils literal"><span class="pre">Reduce()</span></tt> may seem like unnecessary complication for this problem since they abstract so little code. Indeed, we could certainly rewrite the program more simply and briefly without them. We chose this expression for several reasons:</p>
+<ul class="simple">
+<li>We can compare code segments from <tt class="docutils literal"><span class="pre">MR::run()</span></tt> directly with corresponding segments in upcoming parallel implementations to focus on the parallelization changes and hide the common code in method calls.</li>
+<li>The methods <tt class="docutils literal"><span class="pre">Generate_tasks()</span></tt>, <tt class="docutils literal"><span class="pre">Map()</span></tt>, and <tt class="docutils literal"><span class="pre">Reduce()</span></tt> make it obvious where to insert more realistic task generation, docking algorithm, etc., and where to change our map-reduce code examples for problems other than drug design.</li>
+<li>We use these three method names in descriptions of the map-reduce pattern elsewhere.</li>
+</ul>
+</li>
+<li><p class="first">We have not attempted to implement the fault tolerance and scalability features of a production map-reduce framework such as Hadoop.</p>
+</li>
+</ul>
+</div>
+<div class="section" id="questions-for-exploration">
+<h3>Questions for Exploration<a class="headerlink" href="#questions-for-exploration" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li>Compile and test run the sequential program. Determine values for the command-line arguments <tt class="docutils literal"><span class="pre">max_ligand``(maximum</span> <span class="pre">length</span> <span class="pre">of</span> <span class="pre">a</span> <span class="pre">ligand</span> <span class="pre">string)</span> <span class="pre">and</span> <span class="pre">``nligands</span></tt> (total number of ligands to process) that lead to a tolerably long computation for experimenting (e.g., perhaps 15 seconds to a minute of computation). Note the following about our simplified computational problem:<ul>
+<li>Our stand-in scoring algorithm is exponential in the lengths of the ligand and protein strings. Thus, a large value of <tt class="docutils literal"><span class="pre">max_ligand</span></tt> may cause an extremely lengthy computation. Altering <tt class="docutils literal"><span class="pre">max_ligand</span></tt> can help in finding a test computation of a desired order of magnitude.</li>
+<li>We expect the computation time to increase approximately linearly with the number of ligands <tt class="docutils literal"><span class="pre">nligands</span></tt>. However, if <tt class="docutils literal"><span class="pre">nligands</span></tt> is relatively small, you may notice irregular jumps to long computation times when increasing <tt class="docutils literal"><span class="pre">nligands</span></tt>. This is because our simple random algorithm for generating ligands produces ligand strings using <tt class="docutils literal"><span class="pre">random()</span></tt>, as well as ligands with random lengths as well as random content.  Because of the order-of-magnitude effect of ligand length, a sudden long ligand (meaning more characters than those before) may greatly increase the computation time.</li>
+</ul>
+</li>
+<li>If you have <em>more realistic algorithms for docking and/or more realistic data for ligands and proteins</em>, modify the program to incorporate those elements, and compare the results from your modified program to results obtained by other means (other software, wet-lab results, etc.).</li>
+</ul>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../index.html">
+              <img class="logo" src="../_static/CSInParallel200wide.png" alt="Logo"/>
+            </a></p>
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">A Sequential Solution</a><ul>
+<li><a class="reference internal" href="#problem-definition">Problem Definition</a></li>
+<li><a class="reference internal" href="#implementation">Implementation</a><ul>
+<li><a class="reference internal" href="#the-code">The Code</a></li>
+<li><a class="reference internal" href="#comments">Comments</a></li>
+<li><a class="reference internal" href="#questions-for-exploration">Questions for Exploration</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="../intro/intro.html"
+                        title="previous chapter">Introduction</a></p>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../intro/intro.html" title="Introduction"
+             >previous</a> |</li>
+        <li><a href="../index.html">Drug Design Exemplar</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright This work is licensed under a Creative Commons Attribution-ShareAlike 3.0 Unported License.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2b1.
+    </div>
+  </body>
+</html>

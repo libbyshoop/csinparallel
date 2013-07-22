@@ -1,0 +1,320 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>A Sequential Implementation: C++ Specs &mdash; Epidemic Simulation</title>
+    
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+    <link rel="top" title="Epidemic Simulation" href="../index.html" />
+    <link rel="next" title="Parallelizing the C++ Code" href="../parallelizing/openmpandmpi.html" />
+    <link rel="prev" title="Introduction" href="../intro/intro.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../parallelizing/openmpandmpi.html" title="Parallelizing the C++ Code"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="../intro/intro.html" title="Introduction"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../index.html">Epidemic Simulation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="a-sequential-implementation-c-specs">
+<h1>A Sequential Implementation: C++ Specs<a class="headerlink" href="#a-sequential-implementation-c-specs" title="Permalink to this headline">¶</a></h1>
+<p>Based on the explanation in the previous section and the specifications given here, try implementing a sequential version of this model yourself in C++. In the next sections, we&#8217;ll look at using parallelism to speed it up!</p>
+<div class="section" id="at-global-scope">
+<h2>At Global Scope<a class="headerlink" href="#at-global-scope" title="Permalink to this headline">¶</a></h2>
+<dl class="glossary docutils">
+<dt id="term-width-height">width &amp; height:</dt>
+<dd>constant integers representing the dimensions of your simulated world.</dd>
+</dl>
+<dl class="glossary docutils">
+<dt id="term-state">State:</dt>
+<dd><p class="first">An <a class="reference external" href="http://www.cplusplus.com/doc/tutorial/other_data_types/">enum</a> for the states of health a Person can have with respect to the disease, with four options:</p>
+<ul class="last simple">
+<li>Susceptible</li>
+<li>Infected</li>
+<li>Recovered</li>
+<li>Dead</li>
+</ul>
+</dd>
+</dl>
+</div>
+<div class="section" id="classes">
+<h2>Classes<a class="headerlink" href="#classes" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="class-infection">
+<h3>Class Infection<a class="headerlink" href="#class-infection" title="Permalink to this headline">¶</a></h3>
+<p>Represents a particular disease.</p>
+<dl class="glossary docutils">
+<dt id="term-state-variables">State Variables:</dt>
+<dd><ul class="first last simple">
+<li><tt class="docutils literal"><span class="pre">duration</span></tt>, an integer representing duration of illness, in six-hour periods</li>
+<li><tt class="docutils literal"><span class="pre">radius</span></tt>, a float representing the radius of transmission</li>
+<li><tt class="docutils literal"><span class="pre">contagiousness</span></tt>, a float representing the likelihood of a transmission occurring if a person is within the infection radius</li>
+<li><tt class="docutils literal"><span class="pre">deadliness</span></tt>, a float representing the likelihood that an infected individual will die</li>
+</ul>
+</dd>
+</dl>
+<dl class="glossary docutils">
+<dt id="term-constructor-optional">Constructor (optional):</dt>
+<dd><ul class="first last">
+<li><dl class="first docutils">
+<dt><tt class="docutils literal"><span class="pre">Infection</span></tt></dt>
+<dd><ul class="first last simple">
+<li>Arguments: int <tt class="docutils literal"><span class="pre">d</span></tt>, float <tt class="docutils literal"><span class="pre">r</span></tt>, float <tt class="docutils literal"><span class="pre">c</span></tt>, float <tt class="docutils literal"><span class="pre">dd</span></tt></li>
+<li>State change: <tt class="docutils literal"><span class="pre">duration</span></tt>, <tt class="docutils literal"><span class="pre">radius</span></tt>, <tt class="docutils literal"><span class="pre">contagiousness</span></tt>, and <tt class="docutils literal"><span class="pre">deadliness</span></tt> set to <tt class="docutils literal"><span class="pre">d</span></tt>, <tt class="docutils literal"><span class="pre">r</span></tt>, <tt class="docutils literal"><span class="pre">c</span></tt>, and <tt class="docutils literal"><span class="pre">dd</span></tt>, respectively</li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+</dd>
+</dl>
+</div>
+<div class="section" id="class-person">
+<h3>Class Person<a class="headerlink" href="#class-person" title="Permalink to this headline">¶</a></h3>
+<p>Represents an individual human being.</p>
+<dl class="glossary docutils">
+<dt id="term-4">State Variables:</dt>
+<dd><ul class="first last simple">
+<li><tt class="docutils literal"><span class="pre">x</span></tt> and <tt class="docutils literal"><span class="pre">y</span></tt>, two integers representing the Person’s 2D position</li>
+<li><tt class="docutils literal"><span class="pre">state</span></tt>, a State variable identifying what state of health the Person is in</li>
+<li><tt class="docutils literal"><span class="pre">infectedPeriod</span></tt>, an integer representing the units of time required before a Person makes a full recovery.</li>
+</ul>
+</dd>
+</dl>
+<dl class="glossary docutils">
+<dt id="term-constructor">Constructor:</dt>
+<dd><ul class="first last">
+<li><dl class="first docutils">
+<dt><tt class="docutils literal"><span class="pre">Person</span></tt></dt>
+<dd><ul class="first last simple">
+<li>Arguments: none</li>
+<li>State change: <tt class="docutils literal"><span class="pre">x</span></tt> is set to a random integer modulo <tt class="docutils literal"><span class="pre">width</span></tt> and <tt class="docutils literal"><span class="pre">y</span></tt> is set to a random integer mod <tt class="docutils literal"><span class="pre">height</span></tt>; <tt class="docutils literal"><span class="pre">state</span></tt> is set to Susceptible and <tt class="docutils literal"><span class="pre">infectedPeriod</span></tt> to 0</li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+</dd>
+</dl>
+<dl class="glossary docutils">
+<dt id="term-methods">Methods:</dt>
+<dd><ul class="first last">
+<li><dl class="first docutils">
+<dt><tt class="docutils literal"><span class="pre">isInfected</span></tt></dt>
+<dd><ul class="first last simple">
+<li>Arguments: none</li>
+<li>State change: none</li>
+<li>Return: <tt class="docutils literal"><span class="pre">true</span></tt> if the person is Infected; <tt class="docutils literal"><span class="pre">false</span></tt> otherwise</li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt><tt class="docutils literal"><span class="pre">isSusceptible</span></tt></dt>
+<dd><ul class="first last simple">
+<li>Arguments: none</li>
+<li>State change: none</li>
+<li>Return: <tt class="docutils literal"><span class="pre">true</span></tt> if the person is Susceptible; <tt class="docutils literal"><span class="pre">false</span></tt> otherwise</li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt><tt class="docutils literal"><span class="pre">updateState</span></tt></dt>
+<dd><ul class="first last simple">
+<li>Arguments: <tt class="docutils literal"><span class="pre">State</span> <span class="pre">s</span></tt></li>
+<li>State change: <tt class="docutils literal"><span class="pre">state</span></tt> is set to <tt class="docutils literal"><span class="pre">s</span></tt></li>
+<li>Return: none</li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt><tt class="docutils literal"><span class="pre">infectWith</span></tt></dt>
+<dd><ul class="first last simple">
+<li>Arguments: <tt class="docutils literal"><span class="pre">Infection</span> <span class="pre">i</span></tt></li>
+<li>State change: <tt class="docutils literal"><span class="pre">state</span></tt> is set to Infected and <tt class="docutils literal"><span class="pre">infectedPeriod</span></tt> is set to <tt class="docutils literal"><span class="pre">i</span></tt>&#8216;s <tt class="docutils literal"><span class="pre">duration</span></tt></li>
+<li>Return: none</li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt><tt class="docutils literal"><span class="pre">move</span></tt></dt>
+<dd><ul class="first simple">
+<li>Arguments: none</li>
+<li>State change: location is randomly changed by 0, 1, or 2 units in the x direction and y direction</li>
+</ul>
+<div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<p class="last">The modulo function in C++ has no effect on negative numbers. This is a problem if the position variables become negative. An easy way to solve this problem is to add width before you mod by width. Your code might look something like <tt class="docutils literal"><span class="pre">x</span> <span class="pre">=</span> <span class="pre">(x</span> <span class="pre">+</span> <span class="pre">(rand()</span> <span class="pre">%</span> <span class="pre">5)</span> <span class="pre">-</span> <span class="pre">2</span> <span class="pre">+</span> <span class="pre">width)</span> <span class="pre">%</span> <span class="pre">width;</span></tt> (and similarly with <tt class="docutils literal"><span class="pre">y</span></tt>).</p>
+</div>
+<ul class="last simple">
+<li>Return: none</li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt><tt class="docutils literal"><span class="pre">timeStep</span></tt></dt>
+<dd><ul class="first last">
+<li><p class="first">Arguments: inf, an Infection</p>
+</li>
+<li><p class="first">State change: <tt class="docutils literal"><span class="pre">move()</span></tt> is called. If the Person is infected...</p>
+<blockquote>
+<div><ul class="simple">
+<li>if <tt class="docutils literal"><span class="pre">infectedPeriod</span></tt> has reached zero, update <tt class="docutils literal"><span class="pre">state</span></tt> to <tt class="docutils literal"><span class="pre">Recovered</span></tt></li>
+<li>if <tt class="docutils literal"><span class="pre">infectedPeriod</span></tt> is greater than zero, use <tt class="docutils literal"><span class="pre">inf</span></tt>&#8216;s <tt class="docutils literal"><span class="pre">deadliness</span></tt> to determine whether the Person lives or dies</li>
+<li>otherwise, decrement infectedPeriod</li>
+</ul>
+</div></blockquote>
+</li>
+<li><p class="first">Return: none</p>
+</li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+</dd>
+</dl>
+</div>
+</div>
+<div class="section" id="simulating-an-epidemic">
+<h2>Simulating an Epidemic<a class="headerlink" href="#simulating-an-epidemic" title="Permalink to this headline">¶</a></h2>
+<dl class="glossary docutils">
+<dt id="term-initial-parameters">Initial parameters:</dt>
+<dd><ul class="first last simple">
+<li><tt class="docutils literal"><span class="pre">numPersons</span></tt>, an integer representing the number of persons in the simulation</li>
+<li><tt class="docutils literal"><span class="pre">initialInfected</span></tt>, an integer representing the number of persons who are initially infected.</li>
+<li><tt class="docutils literal"><span class="pre">numIterations</span></tt>, an integer representing how many iterations the simulation runs for</li>
+<li><tt class="docutils literal"><span class="pre">Population</span></tt>, a dynamically-allocated array of <tt class="docutils literal"><span class="pre">Person</span></tt> of size <tt class="docutils literal"><span class="pre">numPersons</span></tt>, with the first <tt class="docutils literal"><span class="pre">initialInfected</span></tt> members set to Infected</li>
+<li><tt class="docutils literal"><span class="pre">disease</span></tt>, an instance of an infection with the parameters of your choice</li>
+</ul>
+</dd>
+</dl>
+<dl class="glossary docutils">
+<dt id="term-procedures">Procedures:</dt>
+<dd><ul class="first last">
+<li><p class="first">Set up your preferred type of loop to run the following <tt class="docutils literal"><span class="pre">numIterations</span></tt> times:</p>
+<blockquote>
+<div><ul>
+<li><p class="first">For each member of <tt class="docutils literal"><span class="pre">Population</span></tt></p>
+<blockquote>
+<div><ul class="simple">
+<li>Call <tt class="docutils literal"><span class="pre">timeStep()</span></tt></li>
+<li>If the member is infected, check its position against every susceptible member of <tt class="docutils literal"><span class="pre">Population</span></tt>, and, if the distance between the two is less than <tt class="docutils literal"><span class="pre">radius</span></tt>, use <tt class="docutils literal"><span class="pre">contagiousness</span></tt> to determine whether transmission occurs.</li>
+</ul>
+</div></blockquote>
+</li>
+</ul>
+</div></blockquote>
+</li>
+<li><p class="first">Count the number of Susceptible, Infected, Recovered, and Dead members of <tt class="docutils literal"><span class="pre">Population</span></tt>, and print them out to compare to the initial parameters.</p>
+</li>
+</ul>
+</dd>
+</dl>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../index.html">
+              <img class="logo" src="../_static/CSInParallel200wide.png" alt="Logo"/>
+            </a></p>
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">A Sequential Implementation: C++ Specs</a><ul>
+<li><a class="reference internal" href="#at-global-scope">At Global Scope</a></li>
+<li><a class="reference internal" href="#classes">Classes</a><ul>
+<li><a class="reference internal" href="#class-infection">Class Infection</a></li>
+<li><a class="reference internal" href="#class-person">Class Person</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#simulating-an-epidemic">Simulating an Epidemic</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="../intro/intro.html"
+                        title="previous chapter">Introduction</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="../parallelizing/openmpandmpi.html"
+                        title="next chapter">Parallelizing the C++ Code</a></p>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../parallelizing/openmpandmpi.html" title="Parallelizing the C++ Code"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="../intro/intro.html" title="Introduction"
+             >previous</a> |</li>
+        <li><a href="../index.html">Epidemic Simulation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright This work is licensed under a Creative Commons Attribution-ShareAlike 3.0 Unported License.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2b1.
+    </div>
+  </body>
+</html>

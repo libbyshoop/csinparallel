@@ -1,6 +1,6 @@
 /* PDC project S13 by Luke Bonde and Allison Brumfield   4/17/2013
+  Edited by Eileen King for CS in Parallel, 7/1/13
    Simulates an epidemic or disease spreading through a population */
-
 
 #include <iostream>
 using namespace std;
@@ -51,14 +51,24 @@ public:
   bool isSusceptible(){
     return (state==Susceptible);
   }
+  bool isDead() {
+    return (state==Dead);
+  }
   void move() { 
     x = (x + (rand() % 5) - 2 + width) % width ; // Add width to ensure non-negativity...
     y = (y + (rand() % 5) - 2 + height) % height;
   }
-  void timeStep() { 
+  void timeStep(Infection inf) { 
     move();
-    if (infectedPeriod > 0) --infectedPeriod;
-    else if (infectedPeriod == 0 and isInfected()) updateState(Recovered);
+    if (isInfected()) {
+      if (infectedPeriod == 0) {
+        updateState(Recovered);
+      } else if (rand() % 100) <= int(inf.deadliness*100)) {
+        updateState(Dead);
+      } else {
+        infectedPeriod--;
+      }
+    }
   }
 };
 
@@ -117,9 +127,9 @@ int main(int argc, char** argv) {
     for (p = 0; p < personPortion; ++p) {
       MN[p].timeStep();
       if (MN[p].isInfected()) {
-	x_pos[n]=MN[p].x;
-	y_pos[n]=MN[p].y;
-	n++;
+	       x_pos[n]=MN[p].x;
+	       y_pos[n]=MN[p].y;
+	       n++;
       }
     }    
     // Mark remaining entries in array as null using -1.
@@ -171,16 +181,20 @@ int main(int argc, char** argv) {
       ++numInfected;
     if (MN[p].isSusceptible())
       ++numSusceptible;
+    if (MN[p].isDead())
+      ++numDead;
   }
-  int totalInfected = 0, totalSusceptible = 0;
+  int totalInfected = 0, totalSusceptible = 0, totalDead = 0;
   MPI::COMM_WORLD.Reduce(&numInfected,&totalInfected,1,MPI::INT,MPI::SUM,head);
   MPI::COMM_WORLD.Reduce(&numSusceptible,&totalSusceptible,1,MPI::INT,MPI::SUM,head);
+  MPI::COMM_WORLD.Reduce(&numDead,&totalDead,1,MPI::INT,MPI::SUM,head);
   
   //Print summary of final conditions
   if (my_rank == head) {
-  cout << numSusceptible << " persons are still susceptible" << endl;
-  cout << numInfected << " persons are currently infected" << endl;
-  cout << numPersons - numSusceptible - numInfected << " persons have recovered." << endl;
+    int numRecovered = numPersons - numSusceptible - numInfected;
+    cout << "Finished! After " << numIterations/4 << " days...\nNumber of persons\n\tSusceptible: " 
+    << numSusceptible << "\n\tInfected: " << numInfected << "\n\tRecovered: " 
+    << numRecovered << "\n\tDead: " << numDead << endl;
   }
   
   MPI::Finalize();

@@ -1,5 +1,5 @@
 /* Go code for CSinParallel's Epidemic Simulation module
-Last updated 6-26-13 */
+Last updated 7-1-13 */
 
 //This is how all Go programs begin.
 package main
@@ -19,12 +19,13 @@ const (
   Susceptible = iota
   Infected
   Recovered
+  Dead
 )
 
 //Go uses structs exclusively - there are no classes.
 type Infection struct {
   duration int
-  radius, contagiousness float64 //multiple variables of the same type can simply be collapsed like this
+  radius, contagiousness, deadliness float64 //multiple variables of the same type can simply be collapsed like this
 }
 
 //another struct!
@@ -54,9 +55,9 @@ type Person struct {
 		p.state = s
 	}
 	
-	func (p *Person) infectWith(i Infection) {
+	func (p *Person) infectWith(inf Infection) {
 		p.updateState(Infected)
-		p.infectedPeriod = i.duration
+		p.infectedPeriod = inf.duration
 	}
 	
 	func (p *Person) move() {
@@ -64,13 +65,16 @@ type Person struct {
 		p.y = (p.y + rand.Intn(5) -2 +height) % height
 	}
 	
-	func (p *Person) timeStep() {
+	func (p *Person) timeStep(inf Infection) {
 		p.move()
-		if p.infectedPeriod > 0 {
-			p.infectedPeriod--
-		//because Go uses newlines to decide where to put semicolons, the bracket style below (else on the same line as the previous bracket) is necessary for if-else statements
-		} else if p.infectedPeriod == 0 && p.state == Infected {
-			p.updateState(Recovered)
+		if p.isInfected() {
+			if p.infectedPeriod == 0 {
+				p.updateState(Recovered)
+			} else if (rand.Intn(100) <= int(inf.deadliness*100)) {
+				p.updateState(Dead)
+			} else {
+				p.infectedPeriod--
+			}
 		}
 	}
 
@@ -103,7 +107,7 @@ func main() {
 
 	//rather than writing a constructor, we can simply pass in values for the variables
 	//and they are assigned in the order they appear in the struct's definition
-	influenza := Infection{28,45,.5}
+	influenza := Infection{7,6,.5,.1}
 
 	for i := 0; i<initialInfected; i++ {
 		Population[i].infectWith(influenza)
@@ -111,16 +115,15 @@ func main() {
 	
 	//This is how to print to standard out: call fmt.Println, and the elements to be printed appear in parentheses, separated by commas.
 	//Spaces are automatically added between elements, and the same formatting characters apply in Go as in C++/Python
-	fmt.Println("\nStarting with" , numPersons , "people, of whom are\n\tSusceptible:" , numPersons-initialInfected , "\n\tInfected:" , initialInfected , "\n\tRecovered: 0\n")
+	fmt.Println("\nStarting with" , numPersons , "people, of whom are\n\tSusceptible:" , numPersons-initialInfected , "\n\tInfected:" , initialInfected , "\n\tRecovered: 0\n\tDead: 0\n")
 
 	//Here is the body of the simulation.
 	//Outermost loop: run the whole thing numIterations times.
 	for h := 0; h<numIterations; h++ {
-
 		//For each Person in the array
 		for i := 0; i<numPersons; i++ {
-			//move, and if they're sick, decrease how much longer they'll be sick.
-			Population[i].timeStep()
+			//move, and if they're sick, see if they die. if not, decrease how much longer they'll be sick.
+			Population[i].timeStep(influenza)
 			//And if they are sick, for every other person in the array
 			if (Population[i].isInfected()) {
 				for j:=0; j<numPersons; j++ {
@@ -138,10 +141,9 @@ func main() {
 	
 	//After simulation is complete, count up the number of people in each category and print them out.
 	//We'll use an array to keep track of them, since the states correspond nicely to array indices
-	var numByState [3]int
+	var numByState [4]int
 	for i:= 0; i<numPersons; i++ {
 		numByState[Population[i].state]++
 	}
-	fmt.Println("Finished! After" , numIterations/4, "days...\nNumber of persons\n\tSusceptible:" , numByState[Susceptible] , "\n\tInfected:" , numByState[Infected] , "\n\tRecovered:" , numByState[Recovered])
-	  
+	fmt.Println("Finished! After" , numIterations/4, "days...\nNumber of persons\n\tSusceptible:" , numByState[Susceptible] , "\n\tInfected:" , numByState[Infected] , "\n\tRecovered:" , numByState[Recovered], "\n\tDead:", numByState[Dead]) 
 }

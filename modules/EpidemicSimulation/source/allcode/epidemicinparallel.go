@@ -20,8 +20,6 @@ const numPersons = 20000
 const initialInfected = 200
 const numIterations = 200
 
-//this is an array for keeping track of the number of Persons in each of the states of health	
-var numByState [3]int	
 var waitgr sync.WaitGroup
   
 //This is the Go version of an enum: the first variable's value
@@ -30,12 +28,13 @@ const (
   Susceptible = iota
   Infected
   Recovered
+  Dead
 )
 
 //Go uses structs exclusively - there are no classes.
 type Infection struct {
   duration int
-  radius, contagiousness float64 //multiple variables of the same type can simply be collapsed like this
+  radius, contagiousness, deadliness float64 //multiple variables of the same type can simply be collapsed like this
 }
 
 type Person struct {
@@ -64,9 +63,9 @@ type Person struct {
 		p.state = s
 	}
 	
-	func (p *Person) infectWith(i Infection) {
+	func (p *Person) infectWith(inf Infection) {
 		p.updateState(Infected)
-		p.infectedPeriod = i.duration
+		p.infectedPeriod = inf.duration
 	}
 	
 	func (p *Person) move() {
@@ -74,12 +73,16 @@ type Person struct {
 		p.y = (p.y + rand.Intn(5) -2 +height) % height
 	}
 	
-	func (p *Person) timeStep() {
+	func (p *Person) timeStep(inf Infection) {
 		p.move()
-		if p.infectedPeriod > 0 {
-			p.infectedPeriod--
-		} else if p.infectedPeriod == 0 && p.state == Infected {
-			p.updateState(Recovered)
+		if p.isInfected() {
+			if p.infectedPeriod == 0 {
+				p.updateState(Recovered)
+			} else if (rand.Intn(100) <= int(inf.deadliness*100)) {
+				p.updateState(Dead)
+			} else {
+				p.infectedPeriod--
+			}
 		}
 	}
 
@@ -120,20 +123,20 @@ func main() {
 	Population := make([]Person, numPersons)
 	for i:=0; i<numPersons; i++ { Population[i].init() }
 	
-	influenza := Infection{28,45,.5}
+	influenza := Infection{28,45,.5,.3}
 	for i := 0; i<initialInfected; i++ {
 		Population[i].infectWith(influenza)
 	}
 
 	infectedchan := make(chan Person, numPersons)
 
-	fmt.Println("\nStarting with" , numPersons , "people, of whom are\n\tSusceptible:" , numPersons-initialInfected , "\n\tInfected:" , initialInfected , "\n\tRecovered: 0\n")
+	fmt.Println("\nStarting with" , numPersons , "people, of whom are\n\tSusceptible:" , numPersons-initialInfected , "\n\tInfected:" , initialInfected , "\n\tRecovered: 0\n\tDead: 0\n")
 
 //--------------begin simulation--------------------
 	for h := 0; h<numIterations; h++ {
 
 		for i:= 0; i<numPersons; i++{
-			Population[i].timeStep()
+			Population[i].timeStep(influenza)
 			waitgr.Add(1)
 			go collectInfected(i, &Population, infectedchan)
 		}
@@ -143,9 +146,9 @@ func main() {
 
 	}
 
-	var numByState [3]int
+	var numByState [4]int
 	for i:= 0; i<numPersons; i++ {
 		numByState[Population[i].state]++
 	}
-	fmt.Println("Finished! After" , numIterations/4, "days...\nNumber of persons\n\tSusceptible:" , numByState[Susceptible] , "\n\tInfected:" , numByState[Infected] , "\n\tRecovered:" , numByState[Recovered])
+	fmt.Println("Finished! After" , numIterations/4, "days...\nNumber of persons\n\tSusceptible:" , numByState[Susceptible] , "\n\tInfected:" , numByState[Infected] , "\n\tRecovered:" , numByState[Recovered], "\n\tDead:", numByState[Dead])
 }

@@ -1,4 +1,5 @@
 /* PDC project S13 by Luke Bonde and Allison Brumfield   4/17/2013
+Edited by Eileen King for CS in Parallel, 7/1/13
    Simulates an epidemic or disease spreading through a population */
 
 
@@ -14,7 +15,7 @@ const int height = 10000;   //The height of the environemnt
 const int head = 0;
 
 // The state of health a person can be in
-enum State {Susceptible = 0, Infected = 1, Recovered = 2};
+enum State {Susceptible = 0, Infected = 1, Recovered = 2, Dead = 3};
 
 //A class that contains the pertinate information about the specific disease
 class Infection {
@@ -22,10 +23,13 @@ public:
   int duration;          // 1 unit of time = 6 hours
   float contagiousness;  // Percent chance of transmission
   float radius;            // The radius in which transimission is possible
-  Infection(int d, float c, float r) {
+  float deadliness;      //percent chance of death due to infection
+  Infection(int d, float c, float r, float dd) {
     duration = d;
     contagiousness = c;
-    radius = r;}
+    radius = r;
+    deadliness = dd;
+  }
 } ;
 
 //A class that represents a single person that can move around randomly in the world and potentially get sick
@@ -37,9 +41,11 @@ public:
   Person() { 
     x = rand() % width; 
     y = rand() % height; 
-    state = Susceptible;}
-    void updateState(State s) {
-    state = s;}
+    state = Susceptible;
+  }
+  void updateState(State s) {
+    state = s;
+  }
   void infectWith(Infection i){
     updateState(Infected);
     infectedPeriod = i.duration;
@@ -50,14 +56,24 @@ public:
   bool isSusceptible(){
     return (state==Susceptible);
   }
+  bool isDead() {
+    return (state==Dead);
+  }
   void move() { 
     x = (x + (rand() % 5) - 2 + width) % width ; // Add width to ensure non-negativity...
     y = (y + (rand() % 5) - 2 + height) % height;
   }
-  void timeStep() { 
+   void timeStep(Infection inf) { 
     move();
-    if (infectedPeriod > 0) --infectedPeriod;
-    else if (infectedPeriod == 0 and isInfected()) updateState(Recovered);
+    if (isInfected()) {
+      if (infectedPeriod == 0) {
+        updateState(Recovered);
+      } else if (rand() % 100) <= int(inf.deadliness*100)) {
+        updateState(Dead);
+      } else {
+        infectedPeriod--;
+      }
+    }
   }
 };
 
@@ -168,17 +184,21 @@ int main(int argc, char** argv) {
       ++numInfected;
     if (MN[p].isSusceptible())
       ++numSusceptible;
+    if (MN[p].isDead())
+      ++numDead;
   }
   int totalInfected = 0, totalSusceptible = 0;
   MPI::COMM_WORLD.Reduce(&numInfected,&totalInfected,1,MPI::INT,MPI::SUM,head);
   MPI::COMM_WORLD.Reduce(&numSusceptible,&totalSusceptible,1,MPI::INT,MPI::SUM,head);
-
+  MPI::COMM_WORLD.Reduce(&numDead,&totalDead,1,MPI::INT,MPI::SUM,head);
+  
   //Print summary of final conditions
   if (my_rank == head) {
-  cout << numSusceptible << " persons are still susceptible" << endl;
-  cout << numInfected << " persons are currently infected" << endl;
-  cout << numPersons - numSusceptible - numInfected << " persons have recovered." << endl;
+    int numRecovered = numPersons - numSusceptible - numInfected;
+    cout << "Finished! After " << numIterations/4 << " days...\nNumber of persons\n\tSusceptible: " 
+    << numSusceptible << "\n\tInfected: " << numInfected << "\n\tRecovered: " 
+    << numRecovered << "\n\tDead: " << numDead << endl;
   }
-  
+
   MPI::Finalize();
 }
