@@ -1,0 +1,216 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Divergence Example &mdash; CUDA for C Novices</title>
+    
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="top" title="CUDA for C Novices" href="../index.html" />
+    <link rel="next" title="Questions" href="../Questions/Questions.html" />
+    <link rel="prev" title="Add Vectors Example" href="../addVectors/addVectors.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../Questions/Questions.html" title="Questions"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="../addVectors/addVectors.html" title="Add Vectors Example"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../index.html">CUDA for C Novices</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="divergence-example">
+<h1>Divergence Example<a class="headerlink" href="#divergence-example" title="Permalink to this headline">¶</a></h1>
+<p>Here is the code for divergence.cu</p>
+<div class="highlight-python"><pre>/*
+ * Code to demonstrate thread divergence
+ *
+ * compile with:
+ *   nvcc -o divergence divergence.cu
+ */
+
+#include &lt;stdio.h&gt;
+
+__global__ void kernel_1(int *a) {
+    int tid = threadIdx.x;
+    int cell = tid % 32;
+    a[cell]++;
+}
+
+__global__ void kernel_2(int *a) {
+    int tid = threadIdx.x;
+    int cell = tid % 32;
+    switch(cell) {
+    case 0:
+      a[0]++;
+      break;
+    case 1:
+      a[1]++;
+      break;
+    case 2:
+      a[2]++;
+      break;
+    case 3:
+      a[3]++;
+      break;
+    case 4:
+      a[4]++;
+      break;
+    case 5:
+      a[5]++;
+      break;
+    case 6:
+      a[6]++;
+      break;
+    case 7:
+      a[7]++;
+      break;
+    default:
+      a[cell]++;
+    }
+}
+
+void check(cudaError_t retVal) {
+  //takes return value of a CUDA function and checks if it was an error
+  if(retVal != cudaSuccess) {
+    fprintf(stderr, "ERROR: %s\n", cudaGetErrorString(retVal));
+    exit(1);
+  }
+}
+
+int main() {
+  int a[32];   //array used for bucketing (on host)
+  int *a_dev;  //GPU version
+
+  //allocate the memory on the GPU
+  check(cudaMalloc((void**)&amp;a_dev, 32*sizeof(int)));
+
+  //initialize a[i] to 0
+  for (int i=0; i&lt;32; i++)
+    a[i] = 0;
+
+  //allocate timers
+  cudaEvent_t start;
+  check(cudaEventCreate(&amp;start));
+  cudaEvent_t stop;
+  check(cudaEventCreate(&amp;stop));
+
+  //start timer
+  check(cudaEventRecord(start,0));
+
+  //transfer array to the GPU
+  check(cudaMemcpy(a_dev, a, 32*sizeof(int), cudaMemcpyHostToDevice));
+
+  //call the kernel
+  int threads = 512;
+  int blocks = 512;
+  kernel_2&lt;&lt;&lt;blocks,threads&gt;&gt;&gt;(a_dev);
+
+  //transfer array back to the host
+  check(cudaMemcpy(a, a_dev, 32*sizeof(int), cudaMemcpyDeviceToHost));
+
+  //stop timer and print time
+  check(cudaEventRecord(stop,0));
+  check(cudaEventSynchronize(stop));
+  float diff;
+  check(cudaEventElapsedTime(&amp;diff, start, stop));
+  printf("time: %f ms\n", diff);
+
+  /*
+    //print bucket contents
+    for(int i=0; i&lt;32; i++)
+    printf("%d ", a[i]);
+    printf("\n");
+  */
+
+  //free memory and deallocate timers
+  check(cudaFree(a_dev));
+  check(cudaEventDestroy(start));
+  check(cudaEventDestroy(stop));
+}</pre>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../index.html">
+              <img class="logo" src="../_static/CSInParallel200wide.png" alt="Logo"/>
+            </a></p>
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="../addVectors/addVectors.html"
+                        title="previous chapter">Add Vectors Example</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="../Questions/Questions.html"
+                        title="next chapter">Questions</a></p>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../Questions/Questions.html" title="Questions"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="../addVectors/addVectors.html" title="Add Vectors Example"
+             >previous</a> |</li>
+        <li><a href="../index.html">CUDA for C Novices</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright This work is licensed under a Creative Commons Attribution-ShareAlike 3.0 Unported License.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2b1.
+    </div>
+  </body>
+</html>

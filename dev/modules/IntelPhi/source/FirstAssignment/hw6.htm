@@ -1,0 +1,152 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Phi Demo Lab</title>
+</head>
+
+<body>
+<ul>
+  <li>SSH into the MTL</li>
+  <ul>
+    <li><code>ssh rab-s01@192.55.51.81</code></li>
+    <ul>
+      <li>Optionally use the <code>-Y</code> argument for X-forwarding, if you wish to use a GUI text editor like emacs</li>
+    </ul>
+  </ul>
+</ul>
+<ul>
+  <li>SSH into xeon1 (the machine with the Phi installed)</li>
+  <ul>
+    <li><code>ssh xeon1</code></li>
+    <ul>
+      <li>Again, optionally use the <code>-Y</code> argument for X-forwarding (this requires that it was used for the initial SSH connection into the MTL)</li>
+    </ul>
+  </ul>
+</ul>
+<ul>
+  <li>Make a subdirectory for yourself using your username and go to that directory</li>
+  <ul>
+    <li><code>mkdir username</code></li>
+    <li><code>cd username</code></li>
+  </ul>
+</ul>
+<ul>
+  <li>SSH into the Phi coprocessor</li>
+  <ul>
+    <li><code>ssh mic0</code></li>
+    <ul>
+      <li>If this does not work: <code>ssh 172.31.1.1</code></li>
+    </ul>
+  </ul>
+  <ul>
+    <li>The terminal prompt should look like this: <code>[rab-s01@xeon1-mic0 rab-s01]$ </code></li>
+  </ul>
+</ul>
+<ul>
+  <li>On the Phi, create a subdirectory for yourself using your username</li>
+  <ul>
+    <li><code>mkdir username</code></li>
+  </ul>
+</ul>
+<ul>
+  <li>Logout of the Phi</li>
+  <ul>
+    <li><code>exit</code></li>
+  </ul>
+</ul>
+<ul>
+  <li>Copy the trapezoid code from the phiDemo directory to your subdirectory and switch to that directory and list the contents</li>
+  <ul>
+    <li><code>cp -r ~/phiDemo/trap .</code></li>
+    <li><code>cd trap</code></li>
+    <li><code>ls</code></li>
+  </ul>
+</ul>
+<ul>
+  <li>This contains a correct version of trap.C that was produced in lab5 and a Make file</li>
+  <ul>
+    <li>Look at both files and note that we are using the intel C++ compiler instead of GCC</li>
+  </ul>
+</ul>
+<ul>
+  <li>Build trap on xeon1 and perform some trial runs, keeping track of the runtimes, with varying numbers of threads</li>
+  <ul>
+    <li><code>make</code></li>
+    <li><code>time ./trap 1</code></li>
+    <li><code>time ./trap 2</code></li>
+    <li><code>time ./trap 32</code></li>
+    <li>The xeon1 machine has 2 CPUs with 8 cores (16 threads) each</li>
+  </ul>
+</ul>
+<ul>
+  <li>Build trap to run natively on the Phi and move the executable there</li>
+  <ul>
+    <li><code>make phi</code></li>
+    <li><code>scp trap mic0:username/.</code></li>
+    <ul>
+      <li>Using your username as the directory</li>
+    </ul>
+  </ul>
+</ul>
+<ul>
+  <li>SSH into the Phi and run trial runs there, keeping track of the runtimes, with varying numbers of threads</li>
+  <ul>
+    <li><code>ssh mic0</code></li>
+    <li><code>cd username</code></li>
+    <li><code>time ./trap 1</code></li>
+    <li><code>time ./trap 61</code></li>
+    <li><code>time ./trap 244</code></li>
+    <li>The Phi coprocessor has 61 cores and can run a total of 244 threads</li>
+    <li><em><b>Note:</b> Typically, the Phi does not have the OpenMP runtime library. This needs to be copied to the Phi and added to the <code>LD_LIBRARY_PATH</code> environment variable. This has already been done for the <code>rab-s01</code> account and you can see the Phi version of the runtime library in the <code>~/libs</code> directory on the Phi.</em></li>
+  </ul>
+</ul>
+<ul>
+  <li>Compare the speedups achieved on xeon1 (a traditional multicore computer) and the Phi coprocessor</li>
+  <ul>
+    <li>Note: xeon1 has a 2.60 GHz clock speed and the Phi has a 1.053 GHz clock speed</li>
+  </ul>
+</ul>
+<ul>
+  <li>Optional: Test on the MTL which has 4 CPUS with 10 cores (20 threads) each</li>
+  <li>Optional: copy other OpenMP programs, such as the sieve of eratosthenes, from previous labs to the Phi and try them</li>
+  <ul>
+    <li>Look at the trap Makefile for how to compile for the Phi using icc</li>
+  </ul>
+</ul>
+<br />
+<ul>
+  <li>Offloading sections of code to the Phi</li>
+  <ul>
+    <li>Example</li>
+    <ul>
+      <li>Copy the example offload code to your directory</li>
+      <ul>
+        <li>cp -r ~/phiDemo/offload .</li>
+      </ul>
+    </ul>
+    <ul>
+      <li>Examine the file offload.C</li>
+      <ul>
+        <li>Note the offload pragma</li>
+      </ul>
+    </ul>
+    <ul>
+      <li>Run the makefile and try the code</li>
+      <ul>
+        <li>It prints the available threads first on the host machine and then on the Phi coprocessor</li>
+      </ul>
+    </ul>
+  </ul>
+  <ul>
+    <li>Modifying trap.C</li>
+    <ul>
+      <li>Modify your trap.C to run on the host machine but offload the parallel portion to the Phi</li>
+      <li>Add an offload pragma</li>
+      <li>See <a href="http://software.intel.com/sites/products/documentation/doclib/stdxe/2013/composerxe/compiler/cpp-lin/index.htm">this page</a> and search for offload for documentation on the offload pragma</li>
+    </ul>
+  </ul>
+</ul>
+<p style="font-size: x-small"><a href="/cwis_policies/personal_disclaimer.html"><em>Disclaimer</em></a></p>
+</body>
+</html>
