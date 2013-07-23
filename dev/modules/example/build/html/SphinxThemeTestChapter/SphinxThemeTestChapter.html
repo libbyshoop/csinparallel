@@ -1,0 +1,306 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Example Module &mdash; Module Example</title>
+    
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="top" title="Module Example" href="../index.html" />
+    <link rel="prev" title="Module Example" href="../index.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../index.html" title="Module Example"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../index.html">Module Example</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="example-module">
+<h1>Example Module<a class="headerlink" href="#example-module" title="Permalink to this headline">¶</a></h1>
+<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+<p>This is for bold <strong>Lorem ipsum</strong>.</p>
+<p>This is for italic <em>Lorem ipsum</em>.</p>
+<div class="section" id="this-is-a-subtitle">
+<h2>This is a subtitle<a class="headerlink" href="#this-is-a-subtitle" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="this-is-a-subsubtitle">
+<h3>This is a subsubtitle<a class="headerlink" href="#this-is-a-subsubtitle" title="Permalink to this headline">¶</a></h3>
+</div>
+<div class="section" id="how-to-include-code">
+<h3>How to include Code<a class="headerlink" href="#how-to-include-code" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-c"><div class="highlight"><pre><span class="cm">/*</span>
+<span class="cm">    find_infected()</span>
+<span class="cm">        Each process determines its infected x locations </span>
+<span class="cm">        and infected y locations</span>
+<span class="cm">*/</span>
+<span class="kt">void</span> <span class="nf">find_infected</span><span class="p">(</span><span class="k">struct</span> <span class="n">global_t</span> <span class="o">*</span><span class="n">global</span><span class="p">,</span> <span class="k">struct</span> <span class="n">our_t</span> <span class="o">*</span><span class="n">our</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="c1">// counter to keep track of person in our struct</span>
+    <span class="kt">int</span> <span class="n">our_person1</span><span class="p">;</span>
+
+    <span class="kt">int</span> <span class="n">our_current_infected_person</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="k">for</span><span class="p">(</span><span class="n">our_person1</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">our_person1</span> <span class="o">&lt;=</span> <span class="n">our</span><span class="o">-&gt;</span><span class="n">our_number_of_people</span> <span class="o">-</span> <span class="mi">1</span><span class="p">;</span> 
+        <span class="n">our_person1</span><span class="o">++</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="k">if</span><span class="p">(</span><span class="n">our</span><span class="o">-&gt;</span><span class="n">our_states</span><span class="p">[</span><span class="n">our_person1</span><span class="p">]</span> <span class="o">==</span> <span class="n">INFECTED</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="n">our</span><span class="o">-&gt;</span><span class="n">our_infected_x_locations</span><span class="p">[</span><span class="n">our_current_infected_person</span><span class="p">]</span> <span class="o">=</span> 
+            <span class="n">our</span><span class="o">-&gt;</span><span class="n">our_x_locations</span><span class="p">[</span><span class="n">our_person1</span><span class="p">];</span>
+            <span class="n">our</span><span class="o">-&gt;</span><span class="n">our_infected_y_locations</span><span class="p">[</span><span class="n">our_current_infected_person</span><span class="p">]</span> <span class="o">=</span>
+            <span class="n">our</span><span class="o">-&gt;</span><span class="n">our_y_locations</span><span class="p">[</span><span class="n">our_person1</span><span class="p">];</span>
+            <span class="n">our_current_infected_person</span><span class="o">++</span><span class="p">;</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="how-to-create-a-list">
+<h3>How to create a list<a class="headerlink" href="#how-to-create-a-list" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li>This is a bulleted list.</li>
+<li>It has two items, the second
+item uses two lines. (note the indentation)</li>
+</ul>
+<ol class="arabic simple">
+<li>This is a numbered list.</li>
+<li>It has two items too.</li>
+<li>This is a numbered list.</li>
+<li>It has two items too.</li>
+</ol>
+</div>
+<div class="section" id="colored-blocks">
+<h3>Colored Blocks<a class="headerlink" href="#colored-blocks" title="Permalink to this headline">¶</a></h3>
+<div class="admonition-see-also admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last">This is a simple <strong>seealso</strong> note.</p>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">This is a simple <strong>note</strong> note.</p>
+</div>
+<div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<p class="last">This is a simple <strong>warning</strong> note.</p>
+</div>
+<div class="topic">
+<p class="topic-title first">Dig Deeper:</p>
+<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Comments:</th><td class="field-body">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="this-is-a-table">
+<h3>This is a Table<a class="headerlink" href="#this-is-a-table" title="Permalink to this headline">¶</a></h3>
+<table border="1" class="docutils">
+<colgroup>
+<col width="32%" />
+<col width="34%" />
+<col width="34%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Header 1</th>
+<th class="head">Header 2</th>
+<th class="head">Header 3</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>line 1 column 1</td>
+<td><div class="first last line-block">
+<div class="line">line 1 column 2</div>
+</div>
+</td>
+<td><div class="first last line-block">
+<div class="line">line 1 column 3</div>
+</div>
+</td>
+</tr>
+<tr class="row-odd"><td>line 2 column 1</td>
+<td><div class="first last line-block">
+<div class="line">line 2 column 2</div>
+</div>
+</td>
+<td><div class="first last line-block">
+<div class="line">line 2 column 3</div>
+</div>
+</td>
+</tr>
+<tr class="row-even"><td>line 3 column 1</td>
+<td><div class="first last line-block">
+<div class="line">line 3 column 2</div>
+</div>
+</td>
+<td><div class="first last line-block">
+<div class="line">line 3 column 3</div>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="how-to-create-hyperlinks">
+<h3>How to create hyperlinks<a class="headerlink" href="#how-to-create-hyperlinks" title="Permalink to this headline">¶</a></h3>
+<p>This is a link to <a class="reference external" href="http://www.google.com/">Google</a>.</p>
+<p>A really good site to find color schemes <a class="reference external" href="http://www.colorhexa.com/">ColorHexa</a></p>
+</div>
+<div class="section" id="how-to-include-math">
+<h3>How to include Math<a class="headerlink" href="#how-to-include-math" title="Permalink to this headline">¶</a></h3>
+<p>The classic model of the computer, first established by John von
+Neumann in the 20:math:<cite>{}^{th}</cite> century, has a single CPU connected to
+memory.</p>
+<p>Speedup(N) = <img class="math" src="../_images/math/4cf8a95741445486b25d66f187e971d935f1a59d.png" alt="N–(1–P)*(N–1)"/></p>
+<div class="math">
+<p><img src="../_images/math/a57d3a2e5d07621935490ccf72aa817180166278.png" alt="n_{\mathrm{offset}} = \sum_{k=0}^{N-1} s_k n_k"/></p>
+</div></div>
+<div class="section" id="how-to-include-image">
+<h3>How to include image<a class="headerlink" href="#how-to-include-image" title="Permalink to this headline">¶</a></h3>
+<img alt="alternate text" class="align-center" src="../_images/image1.jpg" style="width: 640px; height: 360px;" />
+</div>
+<div class="section" id="how-to-include-figure">
+<h3>How to include figure<a class="headerlink" href="#how-to-include-figure" title="Permalink to this headline">¶</a></h3>
+<div class="align-center figure align-center">
+<img alt="alternate text" src="../_images/image1.jpg" style="width: 640px; height: 360px;" />
+<p class="caption">figure are like images but with a caption and whatever else you wish to add</p>
+</div>
+</div>
+<div class="section" id="glossary-download-and-field-list">
+<h3>glossary, download and field list<a class="headerlink" href="#glossary-download-and-field-list" title="Permalink to this headline">¶</a></h3>
+<dl class="glossary docutils">
+<dt id="term-apical">apical</dt>
+<dd>at the top of the plant.</dd>
+</dl>
+<p><a class="reference download internal" href="../_downloads/code.h"><tt class="xref download docutils literal"><span class="pre">download</span> <span class="pre">code.h</span></tt></a></p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Whatever:</th><td class="field-body">this is handy to create new field</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="footnote-and-citations">
+<h3>footnote and citations<a class="headerlink" href="#footnote-and-citations" title="Permalink to this headline">¶</a></h3>
+<p>This is that a test for footnote, like <a class="footnote-reference" href="#id3" id="id1">[1]</a> may be defined at the bottom of the page:</p>
+<p>This is a test for citation references, like <a class="reference internal" href="#cit2002">[CIT2002]</a> may be defined at the bottom of the page:</p>
+<table class="docutils footnote" frame="void" id="id3" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id1">[1]</a></td><td>Note that we are using footnote</td></tr>
+</tbody>
+</table>
+<table class="docutils citation" frame="void" id="cit2002" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id2">[CIT2002]</a></td><td>This is a citation</td></tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../index.html">
+              <img class="logo" src="../_static/CSInParallel200wide.png" alt="Logo"/>
+            </a></p>
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Example Module</a><ul>
+<li><a class="reference internal" href="#this-is-a-subtitle">This is a subtitle</a><ul>
+<li><a class="reference internal" href="#this-is-a-subsubtitle">This is a subsubtitle</a></li>
+<li><a class="reference internal" href="#how-to-include-code">How to include Code</a></li>
+<li><a class="reference internal" href="#how-to-create-a-list">How to create a list</a></li>
+<li><a class="reference internal" href="#colored-blocks">Colored Blocks</a></li>
+<li><a class="reference internal" href="#this-is-a-table">This is a Table</a></li>
+<li><a class="reference internal" href="#how-to-create-hyperlinks">How to create hyperlinks</a></li>
+<li><a class="reference internal" href="#how-to-include-math">How to include Math</a></li>
+<li><a class="reference internal" href="#how-to-include-image">How to include image</a></li>
+<li><a class="reference internal" href="#how-to-include-figure">How to include figure</a></li>
+<li><a class="reference internal" href="#glossary-download-and-field-list">glossary, download and field list</a></li>
+<li><a class="reference internal" href="#footnote-and-citations">footnote and citations</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="../index.html"
+                        title="previous chapter">Module Example</a></p>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../index.html" title="Module Example"
+             >previous</a> |</li>
+        <li><a href="../index.html">Module Example</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright This work is licensed under a Creative Commons Attribution-ShareAlike 3.0 Unported License.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>

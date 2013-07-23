@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 #
-# Pandemic Exemplar (for those with some experience) documentation build configuration file, created by
-# sphinx-quickstart on Wed Jul  3 12:30:31 2013.
+# example documentation build configuration file, created by
+# sphinx-quickstart on Tue Jul 23 16:37:56 2013.
 #
 # This file is execfile()d with the current directory set to its containing dir.
 #
@@ -28,14 +28,14 @@ import sys, os, platform
 extensions = ['sphinx.ext.pngmath']
 
 if 'Darwin' in platform.uname()[0]:
-        pngmath_latex = '/usr/local/texlive/2011/bin/x86_64-darwin//latex'
-        pngmath_dvipng = '/usr/local/texlive/2011/bin/x86_64-darwin//dvipng'
+    pngmath_latex = '/usr/local/texlive/2011/bin/x86_64-darwin//latex'
+    pngmath_dvipng = '/usr/local/texlive/2011/bin/x86_64-darwin//dvipng'
 elif 'Linux' in platform.uname()[0]:
-        pngmath_latex = '/usr/bin/latex'
-        pngmath_dvipng = '/usr/bin/dvipng'
+    pngmath_latex = '/usr/bin/latex'
+    pngmath_dvipng = '/usr/bin/dvipng'
 elif 'Windows' in platform.uname()[0]:
-        pngmath_latex = ''
-        pngmath_dvipng = ''
+    pngmath_latex = ''
+    pngmath_dvipng = ''
 
 # !!!!!!!!!!!!!!!!!
 pngmath_dvipng_args = ['-gamma 1.5', '-D 150', '-bg rgb 0.937 0.937 0.882']
@@ -53,7 +53,7 @@ source_suffix = '.rst'
 master_doc = 'index'
 
 # General information about the project.
-project = u'Pandemic Exemplar (for those with some experience)'
+project = u'example'
 copyright = u'This work is licensed under a Creative Commons Attribution-ShareAlike 3.0 Unported License'
 
 # The version info for the project you're documenting, acts as replacement for
@@ -116,14 +116,14 @@ html_theme = 'default'
 
 # The name for this set of Sphinx documents.  If None, it defaults to
 # "<project> v<release> documentation".
-html_title = 'Pandemic Exemplar (for those with some experience)'
+html_title = 'Module Example'
 
 # A shorter title for the navigation bar.  Default is the same as html_title.
 #html_short_title = None
 
 # The name of an image file (relative to this directory) to place at the top
 # of the sidebar.
-html_logo = '../../../images/CSInParallel200wide.png' 
+html_logo = '../../../images/CSInParallel200wide.png'
 
 # The name of an image file (within the static path) to use as favicon of the
 # docs.  This file should be a Windows icon file (.ico) being 16x16 or 32x32
@@ -177,7 +177,7 @@ html_show_sourcelink = False
 #html_file_suffix = None
 
 # Output file base name for HTML help builder.
-htmlhelp_basename = 'PandemicExemplarforthosewithsomeexperiencedoc'
+htmlhelp_basename = 'exampledoc'
 
 
 # -- Options for LaTeX output --------------------------------------------------
@@ -197,8 +197,8 @@ latex_elements = {
 # Grouping the document tree into LaTeX files. List of tuples
 # (source start file, target name, title, author, documentclass [howto/manual]).
 latex_documents = [
-  ('index', 'PandemicExemplarforthosewithsomeexperience.tex', u'Pandemic Exemplar (for those with some experience) Documentation',
-   u'CSinParallel Project', 'manual'),
+  ('index', 'example.tex', u'example',
+   u'CSInParallel Project', 'manual'),
 ]
 
 # The name of an image file (relative to this directory) to place at the top of
@@ -227,8 +227,8 @@ latex_documents = [
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
 man_pages = [
-    ('index', 'pandemicexemplarforthosewithsomeexperience', u'Pandemic Exemplar (for those with some experience)',
-     [u'CSinParallel Project'], 1)
+    ('index', 'example', u'example',
+     [u'CSInParallel Project'], 1)
 ]
 
 # If true, show URL addresses after external links.
@@ -241,8 +241,8 @@ man_pages = [
 # (source start file, target name, title, author,
 #  dir menu entry, description, category)
 texinfo_documents = [
-  ('index', 'PandemicExemplarforthosewithsomeexperience', u'Pandemic Exemplar (for those with some experience)',
-   u'CSinParallel Project', 'PandemicExemplarforthosewithsomeexperience', 'One line description of project.',
+  ('index', 'example', u'example',
+   u'CSInParallel Project', 'example', 'One line description of project.',
    'Miscellaneous'),
 ]
 
