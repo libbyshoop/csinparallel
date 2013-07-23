@@ -11,7 +11,7 @@
 # All configuration values have a default; values that are commented out
 # serve to show the default.
 
-import sys, os
+import sys, os, platform
 
 # If extensions (or modules to document with autodoc) are in another directory,
 # add these directories to sys.path here. If the directory is relative to the
@@ -27,12 +27,15 @@ import sys, os
 # coming with Sphinx (named 'sphinx.ext.*') or your custom ones.
 extensions = ['sphinx.ext.pngmath']
 
-if 'Darwin' in os.uname()[0]:
+if 'Darwin' in platform.uname()[0]:
         pngmath_latex = '/usr/local/texlive/2011/bin/x86_64-darwin/latex'
-        pngmath_dvipng = '/usr/local/texlive/2011/bin/x86_64-darwin/dvipng'
-elif 'Linux' in os.uname()[0]:
-        pngmath_latex = '/usr/bin/latex'
-        pngmath_dvipng = '/usr/bin/dvipng'
+	pngmath_dvipng = '/usr/local/texlive/2011/bin/x86_64-darwin/dvipng'
+elif 'Linux' in platform.uname()[0]:
+	pngmath_latex = '/usr/bin/latex'
+	pngmath_dvipng = '/usr/bin/dvipng'
+elif 'Windows' in platform.uname()[0]:
+	pngmath_latex = ''
+	pngmath_dvipng = ''
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']

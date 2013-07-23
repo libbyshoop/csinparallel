@@ -1,0 +1,157 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Using Vectorization &mdash; Vectorization</title>
+    
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="top" title="Vectorization" href="../index.html" />
+    <link rel="prev" title="Improving Performance" href="../ImprovingPerformance/improve.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../ImprovingPerformance/improve.html" title="Improving Performance"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../index.html">Vectorization</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="using-vectorization">
+<h1>Using Vectorization<a class="headerlink" href="#using-vectorization" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="setup">
+<h2>Setup<a class="headerlink" href="#setup" title="Permalink to this headline">¶</a></h2>
+<p>Download the code to be modified <a class="reference download internal" href="../_downloads/cdms_vector.cpp"><tt class="xref download docutils literal"><span class="pre">cdms_vector.cpp</span></tt></a> and some data to compute with, <a class="reference download internal" href="../_downloads/data2.txt"><tt class="xref download docutils literal"><span class="pre">data2.txt</span></tt></a> and copy it onto the Phi. This data is a table of data about particle position and motion. Columns 13, 14, and 15 represent the normalized momentum of a detected particle in the x, y, and z directions.</p>
+</div>
+<div class="section" id="modifying-the-existing-code">
+<h2>Modifying the Existing Code<a class="headerlink" href="#modifying-the-existing-code" title="Permalink to this headline">¶</a></h2>
+<p>Open up &#8220;cdms_vector.cpp&#8221; and take a look at the written code. As it stands, this code simply uses the read_cols function reads in columns 13, 14, and 15 of the data, described above, and stores them in the 2-dimensional <tt class="docutils literal"><span class="pre">data</span></tt> array. The code then initializes variables for timing the computation, before timing nothing in the following lines:</p>
+<div class="highlight-c++"><div class="highlight"><pre>  <span class="n">startTime</span><span class="o">=</span><span class="n">clock_it</span><span class="p">();</span> <span class="c1">//start timer</span>
+
+  <span class="c1">// --- YOUR COMPUTATION HERE ---</span>
+
+  <span class="n">endTime</span><span class="o">=</span><span class="n">clock_it</span><span class="p">();</span>
+</pre></div>
+</div>
+<p>We want to add a computation that can be vectorized, so at the <tt class="docutils literal"><span class="pre">YOUR</span> <span class="pre">COMPUTATION</span> <span class="pre">HERE</span></tt> message, write a loop to calculate the total momentum of each particle and store it in a new single-dimensional array.  Since the momentums have been normalized, print statements shoould be able to verify a result of 1 for each entry.</p>
+</div>
+<div class="section" id="compiling-with-and-without-vectorization">
+<h2>Compiling With and Without Vectorization<a class="headerlink" href="#compiling-with-and-without-vectorization" title="Permalink to this headline">¶</a></h2>
+<p>Now, compile the program in two different ways, with and without vectorization.</p>
+<p>First, compile without the vectorization by using the -O1 flag:</p>
+<div class="highlight-python"><pre>icpc -O1 -std=c99 cdms_vec.cpp -o cdms_novec</pre>
+</div>
+<p>Second, compile with vectorization by allowing auto-vectorization to occur:</p>
+<div class="highlight-python"><pre>icpc -std=c99 -vec-report2 cdms_vec.cpp -o cdms_vec</pre>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">TODO: Should we somehow <em>use</em> the vector report here? I never actually have.</p>
+</div>
+<p>Now run both of those executables, noting the run times:</p>
+<div class="highlight-python"><pre>% ./cdms_novec
+Total time elapsed: 0.00904894 seconds
+% ./cdms_vec
+Total time elapsed: 0.00875807 seconds</pre>
+</div>
+<p>You may want to run each command multiple times to get a more representative sample.</p>
+</div>
+<div class="section" id="improving-the-vectorization-performance">
+<h2>Improving the Vectorization Performance<a class="headerlink" href="#improving-the-vectorization-performance" title="Permalink to this headline">¶</a></h2>
+<p>In order to improve the vectorization performance (or allow vectorization if the previous code did not vectorize), we can align the data as mentioned in the previous pages. When writing the data into the data array (inside the readCols function), insert <tt class="docutils literal"><span class="pre">__attribute__((aligned(16)))</span></tt> just before the semicolon at the end of the line where each column is assigned. Compile again with vectorization and note any performance improvement.</p>
+</div>
+<div class="section" id="trying-another-computation">
+<h2>Trying Another Computation<a class="headerlink" href="#trying-another-computation" title="Permalink to this headline">¶</a></h2>
+<p>Now try another computation: copy &#8220;cdms_vector.cpp&#8221; and, instead of calculating the total momentum of each particle, calculate the average x-momentum (column 13) of all the particles. Try to see what happens and whether this can be vectorized. Pragma compiler commands may or may not be useful (e.g. <tt class="docutils literal"><span class="pre">#pragma</span> <span class="pre">vector</span> <span class="pre">always</span></tt>).</p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../index.html">
+              <img class="logo" src="../_static/CSInParallel200wide.png" alt="Logo"/>
+            </a></p>
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Using Vectorization</a><ul>
+<li><a class="reference internal" href="#setup">Setup</a></li>
+<li><a class="reference internal" href="#modifying-the-existing-code">Modifying the Existing Code</a></li>
+<li><a class="reference internal" href="#compiling-with-and-without-vectorization">Compiling With and Without Vectorization</a></li>
+<li><a class="reference internal" href="#improving-the-vectorization-performance">Improving the Vectorization Performance</a></li>
+<li><a class="reference internal" href="#trying-another-computation">Trying Another Computation</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="../ImprovingPerformance/improve.html"
+                        title="previous chapter">Improving Performance</a></p>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../ImprovingPerformance/improve.html" title="Improving Performance"
+             >previous</a> |</li>
+        <li><a href="../index.html">Vectorization</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright This work is licensed under a Creative Commons Attribution-ShareAlike 3.0 Unported License..
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>

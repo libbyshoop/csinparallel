@@ -1,0 +1,135 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Pi Using Numerical Integration: Pthreads &mdash; Pi Using Numerical Integration: Pthreads</title>
+    
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="Pi Using Numerical Integration: Pthreads" href="#" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li><a href="#">Pi Using Numerical Integration: Pthreads</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="pi-using-numerical-integration-pthreads">
+<h1>Pi Using Numerical Integration: Pthreads<a class="headerlink" href="#pi-using-numerical-integration-pthreads" title="Permalink to this headline">¶</a></h1>
+<p>An implementation of the area computation with the POSIX threads (Pthreads) explicit threading model is shown here. In the main() routine, a number (NUMTHREADS) of threads are spawned to execute the function Area(). This function takes one argument: (a pointer to) the thread number generated and stored in the tNum array. After the child threads are launched, the main() thread will call pthread_join to wait for each thread, in turn, to complete computation. The computed area of the half circle will then be stored in gPi. Multiply this result by 2.0 to compute the approximation to pi.</p>
+<p>The threaded function Area() uses the thread number (0..NUMTHREADS-1) to initialize the local loop iteration variable. This value is used to compute the midpoint of a rectangle, the height of the rectangle, and then the area of the rectangle. Notice how the increment value in the for-loop is the number of threads. In the code given, this will have the loop of the first thread (myNum == 0) take on values 0, 4, 8, 12, etc., while the last thread (myNum == 3) will use the iteration values 3, 7, 11, 15, etc. This scheme ensures that all values in the NUM_RECT range are used and only used by one thread.</p>
+<p>Rather than update the shared summation variable, gPi, each time a new rectangle area is computed, a local partial sum variable is used within each thread. Once the loop has completed, each partial sum is added to the shared sum with a critical region protected by the mutex object gLock. In this way, protected updates to the shared variable are done only once per thread (4 times) rather than once per rectangle (NUM_RECT times).</p>
+<div class="highlight-python"><pre>#include &lt;stdio.h&gt;
+#include &lt;math.h&gt;
+#include &lt;pthread.h&gt;
+#define NUM_RECT 10000000
+#define NUMTHREADS 4
+double gPi = 0.0;  //  global accumulator for areas computed
+pthread_mutex_t gLock;
+
+void *Area(void *pArg){
+           int myNum = *((int *)pArg);
+           double h = 2.0 / NUM_RECT;
+           double partialSum = 0.0, x;  // local to each thread
+
+           // use every NUMTHREADS-th ste
+           for (int i = myNum; i &lt; NUM_RECT; i += NUMTHREADS){
+       x = -1 + (i + 0.5f) * h;
+                   partialSum += sqrt(1.0 - x*x) * h;
+           }
+           pthread_mutex_lock(&amp;gLock);
+           gPi += partialSum;  // add partial to global final answer
+           pthread_mutex_unlock(&amp;gLock);
+           return 0;
+}
+
+int main(int argc, char **argv) {
+
+pthread_t tHandles[NUMTHREADS]; int tNum[NUMTHREADS], i;
+pthread_mutex_init(&amp;gLock, NULL);
+for ( i = 0; i &lt; NUMTHREADS; ++i ) {
+tNum[i] = i;
+pthread_create(&amp;tHandles[i],           // Returned thread handle
+                       NULL,                 // Thread Attributes
+                       Area,                   // Thread function
+                       (void)&amp;tNum[i]);        // Data for Area()
+}
+for ( i = 0; i &lt; NUMTHREADS; ++i ) {
+   pthread_join(tHandles[i], NULL);
+}
+gPi *= 2.0;
+printf("Computed value of Pi:  %12.9f\n", gPi );
+pthread_mutex_destroy(&amp;gLock);
+return 0;
+}</pre>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="#">
+              <img class="logo" src="_static/CSInParallel200wide.png" alt="Logo"/>
+            </a></p>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li><a href="#">Pi Using Numerical Integration: Pthreads</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright This work is licensed under a Creative Commons Attribution-ShareAlike 3.0 Unported License.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2b1.
+    </div>
+  </body>
+</html>

@@ -1,0 +1,136 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Pi Using Numerical Integration: Go Language &mdash; Pi Using Numerical Integration: Go Language</title>
+    
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="Pi Using Numerical Integration: Go Language" href="#" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li><a href="#">Pi Using Numerical Integration: Go Language</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="pi-using-numerical-integration-go-language">
+<h1>Pi Using Numerical Integration: Go Language<a class="headerlink" href="#pi-using-numerical-integration-go-language" title="Permalink to this headline">¶</a></h1>
+<p>Go is a new open-source language with built-in support for concurrency developed at Google. You may get more info on the language at <a class="reference external" href="http://golang.org/">http://golang.org/</a>. In particular, here is an introduction into concurrency constructs: <a class="reference external" href="http://golang.org/doc/effective_go.html#concurrency">http://golang.org/doc/effective_go.html#concurrency</a>.  You can find the program in easily downloadable form <a class="reference external" href="https://code.google.com/p/eapf-tech-pack-practicum/source/browse/trunk/pi_integration/pi_area_go.go">here</a>.</p>
+<div class="highlight-python"><pre>package main
+
+import (
+        "flag"
+        "fmt"
+        "math"
+        "runtime"
+)
+
+var (
+        nRect  = flag.Int("rect", 1e6, "number of rectangles")
+        nGrain = flag.Int("grain", 1e4, "parallel task grain size (in rectangles)")
+        nCPU   = flag.Int("cpu", 1, "number of CPUs to use")
+)
+
+func main() {
+        flag.Parse()
+        runtime.GOMAXPROCS(*nCPU)   // Set number of OS threads to use.
+        nParts := 0                 // Number of parallel tasks.
+        parts := make(chan float64) // Channel to collect part results.
+        for i := 0; i &lt; *nRect; i += *nGrain {
+                nParts += 1
+                end := i + *nGrain // Calculate end of this part.
+                if end &gt; *nRect {
+                        end = *nRect
+                }
+                // Launch a concurrent goroutine to process this part.
+                go func(begin, end int) {
+                        sum := 0.0
+                        h := 2.0 / float64(*nRect)
+                        for i := begin; i &lt; end; i++ {
+                                x := -1 + (float64(i)+0.5)*h
+                                sum += math.Sqrt(1-x*x) * h
+                        }
+                        parts &lt;- sum // Send the result back.
+                }(i, end)
+        }
+
+        // Aggregate part results.
+        sum := 0.0
+        for p := 0; p &lt; nParts; p++ {
+                sum += &lt;-parts
+        }
+        pi := sum * 2.0
+        fmt.Printf("PI = %g\n", pi)
+}</pre>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="#">
+              <img class="logo" src="_static/CSInParallel200wide.png" alt="Logo"/>
+            </a></p>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li><a href="#">Pi Using Numerical Integration: Go Language</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright This work is licensed under a Creative Commons Attribution-ShareAlike 3.0 Unported License.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2b1.
+    </div>
+  </body>
+</html>
