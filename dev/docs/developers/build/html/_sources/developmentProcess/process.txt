@@ -62,7 +62,7 @@ From the command line:
 	git add <file or directory>
 	git commit 
 
-	git pull develop
+	git pull origin develop
 
 	git push origin ls-dev
 
