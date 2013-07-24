@@ -69,7 +69,7 @@ the second specifies the number of chunks. In our tests, we told the program to 
 as we had cores. The performance levels off at 8 cores. The sequential code was also run on 1 core with an
 average run time of 19.40 seconds. The average parallel Riemann run time ordered by number of cores is shown in the table below.
 
-.. image:: CAPTURE.png
+.. figure:: CAPTURE.png
 	:height: 100px
 	:align: center
 
