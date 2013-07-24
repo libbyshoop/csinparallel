@@ -1,0 +1,132 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Appendix &mdash; Parallel Haskell</title>
+    
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="top" title="Parallel Haskell" href="../index.html" />
+    <link rel="prev" title="Parallel Haskell in the Classroom" href="../ParallelHaskellInTheClassroom/ParallelHaskellInTheClassroom.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../ParallelHaskellInTheClassroom/ParallelHaskellInTheClassroom.html" title="Parallel Haskell in the Classroom"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../index.html">Parallel Haskell</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="appendix">
+<h1>Appendix<a class="headerlink" href="#appendix" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="introductory-parallel-haskell-assignment">
+<h2>Introductory Parallel Haskell Assignment<a class="headerlink" href="#introductory-parallel-haskell-assignment" title="Permalink to this headline">¶</a></h2>
+<p>This could be assigned after a class has reviewed the parallel tools <tt class="docutils literal"><span class="pre">par</span></tt> and <tt class="docutils literal"><span class="pre">pseq</span></tt>. Students should have been taught a Haskell quicksort or similar program. The following code, the classic quicksort algorithm, is a refresher:</p>
+<div class="highlight-python"><pre>1   quicksort :: (Ord a) =&gt; [a] -&gt; [a]
+2   quicksort [ ] = [ ]
+3   quicksort (x:xs) = lesser ++ x:greater
+4        where   lesser = quicksort [y | y &lt;- xs, y &lt; x]
+5                greater = quicksort [z | z &lt;-xs, z &gt;= x]</pre>
+</div>
+<ol class="arabic simple">
+<li><strong>Briefly explain how this code functions; Where is the recursive step? Why is the line</strong> <tt class="docutils literal"><span class="pre">quicksort</span> <span class="pre">[</span> <span class="pre">]</span> <span class="pre">=</span> <span class="pre">[</span> <span class="pre">]</span></tt> <strong>needed?</strong></li>
+</ol>
+<p>The code is a recursive quicksort. The line <tt class="docutils literal"><span class="pre">quicksort</span> <span class="pre">[</span> <span class="pre">]</span> <span class="pre">=</span> <span class="pre">[</span> <span class="pre">]</span></tt> is the base case, in order to prevent the recursion from going on forever. The next line, <tt class="docutils literal"><span class="pre">lesser</span> <span class="pre">++</span> <span class="pre">x:greater</span></tt> takes the list returned from <tt class="docutils literal"><span class="pre">lesser</span></tt>, and concatenates it with <tt class="docutils literal"><span class="pre">x:greater</span></tt>. <tt class="docutils literal"><span class="pre">x:greater</span></tt> appends <tt class="docutils literal"><span class="pre">x</span></tt> to the list returned from <tt class="docutils literal"><span class="pre">greater</span></tt>. <tt class="docutils literal"><span class="pre">lesser</span></tt> is the first recursive call. It quicksorts all data valued less than <tt class="docutils literal"><span class="pre">x</span></tt>. <tt class="docutils literal"><span class="pre">greater</span></tt> is the second recursive call. It quicksorts all data valued greater than <tt class="docutils literal"><span class="pre">x</span></tt>.</p>
+<ol class="arabic simple" start="2">
+<li><strong>We want to end up parallelizing this code. What parts of the program can be run in parallel?</strong></li>
+</ol>
+<p>Each quicksort call makes two recursive calls with independent sublists: <tt class="docutils literal"><span class="pre">lesser</span></tt> and <tt class="docutils literal"><span class="pre">greater</span></tt>. <tt class="docutils literal"><span class="pre">lesser</span></tt> can be evaluated in parallel with <tt class="docutils literal"><span class="pre">greater</span></tt>, at any level of the recursion because they do not share any data, and they can work independently of each other.</p>
+<ol class="arabic simple" start="3">
+<li><strong>We now want to include the</strong> <tt class="docutils literal"><span class="pre">par</span></tt> <strong>function, which evaluates its left argument in parallel while moving on to its right argument. We can start by rewriting the third line of code as,</strong> <tt class="docutils literal"><span class="pre">quicksort</span> <span class="pre">(x:xs)</span> <span class="pre">=</span> <span class="pre">lesser</span> <span class="pre">`par`</span> <span class="pre">(lesser</span> <span class="pre">++</span> <span class="pre">x:greater)</span></tt> <strong>. Would this successfully sort the data in parallel? Why or why not?</strong></li>
+</ol>
+<p>As it is, this line of code will not work. Remember that the right side of <tt class="docutils literal"><span class="pre">par</span></tt> evaluates at the same time as the left side. However, here, the right side of <tt class="docutils literal"><span class="pre">par</span></tt> concatenates <tt class="docutils literal"><span class="pre">lesser</span></tt> with <tt class="docutils literal"><span class="pre">x:greater</span></tt>. But the left side of <tt class="docutils literal"><span class="pre">par</span></tt> is still evaluating <tt class="docutils literal"><span class="pre">lesser</span></tt>. How can we concatenate the list returned from lesser with another list if lesser is not yet done evaluating? This code runs the risk of returning an incomplete or unsorted list.</p>
+<ol class="arabic simple" start="4">
+<li><strong>How would we add the</strong> <tt class="docutils literal"><span class="pre">pseq</span></tt> <strong>function in order to successful complement the</strong> <tt class="docutils literal"><span class="pre">par</span></tt>  <strong>function and make the program run in parallel (hint: the placement of</strong> <tt class="docutils literal"><span class="pre">par</span></tt> <strong>in the previous function is correct; it just needs a</strong> <tt class="docutils literal"><span class="pre">pseq</span></tt> <strong>to supplement it). Explain your reasoning and what happens in the code execution)?</strong></li>
+</ol>
+<p>The line should look like this: <tt class="docutils literal"><span class="pre">quicksort</span> <span class="pre">(x:xs)</span> <span class="pre">=</span> <span class="pre">lesser</span> <span class="pre">`par`</span> <span class="pre">(greater</span> <span class="pre">`pseq`</span> <span class="pre">lesser</span> <span class="pre">++</span> <span class="pre">x:greater)</span></tt>. The code now successfully operates in parallel. The <tt class="docutils literal"><span class="pre">par</span></tt> function tells Haskell to begin evaluating <tt class="docutils literal"><span class="pre">lesser</span></tt> while moving on to the right side of its argument, which in this case is the code in the parentheses. So Haskell is evaluating <tt class="docutils literal"><span class="pre">lesser</span></tt> while moving on to <tt class="docutils literal"><span class="pre">(greater</span> <span class="pre">`pseq`</span> <span class="pre">lesser</span> <span class="pre">++</span> <span class="pre">x:greater)</span></tt>. <tt class="docutils literal"><span class="pre">pseq</span></tt> on the other hand, is doing the opposite. It begins evaluating its left argument, <tt class="docutils literal"><span class="pre">greater</span></tt>, and refuses to let the code execute further until all arguments to its left are completed. This means that <tt class="docutils literal"><span class="pre">pseq</span></tt> guarantees that the <tt class="docutils literal"><span class="pre">lesser</span> <span class="pre">++</span> <span class="pre">x:greater</span></tt> concatenation cannot occur until both <tt class="docutils literal"><span class="pre">lesser</span></tt> and <tt class="docutils literal"><span class="pre">greater</span></tt> have been completely evaluated, thereby ensuring that the code comes back from its recursive calls correctly.</p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../index.html">
+              <img class="logo" src="../_static/CSInParallel200wide.png" alt="Logo"/>
+            </a></p>
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Appendix</a><ul>
+<li><a class="reference internal" href="#introductory-parallel-haskell-assignment">Introductory Parallel Haskell Assignment</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="../ParallelHaskellInTheClassroom/ParallelHaskellInTheClassroom.html"
+                        title="previous chapter">Parallel Haskell in the Classroom</a></p>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../ParallelHaskellInTheClassroom/ParallelHaskellInTheClassroom.html" title="Parallel Haskell in the Classroom"
+             >previous</a> |</li>
+        <li><a href="../index.html">Parallel Haskell</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright This work is licensed under a Creative Commons Attribution-ShareAlike 3.0 Unported License.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2b1.
+    </div>
+  </body>
+</html>

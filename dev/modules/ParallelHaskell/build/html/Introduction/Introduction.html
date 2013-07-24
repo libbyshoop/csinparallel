@@ -1,0 +1,111 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Introduction &mdash; Parallel Haskell</title>
+    
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="top" title="Parallel Haskell" href="../index.html" />
+    <link rel="next" title="Parallel Computing with Haskell using Quicksort" href="../ParallelComputing/ParallelComputing.html" />
+    <link rel="prev" title="Parallel Haskell" href="../index.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../ParallelComputing/ParallelComputing.html" title="Parallel Computing with Haskell using Quicksort"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="../index.html" title="Parallel Haskell"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../index.html">Parallel Haskell</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="introduction">
+<h1>Introduction<a class="headerlink" href="#introduction" title="Permalink to this headline">¶</a></h1>
+<p>In recent years, improvements in CPU processing speed have noticeably slowed. As we reach modern technological limits in transistor density and miniaturization, it has become clear that we cannot further advance computational capabilities with machines built with a single CPU. As a result, multiple-core systems have become all but ubiquitous at every level of computing, from supercomputers to mobile phones. However, adding more processors to a computer does not automatically improve performance. Programmers must identify independent tasks of a program in order to fully take advantage of the extra resources provided by multiple CPUs. Parallel programming is a difficult but vital skill that any computer scientist must understand in the modern world of multi-core computing, and it is therefore imperative that the discipline be taught comprehensively at the undergraduate level <sup>[1, 11]</sup>.</p>
+<a class="reference internal image-reference" href="../_images/haskell_logo7000.png"><img alt="../_images/haskell_logo7000.png" class="align-center" src="../_images/haskell_logo7000.png" style="height: 100px;" /></a>
+<p>While parallel programming education has begun to appear in undergraduate classrooms around the country, more development of curricula is warranted<sup>[1, 9, 11]</sup>. There are many languages, interfaces, and environments available to programmers that accommodate parallel code. Each uses a different methodology<sup>[8, 9]</sup>, and research must be done to assess the relative utility of these programs in the context of an undergraduate computer science education. Among these options is Haskell, a purely functional language with powerful parallel language constructs which use a high level of abstraction, making them easy for a beginning programmer to understand and use. In this module, we explore some of the contructs available in Haskell and analyze the speedups that result from their use. We also examine a few different implementations of a simple program, which estimates π through Riemann integration of the unit circle, while going over the relative strengths and weaknesses of the parallel tools that we used. Our goal is to shed light on the options available to a Haskell programmer who is beginning to write code in parallel.</p>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../index.html">
+              <img class="logo" src="../_static/CSInParallel200wide.png" alt="Logo"/>
+            </a></p>
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="../index.html"
+                        title="previous chapter">Parallel Haskell</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="../ParallelComputing/ParallelComputing.html"
+                        title="next chapter">Parallel Computing with Haskell using Quicksort</a></p>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../ParallelComputing/ParallelComputing.html" title="Parallel Computing with Haskell using Quicksort"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="../index.html" title="Parallel Haskell"
+             >previous</a> |</li>
+        <li><a href="../index.html">Parallel Haskell</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright This work is licensed under a Creative Commons Attribution-ShareAlike 3.0 Unported License.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2b1.
+    </div>
+  </body>
+</html>

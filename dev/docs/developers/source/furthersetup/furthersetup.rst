@@ -63,4 +63,8 @@ Creating Content
 
 Each module is a separate distinct head of a Sphinx documentation tree. This way each one can stand alone and be used independently. It may be useful to look at the other modules as examples of the document structure: they're like books, with each chapter in a different folder.
 
+<<<<<<< HEAD
 The next section describes the process of using git as you develop.  The section following that can be used as a template for making pages of your module.
+=======
+The next section can be used as a template for making pages of your module.
+>>>>>>> origin/dani-dev

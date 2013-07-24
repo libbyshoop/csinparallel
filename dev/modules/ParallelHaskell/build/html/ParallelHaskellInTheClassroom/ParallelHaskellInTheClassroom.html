@@ -1,0 +1,151 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Parallel Haskell in the Classroom &mdash; Parallel Haskell</title>
+    
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="top" title="Parallel Haskell" href="../index.html" />
+    <link rel="next" title="Appendix" href="../Appendix/Appendix.html" />
+    <link rel="prev" title="Riemann Integral and Performance" href="../RiemannIntegral/RiemannIntegral.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../Appendix/Appendix.html" title="Appendix"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="../RiemannIntegral/RiemannIntegral.html" title="Riemann Integral and Performance"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../index.html">Parallel Haskell</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="parallel-haskell-in-the-classroom">
+<h1>Parallel Haskell in the Classroom<a class="headerlink" href="#parallel-haskell-in-the-classroom" title="Permalink to this headline">¶</a></h1>
+<p>The parallel programming tools available in Haskell can be easily used. However, while functional programming is compelling and powerful, it is also very different from other programming languages with which most undergraduates are familiar. It may be difficult to teach Haskell, and this could distract students from the focus of learning concurrent and parallel programming practices. One solution to this problem is to introduce this module in a classroom where students have a background in functional programming, like a programming languages course. If students are already familiar with functional programming, they can be focused on learning the parallel part of the code, deriving the maximum educational benefit from the work shown here.</p>
+<p>Many programming languages textbooks introduce functional programming and parallel computing <sup>[10, 14]</sup>. Instructors could supplement their reading with the free <em>Real World Haskell</em> <sup>[12]</sup> and <em>Learn You a Haskell for Great Good</em> <sup>[5]</sup>. We especially recommend the latter. Lipovaça provides a complete, entertaining background to functional coding that is especially accessible to young programmers. Before being introduced to the parallel tools in Haskell, we recommend that students go over chapters 2-6 and chapter 9 in <em>Learn You a Haskell</em>. This should provide them with a sufficient background in recursion, higher-order functions, and IO for parallelization in Haskell.</p>
+<div class="section" id="discussion">
+<h2>Discussion<a class="headerlink" href="#discussion" title="Permalink to this headline">¶</a></h2>
+<p>As parallel computing becomes increasingly ubiquitous in the programming world, it has become important that parallel programming be taught at the undergraduate level. To that end, there exist many parallel languages and environments, and educators must carefully choose which ones to introduce to young programmers. We believe that the parallel constructs in Haskell are both powerful and informative about the nature of parallel programming and coordination.</p>
+<p>Haskell can be brought to the undergraduate classroom by assigning small, simple programs, like our Riemann estimation of π, or a parallel quicksort. The advantage to these simple assignments is that the volume of work is fairly small. Successfully implementing the π estimation in parallel, for example, should take no more than a dozen lines of code. However, the difficulty of understanding the language constructs and using their syntax makes the assignment far from trivial. A challenging problem solved with relatively few lines of code will compel students to experiment with Haskell&#8217;s various parallel tools before turning in the assignment. This is ideal, because such exploration will allow students to gain a more holistic understanding of the language in general, including how Haskell interacts with multiple CPUs.</p>
+<p>The next step is to begin investigating the potential benefit of more long-term parallel assignments. There are many complex, &#8220;embarrassingly parallel&#8221; programs that could be implemented with Haskell. The way to introduce this more advanced work to undergraduates has yet to be explored. Certainly, a long term project in which students are required to implement a complicated system, like the Boids simulation <sup>[7]</sup> or Conway&#8217;s Game of Life, would increase the requisite level of Haskell comprehension. At the same time, such a project may not actually provide insight into the parallel functions of Haskell beyond what is learned in our small examples; the project would probably make students better programmers, but it is not clear if it would make them better parallel programmers. Furthermore, the advantage to the short assignment structure that we have introduced here is that it need not only be used in a course dedicated to parallel computing. The brevity of the program means that a module could be covered in a programming languages course over the span of about a week, perhaps right as the course is covering functional languages.</p>
+<div class="section" id="acknowledgements">
+<h3>Acknowledgements<a class="headerlink" href="#acknowledgements" title="Permalink to this headline">¶</a></h3>
+<p>Partial support for this work was provided by the National Science Foundation, by the John S. Rogers
+Science Research Program, and by the James F. and Marion L. Miller Foundation. We would also like to
+thank David Bunde, Peter Drake, and James Duncan.</p>
+</div>
+<div class="section" id="references">
+<h3>References<a class="headerlink" href="#references" title="Permalink to this headline">¶</a></h3>
+<p>[1] Joel Adams, Richard Brown, and Elizabeth Shoop. Patterns and exemplars: Compelling strategies for teaching parallel and distributed computing to CS undergraduates. In <em>EduPar-13</em>, 2013.</p>
+<p>[2] Don Jones, Jr., Simon Marlow, and Satnam Singh. Parallel performance tuning for Haskell. In <em>Proceedings of the 2nd ACM SIGPLAN symposium on Haskell</em>, Haskell &#8216;09, 2009.</p>
+<p>[3] Simon Peyton Jones and Simon Marlow. The glorious glasgow haskell compilation system user&#8217;s guide, version 7.6.2. <a class="reference external" href="http://www.haskell.org/ghc/docs/7.6.2/html/users_guide/">http://www.haskell.org/ghc/docs/7.6.2/html/users_guide/</a>. Accessed: 2013-06-10.</p>
+<p>[4] Simon Peyton Jones and Satnam Singh. A tutorial on parallel and concurrent programming in haskell. In <em>Proceedings of the 6th international conference on Advanced functional programming</em>, 2009.</p>
+<p>[5] Miran Lipovaça. <em>Learn You a Haskell for Great Good!</em> No Starch Press, San Francisco, CA, 2011.</p>
+<p>[6] Simon Marlow. <em>Parallel and Concurrent Programming in Haskell</em>. O&#8217;Reilly &amp; Associates Inc, Sebastopol, CA, 2013.</p>
+<p>[7] Craig Reynolds. Flocks, herds and schools: A distributed behavioral model. In <em>Proceedings of the 14th annual conference on Computer graphics and interactive techniques</em>, 1987.</p>
+<p>[8] Wilson Rivera. How to introduce parallelism into programming languages courses. In <em>EduPar-13</em>, 2013.</p>
+<p>[9] Suzanne Rivoire. A breadth-first course in multicore and manycore programming. In <em>Proceedings of the 41st ACM technical symposium on Computer science education</em>, 2010.</p>
+<p>[10] Michael Scott. <em>Programming Language Pragmatics</em>. Elsevier/Morgan Kaufmann Publishers, Amsterdam, 2009.</p>
+<p>[11] Paul Steinberg and Matthew Wolf. ACM Parallel Computing TechPack. <a class="reference external" href="http://techpack.acm.org/parallel/">http://techpack.acm.org/parallel/</a>. Accessed: 2013-05-30.</p>
+<p>[12] Bryan Sullivan. <em>Real World Haskell</em>. O&#8217;Reilly &amp; Associates Inc, Sebastopol, CA, 2009.</p>
+<p>[13] Prabhat Totoo, Pantazis Deligiannis, and Hans-Wolfgang Loidl. Haskell vs. F# vs. Scala: A high-level language features and parallelism support comparison. In <em>Proceedings of the 1st ACM SIGPLAN workshop on Functional high-performance computing</em>, 2012.</p>
+<p>[14] Allen Tucker. <em>Programming languages: Principles and paradigms</em>. McGraw-Hill Higher Education, Boston, 2007.</p>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../index.html">
+              <img class="logo" src="../_static/CSInParallel200wide.png" alt="Logo"/>
+            </a></p>
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Parallel Haskell in the Classroom</a><ul>
+<li><a class="reference internal" href="#discussion">Discussion</a><ul>
+<li><a class="reference internal" href="#acknowledgements">Acknowledgements</a></li>
+<li><a class="reference internal" href="#references">References</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="../RiemannIntegral/RiemannIntegral.html"
+                        title="previous chapter">Riemann Integral and Performance</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="../Appendix/Appendix.html"
+                        title="next chapter">Appendix</a></p>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../Appendix/Appendix.html" title="Appendix"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="../RiemannIntegral/RiemannIntegral.html" title="Riemann Integral and Performance"
+             >previous</a> |</li>
+        <li><a href="../index.html">Parallel Haskell</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright This work is licensed under a Creative Commons Attribution-ShareAlike 3.0 Unported License.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2b1.
+    </div>
+  </body>
+</html>

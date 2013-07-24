@@ -2,10 +2,14 @@
 Components of a Module
 **********************
 
+<<<<<<< HEAD
 Sphinx, check. Github, check. CSS, check. You can create the content of the module
 that can be used by instructors for courses. However, there are more elements to a module, some of which a module author/developer is responsible for, and some of which the CSinParallel project is responsible for, and some of which is a joint effort.
 
 Here are descriptions of the various module elements, organized by what's expected of developers, what gets done by CSinParallel, and what could go either way or be shared.
+=======
+Sphinx, check. Github, check. CSS, check. Now...what actually goes in a module? Here are descriptions of the various sections, organized by what's expected of developers, what gets done by CSinParallel, and what could go either way or be shared.
+>>>>>>> origin/dani-dev
 
 Author's Responsibilities
 #########################
@@ -44,9 +48,13 @@ The level of proficiency you expect of students is at your discretion, given the
 Create module content
 *********************
 
+<<<<<<< HEAD
 Initially, this can be in any format. We can assist you from there to make publication-quality versions using sphinx by creating .rst files, or you can get started on this yourself.  A `tool called pandoc <http://johnmacfarlane.net/pandoc/>`_ works quite well for converting your original content into a .rst file that you can work with.
 
 For the actual .rst files, see the previous template section for eaxamples of rst formatting. How exactly you format your content depends on who you envision the audience being: are you creating material students would interact with directly, or that instructors would absorb and teach from?
+=======
+For the actual .rst files, see the template section. How exactly you format your content depends on who you envision the audience being: are you creating material students would interact with directly, or that instructors would absorb and teach from?
+>>>>>>> origin/dani-dev
 
 
 Write teaching notes and tips
@@ -95,6 +103,7 @@ CSinParallel responsibilities
 Publish onto csinparallel.org
 *****************************
 
+<<<<<<< HEAD
 We will usually take care of final publication of your module onto csinparallel.org.  As you make changes over time (to the github version on the master branch), these will be seen when we update the web server holding the latest version of the master branch.
 
 Test and review; curation
@@ -108,3 +117,10 @@ Develop assessment instruments
 As part of the CSinParallel project, we will assess most modules as they are used by
 instructors in courses.  We will develop assessment instruments for this purpose.
 
+=======
+Test and review; curation
+*************************
+
+Develop assessment instruments
+******************************
+>>>>>>> origin/dani-dev

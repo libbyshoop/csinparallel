@@ -34,14 +34,22 @@ Simple Text Formatting
 Inline Formatting
 *****************
 
+<<<<<<< HEAD
 *Italics* can be made by surrounding text with single asterisks; **bold**, double. To include just a ``line or two of code``, enclose it in double backticks (\`\`). 
+=======
+*Italics* can be made by surrounding text with single asterisks; **bold**, double. To include just a ``line or two of code``, enclose it in double backticks (``). 
+>>>>>>> origin/dani-dev
 
 Asterisks or backticks that could be confused with markup can be escaped with a *back*\ slash. These markups can't be nested or start or end with a space, and there must be whitespace on either side of them (the workaround for this, such as the word backslash above, is to use a backslash-escaped space: ``*back*\ slash``\ .)
 
 Larger Blocks
 *************
 
+<<<<<<< HEAD
 Inline formatting is a start, but you will often want to create larger blocks.
+=======
+Inline formatting is a start, but here are some bigger guns.
+>>>>>>> origin/dani-dev
 
 Code Blocks
 -----------
@@ -52,8 +60,12 @@ Code Blocks
 
 	This is a code block.
 	You can specify the language for coloring purposes,
+<<<<<<< HEAD
 	and there are several other options (such as the highlighted 
 	line above and the line numbers at left).
+=======
+	and there are several other options (such as the highlighted line above and the line numbers at left).
+>>>>>>> origin/dani-dev
 
 - Code blocks are begun with the directive :literal:`.. code-block::` (then specify the language - anything supported by `Pygments`_). 
 
