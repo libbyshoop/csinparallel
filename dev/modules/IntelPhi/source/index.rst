@@ -12,6 +12,8 @@ Contents:
    :maxdepth: 1
 
    FirstAssignment/assignment
+   Architecture/architecture
+   AdvancedUsage/advanced
 
 
 .. comment

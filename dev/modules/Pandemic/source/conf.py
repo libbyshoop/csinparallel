@@ -31,11 +31,14 @@ if 'Darwin' in platform.uname()[0]:
         pngmath_latex = '/usr/local/texlive/2011/bin/x86_64-darwin//latex'
         pngmath_dvipng = '/usr/local/texlive/2011/bin/x86_64-darwin//dvipng'
 elif 'Linux' in platform.uname()[0]:
-        pngmath_latex = ''
-        pngmath_dvipng = ''
+        pngmath_latex = '/usr/bin/latex'
+        pngmath_dvipng = '/usr/bin/dvipng'
 elif 'Windows' in platform.uname()[0]:
         pngmath_latex = ''
         pngmath_dvipng = ''
+
+# !!!!!!!!!!!!!!!!!
+pngmath_dvipng_args = ['-gamma 1.5', '-D 150', '-bg rgb 0.937 0.937 0.882']
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']
