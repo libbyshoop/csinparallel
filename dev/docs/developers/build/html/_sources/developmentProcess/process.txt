@@ -67,7 +67,7 @@ From the command line:
 	git push origin ls-dev
 
 Eventually, you will want to place your work on the develop branch so that
-other people you are working with will be able to see it on a web server. The next few steps describe this. *Use the command line for this set of steps.*
+other people you are working with will be able to see it on a web server. The next few steps describe this. If you are using a Mac or linux, you can *Use the command line for this set of steps.*  However, if you are using the PC client software from github, you can switch to the develop branch in it and there should be an option to merge your branch into the develop branch, which is the equivalent of the following steps.
 
 With this next command, go back to the develop branch:
 ::
