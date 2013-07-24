@@ -171,21 +171,11 @@ html_static_path = ['_static']
 
 
 # Custom sidebar templates, maps document names to template names.
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> 8766cf121e46c568468d697515e36d67e1be51f7
+
 html_sidebars = {
 	'**': [ 'globaltoc.html', 'relations.html'],
    'using/windows': ['windowssidebar.html'],
 }
-<<<<<<< HEAD
-=======
-#html_sidebars = {}
->>>>>>> origin/dani-dev
-=======
->>>>>>> 8766cf121e46c568468d697515e36d67e1be51f7
-
 
 # Additional templates that should be rendered to pages, maps page names to
 # template names.
@@ -197,15 +187,7 @@ html_sidebars = {
 
 
 # If false, no index is generated.
-<<<<<<< HEAD
-<<<<<<< HEAD
 html_use_index = False
-=======
-#html_use_index = True
->>>>>>> origin/dani-dev
-=======
-html_use_index = False
->>>>>>> 8766cf121e46c568468d697515e36d67e1be51f7
 
 
 # If true, the index is split into individual pages for each letter.
