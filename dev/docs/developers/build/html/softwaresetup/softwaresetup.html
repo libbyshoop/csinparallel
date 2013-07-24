@@ -26,12 +26,20 @@
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
     <link rel="shortcut icon" href="../_static/favicon.ico"/>
-    <link rel="top" title="Documentation for Developers" href="../index.html" /> 
+    <link rel="top" title="Documentation for Developers" href="../index.html" />
+    <link rel="next" title="Setting Up A New Module" href="../creatingnewmodule/modulesetup.html" />
+    <link rel="prev" title="Module Developers’ Guide" href="../index.html" /> 
   </head>
   <body>
     <div class="related">
       <h3>Navigation</h3>
       <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../creatingnewmodule/modulesetup.html" title="Setting Up A New Module"
+             accesskey="N">next</a></li>
+        <li class="right" >
+          <a href="../index.html" title="Module Developers’ Guide"
+             accesskey="P">previous</a> |</li>
         <li><a href="../index.html">Documentation for Developers</a> &raquo;</li> 
       </ul>
     </div>  
@@ -46,25 +54,16 @@
 <p>Before you can start writing modules, you&#8217;ll need some software.</p>
 <div class="section" id="the-github-repository">
 <h2>The GitHub Repository<a class="headerlink" href="#the-github-repository" title="Permalink to this headline">¶</a></h2>
-<p>&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD
-&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD
-=======
-&gt;&gt;&gt;&gt;&gt;&gt;&gt; 8766cf121e46c568468d697515e36d67e1be51f7
-CSinParallel modules are housed in a <a class="reference external" href="https://github.com/libbyshoop/csinparallel">github repository</a>. (If you don&#8217;t have a github client, <a class="reference external" href="https://help.github.com/articles/set-up-git">start with that</a>).  This repository contains all the modules as individual Sphinx projects.
+<p>CSinParallel modules are housed in a <a class="reference external" href="https://github.com/libbyshoop/csinparallel">github repository</a>. (If you don&#8217;t have a github client, <a class="reference external" href="https://help.github.com/articles/set-up-git">start with that</a>).  This repository contains all the modules as individual Sphinx projects.
 To work on the modules or create new ones, you will need to be a <em>collaborator</em> on this project.  Once you are set up as a collaborator, you will eventually clone the repository on your own machine, which you can do with the github client (there is one for Windows and for Macs).  If you are working on a linux machine, you will use the
 command line to run git commands.</p>
 <p>For reference, the <a class="reference external" href="http://git-htmldocs.googlecode.com/git/git.html">git manual pages</a> are extensive and <a class="reference external" href="http://www.atlassian.com/git/tutorial">this git tutorial</a>
 provides easy access to most commands.</p>
-<div class="section" id="head">
-<h3>&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD<a class="headerlink" href="#head" title="Permalink to this headline">¶</a></h3>
-<p>CSinParallel modules are housed in a <a class="reference external" href="https://github.com/libbyshoop/csinparallel">github repository</a>. (If you don&#8217;t have a github client, <a class="reference external" href="https://help.github.com/articles/set-up-git">start with that</a>).  Fork the repository, which contains all the modules as individual Sphinx projects.
-&gt;&gt;&gt;&gt;&gt;&gt;&gt; origin/dani-dev
-=======
-&gt;&gt;&gt;&gt;&gt;&gt;&gt; 8766cf121e46c568468d697515e36d67e1be51f7</p>
-</div>
 </div>
 <div class="section" id="additional-software">
 <h2>Additional Software<a class="headerlink" href="#additional-software" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="a-text-editor">
+<h3>A Text Editor<a class="headerlink" href="#a-text-editor" title="Permalink to this headline">¶</a></h3>
 <p>You&#8217;ll need an editor that can work with restructured text (.rst, a simple markdown language).</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -74,8 +73,14 @@ provides easy access to most commands.</p>
 </tr>
 </tbody>
 </table>
+</div>
+<div class="section" id="python">
+<h3>Python<a class="headerlink" href="#python" title="Permalink to this headline">¶</a></h3>
 <p>You&#8217;ll need a version of Python 2 (not Python 3), preferably 2.7. You can download one from <a class="reference external" href="http://www.python.org">the Python site</a>.</p>
 <p>If you already have Python but aren&#8217;t sure which version, enter <tt class="docutils literal"><span class="pre">python</span> <span class="pre">-v</span></tt> into a terminal or command line to check.</p>
+</div>
+<div class="section" id="easy-install">
+<h3>easy_install<a class="headerlink" href="#easy-install" title="Permalink to this headline">¶</a></h3>
 <p>Finally, you&#8217;ll need the <tt class="docutils literal"><span class="pre">easy_install</span></tt>
 Python program, which you can <a class="reference external" href="http://pypi.python.org/pypi/setuptools">download here</a>.</p>
 <blockquote>
@@ -86,21 +91,11 @@ Python program, which you can <a class="reference external" href="http://pypi.py
 </ul>
 </dd>
 <dt>On a PC:</dt>
-<dd><ul class="first last simple">
+<dd><ul class="first simple">
 <li>grab the 32-bit executable for Python 2.7 from <a class="reference external" href="https://pypi.python.org/pypi/setuptools#files">here</a></li>
-</ul>
-</dd>
-</dl>
-</div></blockquote>
-<p>&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD
-&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD</p>
-<blockquote>
-<div><ul class="simple">
 <li>You&#8217;ll also need to add your Python Scripts directory to your PATH environment variable (in System Properties, click the Advanced tab, then Environment Variables, then add C:\Python27\Scripts\ to the Variable value for Variable Path). Be sure to close and restart the command prompt in order for these changes to take effect.</li>
 </ul>
-</div></blockquote>
-<blockquote>
-<div><table class="docutils field-list" frame="void" rules="none">
+<table class="last docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
@@ -108,7 +103,10 @@ Python program, which you can <a class="reference external" href="http://pypi.py
 </tr>
 </tbody>
 </table>
+</dd>
+</dl>
 </div></blockquote>
+</div>
 </div>
 <div class="section" id="sphinx">
 <h2>Sphinx<a class="headerlink" href="#sphinx" title="Permalink to this headline">¶</a></h2>
@@ -127,7 +125,22 @@ Python program, which you can <a class="reference external" href="http://pypi.py
               <img class="logo" src="../_static/CSInParallel200wide.png" alt="Logo"/>
             </a></p>
 <h3><a href="../index.html">Table Of Contents</a></h3>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="">What You&#8217;ll Need to Get Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../creatingnewmodule/modulesetup.html">Setting Up A New Module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../furthersetup/furthersetup.html">Editing Your New Module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../developmentProcess/process.html">The CSinParallel Module Development Process</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../newmoduletemplate/newmoduletemplate.html">New Module Template</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../modulechecklist/modulechecklist.html">Checklist: Reminders for Experienced Module Creators</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../components/components.html">Components of a Module</a></li>
+</ul>
 
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="../index.html"
+                        title="previous chapter">Module Developers&#8217; Guide</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="../creatingnewmodule/modulesetup.html"
+                        title="next chapter">Setting Up A New Module</a></p>
         </div>
       </div>
       <div class="clearer"></div>
@@ -135,6 +148,12 @@ Python program, which you can <a class="reference external" href="http://pypi.py
     <div class="related">
       <h3>Navigation</h3>
       <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../creatingnewmodule/modulesetup.html" title="Setting Up A New Module"
+             >next</a></li>
+        <li class="right" >
+          <a href="../index.html" title="Module Developers’ Guide"
+             >previous</a> |</li>
         <li><a href="../index.html">Documentation for Developers</a> &raquo;</li> 
       </ul>
     </div>

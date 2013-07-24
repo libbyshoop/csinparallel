@@ -2,10 +2,6 @@
 Setting Up A New Module
 ***********************
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> 8766cf121e46c568468d697515e36d67e1be51f7
 If you've already got Python, a github client, and the Sphinx package installed, then begin here!
 
 First Time: clone the repository
@@ -57,29 +53,15 @@ are doing your work on a new branch that you create from the develop branch**.  
 
 As an alternative to this second step, you can use your github client to make a new sub-branch off the develop branch.  Look for a small plus sign on the develop branch in the list of branches.
 
-In a later section of this documentation we describe tthe workflow with git in greater detail.  Note for now that *your new work will always be done in the dev/modules directory*, where you can create a brand new module.
-<<<<<<< HEAD
-=======
-If you've already got Python, a Git client, and the Sphinx package installed, then begin here!
-:note: If your content is already in LaTeX form, check out this page instead.
->>>>>>> origin/dani-dev
-=======
->>>>>>> 8766cf121e46c568468d697515e36d67e1be51f7
+In a later section of this documentation we describe the workflow with git in greater detail.  Note for now that *your new work will always be done in the dev/modules directory*, where you can create a brand new module.
+
 
 Creating a Module
 #################
 
-<<<<<<< HEAD
-<<<<<<< HEAD
 
+Find your GitHub directory (on Windows, it usually puts itself in ``My Documents``). If you forked the repository, you'll have a directory called csinparallel.
 Navigate to ``csinparallel/dev/modules``, and enter ``sphinx-quickstart``
-=======
-Find your GitHub directory (on Windows, it usually puts itself in ``My Documents``). If you forked the repository, you'll have a directory called csinparallel.Navigate to ``csinparallel/modules``, and enter ``sphinx-quickstart``
->>>>>>> origin/dani-dev
-=======
-
-Navigate to ``csinparallel/dev/modules``, and enter ``sphinx-quickstart``
->>>>>>> 8766cf121e46c568468d697515e36d67e1be51f7
 to begin. Next, follow these directions below to go through the setup process.
 
 Setup
@@ -132,15 +114,8 @@ Bolded answers require the user to type something, not just hit enter.
 Modifying the conf.py File
 ##########################
 
-<<<<<<< HEAD
-<<<<<<< HEAD
+
 In ``/GitHub/csinparallel/dev/modules/YourModuleName/source``, run the configuration script. To do this, copy the file :download:`confscript.py <confscript.py>` into this folder, and double click on it or enter ``python confscript.py`` into a terminal or command line.  Follow the directions to enter your module's name (in plain English) and a short description when prompted.
-=======
-In ``/GitHub/csinparallel/modules/YourModuleName/source``, run the configuration script. To do this, copy the file :download:`confscript.py <confscript.py>` into this folder, and double click on it or enter ``python confscript.py`` into a terminal or command line.  Follow the directions to enter your module's name (in plain English) and a short description when prompted.
->>>>>>> origin/dani-dev
-=======
-In ``/GitHub/csinparallel/dev/modules/YourModuleName/source``, run the configuration script. To do this, copy the file :download:`confscript.py <confscript.py>` into this folder, and double click on it or enter ``python confscript.py`` into a terminal or command line.  Follow the directions to enter your module's name (in plain English) and a short description when prompted.
->>>>>>> 8766cf121e46c568468d697515e36d67e1be51f7
 
 Optional: Enabling LaTeX
 ************************
@@ -166,10 +141,6 @@ and then find your computer's tex paths and add them to the appropriate fields.
 Making the Module
 #################
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> 8766cf121e46c568468d697515e36d67e1be51f7
 Open the Makefile (not make.bat) and find the latexpdf entry. Add this line:
 
     ``tar -czf $(BUILDDIR)/latex.tar.gz $(BUILDDIR)/latex`` 
@@ -177,17 +148,7 @@ Open the Makefile (not make.bat) and find the latexpdf entry. Add this line:
 indented with a tab and on a line by itself after this line:
 
     ``$(MAKE) -C $(BUILDDIR)/latex all-pdf``
-<<<<<<< HEAD
 
 You now have enough of a start to see results! From ``csinparallel/dev/modules/YourModuleName``, enter ``make html``. This will render HTML files from your ``source`` folder and place them in your ``build`` folder. Click on one to open it! 
-=======
-Open the Makefile (not make.bat) and find the latexpdf entry. Add ``tar -czf $(BUILDDIR)/latex.tar.gz $(BUILDDIR)/latex`` after ``$(MAKE) -C $(BUILDDIR)/latex all-pdf``.
-
-You now have enough of a start to see results! From ``csinparallel/modules/YourModuleName``, enter ``make html``. This will render HTML files from your ``source`` folder and place them in your ``build`` folder. Click on one to open it! 
->>>>>>> origin/dani-dev
-=======
-
-You now have enough of a start to see results! From ``csinparallel/dev/modules/YourModuleName``, enter ``make html``. This will render HTML files from your ``source`` folder and place them in your ``build`` folder. Click on one to open it! 
->>>>>>> 8766cf121e46c568468d697515e36d67e1be51f7
 
 The next section of this tutorial will outline how to begin to make changes to what you see here.

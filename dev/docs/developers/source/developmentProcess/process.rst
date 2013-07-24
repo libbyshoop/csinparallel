@@ -45,20 +45,22 @@ of the csinparallel repository resides.
 When developing a module, you will checkout off the develop branch
 of the csinparallel repository:
 ::
-	git checkout -b ls-dev develop
+
+    git checkout -b ls-dev develop
 
 Now you can do your work:
 
 - commit to your branch as you go along, 
-- occasionally push up to github on your branch off develop (so you are saving a copy
-in the repository),
+- occasionally push up to github on your branch off develop (so you are saving a copy in the repository),
 - and occasionally pull down other's work from the develop branch and merge it with yours.
 
 
-.. note:: These above steps can be done with the github client tool by committing and doing 'sync' operations, or using the command line.  Below are the command-line equivalents. See also: the `git manual pages <http://git-htmldocs.googlecode.com/git/git.html>`_ and `this git tutorial <http://www.atlassian.com/git/tutorial>`_.
+.. note:: 
+	These above steps can be done with the github client tool by committing and doing 'sync' operations, or using the command line.  Below are the command-line equivalents. See also: the `git manual pages <http://git-htmldocs.googlecode.com/git/git.html>`_ and `this git tutorial <http://www.atlassian.com/git/tutorial>`_.
 
 From the command line:
 ::
+
 	git add <file or directory>
 	git commit 
 
@@ -66,21 +68,26 @@ From the command line:
 
 	git push origin ls-dev
 
+
 .. warning:: It is really important that you pull down changes that others have made on the develop branch onto your sub-branch before you do the following step of merging your changes back onto the develop branch.
+
 
 Eventually, you will want to place your work on the develop branch so that
 other people you are working with will be able to see it on a web server. The next few steps describe this. If you are using a Mac or linux, you can *Use the command line for this set of steps.*  However, if you are using the PC client software from github, you can switch to the develop branch in it and there should be an option to merge your branch into the develop branch, which is the equivalent of the following steps.
 
 With this next command, go back to the develop branch:
 ::
+
 	git checkout develop
 
 From the develop branch, merge your sub-branch changes:
 ::
+
 	git merge --no-ff ls-dev
 	
 Push the changes back up to github on the develop branch:
 ::
+
 	git push origin develop
 
 
