@@ -7,6 +7,11 @@ Module Developers' Guide
 ========================
 
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+We at CSinParallel are here to help you contribute your material to our project.  If you have some course material that has worked for you, we would be interested in converting it to the format we use on this site.  This document describes the complete process. Keep in mind that we help with a great deal of this.  We describe it all here so that those of us working closely on the project know what the process is.  To start, you may want to skip all the way to the end and simply look at the chapter entitled *Components of a Module*.
+
+>>>>>>> 8766cf121e46c568468d697515e36d67e1be51f7
 The following chapters describe various parts of the CSinParallel module development process.  We create modules using the sphinx documentation system, an open-source project used by the python community to generate documentation.  Files of content are written using reStructuredText.   We keep the modules
 under source control on github.com. The first three chapters describe these aspects.
 
@@ -17,14 +22,18 @@ The reStructuredText file used to create the chapter called *New Module Template
 
 Besides the module content written in reStructuredText, there are several other components that go into a module that will be published on csinparallel.org. These are described in the chapter entitled *Components of a Module*.
 
+<<<<<<< HEAD
 =======
 >>>>>>> origin/dani-dev
+=======
+>>>>>>> 8766cf121e46c568468d697515e36d67e1be51f7
 .. toctree::
    :maxdepth: 1
 
    softwaresetup/softwaresetup
    creatingnewmodule/modulesetup
    furthersetup/furthersetup
+<<<<<<< HEAD
 <<<<<<< HEAD
    developmentProcess/process
    newmoduletemplate/newmoduletemplate
@@ -33,6 +42,11 @@ Besides the module content written in reStructuredText, there are several other 
    modulechecklist/modulechecklist
    newmoduletemplate/newmoduletemplate
 >>>>>>> origin/dani-dev
+=======
+   developmentProcess/process
+   newmoduletemplate/newmoduletemplate
+   modulechecklist/modulechecklist
+>>>>>>> 8766cf121e46c568468d697515e36d67e1be51f7
    components/components
    
 

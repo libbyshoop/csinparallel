@@ -6,6 +6,11 @@
 Module Developers' Guide
 ========================
 
+<<<<<<< HEAD
+=======
+We at CSinParallel are here to help you contribute your material to our project.  If you have some course material that has worked for you, we would be interested in converting it to the format we use on this site.  This document describes the complete process. Keep in mind that we help with a great deal of this.  We describe it all here so that those of us working closely on the project know what the process is.  To start, you may want to skip all the way to the end and simply look at the chapter entitled *Components of a Module*.
+
+>>>>>>> 8766cf121e46c568468d697515e36d67e1be51f7
 The following chapters describe various parts of the CSinParallel module development process.  We create modules using the sphinx documentation system, an open-source project used by the python community to generate documentation.  Files of content are written using reStructuredText.   We keep the modules
 under source control on github.com. The first three chapters describe these aspects.
 

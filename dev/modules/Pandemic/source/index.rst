@@ -6,6 +6,7 @@
 Welcome to Pandemic Exemplar (for those with some experience)'s documentation!
 ==============================================================================
 
+<<<<<<< HEAD
 Contents:
 
 .. toctree::
@@ -19,4 +20,22 @@ Indices and tables
 * :ref:`genindex`
 * :ref:`modindex`
 * :ref:`search`
+=======
+.. toctree::
+   :maxdepth: 1
+
+   1-Introduction/introduction
+   2-DataStructure/datastructure
+   3-InitFunctions/initfunctions
+   4-MPIFunctions/mpifunctions
+   5-CoreFunctions/corefunctions
+   5-CudaFunctions/cudafunctions
+   6-DisplayFunctions/displayfunctions
+   7-FinishFunctions/finishfunctions
+
+.. comment
+	* :ref:`genindex`
+	* :ref:`modindex`
+	* :ref:`search`
+>>>>>>> 8766cf121e46c568468d697515e36d67e1be51f7
 

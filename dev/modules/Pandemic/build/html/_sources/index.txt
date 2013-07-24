@@ -1,0 +1,25 @@
+.. Pandemic Exemplar (for those with some experience) documentation master file, created by
+   sphinx-quickstart on Wed Jul  3 12:30:31 2013.
+   You can adapt this file completely to your liking, but it should at least
+   contain the root `toctree` directive.
+
+Welcome to Pandemic Exemplar (for those with some experience)'s documentation!
+==============================================================================
+
+.. toctree::
+   :maxdepth: 1
+
+   1-Introduction/introduction
+   2-DataStructure/datastructure
+   3-InitFunctions/initfunctions
+   4-MPIFunctions/mpifunctions
+   5-CoreFunctions/corefunctions
+   5-CudaFunctions/cudafunctions
+   6-DisplayFunctions/displayfunctions
+   7-FinishFunctions/finishfunctions
+
+.. comment
+	* :ref:`genindex`
+	* :ref:`modindex`
+	* :ref:`search`
+

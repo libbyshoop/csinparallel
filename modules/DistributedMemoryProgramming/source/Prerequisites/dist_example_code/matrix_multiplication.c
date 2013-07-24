@@ -33,7 +33,8 @@ int main (int argc, char *argv[]) {
         mtype,                 /* message type */
         rows,                  /* rows of matrix A sent to each worker */
 		averow, extra, offset, /* used to determine rows sent to each worker */
-        i, j, k, rc;           /* misc */
+        i, j, k;               /* misc */
+        errorCode = 1;         /* error code initialized for MPI_Abort */
 
     double      a[ROWA][COLA],           /* matrix A to be multiplied */
                 b[COLA][COLB],           /* matrix B to be multiplied */
@@ -90,16 +91,16 @@ int main (int argc, char *argv[]) {
             rows = (dest <= extra) ? averow+1 : averow;
             printf("Sending %d rows to task %d offset=%d\n", rows, dest, offset);
             /* Send value offset to all processes */
-            MPI_Send(&offset, 1, MPI_INT, dest, mtype, MPI_COMM_WORLD); 
+            MPI_Send(&offset, 1, MPI_INT, dest, mtype, MPI_COMM_WORLD);
             /* Send value of rows to all processes */
-            MPI_Send(&rows, 1, MPI_INT, dest, mtype, MPI_COMM_WORLD);   
-            /* Sending some rows of matrix A to some processes. Offset is the starting row, 
+            MPI_Send(&rows, 1, MPI_INT, dest, mtype, MPI_COMM_WORLD);
+            /* Sending some rows of matrix A to some processes. Offset is the starting row,
             * and it starts at 0 column.*/
             MPI_Send(&a[offset][0], rows*COLA, MPI_DOUBLE, dest, mtype, MPI_COMM_WORLD);
             /* Send entire B matrix to all processes*/
-            MPI_Send(&b, COLA*COLB, MPI_DOUBLE, dest, mtype, MPI_COMM_WORLD); 
+            MPI_Send(&b, COLA*COLB, MPI_DOUBLE, dest, mtype, MPI_COMM_WORLD);
             /* the first process gets row 0 to some rows, and so on */
-            offset = offset + rows; 
+            offset = offset + rows;
         }
 
         /* Receive results from worker tasks */
