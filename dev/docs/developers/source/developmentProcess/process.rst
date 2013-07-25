@@ -69,18 +69,31 @@ From the command line:
 	git push origin ls-dev
 
 
-.. warning:: It is really important that you pull down changes that others have made on the develop branch onto your sub-branch before you do the following step of merging your changes back onto the develop branch.
+.. warning:: It is really important that you pull down changes that others have made on the develop branch onto your sub-branch before you do the following step of merging your changes back onto the develop branch. **You could experience problems if someone else is working on the same files as you are.  You want to try to avoid this by communicating.** If it does happen, you will need to sort out which version needs to be back onto develop during the next steps below, and make sure your sub-branch copy is correct.  You also want to pull from develop because you need to get changes to files that others have worked on. Otherwise, you will be trying to merge old files from your sub-branch into the develop branch on the server in the next steps that follow.
 
 
 Eventually, you will want to place your work on the develop branch so that
-other people you are working with will be able to see it on a web server. The next few steps describe this. If you are using a Mac or linux, you can *Use the command line for this set of steps.*  However, if you are using the PC client software from github, you can switch to the develop branch in it and there should be an option to merge your branch into the develop branch, which is the equivalent of the following steps.
+other people you are working with will be able to see it on a web server. The next few steps describe this. 
 
-With this next command, go back to the develop branch:
+:Take Note:
+
+	- If you are using a Mac or linux, you can *Use the command line for this following set of steps.*  
+
+	- However, if you are using the PC client software from github, you can switch to the develop branch in it and there should be an option to merge your branch into the develop branch, which is the equivalent of the following steps.
+
+With these next commands, go back to the develop branch and also pull down the latest changes made by others:
 ::
 
 	git checkout develop
+	git pull origin develop
 
-From the develop branch, merge your sub-branch changes:
+On the client tools, these two steps above are done by *syncing* your develop branch.
+
+:Take Note:
+
+	Your local copy of all of our documentation is a clone that you are editing and it needs to contain changes that others have been working on in the meantime.  This includes both your cloned develop branch and sub-branch of the develop branch. **You could experience problems if someone else is working on the same files as you are.  You want to try to avoid this by communicating.**  
+
+From the develop branch, merge your sub-branch changes into the develop branch:
 ::
 
 	git merge --no-ff ls-dev
@@ -90,6 +103,13 @@ Push the changes back up to github on the develop branch:
 
 	git push origin develop
 
+On the PC client tool, these two steps above are done by doing the merge (shown pictorially in the tool as merge sub-branch --> develop), then *syncing* your develop branch.
+
+.. note:: When you wish to continue working on other changes or new modules, go back to your sub-branch of develop. (git checkout ls-dev, e.g.)
+
+
+Seeing your changes online
+==========================
 
 The 'develop' branch can be housed on a web server separately from
 the master branch.  This will be updated on a regular basis so that
