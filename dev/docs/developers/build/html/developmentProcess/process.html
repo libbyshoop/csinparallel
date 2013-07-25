@@ -126,19 +126,9 @@ other people you are working with will be able to see it on a web server. The ne
 </tr>
 </tbody>
 </table>
-<p>With these next commands, go back to the develop branch and also pull down the latest changes made by others:</p>
-<div class="highlight-python"><pre>git checkout develop
-git pull origin develop</pre>
+<p>With these next commands, go back to the develop branch:</p>
+<div class="highlight-python"><pre>git checkout develop</pre>
 </div>
-<p>On the client tools, these two steps above are done by <em>syncing</em> your develop branch.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Take Note:</th><td class="field-body">Your local copy of all of our documentation is a clone that you are editing and it needs to contain changes that others have been working on in the meantime.  This includes both your cloned develop branch and sub-branch of the develop branch. <strong>You could experience problems if someone else is working on the same files as you are.  You want to try to avoid this by communicating.</strong></td>
-</tr>
-</tbody>
-</table>
 <p>From the develop branch, merge your sub-branch changes into the develop branch:</p>
 <div class="highlight-python"><pre>git merge --no-ff ls-dev</pre>
 </div>
