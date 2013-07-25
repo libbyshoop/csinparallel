@@ -82,17 +82,10 @@ other people you are working with will be able to see it on a web server. The ne
 
 	- However, if you are using the PC client software from github, you can switch to the develop branch in it and there should be an option to merge your branch into the develop branch, which is the equivalent of the following steps.
 
-With these next commands, go back to the develop branch and also pull down the latest changes made by others:
+With these next commands, go back to the develop branch:
 ::
 
 	git checkout develop
-	git pull origin develop
-
-On the client tools, these two steps above are done by *syncing* your develop branch.
-
-:Take Note:
-
-	Your local copy of all of our documentation is a clone that you are editing and it needs to contain changes that others have been working on in the meantime.  This includes both your cloned develop branch and sub-branch of the develop branch. **You could experience problems if someone else is working on the same files as you are.  You want to try to avoid this by communicating.**  
 
 From the develop branch, merge your sub-branch changes into the develop branch:
 ::
