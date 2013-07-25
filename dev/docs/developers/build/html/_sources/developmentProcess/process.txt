@@ -64,13 +64,8 @@ From the command line:
 	git add <file or directory>
 	git commit 
 
-	git pull origin develop
-
 	git push origin ls-dev
 
-
-
-.. warning:: It is really important that you pull down changes that others have made on the develop branch onto your sub-branch before you do the following step of merging your changes back onto the develop branch. **You could experience problems if someone else is working on the same files as you are.  You want to try to avoid this by communicating.** If it does happen, you will need to sort out which version needs to be back onto develop during the next steps below, and make sure your sub-branch copy is correct.  You also want to pull from develop because you need to get changes to files that others have worked on. Otherwise, you will be trying to merge old files from your sub-branch into the develop branch on the server in the next steps that follow.
 
 
 Eventually, you will want to place your work on the develop branch so that
@@ -86,6 +81,9 @@ With these next commands, go back to the develop branch:
 ::
 
 	git checkout develop
+	git pull origin develop
+
+.. warning:: It is really important that you pull down changes that others have made on the develop branch onto your copy of the develop branch before you do the following step of merging your changes back onto the develop branch. **You could experience problems if someone else is working on the same files as you are.  You want to try to avoid this by communicating.** If it does happen, you will need to sort out which version needs to be back onto develop during the next steps below, and make sure your sub-branch copy is correct.  You also want to pull from develop because you need to get changes to files that others have worked on. Otherwise, you will be trying to merge old files from your sub-branch into the develop branch on the server in the next steps that follow.
 
 From the develop branch, merge your sub-branch changes into the develop branch:
 ::

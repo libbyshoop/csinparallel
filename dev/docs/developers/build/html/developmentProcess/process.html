@@ -104,13 +104,7 @@ of the csinparallel repository:</p>
 <div class="highlight-python"><pre>git add &lt;file or directory&gt;
 git commit
 
-git pull origin develop
-
 git push origin ls-dev</pre>
-</div>
-<div class="admonition warning">
-<p class="first admonition-title">Warning</p>
-<p class="last">It is really important that you pull down changes that others have made on the develop branch onto your sub-branch before you do the following step of merging your changes back onto the develop branch. <strong>You could experience problems if someone else is working on the same files as you are.  You want to try to avoid this by communicating.</strong> If it does happen, you will need to sort out which version needs to be back onto develop during the next steps below, and make sure your sub-branch copy is correct.  You also want to pull from develop because you need to get changes to files that others have worked on. Otherwise, you will be trying to merge old files from your sub-branch into the develop branch on the server in the next steps that follow.</p>
 </div>
 <p>Eventually, you will want to place your work on the develop branch so that
 other people you are working with will be able to see it on a web server. The next few steps describe this.</p>
@@ -127,7 +121,12 @@ other people you are working with will be able to see it on a web server. The ne
 </tbody>
 </table>
 <p>With these next commands, go back to the develop branch:</p>
-<div class="highlight-python"><pre>git checkout develop</pre>
+<div class="highlight-python"><pre>git checkout develop
+git pull origin develop</pre>
+</div>
+<div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<p class="last">It is really important that you pull down changes that others have made on the develop branch onto your copy of the develop branch before you do the following step of merging your changes back onto the develop branch. <strong>You could experience problems if someone else is working on the same files as you are.  You want to try to avoid this by communicating.</strong> If it does happen, you will need to sort out which version needs to be back onto develop during the next steps below, and make sure your sub-branch copy is correct.  You also want to pull from develop because you need to get changes to files that others have worked on. Otherwise, you will be trying to merge old files from your sub-branch into the develop branch on the server in the next steps that follow.</p>
 </div>
 <p>From the develop branch, merge your sub-branch changes into the develop branch:</p>
 <div class="highlight-python"><pre>git merge --no-ff ls-dev</pre>
