@@ -9,8 +9,8 @@ Spinlocks and Contention
    :maxdepth: 1
 
    part1/alphabetsoup
-   part2/part2
-   part3/part3
+   part2/backoffandqueue
+   part3/clhmcsabort
 
 .. comment
 	* :ref:`genindex`

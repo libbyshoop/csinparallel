@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Part Two: A Couple of Other Ideas &mdash; Spinlocks and Contention</title>
+    <title>A Second Helping of Soup &mdash; Spinlocks and Contention</title>
     
     <link rel="stylesheet" href="../_static/default.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
@@ -25,8 +25,7 @@
     <script type="text/javascript" src="../_static/doctools.js"></script>
     <link rel="shortcut icon" href="../_static/favicon.ico"/>
     <link rel="top" title="Spinlocks and Contention" href="../index.html" />
-    <link rel="next" title="Getting More Sophisticated" href="../part3/part3.html" />
-    <link rel="prev" title="MIMD, TTAS, and Other Alphabet Soup" href="../part1/alphabetsoup.html" /> 
+    <link rel="prev" title="Solving the Mystery and Using Our Findings" href="../part2/backoffandqueue.html" /> 
   </head>
   <body>
     <div class="related">
@@ -36,10 +35,7 @@
           <a href="../genindex.html" title="General Index"
              accesskey="I">index</a></li>
         <li class="right" >
-          <a href="../part3/part3.html" title="Getting More Sophisticated"
-             accesskey="N">next</a> |</li>
-        <li class="right" >
-          <a href="../part1/alphabetsoup.html" title="MIMD, TTAS, and Other Alphabet Soup"
+          <a href="../part2/backoffandqueue.html" title="Solving the Mystery and Using Our Findings"
              accesskey="P">previous</a> |</li>
         <li><a href="../index.html">Spinlocks and Contention</a> &raquo;</li> 
       </ul>
@@ -50,119 +46,13 @@
         <div class="bodywrapper">
           <div class="body">
             
-  <div class="section" id="part-two-a-couple-of-other-ideas">
-<h1>Part Two: A Couple of Other Ideas<a class="headerlink" href="#part-two-a-couple-of-other-ideas" title="Permalink to this headline">¶</a></h1>
-<div class="section" id="backoff-locks">
-<h2>Backoff Locks<a class="headerlink" href="#backoff-locks" title="Permalink to this headline">¶</a></h2>
-<p>To motivate an improvement on the TTAS lock algorithm, we review how it works: test the lock until it appears to be free, then pouncing with TAS. It seems logical to conclude that if another thread manages to acquire the lock between those two steps that it is under high contention and therefore unwise to continue trying to acquire immediately. Instead, it makes more sense to <em>back off</em> for some period of time.</p>
-<a class="reference internal image-reference" href="../_images/backoff1.png"><img alt="Length of backoff." class="align-center" src="../_images/backoff1.png" style="width: 318.0px; height: 118.8px;" /></a>
-<p>For how long should the thread back off before retrying? A good rule of thumb is that the larger the number of unsuccessful tries, the higher the likely contention, and the longer the thread should back off. Here is a simple approach. Whenever the thread sees the lock has become free but fails to acquire it, it backs off before retrying. To ensure that concurrent conflicting threads do not fall into &#8220;lockstep&#8221;, all trying to acquire the lock at the same time, the thread backs off for a random duration. Each time the thread tries and fails to get the lock, it doubles the expected time it backs off, up to a fixed maximum.</p>
-<a class="reference internal image-reference" href="../_images/backoff2.png"><img alt="Length of backoff." class="align-center" src="../_images/backoff2.png" style="width: 315.6px; height: 127.2px;" /></a>
-<p>Here is an implementation of such a lock. The constant MIN_DELAY indicates the initial, shortest limit (it makes no sense for the thread to back off for too short a duration).</p>
-<div class="highlight-java"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
- 2
- 3
- 4
- 5
- 6
- 7
- 8
- 9
-10
-11
-12
-13</pre></div></td><td class="code"><div class="highlight"><pre><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Backoff</span> <span class="kd">implements</span> <span class="n">lock</span> <span class="o">{</span>
-<span class="kd">public</span> <span class="kt">void</span> <span class="nf">lock</span><span class="o">()</span> <span class="o">{</span>
-        <span class="kt">int</span> <span class="n">delay</span> <span class="o">=</span> <span class="n">MIN_DELAY</span><span class="o">;</span>
-        <span class="k">while</span> <span class="o">(</span><span class="kc">true</span><span class="o">)</span> <span class="o">{</span>
-                <span class="k">while</span> <span class="o">(</span><span class="n">state</span><span class="o">.</span><span class="na">get</span><span class="o">())</span> <span class="o">{}</span>
-                <span class="k">if</span> <span class="o">(!</span><span class="n">lock</span><span class="o">.</span><span class="na">getAndSet</span><span class="o">(</span><span class="kc">true</span><span class="o">))</span>
-                        <span class="k">return</span><span class="o">;</span>
-                <span class="n">sleep</span><span class="o">(</span><span class="n">random</span><span class="o">()</span> <span class="o">%</span> <span class="n">delay</span><span class="o">);</span>
-                <span class="k">if</span> <span class="o">(</span><span class="n">delay</span> <span class="o">&lt;</span> <span class="n">MAX_DELAY</span><span class="o">)</span>
-                        <span class="n">delay</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">delay</span><span class="o">;</span>
-                <span class="o">}</span>
-        <span class="o">}</span>
-<span class="o">}</span>
-</pre></div>
-</td></tr></table></div>
-<p>As in the TTAS algorithm, the thread spins testing the lock until the lock appears to be free. Then the thread tries to acquire the lock. If it fails, then it computes a random delay between zero and the current limit and then sleeps for that delay before retrying.</p>
-<p>It doubles the limit for the next back-off, up to MAX_DELAY. It is important to note that the thread backs off only when it fails to acquire a lock that it had immediately before observed to be free. Observing that the lock is held by another thread says nothing about the level of contention.</p>
-<p>The graph below shows that the backoff lock outperforms the TTAS lock, though it is far from the ideal curve (which is flat). The slope of the backoff curve varies greatly from one machine to another, but is invariably better than that of a TTAS lock.</p>
-<a class="reference internal image-reference" href="../_images/backofftiming.png"><img alt="Length of backoff." class="align-center" src="../_images/backofftiming.png" style="width: 252.8px; height: 144.0px;" /></a>
-<p>The backoff lock is easy to implement, and on many architectures performs significantly better than TTAS lock. Unfortunately, its performance is sensitive to the choice of minimum and maximum delay constants. To deploy this lock on a particular architecture, it is easy to experiment with different values, and choose the ones that work best. Experience shows, however, that these optimal values are sensitive to the number of processors and their speed, so it is not easy to tune the back-off lock class to be portable across a range of different machines.</p>
-</div>
-<div class="section" id="queue-locks">
-<h2>Queue Locks<a class="headerlink" href="#queue-locks" title="Permalink to this headline">¶</a></h2>
-<p>We now explore a different approach to implementing spin locks, one that is a little more complicated than backoff locks, but inherently more portable. One can overcome these drawbacks by having threads form a line, or queue. In a queue, each thread can learn if its turn has arrived by checking whether its predecessor has been served. Invalidation traffic is reduced by having each thread spin on a different location. A queue also allows for better utilization of the critical section since there is no need to guess when to attempt to access it: each thread is notified directly by its predecessor in the queue. Finally, a queue provides first-come-first-served fairness, the same high level of fairness achieved by the <a class="reference external" href="http://en.wikipedia.org/wiki/Lamport's_bakery_algorithm#Algorithm">bakery</a> algorithm. We now explore different ways to implement queue locks, a family of locking algorithms that exploit these insights.</p>
-<p>Here is the Anderson queue lock, a simple array-based queue lock. The threads share an atomic integer tail field, initially zero. To acquire the lock, each thread atomically increments the tail field. Call the resulting value the thread&#8217;s slot. The slot is used as an index into a Boolean flag array. If <tt class="docutils literal"><span class="pre">flag[j]</span></tt> is true, then the thread with slotj has permission to acquire the lock. Initially, <tt class="docutils literal"><span class="pre">flag[0]</span></tt> is true.</p>
-<a class="reference internal image-reference" href="../_images/andlock1.png"><img alt="Timing of queue lock." class="align-center" src="../_images/andlock1.png" style="width: 288.8px; height: 137.6px;" /></a>
-<p>To acquire the lock, each thread atomically increments the tail field. We&#8217;ll call the resulting value the thread&#8217;s slot.</p>
-<a class="reference internal image-reference" href="../_images/andlock2.png"><img alt="Timing of queue lock." class="align-left" src="../_images/andlock2.png" style="width: 288.8px; height: 137.6px;" /></a>
-<a class="reference internal image-reference" href="../_images/andlock3.png"><img alt="Timing of queue lock." class="align-right" src="../_images/andlock3.png" style="width: 276.8px; height: 132.0px;" /></a>
-<a class="reference internal image-reference" href="../_images/placeholder.png"><img alt="../_images/placeholder.png" class="align-center" src="../_images/placeholder.png" style="width: 86.0px; height: 16.0px;" /></a>
-<p>The slot is used as an index into a Boolean flag array. If <tt class="docutils literal"><span class="pre">flag[j]</span></tt> is true, then the thread with slot <em>j</em> has permission to acquire the lock. Initially, <tt class="docutils literal"><span class="pre">flag[0]</span></tt> is true. To acquire the lock, a thread spins until the flag at its slot becomes true.</p>
-<a class="reference internal image-reference" href="../_images/andlock4.png"><img alt="Timing of queue lock." class="align-center" src="../_images/andlock4.png" style="width: 272.0px; height: 136.0px;" /></a>
-<p>Here another thread wants to acquire the lock.</p>
-<a class="reference internal image-reference" href="../_images/andlock5.png"><img alt="Timing of queue lock." class="align-center" src="../_images/andlock5.png" style="width: 270.4px; height: 136.8px;" /></a>
-<p>It applies get-and-increment to the next pointer...</p>
-<a class="reference internal image-reference" href="../_images/andlock6.png"><img alt="Timing of queue lock." class="align-center" src="../_images/andlock6.png" style="width: 278.4px; height: 139.2px;" /></a>
-<p>...and advances the next pointer to acquire its own slot.</p>
-<a class="reference internal image-reference" href="../_images/andlock7.png"><img alt="Timing of queue lock." class="align-center" src="../_images/andlock7.png" style="width: 278.4px; height: 143.2px;" /></a>
-<p>Then it spins until the flag variable at that slot becomes true.</p>
-<a class="reference internal image-reference" href="../_images/andlock8.png"><img alt="Timing of queue lock." class="align-center" src="../_images/andlock8.png" style="width: 271.2px; height: 152.0px;" /></a>
-<p>The first thread releases the lock by setting the next slot to true.</p>
-<a class="reference internal image-reference" href="../_images/andlock9.png"><img alt="Timing of queue lock." class="align-center" src="../_images/andlock9.png" style="width: 269.6px; height: 140.0px;" /></a>
-<p>The second thread notices the change, and enters its critical section.</p>
-<a class="reference internal image-reference" href="../_images/andlock10.png"><img alt="Timing of queue lock." class="align-center" src="../_images/andlock10.png" style="width: 292.0px; height: 134.4px;" /></a>
-<p>Here is an implementation of the Anderson queue lock.</p>
-<div class="highlight-java"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
-2
-3
-4
-5
-6
-7
-8</pre></div></td><td class="code"><div class="highlight"><pre><span class="kd">public</span> <span class="kd">class</span> <span class="nc">ALock</span> <span class="kd">implements</span> <span class="n">Lock</span> <span class="o">{</span>
-        <span class="kt">boolean</span><span class="o">[]</span> <span class="n">flags</span><span class="o">=</span> <span class="o">{</span><span class="kc">true</span><span class="o">,</span><span class="kc">false</span><span class="o">,...,</span><span class="kc">false</span><span class="o">};</span> <span class="c1">//one flag per thread</span>
-        <span class="n">AtomicInteger</span> <span class="n">next</span> <span class="o">=</span> <span class="k">new</span> <span class="n">AtomicInteger</span><span class="o">(</span><span class="mi">0</span><span class="o">);</span> <span class="c1">//next field tells us which flag to use</span>
-        <span class="c1">//each thread has a thread-local variable that keeps track of its slot</span>
-        <span class="c1">//(that is, each thread has a private instance of mySlot</span>
-        <span class="c1">//shared only by name and not reference)</span>
-        <span class="n">ThreadLocal</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">&gt;</span> <span class="n">mySlot</span><span class="o">;</span>
-<span class="o">}</span>
-</pre></div>
-</td></tr></table></div>
-<p>We have one flag per thread, which means we have to know how many threads there are - there are <em>N</em> flags because you never expect to see more than <em>N</em> threads (each in line waiting for the lock). Unlike the <a class="reference external" href="http://en.wikipedia.org/wiki/Lamport's_bakery_algorithm#Algorithm">bakery</a> and <a class="reference external" href="http://en.wikipedia.org/wiki/Peterson's_algorithm#Filter_algorithm:_Peterson.27s_algorithm_for_N_processes">Peterson filter</a> algorithms, the flags are multi-reader and multi-writer, so a thread does not have an exclusive location in the flag array. Rather, a thread calls get-and-increment to get an assigned slot. It then spins on its assigned slot until the value is true.</p>
-<p>Bus traffic, then, is greatly reduced as each thread spins on a locally cached copy of a single array location - contention on the flags is minimized and invalidation traffic is low as well. However, contention may still occur due to <em>false sharing</em>: cache memory is not stored as individual items but as multiword lines, and adjacent data items like array elements frequently share lines. When one flag is changed, it will invalidate its entire cache line, which may include nearby unchanged items. One way around this problem is to <em>pad</em> array elements so that each element is mapped to a distinct cache line (for example, with a cache of four-word lines, we can increase the lock array size fourfold and moving from location <em>i</em> to next location 4(<em>i</em> + 1) mod 32 rather than <em>i</em> + 1 mod 8.</p>
-<p>Here is the code for the lock and unlock methods: if I&#8217;m a thread, first, I claim a slot by atomically incrementing the next field. Next, I wait until my predecessor has released the lock. I reset my slot to false so that it can be used the next time around. To release the lock, I set the slot after mine to true, being careful to wrap around.</p>
-<div class="highlight-java"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
-2
-3
-4
-5
-6
-7
-8
-9</pre></div></td><td class="code"><div class="highlight"><pre><span class="kd">public</span> <span class="nf">lock</span><span class="o">()</span> <span class="o">{</span>
-        <span class="kt">int</span> <span class="n">mySlot</span> <span class="o">=</span> <span class="n">next</span><span class="o">.</span><span class="na">getAndIncrement</span><span class="o">();</span> <span class="c1">//take next slot</span>
-        <span class="k">while</span> <span class="o">(!</span><span class="n">flags</span><span class="o">[</span><span class="n">mySlot</span> <span class="o">%</span> <span class="n">n</span><span class="o">])</span> <span class="o">{};</span> <span class="c1">//spin until told where to go</span>
-        <span class="n">flags</span><span class="o">[</span><span class="n">mySlot</span> <span class="o">%</span> <span class="n">n</span><span class="o">]</span> <span class="o">=</span> <span class="kc">false</span><span class="o">;</span> <span class="c1">//prepare slot for reuse</span>
-<span class="o">}</span>
-
-<span class="kd">public</span> <span class="nf">unlock</span><span class="o">()</span> <span class="o">{</span>
-        <span class="n">flags</span><span class="o">[(</span><span class="n">mySlot</span><span class="o">+</span><span class="mi">1</span><span class="o">)</span> <span class="o">%</span> <span class="n">n</span><span class="o">]</span> <span class="o">=</span> <span class="kc">true</span><span class="o">;</span> <span class="c1">//tell next thread to go</span>
-<span class="o">}</span>
-</pre></div>
-</td></tr></table></div>
-<p>The Anderson queue lock improves on backoff locks because it reduces invalidations to a minimum and schedules access to the critical section tightly, minimizing the interval between when a lock is freed by one thread and when is acquired by another. There is also a theoretical benefit: unlike the TTAS and backoff lock, this algorithm guarantees that there is no lockout, and in fact, provides first-come-first-served fairness, which we actually lose in TTAS and TTAS with backoff.</p>
-<a class="reference internal image-reference" href="../_images/queuegraph.png"><img alt="Timing of queue lock." class="align-center" src="../_images/queuegraph.png" style="width: 167.0px; height: 130.0px;" /></a>
-<p>The Anderson lock is the first truly scalable lock we&#8217;ve examined so far, and is simple and easy to implement. However, the Anderson lock has two disadvantages. First, it is not space-efficient; it requires knowing a bound <em>N</em> on the maximum number of concurrent threads, and it allocates an array of that size per lock (one bit per thread). Thus, <em>L</em> locks will require <em>O(LN)</em> space even if a thread accesses only one lock at a given time. Second, the lock is poorly suited for uncached architectures, since any thread may end up spinning on any array location, and in the absence of caches, spinning on a remote location may be very expensive.</p>
-</div>
+  <div class="section" id="a-second-helping-of-soup">
+<h1>A Second Helping of Soup<a class="headerlink" href="#a-second-helping-of-soup" title="Permalink to this headline">¶</a></h1>
+<p>In this final section, we examine</p>
 <div class="section" id="the-clh-lock">
 <h2>The CLH Lock<a class="headerlink" href="#the-clh-lock" title="Permalink to this headline">¶</a></h2>
-<p>The CLH queue lock (by Travis Craig, Anders Landin, and Erik Hagersten - most of these algorithms are named for their creators) is much more space-efficient, since it incurs a small constant-size overhead per thread. It also provides FIFO fairness.</p>
-<p>This algorithm records each thread&#8217;s status in a QNode object, which has a Boolean locked field. If that field is true, then the corresponding thread either has acquired the lock or is waiting for the lock. If that field is false, then the thread has released the lock.  The lock itself is represented as a virtual linked list of QNodes objects. We use the term &#8220;virtual&#8221; because the list is implicit: each thread points to its predecessor through a thread-local <tt class="docutils literal"><span class="pre">predvariable</span></tt>. The public tail variable points to the last node in the queue.</p>
+<p>The CLH queue lock (by Travis Craig, Anders Landin, and Erik Hagersten - many of these algorithms are named for their creators) is much more space-efficient since it incurs a small constant-size overhead per thread. It also provides FIFO fairness.</p>
+<p>This algorithm records each thread&#8217;s status in a QNode object, which has a Boolean locked field. If that field is true, then the corresponding thread either has acquired the lock or is waiting for the lock. If that field is false, then the thread has released the lock. The lock itself is represented as a virtual linked list of QNode objects. We use the term &#8220;virtual&#8221; because the list is implicit: each thread points to its predecessor through a thread-local <tt class="docutils literal"><span class="pre">predvariable</span></tt>. The public tail variable points to the last node in the queue.</p>
 <a class="reference internal image-reference" href="../_images/clh1to3.png"><img alt="CLH" class="align-center" src="../_images/clh1to3.png" style="width: 606.0px; height: 172.8px;" /></a>
 <p>To acquire the lock, a thread sets the locked field of its QNode to true, meaning that the thread is not ready to release the lock.</p>
 <a class="reference internal image-reference" href="../_images/clh4.png"><img alt="CLH" class="align-center" src="../_images/clh4.png" style="width: 168.8px; height: 148.0px;" /></a>
@@ -328,6 +218,111 @@
 <p>And red has acquired the lock!</p>
 <a class="reference internal image-reference" href="../_images/mcsunlock6.png"><img alt="MCS" class="align-center" src="../_images/mcsunlock6.png" style="width: 264.8px; height: 142.4px;" /></a>
 </div>
+<div class="section" id="a-final-real-world-complication-aborting-threads">
+<h2>A Final Real-World Complication: Aborting Threads<a class="headerlink" href="#a-final-real-world-complication-aborting-threads" title="Permalink to this headline">¶</a></h2>
+<p>The spinlock constructions we&#8217;ve looked at some far provide first-come-first-served (FIFO) access with little contention, making them useful in many applications. In <a class="reference external" href="http://en.wikipedia.org/wiki/Real-time_computing">real-time systems</a>, however, threads may require the ability to <em>abort</em>, canceling a pending request to acquire a lock in order to meet some other real-time deadline. Example reasons for giving up waiting for a lock could include a tiemout or a database transaction aborted by the user. Let&#8217;s look at implementing the option to abort on the locks we&#8217;ve examined so far:</p>
+<p>Aborting a <span class="uline">backoff lock</span> request is trivial: if the request takes too long, simply return from the <tt class="docutils literal"><span class="pre">lock()</span></tt> method. The lock&#8217;s state is unaffected by any thread&#8217;s abort. A nice property of this lock is that the abort itself is immediate: it is wait-free, requiring only a constant number of steps, and there is no cleanup.</p>
+<p>The <span class="uline">queue lock</span> is a little trickier, though: if we simply quit, the next thread in line will starve.</p>
+<p>Under normal circumstances, recall, the queue lock works like this:</p>
+<a class="reference internal image-reference" href="../_images/normalqueue.gif"><img alt="normal queue behavior." class="align-center" src="../_images/normalqueue.gif" style="width: 300.0px; height: 126.4px;" /></a>
+<p>However, if we try to have a node in the middle abort, the subsequent threads run into problems:</p>
+<a class="reference internal image-reference" href="../_images/abortqueue.gif"><img alt="queue with an aborting node" class="align-center" src="../_images/abortqueue.gif" style="width: 300.0px; height: 126.4px;" /></a>
+<p>Instead, to create a CLHLock that can abort, we need a graceful way out. Removing a node in a wait-free manner from the middle of the list is difficult if we want that thread to reuse its own node. The initial state would look like this:</p>
+<a class="reference internal image-reference" href="../_images/clhabort1.png"><img alt="clh with abort, initial" class="align-center" src="../_images/clhabort1.png" style="width: 268.8px; height: 159.2px;" /></a>
+<p>The idling purple processor decides it wants to acquire the lock:</p>
+<a class="reference internal image-reference" href="../_images/clhabort2.png"><img alt="clh with abort, acquiring" class="align-center" src="../_images/clhabort2.png" style="width: 160.8px; height: 141.6px;" /></a>
+<p>Each thread allocates a new QNode for each lock access. A Null predecessor value means that the QNode is not aborted and has not yet completed executing the critical section.</p>
+<a class="reference internal image-reference" href="../_images/clhabort3.png"><img alt="clh with abort, acquiring" class="align-center" src="../_images/clhabort3.png" style="width: 273.6px; height: 190.4px;" /></a>
+<p>The purple predecessor can now acquire the lock:</p>
+<a class="reference internal image-reference" href="../_images/clhabort4.png"><img alt="clh with abort, acquiring" class="align-center" src="../_images/clhabort4.png" style="width: 191.2px; height: 153.6px;" /></a>
+<p>Success, but it took a lot of work.</p>
+<a class="reference internal image-reference" href="../_images/clhabort5.png"><img alt="clh with abort, locked" class="align-center" src="../_images/clhabort5.png" style="width: 249.6px; height: 176.0px;" /></a>
+<p>Instead, what if we let the successor deal with the recycling? Here we&#8217;ll see a CLH lock in which the aborting thread marks the node so that the successor in the list will reuse the abandoned node and wait for that node&#8217;s predecessor - the Timeout Lock.</p>
+<a class="reference internal image-reference" href="../_images/to1.png"><img alt="to lock" class="align-center" src="../_images/to1.png" style="width: 249.6px; height: 176.0px;" /></a>
+<p>The blue processor times out and aborts...</p>
+<a class="reference internal image-reference" href="../_images/to2.png"><img alt="to lock" class="align-center" src="../_images/to2.png" style="width: 288.8px; height: 151.2px;" /></a>
+<p>...but in this version its successor, the red processor, notices and takes over.</p>
+<a class="reference internal image-reference" href="../_images/to3.png"><img alt="to lock" class="align-center" src="../_images/to3.png" style="width: 304.8px; height: 164.0px;" /></a>
+<p>The red processor recycles its predecessor&#8217;s node...</p>
+<a class="reference internal image-reference" href="../_images/to4.png"><img alt="to lock" class="align-center" src="../_images/to4.png" style="width: 288.8px; height: 110.4px;" /></a>
+<p>...and begins to spin on the predecessor&#8217;s predecessor.</p>
+<a class="reference internal image-reference" href="../_images/to5.png"><img alt="to lock" class="align-center" src="../_images/to5.png" style="width: 282.4px; height: 140.0px;" /></a>
+<p>Here&#8217;s the code for this lock:</p>
+<div class="highlight-java"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4
+5</pre></div></td><td class="code"><div class="highlight"><pre><span class="kd">public</span> <span class="kd">class</span> <span class="nc">TOLock</span> <span class="kd">implements</span> <span class="n">Lock</span> <span class="o">{</span>
+        <span class="kd">static</span> <span class="n">Qnode</span> <span class="n">AVAILABLE</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Qnode</span><span class="o">();</span> <span class="c1">//Distinguished node to signify free lock</span>
+        <span class="n">AtomicReference</span><span class="o">&lt;</span><span class="n">Qnode</span><span class="o">&gt;</span> <span class="n">tail</span><span class="o">;</span> <span class="c1">//Tail of the queue</span>
+        <span class="n">ThreadLocal</span><span class="o">&lt;</span><span class="n">Qnode</span><span class="o">&gt;</span> <span class="n">myNode</span><span class="o">;</span> <span class="c1">//Remember my node…</span>
+<span class="o">}</span>
+</pre></div>
+</td></tr></table></div>
+<p>And the lock function looks like this:</p>
+<div class="highlight-java"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22</pre></div></td><td class="code"><div class="highlight"><pre><span class="kd">public</span> <span class="kt">boolean</span> <span class="nf">lock</span><span class="o">(</span><span class="kt">long</span> <span class="n">timeout</span><span class="o">)</span> <span class="o">{</span>
+<span class="hll">        <span class="n">Qnode</span> <span class="n">qnode</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Qnode</span><span class="o">();</span>
+</span><span class="hll">        <span class="n">myNode</span><span class="o">.</span><span class="na">set</span><span class="o">(</span><span class="n">qnode</span><span class="o">);</span>
+</span><span class="hll">        <span class="n">qnode</span><span class="o">.</span><span class="na">prev</span> <span class="o">=</span> <span class="kc">null</span><span class="o">;</span>
+</span>        <span class="c1">//first three lines create and initialize node</span>
+        <span class="n">Qnode</span> <span class="n">myPred</span> <span class="o">=</span> <span class="n">tail</span><span class="o">.</span><span class="na">getAndSet</span><span class="o">(</span><span class="n">qnode</span><span class="o">);</span> <span class="c1">//Swap with tail</span>
+        <span class="k">if</span> <span class="o">(</span><span class="n">myPred</span><span class="o">==</span> <span class="kc">null</span> <span class="o">||</span> <span class="n">myPred</span><span class="o">.</span><span class="na">prev</span> <span class="o">==</span> <span class="n">AVAILABLE</span><span class="o">)</span>
+                <span class="k">return</span> <span class="kc">true</span><span class="o">;</span> <span class="c1">//If predecessor absent or released, we are done</span>
+        <span class="kt">long</span> <span class="n">start</span> <span class="o">=</span> <span class="n">now</span><span class="o">();</span>
+        <span class="k">while</span> <span class="o">(</span><span class="n">now</span><span class="o">()-</span> <span class="n">start</span> <span class="o">&lt;</span> <span class="n">timeout</span><span class="o">)</span> <span class="o">{</span> <span class="c1">//Keep trying for a while...</span>
+                <span class="n">Qnode</span> <span class="n">predPred</span> <span class="o">=</span> <span class="n">myPred</span><span class="o">.</span><span class="na">prev</span><span class="o">;</span> <span class="c1">//Spin on predecessor’s prev field</span>
+                <span class="k">if</span> <span class="o">(</span><span class="n">predPred</span> <span class="o">==</span> <span class="n">AVAILABLE</span><span class="o">)</span> <span class="o">{</span> <span class="c1">//Predecessor released lock</span>
+                        <span class="k">return</span> <span class="kc">true</span><span class="o">;</span>
+                <span class="o">}</span> <span class="k">else</span> <span class="k">if</span> <span class="o">(</span><span class="n">predPred</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+                <span class="n">myPred</span> <span class="o">=</span> <span class="n">predPred</span><span class="o">;</span> <span class="c1">//Predecessor aborted, advance one</span>
+        <span class="o">}</span>
+        <span class="o">}</span>
+        <span class="k">if</span> <span class="o">(!</span><span class="n">tail</span><span class="o">.</span><span class="na">compareAndSet</span><span class="o">(</span><span class="n">qnode</span><span class="o">,</span> <span class="n">myPred</span><span class="o">))</span>
+        <span class="n">qnode</span><span class="o">.</span><span class="na">prev</span> <span class="o">=</span> <span class="n">myPred</span><span class="o">;</span> <span class="c1">//Do I have a successor? If CAS fails: I do have a successor, tell it about myPred (see note below)</span>
+        <span class="k">return</span> <span class="kc">false</span><span class="o">;</span> <span class="c1">//If CAS succeeds: no successor, simply return false. Redirecting to predecessor tells the successors that node belongs to aborted lock() request and that they must spin on its predecessor.</span>
+
+<span class="o">}</span>
+</pre></div>
+</td></tr></table></div>
+<p>Note: In case a node is timing out it first checks if tail points to its node, if the CAS is putting back the original value, or the next value in line if you have followed any aborted nodes (i.e., the original node you were spinning on aborted, so you moved to the next in line). If the CAS fails to put back in tail the original node, then someone arrived after you, so you mark your <tt class="docutils literal"><span class="pre">prev</span></tt> pointer to the prior previous owner. If someone is spinning on your node, they will see the pointer change and follow that chain.</p>
+<p>The unlock function looks like this: try to swap back in Null to the tail. If it succeeds, then you are done. Otherwise, you need to set the available to`` prev``. This change of <tt class="docutils literal"><span class="pre">prev</span></tt> signals anyone spinning on your node that they have the lock. If the <tt class="docutils literal"><span class="pre">CAS()</span></tt> fails, the condition is true, there is a successor and so I must notify it what to wait on since I am timing out. If the tail points to me, then no one is waiting and putting a null completes the <tt class="docutils literal"><span class="pre">unlock()</span></tt>.</p>
+<div class="highlight-java"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4
+5</pre></div></td><td class="code"><div class="highlight"><pre><span class="kd">public</span> <span class="kt">void</span> <span class="nf">unlock</span><span class="o">()</span> <span class="o">{</span>
+        <span class="n">Qnode</span> <span class="n">qnode</span> <span class="o">=</span> <span class="n">myNode</span><span class="o">.</span><span class="na">get</span><span class="o">();</span>
+        <span class="k">if</span> <span class="o">(!</span><span class="n">tail</span><span class="o">.</span><span class="na">compareAndSet</span><span class="o">(</span><span class="n">qnode</span><span class="o">,</span> <span class="kc">null</span><span class="o">))</span> <span class="c1">//If CAS failed: exists a successor, notify successor it can enter; if CAS successful: set tail to null, no clean up since no successor waiting</span>
+                <span class="n">qnode</span><span class="o">.</span><span class="na">prev</span> <span class="o">=</span> <span class="n">AVAILABLE</span><span class="o">;</span>
+<span class="o">}</span>
+</pre></div>
+</td></tr></table></div>
+</div>
+<div class="section" id="conclusion">
+<h2>Conclusion<a class="headerlink" href="#conclusion" title="Permalink to this headline">¶</a></h2>
+<p>In this module we saw a variety of spin locks that vary in characteristics and performance. Such a variety is useful, because no single algorithm is ideal for all applications. For some applications, complex algorithms work best, and for others, simple algorithms are preferable. The best choice usually depends on specific aspects of the application and the target architecture.</p>
+</div>
 </div>
 
 
@@ -341,21 +336,18 @@
             </a></p>
   <h3><a href="../index.html">Table Of Contents</a></h3>
   <ul>
-<li><a class="reference internal" href="#">Part Two: A Couple of Other Ideas</a><ul>
-<li><a class="reference internal" href="#backoff-locks">Backoff Locks</a></li>
-<li><a class="reference internal" href="#queue-locks">Queue Locks</a></li>
+<li><a class="reference internal" href="#">A Second Helping of Soup</a><ul>
 <li><a class="reference internal" href="#the-clh-lock">The CLH Lock</a></li>
 <li><a class="reference internal" href="#mcs-lock">MCS Lock</a></li>
+<li><a class="reference internal" href="#a-final-real-world-complication-aborting-threads">A Final Real-World Complication: Aborting Threads</a></li>
+<li><a class="reference internal" href="#conclusion">Conclusion</a></li>
 </ul>
 </li>
 </ul>
 
   <h4>Previous topic</h4>
-  <p class="topless"><a href="../part1/alphabetsoup.html"
-                        title="previous chapter">MIMD, TTAS, and Other Alphabet Soup</a></p>
-  <h4>Next topic</h4>
-  <p class="topless"><a href="../part3/part3.html"
-                        title="next chapter">Getting More Sophisticated</a></p>
+  <p class="topless"><a href="../part2/backoffandqueue.html"
+                        title="previous chapter">Solving the Mystery and Using Our Findings</a></p>
 <div id="searchbox" style="display: none">
   <h3>Quick search</h3>
     <form class="search" action="../search.html" method="get">
@@ -380,10 +372,7 @@
           <a href="../genindex.html" title="General Index"
              >index</a></li>
         <li class="right" >
-          <a href="../part3/part3.html" title="Getting More Sophisticated"
-             >next</a> |</li>
-        <li class="right" >
-          <a href="../part1/alphabetsoup.html" title="MIMD, TTAS, and Other Alphabet Soup"
+          <a href="../part2/backoffandqueue.html" title="Solving the Mystery and Using Our Findings"
              >previous</a> |</li>
         <li><a href="../index.html">Spinlocks and Contention</a> &raquo;</li> 
       </ul>

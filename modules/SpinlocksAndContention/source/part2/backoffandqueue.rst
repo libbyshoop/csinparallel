@@ -1,6 +1,134 @@
-*********************************
-Part Two: A Couple of Other Ideas
-*********************************
+******************************************
+Solving the Mystery and Using Our Findings
+******************************************
+
+In the last section, we observed that the logically equivalent TAS and TTAS locks, two ways to implement a spinlock, differ dramatically with respect to actual performance (and neither approaches what we thought the ideal timing should look like). To solve the mystery of why this might be, we've been looking more thoroughly at multiprocessor architecture. We'll begin with exploring one cache coherence protocol.
+
+Write-Back Caches
+#################
+
+In a write-back coherence protocol, an invalidation message is sent out when the value is first modified, instructing the other processors to discard that value from their caches (a non-trivial protocol). Once the processor has invalidated the other cached values, it can make subsequent modifications without further bus traffic. A value that has been modified in the cache but not written back is called *dirty*\ . If the processor needs to use the cache for another value, or if another processor wants it, however, it must remember to write back any dirty values.
+
+Cache entries therefore now have three states: invalid (contains raw seething bits!), valid (can read but not write), and dirty (data has been modified). If the cache is invalid, then its contents are meaningless. If it is valid, then the processor can read the value, but does not have permission to write it because it may be cached elsewhere. If the value is dirty, then the processor has modified the value and is intercepting other load requests for it.  It must be written back before that cache can be reused.
+
+To see an example, let's rewind back to the moment when the red processor updated its cached data.
+
+.. image:: images/cachecoherence1.png
+	:width: 612px
+	:height: 356px
+	:scale: 40%
+	:alt: Data modified.
+	:align: center
+
+It broadcasts an *invalidation* message warning the other processors to invalidate, or discard, their cached copies of that data.
+
+.. image:: images/cachecoherence2.png
+	:width: 616px
+	:height: 460px
+	:scale: 40%
+	:alt: Data modified.
+	:align: center
+
+When the other processors hear the invalidation message, they set their caches to the *invalid* state.
+
+.. image:: images/cachecoherence3.png
+	:width: 690px
+	:height: 450px
+	:scale: 40%
+	:alt: Data modified.
+	:align: center
+
+From this point on, the red processor can update that data value without causing any bus traffic, because it knows that it has the only cached copy. This is much more efficient than a write-through cache because it produces much less bus traffic.
+
+.. image:: images/cachecoherence4.png
+	:width: 744px
+	:height: 464px
+	:scale: 40%
+	:alt: Data modified.
+	:align: center
+
+Finally, there is no need to update memory until the processor wants to use that cache space for something else. Any other processor that asks for the data will get it from the red processor.
+
+.. image:: images/cachecoherence5.png
+	:width: 652px
+	:height: 368px
+	:scale: 40%
+	:alt: Data modified.
+	:align: center
+
+If another processor wants the data, it asks for it over the bus.
+
+.. image:: images/cachecoherence6.png
+	:width: 614px
+	:height: 372px
+	:scale: 40%
+	:alt: Data modified.
+	:align: center
+
+And the owner responds by sending the data over.
+
+.. image:: images/cachecoherence7.png
+	:width: 610px
+	:height: 446px
+	:scale: 40%
+	:alt: Data modified.
+	:align: center
+
+That leaves us here.
+
+.. image:: images/cachecoherence8.png
+	:width: 688px
+	:height: 378px
+	:scale: 40%
+	:alt: Data modified.
+	:align: center
+
+Note that optimizing a spin lock is not a simple question, because we have to figure out exactly what we want to optimize: whether it’s the bus bandwidth used by spinning threads or the latency of lock acquisition or release, or whether we mostly care about uncontended locks.
+
+Solving the Mystery
+###################
+
+We now consider how the simple test-and-set algorithm performs using a bus-based write-back cache (the most common case in practice). Each ``testAndSet()`` call goes over the bus, and since all of the waiting threads are continually using the bus, all threads, even those not waiting for the lock, must wait to use the bus for each memory access. Even worse, the TAS call invalidates all cached copies of the lock, so every spinning thread encounters a cache miss almost every time and has to use the bus to fetch the new but unchanged value. Adding insult to injury, when the thread holding the lock tries to release it, it may be delayed waiting to use the bus that is monopolized by the spinners. We now understand why the TAS lock performs so poorly.
+
+Now consider the behavior of the TTAS lock algorithm while the lock is held by a thread A. The first time thread B reads the lock it takes a cache miss, forcing B to block while the value is loaded into B's cache. As long as A holds the lock, B repeatedly rereads the value...but each time, B hits in its cache (finding the desired value). B thus produces no bus traffic, and does not slow down other threads' memory accesses. Moreover, a thread that releases a lock is not delayed by threads spinning on that lock. However, there is a problem when the lock is released: *false* is written to the lock variable, which invalidates all of the cached copies. Each thread then takes a cache miss, rereads the new value, and calls ``getAndSet()`` more or less simultaneously, producing a storm of bus traffic.
+
+Again, let's break it down visually. While the lock is held, all the contenders spin in their caches, rereading cached data without causing any bus traffic.
+
+.. image:: images/localspinning1.png
+	:width: 612px
+	:height: 360px
+	:scale: 40%
+	:alt: Local spinning.
+	:align: center
+
+Things deteriorate, however, when the lock is released. The lock holder releases the lock by writing false to the lock variable…
+
+.. image:: images/localspinning2.png
+	:width: 612px
+	:height: 354px
+	:scale: 40%
+	:alt: Local spinning.
+	:align: center
+
+… which immediately invalidates the spinners' cached copies. Each one takes a cache miss, rereads the new value...
+
+.. image:: images/allmiss.png
+	:width: 612px
+	:height: 358px
+	:scale: 40%
+	:alt: Everyone takes a cache miss.
+	:align: center
+
+and they all (more or less simultaneously) call test-and-set to acquire the lock. The first to succeed invalidates the others, who must then reread the value, causing a storm of bus traffic. 
+
+.. image:: images/allcalltas.png
+	:width: 610px
+	:height: 358px
+	:scale: 40%
+	:alt: Everyone calls TAS.
+	:align: center
+
+Eventually, the processors *quiesce* or settle down once again to local spinning. So now we understand why the TTAS lock performs much better than the TAS lock, but still much worse than an ideal lock. Mystery explained!
 
 Backoff Locks
 #############
@@ -202,361 +330,3 @@ The Anderson lock is the first truly scalable lock we've examined so far, and is
 
 .. _bakery: http://en.wikipedia.org/wiki/Lamport's_bakery_algorithm#Algorithm
 .. _Peterson filter: http://en.wikipedia.org/wiki/Peterson's_algorithm#Filter_algorithm:_Peterson.27s_algorithm_for_N_processes
-
-The CLH Lock
-############
-
-The CLH queue lock (by Travis Craig, Anders Landin, and Erik Hagersten - most of these algorithms are named for their creators) is much more space-efficient, since it incurs a small constant-size overhead per thread. It also provides FIFO fairness.
-
-This algorithm records each thread's status in a QNode object, which has a Boolean locked field. If that field is true, then the corresponding thread either has acquired the lock or is waiting for the lock. If that field is false, then the thread has released the lock.  The lock itself is represented as a virtual linked list of QNodes objects. We use the term "virtual" because the list is implicit: each thread points to its predecessor through a thread-local ``predvariable``\ . The public tail variable points to the last node in the queue.
-
-.. image:: images/clh1to3.png
-	:width: 1515px
-	:height: 432px
-	:scale: 40%
-	:alt: CLH
-	:align: center
-
-To acquire the lock, a thread sets the locked field of its QNode to true, meaning that the thread is not ready to release the lock.
-
-.. image:: images/clh4.png
-	:width: 422px
-	:height: 370px
-	:scale: 40%
-	:alt: CLH
-	:align: center
-
-The thread applies swap to the tail to make its own node the tail of the queue, simultaneously acquiring a reference to its predecessor's QNode.
-
-.. image:: images/clh5.png
-	:width: 468px
-	:height: 376px
-	:scale: 40%
-	:alt: CLH
-	:align: center
-
-Because it sees that its predecessor’s QNode is false, this thread now has the lock.
-
-.. image:: images/clh6.png
-	:width: 428px
-	:height: 432px
-	:scale: 40%
-	:alt: CLH
-	:align: center
-
-Another thread that wants the lock does the same sequence of steps …
-
-.. image:: images/clh7.png
-	:width: 638px
-	:height: 422px
-	:scale: 40%
-	:alt: CLH
-	:align: left
-
-.. image:: images/clh8.png
-	:width: 676px
-	:height: 378px
-	:scale: 40%
-	:alt: CLH
-	:align: right
-
-Note that the list is ordered implicitly - there are no real pointers between the nodes.
-
-.. image:: images/clh9.png
-	:width: 592px
-	:height: 352px
-	:scale: 40%
-	:alt: CLH
-	:align: center
-
-But each thread keeps a reference of the node it added to the list. So each thread has the node it was assigned from the swap and the reference to the node it added when the swap completed.
-
-.. image:: images/clh10.png
-	:width: 578px
-	:height: 458px
-	:scale: 40%
-	:alt: CLH
-	:align: center
-
-Again, the links are implicit, as shown below.
-
-.. image:: images/clh11.png
-	:width: 754px
-	:height: 444px
-	:scale: 40%
-	:alt: CLH
-	:align: center
-
-The waiting thread then spins on its predecessor's QNode until the predecessor releases the lock. 
-
-.. image:: images/clh12.png
-	:width: 580px
-	:height: 486px
-	:scale: 40%
-	:alt: CLH
-	:align: center
-
-The thread actually spins on a *cached* copy of purple's node. This is very efficient in terms of interconnect traffic (unless you are on a NUMA architecture, where purple's node may be on a different processor).
-
-.. image:: images/clh13.png
-	:width: 722px
-	:height: 484px
-	:scale: 40%
-	:alt: CLH
-	:align: center
-
-Some coherence protocols shared memory might not be updated at all, only the cached copy. This is very efficient. 
-
-.. image:: images/clh14.png
-	:width: 742px
-	:height: 442px
-	:scale: 40%
-	:alt: CLH
-	:align: center
-
-When a thread acquires a lock it can reuse its predecessor's QNode as its new node for future lock accesses. Note that it can do so since at this point the thread's predecessor's QNode will no longer be used by the predecessor, and the thread's old QNode is pointed to either by the thread's successor or by the tail. 
-
-.. image:: images/clh15.png
-	:width: 578px
-	:height: 448px
-	:scale: 40%
-	:alt: CLH
-	:align: center
-
-The reuse of the QNode's means that for *L* locks and *N* threads, if each thread accesses at most one lock at a time, we only need O(\ *L*\ +\ *N*\ ) space as compared with  O(\ *LN*\ ) for the ALock. Of course, this only holds for accessing one lock at a time. If you access all *L* locks, then you need a QNode for each access.
-
-Here is what the code looks like as a Java object: if the locked field is true, the lock has not been released yet (it may also not have been acquired yet either).
-
-.. code-block:: java
-	:linenos:
-
-	class Qnode {
-		AtomicBoolean locked = new AtomicBoolean(true);
-	} 
-
-And here is the code for the lock:
-
-.. code-block:: java
-	:linenos:
-
-	class CLHLock implements Lock {
-		AtomicReference<Qnode> tail; //tail of the queue
-		ThreadLocal<Qnode> myNode = new Qnode();
-		//recall that ThreadLocal means that each thread has a private 
-		//instance of myNode, shared only by name and not reference)
-		public void lock() {
-			Qnode pred = tail.getAndSet(myNode); //swap in myNode
-			while (pred.locked) {} //spin until predecessor releases lock
-		}
-
-		public void unlock() {
-			myNode.locked.set(false); //notify successor
-			myNode = pred; //recycle predecessor's node
-			//(notice that we don't actually reuse myNode in lock())
-		}
-	}
-
-Like the ALock, this algorithm has each thread spin on a distinct location, so when one thread releases its lock, it invalidates its successor's cache only, and does not invalidate any other thread's cache. It does so with a lower space overhead, and, importantly, without requiring prior knowledge of the number of threads accessing a lock. It also provides first-come-first-served fairness. 
-
-To understand the principal disadvantage of this lock algorithm, we need to know a little more about non-uniform memory (NUMA) architectures. NUMA architectures tend to be described as if they have flat shared memory, but the truth is that not all have caches, and some regions of memory are faster than others. The principal disadvantage of the CLHLock algorithm is that it performs poorly on cacheless NUMA architectures -   each thread spins waiting for its predecessors' nodes to become false. If this memory location is remote, then performance will suffer. 
-
-.. image:: images/numatiming.png
-	:width: 938px
-	:height: 482px
-	:scale: 40%
-	:alt: CLH
-	:align: center
-
-On cache-coherent architectures, however, this approach should work well.
-
-MCS Lock
-########
-
-The MCS lock is another kind of queue lock that ensures that processes always spin on a fixed location in local memory, so this one works well for cacheless architectures. Like the CLH lock, it uses only a small fixed-size overhead per thread. It also provides FIFO fairness.
-
-Here, too, the lock is represented as a linked list of QNodes, where each QNode represents either a lock holder or a thread waiting to acquire the lock. Unlike the CLH lock, the list is explicit, not virtual.
-
-.. image:: images/mcs1.png
-	:width: 424px
-	:height: 360px
-	:scale: 40%
-	:alt: MCS
-	:align: center
-
-To acquire the lock, a thread places its own QNode at the tail of the list.
-
-.. image:: images/mcs2.png
-	:width: 662px
-	:height: 354px
-	:scale: 40%
-	:alt: MCS
-	:align: center
-
-The node then swaps in a reference to its own QNode.
-
-.. image:: images/mcs3.png
-	:width: 678px
-	:height: 356px
-	:scale: 40%
-	:alt: MCS
-	:align: center
-
-At this point the swap is completed, and the queue variable points to the tail of the queue.
-
-.. image:: images/mcs4.png
-	:width: 652px
-	:height: 402px
-	:scale: 40%
-	:alt: MCS
-	:align: center
-
-To acquire the lock, a thread places its own QNode at the tail of the list. If there are no other QNodes on the list, it looks like this.
-
-.. image:: images/mcs5.png
-	:width: 660px
-	:height: 392px
-	:scale: 40%
-	:alt: MCS
-	:align: center
-
-If a thread trying to acquire the lock has a predecessor, it modifies the predecessor's node to refer back to its own QNode.
-
-.. image:: images/mcs6to7.png
-	:width: 1540px
-	:height: 440px
-	:scale: 40%
-	:alt: MCS
-	:align: center
-
-The predecessor's node now refers to the red processor's QNode.
-
-.. image:: images/mcs8.png
-	:width: 736px
-	:height: 392px
-	:scale: 40%
-	:alt: MCS
-	:align: center
-
-The red processor now spins locally, waiting for its turn.
-
-.. image:: images/mcs9.png
-	:width: 728px
-	:height: 440px
-	:scale: 40%
-	:alt: MCS
-	:align: center
-
-The purple node is the first node, and it finds the lock free, so its flag is already set to true (default on creation).
-
-.. image:: images/mcs10.png
-	:width: 728px
-	:height: 434px
-	:scale: 40%
-	:alt: MCS
-	:align: center
-
-The red processor acquires the lock!
-
-.. image:: images/mcs11.png
-	:width: 738px
-	:height: 382px
-	:scale: 40%
-	:alt: MCS
-	:align: center
-
-So now that we understand how it works, let's take a look at the code. Here is the code for QNodes:
-
-.. code-block:: java
-	:linenos:
-
-	class Qnode {
-		boolean locked = false;
-		Qnode next = null;
-	}
-
-And here is the code that uses the QNode to implement an MCSLock:
-
-.. code-block:: java
-	:linenos:
-
-	class MCSLock implements Lock {
-		AtomicReference tail;
-		public void lock() {
-			Qnode qnode = new Qnode(); //qnode should be a thread-local variable!
-			//we'll need it in the unlock method.
-			Qnode pred = tail.getAndSet(qnode); //add my node to the tail of queue
-			if (pred != null) {
-				qnode.locked = true;
-				pred.next = qnode;
-				while (qnode.locked) {} //wait until unlocked
-			}
-		}
-	}
-
-The only way the CAS will fail is if someone has changed the tail. The fact that the tail has now changed suggests that someone else is trying to acquire the lock, and we need to wait for them to set the next pointer.
-
-.. code-block:: java
-	:linenos:
-
-	public void unlock() {
-		if (qnode.next == null) { //no successor?
-			if (tail.CAS(qnode, null) //if really no successor, return
-			return;
-			while (qnode.next == null) {} //Otherwise wait for successor to catch up
-			}
-		qnode.next.locked = false; //pass lock to successor
-		}
-	}
-
-We'll unpack unlocking with some more images. We left off here:
-
-.. image:: images/mcsunlock1.png
-	:width: 664px
-	:height: 336px
-	:scale: 40%
-	:alt: MCS
-	:align: center
-
-The purple node looks at the queue.
-
-.. image:: images/mcsunlock2.png
-	:width: 664px
-	:height: 438px
-	:scale: 40%
-	:alt: MCS
-	:align: center
-
-Red prepares to spin...
-
-.. image:: images/mcsunlock3.png
-	:width: 658px
-	:height: 350px
-	:scale: 40%
-	:alt: MCS
-	:align: center
-
-.. image:: images/mcsunlock4.png
-	:width: 662px
-	:height: 346px
-	:scale: 40%
-	:alt: MCS
-	:align: center
-
-...and then spins!
-
-.. image:: images/mcsunlock5.png
-	:width: 662px
-	:height: 356px
-	:scale: 40%
-	:alt: MCS
-	:align: center
-
-And red has acquired the lock!
-
-.. image:: images/mcsunlock6.png
-	:width: 662px
-	:height: 356px
-	:scale: 40%
-	:alt: MCS
-	:align: center
-	

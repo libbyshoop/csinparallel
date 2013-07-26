@@ -1,0 +1,264 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Solving the Mystery and Using Our Findings &mdash; Spinlocks and Contention</title>
+    
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+    <link rel="top" title="Spinlocks and Contention" href="../index.html" />
+    <link rel="next" title="A Second Helping of Soup" href="../part3/clhmcsabort.html" />
+    <link rel="prev" title="MIMD, TTAS, and Other Alphabet Soup" href="../part1/alphabetsoup.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../part3/clhmcsabort.html" title="A Second Helping of Soup"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="../part1/alphabetsoup.html" title="MIMD, TTAS, and Other Alphabet Soup"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../index.html">Spinlocks and Contention</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="solving-the-mystery-and-using-our-findings">
+<h1>Solving the Mystery and Using Our Findings<a class="headerlink" href="#solving-the-mystery-and-using-our-findings" title="Permalink to this headline">¶</a></h1>
+<p>In the last section, we observed that the logically equivalent TAS and TTAS locks, two ways to implement a spinlock, differ dramatically with respect to actual performance (and neither approaches what we thought the ideal timing should look like). To solve the mystery of why this might be, we&#8217;ve been looking more thoroughly at multiprocessor architecture. We&#8217;ll begin with exploring one cache coherence protocol.</p>
+<div class="section" id="write-back-caches">
+<h2>Write-Back Caches<a class="headerlink" href="#write-back-caches" title="Permalink to this headline">¶</a></h2>
+<p>In a write-back coherence protocol, an invalidation message is sent out when the value is first modified, instructing the other processors to discard that value from their caches (a non-trivial protocol). Once the processor has invalidated the other cached values, it can make subsequent modifications without further bus traffic. A value that has been modified in the cache but not written back is called <em>dirty</em>. If the processor needs to use the cache for another value, or if another processor wants it, however, it must remember to write back any dirty values.</p>
+<p>Cache entries therefore now have three states: invalid (contains raw seething bits!), valid (can read but not write), and dirty (data has been modified). If the cache is invalid, then its contents are meaningless. If it is valid, then the processor can read the value, but does not have permission to write it because it may be cached elsewhere. If the value is dirty, then the processor has modified the value and is intercepting other load requests for it.  It must be written back before that cache can be reused.</p>
+<p>To see an example, let&#8217;s rewind back to the moment when the red processor updated its cached data.</p>
+<a class="reference internal image-reference" href="../_images/cachecoherence1.png"><img alt="Data modified." class="align-center" src="../_images/cachecoherence1.png" style="width: 244.8px; height: 142.4px;" /></a>
+<p>It broadcasts an <em>invalidation</em> message warning the other processors to invalidate, or discard, their cached copies of that data.</p>
+<a class="reference internal image-reference" href="../_images/cachecoherence2.png"><img alt="Data modified." class="align-center" src="../_images/cachecoherence2.png" style="width: 246.4px; height: 184.0px;" /></a>
+<p>When the other processors hear the invalidation message, they set their caches to the <em>invalid</em> state.</p>
+<a class="reference internal image-reference" href="../_images/cachecoherence3.png"><img alt="Data modified." class="align-center" src="../_images/cachecoherence3.png" style="width: 276.0px; height: 180.0px;" /></a>
+<p>From this point on, the red processor can update that data value without causing any bus traffic, because it knows that it has the only cached copy. This is much more efficient than a write-through cache because it produces much less bus traffic.</p>
+<a class="reference internal image-reference" href="../_images/cachecoherence4.png"><img alt="Data modified." class="align-center" src="../_images/cachecoherence4.png" style="width: 297.6px; height: 185.6px;" /></a>
+<p>Finally, there is no need to update memory until the processor wants to use that cache space for something else. Any other processor that asks for the data will get it from the red processor.</p>
+<a class="reference internal image-reference" href="../_images/cachecoherence5.png"><img alt="Data modified." class="align-center" src="../_images/cachecoherence5.png" style="width: 260.8px; height: 147.2px;" /></a>
+<p>If another processor wants the data, it asks for it over the bus.</p>
+<a class="reference internal image-reference" href="../_images/cachecoherence6.png"><img alt="Data modified." class="align-center" src="../_images/cachecoherence6.png" style="width: 245.6px; height: 148.8px;" /></a>
+<p>And the owner responds by sending the data over.</p>
+<a class="reference internal image-reference" href="../_images/cachecoherence7.png"><img alt="Data modified." class="align-center" src="../_images/cachecoherence7.png" style="width: 244.0px; height: 178.4px;" /></a>
+<p>That leaves us here.</p>
+<a class="reference internal image-reference" href="../_images/cachecoherence8.png"><img alt="Data modified." class="align-center" src="../_images/cachecoherence8.png" style="width: 275.2px; height: 151.2px;" /></a>
+<p>Note that optimizing a spin lock is not a simple question, because we have to figure out exactly what we want to optimize: whether it’s the bus bandwidth used by spinning threads or the latency of lock acquisition or release, or whether we mostly care about uncontended locks.</p>
+</div>
+<div class="section" id="solving-the-mystery">
+<h2>Solving the Mystery<a class="headerlink" href="#solving-the-mystery" title="Permalink to this headline">¶</a></h2>
+<p>We now consider how the simple test-and-set algorithm performs using a bus-based write-back cache (the most common case in practice). Each <tt class="docutils literal"><span class="pre">testAndSet()</span></tt> call goes over the bus, and since all of the waiting threads are continually using the bus, all threads, even those not waiting for the lock, must wait to use the bus for each memory access. Even worse, the TAS call invalidates all cached copies of the lock, so every spinning thread encounters a cache miss almost every time and has to use the bus to fetch the new but unchanged value. Adding insult to injury, when the thread holding the lock tries to release it, it may be delayed waiting to use the bus that is monopolized by the spinners. We now understand why the TAS lock performs so poorly.</p>
+<p>Now consider the behavior of the TTAS lock algorithm while the lock is held by a thread A. The first time thread B reads the lock it takes a cache miss, forcing B to block while the value is loaded into B&#8217;s cache. As long as A holds the lock, B repeatedly rereads the value...but each time, B hits in its cache (finding the desired value). B thus produces no bus traffic, and does not slow down other threads&#8217; memory accesses. Moreover, a thread that releases a lock is not delayed by threads spinning on that lock. However, there is a problem when the lock is released: <em>false</em> is written to the lock variable, which invalidates all of the cached copies. Each thread then takes a cache miss, rereads the new value, and calls <tt class="docutils literal"><span class="pre">getAndSet()</span></tt> more or less simultaneously, producing a storm of bus traffic.</p>
+<p>Again, let&#8217;s break it down visually. While the lock is held, all the contenders spin in their caches, rereading cached data without causing any bus traffic.</p>
+<a class="reference internal image-reference" href="../_images/localspinning1.png"><img alt="Local spinning." class="align-center" src="../_images/localspinning1.png" style="width: 244.8px; height: 144.0px;" /></a>
+<p>Things deteriorate, however, when the lock is released. The lock holder releases the lock by writing false to the lock variable…</p>
+<a class="reference internal image-reference" href="../_images/localspinning2.png"><img alt="Local spinning." class="align-center" src="../_images/localspinning2.png" style="width: 244.8px; height: 141.6px;" /></a>
+<p>… which immediately invalidates the spinners&#8217; cached copies. Each one takes a cache miss, rereads the new value...</p>
+<a class="reference internal image-reference" href="../_images/allmiss.png"><img alt="Everyone takes a cache miss." class="align-center" src="../_images/allmiss.png" style="width: 244.8px; height: 143.2px;" /></a>
+<p>and they all (more or less simultaneously) call test-and-set to acquire the lock. The first to succeed invalidates the others, who must then reread the value, causing a storm of bus traffic.</p>
+<a class="reference internal image-reference" href="../_images/allcalltas.png"><img alt="Everyone calls TAS." class="align-center" src="../_images/allcalltas.png" style="width: 244.0px; height: 143.2px;" /></a>
+<p>Eventually, the processors <em>quiesce</em> or settle down once again to local spinning. So now we understand why the TTAS lock performs much better than the TAS lock, but still much worse than an ideal lock. Mystery explained!</p>
+</div>
+<div class="section" id="backoff-locks">
+<h2>Backoff Locks<a class="headerlink" href="#backoff-locks" title="Permalink to this headline">¶</a></h2>
+<p>To motivate an improvement on the TTAS lock algorithm, we review how it works: test the lock until it appears to be free, then pouncing with TAS. It seems logical to conclude that if another thread manages to acquire the lock between those two steps that it is under high contention and therefore unwise to continue trying to acquire immediately. Instead, it makes more sense to <em>back off</em> for some period of time.</p>
+<a class="reference internal image-reference" href="../_images/backoff1.png"><img alt="Length of backoff." class="align-center" src="../_images/backoff1.png" style="width: 318.0px; height: 118.8px;" /></a>
+<p>For how long should the thread back off before retrying? A good rule of thumb is that the larger the number of unsuccessful tries, the higher the likely contention, and the longer the thread should back off. Here is a simple approach. Whenever the thread sees the lock has become free but fails to acquire it, it backs off before retrying. To ensure that concurrent conflicting threads do not fall into &#8220;lockstep&#8221;, all trying to acquire the lock at the same time, the thread backs off for a random duration. Each time the thread tries and fails to get the lock, it doubles the expected time it backs off, up to a fixed maximum.</p>
+<a class="reference internal image-reference" href="../_images/backoff2.png"><img alt="Length of backoff." class="align-center" src="../_images/backoff2.png" style="width: 315.6px; height: 127.2px;" /></a>
+<p>Here is an implementation of such a lock. The constant MIN_DELAY indicates the initial, shortest limit (it makes no sense for the thread to back off for too short a duration).</p>
+<div class="highlight-java"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13</pre></div></td><td class="code"><div class="highlight"><pre><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Backoff</span> <span class="kd">implements</span> <span class="n">lock</span> <span class="o">{</span>
+<span class="kd">public</span> <span class="kt">void</span> <span class="nf">lock</span><span class="o">()</span> <span class="o">{</span>
+        <span class="kt">int</span> <span class="n">delay</span> <span class="o">=</span> <span class="n">MIN_DELAY</span><span class="o">;</span>
+        <span class="k">while</span> <span class="o">(</span><span class="kc">true</span><span class="o">)</span> <span class="o">{</span>
+                <span class="k">while</span> <span class="o">(</span><span class="n">state</span><span class="o">.</span><span class="na">get</span><span class="o">())</span> <span class="o">{}</span>
+                <span class="k">if</span> <span class="o">(!</span><span class="n">lock</span><span class="o">.</span><span class="na">getAndSet</span><span class="o">(</span><span class="kc">true</span><span class="o">))</span>
+                        <span class="k">return</span><span class="o">;</span>
+                <span class="n">sleep</span><span class="o">(</span><span class="n">random</span><span class="o">()</span> <span class="o">%</span> <span class="n">delay</span><span class="o">);</span>
+                <span class="k">if</span> <span class="o">(</span><span class="n">delay</span> <span class="o">&lt;</span> <span class="n">MAX_DELAY</span><span class="o">)</span>
+                        <span class="n">delay</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">delay</span><span class="o">;</span>
+                <span class="o">}</span>
+        <span class="o">}</span>
+<span class="o">}</span>
+</pre></div>
+</td></tr></table></div>
+<p>As in the TTAS algorithm, the thread spins testing the lock until the lock appears to be free. Then the thread tries to acquire the lock. If it fails, then it computes a random delay between zero and the current limit and then sleeps for that delay before retrying.</p>
+<p>It doubles the limit for the next back-off, up to MAX_DELAY. It is important to note that the thread backs off only when it fails to acquire a lock that it had immediately before observed to be free. Observing that the lock is held by another thread says nothing about the level of contention.</p>
+<p>The graph below shows that the backoff lock outperforms the TTAS lock, though it is far from the ideal curve (which is flat). The slope of the backoff curve varies greatly from one machine to another, but is invariably better than that of a TTAS lock.</p>
+<a class="reference internal image-reference" href="../_images/backofftiming.png"><img alt="Length of backoff." class="align-center" src="../_images/backofftiming.png" style="width: 252.8px; height: 144.0px;" /></a>
+<p>The backoff lock is easy to implement, and on many architectures performs significantly better than TTAS lock. Unfortunately, its performance is sensitive to the choice of minimum and maximum delay constants. To deploy this lock on a particular architecture, it is easy to experiment with different values, and choose the ones that work best. Experience shows, however, that these optimal values are sensitive to the number of processors and their speed, so it is not easy to tune the back-off lock class to be portable across a range of different machines.</p>
+</div>
+<div class="section" id="queue-locks">
+<h2>Queue Locks<a class="headerlink" href="#queue-locks" title="Permalink to this headline">¶</a></h2>
+<p>We now explore a different approach to implementing spin locks, one that is a little more complicated than backoff locks, but inherently more portable. One can overcome these drawbacks by having threads form a line, or queue. In a queue, each thread can learn if its turn has arrived by checking whether its predecessor has been served. Invalidation traffic is reduced by having each thread spin on a different location. A queue also allows for better utilization of the critical section since there is no need to guess when to attempt to access it: each thread is notified directly by its predecessor in the queue. Finally, a queue provides first-come-first-served fairness, the same high level of fairness achieved by the <a class="reference external" href="http://en.wikipedia.org/wiki/Lamport's_bakery_algorithm#Algorithm">bakery</a> algorithm. We now explore different ways to implement queue locks, a family of locking algorithms that exploit these insights.</p>
+<p>Here is the Anderson queue lock, a simple array-based queue lock. The threads share an atomic integer tail field, initially zero. To acquire the lock, each thread atomically increments the tail field. Call the resulting value the thread&#8217;s slot. The slot is used as an index into a Boolean flag array. If <tt class="docutils literal"><span class="pre">flag[j]</span></tt> is true, then the thread with slotj has permission to acquire the lock. Initially, <tt class="docutils literal"><span class="pre">flag[0]</span></tt> is true.</p>
+<a class="reference internal image-reference" href="../_images/andlock1.png"><img alt="Timing of queue lock." class="align-center" src="../_images/andlock1.png" style="width: 288.8px; height: 137.6px;" /></a>
+<p>To acquire the lock, each thread atomically increments the tail field. We&#8217;ll call the resulting value the thread&#8217;s slot.</p>
+<a class="reference internal image-reference" href="../_images/andlock2.png"><img alt="Timing of queue lock." class="align-left" src="../_images/andlock2.png" style="width: 288.8px; height: 137.6px;" /></a>
+<a class="reference internal image-reference" href="../_images/andlock3.png"><img alt="Timing of queue lock." class="align-right" src="../_images/andlock3.png" style="width: 276.8px; height: 132.0px;" /></a>
+<a class="reference internal image-reference" href="../_images/placeholder.png"><img alt="../_images/placeholder.png" class="align-center" src="../_images/placeholder.png" style="width: 86.0px; height: 16.0px;" /></a>
+<p>The slot is used as an index into a Boolean flag array. If <tt class="docutils literal"><span class="pre">flag[j]</span></tt> is true, then the thread with slot <em>j</em> has permission to acquire the lock. Initially, <tt class="docutils literal"><span class="pre">flag[0]</span></tt> is true. To acquire the lock, a thread spins until the flag at its slot becomes true.</p>
+<a class="reference internal image-reference" href="../_images/andlock4.png"><img alt="Timing of queue lock." class="align-center" src="../_images/andlock4.png" style="width: 272.0px; height: 136.0px;" /></a>
+<p>Here another thread wants to acquire the lock.</p>
+<a class="reference internal image-reference" href="../_images/andlock5.png"><img alt="Timing of queue lock." class="align-center" src="../_images/andlock5.png" style="width: 270.4px; height: 136.8px;" /></a>
+<p>It applies get-and-increment to the next pointer...</p>
+<a class="reference internal image-reference" href="../_images/andlock6.png"><img alt="Timing of queue lock." class="align-center" src="../_images/andlock6.png" style="width: 278.4px; height: 139.2px;" /></a>
+<p>...and advances the next pointer to acquire its own slot.</p>
+<a class="reference internal image-reference" href="../_images/andlock7.png"><img alt="Timing of queue lock." class="align-center" src="../_images/andlock7.png" style="width: 278.4px; height: 143.2px;" /></a>
+<p>Then it spins until the flag variable at that slot becomes true.</p>
+<a class="reference internal image-reference" href="../_images/andlock8.png"><img alt="Timing of queue lock." class="align-center" src="../_images/andlock8.png" style="width: 271.2px; height: 152.0px;" /></a>
+<p>The first thread releases the lock by setting the next slot to true.</p>
+<a class="reference internal image-reference" href="../_images/andlock9.png"><img alt="Timing of queue lock." class="align-center" src="../_images/andlock9.png" style="width: 269.6px; height: 140.0px;" /></a>
+<p>The second thread notices the change, and enters its critical section.</p>
+<a class="reference internal image-reference" href="../_images/andlock10.png"><img alt="Timing of queue lock." class="align-center" src="../_images/andlock10.png" style="width: 292.0px; height: 134.4px;" /></a>
+<p>Here is an implementation of the Anderson queue lock.</p>
+<div class="highlight-java"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4
+5
+6
+7
+8</pre></div></td><td class="code"><div class="highlight"><pre><span class="kd">public</span> <span class="kd">class</span> <span class="nc">ALock</span> <span class="kd">implements</span> <span class="n">Lock</span> <span class="o">{</span>
+        <span class="kt">boolean</span><span class="o">[]</span> <span class="n">flags</span><span class="o">=</span> <span class="o">{</span><span class="kc">true</span><span class="o">,</span><span class="kc">false</span><span class="o">,...,</span><span class="kc">false</span><span class="o">};</span> <span class="c1">//one flag per thread</span>
+        <span class="n">AtomicInteger</span> <span class="n">next</span> <span class="o">=</span> <span class="k">new</span> <span class="n">AtomicInteger</span><span class="o">(</span><span class="mi">0</span><span class="o">);</span> <span class="c1">//next field tells us which flag to use</span>
+        <span class="c1">//each thread has a thread-local variable that keeps track of its slot</span>
+        <span class="c1">//(that is, each thread has a private instance of mySlot</span>
+        <span class="c1">//shared only by name and not reference)</span>
+        <span class="n">ThreadLocal</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">&gt;</span> <span class="n">mySlot</span><span class="o">;</span>
+<span class="o">}</span>
+</pre></div>
+</td></tr></table></div>
+<p>We have one flag per thread, which means we have to know how many threads there are - there are <em>N</em> flags because you never expect to see more than <em>N</em> threads (each in line waiting for the lock). Unlike the <a class="reference external" href="http://en.wikipedia.org/wiki/Lamport's_bakery_algorithm#Algorithm">bakery</a> and <a class="reference external" href="http://en.wikipedia.org/wiki/Peterson's_algorithm#Filter_algorithm:_Peterson.27s_algorithm_for_N_processes">Peterson filter</a> algorithms, the flags are multi-reader and multi-writer, so a thread does not have an exclusive location in the flag array. Rather, a thread calls get-and-increment to get an assigned slot. It then spins on its assigned slot until the value is true.</p>
+<p>Bus traffic, then, is greatly reduced as each thread spins on a locally cached copy of a single array location - contention on the flags is minimized and invalidation traffic is low as well. However, contention may still occur due to <em>false sharing</em>: cache memory is not stored as individual items but as multiword lines, and adjacent data items like array elements frequently share lines. When one flag is changed, it will invalidate its entire cache line, which may include nearby unchanged items. One way around this problem is to <em>pad</em> array elements so that each element is mapped to a distinct cache line (for example, with a cache of four-word lines, we can increase the lock array size fourfold and moving from location <em>i</em> to next location 4(<em>i</em> + 1) mod 32 rather than <em>i</em> + 1 mod 8.</p>
+<p>Here is the code for the lock and unlock methods: if I&#8217;m a thread, first, I claim a slot by atomically incrementing the next field. Next, I wait until my predecessor has released the lock. I reset my slot to false so that it can be used the next time around. To release the lock, I set the slot after mine to true, being careful to wrap around.</p>
+<div class="highlight-java"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9</pre></div></td><td class="code"><div class="highlight"><pre><span class="kd">public</span> <span class="nf">lock</span><span class="o">()</span> <span class="o">{</span>
+        <span class="kt">int</span> <span class="n">mySlot</span> <span class="o">=</span> <span class="n">next</span><span class="o">.</span><span class="na">getAndIncrement</span><span class="o">();</span> <span class="c1">//take next slot</span>
+        <span class="k">while</span> <span class="o">(!</span><span class="n">flags</span><span class="o">[</span><span class="n">mySlot</span> <span class="o">%</span> <span class="n">n</span><span class="o">])</span> <span class="o">{};</span> <span class="c1">//spin until told where to go</span>
+        <span class="n">flags</span><span class="o">[</span><span class="n">mySlot</span> <span class="o">%</span> <span class="n">n</span><span class="o">]</span> <span class="o">=</span> <span class="kc">false</span><span class="o">;</span> <span class="c1">//prepare slot for reuse</span>
+<span class="o">}</span>
+
+<span class="kd">public</span> <span class="nf">unlock</span><span class="o">()</span> <span class="o">{</span>
+        <span class="n">flags</span><span class="o">[(</span><span class="n">mySlot</span><span class="o">+</span><span class="mi">1</span><span class="o">)</span> <span class="o">%</span> <span class="n">n</span><span class="o">]</span> <span class="o">=</span> <span class="kc">true</span><span class="o">;</span> <span class="c1">//tell next thread to go</span>
+<span class="o">}</span>
+</pre></div>
+</td></tr></table></div>
+<p>The Anderson queue lock improves on backoff locks because it reduces invalidations to a minimum and schedules access to the critical section tightly, minimizing the interval between when a lock is freed by one thread and when is acquired by another. There is also a theoretical benefit: unlike the TTAS and backoff lock, this algorithm guarantees that there is no lockout, and in fact, provides first-come-first-served fairness, which we actually lose in TTAS and TTAS with backoff.</p>
+<a class="reference internal image-reference" href="../_images/queuegraph.png"><img alt="Timing of queue lock." class="align-center" src="../_images/queuegraph.png" style="width: 167.0px; height: 130.0px;" /></a>
+<p>The Anderson lock is the first truly scalable lock we&#8217;ve examined so far, and is simple and easy to implement. However, the Anderson lock has two disadvantages. First, it is not space-efficient; it requires knowing a bound <em>N</em> on the maximum number of concurrent threads, and it allocates an array of that size per lock (one bit per thread). Thus, <em>L</em> locks will require <em>O(LN)</em> space even if a thread accesses only one lock at a given time. Second, the lock is poorly suited for uncached architectures, since any thread may end up spinning on any array location, and in the absence of caches, spinning on a remote location may be very expensive.</p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../index.html">
+              <img class="logo" src="../_static/CSInParallel200wide.png" alt="Logo"/>
+            </a></p>
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Solving the Mystery and Using Our Findings</a><ul>
+<li><a class="reference internal" href="#write-back-caches">Write-Back Caches</a></li>
+<li><a class="reference internal" href="#solving-the-mystery">Solving the Mystery</a></li>
+<li><a class="reference internal" href="#backoff-locks">Backoff Locks</a></li>
+<li><a class="reference internal" href="#queue-locks">Queue Locks</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="../part1/alphabetsoup.html"
+                        title="previous chapter">MIMD, TTAS, and Other Alphabet Soup</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="../part3/clhmcsabort.html"
+                        title="next chapter">A Second Helping of Soup</a></p>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../part3/clhmcsabort.html" title="A Second Helping of Soup"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="../part1/alphabetsoup.html" title="MIMD, TTAS, and Other Alphabet Soup"
+             >previous</a> |</li>
+        <li><a href="../index.html">Spinlocks and Contention</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright This work is licensed under a Creative Commons Attribution-ShareAlike 3.0 Unported License.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2b1.
+    </div>
+  </body>
+</html>
