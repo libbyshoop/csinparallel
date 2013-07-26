@@ -1,0 +1,238 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Computing Area Under the Curve &mdash; Finding the Area Under the Curve</title>
+    
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="top" title="Finding the Area Under the Curve" href="../index.html" />
+    <link rel="next" title="Finding the Area Under the Curve Using Blocking" href="../Blocking/blocking.html" />
+    <link rel="prev" title="Finding the Area Unde the Curve" href="../FindingArea/findingArea.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../Blocking/blocking.html" title="Finding the Area Under the Curve Using Blocking"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="../FindingArea/findingArea.html" title="Finding the Area Unde the Curve"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../index.html">Finding the Area Under the Curve</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="computing-area-under-the-curve">
+<h1>Computing Area Under the Curve<a class="headerlink" href="#computing-area-under-the-curve" title="Permalink to this headline">¶</a></h1>
+<p>The code that illustrates the finding of the area under the curve using parallel computing and/or distributed processing consists of a main .c file and several .h files. The files are as follows:</p>
+<ul class="simple">
+<li><strong>area.c</strong> - contains the main function of the program</li>
+<li><strong>area.h</strong> - performs the important calculations and calls other drawing routines</li>
+<li><strong>structs.h</strong> - contains general information of some important structs and functions used</li>
+<li><strong>Xarea.h</strong> - contains all functions that call X windowing drawing routines</li>
+<li><strong>colors.h</strong> - contain coloring functions that call X drawing routines</li>
+<li><strong>MPEarea.h</strong> - contains all functions that call the MPE drawing routines</li>
+</ul>
+<p>One of the main concerns of this program is how to split up the region we are interested in computing among the processing units, based on how many nodes and/or threads are to be used and the number of rectangles specified.
+A serial version of the program computes the areas of each rectangle one by one, stores the areas and finally sums the stored areas up. The following image shows the effect of computing this problem in a serial fashion:</p>
+<a class="reference internal image-reference" href="../_images/serial.png"><img alt="serial" class="align-center" src="../_images/serial.png" style="width: 350px; height: 700px;" /></a>
+<p>In a parallel version, the same steps are followed, except each process or thread deals with a smaller number of rectangles. Each thread or sum keeps a sum of the areas of the rectangles they were responsible for and this value is private to this process. In the final step, each process communicates its private sum to the master process which then finally sums all the partial sums together for a final output. This is called reduction - we are reducing all the individual sums to a final one.</p>
+<p>When using MPI, one of the first main steps to do is to distribute a certain amount of rectangles to each node. If MPI is not used then the head node gets all the rectangles. The following code extract demonstrates how this is done.</p>
+<div class="highlight-c"><div class="highlight"><pre><span class="cm">/***************************************************************************</span>
+<span class="cm"> * Set up all the information processes/threads need to know about rectangles *</span>
+<span class="cm"> ***************************************************************************/</span>
+<span class="kt">void</span> <span class="nf">setup_rectangles</span><span class="p">(</span><span class="k">struct</span> <span class="kt">area_t</span> <span class="o">*</span> <span class="n">area</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">struct</span> <span class="kt">curve_t</span> <span class="o">*</span> <span class="n">curve</span><span class="o">=</span> <span class="o">&amp;</span><span class="p">(</span><span class="n">area</span><span class="o">-&gt;</span><span class="n">curve</span><span class="p">);</span>
+    <span class="k">struct</span> <span class="kt">rec_t</span> <span class="o">*</span> <span class="n">rect</span> 	<span class="o">=</span> <span class="o">&amp;</span><span class="p">(</span><span class="n">area</span><span class="o">-&gt;</span><span class="n">rect</span><span class="p">);</span>
+    <span class="k">struct</span> <span class="kt">display_t</span> <span class="o">*</span> <span class="n">d</span>	<span class="o">=</span> <span class="o">&amp;</span><span class="p">(</span><span class="n">area</span><span class="o">-&gt;</span><span class="n">d</span><span class="p">);</span>
+    
+    <span class="cm">/* Calculate the overall width of the domain of the</span>
+<span class="cm">    *  function and the width of a rectangle.*/</span>
+    <span class="n">curve</span><span class="o">-&gt;</span><span class="n">width</span> <span class="o">=</span> <span class="n">curve</span><span class="o">-&gt;</span><span class="n">xright</span> <span class="o">-</span> <span class="n">curve</span><span class="o">-&gt;</span><span class="n">xleft</span><span class="p">;</span>
+    <span class="n">rect</span><span class="o">-&gt;</span><span class="n">width</span> <span class="o">=</span> <span class="n">curve</span><span class="o">-&gt;</span><span class="n">width</span> <span class="o">/</span> <span class="n">rect</span><span class="o">-&gt;</span><span class="n">num_rect</span><span class="p">;</span>
+    
+    <span class="cm">/* Calculate the number of rectangles for </span>
+<span class="cm">    *  which the process is responsible. */</span>
+    <span class="n">rect</span><span class="o">-&gt;</span><span class="n">private_num_rect</span> <span class="o">=</span> <span class="n">rect</span><span class="o">-&gt;</span><span class="n">num_rect</span> <span class="o">/</span> <span class="n">area</span><span class="o">-&gt;</span><span class="n">numProcs</span><span class="p">;</span> 
+    
+    <span class="cm">/* Calculate the left x-boundary of the process. */</span>
+    <span class="n">curve</span><span class="o">-&gt;</span><span class="n">my_xleft</span> <span class="o">=</span> <span class="n">curve</span><span class="o">-&gt;</span><span class="n">xleft</span> <span class="o">+</span> <span class="n">area</span><span class="o">-&gt;</span><span class="n">rank</span><span class="o">*</span><span class="n">rect</span><span class="o">-&gt;</span><span class="n">private_num_rect</span><span class="o">*</span><span class="n">rect</span><span class="o">-&gt;</span><span class="n">width</span><span class="p">;</span>
+    
+    <span class="cm">/*Add extra rectangles to the last process*/</span>
+    <span class="k">if</span><span class="p">(</span><span class="n">area</span><span class="o">-&gt;</span><span class="n">rank</span> <span class="o">==</span> <span class="n">area</span><span class="o">-&gt;</span><span class="n">numProcs</span> <span class="o">-</span> <span class="mi">1</span><span class="p">){</span>
+      <span class="n">rect</span><span class="o">-&gt;</span><span class="n">private_num_rect</span> <span class="o">+=</span> <span class="n">rect</span><span class="o">-&gt;</span><span class="n">num_rect</span> <span class="o">%</span> <span class="n">area</span><span class="o">-&gt;</span><span class="n">numProcs</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>The overall number of rectangles is divided by the number of processes. Note that if these numbers are evenly divisible, each process will acquire an equal sized subset of rectangles. In case they are not evenly divisible, then the last process will take on the remainder of the rectangles.</p>
+<div class="section" id="activity-0-load-balancing">
+<h2>ACTIVITY 0 - Load Balancing<a class="headerlink" href="#activity-0-load-balancing" title="Permalink to this headline">¶</a></h2>
+<p>By dividing the rectangles in the way it was done above, we can see that the last process will always get an extra 0 through <em>n</em>-1 rectangles. For this particular problem being run on our particular hardware, this may not seem like a big issue, since the maximum number of extra rectangles the last process can be responsible is no more than 5. By running a small number of rectangles, however, we can notice how the last process will have a relatively large number of rectangles to deal with than the others. We say there is improper load balancing. In addition, suppose we are working on a much larger system that has thousands of cores or even more. This can pose a problem given that the largest amount of extra rectangles can be up to <em>n</em>-1. The first task geared towards improving this code would be to ensure for proper load balancing of the data among the processes.</p>
+<p>The solution to this problem can be obtained by downloading <a class="reference download internal" href="../_downloads/area_load_balancing.tgz"><tt class="xref download docutils literal"><span class="pre">area_load_balancing.tar.gz</span></tt></a>.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Comments:</th><td class="field-body">It is recommended that you create a folder called <em>Area-under-curve</em>, into which you will place any folders containing the activities.
+To compile this and all the other programs, download this <a class="reference download internal" href="../_downloads/Makefile"><tt class="xref download docutils literal"><span class="pre">Makefile</span></tt></a> and place it outside the folder(s) your actual program is in, that is in your <em>Area-under-curve</em> folder.</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="activity-1-reduction-of-sum">
+<h2>ACTIVITY 1 - Reduction of Sum<a class="headerlink" href="#activity-1-reduction-of-sum" title="Permalink to this headline">¶</a></h2>
+<p>In the following code excerpt we can see how the sum is computed using MPI_Reduction. This means that the head node will sum up all the partial sums from the other nodes.</p>
+<div class="highlight-c"><pre>/***************************************************************************
+ * Sum the areas of all rectangles*
+ ***************************************************************************/
+void sum_rectangles(struct area_t * area) {
+  struct rec_t * rect = &amp;(area-&gt;rect);
+ 
+  /* Calculate the overall sum */
+  #ifdef _MPI
+  MPI_Reduce(&amp;area-&gt;my_sum, &amp;area-&gt;total_sum, 1, MPI_DOUBLE, MPI_SUM, 0, MPI_COMM_WORLD);
+  #else
+  area-&gt;total_sum = area-&gt;my_sum;
+  #endif
+  
+</pre>
+</div>
+<p>In case of a heterogeneous computing or OpenMP only version of this code each thread computes its partial sum and updates the my_sum variable in the main struct area. There is another way to make the summation more efficient when threads are involved. We can use OpenMP to perform a reduction on the partial sums of each thread. In case of a heterogeneous version, these partial sums will be then further reduced using MPI.
+Thus change the following for loop to perform OpenMP reduction.</p>
+<div class="highlight-c"><pre>/***************************************************************************
+ * Find boundaries of each rectangle and calculate the area for each*
+ ***************************************************************************/
+void get_rectangle_area(struct area_t * area) {
+  struct display_t * d = &amp;(area-&gt;d);
+  struct rec_t * rect = &amp;(area-&gt;rect);
+  struct curve_t * curve = &amp;(area-&gt;curve);
+  int current_rectangle;
+  double current_left,current_height;
+
+  #ifdef OMP
+  #pragma omp parallel for private(current_rectangle, current_left, current_height)
+  #endif
+  for(current_rectangle = 0; current_rectangle &lt; rect-&gt;private_num_rect; current_rectangle++)
+  {
+    /* Calculate the x-value of the left side of the rectangle */
+    current_left = curve-&gt;my_xleft + current_rectangle *rect-&gt;width;
+    
+    /* Calculate the height of the rectangle */
+    current_height = FUNC(area, current_left);
+    
+    /* Calculate the area of the rectangle and add it to the sum private to each process*/
+    area-&gt;my_sum += rect-&gt;width * current_height;
+    
+</pre>
+</div>
+<p>Leave the rest of the loop as is:</p>
+<div class="highlight-c"><div class="highlight"><pre>    <span class="cm">/*Draw the current rectangle*/</span>
+    <span class="k">if</span><span class="p">(</span><span class="n">area</span><span class="o">-&gt;</span><span class="n">do_display</span><span class="p">){</span>
+      <span class="k">if</span><span class="p">(</span><span class="n">area</span><span class="o">-&gt;</span><span class="n">circle</span><span class="p">){</span>
+	<span class="n">current_left</span> <span class="o">=</span> <span class="n">curve</span><span class="o">-&gt;</span><span class="n">circle_my_xleft</span> <span class="o">+</span> <span class="n">current_rectangle</span><span class="o">*</span><span class="n">rect</span><span class="o">-&gt;</span><span class="n">circle_width</span><span class="p">;</span> 
+	<span class="n">current_height</span> <span class="o">=</span> <span class="n">scale_circle</span><span class="p">(</span><span class="n">current_left</span><span class="p">);</span>
+      <span class="p">}</span>
+      <span class="k">if</span><span class="p">(</span><span class="n">area</span><span class="o">-&gt;</span><span class="n">sin</span><span class="p">){</span>
+	<span class="n">current_left</span> <span class="o">=</span> <span class="n">curve</span><span class="o">-&gt;</span><span class="n">sin_my_xleft</span> <span class="o">+</span> <span class="n">current_rectangle</span><span class="o">*</span><span class="n">rect</span><span class="o">-&gt;</span><span class="n">sin_width</span><span class="p">;</span>
+	<span class="n">current_height</span> <span class="o">=</span> <span class="n">scale_sin</span><span class="p">(</span><span class="n">current_left</span><span class="p">);</span>
+      <span class="p">}</span>
+      <span class="n">draw_rectangle</span><span class="p">(</span><span class="n">area</span><span class="p">,</span><span class="n">current_left</span><span class="p">,</span><span class="n">current_height</span><span class="p">);</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>The solution to this problem can be obtained by downloading <a class="reference download internal" href="../_downloads/area_OpenMP_reduction.tgz"><tt class="xref download docutils literal"><span class="pre">area_OpenMP_reduction.tar.gz</span></tt></a>.</p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../index.html">
+              <img class="logo" src="../_static/CSInParallel200wide.png" alt="Logo"/>
+            </a></p>
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Computing Area Under the Curve</a><ul>
+<li><a class="reference internal" href="#activity-0-load-balancing">ACTIVITY 0 - Load Balancing</a></li>
+<li><a class="reference internal" href="#activity-1-reduction-of-sum">ACTIVITY 1 - Reduction of Sum</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="../FindingArea/findingArea.html"
+                        title="previous chapter">Finding the Area Unde the Curve</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="../Blocking/blocking.html"
+                        title="next chapter">Finding the Area Under the Curve Using Blocking</a></p>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../Blocking/blocking.html" title="Finding the Area Under the Curve Using Blocking"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="../FindingArea/findingArea.html" title="Finding the Area Unde the Curve"
+             >previous</a> |</li>
+        <li><a href="../index.html">Finding the Area Under the Curve</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright This work is licensed under a Creative Commons Attribution-ShareAlike 3.0 Unported License.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2b1.
+    </div>
+  </body>
+</html>
