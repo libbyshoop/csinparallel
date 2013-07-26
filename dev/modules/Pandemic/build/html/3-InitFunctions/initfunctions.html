@@ -1,0 +1,383 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Init Functions &mdash; Pandemic Exemplar (for those with some experience)</title>
+    
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="top" title="Pandemic Exemplar (for those with some experience)" href="../index.html" />
+    <link rel="next" title="MPI Functions" href="../4-MPIFunctions/mpifunctions.html" />
+    <link rel="prev" title="Data Structures" href="../2-DataStructure/datastructure.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../4-MPIFunctions/mpifunctions.html" title="MPI Functions"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="../2-DataStructure/datastructure.html" title="Data Structures"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../index.html">Pandemic Exemplar (for those with some experience)</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="init-functions">
+<h1>Init Functions<a class="headerlink" href="#init-functions" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="init">
+<h2>init<a class="headerlink" href="#init" title="Permalink to this headline">¶</a></h2>
+<div class="figure align-center">
+<img alt="image" src="../_images/img-51.png" />
+</div>
+<p>Before executing the algorithm, the code starts by initializing MPI
+using the <strong>MPI_Init(&amp;argc, &amp;argv)</strong>; function. We pass the addresses of
+the arguments to <strong>main</strong>, <strong>argc</strong> and <strong>argv</strong>, so that MPI can strip out anything
+from the command line related to MPI, such as <strong>mpirun</strong> or <strong>–np</strong>. <strong>MPI_Init</strong>
+must be called before any other MPI functions are executed, and we also
+want to call it before we parse the rest of the command line arguments
+in step II of the algorithm.</p>
+<p>Here we see one process figuring out its rank. It does so by calling the
+<strong>MPI_Comm_rank(MPI_COMM_WORLD, &amp;our_rank)</strong>; function. This function
+checks the MPI “world” (the “communicator” of all the MPI processes,
+MPI_COMM_WORLD). You pass the address of the variable for the
+process’s rank to the function as the second argument using the
+ampersand (&amp;).</p>
+<p>If we only have 1 process total (i.e., if we are not using distributed
+memory), then the rank of the process will be 0, which we set in the
+code as <strong>our_rank = 0</strong>.</p>
+<p>We also see another process figuring out how many processes there are.
+It does so by calling the <strong>MPI_Comm_size(MPI_COMM_WORLD,
+&amp;total_number_of_processes)</strong> function. Just as with <strong>MPI_Comm_rank</strong>,
+you pass the communicator of all the processes and the address of the
+variable for the number of processes.</p>
+<p>If we have only 1 process total, we set the number of processes by
+calling total_number_of_processes = 1.</p>
+<p>After MPI initialization, init function will call the following 6 functions.</p>
+</div>
+<div class="section" id="parse-args">
+<h2>parse_args<a class="headerlink" href="#parse-args" title="Permalink to this headline">¶</a></h2>
+<div class="figure align-center">
+<img alt="image" src="../_images/img-6.png" />
+</div>
+<p>These parameters are specified via command line arguments when the
+program is run. Otherwise, default values are used. The code uses <strong>getopt</strong>
+function to do this. Type <strong>man 3 getopt</strong> in a shell if you are interested
+how it works.</p>
+</div>
+<div class="section" id="init-check">
+<h2>init_check<a class="headerlink" href="#init-check" title="Permalink to this headline">¶</a></h2>
+<p>Each process makes sure that the <strong>total number of initially infected people</strong> is
+less than the <strong>total number of people</strong></p>
+<div class="figure align-center">
+<img alt="image" src="../_images/img-7.png" />
+</div>
+<p>The simulation can’t run if there are more initially infected people
+than there are people. If there are, the code uses the fprintf function
+to print an error message to standard error, and it exits the program
+with exit code -1.</p>
+</div>
+<div class="section" id="find-size">
+<h2>find_size<a class="headerlink" href="#find-size" title="Permalink to this headline">¶</a></h2>
+<p>Each process determines the number of people for which it is responsible</p>
+<div class="figure align-center">
+<img alt="image" src="../_images/img-8.png" />
+</div>
+<p>Each process will try to take an even split of the number of people. It
+does so by dividing the number of people by the total number of
+processes and throwing away any remainder. Because the variables
+involved are integers in C, the throwing away of the remainder is
+handled automatically in the division:
+<strong>our_number_of_people = total_number_of_people / total_number_of_processes</strong></p>
+<p>The last process is responsible for the remainder</p>
+<div class="figure align-center">
+<img alt="image" src="../_images/img-9.png" />
+</div>
+<p>Every person has to be accounted for, so any remainder of the division
+is assigned to the last process. We can obtain the remainder by using
+the modulo operator (%), and we add it to the existing value using the
+plus-equals operator (+=): <strong>our_number_of_people +=
+total_number_of_people % total_number_of_processes</strong>. We only want
+the last process to do this, so we surround the code with <strong>if(our_rank
+== total_number_of_processes - 1)</strong>, since the last process has rank N
+– 1, where N is the total number of processes.</p>
+<p>Each process determines the number of initially infected people
+for which it is responsible</p>
+<div class="figure align-center">
+<img alt="image" src="../_images/img-10.png" />
+</div>
+<p>This is the same method used before, but it considers only the
+infected people.</p>
+<p>The last process is responsible for the remainder</p>
+<div class="figure align-center">
+<img alt="image" src="../_images/img-11.png" />
+</div>
+<p>This is the same method used before, but it considers only the
+infected people.</p>
+</div>
+<div class="section" id="allocate-array">
+<h2>allocate_array<a class="headerlink" href="#allocate-array" title="Permalink to this headline">¶</a></h2>
+<p>At this point we are ready to allocate our arrays, which must be
+performed before we can start filling the arrays. Allocating an array
+means reserving enough space in memory for it; if we don’t reserve the
+space the program will assume that it is a zero-length array. The
+allocation must happen in the “heap” memory, meaning we must allocate it
+dynamically (i.e. as the program is running). To allocate memory on the
+heap, we use the <strong>malloc</strong> function, which takes the amount of space that
+is requested and returns a pointer to the newly allocated memory, which
+we can then use as an array. Let’s see an example with the x_locations
+array:</p>
+<p><strong>x_locations = (int*)malloc(total_number_of_people * sizeof(int))</strong>;</p>
+<p>Here we see that malloc has taken an argument, <strong>total_number_of_people
+* sizeof(int)</strong>. This is how we specify that we want to fill the array
+with a certain number of integers, namely the amount stored in the
+<strong>total_number_of_people</strong> variable. We also need to specify how big
+these integers are, for which we use the <strong>sizeof(int)</strong> function. We then
+take the return from <strong>malloc</strong> and tell the program to “cast” it (i.e. use
+it) as a pointer to integers, for which we use <strong>(int*)</strong>. This is then
+assigned to x_locations, and we can now use <strong>x_locations</strong> as an array.</p>
+<p>For the 2D array <strong>environment</strong>, we must allocate not only the array itself
+but also each of the arrays that it contains (since a 2D array is an
+array whose elements are arrays). The array has horizontal strips of
+length <strong>environment_width</strong> and vertical strips of length
+<strong>environment_height</strong>. We perform the allocation by allocating enough
+space for the entire array first using <strong>environment =
+(char**)malloc(environment_width * environment_height *
+sizeof(char*))</strong>. That is, we are allocating enough <strong>char*</strong>’s for
+<strong>environment_width</strong> times <strong>environment_height</strong>, casting this as a <strong>char**</strong>
+and assigning it to <strong>environment</strong>. Then we allocate each array within
+<strong>environment</strong>, like so:</p>
+<div class="highlight-c"><div class="highlight"><pre>    <span class="n">dpy</span><span class="o">-&gt;</span><span class="n">environment</span> <span class="o">=</span> <span class="p">(</span><span class="kt">char</span><span class="o">**</span><span class="p">)</span><span class="n">malloc</span><span class="p">(</span><span class="n">constant</span><span class="o">-&gt;</span><span class="n">environment_width</span> <span class="o">*</span> 
+        <span class="n">constant</span><span class="o">-&gt;</span><span class="n">environment_height</span> <span class="o">*</span> <span class="k">sizeof</span><span class="p">(</span><span class="kt">char</span><span class="o">*</span><span class="p">));</span>
+    <span class="kt">int</span> <span class="n">our_current_location_x</span><span class="p">;</span>
+    <span class="k">for</span><span class="p">(</span><span class="n">our_current_location_x</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> 
+        <span class="n">our_current_location_x</span> <span class="o">&lt;=</span> <span class="n">constant</span><span class="o">-&gt;</span><span class="n">environment_width</span> <span class="o">-</span> <span class="mi">1</span><span class="p">;</span>
+        <span class="n">our_current_location_x</span><span class="o">++</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="n">dpy</span><span class="o">-&gt;</span><span class="n">environment</span><span class="p">[</span><span class="n">our_current_location_x</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="kt">char</span><span class="o">*</span><span class="p">)</span><span class="n">malloc</span><span class="p">(</span>
+            <span class="n">constant</span><span class="o">-&gt;</span><span class="n">environment_height</span> <span class="o">*</span> <span class="k">sizeof</span><span class="p">(</span><span class="kt">char</span><span class="p">));</span>
+    <span class="p">}</span>
+</pre></div>
+</div>
+<p>The number of arrays we need is stored in <strong>environment_width</strong>, so we loop
+from <strong>0</strong> to <strong>environment_width – 1</strong> and allocate enough space in each
+element of environment for <strong>environment_height</strong> chars, each one of which
+has size <strong>sizeof(char)</strong>.</p>
+<p>This can be a convoluted process but is necessary for allocating arrays
+dynamically, which allows us to specify options on the command line (so
+we don’t have to edit the source code and re-compile each time we want
+to run a simulation with different parameters).</p>
+</div>
+<div class="section" id="init-array">
+<h2>init_array<a class="headerlink" href="#init-array" title="Permalink to this headline">¶</a></h2>
+<p>First, each process spawns threads to set the states of the initially
+infected people and set the count of its infected people</p>
+<div class="figure align-center">
+<img alt="image" src="../_images/img-12.png" />
+</div>
+<p>The code spawns threads using the <strong>#pragma omp parallel</strong> for line, which
+parallelizes the <strong>for</strong> loop below it; threads execute the iterations of
+the loop in parallel. Since OpenMP does not support reduction to struct,
+we need to create local instance such as <strong>our_num_infected_local</strong> and
+then put local instance back to struct.</p>
+<p>Threads set the states of infected people using the <strong>our_states</strong> array.
+They fill the first <strong>our_num_initially_infected</strong> cells of the array
+with the <strong>INFECTED</strong> constant; i.e. they fill in the <strong>0</strong> through
+<strong>our_num_initially_infected – 1</strong> positions of the array with INFECTED
+as below:</p>
+<div class="highlight-c"><div class="highlight"><pre><span class="cp">    // Each process spawns threads to set the states of the initially </span>
+<span class="cp">    // infected people and set the count of its infected people</span>
+<span class="cp">    #ifdef _OPENMP </span>
+<span class="cp">    #pragma omp parallel for private(my_current_person_id) \</span>
+<span class="cp">        reduction(+:our_num_infected_local)</span>
+<span class="cp">    #endif</span>
+    <span class="k">for</span><span class="p">(</span><span class="n">my_current_person_id</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">my_current_person_id</span> 
+        <span class="o">&lt;=</span> <span class="n">our_num_initially_infected</span> <span class="o">-</span> <span class="mi">1</span><span class="p">;</span> <span class="n">my_current_person_id</span><span class="o">++</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="n">our</span><span class="o">-&gt;</span><span class="n">our_states</span><span class="p">[</span><span class="n">my_current_person_id</span><span class="p">]</span> <span class="o">=</span> <span class="n">INFECTED</span><span class="p">;</span>
+        <span class="n">our_num_infected_local</span><span class="o">++</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="n">our</span><span class="o">-&gt;</span><span class="n">our_num_infected</span> <span class="o">=</span> <span class="n">our_num_infected_local</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>Note we also add 1 to the <strong>our_num_infected variable</strong> using the
+plus-plus operator (++) at each iteration of the loop. This is how we
+count a process’ number of infected people.</p>
+<p>Next, each process spawns threads to set the states of the rest of its
+people and set the count of its susceptible people</p>
+<div class="figure align-center">
+<img alt="image" src="../_images/img-13.png" />
+</div>
+<p>This is similar to last step, but we want to fill the rest of the array
+(from <strong>our_num_initially_infected</strong> to <strong>our_number_of_people - 1</strong>) with
+the <strong>SUSCEPTIBLE</strong> constant, and we want to add <strong>1</strong> to the
+<strong>our_num_susceptible</strong> variable at each iteration of the loop:</p>
+<div class="highlight-c"><div class="highlight"><pre><span class="cp">    // Each process spawns threads to set the states of the rest of</span>
+<span class="cp">    // its people and set the count of its susceptible people</span>
+<span class="cp">    #ifdef _OPENMP </span>
+<span class="cp">    #pragma omp parallel for private(my_current_person_id) \</span>
+<span class="cp">        reduction(+:our_num_susceptible_local)</span>
+<span class="cp">    #endif</span>
+    <span class="k">for</span><span class="p">(</span><span class="n">my_current_person_id</span> <span class="o">=</span> <span class="n">our_num_initially_infected</span><span class="p">;</span> 
+        <span class="n">my_current_person_id</span> <span class="o">&lt;=</span> <span class="n">our_number_of_people</span> <span class="o">-</span> <span class="mi">1</span><span class="p">;</span> 
+        <span class="n">my_current_person_id</span><span class="o">++</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="n">our</span><span class="o">-&gt;</span><span class="n">our_states</span><span class="p">[</span><span class="n">my_current_person_id</span><span class="p">]</span> <span class="o">=</span> <span class="n">SUSCEPTIBLE</span><span class="p">;</span>
+        <span class="n">our_num_susceptible_local</span><span class="o">++</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="n">our</span><span class="o">-&gt;</span><span class="n">our_num_susceptible</span> <span class="o">=</span> <span class="n">our_num_susceptible_local</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>The <strong>our_states</strong> array is now full; the first
+<strong>our_num_initially_infected</strong> cells have the <strong>INFECTED</strong> constant, and the
+rest have the <strong>SUSCEPTIBLE</strong> constant.</p>
+<p>Then, each process spawns threads to set random x and y locations for
+each of its people</p>
+<div class="figure align-center">
+<img alt="image" src="../_images/img-14.png" />
+</div>
+<p>Locations of people are stored in the <strong>our_x_locations</strong> and
+<strong>our_y_locations</strong> arrays. To fill these arrays with random values, we
+use a for loop and the random function:</p>
+<div class="highlight-c"><div class="highlight"><pre><span class="cp">    // Each process spawns threads to set random x and y locations for </span>
+<span class="cp">    // each of its people</span>
+<span class="cp">    #ifdef _OPENMP </span>
+<span class="cp">    #pragma omp parallel for private(my_current_person_id)</span>
+<span class="cp">    #endif</span>
+    <span class="k">for</span><span class="p">(</span><span class="n">my_current_person_id</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+        <span class="n">my_current_person_id</span> <span class="o">&lt;=</span> <span class="n">our_number_of_people</span> <span class="o">-</span> <span class="mi">1</span><span class="p">;</span> 
+        <span class="n">my_current_person_id</span><span class="o">++</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="n">our</span><span class="o">-&gt;</span><span class="n">our_x_locations</span><span class="p">[</span><span class="n">my_current_person_id</span><span class="p">]</span> <span class="o">=</span> <span class="n">random</span><span class="p">()</span> <span class="o">%</span> <span class="n">constant</span><span class="o">-&gt;</span><span class="n">environment_width</span><span class="p">;</span>
+        <span class="n">our</span><span class="o">-&gt;</span><span class="n">our_y_locations</span><span class="p">[</span><span class="n">my_current_person_id</span><span class="p">]</span> <span class="o">=</span> <span class="n">random</span><span class="p">()</span> <span class="o">%</span> <span class="n">constant</span><span class="o">-&gt;</span><span class="n">environment_height</span><span class="p">;</span>
+    <span class="p">}</span>
+</pre></div>
+</div>
+<p>By calling random with the <strong>modulus (%)</strong> operator, we can restrict the
+size of the random number it generates. Since we cannot have x locations
+larger than the width of the environment, we call <strong>random() %
+environment_width</strong>; to make sure the <strong>x location</strong> of each person is less
+than <strong>environment_width</strong>. Similarly for the <strong>y location</strong> and
+<strong>environment_height</strong>.</p>
+<p>We are filling the x and y location arrays for all of the people for
+which the process is responsible, so we loop from <strong>0</strong> to
+<strong>our_number_of_people – 1</strong>.</p>
+<p>Finally, each process spawns threads to initialize the number of days
+infected of each of its people to 0</p>
+<div class="figure align-center">
+<img alt="image" src="../_images/img-15.png" />
+</div>
+<p>The number of days each person is infected is stored in the
+<strong>our_num_days_infected</strong> array, so we loop over all of the people and
+fill this array with 0, since the simulation starts at day 0, at which
+point no days have yet elapsed:</p>
+<div class="highlight-c"><div class="highlight"><pre><span class="cp">    // Each process spawns threads to initialize the number of days </span>
+<span class="cp">    // infected of each of its people to 0</span>
+<span class="cp">    #ifdef _OPENMP </span>
+<span class="cp">    #pragma omp parallel for private(my_current_person_id)</span>
+<span class="cp">    #endif</span>
+    <span class="k">for</span><span class="p">(</span><span class="n">my_current_person_id</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+        <span class="n">my_current_person_id</span> <span class="o">&lt;=</span> <span class="n">our_number_of_people</span> <span class="o">-</span> <span class="mi">1</span><span class="p">;</span>
+        <span class="n">my_current_person_id</span><span class="o">++</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="n">our</span><span class="o">-&gt;</span><span class="n">our_num_days_infected</span><span class="p">[</span><span class="n">my_current_person_id</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="p">}</span>
+</pre></div>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../index.html">
+              <img class="logo" src="../_static/CSInParallel200wide.png" alt="Logo"/>
+            </a></p>
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Init Functions</a><ul>
+<li><a class="reference internal" href="#init">init</a></li>
+<li><a class="reference internal" href="#parse-args">parse_args</a></li>
+<li><a class="reference internal" href="#init-check">init_check</a></li>
+<li><a class="reference internal" href="#find-size">find_size</a></li>
+<li><a class="reference internal" href="#allocate-array">allocate_array</a></li>
+<li><a class="reference internal" href="#init-array">init_array</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="../2-DataStructure/datastructure.html"
+                        title="previous chapter">Data Structures</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="../4-MPIFunctions/mpifunctions.html"
+                        title="next chapter">MPI Functions</a></p>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../4-MPIFunctions/mpifunctions.html" title="MPI Functions"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="../2-DataStructure/datastructure.html" title="Data Structures"
+             >previous</a> |</li>
+        <li><a href="../index.html">Pandemic Exemplar (for those with some experience)</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright This work is licensed under a Creative Commons Attribution-ShareAlike 3.0 Unported License.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>
