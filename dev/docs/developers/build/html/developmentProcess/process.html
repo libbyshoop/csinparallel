@@ -93,10 +93,9 @@ of the csinparallel repository:</p>
 <p>Now you can do your work:</p>
 <ul class="simple">
 <li>commit to your branch as you go along,</li>
-<li>occasionally push up to github on your branch off develop (so you are saving a copy</li>
+<li>occasionally push up to github on your branch off develop (so you are saving a copy in the repository),</li>
+<li>and occasionally pull down other&#8217;s work from the develop branch and merge it with yours.</li>
 </ul>
-<p>in the repository),
-- and occasionally pull down other&#8217;s work from the develop branch and merge it with yours.</p>
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
 <p class="last">These above steps can be done with the github client tool by committing and doing &#8216;sync&#8217; operations, or using the command line.  Below are the command-line equivalents. See also: the <a class="reference external" href="http://git-htmldocs.googlecode.com/git/git.html">git manual pages</a> and <a class="reference external" href="http://www.atlassian.com/git/tutorial">this git tutorial</a>.</p>
@@ -105,21 +104,44 @@ of the csinparallel repository:</p>
 <div class="highlight-python"><pre>git add &lt;file or directory&gt;
 git commit
 
-git pull develop
-
 git push origin ls-dev</pre>
 </div>
 <p>Eventually, you will want to place your work on the develop branch so that
-other people you are working with will be able to see it on a web server. The next few steps describe this. <em>Use the command line for this set of steps.</em></p>
-<p>With this next command, go back to the develop branch:</p>
-<div class="highlight-python"><pre>git checkout develop</pre>
+other people you are working with will be able to see it on a web server. The next few steps describe this.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Take Note:</th><td class="field-body"><ul class="first last simple">
+<li>If you are using a Mac or linux, you can <em>Use the command line for this following set of steps.</em></li>
+<li>However, if you are using the PC client software from github, you can switch to the develop branch in it and there should be an option to merge your branch into the develop branch, which is the equivalent of the following steps.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p>With these next commands, go back to the develop branch:</p>
+<div class="highlight-python"><pre>git checkout develop
+git pull origin develop</pre>
 </div>
-<p>From the develop branch, merge your sub-branch changes:</p>
+<div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<p class="last">It is really important that you pull down changes that others have made on the develop branch onto your copy of the develop branch before you do the following step of merging your changes back onto the develop branch. <strong>You could experience problems if someone else is working on the same files as you are.  You want to try to avoid this by communicating.</strong> If it does happen, you will need to sort out which version needs to be back onto develop during the next steps below, and make sure your sub-branch copy is correct.  You also want to pull from develop because you need to get changes to files that others have worked on. Otherwise, you will be trying to merge old files from your sub-branch into the develop branch on the server in the next steps that follow.</p>
+</div>
+<p>From the develop branch, merge your sub-branch changes into the develop branch:</p>
 <div class="highlight-python"><pre>git merge --no-ff ls-dev</pre>
 </div>
 <p>Push the changes back up to github on the develop branch:</p>
 <div class="highlight-python"><pre>git push origin develop</pre>
 </div>
+<p>On the PC client tool, these two steps above are done by doing the merge (shown pictorially in the tool as merge sub-branch &#8211;&gt; develop), then <em>syncing</em> your develop branch.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">When you wish to continue working on other changes or new modules, go back to your sub-branch of develop. (git checkout ls-dev, e.g.)</p>
+</div>
+</div>
+<div class="section" id="seeing-your-changes-online">
+<h2>Seeing your changes online<a class="headerlink" href="#seeing-your-changes-online" title="Permalink to this headline">¶</a></h2>
 <p>The &#8216;develop&#8217; branch can be housed on a web server separately from
 the master branch.  This will be updated on a regular basis so that
 developers can share their resulting work woth others.  We envision this

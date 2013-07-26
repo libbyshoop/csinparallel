@@ -46,6 +46,7 @@ Python program, which you can `download here`_.
 		- ``sudo sh setuptools-0.6c9-py2.7.egg --prefix=~``
 	On a PC:
 		- grab the 32-bit executable for Python 2.7 from `here`_
+
 		- You'll also need to add your Python Scripts directory to your PATH environment variable (in System Properties, click the Advanced tab, then Environment Variables, then add C:\\Python27\\Scripts\\ to the Variable value for Variable Path). Be sure to close and restart the command prompt in order for these changes to take effect.
 
 		:note: If you've got more than one version of Python, make sure you add this to the list **before** any paths including other versions of Python.

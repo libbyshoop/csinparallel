@@ -1,0 +1,116 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Pi Using Numerical Integration: ArBB &mdash; Pi Using Numerical Integration: ArBB</title>
+    
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="Pi Using Numerical Integration: ArBB" href="#" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li><a href="#">Pi Using Numerical Integration: ArBB</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="pi-using-numerical-integration-arbb">
+<h1>Pi Using Numerical Integration: ArBB<a class="headerlink" href="#pi-using-numerical-integration-arbb" title="Permalink to this headline">¶</a></h1>
+<p>The Intel® Array Building Blocks (ArBB) code is written to execute in a data-parallel fashion. No explicit loop is written since computations are applied to each element of data containers. This does mean that extra space must be allocated to hold values that would otherwise be generated dynamically by a for-loop.  The details are below, or can be <a class="reference external" href="http://code.google.com/p/eapf-tech-pack-practicum/source/browse/trunk/pi_integration/pi_area_arbb.cpp">downloaded directly</a>.</p>
+<p>In the main() routine, the first line allocates a (dense) container of double-precision floating point numbers (f64), indices, and initializes it to hold the floats from 0.0 to num_rect-1 by strides of 1.0. This is the “simulation” of the for-loop seen in previous examples. The next line allocates a container to hold the computed area of each individual rectangle (as indexed by corresponding elements from the indices container). The arbb::call() function launches an execution of the calc_pi routine, sending as parameters the two previously allocated containers and the width of each rectangle to be used. The sole task of calc_pi() is to map the computation found in the calc_area() routine onto each element of the iVals container, then place the results into the corresponding location of the area container. The calc_area() function is written to handle a single rectangle. However, the runtime of ArBB will perform this computation on all elements of the iVals container and update the area container elements. Finally, the arbb::sums() function is used to perform an addition reduction of all elements within the area container, that sum is multiplied by 2.0, and the product is stored in the ArBB scalar pi.</p>
+<div class="highlight-python"><pre># include &lt;iostream&gt;
+# include &lt;cstdlib&gt;
+# include &lt;arbb.hpp&gt;
+
+const long num_rect=10485760;
+void calc_area(arbb::f64 &amp;y, arbb::f64 h, arbb::f64 i)
+{
+       arbb::f64 x = -1.0f + (i+0.5f) * h;
+       y = arbb::sqrt(1.0 - x*x) * h ;
+}
+void calc_pi(arbb::dense&lt;arbb::f64&gt; &amp;areas, arbb::f64 width, arbb::dense&lt;arbb::f64&gt; iVals)
+{
+       arbb::map(calc_area)(areas, width, iVals);
+}
+
+int main(int argc, char *argv[])
+{
+   arbb::dense&lt;arbb::f64&gt; iterations = arbb::indices(arbb::f64(0.0), num_rect, arbb::f64(1.0));
+   arbb::dense&lt;arbb::f64&gt; areas(num_rect);
+   arbb::f64 h = 1.0f / num_rect;
+   arbb::call(calc_pi)(areas, h, iterations);
+   arbb::f64 pi = arbb::sum(areas) * 2.0f;
+   std::cout &lt;&lt; "Pi =" &lt;&lt; arbb::value(pi) &lt;&lt; std::endl;
+   return 0;
+}</pre>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="#">
+              <img class="logo" src="_static/CSInParallel200wide.png" alt="Logo"/>
+            </a></p>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li><a href="#">Pi Using Numerical Integration: ArBB</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright This work is licensed under a Creative Commons Attribution-ShareAlike 3.0 Unported License.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2b1.
+    </div>
+  </body>
+</html>

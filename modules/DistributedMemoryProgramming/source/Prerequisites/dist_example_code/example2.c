@@ -3,7 +3,7 @@
 
 #define FROM_MASTER 1
 
-int main(int argc, char ** argv[]) {
+int main(int argc, char * argv[]) {
 
     int rank, nprocs;
     char message[12] = "Hello, world";
@@ -14,8 +14,10 @@ int main(int argc, char ** argv[]) {
     /* Initialize MPI execution environment */
     MPI_Init(&argc, &argv);
     /* Determines the size of MPI_COMM_WORLD */
-    MPI_Comm_size(MPI_COMM_WORLD, &nprocs)
+    nprocs = -1;
+    MPI_Comm_size(MPI_COMM_WORLD, &nprocs);
     /* Give each process a unique rank */
+    rank = -1;
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
 	
     /* If the process is the master */

@@ -61,12 +61,12 @@ int main(int argc, char *argv[]) {
     mypi = step * sum;
 
     printf("This is my sum: %.16f from rank: %d name: %s\n", mypi, rank, name);
-    
+
     /* Now we can reduce all those sums to one value which is Pi */
     // TO DO:
     MPI_Reduce(&mypi, &pi, 1, MPI_DOUBLE, MPI_SUM, 0, MPI_COMM_WORLD);
 
-    if (myid == 0) {
+    if (rank == 0) {
         printf("Pi is approximately %.16f, Error is %.16f\n", pi, fabs(pi - PI25DT));
         end_time = MPI_Wtime();
         computation_time = end_time - start_time;

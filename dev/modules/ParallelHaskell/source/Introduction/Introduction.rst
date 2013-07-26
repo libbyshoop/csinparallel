@@ -1,0 +1,10 @@
+Introduction
+================
+
+In recent years, improvements in CPU processing speed have noticeably slowed. As we reach modern technological limits in transistor density and miniaturization, it has become clear that we cannot further advance computational capabilities with machines built with a single CPU. As a result, multiple-core systems have become all but ubiquitous at every level of computing, from supercomputers to mobile phones. However, adding more processors to a computer does not automatically improve performance. Programmers must identify independent tasks of a program in order to fully take advantage of the extra resources provided by multiple CPUs. Parallel programming is a difficult but vital skill that any computer scientist must understand in the modern world of multi-core computing, and it is therefore imperative that the discipline be taught comprehensively at the undergraduate level \ :sup:`[1, 11]`\.
+
+.. image:: haskell_logo7000.png
+	:height: 100px
+	:align: center
+
+While parallel programming education has begun to appear in undergraduate classrooms around the country, more development of curricula is warranted\ :sup:`[1, 9, 11]`\. There are many languages, interfaces, and environments available to programmers that accommodate parallel code. Each uses a different methodology\ :sup:`[8, 9]`\, and research must be done to assess the relative utility of these programs in the context of an undergraduate computer science education. Among these options is Haskell, a purely functional language with powerful parallel language constructs which use a high level of abstraction, making them easy for a beginning programmer to understand and use. In this module, we explore some of the contructs available in Haskell and analyze the speedups that result from their use. We also examine a few different implementations of a simple program, which estimates π through Riemann integration of the unit circle, while going over the relative strengths and weaknesses of the parallel tools that we used. Our goal is to shed light on the options available to a Haskell programmer who is beginning to write code in parallel. 
