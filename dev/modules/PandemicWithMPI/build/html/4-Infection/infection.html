@@ -1,0 +1,206 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Infection Functions &mdash; Pandemic With MPI</title>
+    
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="top" title="Pandemic With MPI" href="../index.html" />
+    <link rel="next" title="Display Functions" href="../5-Display/display.html" />
+    <link rel="prev" title="Initialize Functions" href="../3-Initialize/initialize.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../5-Display/display.html" title="Display Functions"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="../3-Initialize/initialize.html" title="Initialize Functions"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../index.html">Pandemic With MPI</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="infection-functions">
+<h1>Infection Functions<a class="headerlink" href="#infection-functions" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="find-infected">
+<h2>find_infected<a class="headerlink" href="#find-infected" title="Permalink to this headline">¶</a></h2>
+<p>For each process, this function determines its infected x locations and infected y locations</p>
+<div class="figure align-center">
+<img alt="image" src="../_images/img-16.png" />
+</div>
+<p>We have already set the states of the infected people and the positions of all the people, but we need to specifically set the positions of the infected people and store them in the <strong>our_infected_x_locations</strong> and <strong>our_infected_y_locations</strong> arrays. We do this by marching through the <strong>our_states</strong> array and checking whether the state at each cell is <strong>INFECTED</strong>. If it is, we add the locations of the current infected person from the <strong>our_x_locations</strong> and <strong>our_y_locations</strong> arrays to the <strong>our_infected_x_locations</strong> and <strong>our_infected_y_locations</strong> arrays. We determine the ID of the current infected person using the <strong>our_current_infected_person</strong> variable:</p>
+<div class="highlight-c"><div class="highlight"><pre>    <span class="k">for</span><span class="p">(</span><span class="n">our_person1</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">our_person1</span> <span class="o">&lt;=</span> <span class="n">our</span><span class="o">-&gt;</span><span class="n">our_number_of_people</span> <span class="o">-</span> <span class="mi">1</span><span class="p">;</span> <span class="n">our_person1</span><span class="o">++</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="k">if</span><span class="p">(</span><span class="n">our</span><span class="o">-&gt;</span><span class="n">our_states</span><span class="p">[</span><span class="n">our_person1</span><span class="p">]</span> <span class="o">==</span> <span class="n">INFECTED</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="n">our</span><span class="o">-&gt;</span><span class="n">our_infected_x_locations</span><span class="p">[</span><span class="n">our_current_infected_person</span><span class="p">]</span> <span class="o">=</span> 
+            <span class="n">our</span><span class="o">-&gt;</span><span class="n">our_x_locations</span><span class="p">[</span><span class="n">our_person1</span><span class="p">];</span>
+            <span class="n">our</span><span class="o">-&gt;</span><span class="n">our_infected_y_locations</span><span class="p">[</span><span class="n">our_current_infected_person</span><span class="p">]</span> <span class="o">=</span>
+            <span class="n">our</span><span class="o">-&gt;</span><span class="n">our_y_locations</span><span class="p">[</span><span class="n">our_person1</span><span class="p">];</span>
+            <span class="n">our_current_infected_person</span><span class="o">++</span><span class="p">;</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="share-infected">
+<h2>share_infected<a class="headerlink" href="#share-infected" title="Permalink to this headline">¶</a></h2>
+<p>First, for each process, this function sends its count of infected people to all the other processes and receives their counts</p>
+<div class="figure align-center">
+<img alt="image" src="../_images/img-17.png" />
+</div>
+<div class="highlight-c"><div class="highlight"><pre>    <span class="c1">// Each process sends its count of infected people to all the</span>
+    <span class="c1">// other processes and receives their counts</span>
+    <span class="n">MPI_Allgather</span><span class="p">(</span><span class="o">&amp;</span><span class="n">our</span><span class="o">-&gt;</span><span class="n">our_num_infected</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">MPI_INT</span><span class="p">,</span> <span class="n">recvcounts</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> 
+        <span class="n">MPI_INT</span><span class="p">,</span> <span class="n">MPI_COMM_WORLD</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>This step is handled by the MPI command <strong>MPI_Allgather</strong> whose arguments are as follows:</p>
+<ul class="simple">
+<li><strong>&amp;our_num_infected</strong> – the address of the sending buffer (the thing being sent).</li>
+<li><strong>1</strong> – the count of things being sent.</li>
+<li><strong>MPI_INT</strong> – the datatype of things being sent.</li>
+<li><strong>recvcounts</strong> – the receive buffer (an array of things being received).</li>
+<li><strong>1</strong> – the count of things being received.</li>
+<li><strong>MPI_INT</strong> – the datatype of things being received.</li>
+<li><strong>MPI_COMM_WORLD</strong> – the communicator of processes that send and receive data.</li>
+</ul>
+<p>Once the data has been sent and received, we count the total number of infected people by adding up the values in the <strong>recvcounts</strong> array and storing the result in the <strong>total_num_infected</strong> variable:</p>
+<div class="highlight-c"><div class="highlight"><pre>    <span class="n">global</span><span class="o">-&gt;</span><span class="n">total_num_infected</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="kt">int</span> <span class="n">current_rank</span><span class="p">;</span>
+    <span class="k">for</span><span class="p">(</span><span class="n">current_rank</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">current_rank</span> <span class="o">&lt;=</span> <span class="n">total_number_of_processes</span> <span class="o">-</span> <span class="mi">1</span><span class="p">;</span>
+        <span class="n">current_rank</span><span class="o">++</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="n">global</span><span class="o">-&gt;</span><span class="n">total_num_infected</span> <span class="o">+=</span> <span class="n">recvcounts</span><span class="p">[</span><span class="n">current_rank</span><span class="p">];</span>
+    <span class="p">}</span>
+</pre></div>
+</div>
+<p>Next, for each process, the function sends the x locations of its infected people to all the other processes and receives the x locations of their infected people</p>
+<p>For this send and receive, we need to use <strong>MPI_Allgatherv</strong> instead of <strong>MPI_Allgather</strong>. This is because each process has a varying number of infected people, so it needs to be able to send a variable number of x locations. To do this, we first need to set up the displacements in the receive buffer; that is, we need to indicate how many elements each process will send and at what points in the receive array they will appear. We can do this with a <strong>displs</strong> array, which will contain a list of the displacements in the receive buffer:</p>
+<div class="highlight-c"><div class="highlight"><pre>    <span class="c1">// Each process sends the x locations of its infected people to </span>
+    <span class="c1">// all the other processes and receives the x locations of their </span>
+    <span class="c1">// infected people</span>
+    <span class="n">MPI_Allgatherv</span><span class="p">(</span><span class="n">our</span><span class="o">-&gt;</span><span class="n">our_infected_x_locations</span><span class="p">,</span> <span class="n">our</span><span class="o">-&gt;</span><span class="n">our_num_infected</span><span class="p">,</span> <span class="n">MPI_INT</span><span class="p">,</span> 
+        <span class="n">global</span><span class="o">-&gt;</span><span class="n">their_infected_x_locations</span><span class="p">,</span> <span class="n">recvcounts</span><span class="p">,</span> <span class="n">displs</span><span class="p">,</span> 
+        <span class="n">MPI_INT</span><span class="p">,</span> <span class="n">MPI_COMM_WORLD</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>We are now ready to call the <strong>MPI_Allgatherv</strong>. Here are its arguments:</p>
+<ul class="simple">
+<li><strong>our_infected_x_locations</strong> – the send buffer (array of things to send).</li>
+<li><strong>our_num_infected</strong> – the count of elements in the send buffer.</li>
+<li><strong>MPI_INT</strong> – the datatype of the elements in the send buffer.</li>
+<li><strong>their_infected_x_locations</strong> – the receive buffer (array of things to receive).</li>
+<li><strong>recvcounts</strong> – an array of counts of elements in the receive buffer</li>
+<li><strong>displs</strong> – the list of displacements in the receive buffer, as determined above.</li>
+<li><strong>MPI_INT</strong> – the data type of the elements in the receive buffer.</li>
+<li><strong>MPI_COMM_WORLD</strong> – the communicator of processes that send and receive data.</li>
+</ul>
+<p>Once the command is complete, each process will have the full array of the x locations of the infected people from each process, stored in the <strong>their_infected_x_locations</strong> array.</p>
+<p>Finally, each process sends the y locations of its infected people to all the other processes and receives the y locations of their infected people</p>
+<div class="highlight-c"><div class="highlight"><pre>    <span class="c1">// Each process sends the y locations of its infected people </span>
+    <span class="c1">// to all the other processes and receives the y locations of their </span>
+    <span class="c1">// infected people</span>
+    <span class="n">MPI_Allgatherv</span><span class="p">(</span><span class="n">our</span><span class="o">-&gt;</span><span class="n">our_infected_y_locations</span><span class="p">,</span> <span class="n">our</span><span class="o">-&gt;</span><span class="n">our_num_infected</span><span class="p">,</span> <span class="n">MPI_INT</span><span class="p">,</span> 
+        <span class="n">global</span><span class="o">-&gt;</span><span class="n">their_infected_y_locations</span><span class="p">,</span> <span class="n">recvcounts</span><span class="p">,</span> <span class="n">displs</span><span class="p">,</span> 
+        <span class="n">MPI_INT</span><span class="p">,</span> <span class="n">MPI_COMM_WORLD</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>The y locations are sent and received just as the x locations are sent and received. In fact, the function calls have exactly 2 letters difference; the x’s in the <strong>Allgatherv</strong> from last step. are replaced by y’s in the <strong>Allgatherv</strong> in this step.</p>
+<p>Note that the code will only execute previous two steps if MPI is enabled. If it is not enabled, the code simply copies the <strong>our_infected_x_locations</strong> and <strong>our_infected_y_locations</strong> arrays into the <strong>their_infected_x_locations</strong> and <strong>their_infected_y_locations</strong> arrays and the <strong>our_num_infected</strong> variable into the <strong>total_num_infected</strong> variable.</p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../index.html">
+              <img class="logo" src="../_static/CSInParallel200wide.png" alt="Logo"/>
+            </a></p>
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Infection Functions</a><ul>
+<li><a class="reference internal" href="#find-infected">find_infected</a></li>
+<li><a class="reference internal" href="#share-infected">share_infected</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="../3-Initialize/initialize.html"
+                        title="previous chapter">Initialize Functions</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="../5-Display/display.html"
+                        title="next chapter">Display Functions</a></p>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../5-Display/display.html" title="Display Functions"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="../3-Initialize/initialize.html" title="Initialize Functions"
+             >previous</a> |</li>
+        <li><a href="../index.html">Pandemic With MPI</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2013, CSInParallel Project.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>
