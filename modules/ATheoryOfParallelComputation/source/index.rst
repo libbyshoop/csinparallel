@@ -11,6 +11,7 @@ A Theory of Parallel Computation
 
    Background/Background
    ThePiCalculus/ThePiCalculus
+   CSCExample/cscexample
    ExamplesAndApplications/ExamplesAndApplications
    History/History
 

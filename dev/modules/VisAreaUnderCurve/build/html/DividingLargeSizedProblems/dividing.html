@@ -1,0 +1,124 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Dividing Large Sized Problems &mdash; Finding the Area Under the Curve</title>
+    
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="top" title="Finding the Area Under the Curve" href="../index.html" />
+    <link rel="next" title="Finding the Area Unde the Curve" href="../FindingArea/findingArea.html" />
+    <link rel="prev" title="Introduction" href="../Introduction/intro.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../FindingArea/findingArea.html" title="Finding the Area Unde the Curve"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="../Introduction/intro.html" title="Introduction"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../index.html">Finding the Area Under the Curve</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="dividing-large-sized-problems">
+<h1>Dividing Large Sized Problems<a class="headerlink" href="#dividing-large-sized-problems" title="Permalink to this headline">¶</a></h1>
+<p>The splitting of a large sized problem can be done in various ways, some of which have become standards and are repeatedly used in various problems. Depending on the kind of computation used to solve a problem, one way of iterating over data may be preferred over the other. Naturally the easiest solution would be to split the data into approximately equal parts amongst computer nodes or processor cores. This, however, may not always be the most efficient approach. Therefore, it is necessary to know some commonly used techniques for splitting up data.
+We introduce two parallelization methods widely applied to parallelized loops: <strong>blocking</strong> and <strong>striping (or slicing)</strong>.</p>
+<p>Blocking is a way of dividing data into adjacent equally sized chunks. Then each of these chunks is assigned to each processing unit or core. The following illustration depicts dividing an array of data into n blocks and assigning each block to one of the <em>n</em> processes. The block sizes are approximately the same, depending on whether the amount of data is divisible by the number of processes.</p>
+<a class="reference internal image-reference" href="../_images/blocking.png"><img alt="blocking" class="align-center" src="../_images/blocking.png" style="width: 900px; height: 290px;" /></a>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Blocking is ideal in cases of uniform distribution of data and preferable when loop iterations access memory/cache locations.</p>
+</div>
+<p>Striping is a way of iterating over data such that the processes and/or cores seemingly alternate between iterations. For instance, the first iteration will be performed by the first process, the second iteration by the second process, the third iteration by the third process, and so on. If there are <em>n</em> processes then each processor will perform every <a href="#id1"><span class="problematic" id="id2">*</span></a>n*th iteration. The following illustration shows this method.</p>
+<a class="reference internal image-reference" href="../_images/striping.png"><img alt="striping" class="align-center" src="../_images/striping.png" style="width: 350px; height: 500px;" /></a>
+<p>This pattern continues until we’ve iterated over all data. The size of each strip can vary.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Striping as a method is desirable in case of non-uniform data distribution and when loop iterations do not access memory/cache locations.</p>
+</div>
+<p>In case of hybrid computing we can perform blocking amongst processes as well as further apply blocking on dividing data amongst threads. Same applies for striping. Combinations are also possible such as blocking first and then striping, or striping first and then blocking.</p>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../index.html">
+              <img class="logo" src="../_static/CSInParallel200wide.png" alt="Logo"/>
+            </a></p>
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="../Introduction/intro.html"
+                        title="previous chapter">Introduction</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="../FindingArea/findingArea.html"
+                        title="next chapter">Finding the Area Unde the Curve</a></p>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../FindingArea/findingArea.html" title="Finding the Area Unde the Curve"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="../Introduction/intro.html" title="Introduction"
+             >previous</a> |</li>
+        <li><a href="../index.html">Finding the Area Under the Curve</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright This work is licensed under a Creative Commons Attribution-ShareAlike 3.0 Unported License.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2b1.
+    </div>
+  </body>
+</html>

@@ -1,0 +1,179 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Pi Using Numerical Integration: MPI &mdash; Pi Using Numerical Integration: MPI</title>
+    
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="Pi Using Numerical Integration: MPI" href="#" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li><a href="#">Pi Using Numerical Integration: MPI</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="pi-using-numerical-integration-mpi">
+<h1>Pi Using Numerical Integration: MPI<a class="headerlink" href="#pi-using-numerical-integration-mpi" title="Permalink to this headline">¶</a></h1>
+<p>Distributed memory bears lots of similarity on the surface to shared memory in that the work can be evenly divided between computational elements. The key detail to be aware of is that the shared memory thread requires few resources to put it into play; an MPI process requires significant care and feeding. The best example of this is if the task was to get a drink from the refrigerator, with that latency being the cost of a single cycle, i.e reaching the register file, then shared memory is like going out the the garage refrigerator. Going to a remote memory in another MPI process is like traveling 40 miles for the drink. The impact of this will not be seen in this code, but it does provide a framework a person use for adding a more representative CPU and bandwidth load.</p>
+<p>The MPI version is also similar to the OpenMP, in that both the OpenMP thread and the MPI process learn of their portion of the work from their rank among all the other threads/processes. An MPI_Reduce is done at the end to perform a log(n) summation of the partial areas from each process.</p>
+<div class="section" id="further-exploration">
+<h2>Further Exploration<a class="headerlink" href="#further-exploration" title="Permalink to this headline">¶</a></h2>
+<blockquote>
+<div><ul class="simple">
+<li>What happens when you have more than one process running on a particular processors. How can  you know how many processors you have, or if you have more than one process running on a processor?</li>
+</ul>
+</div></blockquote>
+</div>
+<div class="section" id="complete-code">
+<h2>Complete Code<a class="headerlink" href="#complete-code" title="Permalink to this headline">¶</a></h2>
+<p>The full code can be downloaded <a class="reference external" href="https://code.google.com/p/eapf-tech-pack-practicum/source/browse/trunk/pi_integration/pi_area_mpi.c">here</a>.</p>
+<div class="highlight-python"><pre>/*  calculating pi via area under the curve
+ *  This code uses an algorithm fairly easily ported to all parallel methods.
+ *  Since it calculates pi, it is easy to verify that results are correct.
+ *  It can also be used to explore accuracy of results and techniques for managing error.
+ */
+
+#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+#include &lt;math.h&gt;
+#include &lt;mpi.h&gt;
+
+#define NUMRECT 10000000
+
+/*  students learn in grammar school that the area of a circle is pi*radius*radius.
+ *  They learn in high school that the formula of a circle is x^2 + y^2 = radius^2.
+ *
+ *  These facts allows students calculating pi by estimating area of mid-point rectangles
+ *
+ *  Area of unit circle is pi, y = sqrt(1-x^2) is formula for semicircle from -1 to 1
+ */
+
+int main(int argc, char **argv) {
+
+    int        numRect;                                    // number of rectangles
+    int        i;                                          // loop index
+    int        rank, size;               // MPI info used to know segment a process owns
+    double        width;                            // width of each rectangle
+    double        startingX = -1.0, overallWidth = 2.0;
+    double        x;                                       // x value of midpoint
+    double        pi, halfPi, partPi = 0.0;  // sum of area of rectangles gives pi/2
+
+
+    numRect = argc == 2 ? atoi(argv[1]) : NUMRECT;        // get number of rectangles
+
+
+    MPI_Init(&amp;argc, &amp;argv);
+    MPI_Comm_rank(MPI_COMM_WORLD, &amp;rank);
+    MPI_Comm_size(MPI_COMM_WORLD, &amp;size);
+
+
+    numRect        /= size;                     // adjust so each process
+    overallWidth        /= size;                 //    does its part of the curve
+    startingX        += rank * overallWidth;    // Can then carry on serial cacl for that process
+
+
+    width        = overallWidth / numRect;     // calculate width of each rectangle
+    x = startingX - width/2;                        // setup for x to be at midpoint
+
+
+    for (i=0; i&lt;numRect; ++i) {                // calculate area of each rectangle
+            x         += width;
+            partPi += width * sqrt(1.0 - x*x);
+    }
+
+
+    MPI_Reduce(&amp;partPi, &amp;halfPi, 1, MPI_DOUBLE,  MPI_SUM, 0, MPI_COMM_WORLD);
+
+
+    if (rank == 0) {
+            pi = 2.0 * halfPi;
+            printf ("\n==\n==\t%20s = %15.10f\n",    "pi",        pi);
+            printf ("==\t%20s = %15d\n",       "total rectangles",    size*numRect);
+            printf ("==\t%20s = %15d\n==\n\n",    "processes",          size);
+    }
+    MPI_Finalize();
+    return 0;
+}</pre>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="#">
+              <img class="logo" src="_static/CSInParallel200wide.png" alt="Logo"/>
+            </a></p>
+  <h3><a href="#">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Pi Using Numerical Integration: MPI</a><ul>
+<li><a class="reference internal" href="#further-exploration">Further Exploration</a></li>
+<li><a class="reference internal" href="#complete-code">Complete Code</a></li>
+</ul>
+</li>
+</ul>
+
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li><a href="#">Pi Using Numerical Integration: MPI</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright This work is licensed under a Creative Commons Attribution-ShareAlike 3.0 Unported License.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2b1.
+    </div>
+  </body>
+</html>

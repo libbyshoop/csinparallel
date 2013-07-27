@@ -1,16 +1,16 @@
-\BOOKMARK [0][-]{chapter.1}{Getting Started with Multicore Programming using OpenMP}{}
-\BOOKMARK [1][-]{section.1.1}{Notes about this document}{chapter.1}
-\BOOKMARK [1][-]{section.1.2}{Multicore machines and shared memory}{chapter.1}
-\BOOKMARK [1][-]{section.1.3}{Getting started with OpenMP}{chapter.1}
-\BOOKMARK [1][-]{section.1.4}{To Do:}{chapter.1}
-\BOOKMARK [1][-]{section.1.5}{What's happening?}{chapter.1}
-\BOOKMARK [0][-]{chapter.2}{Creating a correct threaded version}{}
-\BOOKMARK [1][-]{section.2.1}{Race Conditions}{chapter.2}
-\BOOKMARK [1][-]{section.2.2}{Avoiding Race Conditions}{chapter.2}
-\BOOKMARK [1][-]{section.2.3}{Reduction}{chapter.2}
-\BOOKMARK [1][-]{section.2.4}{Thread-safe Code}{chapter.2}
-\BOOKMARK [0][-]{chapter.3}{Timing and Performance on Intel Manycore Testing Lab}{}
-\BOOKMARK [1][-]{section.3.1}{Timing performance}{chapter.3}
-\BOOKMARK [1][-]{section.3.2}{Using the MTL}{chapter.3}
-\BOOKMARK [1][-]{section.3.3}{Investigating \217scalability\220}{chapter.3}
-\BOOKMARK [1][-]{section.3.4}{An Alternative Method for Timing Code \(optional; for reference\)}{chapter.3}
+\BOOKMARK [0][-]{chapter.1}{Getting Started with Multicore Programming using OpenMP}{}% 1
+\BOOKMARK [1][-]{section.1.1}{Notes about this document}{chapter.1}% 2
+\BOOKMARK [1][-]{section.1.2}{Multicore machines and shared memory}{chapter.1}% 3
+\BOOKMARK [1][-]{section.1.3}{Getting started with OpenMP}{chapter.1}% 4
+\BOOKMARK [1][-]{section.1.4}{To Do:}{chapter.1}% 5
+\BOOKMARK [1][-]{section.1.5}{What's happening?}{chapter.1}% 6
+\BOOKMARK [0][-]{chapter.2}{Creating a correct threaded version}{}% 7
+\BOOKMARK [1][-]{section.2.1}{Race Conditions}{chapter.2}% 8
+\BOOKMARK [1][-]{section.2.2}{Avoiding Race Conditions}{chapter.2}% 9
+\BOOKMARK [1][-]{section.2.3}{Reduction}{chapter.2}% 10
+\BOOKMARK [1][-]{section.2.4}{Thread-safe Code}{chapter.2}% 11
+\BOOKMARK [0][-]{chapter.3}{Timing and Performance on Intel Manycore Testing Lab}{}% 12
+\BOOKMARK [1][-]{section.3.1}{Timing performance}{chapter.3}% 13
+\BOOKMARK [1][-]{section.3.2}{Using the MTL}{chapter.3}% 14
+\BOOKMARK [1][-]{section.3.3}{Investigating \217scalability\220}{chapter.3}% 15
+\BOOKMARK [1][-]{section.3.4}{An Alternative Method for Timing Code \(optional; for reference\)}{chapter.3}% 16

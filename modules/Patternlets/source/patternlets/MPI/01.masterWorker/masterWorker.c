@@ -15,10 +15,10 @@ int main(int argc, char** argv) {
   MPI_Comm_size(MPI_COMM_WORLD, &numWorkers);
   MPI_Get_processor_name (hostName, &length);
 
-  if ( id == 0 ) {  // process 0 is the master
+  if ( id == 0 ) {  // process 0 is the master 
     printf("Greetings from the master, # %d (%s) of %d processes\n",
             id, hostName, numWorkers);
-  } else {          // processes with ids > 0 are workers
+  } else {          // processes with ids > 0 are workers 
     printf("Greetings from a worker, # %d (%s) of %d processes\n",
             id, hostName, numWorkers);
   }
@@ -26,3 +26,4 @@ int main(int argc, char** argv) {
   MPI_Finalize();
   return 0;
 }
+

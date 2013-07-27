@@ -1,0 +1,145 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Introduction &mdash; MapReduce with River Trail</title>
+    
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="top" title="MapReduce with River Trail" href="../index.html" />
+    <link rel="next" title="Using River Trail to Parallelize Javascript" href="../UsingRT/using.html" />
+    <link rel="prev" title="Welcome to MapReduce with RiverTrail’s documentation!" href="../index.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../UsingRT/using.html" title="Using River Trail to Parallelize Javascript"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="../index.html" title="Welcome to MapReduce with RiverTrail’s documentation!"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../index.html">MapReduce with River Trail</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="introduction">
+<h1>Introduction<a class="headerlink" href="#introduction" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="what-is-river-trail">
+<h2>What is River Trail<a class="headerlink" href="#what-is-river-trail" title="Permalink to this headline">¶</a></h2>
+<p>River Trail is an extension of JavaScript written by Intel and Mozilla to enable data-parallelism in web applications. It compiles units of code with the OpenCL kernel compiler to parallelize them. It also adds a specialized object, the ParallelArray object, to JavaScript.</p>
+</div>
+<div class="section" id="what-it-looks-like">
+<h2>What It Looks Like<a class="headerlink" href="#what-it-looks-like" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-python"><pre>var first = new ParallelArray(1,2,3,4);
+
+/* Elemental functions */
+var incd = first.map(function f(val) {return val+1;} );
+
+/* Collective functions */
+var summed = incd.reduce(function f(a, b) {return a + b;});</pre>
+</div>
+</div>
+<div class="section" id="how-it-works">
+<h2>How It Works<a class="headerlink" href="#how-it-works" title="Permalink to this headline">¶</a></h2>
+<p>When ParallelArray object functions (such as map, reduce, scatter, scan, and filter) are called, an OpenCL kernel is executed and returned. OpenCL executes these kernels on as many devices as it is able to control, which may include multiple CPUs, vector cores, and GPUs. So, the computation is distributed to each core and each partition of the graphics card.</p>
+</div>
+<div class="section" id="benefits">
+<h2>Benefits<a class="headerlink" href="#benefits" title="Permalink to this headline">¶</a></h2>
+<p>The River Trail extension increases speed (often significantly) by leveraging more of a computer&#8217;s available resources. It is especially useful in graphics, a major computational area for JavaScript, where it allows much speed up for certain operations.</p>
+<p>Also, as you will see in the next module, the River Trail extension is fairly easy for users to obtain. It is currently included in the Mozilla Firefox nightly build and will hopefully be standardized soon.</p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../index.html">
+              <img class="logo" src="../_static/CSInParallel200wide.png" alt="Logo"/>
+            </a></p>
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Introduction</a><ul>
+<li><a class="reference internal" href="#what-is-river-trail">What is River Trail</a></li>
+<li><a class="reference internal" href="#what-it-looks-like">What It Looks Like</a></li>
+<li><a class="reference internal" href="#how-it-works">How It Works</a></li>
+<li><a class="reference internal" href="#benefits">Benefits</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="../index.html"
+                        title="previous chapter">Welcome to MapReduce with RiverTrail&#8217;s documentation!</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="../UsingRT/using.html"
+                        title="next chapter">Using River Trail to Parallelize Javascript</a></p>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../UsingRT/using.html" title="Using River Trail to Parallelize Javascript"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="../index.html" title="Welcome to MapReduce with RiverTrail’s documentation!"
+             >previous</a> |</li>
+        <li><a href="../index.html">MapReduce with River Trail</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright This work is licensed under a Creative Commons Attribution-ShareAlike 3.0 Unported License.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>

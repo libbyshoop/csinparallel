@@ -1,3 +1,5 @@
+
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
@@ -33,11 +35,8 @@
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
-          <a href="../genindex.html" title="General Index"
-             accesskey="I">index</a></li>
-        <li class="right" >
           <a href="../furthersetup/furthersetup.html" title="Editing Your New Module"
-             accesskey="N">next</a> |</li>
+             accesskey="N">next</a></li>
         <li class="right" >
           <a href="../softwaresetup/softwaresetup.html" title="What You’ll Need to Get Started"
              accesskey="P">previous</a> |</li>
@@ -52,11 +51,68 @@
             
   <div class="section" id="setting-up-a-new-module">
 <h1>Setting Up A New Module<a class="headerlink" href="#setting-up-a-new-module" title="Permalink to this headline">¶</a></h1>
-<p>If you&#8217;ve already got Python, a Git client, and the Sphinx package installed, then begin here!
-:note: If your content is already in LaTeX form, check out this page instead.</p>
+<p>If you&#8217;ve already got Python, a github client, and the Sphinx package installed, then begin here!</p>
+<div class="section" id="first-time-clone-the-repository">
+<h2>First Time: clone the repository<a class="headerlink" href="#first-time-clone-the-repository" title="Permalink to this headline">¶</a></h2>
+<p>If you are working on the project for the first time, you will first need to become a github user and collaborator on the CSinParallel github repository.
+You can <a class="reference external" href="https://github.com/libbyshoop/csinparallel">visit the project on github</a>.</p>
+<dl class="docutils">
+<dt>Note that the central repo on github.com holds two main branches (git terminology):</dt>
+<dd><ol class="first last arabic simple">
+<li>master : origin/master</li>
+<li>develop :    origin/develop</li>
+</ol>
+</dd>
+</dl>
+<p>If you are working on the project for the first time or are moving to a new computer,
+you will next want to <em>clone</em> a copy of the current state of the project on your own machine. The github clients available from github.com will enable you to clone the project, once you are a collaborator.  You can even do this directly from the
+<a class="reference external" href="https://github.com/libbyshoop/csinparallel">project page on github</a>.</p>
+<p>Find your directory containing the cloned copy of the repository (on Windows, it usually puts itself in <tt class="docutils literal"><span class="pre">My</span> <span class="pre">Documents</span></tt>). It should be a directory called csinparallel.You will see the following directory structure:</p>
+<div class="highlight-python"><pre>csinparallel/modules/_____Module Name Here_______/source
+                                                 /build
+            /images
+            /docs
+            /dev/modules/_____Module Name Here_______/source
+                                                     /build
+                /images
+                /docs
+            /README.rst</pre>
+</div>
+<p>Modules that are ready for production will be in the top directory shown above.
+Modules that are under development will be under the directory named &#8216;dev&#8217;.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">If you <a class="reference external" href="https://github.com/libbyshoop/csinparallel">visit the project on github</a>, you can also explore this directory structure. This documentation you are reading is in the docs folder.</p>
+</div>
+</div>
+<div class="section" id="make-sure-you-are-using-the-develop-branch">
+<h2>Make sure you are using the develop branch<a class="headerlink" href="#make-sure-you-are-using-the-develop-branch" title="Permalink to this headline">¶</a></h2>
+<p>Now for some heavy-duty git terminology:</p>
+<p>As you begin your work to create a new module, you will want to <strong>be certain that you
+are doing your work on a new branch that you create from the develop branch</strong>.  Once you have your clone of the project, you can create your own sub-vranch of the devlop branch by:</p>
+<blockquote>
+<div><ol class="arabic">
+<li><p class="first">Navigate to the clone directory named <tt class="docutils literal"><span class="pre">csinparallel</span></tt></p>
+</li>
+<li><dl class="first docutils">
+<dt>Execute this on the connamd line:</dt>
+<dd><p class="first last"><tt class="docutils literal"><span class="pre">git</span> <span class="pre">checkout</span> <span class="pre">-b</span> <span class="pre">&lt;your-branch-name&gt;</span> <span class="pre">develop</span></tt></p>
+</dd>
+</dl>
+</li>
+</ol>
+</div></blockquote>
+<div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<p class="last">The text inside and including the brackets &lt; &gt; above is a single name for your branch. We suggest a name such as <em>ls-dev</em>, where ls should be replaced by your initials, your first or last name, or a combination of those.</p>
+</div>
+<p>As an alternative to this second step, you can use your github client to make a new sub-branch off the develop branch.  Look for a small plus sign on the develop branch in the list of branches.</p>
+<p>In a later section of this documentation we describe the workflow with git in greater detail.  Note for now that <em>your new work will always be done in the dev/modules directory</em>, where you can create a brand new module.</p>
+</div>
 <div class="section" id="creating-a-module">
 <h2>Creating a Module<a class="headerlink" href="#creating-a-module" title="Permalink to this headline">¶</a></h2>
-<p>Find your GitHub directory (on Windows, it usually puts itself in <tt class="docutils literal"><span class="pre">My</span> <span class="pre">Documents</span></tt>). If you forked the repository, you&#8217;ll have a directory called csinparallel.Navigate to <tt class="docutils literal"><span class="pre">csinparallel/modules</span></tt>, and enter <tt class="docutils literal"><span class="pre">sphinx-quickstart</span></tt>
+<p>Find your GitHub directory (on Windows, it usually puts itself in <tt class="docutils literal"><span class="pre">My</span> <span class="pre">Documents</span></tt>). If you forked the repository, you&#8217;ll have a directory called csinparallel.
+Navigate to <tt class="docutils literal"><span class="pre">csinparallel/dev/modules</span></tt>, and enter <tt class="docutils literal"><span class="pre">sphinx-quickstart</span></tt>
 to begin. Next, follow these directions below to go through the setup process.</p>
 <div class="section" id="setup">
 <h3>Setup<a class="headerlink" href="#setup" title="Permalink to this headline">¶</a></h3>
@@ -86,7 +142,7 @@ to begin. Next, follow these directions below to go through the setup process.</
 </div>
 <div class="section" id="modifying-the-conf-py-file">
 <h2>Modifying the conf.py File<a class="headerlink" href="#modifying-the-conf-py-file" title="Permalink to this headline">¶</a></h2>
-<p>In <tt class="docutils literal"><span class="pre">/GitHub/csinparallel/modules/YourModuleName/source</span></tt>, run either the Windows or Mac/Linux configuration script. To do this, copy the file <tt class="docutils literal"><span class="pre">confscript.py</span></tt> into this folder and double click on it, or enter <tt class="docutils literal"><span class="pre">python</span> <span class="pre">confscript.py</span></tt> into a terminal or command line.  Follow the directions to enter your module&#8217;s name (in plain English) and a short description when prompted.</p>
+<p>In <tt class="docutils literal"><span class="pre">/GitHub/csinparallel/dev/modules/YourModuleName/source</span></tt>, run the configuration script. To do this, copy the file <a class="reference download internal" href="../_downloads/confscript.py"><tt class="xref download docutils literal"><span class="pre">confscript.py</span></tt></a> into this folder, and double click on it or enter <tt class="docutils literal"><span class="pre">python</span> <span class="pre">confscript.py</span></tt> into a terminal or command line.  Follow the directions to enter your module&#8217;s name (in plain English) and a short description when prompted.</p>
 <div class="section" id="optional-enabling-latex">
 <h3>Optional: Enabling LaTeX<a class="headerlink" href="#optional-enabling-latex" title="Permalink to this headline">¶</a></h3>
 <p>Most module editors will not need to create LaTeX versions of their modules. If you really want to, though, you&#8217;ll need to open conf.py and change <tt class="docutils literal"><span class="pre">extentions</span> <span class="pre">=</span> <span class="pre">['sphinx.ext.pngmath']</span></tt> to the following:</p>
@@ -110,8 +166,13 @@ to begin. Next, follow these directions below to go through the setup process.</
 </div>
 <div class="section" id="making-the-module">
 <h2>Making the Module<a class="headerlink" href="#making-the-module" title="Permalink to this headline">¶</a></h2>
-<p>Open the Makefile (not make.bat) and find the latexpdf entry. Add <tt class="docutils literal"><span class="pre">tar</span> <span class="pre">-czf</span> <span class="pre">$(BUILDDIR)/latex.tar.gz</span> <span class="pre">$(BUILDDIR)/latex</span></tt> after <tt class="docutils literal"><span class="pre">$(MAKE)</span> <span class="pre">-C</span> <span class="pre">$(BUILDDIR)/latex</span> <span class="pre">all-pdf</span></tt>.</p>
-<p>You now have enough of a start to see results! From <tt class="docutils literal"><span class="pre">csinparallel/modules/YourModuleName</span></tt>, enter <tt class="docutils literal"><span class="pre">make</span> <span class="pre">html</span></tt>. This will render HTML files from your <tt class="docutils literal"><span class="pre">source</span></tt> folder and place them in your <tt class="docutils literal"><span class="pre">build</span></tt> folder. Click on one to open it!</p>
+<p>Open the Makefile (not make.bat) and find the latexpdf entry. Add this line:</p>
+<blockquote>
+<div><tt class="docutils literal"><span class="pre">tar</span> <span class="pre">-czf</span> <span class="pre">$(BUILDDIR)/latex.tar.gz</span> <span class="pre">$(BUILDDIR)/latex</span></tt></div></blockquote>
+<p>indented with a tab and on a line by itself after this line:</p>
+<blockquote>
+<div><tt class="docutils literal"><span class="pre">$(MAKE)</span> <span class="pre">-C</span> <span class="pre">$(BUILDDIR)/latex</span> <span class="pre">all-pdf</span></tt></div></blockquote>
+<p>You now have enough of a start to see results! From <tt class="docutils literal"><span class="pre">csinparallel/dev/modules/YourModuleName</span></tt>, enter <tt class="docutils literal"><span class="pre">make</span> <span class="pre">html</span></tt>. This will render HTML files from your <tt class="docutils literal"><span class="pre">source</span></tt> folder and place them in your <tt class="docutils literal"><span class="pre">build</span></tt> folder. Click on one to open it!</p>
 <p>The next section of this tutorial will outline how to begin to make changes to what you see here.</p>
 </div>
 </div>
@@ -125,20 +186,15 @@ to begin. Next, follow these directions below to go through the setup process.</
             <p class="logo"><a href="../index.html">
               <img class="logo" src="../_static/CSInParallel200wide.png" alt="Logo"/>
             </a></p>
-  <h3><a href="../index.html">Table Of Contents</a></h3>
-  <ul>
-<li><a class="reference internal" href="#">Setting Up A New Module</a><ul>
-<li><a class="reference internal" href="#creating-a-module">Creating a Module</a><ul>
-<li><a class="reference internal" href="#setup">Setup</a></li>
-</ul>
-</li>
-<li><a class="reference internal" href="#modifying-the-conf-py-file">Modifying the conf.py File</a><ul>
-<li><a class="reference internal" href="#optional-enabling-latex">Optional: Enabling LaTeX</a></li>
-</ul>
-</li>
-<li><a class="reference internal" href="#making-the-module">Making the Module</a></li>
-</ul>
-</li>
+<h3><a href="../index.html">Table Of Contents</a></h3>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../softwaresetup/softwaresetup.html">What You&#8217;ll Need to Get Started</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="">Setting Up A New Module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../furthersetup/furthersetup.html">Editing Your New Module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../developmentProcess/process.html">The CSinParallel Module Development Process</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../newmoduletemplate/newmoduletemplate.html">New Module Template</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../modulechecklist/modulechecklist.html">Checklist: Reminders for Experienced Module Creators</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../components/components.html">Components of a Module</a></li>
 </ul>
 
   <h4>Previous topic</h4>
@@ -147,19 +203,6 @@ to begin. Next, follow these directions below to go through the setup process.</
   <h4>Next topic</h4>
   <p class="topless"><a href="../furthersetup/furthersetup.html"
                         title="next chapter">Editing Your New Module</a></p>
-<div id="searchbox" style="display: none">
-  <h3>Quick search</h3>
-    <form class="search" action="../search.html" method="get">
-      <input type="text" name="q" />
-      <input type="submit" value="Go" />
-      <input type="hidden" name="check_keywords" value="yes" />
-      <input type="hidden" name="area" value="default" />
-    </form>
-    <p class="searchtip" style="font-size: 90%">
-    Enter search terms or a module, class or function name.
-    </p>
-</div>
-<script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
       </div>
       <div class="clearer"></div>
@@ -168,11 +211,8 @@ to begin. Next, follow these directions below to go through the setup process.</
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
-          <a href="../genindex.html" title="General Index"
-             >index</a></li>
-        <li class="right" >
           <a href="../furthersetup/furthersetup.html" title="Editing Your New Module"
-             >next</a> |</li>
+             >next</a></li>
         <li class="right" >
           <a href="../softwaresetup/softwaresetup.html" title="What You’ll Need to Get Started"
              >previous</a> |</li>
@@ -181,7 +221,7 @@ to begin. Next, follow these directions below to go through the setup process.</
     </div>
     <div class="footer">
         &copy; Copyright This work is licensed under a Creative Commons Attribution-ShareAlike 3.0 Unported License.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2b1.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
     </div>
   </body>
 </html>

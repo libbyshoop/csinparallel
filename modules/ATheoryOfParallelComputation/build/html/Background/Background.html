@@ -53,12 +53,14 @@
             
   <div class="section" id="background">
 <h1>Background<a class="headerlink" href="#background" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="history">
+<h2>History<a class="headerlink" href="#history" title="Permalink to this headline">¶</a></h2>
 <ul>
 <li><p class="first">DFAs, NFAs, pushdown automata, Turing machines... All are mathematical entities that model computation. These abstract systems have concrete, practical applications in computer science (CS).</p>
 <p>For example, deterministic finite automata (DFAs) are associated with regular expressions, which computer   programs that involve pattern matching frequently rely on. Also, knowing theoretical results such as the inability of any computation to determine whether or not another computation will stop (Halting Problem) can keeps programmers from attempting to write impossible computer programs.</p>
 </li>
 <li><p class="first">Automata represent one approach to mathematically modeling computation. There are others.</p>
-<p>For example, the mathematical logician Alonzo Church created a formalism of computation based on functions in the 1930s, called the <em>:math:`lambda`-calculus</em>. The key notion in this approach is an operator (i.e., function) called <img class="math" src="../_images/math/ce4588fd900d02afcbd260bc07f54cce49a7dc4a.png" alt="\lambda"/> that is capable of generating other functions.</p>
+<p>For example, the mathematical logician Alonzo Church created a formalism of computation based on functions in the 1930s, called the <span class="math">\lambda`*-calculus*. The key notion in this approach is an operator (i.e., function) called :math:</span>lambda` that is capable of generating other functions.</p>
 <p>One of the earliest high-level programming languages, LISP (for LISt Processing language, 1959), is a practical computer implementation of the <img class="math" src="../_images/math/ce4588fd900d02afcbd260bc07f54cce49a7dc4a.png" alt="\lambda"/>-calculus. LISP was designed originally for research in <em>artificial intelligence (AI)</em>, a field in CS that perpetually seeks to extend the capabilities of computers to carry out tasks that humans can do. Scheme and Clojure are some contemporary programming languages descended from the original LISP, and and other widely used &#8220;functional&#8221; programming languages such as ML and Haskell are based on the <img class="math" src="../_images/math/ce4588fd900d02afcbd260bc07f54cce49a7dc4a.png" alt="\lambda"/>-calculus. Programmers use these languages to develop useful applications, and researchers use them to explore new frontiers in computing.</p>
 </li>
 <li><p class="first">From a theoretical viewpoint, the <img class="math" src="../_images/math/ce4588fd900d02afcbd260bc07f54cce49a7dc4a.png" alt="\lambda"/>-calculus embodies all essential features of functional computation. This holds because the relationship between &#8220;inputs&#8221; (domain values in Mathematics, arguments/parameters in programming) and &#8220;outputs&#8221; (range values in Math, return values in programming) from functions expresses everything in a purely functional system of computations (no &#8220;state changes&#8221;), and <img class="math" src="../_images/math/ce4588fd900d02afcbd260bc07f54cce49a7dc4a.png" alt="\lambda"/>-calculus is the mathematical theory of functions considered entirely according to their &#8220;inputs&#8221; and &#8220;outputs.&#8221;</p>
@@ -66,25 +68,35 @@
 </li>
 <li><p class="first">However, all of the computational models we&#8217;ve mentioned so far (Turing machines, <img class="math" src="../_images/math/ce4588fd900d02afcbd260bc07f54cce49a7dc4a.png" alt="\lambda"/>-calculus, etc.) are for <em>sequential computations</em> only. This means that we assume only a single computational entity. Until a few years ago, it was reasonable to assume that only one computational processor would be available for most computations, because most computers had only one computational circuit for carrying out instructions.</p>
 </li>
-<li><p class="first">Nowadays, retailers sell only <em>multi-core</em> computers (i.e., computers having multiple circuits for carrying out instructions) on the commodity market, and hardware manufacturers such as Intel and AMD no longer produce chips with only one computational processor. This results from computer engineering having reached certain limitations on performance for individual processors (related to electrical power consumption, access to computer memory, and parallel speedup capabilities with a single processor).</p>
-</li>
-<li><p class="first">Consequently, the only way to continue improving the performance of computers going forward is to use <em>parallel computing</em>, in which multiple computer actions are carried out physically at the same time. Parallel computing (or <em>parallelism</em>) can be accomplished by writing programs that use multiple computational cores at the same time, and/or by running multiple cooperating programs on multiple computers.</p>
-</li>
-<li><p class="first">Some computations are easy to parallelize. For example, a computation may involve applying exactly the same program steps to multiple independent input data sets, in which case we can perform parallel processing by executing that series of program steps on multiple processors (i.e., multiple cores and/or computers), and submitting different data sets to different processors. We call this strategy <em>data parallelism</em>. Some authors refer to such computations as being <em>embarassingly parallel</em>.</p>
-</li>
-<li><p class="first">Other types of computations may be parallelizable without being data parallelizable. For example, matrix multiplication requires combining the rows and columns of rectangular arrays of numbers in ways that require accessing each number multiple times, in different groupings. Parallelization strategies for matrix multiplication exist, such as multiplying submatrices formed by subdividing the original matrices, then combining those results appropriately. However, those strategies are more complex than simple data parallelism.</p>
-</li>
+</ul>
+</div>
+<div class="section" id="the-push-to-parallelism">
+<h2>The Push to Parallelism<a class="headerlink" href="#the-push-to-parallelism" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li>Nowadays, retailers sell only <em>multi-core</em> computers (i.e., computers having multiple circuits for carrying out instructions) on the commodity market, and hardware manufacturers such as Intel and AMD no longer produce chips with only one computational processor. This results from computer engineering having reached certain limitations on performance for individual processors (related to electrical power consumption, access to computer memory, and parallel speedup capabilities with a single processor).</li>
+<li>Consequently, the only way to continue improving the performance of computers going forward is to use <em>parallel computing</em>, in which multiple computer actions are carried out physically at the same time. Parallel computing (or <em>parallelism</em>) can be accomplished by writing programs that use multiple computational cores at the same time, and/or by running multiple cooperating programs on multiple computers.</li>
+<li>Some computations are easy to parallelize. For example, a computation may involve applying exactly the same program steps to multiple independent input data sets, in which case we can perform parallel processing by executing that series of program steps on multiple processors (i.e., multiple cores and/or computers), and submitting different data sets to different processors. We call this strategy <em>data parallelism</em>. Some authors refer to such computations as being <em>embarassingly parallel</em>.</li>
+<li>Other types of computations may be parallelizable without being data parallelizable. For example, matrix multiplication requires combining the rows and columns of rectangular arrays of numbers in ways that require accessing each number multiple times, in different groupings. Parallelization strategies for matrix multiplication exist, such as multiplying submatrices formed by subdividing the original matrices, then combining those results appropriately. However, those strategies are more complex than simple data parallelism.</li>
+</ul>
+</div>
+<div class="section" id="difficulties-with-parallelization">
+<h2>Difficulties with Parallelization<a class="headerlink" href="#difficulties-with-parallelization" title="Permalink to this headline">¶</a></h2>
+<ul>
 <li><p class="first">Many computations require parallelizing according to the computational steps instead of (or in addition to) parallelizing according to the data. When a computation has multiple processors carrying out different sequences of computational steps in order to accomplish its work, we say that computation has <em>task parallelism</em>.</p>
 <p>For example, imagine a computation that extracts certain elements from a body of text (e.g., proper names), then sorts those elements, and finally removing duplications. With multiple processors, one might program one processor to extract those elements, another to perform the sorting operation, and a third to remove the duplications. In effect, we have an assembly line of processes, also called a <em>pipeline</em> by computer scientists.</p>
 </li>
 <li><p class="first">Computer scientists have found other computations exceedingly difficult to parallelize effectively. Notably, nobody knows how to parallelize finite state machines (FSMs) well, as a general class of computations. [View from Berkeley 06, p.16]</p>
 </li>
-<li><p class="first">We can easily imagine how to construct a mathematical model of computation for simple data parallelism from a model of computation for the sequential case of that same computation, by replicating the sequential model. This approach seems promising as long as we can assume that those multiple parallel computations do not need to interact with each other in any way.</p>
-</li>
-<li><p class="first">However, more complicated forms of parallelism that involve multiple processes interacting in various ways, such as the task parallelism example of pipelining, requires a mathematical model of parallel computation capable of expressing those interactions between processes.</p>
-</li>
+</ul>
+</div>
+<div class="section" id="the-solution">
+<h2>The Solution<a class="headerlink" href="#the-solution" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li>We can easily imagine how to construct a mathematical model of computation for simple data parallelism from a model of computation for the sequential case of that same computation, by replicating the sequential model. This approach seems promising as long as we can assume that those multiple parallel computations do not need to interact with each other in any way.</li>
+<li>However, more complicated forms of parallelism that involve multiple processes interacting in various ways, such as the task parallelism example of pipelining, requires a mathematical model of parallel computation capable of expressing those interactions between processes.</li>
 </ul>
 <p>The <img class="math" src="../_images/math/f2ca003a7da0de4994b4733e203b74ff52d42553.png" alt="\pi"/>-calculus, introduced in the next section, is an example of such a model of parallel computation.</p>
+</div>
 </div>
 
 
@@ -96,6 +108,17 @@
             <p class="logo"><a href="../index.html">
               <img class="logo" src="../_static/CSInParallel200wide.png" alt="Logo"/>
             </a></p>
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Background</a><ul>
+<li><a class="reference internal" href="#history">History</a></li>
+<li><a class="reference internal" href="#the-push-to-parallelism">The Push to Parallelism</a></li>
+<li><a class="reference internal" href="#difficulties-with-parallelization">Difficulties with Parallelization</a></li>
+<li><a class="reference internal" href="#the-solution">The Solution</a></li>
+</ul>
+</li>
+</ul>
+
   <h4>Previous topic</h4>
   <p class="topless"><a href="../index.html"
                         title="previous chapter">A Theory of Parallel Computation</a></p>
