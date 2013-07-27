@@ -13,7 +13,7 @@
 
 
 \title{Parallel Patternlets}
-\date{January 21, 2013}
+\date{July 26, 2013}
 \release{}
 \author{CSinParallel Project}
 \newcommand{\sphinxlogo}{}
@@ -166,14 +166,22 @@ A C code file for each example below can be found in subdirectories of the MPI d
 along with a makefile and an example of how to execute the program.
 
 
-\subsection{0. Hello, World}
-\label{MessagePassing/MPI_Patternlets:hello-world}
-First let us illustrate the basic components of an MPI program.
+\subsection{0. Single Program, Multiple Data}
+\label{MessagePassing/MPI_Patternlets:single-program-multiple-data}
+First let us illustrate the basic components of an MPI program,
+which by its nature uses a single program that runs on each process.
+Note what gets printed is different for each process, thus the
+processes using this one single program can have different data values
+for its variables.  This is why we call it single program, multiple data.
 
 \begin{Verbatim}[commandchars=\\\{\}]
-\PYG{c+cm}{/* hello.c}
-\PYG{c+cm}{ * ... illustrates the use of the basic MPI commands...}
+\PYG{c+cm}{/* spmd.c}
+\PYG{c+cm}{ * ... illustrates the single program multiple data}
+\PYG{c+cm}{ *      (SPMD) pattern using basic MPI commands.}
+\PYG{c+cm}{ *}
 \PYG{c+cm}{ * Joel Adams, Calvin College, November 2009.}
+\PYG{c+cm}{ *}
+\PYG{c+cm}{ * Usage: mpirun -np 4 ./spmd}
 \PYG{c+cm}{ */}
 
 \PYG{c+cp}{\PYGZsh{}}\PYG{c+cp}{include \PYGZlt{}stdio.h\PYGZgt{}}
@@ -197,6 +205,8 @@ First let us illustrate the basic components of an MPI program.
 \PYG{p}{\PYGZcb{}}
 \end{Verbatim}
 
+\emph{file: patternlets/MPI/00.spmd/spmd.c}
+
 
 \subsection{1. The Master-Worker Implementation Strategy Pattern}
 \label{MessagePassing/MPI_Patternlets:the-master-worker-implementation-strategy-pattern}
@@ -218,10 +228,10 @@ First let us illustrate the basic components of an MPI program.
   \PYG{n}{MPI\PYGZus{}Comm\PYGZus{}size}\PYG{p}{(}\PYG{n}{MPI\PYGZus{}COMM\PYGZus{}WORLD}\PYG{p}{,} \PYG{o}{\PYGZam{}}\PYG{n}{numWorkers}\PYG{p}{)}\PYG{p}{;}
   \PYG{n}{MPI\PYGZus{}Get\PYGZus{}processor\PYGZus{}name} \PYG{p}{(}\PYG{n}{hostName}\PYG{p}{,} \PYG{o}{\PYGZam{}}\PYG{n}{length}\PYG{p}{)}\PYG{p}{;}
 
-  \PYG{k}{if} \PYG{p}{(} \PYG{n}{id} \PYG{o}{=}\PYG{o}{=} \PYG{l+m+mi}{0} \PYG{p}{)} \PYG{p}{\PYGZob{}}  \PYG{c+c1}{// process 0 is the master}
+  \PYG{k}{if} \PYG{p}{(} \PYG{n}{id} \PYG{o}{=}\PYG{o}{=} \PYG{l+m+mi}{0} \PYG{p}{)} \PYG{p}{\PYGZob{}}  \PYG{c+c1}{// process 0 is the master }
     \PYG{n}{printf}\PYG{p}{(}\PYG{l+s}{"}\PYG{l+s}{Greetings from the master, \PYGZsh{} \PYGZpc{}d (\PYGZpc{}s) of \PYGZpc{}d processes}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s}{"}\PYG{p}{,}
             \PYG{n}{id}\PYG{p}{,} \PYG{n}{hostName}\PYG{p}{,} \PYG{n}{numWorkers}\PYG{p}{)}\PYG{p}{;}
-  \PYG{p}{\PYGZcb{}} \PYG{k}{else} \PYG{p}{\PYGZob{}}          \PYG{c+c1}{// processes with ids \PYGZgt{} 0 are workers}
+  \PYG{p}{\PYGZcb{}} \PYG{k}{else} \PYG{p}{\PYGZob{}}          \PYG{c+c1}{// processes with ids \PYGZgt{} 0 are workers }
     \PYG{n}{printf}\PYG{p}{(}\PYG{l+s}{"}\PYG{l+s}{Greetings from a worker, \PYGZsh{} \PYGZpc{}d (\PYGZpc{}s) of \PYGZpc{}d processes}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s}{"}\PYG{p}{,}
             \PYG{n}{id}\PYG{p}{,} \PYG{n}{hostName}\PYG{p}{,} \PYG{n}{numWorkers}\PYG{p}{)}\PYG{p}{;}
   \PYG{p}{\PYGZcb{}}
@@ -231,11 +241,13 @@ First let us illustrate the basic components of an MPI program.
 \PYG{p}{\PYGZcb{}}
 \end{Verbatim}
 
+\emph{file: patternlets/MPI/01.masterWorker/masterWorker.c}
 
-\subsection{2. Send-Receive (basic message passing pattern)}
-\label{MessagePassing/MPI_Patternlets:send-receive-basic-message-passing-pattern}
+
+\subsection{2. Message passing 1, using Send-Receive of a single value}
+\label{MessagePassing/MPI_Patternlets:message-passing-1-using-send-receive-of-a-single-value}
 \begin{Verbatim}[commandchars=\\\{\}]
-\PYG{c+cm}{/* sendRecv.c}
+\PYG{c+cm}{/* messagePassing.c}
 \PYG{c+cm}{ * ... illustrates the use of the MPI\PYGZus{}Send() and MPI\PYGZus{}Recv() commands...}
 \PYG{c+cm}{ * Joel Adams, Calvin College, November 2009.}
 \PYG{c+cm}{ */}
@@ -247,41 +259,125 @@ First let us illustrate the basic components of an MPI program.
 \PYG{k+kt}{int} \PYG{n+nf}{odd}\PYG{p}{(}\PYG{k+kt}{int} \PYG{n}{number}\PYG{p}{)} \PYG{p}{\PYGZob{}} \PYG{k}{return} \PYG{n}{number} \PYG{o}{\PYGZpc{}} \PYG{l+m+mi}{2}\PYG{p}{;} \PYG{p}{\PYGZcb{}}
 
 \PYG{k+kt}{int} \PYG{n+nf}{main}\PYG{p}{(}\PYG{k+kt}{int} \PYG{n}{argc}\PYG{p}{,} \PYG{k+kt}{char}\PYG{o}{*}\PYG{o}{*} \PYG{n}{argv}\PYG{p}{)} \PYG{p}{\PYGZob{}}
-	\PYG{k+kt}{int} \PYG{n}{id} \PYG{o}{=} \PYG{o}{-}\PYG{l+m+mi}{1}\PYG{p}{,} \PYG{n}{numProcesses} \PYG{o}{=} \PYG{o}{-}\PYG{l+m+mi}{1}\PYG{p}{;} 
-	\PYG{k+kt}{float} \PYG{n}{sendValue} \PYG{o}{=} \PYG{o}{-}\PYG{l+m+mi}{1}\PYG{p}{,} \PYG{n}{receivedValue} \PYG{o}{=} \PYG{o}{-}\PYG{l+m+mi}{1}\PYG{p}{;}
-	\PYG{n}{MPI\PYGZus{}Status} \PYG{n}{status}\PYG{p}{;}
+    \PYG{k+kt}{int} \PYG{n}{id} \PYG{o}{=} \PYG{o}{-}\PYG{l+m+mi}{1}\PYG{p}{,} \PYG{n}{numProcesses} \PYG{o}{=} \PYG{o}{-}\PYG{l+m+mi}{1}\PYG{p}{;} 
+    \PYG{k+kt}{float} \PYG{n}{sendValue} \PYG{o}{=} \PYG{o}{-}\PYG{l+m+mi}{1}\PYG{p}{,} \PYG{n}{receivedValue} \PYG{o}{=} \PYG{o}{-}\PYG{l+m+mi}{1}\PYG{p}{;}
+    \PYG{n}{MPI\PYGZus{}Status} \PYG{n}{status}\PYG{p}{;}
 
-	\PYG{n}{MPI\PYGZus{}Init}\PYG{p}{(}\PYG{o}{\PYGZam{}}\PYG{n}{argc}\PYG{p}{,} \PYG{o}{\PYGZam{}}\PYG{n}{argv}\PYG{p}{)}\PYG{p}{;}
-	\PYG{n}{MPI\PYGZus{}Comm\PYGZus{}rank}\PYG{p}{(}\PYG{n}{MPI\PYGZus{}COMM\PYGZus{}WORLD}\PYG{p}{,} \PYG{o}{\PYGZam{}}\PYG{n}{id}\PYG{p}{)}\PYG{p}{;}
-	\PYG{n}{MPI\PYGZus{}Comm\PYGZus{}size}\PYG{p}{(}\PYG{n}{MPI\PYGZus{}COMM\PYGZus{}WORLD}\PYG{p}{,} \PYG{o}{\PYGZam{}}\PYG{n}{numProcesses}\PYG{p}{)}\PYG{p}{;}
+    \PYG{n}{MPI\PYGZus{}Init}\PYG{p}{(}\PYG{o}{\PYGZam{}}\PYG{n}{argc}\PYG{p}{,} \PYG{o}{\PYGZam{}}\PYG{n}{argv}\PYG{p}{)}\PYG{p}{;}
+    \PYG{n}{MPI\PYGZus{}Comm\PYGZus{}rank}\PYG{p}{(}\PYG{n}{MPI\PYGZus{}COMM\PYGZus{}WORLD}\PYG{p}{,} \PYG{o}{\PYGZam{}}\PYG{n}{id}\PYG{p}{)}\PYG{p}{;}
+    \PYG{n}{MPI\PYGZus{}Comm\PYGZus{}size}\PYG{p}{(}\PYG{n}{MPI\PYGZus{}COMM\PYGZus{}WORLD}\PYG{p}{,} \PYG{o}{\PYGZam{}}\PYG{n}{numProcesses}\PYG{p}{)}\PYG{p}{;}
 
-	\PYG{k}{if} \PYG{p}{(}\PYG{n}{numProcesses} \PYG{o}{\PYGZgt{}} \PYG{l+m+mi}{1} \PYG{o}{\PYGZam{}}\PYG{o}{\PYGZam{}} \PYG{o}{!}\PYG{n}{odd}\PYG{p}{(}\PYG{n}{numProcesses}\PYG{p}{)} \PYG{p}{)} \PYG{p}{\PYGZob{}}
-		\PYG{n}{sendValue} \PYG{o}{=} \PYG{n}{sqrt}\PYG{p}{(}\PYG{n}{id}\PYG{p}{)}\PYG{p}{;}
-		\PYG{k}{if} \PYG{p}{(} \PYG{n}{odd}\PYG{p}{(}\PYG{n}{id}\PYG{p}{)} \PYG{p}{)} \PYG{p}{\PYGZob{}}  \PYG{c+c1}{// odd processors send, then receive }
-			\PYG{n}{MPI\PYGZus{}Send}\PYG{p}{(}\PYG{o}{\PYGZam{}}\PYG{n}{sendValue}\PYG{p}{,} \PYG{l+m+mi}{1}\PYG{p}{,} \PYG{n}{MPI\PYGZus{}FLOAT}\PYG{p}{,} \PYG{n}{id}\PYG{o}{-}\PYG{l+m+mi}{1}\PYG{p}{,} \PYG{l+m+mi}{1}\PYG{p}{,} \PYG{n}{MPI\PYGZus{}COMM\PYGZus{}WORLD}\PYG{p}{)}\PYG{p}{;}
-			\PYG{n}{MPI\PYGZus{}Recv}\PYG{p}{(}\PYG{o}{\PYGZam{}}\PYG{n}{receivedValue}\PYG{p}{,} \PYG{l+m+mi}{1}\PYG{p}{,} \PYG{n}{MPI\PYGZus{}FLOAT}\PYG{p}{,} \PYG{n}{id}\PYG{o}{-}\PYG{l+m+mi}{1}\PYG{p}{,} \PYG{l+m+mi}{2}\PYG{p}{,} 
-					\PYG{n}{MPI\PYGZus{}COMM\PYGZus{}WORLD}\PYG{p}{,} \PYG{o}{\PYGZam{}}\PYG{n}{status}\PYG{p}{)}\PYG{p}{;}
-		\PYG{p}{\PYGZcb{}} \PYG{k}{else} \PYG{p}{\PYGZob{}}          \PYG{c+c1}{// even processors receive, then send}
-			\PYG{n}{MPI\PYGZus{}Recv}\PYG{p}{(}\PYG{o}{\PYGZam{}}\PYG{n}{receivedValue}\PYG{p}{,} \PYG{l+m+mi}{1}\PYG{p}{,} \PYG{n}{MPI\PYGZus{}FLOAT}\PYG{p}{,} \PYG{n}{id}\PYG{o}{+}\PYG{l+m+mi}{1}\PYG{p}{,} \PYG{l+m+mi}{1}\PYG{p}{,} 
-					\PYG{n}{MPI\PYGZus{}COMM\PYGZus{}WORLD}\PYG{p}{,} \PYG{o}{\PYGZam{}}\PYG{n}{status}\PYG{p}{)}\PYG{p}{;}
-			\PYG{n}{MPI\PYGZus{}Send}\PYG{p}{(}\PYG{o}{\PYGZam{}}\PYG{n}{sendValue}\PYG{p}{,} \PYG{l+m+mi}{1}\PYG{p}{,} \PYG{n}{MPI\PYGZus{}FLOAT}\PYG{p}{,} \PYG{n}{id}\PYG{o}{+}\PYG{l+m+mi}{1}\PYG{p}{,} \PYG{l+m+mi}{2}\PYG{p}{,} \PYG{n}{MPI\PYGZus{}COMM\PYGZus{}WORLD}\PYG{p}{)}\PYG{p}{;}
-		\PYG{p}{\PYGZcb{}}
+    \PYG{k}{if} \PYG{p}{(}\PYG{n}{numProcesses} \PYG{o}{\PYGZgt{}} \PYG{l+m+mi}{1} \PYG{o}{\PYGZam{}}\PYG{o}{\PYGZam{}} \PYG{o}{!}\PYG{n}{odd}\PYG{p}{(}\PYG{n}{numProcesses}\PYG{p}{)} \PYG{p}{)} \PYG{p}{\PYGZob{}}
+        \PYG{n}{sendValue} \PYG{o}{=} \PYG{n}{sqrt}\PYG{p}{(}\PYG{n}{id}\PYG{p}{)}\PYG{p}{;}
+        \PYG{k}{if} \PYG{p}{(} \PYG{n}{odd}\PYG{p}{(}\PYG{n}{id}\PYG{p}{)} \PYG{p}{)} \PYG{p}{\PYGZob{}}  \PYG{c+c1}{// odd processors send, then receive }
+            \PYG{n}{MPI\PYGZus{}Send}\PYG{p}{(}\PYG{o}{\PYGZam{}}\PYG{n}{sendValue}\PYG{p}{,} \PYG{l+m+mi}{1}\PYG{p}{,} \PYG{n}{MPI\PYGZus{}FLOAT}\PYG{p}{,} \PYG{n}{id}\PYG{o}{-}\PYG{l+m+mi}{1}\PYG{p}{,} \PYG{l+m+mi}{1}\PYG{p}{,} \PYG{n}{MPI\PYGZus{}COMM\PYGZus{}WORLD}\PYG{p}{)}\PYG{p}{;}
+            \PYG{n}{MPI\PYGZus{}Recv}\PYG{p}{(}\PYG{o}{\PYGZam{}}\PYG{n}{receivedValue}\PYG{p}{,} \PYG{l+m+mi}{1}\PYG{p}{,} \PYG{n}{MPI\PYGZus{}FLOAT}\PYG{p}{,} \PYG{n}{id}\PYG{o}{-}\PYG{l+m+mi}{1}\PYG{p}{,} \PYG{l+m+mi}{2}\PYG{p}{,} 
+                       \PYG{n}{MPI\PYGZus{}COMM\PYGZus{}WORLD}\PYG{p}{,} \PYG{o}{\PYGZam{}}\PYG{n}{status}\PYG{p}{)}\PYG{p}{;}
+        \PYG{p}{\PYGZcb{}} \PYG{k}{else} \PYG{p}{\PYGZob{}}          \PYG{c+c1}{// even processors receive, then send }
+            \PYG{n}{MPI\PYGZus{}Recv}\PYG{p}{(}\PYG{o}{\PYGZam{}}\PYG{n}{receivedValue}\PYG{p}{,} \PYG{l+m+mi}{1}\PYG{p}{,} \PYG{n}{MPI\PYGZus{}FLOAT}\PYG{p}{,} \PYG{n}{id}\PYG{o}{+}\PYG{l+m+mi}{1}\PYG{p}{,} \PYG{l+m+mi}{1}\PYG{p}{,} 
+                       \PYG{n}{MPI\PYGZus{}COMM\PYGZus{}WORLD}\PYG{p}{,} \PYG{o}{\PYGZam{}}\PYG{n}{status}\PYG{p}{)}\PYG{p}{;}
+            \PYG{n}{MPI\PYGZus{}Send}\PYG{p}{(}\PYG{o}{\PYGZam{}}\PYG{n}{sendValue}\PYG{p}{,} \PYG{l+m+mi}{1}\PYG{p}{,} \PYG{n}{MPI\PYGZus{}FLOAT}\PYG{p}{,} \PYG{n}{id}\PYG{o}{+}\PYG{l+m+mi}{1}\PYG{p}{,} \PYG{l+m+mi}{2}\PYG{p}{,} \PYG{n}{MPI\PYGZus{}COMM\PYGZus{}WORLD}\PYG{p}{)}\PYG{p}{;}
+        \PYG{p}{\PYGZcb{}}
 
-		\PYG{n}{printf}\PYG{p}{(}\PYG{l+s}{"}\PYG{l+s}{Process \PYGZpc{}d of \PYGZpc{}d computed \PYGZpc{}f and received \PYGZpc{}f}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s}{"}\PYG{p}{,}
-			\PYG{n}{id}\PYG{p}{,} \PYG{n}{numProcesses}\PYG{p}{,} \PYG{n}{sendValue}\PYG{p}{,} \PYG{n}{receivedValue}\PYG{p}{)}\PYG{p}{;}
-	\PYG{p}{\PYGZcb{}} \PYG{k}{else} \PYG{k}{if} \PYG{p}{(} \PYG{o}{!}\PYG{n}{id}\PYG{p}{)} \PYG{p}{\PYGZob{}}  \PYG{c+c1}{// only process 0 does this part}
-		\PYG{n}{printf}\PYG{p}{(}\PYG{l+s}{"}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s}{Please run this program using -np N where N is positive and even.}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s}{"}\PYG{p}{)}\PYG{p}{;}
-	\PYG{p}{\PYGZcb{}}
+        \PYG{n}{printf}\PYG{p}{(}\PYG{l+s}{"}\PYG{l+s}{Process \PYGZpc{}d of \PYGZpc{}d computed \PYGZpc{}f and received \PYGZpc{}f}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s}{"}\PYG{p}{,}
+                \PYG{n}{id}\PYG{p}{,} \PYG{n}{numProcesses}\PYG{p}{,} \PYG{n}{sendValue}\PYG{p}{,} \PYG{n}{receivedValue}\PYG{p}{)}\PYG{p}{;}
+    \PYG{p}{\PYGZcb{}} \PYG{k}{else} \PYG{k}{if} \PYG{p}{(} \PYG{o}{!}\PYG{n}{id}\PYG{p}{)} \PYG{p}{\PYGZob{}}  \PYG{c+c1}{// only process 0 does this part }
+        \PYG{n}{printf}\PYG{p}{(}\PYG{l+s}{"}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s}{Please run this program using -np N where N is positive and even.}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s}{"}\PYG{p}{)}\PYG{p}{;}
+    \PYG{p}{\PYGZcb{}}
 
-	\PYG{n}{MPI\PYGZus{}Finalize}\PYG{p}{(}\PYG{p}{)}\PYG{p}{;}
-	\PYG{k}{return} \PYG{l+m+mi}{0}\PYG{p}{;}
+    \PYG{n}{MPI\PYGZus{}Finalize}\PYG{p}{(}\PYG{p}{)}\PYG{p}{;}
+    \PYG{k}{return} \PYG{l+m+mi}{0}\PYG{p}{;}
 \PYG{p}{\PYGZcb{}}
 \end{Verbatim}
 
+\emph{file: patternlets/MPI/02.messagePassing/messagePassing.c}
 
-\subsection{3. Data Decomposition: on \emph{slices} using parallel-for}
-\label{MessagePassing/MPI_Patternlets:data-decomposition-on-slices-using-parallel-for}
-In this example, the data being decomposed in simply the set of integeres from zero to 15, inclusive.
+
+\subsection{3. Message passing 2,  using Send-Receive of an array of values}
+\label{MessagePassing/MPI_Patternlets:message-passing-2-using-send-receive-of-an-array-of-values}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{c+cm}{/* messagePassing2.c}
+\PYG{c+cm}{ * ... illustrates the use of the MPI\PYGZus{}Send() and MPI\PYGZus{}Recv() commands...}
+\PYG{c+cm}{ *}
+\PYG{c+cm}{ * Joel Adams, Calvin College, November 2009.}
+\PYG{c+cm}{ *}
+\PYG{c+cm}{ * Usage: mpirun -np N ./messagePassing2}
+\PYG{c+cm}{ *}
+\PYG{c+cm}{ * Exercise: Run the program, varying the value of N from 1-8.}
+\PYG{c+cm}{ */}
+
+\PYG{c+cp}{\PYGZsh{}}\PYG{c+cp}{include \PYGZlt{}stdio.h\PYGZgt{}    }\PYG{c+c1}{// printf()}
+\PYG{c+cp}{\PYGZsh{}}\PYG{c+cp}{include \PYGZlt{}string.h\PYGZgt{}   }\PYG{c+c1}{// strlen()}
+\PYG{c+cp}{\PYGZsh{}}\PYG{c+cp}{include \PYGZlt{}mpi.h\PYGZgt{}      }\PYG{c+c1}{// MPI}
+
+\PYG{c+cp}{\PYGZsh{}}\PYG{c+cp}{define MAX 256}
+
+\PYG{k+kt}{int} \PYG{n+nf}{main}\PYG{p}{(}\PYG{k+kt}{int} \PYG{n}{argc}\PYG{p}{,} \PYG{k+kt}{char}\PYG{o}{*}\PYG{o}{*} \PYG{n}{argv}\PYG{p}{)} \PYG{p}{\PYGZob{}}
+    \PYG{k+kt}{int} \PYG{n}{id} \PYG{o}{=} \PYG{o}{-}\PYG{l+m+mi}{1}\PYG{p}{,} \PYG{n}{numProcesses} \PYG{o}{=} \PYG{o}{-}\PYG{l+m+mi}{1}\PYG{p}{;} 
+    \PYG{k+kt}{char} \PYG{n}{sendBuffer}\PYG{p}{[}\PYG{n}{MAX}\PYG{p}{]} \PYG{o}{=} \PYG{p}{\PYGZob{}}\PYG{l+s+sc}{'\PYGZbs{}0'}\PYG{p}{\PYGZcb{}}\PYG{p}{;}
+    \PYG{k+kt}{char} \PYG{n}{recvBuffer}\PYG{p}{[}\PYG{n}{MAX}\PYG{p}{]} \PYG{o}{=} \PYG{p}{\PYGZob{}}\PYG{l+s+sc}{'\PYGZbs{}0'}\PYG{p}{\PYGZcb{}}\PYG{p}{;}
+    \PYG{n}{MPI\PYGZus{}Status} \PYG{n}{status}\PYG{p}{;}
+
+    \PYG{n}{MPI\PYGZus{}Init}\PYG{p}{(}\PYG{o}{\PYGZam{}}\PYG{n}{argc}\PYG{p}{,} \PYG{o}{\PYGZam{}}\PYG{n}{argv}\PYG{p}{)}\PYG{p}{;}
+    \PYG{n}{MPI\PYGZus{}Comm\PYGZus{}rank}\PYG{p}{(}\PYG{n}{MPI\PYGZus{}COMM\PYGZus{}WORLD}\PYG{p}{,} \PYG{o}{\PYGZam{}}\PYG{n}{id}\PYG{p}{)}\PYG{p}{;}
+    \PYG{n}{MPI\PYGZus{}Comm\PYGZus{}size}\PYG{p}{(}\PYG{n}{MPI\PYGZus{}COMM\PYGZus{}WORLD}\PYG{p}{,} \PYG{o}{\PYGZam{}}\PYG{n}{numProcesses}\PYG{p}{)}\PYG{p}{;}
+
+    \PYG{k}{if} \PYG{p}{(}\PYG{n}{numProcesses} \PYG{o}{\PYGZgt{}} \PYG{l+m+mi}{1}\PYG{p}{)} \PYG{p}{\PYGZob{}}
+        \PYG{k}{if} \PYG{p}{(} \PYG{n}{id} \PYG{o}{=}\PYG{o}{=} \PYG{l+m+mi}{0} \PYG{p}{)} \PYG{p}{\PYGZob{}}
+            \PYG{n}{sprintf}\PYG{p}{(}\PYG{n}{sendBuffer}\PYG{p}{,} \PYG{l+s}{"}\PYG{l+s}{\PYGZpc{}d}\PYG{l+s}{"}\PYG{p}{,} \PYG{n}{id}\PYG{p}{)}\PYG{p}{;}    \PYG{c+c1}{// create msg}
+
+            \PYG{n}{MPI\PYGZus{}Send}\PYG{p}{(}\PYG{n}{sendBuffer}\PYG{p}{,}              \PYG{c+c1}{// msg sent}
+                      \PYG{n}{strlen}\PYG{p}{(}\PYG{n}{sendBuffer}\PYG{p}{)} \PYG{o}{+} \PYG{l+m+mi}{1}\PYG{p}{,} \PYG{c+c1}{// num chars + NULL}
+                      \PYG{n}{MPI\PYGZus{}CHAR}\PYG{p}{,}               \PYG{c+c1}{// type}
+                      \PYG{n}{id}\PYG{o}{+}\PYG{l+m+mi}{1}\PYG{p}{,}                   \PYG{c+c1}{// destination}
+                      \PYG{l+m+mi}{1}\PYG{p}{,}                      \PYG{c+c1}{// tag}
+                      \PYG{n}{MPI\PYGZus{}COMM\PYGZus{}WORLD}\PYG{p}{)}\PYG{p}{;}        \PYG{c+c1}{// communicator}
+
+            \PYG{n}{MPI\PYGZus{}Recv}\PYG{p}{(}\PYG{n}{recvBuffer}\PYG{p}{,}              \PYG{c+c1}{// msg received}
+                      \PYG{n}{MAX}\PYG{p}{,}                    \PYG{c+c1}{// buffer size}
+                      \PYG{n}{MPI\PYGZus{}CHAR}\PYG{p}{,}               \PYG{c+c1}{// type}
+                      \PYG{n}{numProcesses}\PYG{o}{-}\PYG{l+m+mi}{1}\PYG{p}{,}         \PYG{c+c1}{// sender}
+                      \PYG{l+m+mi}{1}\PYG{p}{,}                      \PYG{c+c1}{// tag}
+                      \PYG{n}{MPI\PYGZus{}COMM\PYGZus{}WORLD}\PYG{p}{,}         \PYG{c+c1}{// communicator}
+                      \PYG{o}{\PYGZam{}}\PYG{n}{status}\PYG{p}{)}\PYG{p}{;}               \PYG{c+c1}{// recv status}
+        \PYG{p}{\PYGZcb{}} \PYG{k}{else} \PYG{p}{\PYGZob{}} 
+            \PYG{n}{MPI\PYGZus{}Recv}\PYG{p}{(}\PYG{n}{recvBuffer}\PYG{p}{,}              \PYG{c+c1}{// msg received}
+                      \PYG{n}{MAX}\PYG{p}{,}                    \PYG{c+c1}{// buffer size}
+                      \PYG{n}{MPI\PYGZus{}CHAR}\PYG{p}{,}               \PYG{c+c1}{// type}
+                      \PYG{n}{MPI\PYGZus{}ANY\PYGZus{}SOURCE}\PYG{p}{,}         \PYG{c+c1}{// sender (anyone)}
+                      \PYG{l+m+mi}{1}\PYG{p}{,}                      \PYG{c+c1}{// tag}
+                      \PYG{n}{MPI\PYGZus{}COMM\PYGZus{}WORLD}\PYG{p}{,}         \PYG{c+c1}{// communicator}
+                      \PYG{o}{\PYGZam{}}\PYG{n}{status}\PYG{p}{)}\PYG{p}{;}               \PYG{c+c1}{// recv status}
+
+            \PYG{c+c1}{// build msg to send by appending id to msg received}
+            \PYG{n}{sprintf}\PYG{p}{(}\PYG{n}{sendBuffer}\PYG{p}{,} \PYG{l+s}{"}\PYG{l+s}{\PYGZpc{}s \PYGZpc{}d}\PYG{l+s}{"}\PYG{p}{,} \PYG{n}{recvBuffer}\PYG{p}{,} \PYG{n}{id}\PYG{p}{)}\PYG{p}{;}
+
+            \PYG{n}{MPI\PYGZus{}Send}\PYG{p}{(}\PYG{n}{sendBuffer}\PYG{p}{,}              \PYG{c+c1}{// msg to send}
+                      \PYG{n}{strlen}\PYG{p}{(}\PYG{n}{sendBuffer}\PYG{p}{)} \PYG{o}{+} \PYG{l+m+mi}{1}\PYG{p}{,} \PYG{c+c1}{// num chars + NULL}
+                      \PYG{n}{MPI\PYGZus{}CHAR}\PYG{p}{,}               \PYG{c+c1}{// type}
+                      \PYG{p}{(}\PYG{n}{id}\PYG{o}{+}\PYG{l+m+mi}{1}\PYG{p}{)} \PYG{o}{\PYGZpc{}} \PYG{n}{numProcesses}\PYG{p}{,}  \PYG{c+c1}{// destination}
+                      \PYG{l+m+mi}{1}\PYG{p}{,}                      \PYG{c+c1}{// tag}
+                      \PYG{n}{MPI\PYGZus{}COMM\PYGZus{}WORLD}\PYG{p}{)}\PYG{p}{;}        \PYG{c+c1}{// communicator}
+        \PYG{p}{\PYGZcb{}}
+
+        \PYG{n}{printf}\PYG{p}{(}\PYG{l+s}{"}\PYG{l+s}{Process \PYGZpc{}d of \PYGZpc{}d received \PYGZpc{}s}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s}{"}\PYG{p}{,}
+                \PYG{n}{id}\PYG{p}{,} \PYG{n}{numProcesses}\PYG{p}{,} \PYG{n}{recvBuffer}\PYG{p}{)}\PYG{p}{;}
+    \PYG{p}{\PYGZcb{}} \PYG{k}{else} \PYG{p}{\PYGZob{}}
+        \PYG{n}{printf}\PYG{p}{(}\PYG{l+s}{"}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s}{Please run this program with at least 2 processes}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s}{"}\PYG{p}{)}\PYG{p}{;}
+    \PYG{p}{\PYGZcb{}}
+
+    \PYG{n}{MPI\PYGZus{}Finalize}\PYG{p}{(}\PYG{p}{)}\PYG{p}{;}
+    \PYG{k}{return} \PYG{l+m+mi}{0}\PYG{p}{;}
+\PYG{p}{\PYGZcb{}}
+\end{Verbatim}
+
+\emph{file: patternlets/MPI/03.messagePassing2/messagePassing2.c}
+
+
+\subsection{4. A. Data Decomposition: on \emph{slices} using parallel-for (textual version)}
+\label{MessagePassing/MPI_Patternlets:a-data-decomposition-on-slices-using-parallel-for-textual-version}
+In this example, the data being decomposed is simply the set of integers
+from zero to REPS * numProcesses, which are used in the for loop.
 
 \begin{Verbatim}[commandchars=\\\{\}]
 \PYG{c+cm}{/* parallelForSlices.c}
@@ -296,14 +392,14 @@ In this example, the data being decomposed in simply the set of integeres from z
 \PYG{c+cp}{\PYGZsh{}}\PYG{c+cp}{include \PYGZlt{}mpi.h\PYGZgt{}}
 
 \PYG{k+kt}{int} \PYG{n+nf}{main}\PYG{p}{(}\PYG{k+kt}{int} \PYG{n}{argc}\PYG{p}{,} \PYG{k+kt}{char}\PYG{o}{*}\PYG{o}{*} \PYG{n}{argv}\PYG{p}{)} \PYG{p}{\PYGZob{}}
-	\PYG{k}{const} \PYG{k+kt}{int} \PYG{n}{ITERS} \PYG{o}{=} \PYG{l+m+mi}{16}\PYG{p}{;}
+	\PYG{k}{const} \PYG{k+kt}{int} \PYG{n}{REPS} \PYG{o}{=} \PYG{l+m+mi}{8}\PYG{p}{;}
 	\PYG{k+kt}{int} \PYG{n}{id} \PYG{o}{=} \PYG{o}{-}\PYG{l+m+mi}{1}\PYG{p}{,} \PYG{n}{numProcesses} \PYG{o}{=} \PYG{o}{-}\PYG{l+m+mi}{1}\PYG{p}{,} \PYG{n}{i} \PYG{o}{=} \PYG{o}{-}\PYG{l+m+mi}{1}\PYG{p}{;}
 
 	\PYG{n}{MPI\PYGZus{}Init}\PYG{p}{(}\PYG{o}{\PYGZam{}}\PYG{n}{argc}\PYG{p}{,} \PYG{o}{\PYGZam{}}\PYG{n}{argv}\PYG{p}{)}\PYG{p}{;}
 	\PYG{n}{MPI\PYGZus{}Comm\PYGZus{}rank}\PYG{p}{(}\PYG{n}{MPI\PYGZus{}COMM\PYGZus{}WORLD}\PYG{p}{,} \PYG{o}{\PYGZam{}}\PYG{n}{id}\PYG{p}{)}\PYG{p}{;}
 	\PYG{n}{MPI\PYGZus{}Comm\PYGZus{}size}\PYG{p}{(}\PYG{n}{MPI\PYGZus{}COMM\PYGZus{}WORLD}\PYG{p}{,} \PYG{o}{\PYGZam{}}\PYG{n}{numProcesses}\PYG{p}{)}\PYG{p}{;}
 
-	\PYG{k}{for} \PYG{p}{(}\PYG{n}{i} \PYG{o}{=} \PYG{n}{id}\PYG{p}{;} \PYG{n}{i} \PYG{o}{\PYGZlt{}} \PYG{n}{ITERS}\PYG{p}{;} \PYG{n}{i} \PYG{o}{+}\PYG{o}{=} \PYG{n}{numProcesses}\PYG{p}{)} \PYG{p}{\PYGZob{}}
+	\PYG{k}{for} \PYG{p}{(}\PYG{n}{i} \PYG{o}{=} \PYG{n}{id}\PYG{p}{;} \PYG{n}{i} \PYG{o}{\PYGZlt{}} \PYG{n}{REPS}\PYG{p}{;} \PYG{n}{i} \PYG{o}{+}\PYG{o}{=} \PYG{n}{numProcesses}\PYG{p}{)} \PYG{p}{\PYGZob{}}
 		\PYG{n}{printf}\PYG{p}{(}\PYG{l+s}{"}\PYG{l+s}{Process \PYGZpc{}d is performing iteration \PYGZpc{}d}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s}{"}\PYG{p}{,}
 			\PYG{n}{id}\PYG{p}{,} \PYG{n}{i}\PYG{p}{)}\PYG{p}{;}
 	\PYG{p}{\PYGZcb{}}
@@ -313,9 +409,114 @@ In this example, the data being decomposed in simply the set of integeres from z
 \PYG{p}{\PYGZcb{}}
 \end{Verbatim}
 
+\emph{file: patternlets/MPI/04.parallelForLoop-slices/textual/parallelForSlices.c}
 
-\subsection{4. Data Decomposition: on \emph{blocks} using parallel-for}
-\label{MessagePassing/MPI_Patternlets:data-decomposition-on-blocks-using-parallel-for}
+
+\subsection{4. B. Data Decomposition: on \emph{slices} using parallel-for (visual version)}
+\label{MessagePassing/MPI_Patternlets:b-data-decomposition-on-slices-using-parallel-for-visual-version}
+In this example, we can visually see how the slicing of data used in iterations
+of a nested for loop is working.  Run it to see the effect!
+
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{c+cm}{/* parallelForStripes.c is a graphical illustration of}
+\PYG{c+cm}{ *  the 'slicing' version of the parallel for loop design pattern,}
+\PYG{c+cm}{ *  using Argonne Labs' MPE graphics library for X11 systems.}
+\PYG{c+cm}{ *}
+\PYG{c+cm}{ * Summer 2013, Joel Adams, Calvin College.}
+\PYG{c+cm}{ *}
+\PYG{c+cm}{ * Usage: mpirun -np N ./parallelForStripes}
+\PYG{c+cm}{ *        Click the mouse in the window to terminate the program.}
+\PYG{c+cm}{ *        You must have an X11 server running.}
+\PYG{c+cm}{ *}
+\PYG{c+cm}{ * Exercise: Run the program, varying N from 1 - 32,  like this: 1, 2, 4, 8, 16, 24, 32}
+\PYG{c+cm}{ *            and compare to the 'Blocks' version...}
+\PYG{c+cm}{ */}
+
+\PYG{c+cp}{\PYGZsh{}}\PYG{c+cp}{include \PYGZlt{}mpi.h\PYGZgt{}     }\PYG{c+c1}{// MPI}
+\PYG{c+cp}{\PYGZsh{}}\PYG{c+cp}{include \PYGZlt{}mpe.h\PYGZgt{}     }\PYG{c+c1}{// MPE}
+\PYG{c+cp}{\PYGZsh{}}\PYG{c+cp}{include \PYGZlt{}stdlib.h\PYGZgt{}  }\PYG{c+c1}{// getenv()}
+\PYG{c+cp}{\PYGZsh{}}\PYG{c+cp}{include \PYGZlt{}string.h\PYGZgt{}  }\PYG{c+c1}{// strcmp()}
+\PYG{c+cp}{\PYGZsh{}}\PYG{c+cp}{include \PYGZlt{}stdio.h\PYGZgt{}   }\PYG{c+c1}{// printf(), etc.}
+\PYG{c+cp}{\PYGZsh{}}\PYG{c+cp}{include \PYGZlt{}unistd.h\PYGZgt{}  }\PYG{c+c1}{// usleep}
+
+\PYG{c+cm}{/* }
+\PYG{c+cm}{ * getDisplay() retrieves the DISPLAY environment info}
+\PYG{c+cm}{ */}
+
+\PYG{k+kt}{char}\PYG{o}{*} \PYG{n+nf}{getDisplay}\PYG{p}{(}\PYG{p}{)} \PYG{p}{\PYGZob{}}
+	\PYG{k+kt}{char} \PYG{o}{*} \PYG{n}{display} \PYG{o}{=} \PYG{n}{getenv}\PYG{p}{(}\PYG{l+s}{"}\PYG{l+s}{DISPLAY}\PYG{l+s}{"}\PYG{p}{)}\PYG{p}{;}
+	\PYG{k}{if} \PYG{p}{(} \PYG{n}{strncmp}\PYG{p}{(}\PYG{n}{display}\PYG{p}{,} \PYG{l+s}{"}\PYG{l+s}{(null)}\PYG{l+s}{"}\PYG{p}{,} \PYG{l+m+mi}{7}\PYG{p}{)} \PYG{o}{=}\PYG{o}{=} \PYG{l+m+mi}{0} \PYG{p}{)} \PYG{p}{\PYGZob{}}
+		\PYG{n}{fprintf}\PYG{p}{(}\PYG{n}{stderr}\PYG{p}{,} \PYG{l+s}{"}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s}{*** Fatal: DISPLAY variable not set.}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s}{"}\PYG{p}{)}\PYG{p}{;}
+		\PYG{n}{exit}\PYG{p}{(}\PYG{l+m+mi}{1}\PYG{p}{)}\PYG{p}{;}
+	\PYG{p}{\PYGZcb{}}
+	\PYG{k}{return} \PYG{n}{display}\PYG{p}{;}
+\PYG{p}{\PYGZcb{}}
+
+
+\PYG{k+kt}{int} \PYG{n+nf}{main}\PYG{p}{(}\PYG{k+kt}{int} \PYG{n}{argc}\PYG{p}{,} \PYG{k+kt}{char}\PYG{o}{*} \PYG{n}{argv}\PYG{p}{[}\PYG{p}{]}\PYG{p}{)} \PYG{p}{\PYGZob{}}
+    \PYG{k}{const} \PYG{k+kt}{int}  \PYG{n}{WINDOW\PYGZus{}WIDTH} \PYG{o}{=} \PYG{l+m+mi}{800}\PYG{p}{;}
+    \PYG{k}{const} \PYG{k+kt}{int}  \PYG{n}{WINDOW\PYGZus{}HEIGHT} \PYG{o}{=} \PYG{l+m+mi}{512}\PYG{p}{;}
+    \PYG{k+kt}{int}        \PYG{n}{x} \PYG{o}{=} \PYG{l+m+mi}{0}\PYG{p}{,} \PYG{n}{y} \PYG{o}{=} \PYG{l+m+mi}{0}\PYG{p}{;}
+    \PYG{k+kt}{int}        \PYG{n}{id} \PYG{o}{=} \PYG{o}{-}\PYG{l+m+mi}{1}\PYG{p}{,} \PYG{n}{numProcesses} \PYG{o}{=} \PYG{o}{-}\PYG{l+m+mi}{1}\PYG{p}{;}
+    \PYG{k+kt}{int}        \PYG{n}{button} \PYG{o}{=} \PYG{o}{-}\PYG{l+m+mi}{1}\PYG{p}{;}
+    \PYG{k+kt}{int}        \PYG{n}{square\PYGZus{}width} \PYG{o}{=} \PYG{l+m+mi}{4}\PYG{p}{;}
+    \PYG{n}{MPE\PYGZus{}XGraph} \PYG{n}{canvas}\PYG{p}{;}
+    \PYG{n}{MPE\PYGZus{}Color} \PYG{o}{*}\PYG{n}{colors} \PYG{o}{=} \PYG{n+nb}{NULL}\PYG{p}{;}
+    \PYG{n}{MPE\PYGZus{}Color}  \PYG{n}{myColor} \PYG{o}{=} \PYG{l+m+mi}{0}\PYG{p}{;}
+
+    \PYG{c+c1}{// initialize environment, variables, etc.}
+    \PYG{n}{MPI\PYGZus{}Init}\PYG{p}{(}\PYG{o}{\PYGZam{}}\PYG{n}{argc}\PYG{p}{,}\PYG{o}{\PYGZam{}}\PYG{n}{argv}\PYG{p}{)}\PYG{p}{;}
+    \PYG{n}{MPI\PYGZus{}Comm\PYGZus{}rank}\PYG{p}{(}\PYG{n}{MPI\PYGZus{}COMM\PYGZus{}WORLD}\PYG{p}{,} \PYG{o}{\PYGZam{}}\PYG{n}{id}\PYG{p}{)}\PYG{p}{;}
+    \PYG{n}{MPI\PYGZus{}Comm\PYGZus{}size}\PYG{p}{(}\PYG{n}{MPI\PYGZus{}COMM\PYGZus{}WORLD}\PYG{p}{,} \PYG{o}{\PYGZam{}}\PYG{n}{numProcesses}\PYG{p}{)}\PYG{p}{;}
+    \PYG{n}{MPE\PYGZus{}Open\PYGZus{}graphics}\PYG{p}{(} \PYG{o}{\PYGZam{}}\PYG{n}{canvas}\PYG{p}{,} \PYG{n}{MPI\PYGZus{}COMM\PYGZus{}WORLD}\PYG{p}{,} 
+                         \PYG{n}{getDisplay}\PYG{p}{(}\PYG{p}{)}\PYG{p}{,}
+                         \PYG{l+m+mi}{5}\PYG{p}{,} \PYG{l+m+mi}{5}\PYG{p}{,}
+                         \PYG{n}{WINDOW\PYGZus{}WIDTH}\PYG{p}{,} \PYG{n}{WINDOW\PYGZus{}HEIGHT}\PYG{p}{,} \PYG{l+m+mi}{0} \PYG{p}{)}\PYG{p}{;}
+    \PYG{n}{colors} \PYG{o}{=} \PYG{n}{malloc}\PYG{p}{(} \PYG{n}{numProcesses} \PYG{o}{*} \PYG{k}{sizeof}\PYG{p}{(}\PYG{n}{MPE\PYGZus{}Color}\PYG{p}{)} \PYG{p}{)}\PYG{p}{;}
+    \PYG{n}{MPE\PYGZus{}Make\PYGZus{}color\PYGZus{}array}\PYG{p}{(}\PYG{n}{canvas}\PYG{p}{,} \PYG{n}{numProcesses}\PYG{p}{,} \PYG{n}{colors}\PYG{p}{)}\PYG{p}{;}
+    \PYG{n}{myColor} \PYG{o}{=} \PYG{n}{colors}\PYG{p}{[}\PYG{n}{id}\PYG{p}{]}\PYG{p}{;}
+
+    \PYG{c+c1}{// each process does a block of the window's pixels}
+    \PYG{c+c1}{////////////////////////////////////////////////////////////////////////}
+    \PYG{c+c1}{// You could try it using the folowing commented code and more processes}
+    \PYG{c+c1}{// This version draws single points for each execution in the nested loop}
+    \PYG{c+c1}{//for (y = id; y \PYGZlt{} WINDOW\PYGZus{}HEIGHT; y += numProcesses) \PYGZob{}}
+    \PYG{c+c1}{//  for (x = 0; x \PYGZlt{} WINDOW\PYGZus{}WIDTH; x++) \PYGZob{}}
+    \PYG{c+c1}{//      MPE\PYGZus{}Draw\PYGZus{}point(canvas, x, y, myColor);    }
+    \PYG{c+c1}{//       usleep(4000);  // for illustrative purposes, we wait so our }
+    \PYG{c+c1}{//                      // eyes can see it happening }
+    \PYG{c+c1}{//      MPE\PYGZus{}Update(canvas);  // update here to slow things down    }
+    \PYG{c+c1}{////////////////////////////////////////////////////////////////////////}
+    \PYG{c+c1}{// This version draws bars 4 pixels wide and waits so we can see it}
+    \PYG{k}{for} \PYG{p}{(}\PYG{n}{y} \PYG{o}{=} \PYG{n}{id}\PYG{o}{*}\PYG{n}{square\PYGZus{}width}\PYG{p}{;} \PYG{n}{y} \PYG{o}{\PYGZlt{}} \PYG{n}{WINDOW\PYGZus{}HEIGHT}\PYG{p}{;} \PYG{n}{y} \PYG{o}{+}\PYG{o}{=} \PYG{n}{numProcesses}\PYG{o}{*}\PYG{n}{square\PYGZus{}width}\PYG{p}{)} \PYG{p}{\PYGZob{}}
+       \PYG{k}{for} \PYG{p}{(}\PYG{n}{x} \PYG{o}{=} \PYG{l+m+mi}{0}\PYG{p}{;} \PYG{n}{x} \PYG{o}{\PYGZlt{}} \PYG{n}{WINDOW\PYGZus{}WIDTH}\PYG{p}{;} \PYG{n}{x}\PYG{o}{+}\PYG{o}{=}\PYG{n}{square\PYGZus{}width}\PYG{p}{)} \PYG{p}{\PYGZob{}}
+          \PYG{n}{MPE\PYGZus{}Fill\PYGZus{}rectangle}\PYG{p}{(} \PYG{n}{canvas}\PYG{p}{,} \PYG{n}{x}\PYG{p}{,} \PYG{n}{y}\PYG{p}{,} \PYG{n}{square\PYGZus{}width}\PYG{p}{,} \PYG{n}{square\PYGZus{}width}\PYG{p}{,} \PYG{n}{myColor} \PYG{p}{)}\PYG{p}{;}
+          \PYG{n}{usleep}\PYG{p}{(}\PYG{l+m+mi}{4000}\PYG{p}{)}\PYG{p}{;}  \PYG{c+c1}{// for illustrative purposes, }
+                          \PYG{c+c1}{// we wait so our eyes can see it happening}
+          \PYG{n}{MPE\PYGZus{}Update}\PYG{p}{(}\PYG{n}{canvas}\PYG{p}{)}\PYG{p}{;}  \PYG{c+c1}{// update here to slow things down}
+       \PYG{p}{\PYGZcb{}}
+    \PYG{p}{\PYGZcb{}}
+
+    \PYG{c+c1}{// pause until mouse-click so the program doesn't terminate}
+    \PYG{k}{if} \PYG{p}{(}\PYG{n}{id} \PYG{o}{=}\PYG{o}{=} \PYG{l+m+mi}{0}\PYG{p}{)} \PYG{p}{\PYGZob{}}
+       \PYG{n}{printf}\PYG{p}{(}\PYG{l+s}{"}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s}{Click in the window to continue...}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s}{"}\PYG{p}{)}\PYG{p}{;}
+       \PYG{n}{MPE\PYGZus{}Get\PYGZus{}mouse\PYGZus{}press}\PYG{p}{(} \PYG{n}{canvas}\PYG{p}{,} \PYG{o}{\PYGZam{}}\PYG{n}{x}\PYG{p}{,} \PYG{o}{\PYGZam{}}\PYG{n}{y}\PYG{p}{,} \PYG{o}{\PYGZam{}}\PYG{n}{button} \PYG{p}{)}\PYG{p}{;}
+    \PYG{p}{\PYGZcb{}}
+
+    \PYG{c+c1}{// clean up }
+    \PYG{n}{MPE\PYGZus{}Close\PYGZus{}graphics}\PYG{p}{(} \PYG{o}{\PYGZam{}}\PYG{n}{canvas}\PYG{p}{)}\PYG{p}{;}
+    \PYG{n}{MPI\PYGZus{}Finalize}\PYG{p}{(}\PYG{p}{)}\PYG{p}{;}
+    \PYG{n}{free}\PYG{p}{(}\PYG{n}{colors}\PYG{p}{)}\PYG{p}{;}
+    \PYG{k}{if} \PYG{p}{(}\PYG{n}{id} \PYG{o}{=}\PYG{o}{=} \PYG{l+m+mi}{0}\PYG{p}{)} \PYG{n}{printf}\PYG{p}{(}\PYG{l+s}{"}\PYG{l+s}{Program complete.}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s}{"}\PYG{p}{)}\PYG{p}{;} 
+    \PYG{k}{return} \PYG{l+m+mi}{0}\PYG{p}{;}
+\PYG{p}{\PYGZcb{}}
+\end{Verbatim}
+
+\emph{file: patternlets/MPI/04.parallelForLoop-slices/visual/parallelForSlices.c}
+
+
+\subsection{5. A. Data Decomposition: on \emph{blocks} using parallel-for (textual version)}
+\label{MessagePassing/MPI_Patternlets:a-data-decomposition-on-blocks-using-parallel-for-textual-version}
 This is a basic example that does not yet include a data array, though
 it would typically be used when each process would be working on a portion
 of an array that could have been looped over in a sequential solution.
@@ -332,7 +533,7 @@ of an array that could have been looped over in a sequential solution.
 \PYG{c+cp}{\PYGZsh{}}\PYG{c+cp}{include \PYGZlt{}mpi.h\PYGZgt{}}
 
 \PYG{k+kt}{int} \PYG{n+nf}{main}\PYG{p}{(}\PYG{k+kt}{int} \PYG{n}{argc}\PYG{p}{,} \PYG{k+kt}{char}\PYG{o}{*}\PYG{o}{*} \PYG{n}{argv}\PYG{p}{)} \PYG{p}{\PYGZob{}}
-	\PYG{k}{const} \PYG{k+kt}{int} \PYG{n}{ITERS} \PYG{o}{=} \PYG{l+m+mi}{16}\PYG{p}{;}
+	\PYG{k}{const} \PYG{k+kt}{int} \PYG{n}{REPS} \PYG{o}{=} \PYG{l+m+mi}{8}\PYG{p}{;}
 	\PYG{k+kt}{int} \PYG{n}{id} \PYG{o}{=} \PYG{o}{-}\PYG{l+m+mi}{1}\PYG{p}{,} \PYG{n}{numProcesses} \PYG{o}{=} \PYG{o}{-}\PYG{l+m+mi}{1}\PYG{p}{,} \PYG{n}{i} \PYG{o}{=} \PYG{o}{-}\PYG{l+m+mi}{1}\PYG{p}{,}
 		\PYG{n}{start} \PYG{o}{=} \PYG{o}{-}\PYG{l+m+mi}{1}\PYG{p}{,} \PYG{n}{stop} \PYG{o}{=} \PYG{o}{-}\PYG{l+m+mi}{1}\PYG{p}{,} \PYG{n}{blockSize} \PYG{o}{=} \PYG{o}{-}\PYG{l+m+mi}{1}\PYG{p}{;}
 
@@ -340,16 +541,16 @@ of an array that could have been looped over in a sequential solution.
 	\PYG{n}{MPI\PYGZus{}Comm\PYGZus{}rank}\PYG{p}{(}\PYG{n}{MPI\PYGZus{}COMM\PYGZus{}WORLD}\PYG{p}{,} \PYG{o}{\PYGZam{}}\PYG{n}{id}\PYG{p}{)}\PYG{p}{;}
 	\PYG{n}{MPI\PYGZus{}Comm\PYGZus{}size}\PYG{p}{(}\PYG{n}{MPI\PYGZus{}COMM\PYGZus{}WORLD}\PYG{p}{,} \PYG{o}{\PYGZam{}}\PYG{n}{numProcesses}\PYG{p}{)}\PYG{p}{;}
 
-	\PYG{n}{blockSize} \PYG{o}{=} \PYG{n}{ITERS} \PYG{o}{/} \PYG{n}{numProcesses}\PYG{p}{;}     \PYG{c+c1}{// integer division}
+	\PYG{n}{blockSize} \PYG{o}{=} \PYG{n}{REPS} \PYG{o}{/} \PYG{n}{numProcesses}\PYG{p}{;}      \PYG{c+c1}{// integer division }
 	\PYG{n}{start} \PYG{o}{=} \PYG{n}{id} \PYG{o}{*} \PYG{n}{blockSize}\PYG{p}{;}               \PYG{c+c1}{// find starting index}
                                               \PYG{c+c1}{// find stopping index}
 	\PYG{k}{if} \PYG{p}{(} \PYG{n}{id} \PYG{o}{\PYGZlt{}} \PYG{n}{numProcesses} \PYG{o}{-} \PYG{l+m+mi}{1} \PYG{p}{)} \PYG{p}{\PYGZob{}}        \PYG{c+c1}{// if not the last process}
 		\PYG{n}{stop} \PYG{o}{=} \PYG{p}{(}\PYG{n}{id} \PYG{o}{+} \PYG{l+m+mi}{1}\PYG{p}{)} \PYG{o}{*} \PYG{n}{blockSize}\PYG{p}{;}  \PYG{c+c1}{//  stop where next process starts}
-	\PYG{p}{\PYGZcb{}} \PYG{k}{else} \PYG{p}{\PYGZob{}}                              \PYG{c+c1}{// else}
-		\PYG{n}{stop} \PYG{o}{=} \PYG{n}{ITERS}\PYG{p}{;}                 \PYG{c+c1}{//  last process does leftovers}
+	\PYG{p}{\PYGZcb{}} \PYG{k}{else} \PYG{p}{\PYGZob{}}                              \PYG{c+c1}{// else }
+		\PYG{n}{stop} \PYG{o}{=} \PYG{n}{REPS}\PYG{p}{;}                  \PYG{c+c1}{//  last process does leftovers }
 	\PYG{p}{\PYGZcb{}}
 
-	\PYG{k}{for} \PYG{p}{(}\PYG{n}{i} \PYG{o}{=} \PYG{n}{start}\PYG{p}{;} \PYG{n}{i} \PYG{o}{\PYGZlt{}} \PYG{n}{stop}\PYG{p}{;} \PYG{n}{i}\PYG{o}{+}\PYG{o}{+}\PYG{p}{)} \PYG{p}{\PYGZob{}}      \PYG{c+c1}{// iterate through your range}
+	\PYG{k}{for} \PYG{p}{(}\PYG{n}{i} \PYG{o}{=} \PYG{n}{start}\PYG{p}{;} \PYG{n}{i} \PYG{o}{\PYGZlt{}} \PYG{n}{stop}\PYG{p}{;} \PYG{n}{i}\PYG{o}{+}\PYG{o}{+}\PYG{p}{)} \PYG{p}{\PYGZob{}}      \PYG{c+c1}{// iterate through your range }
 		\PYG{n}{printf}\PYG{p}{(}\PYG{l+s}{"}\PYG{l+s}{Process \PYGZpc{}d is performing iteration \PYGZpc{}d}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s}{"}\PYG{p}{,}
 			\PYG{n}{id}\PYG{p}{,} \PYG{n}{i}\PYG{p}{)}\PYG{p}{;}
 	\PYG{p}{\PYGZcb{}}
@@ -359,8 +560,119 @@ of an array that could have been looped over in a sequential solution.
 \PYG{p}{\PYGZcb{}}
 \end{Verbatim}
 
+\emph{file: patternlets/MPI/05.parallelForLoop-blocks/textual/parallelForBlocks.c}
 
-\subsection{5. Broadcast: a special form of message passing}
+
+\subsection{5. B. Data Decomposition: on \emph{blocks} using parallel-for (visual version)}
+\label{MessagePassing/MPI_Patternlets:b-data-decomposition-on-blocks-using-parallel-for-visual-version}
+In this example you can see how blocks of values within a matrix might be
+assigned to each process.  Run it to see the effect!
+
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{c+cm}{/* parallelForBlocks.c is a graphical illustration of}
+\PYG{c+cm}{ *  the 'blocks' version of the parallel for loop design pattern,}
+\PYG{c+cm}{ *  using Argonne Labs' MPE graphics library for X11 systems.}
+\PYG{c+cm}{ *}
+\PYG{c+cm}{ * Summer 2013, Joel Adams, Calvin College.}
+\PYG{c+cm}{ *}
+\PYG{c+cm}{ * Usage: mpirun -np N ./parallelForBlocks}
+\PYG{c+cm}{ *        Click the mouse in the window to terminate the program.}
+\PYG{c+cm}{ *        You must have an X11 server running.}
+\PYG{c+cm}{ *}
+\PYG{c+cm}{ * Exercise: Run the program, varying N from 1 - 32, like this: 1, 2, 4, 8, 16, 24, 32}
+\PYG{c+cm}{ *            and compare to the 'Stripes' version...}
+\PYG{c+cm}{ */}
+
+\PYG{c+cp}{\PYGZsh{}}\PYG{c+cp}{include \PYGZlt{}mpi.h\PYGZgt{}     }\PYG{c+c1}{// MPI}
+\PYG{c+cp}{\PYGZsh{}}\PYG{c+cp}{include \PYGZlt{}mpe.h\PYGZgt{}     }\PYG{c+c1}{// MPE}
+\PYG{c+cp}{\PYGZsh{}}\PYG{c+cp}{include \PYGZlt{}stdlib.h\PYGZgt{}  }\PYG{c+c1}{// getenv() }
+\PYG{c+cp}{\PYGZsh{}}\PYG{c+cp}{include \PYGZlt{}string.h\PYGZgt{}  }\PYG{c+c1}{// strcmp() }
+\PYG{c+cp}{\PYGZsh{}}\PYG{c+cp}{include \PYGZlt{}stdio.h\PYGZgt{}   }\PYG{c+c1}{// printf(), etc.}
+\PYG{c+cp}{\PYGZsh{}}\PYG{c+cp}{include \PYGZlt{}unistd.h\PYGZgt{}  }\PYG{c+c1}{// usleep}
+
+\PYG{c+cm}{/* }
+\PYG{c+cm}{ * getDisplay() retrieves the DISPLAY environment info}
+\PYG{c+cm}{ */}
+
+\PYG{k+kt}{char}\PYG{o}{*} \PYG{n+nf}{getDisplay}\PYG{p}{(}\PYG{p}{)} \PYG{p}{\PYGZob{}}
+	\PYG{k+kt}{char} \PYG{o}{*} \PYG{n}{display} \PYG{o}{=} \PYG{n}{getenv}\PYG{p}{(}\PYG{l+s}{"}\PYG{l+s}{DISPLAY}\PYG{l+s}{"}\PYG{p}{)}\PYG{p}{;}
+	\PYG{k}{if} \PYG{p}{(} \PYG{n}{strncmp}\PYG{p}{(}\PYG{n}{display}\PYG{p}{,} \PYG{l+s}{"}\PYG{l+s}{(null)}\PYG{l+s}{"}\PYG{p}{,} \PYG{l+m+mi}{7}\PYG{p}{)} \PYG{o}{=}\PYG{o}{=} \PYG{l+m+mi}{0} \PYG{p}{)} \PYG{p}{\PYGZob{}}
+		\PYG{n}{fprintf}\PYG{p}{(}\PYG{n}{stderr}\PYG{p}{,} \PYG{l+s}{"}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s}{*** Fatal: DISPLAY variable not set.}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s}{"}\PYG{p}{)}\PYG{p}{;}
+		\PYG{n}{exit}\PYG{p}{(}\PYG{l+m+mi}{1}\PYG{p}{)}\PYG{p}{;}
+	\PYG{p}{\PYGZcb{}}
+	\PYG{k}{return} \PYG{n}{display}\PYG{p}{;}
+\PYG{p}{\PYGZcb{}}
+
+
+\PYG{k+kt}{int} \PYG{n+nf}{main}\PYG{p}{(}\PYG{k+kt}{int} \PYG{n}{argc}\PYG{p}{,} \PYG{k+kt}{char}\PYG{o}{*} \PYG{n}{argv}\PYG{p}{[}\PYG{p}{]}\PYG{p}{)} \PYG{p}{\PYGZob{}}
+    \PYG{k}{const} \PYG{k+kt}{int}  \PYG{n}{WINDOW\PYGZus{}WIDTH} \PYG{o}{=} \PYG{l+m+mi}{800}\PYG{p}{;}
+    \PYG{k}{const} \PYG{k+kt}{int}  \PYG{n}{WINDOW\PYGZus{}HEIGHT} \PYG{o}{=} \PYG{l+m+mi}{512}\PYG{p}{;}
+    \PYG{k+kt}{int}        \PYG{n}{x} \PYG{o}{=} \PYG{l+m+mi}{0}\PYG{p}{,} \PYG{n}{y} \PYG{o}{=} \PYG{l+m+mi}{0}\PYG{p}{;}
+    \PYG{k+kt}{int}        \PYG{n}{id} \PYG{o}{=} \PYG{o}{-}\PYG{l+m+mi}{1}\PYG{p}{,} \PYG{n}{numProcesses} \PYG{o}{=} \PYG{o}{-}\PYG{l+m+mi}{1}\PYG{p}{;}
+    \PYG{k+kt}{int}        \PYG{n}{button} \PYG{o}{=} \PYG{o}{-}\PYG{l+m+mi}{1}\PYG{p}{;}
+    \PYG{k+kt}{int}        \PYG{n}{blockSize} \PYG{o}{=} \PYG{l+m+mi}{0}\PYG{p}{;}
+    \PYG{k+kt}{int}        \PYG{n}{yStart}\PYG{p}{,} \PYG{n}{yEnd}\PYG{p}{;}
+    \PYG{n}{MPE\PYGZus{}XGraph} \PYG{n}{canvas}\PYG{p}{;}
+    \PYG{n}{MPE\PYGZus{}Color} \PYG{o}{*}\PYG{n}{colors} \PYG{o}{=} \PYG{n+nb}{NULL}\PYG{p}{;}
+    \PYG{n}{MPE\PYGZus{}Color}  \PYG{n}{myColor} \PYG{o}{=} \PYG{l+m+mi}{0}\PYG{p}{;}
+
+    \PYG{c+c1}{// initialize environment, variables, etc. }
+    \PYG{n}{MPI\PYGZus{}Init}\PYG{p}{(}\PYG{o}{\PYGZam{}}\PYG{n}{argc}\PYG{p}{,}\PYG{o}{\PYGZam{}}\PYG{n}{argv}\PYG{p}{)}\PYG{p}{;}
+    \PYG{n}{MPI\PYGZus{}Comm\PYGZus{}rank}\PYG{p}{(}\PYG{n}{MPI\PYGZus{}COMM\PYGZus{}WORLD}\PYG{p}{,} \PYG{o}{\PYGZam{}}\PYG{n}{id}\PYG{p}{)}\PYG{p}{;}
+    \PYG{n}{MPI\PYGZus{}Comm\PYGZus{}size}\PYG{p}{(}\PYG{n}{MPI\PYGZus{}COMM\PYGZus{}WORLD}\PYG{p}{,} \PYG{o}{\PYGZam{}}\PYG{n}{numProcesses}\PYG{p}{)}\PYG{p}{;}
+    \PYG{n}{MPE\PYGZus{}Open\PYGZus{}graphics}\PYG{p}{(} \PYG{o}{\PYGZam{}}\PYG{n}{canvas}\PYG{p}{,} \PYG{n}{MPI\PYGZus{}COMM\PYGZus{}WORLD}\PYG{p}{,} 
+                         \PYG{n}{getDisplay}\PYG{p}{(}\PYG{p}{)}\PYG{p}{,}
+                         \PYG{l+m+mi}{5}\PYG{p}{,} \PYG{l+m+mi}{5}\PYG{p}{,}
+                         \PYG{n}{WINDOW\PYGZus{}WIDTH}\PYG{p}{,} \PYG{n}{WINDOW\PYGZus{}HEIGHT}\PYG{p}{,} \PYG{l+m+mi}{0} \PYG{p}{)}\PYG{p}{;}
+    \PYG{n}{colors} \PYG{o}{=} \PYG{n}{malloc}\PYG{p}{(} \PYG{n}{numProcesses} \PYG{o}{*} \PYG{k}{sizeof}\PYG{p}{(}\PYG{n}{MPE\PYGZus{}Color}\PYG{p}{)} \PYG{p}{)}\PYG{p}{;}
+    \PYG{n}{MPE\PYGZus{}Make\PYGZus{}color\PYGZus{}array}\PYG{p}{(}\PYG{n}{canvas}\PYG{p}{,} \PYG{n}{numProcesses}\PYG{p}{,} \PYG{n}{colors}\PYG{p}{)}\PYG{p}{;}
+    \PYG{n}{myColor} \PYG{o}{=} \PYG{n}{colors}\PYG{p}{[}\PYG{n}{id}\PYG{p}{]}\PYG{p}{;}
+    \PYG{n}{blockSize} \PYG{o}{=} \PYG{n}{WINDOW\PYGZus{}HEIGHT} \PYG{o}{/} \PYG{n}{numProcesses}\PYG{p}{;}
+    \PYG{n}{yStart} \PYG{o}{=} \PYG{n}{id} \PYG{o}{*} \PYG{n}{blockSize}\PYG{p}{;}
+    \PYG{n}{yEnd} \PYG{o}{=} \PYG{n}{yStart} \PYG{o}{+} \PYG{n}{blockSize}\PYG{p}{;}
+
+    \PYG{c+c1}{// processes draw the window's pixels in stripes}
+    \PYG{c+c1}{////////////////////////////////////////////////////////////////////////}
+    \PYG{c+c1}{// You could try it using the folowing commented code and more processes}
+    \PYG{c+c1}{// This version draws single points for each execution in the nested loop}
+    \PYG{c+c1}{// for (y = yStart; y \PYGZlt{} yEnd; y++) \PYGZob{}}
+    \PYG{c+c1}{//    for (x = 0; x \PYGZlt{} WINDOW\PYGZus{}WIDTH; x++) \PYGZob{}}
+    \PYG{c+c1}{//       MPE\PYGZus{}Draw\PYGZus{}point(canvas, x, y, myColor);}
+    \PYG{c+c1}{//       usleep(4000);  // for illustrative purposes, we wait so our }
+    \PYG{c+c1}{//                      // eyes can see it happening }
+    \PYG{c+c1}{//      MPE\PYGZus{}Update(canvas);  // update here to slow things down}
+    \PYG{c+c1}{//   \PYGZcb{}}
+    \PYG{c+c1}{//\PYGZcb{}}
+    \PYG{c+c1}{////////////////////////////////////////////////////////////////////////}
+    \PYG{c+c1}{// This version draws bars 4 pixels wide and waits so we can see it}
+    \PYG{k}{for} \PYG{p}{(}\PYG{n}{y} \PYG{o}{=} \PYG{n}{yStart}\PYG{p}{;} \PYG{n}{y} \PYG{o}{\PYGZlt{}} \PYG{n}{yEnd}\PYG{p}{;} \PYG{n}{y}\PYG{o}{+}\PYG{o}{=}\PYG{l+m+mi}{4}\PYG{p}{)} \PYG{p}{\PYGZob{}}
+       \PYG{k}{for} \PYG{p}{(}\PYG{n}{x} \PYG{o}{=} \PYG{l+m+mi}{0}\PYG{p}{;} \PYG{n}{x} \PYG{o}{\PYGZlt{}} \PYG{n}{WINDOW\PYGZus{}WIDTH}\PYG{p}{;} \PYG{n}{x}\PYG{o}{+}\PYG{o}{=}\PYG{l+m+mi}{4}\PYG{p}{)} \PYG{p}{\PYGZob{}}
+          \PYG{n}{MPE\PYGZus{}Fill\PYGZus{}rectangle}\PYG{p}{(} \PYG{n}{canvas}\PYG{p}{,} \PYG{n}{x}\PYG{p}{,} \PYG{n}{y}\PYG{p}{,} \PYG{l+m+mi}{4}\PYG{p}{,} \PYG{l+m+mi}{4}\PYG{p}{,} \PYG{n}{myColor} \PYG{p}{)}\PYG{p}{;}
+          \PYG{n}{usleep}\PYG{p}{(}\PYG{l+m+mi}{4000}\PYG{p}{)}\PYG{p}{;}  \PYG{c+c1}{// for illustrative purposes, we wait so our }
+                          \PYG{c+c1}{// eyes can see it happening        }
+          \PYG{n}{MPE\PYGZus{}Update}\PYG{p}{(}\PYG{n}{canvas}\PYG{p}{)}\PYG{p}{;}  \PYG{c+c1}{// update here to slow things down}
+       \PYG{p}{\PYGZcb{}}
+    \PYG{p}{\PYGZcb{}}
+
+    \PYG{c+c1}{// pause until mouse-click so the program doesn't terminate}
+    \PYG{k}{if} \PYG{p}{(}\PYG{n}{id} \PYG{o}{=}\PYG{o}{=} \PYG{l+m+mi}{0}\PYG{p}{)} \PYG{p}{\PYGZob{}}
+       \PYG{n}{printf}\PYG{p}{(}\PYG{l+s}{"}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s}{Click in the window to continue...}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s}{"}\PYG{p}{)}\PYG{p}{;}
+       \PYG{n}{MPE\PYGZus{}Get\PYGZus{}mouse\PYGZus{}press}\PYG{p}{(} \PYG{n}{canvas}\PYG{p}{,} \PYG{o}{\PYGZam{}}\PYG{n}{x}\PYG{p}{,} \PYG{o}{\PYGZam{}}\PYG{n}{y}\PYG{p}{,} \PYG{o}{\PYGZam{}}\PYG{n}{button} \PYG{p}{)}\PYG{p}{;}
+    \PYG{p}{\PYGZcb{}}
+
+    \PYG{c+c1}{// clean up }
+    \PYG{n}{MPE\PYGZus{}Close\PYGZus{}graphics}\PYG{p}{(} \PYG{o}{\PYGZam{}}\PYG{n}{canvas}\PYG{p}{)}\PYG{p}{;}
+    \PYG{n}{MPI\PYGZus{}Finalize}\PYG{p}{(}\PYG{p}{)}\PYG{p}{;}
+    \PYG{n}{free}\PYG{p}{(}\PYG{n}{colors}\PYG{p}{)}\PYG{p}{;}
+    \PYG{k}{if} \PYG{p}{(}\PYG{n}{id} \PYG{o}{=}\PYG{o}{=} \PYG{l+m+mi}{0}\PYG{p}{)} \PYG{n}{printf}\PYG{p}{(}\PYG{l+s}{"}\PYG{l+s}{Program complete.}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s}{"}\PYG{p}{)}\PYG{p}{;} 
+    \PYG{k}{return} \PYG{l+m+mi}{0}\PYG{p}{;}
+\PYG{p}{\PYGZcb{}}
+\end{Verbatim}
+
+\emph{file: atternlets/MPI/05.parallelForLoop-blocks/visual/parallelForBlocks.c}
+
+
+\subsection{6. Broadcast: a special form of message passing}
 \label{MessagePassing/MPI_Patternlets:broadcast-a-special-form-of-message-passing}
 This example shows how to ensure that all processes have a copy of an array
 created by a single \emph{master} node.
@@ -375,7 +687,8 @@ created by a single \emph{master} node.
 \PYG{c+cp}{\PYGZsh{}}\PYG{c+cp}{include \PYGZlt{}stdio.h\PYGZgt{}}
 \PYG{c+cp}{\PYGZsh{}}\PYG{c+cp}{include \PYGZlt{}stdlib.h\PYGZgt{}}
 
-\PYG{c+c1}{// fill an array with values}
+\PYG{c+cm}{/* fill an array with values }
+\PYG{c+cm}{ */}
 \PYG{k+kt}{void} \PYG{n+nf}{fill}\PYG{p}{(}\PYG{k+kt}{int}\PYG{o}{*} \PYG{n}{a}\PYG{p}{,} \PYG{k+kt}{int} \PYG{n}{size}\PYG{p}{)} \PYG{p}{\PYGZob{}}
 	\PYG{k+kt}{int} \PYG{n}{i}\PYG{p}{;}
 	\PYG{k}{for} \PYG{p}{(}\PYG{n}{i} \PYG{o}{=} \PYG{l+m+mi}{0}\PYG{p}{;} \PYG{n}{i} \PYG{o}{\PYGZlt{}} \PYG{n}{size}\PYG{p}{;} \PYG{n}{i}\PYG{o}{+}\PYG{o}{+}\PYG{p}{)} \PYG{p}{\PYGZob{}}
@@ -383,7 +696,8 @@ created by a single \emph{master} node.
 	\PYG{p}{\PYGZcb{}}
 \PYG{p}{\PYGZcb{}}
 
-\PYG{c+c1}{// display a string, a process id, and its array values}
+\PYG{c+cm}{/* display a string, a process id, and its array values }
+\PYG{c+cm}{ */}
 \PYG{k+kt}{void} \PYG{n+nf}{print}\PYG{p}{(}\PYG{k+kt}{char}\PYG{o}{*} \PYG{n}{str}\PYG{p}{,} \PYG{k+kt}{int} \PYG{n}{id}\PYG{p}{,} \PYG{k+kt}{int}\PYG{o}{*} \PYG{n}{a}\PYG{p}{)} \PYG{p}{\PYGZob{}}
 	\PYG{n}{printf}\PYG{p}{(}\PYG{l+s}{"}\PYG{l+s}{process \PYGZpc{}d \PYGZpc{}s: \PYGZob{}\PYGZpc{}d, \PYGZpc{}d, \PYGZpc{}d, \PYGZpc{}d, \PYGZpc{}d, \PYGZpc{}d, \PYGZpc{}d, \PYGZpc{}d\PYGZcb{}}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s}{"}\PYG{p}{,}
 	   \PYG{n}{id}\PYG{p}{,} \PYG{n}{str}\PYG{p}{,} \PYG{n}{a}\PYG{p}{[}\PYG{l+m+mi}{0}\PYG{p}{]}\PYG{p}{,} \PYG{n}{a}\PYG{p}{[}\PYG{l+m+mi}{1}\PYG{p}{]}\PYG{p}{,} \PYG{n}{a}\PYG{p}{[}\PYG{l+m+mi}{2}\PYG{p}{]}\PYG{p}{,} \PYG{n}{a}\PYG{p}{[}\PYG{l+m+mi}{3}\PYG{p}{]}\PYG{p}{,} \PYG{n}{a}\PYG{p}{[}\PYG{l+m+mi}{4}\PYG{p}{]}\PYG{p}{,} \PYG{n}{a}\PYG{p}{[}\PYG{l+m+mi}{5}\PYG{p}{]}\PYG{p}{,} \PYG{n}{a}\PYG{p}{[}\PYG{l+m+mi}{6}\PYG{p}{]}\PYG{p}{,} \PYG{n}{a}\PYG{p}{[}\PYG{l+m+mi}{7}\PYG{p}{]}\PYG{p}{)}\PYG{p}{;}
@@ -411,8 +725,10 @@ created by a single \emph{master} node.
 \PYG{p}{\PYGZcb{}}
 \end{Verbatim}
 
+\emph{file: patternlets/MPI/06.broadcast/broadcast.c}
 
-\subsection{6. Collective Communication: Reduction}
+
+\subsection{7. Collective Communication: Reduction}
 \label{MessagePassing/MPI_Patternlets:collective-communication-reduction}
 Once processes have performed independent concurrent computations, possibly
 on some portion of decomposed data, it is quite commen to then \emph{reduce}
@@ -457,8 +773,10 @@ MPI\_MAX in the following code.
 \PYG{p}{\PYGZcb{}}
 \end{Verbatim}
 
+\emph{file: patternlets/MPI/07.reduction/reduction.c}
 
-\subsection{7. Collective communication: Scatter for message-passing data decomposition}
+
+\subsection{8. Collective communication: Scatter for message-passing data decomposition}
 \label{MessagePassing/MPI_Patternlets:collective-communication-scatter-for-message-passing-data-decomposition}
 If processes can independently work on portions of a larger data array
 using the geometric data decomposition pattern,
@@ -501,8 +819,10 @@ a copy of its portion of the array.
 \PYG{p}{\PYGZcb{}}
 \end{Verbatim}
 
+\emph{file: patternlets/MPI/08.scatter/scatter.c}
 
-\subsection{8. Collective communication: Gather for message-passing data decomposition}
+
+\subsection{9. Collective communication: Gather for message-passing data decomposition}
 \label{MessagePassing/MPI_Patternlets:collective-communication-gather-for-message-passing-data-decomposition}
 If processes can independently work on portions of a larger data array
 using the geometric data decomposition pattern,
@@ -519,8 +839,9 @@ a copy of its portion of the array back to the root, or master process.
 \PYG{c+cp}{\PYGZsh{}}\PYG{c+cp}{include \PYGZlt{}stdio.h\PYGZgt{}}
 \PYG{c+cp}{\PYGZsh{}}\PYG{c+cp}{include \PYGZlt{}stdlib.h\PYGZgt{}}
 
+\PYG{c+cp}{\PYGZsh{}}\PYG{c+cp}{define MAX 3}
+
 \PYG{k+kt}{int} \PYG{n+nf}{main}\PYG{p}{(}\PYG{k+kt}{int} \PYG{n}{argc}\PYG{p}{,} \PYG{k+kt}{char}\PYG{o}{*}\PYG{o}{*} \PYG{n}{argv}\PYG{p}{)} \PYG{p}{\PYGZob{}}
-   \PYG{k}{const} \PYG{k+kt}{int} \PYG{n}{MAX} \PYG{o}{=} \PYG{l+m+mi}{3}\PYG{p}{;}
    \PYG{k+kt}{int} \PYG{n}{computeArray}\PYG{p}{[}\PYG{n}{MAX}\PYG{p}{]}\PYG{p}{;}
    \PYG{k+kt}{int}\PYG{o}{*} \PYG{n}{gatherArray} \PYG{o}{=} \PYG{n+nb}{NULL}\PYG{p}{;}
    \PYG{k+kt}{int} \PYG{n}{i}\PYG{p}{,} \PYG{n}{numProcs}\PYG{p}{,} \PYG{n}{myRank}\PYG{p}{,} \PYG{n}{totalGatheredVals}\PYG{p}{;}
@@ -552,6 +873,52 @@ a copy of its portion of the array back to the root, or master process.
    \PYG{k}{return} \PYG{l+m+mi}{0}\PYG{p}{;}
 \PYG{p}{\PYGZcb{}}
 \end{Verbatim}
+
+\emph{file: patternlets/MPI/09.gather/gather.c}
+
+
+\subsection{10. Collective Communication: Barrier}
+\label{MessagePassing/MPI_Patternlets:collective-communication-barrier}
+This simple example shows the use of a barrier: a point at which all processes
+must complete the code above it before moving on and running the code below it.
+
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{c+cm}{/* barrier.c}
+\PYG{c+cm}{ * ... illustrates the behavior of MPI\PYGZus{}Barrier() ...}
+\PYG{c+cm}{ * Joel Adams, Calvin College, May 2013.}
+\PYG{c+cm}{ *}
+\PYG{c+cm}{ * Exercise: }
+\PYG{c+cm}{ *  - Compile and run the program several times, noting the intermixed outputs}
+\PYG{c+cm}{ *  - Uncomment the barrier call; then recompile and rerun,}
+\PYG{c+cm}{ *     noting the change in the outputs.}
+\PYG{c+cm}{ */}
+
+\PYG{c+cp}{\PYGZsh{}}\PYG{c+cp}{include \PYGZlt{}stdio.h\PYGZgt{}}
+\PYG{c+cp}{\PYGZsh{}}\PYG{c+cp}{include \PYGZlt{}mpi.h\PYGZgt{}}
+
+\PYG{k+kt}{int} \PYG{n+nf}{main}\PYG{p}{(}\PYG{k+kt}{int} \PYG{n}{argc}\PYG{p}{,} \PYG{k+kt}{char}\PYG{o}{*}\PYG{o}{*} \PYG{n}{argv}\PYG{p}{)} \PYG{p}{\PYGZob{}}
+	\PYG{k+kt}{int} \PYG{n}{id} \PYG{o}{=} \PYG{o}{-}\PYG{l+m+mi}{1}\PYG{p}{,} \PYG{n}{numProcesses} \PYG{o}{=} \PYG{o}{-}\PYG{l+m+mi}{1}\PYG{p}{,} \PYG{n}{length} \PYG{o}{=} \PYG{o}{-}\PYG{l+m+mi}{1}\PYG{p}{;}
+	\PYG{k+kt}{char} \PYG{n}{myHostName}\PYG{p}{[}\PYG{n}{MPI\PYGZus{}MAX\PYGZus{}PROCESSOR\PYGZus{}NAME}\PYG{p}{]}\PYG{p}{;}
+
+	\PYG{n}{MPI\PYGZus{}Init}\PYG{p}{(}\PYG{o}{\PYGZam{}}\PYG{n}{argc}\PYG{p}{,} \PYG{o}{\PYGZam{}}\PYG{n}{argv}\PYG{p}{)}\PYG{p}{;}
+	\PYG{n}{MPI\PYGZus{}Comm\PYGZus{}rank}\PYG{p}{(}\PYG{n}{MPI\PYGZus{}COMM\PYGZus{}WORLD}\PYG{p}{,} \PYG{o}{\PYGZam{}}\PYG{n}{id}\PYG{p}{)}\PYG{p}{;}
+	\PYG{n}{MPI\PYGZus{}Comm\PYGZus{}size}\PYG{p}{(}\PYG{n}{MPI\PYGZus{}COMM\PYGZus{}WORLD}\PYG{p}{,} \PYG{o}{\PYGZam{}}\PYG{n}{numProcesses}\PYG{p}{)}\PYG{p}{;}
+	\PYG{n}{MPI\PYGZus{}Get\PYGZus{}processor\PYGZus{}name} \PYG{p}{(}\PYG{n}{myHostName}\PYG{p}{,} \PYG{o}{\PYGZam{}}\PYG{n}{length}\PYG{p}{)}\PYG{p}{;}
+
+	\PYG{n}{printf}\PYG{p}{(}\PYG{l+s}{"}\PYG{l+s}{Process \PYGZpc{}d of \PYGZpc{}d on \PYGZpc{}s is BEFORE the barrier.}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s}{"}\PYG{p}{,}
+		\PYG{n}{id}\PYG{p}{,} \PYG{n}{numProcesses}\PYG{p}{,} \PYG{n}{myHostName}\PYG{p}{)}\PYG{p}{;}
+
+	\PYG{n}{MPI\PYGZus{}Barrier}\PYG{p}{(}\PYG{n}{MPI\PYGZus{}COMM\PYGZus{}WORLD}\PYG{p}{)}\PYG{p}{;} 
+
+	\PYG{n}{printf}\PYG{p}{(}\PYG{l+s}{"}\PYG{l+s}{Process \PYGZpc{}d of \PYGZpc{}d on \PYGZpc{}s is AFTER the barrier.}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s}{"}\PYG{p}{,}
+		\PYG{n}{id}\PYG{p}{,} \PYG{n}{numProcesses}\PYG{p}{,} \PYG{n}{myHostName}\PYG{p}{)}\PYG{p}{;}
+
+	\PYG{n}{MPI\PYGZus{}Finalize}\PYG{p}{(}\PYG{p}{)}\PYG{p}{;}
+	\PYG{k}{return} \PYG{l+m+mi}{0}\PYG{p}{;}
+\PYG{p}{\PYGZcb{}}
+\end{Verbatim}
+
+\emph{file: patternlets/MPI/10.barrier/barrier.c}
 
 
 \section{Shared Memory Parallel Patternlets in OpenMP}
@@ -586,19 +953,23 @@ A C code file for each example below can be found in subdirectories of the OpenM
 along with a makefile.
 
 
-\subsection{0. The OMP parallel pragma}
-\label{SharedMemory/OpenMP_Patternlets:the-omp-parallel-pragma}
-The \emph{omp parallel} pragma on line 18, when uncommented, tells the compiler to
+\subsection{0. The basic fork-join pattern}
+\label{SharedMemory/OpenMP_Patternlets:the-basic-fork-join-pattern}
+The \emph{omp parallel} pragma on line 22, when uncommented, tells the compiler to
 fork a set of threads to execute that particular line of code.
 
 \begin{Verbatim}[commandchars=\\\{\},numbers=left,firstnumber=1,stepnumber=1]
-\PYG{c+cm}{/* simpleParallel.c}
-\PYG{c+cm}{ * ... illustrates the use of OpenMP's parallel directive...}
+\PYG{c+cm}{/* forkJoin.c}
+\PYG{c+cm}{ * ... illustrates the fork-join pattern }
+\PYG{c+cm}{ *      using OpenMP's parallel directive.}
 \PYG{c+cm}{ *}
 \PYG{c+cm}{ * Joel Adams, Calvin College, November 2009.}
 \PYG{c+cm}{ *}
-\PYG{c+cm}{ * Usage: ./simpleParallel }
-\PYG{c+cm}{ * Compile \PYGZam{} run, uncomment the pragma, recompile \PYGZam{} run, compare.}
+\PYG{c+cm}{ * Usage: ./forkJoin}
+\PYG{c+cm}{ *}
+\PYG{c+cm}{ * Exercise:}
+\PYG{c+cm}{ * - Compile \PYGZam{} run, uncomment the pragma,}
+\PYG{c+cm}{ *    recompile \PYGZam{} run, compare results.}
 \PYG{c+cm}{ */}
 
 \PYG{c+cp}{\PYGZsh{}}\PYG{c+cp}{include \PYGZlt{}stdio.h\PYGZgt{}}
@@ -607,7 +978,7 @@ fork a set of threads to execute that particular line of code.
 
 \PYG{k+kt}{int} \PYG{n+nf}{main}\PYG{p}{(}\PYG{k+kt}{int} \PYG{n}{argc}\PYG{p}{,} \PYG{k+kt}{char}\PYG{o}{*}\PYG{o}{*} \PYG{n}{argv}\PYG{p}{)} \PYG{p}{\PYGZob{}}
 
-    \PYG{n}{printf}\PYG{p}{(}\PYG{l+s}{"}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s}{Before...}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s}{"}\PYG{p}{)}\PYG{p}{;}
+    \PYG{n}{printf}\PYG{p}{(}\PYG{l+s}{"}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s}{Before...}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s}{"}\PYG{p}{)}\PYG{p}{;}
 
 \PYG{c+c1}{//    \PYGZsh{}pragma omp parallel }
     \PYG{n}{printf}\PYG{p}{(}\PYG{l+s}{"}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s}{During...}\PYG{l+s}{"}\PYG{p}{)}\PYG{p}{;}
@@ -618,23 +989,28 @@ fork a set of threads to execute that particular line of code.
 \PYG{p}{\PYGZcb{}}
 \end{Verbatim}
 
+\emph{file: patternlets/OpenMP/00.forkJoin/forkJoin.c}
 
-\subsection{1. Hello, World: default number of OpenMP threads}
-\label{SharedMemory/OpenMP_Patternlets:hello-world-default-number-of-openmp-threads}
-Note how there are OpenMP functions to
-obtain a thread number and the total number of threads.
-When the pragma is uncommented, note what the default number of threads
-is.  Here the threads are forked and execute the block of code insode the
-curly braces on lines 18 through 20.
+
+\subsection{1. Fork-join: setting the number of threads}
+\label{SharedMemory/OpenMP_Patternlets:fork-join-setting-the-number-of-threads}
+Note how there is an OpenMP function for setting the number of threads to use in
+the next `fork'.
 
 \begin{Verbatim}[commandchars=\\\{\},numbers=left,firstnumber=1,stepnumber=1]
-\PYG{c+cm}{/* parallelHello.c}
-\PYG{c+cm}{ * ... illustrates the use of two basic OpenMP commands...}
+\PYG{c+cm}{/* forkJoin2.c}
+\PYG{c+cm}{ * ... illustrates the fork-join pattern }
+\PYG{c+cm}{ *      using multiple OpenMP parallel directives,}
+\PYG{c+cm}{ *      and changing the number of threads two ways.}
 \PYG{c+cm}{ *}
-\PYG{c+cm}{ * Joel Adams, Calvin College, November 2009.}
+\PYG{c+cm}{ * Joel Adams, Calvin College, May 2013.}
 \PYG{c+cm}{ *}
-\PYG{c+cm}{ * Usage: ./parallelHello}
-\PYG{c+cm}{ * Compile \PYGZam{} run, uncomment pragma, recompile \PYGZam{} run, compare results}
+\PYG{c+cm}{ * Usage: ./forkJoin2}
+\PYG{c+cm}{ *}
+\PYG{c+cm}{ * Exercise:}
+\PYG{c+cm}{ * - Compile \PYGZam{} run, compare results to source.}
+\PYG{c+cm}{ * - Predict how many threads will be used in 'Part IV'?}
+\PYG{c+cm}{ * - Uncomment 'Part IV', recompile, rerun.}
 \PYG{c+cm}{ */}
 
 \PYG{c+cp}{\PYGZsh{}}\PYG{c+cp}{include \PYGZlt{}stdio.h\PYGZgt{}}
@@ -643,59 +1019,183 @@ curly braces on lines 18 through 20.
 
 \PYG{k+kt}{int} \PYG{n+nf}{main}\PYG{p}{(}\PYG{k+kt}{int} \PYG{n}{argc}\PYG{p}{,} \PYG{k+kt}{char}\PYG{o}{*}\PYG{o}{*} \PYG{n}{argv}\PYG{p}{)} \PYG{p}{\PYGZob{}}
 
-\PYG{c+c1}{//    \PYGZsh{}pragma omp parallel }
-    \PYG{p}{\PYGZob{}}
-        \PYG{k+kt}{int} \PYG{n}{rank}  \PYG{o}{=} \PYG{n}{omp\PYGZus{}get\PYGZus{}thread\PYGZus{}num}\PYG{p}{(}\PYG{p}{)}\PYG{p}{;}
-        \PYG{k+kt}{int} \PYG{n}{numThreads} \PYG{o}{=} \PYG{n}{omp\PYGZus{}get\PYGZus{}num\PYGZus{}threads}\PYG{p}{(}\PYG{p}{)}\PYG{p}{;}
-        \PYG{n}{printf}\PYG{p}{(}\PYG{l+s}{"}\PYG{l+s}{Hello from thread \PYGZpc{}d of \PYGZpc{}d}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s}{"}\PYG{p}{,} \PYG{n}{rank}\PYG{p}{,} \PYG{n}{numThreads}\PYG{p}{)}\PYG{p}{;}
-    \PYG{p}{\PYGZcb{}}
+    \PYG{n}{printf}\PYG{p}{(}\PYG{l+s}{"}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s}{Beginning}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s}{"}\PYG{p}{)}\PYG{p}{;}
+
+    \PYG{c+cp}{\PYGZsh{}}\PYG{c+cp}{pragma omp parallel }
+    \PYG{n}{printf}\PYG{p}{(}\PYG{l+s}{"}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s}{Part I}\PYG{l+s}{"}\PYG{p}{)}\PYG{p}{;}
+
+    \PYG{n}{printf}\PYG{p}{(}\PYG{l+s}{"}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s}{Between I and II...}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s}{"}\PYG{p}{)}\PYG{p}{;}
+
+    \PYG{n}{omp\PYGZus{}set\PYGZus{}num\PYGZus{}threads}\PYG{p}{(}\PYG{l+m+mi}{3}\PYG{p}{)}\PYG{p}{;}
+
+    \PYG{c+cp}{\PYGZsh{}}\PYG{c+cp}{pragma omp parallel }
+    \PYG{n}{printf}\PYG{p}{(}\PYG{l+s}{"}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s}{Part II...}\PYG{l+s}{"}\PYG{p}{)}\PYG{p}{;}
+
+    \PYG{n}{printf}\PYG{p}{(}\PYG{l+s}{"}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s}{Between II and III...}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s}{"}\PYG{p}{)}\PYG{p}{;}
+
+    \PYG{c+cp}{\PYGZsh{}}\PYG{c+cp}{pragma omp parallel num\PYGZus{}threads(5)}
+    \PYG{n}{printf}\PYG{p}{(}\PYG{l+s}{"}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s}{Part III...}\PYG{l+s}{"}\PYG{p}{)}\PYG{p}{;}
+\PYG{c+cm}{/*}
+\PYG{c+cm}{    printf("\PYGZbs{}n\PYGZbs{}nBetween III and IV...\PYGZbs{}n");}
+
+\PYG{c+cm}{    \PYGZsh{}pragma omp parallel }
+\PYG{c+cm}{    printf("\PYGZbs{}nPart IV...");}
+\PYG{c+cm}{*/}
+    \PYG{n}{printf}\PYG{p}{(}\PYG{l+s}{"}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s}{End}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s}{"}\PYG{p}{)}\PYG{p}{;}
 
     \PYG{k}{return} \PYG{l+m+mi}{0}\PYG{p}{;}
 \PYG{p}{\PYGZcb{}}
 \end{Verbatim}
 
+\emph{file patternlets/OpenMP/01.forkJoin2/forkJoin2.c}
 
-\subsection{2. Hello, World}
-\label{SharedMemory/OpenMP_Patternlets:hello-world}
-Here we enter the number of threads to use on the command line.
 
-\begin{Verbatim}[commandchars=\\\{\}]
-\PYG{c+cm}{/* parallelHello2.c}
-\PYG{c+cm}{ * ... illustrates the use of two basic OpenMP commands}
-\PYG{c+cm}{ * 	using the commandline to control the number of threads...}
+\subsection{2. Single Program, multiple data}
+\label{SharedMemory/OpenMP_Patternlets:single-program-multiple-data}
+Note how there are OpenMP functions to
+obtain a thread number and the total number of threads.
+We have one program, but multiple threads executing,
+each with a copy of the id and num\_threads variables.
+
+When the pragma is uncommented, note what the default number of threads
+is.  Here the threads are forked and execute the block of code insode the
+curly braces on lines 22 through 26.
+
+\begin{Verbatim}[commandchars=\\\{\},numbers=left,firstnumber=1,stepnumber=1]
+\PYG{c+cm}{/* spmd.c}
+\PYG{c+cm}{ * ... illustrates the single-program-multiple-data (SPMD)}
+\PYG{c+cm}{ *      pattern using two basic OpenMP commands...}
 \PYG{c+cm}{ *}
 \PYG{c+cm}{ * Joel Adams, Calvin College, November 2009.}
 \PYG{c+cm}{ *}
-\PYG{c+cm}{ * Usage: ./parallelHello2 [numThreads]}
-\PYG{c+cm}{ * Compile \PYGZam{} run with no commandline arg, rerun with different commandline args}
+\PYG{c+cm}{ * Usage: ./spmd}
+\PYG{c+cm}{ *}
+\PYG{c+cm}{ * Exercise:}
+\PYG{c+cm}{ * - Compile \PYGZam{} run }
+\PYG{c+cm}{ * - Uncomment pragma, recompile \PYGZam{} run, compare results}
 \PYG{c+cm}{ */}
-
-
 
 \PYG{c+cp}{\PYGZsh{}}\PYG{c+cp}{include \PYGZlt{}stdio.h\PYGZgt{}}
 \PYG{c+cp}{\PYGZsh{}}\PYG{c+cp}{include \PYGZlt{}omp.h\PYGZgt{}}
 \PYG{c+cp}{\PYGZsh{}}\PYG{c+cp}{include \PYGZlt{}stdlib.h\PYGZgt{}}
 
 \PYG{k+kt}{int} \PYG{n+nf}{main}\PYG{p}{(}\PYG{k+kt}{int} \PYG{n}{argc}\PYG{p}{,} \PYG{k+kt}{char}\PYG{o}{*}\PYG{o}{*} \PYG{n}{argv}\PYG{p}{)} \PYG{p}{\PYGZob{}}
-    \PYG{k+kt}{int} \PYG{n}{rank}\PYG{p}{,} \PYG{n}{numThreads}\PYG{p}{;}
+    \PYG{n}{printf}\PYG{p}{(}\PYG{l+s}{"}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s}{"}\PYG{p}{)}\PYG{p}{;}
 
+\PYG{c+c1}{//    \PYGZsh{}pragma omp parallel }
+    \PYG{p}{\PYGZob{}}
+        \PYG{k+kt}{int} \PYG{n}{id} \PYG{o}{=} \PYG{n}{omp\PYGZus{}get\PYGZus{}thread\PYGZus{}num}\PYG{p}{(}\PYG{p}{)}\PYG{p}{;}
+        \PYG{k+kt}{int} \PYG{n}{numThreads} \PYG{o}{=} \PYG{n}{omp\PYGZus{}get\PYGZus{}num\PYGZus{}threads}\PYG{p}{(}\PYG{p}{)}\PYG{p}{;}
+        \PYG{n}{printf}\PYG{p}{(}\PYG{l+s}{"}\PYG{l+s}{Hello from thread \PYGZpc{}d of \PYGZpc{}d}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s}{"}\PYG{p}{,} \PYG{n}{id}\PYG{p}{,} \PYG{n}{numThreads}\PYG{p}{)}\PYG{p}{;}
+    \PYG{p}{\PYGZcb{}}
+
+    \PYG{n}{printf}\PYG{p}{(}\PYG{l+s}{"}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s}{"}\PYG{p}{)}\PYG{p}{;}
+    \PYG{k}{return} \PYG{l+m+mi}{0}\PYG{p}{;}
+\PYG{p}{\PYGZcb{}}
+\end{Verbatim}
+
+\emph{file: patternlets/OpenMP/02.spmd/spmd.c}
+
+
+\subsection{3. Single Program, multiple data}
+\label{SharedMemory/OpenMP_Patternlets:id1}
+Here we enter the number of threads to use on the command line.
+
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{c+cm}{/* spmd2.c}
+\PYG{c+cm}{ * ... illustrates the SPMD pattern in OpenMP,}
+\PYG{c+cm}{ * 	using the commandline arguments }
+\PYG{c+cm}{ *      to control the number of threads.}
+\PYG{c+cm}{ *}
+\PYG{c+cm}{ * Joel Adams, Calvin College, November 2009.}
+\PYG{c+cm}{ *}
+\PYG{c+cm}{ * Usage: ./spmd2 [numThreads]}
+\PYG{c+cm}{ *}
+\PYG{c+cm}{ * Exercise:}
+\PYG{c+cm}{ * - Compile \PYGZam{} run with no commandline args }
+\PYG{c+cm}{ * - Rerun with different commandline args}
+\PYG{c+cm}{ */}
+
+\PYG{c+cp}{\PYGZsh{}}\PYG{c+cp}{include \PYGZlt{}stdio.h\PYGZgt{}}
+\PYG{c+cp}{\PYGZsh{}}\PYG{c+cp}{include \PYGZlt{}omp.h\PYGZgt{}}
+\PYG{c+cp}{\PYGZsh{}}\PYG{c+cp}{include \PYGZlt{}stdlib.h\PYGZgt{}}
+
+\PYG{k+kt}{int} \PYG{n+nf}{main}\PYG{p}{(}\PYG{k+kt}{int} \PYG{n}{argc}\PYG{p}{,} \PYG{k+kt}{char}\PYG{o}{*}\PYG{o}{*} \PYG{n}{argv}\PYG{p}{)} \PYG{p}{\PYGZob{}}
+    \PYG{k+kt}{int} \PYG{n}{id}\PYG{p}{,} \PYG{n}{numThreads}\PYG{p}{;}
+
+    \PYG{n}{printf}\PYG{p}{(}\PYG{l+s}{"}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s}{"}\PYG{p}{)}\PYG{p}{;}
     \PYG{k}{if} \PYG{p}{(}\PYG{n}{argc} \PYG{o}{\PYGZgt{}} \PYG{l+m+mi}{1}\PYG{p}{)} \PYG{p}{\PYGZob{}}
         \PYG{n}{omp\PYGZus{}set\PYGZus{}num\PYGZus{}threads}\PYG{p}{(} \PYG{n}{atoi}\PYG{p}{(}\PYG{n}{argv}\PYG{p}{[}\PYG{l+m+mi}{1}\PYG{p}{]}\PYG{p}{)} \PYG{p}{)}\PYG{p}{;}
     \PYG{p}{\PYGZcb{}}
 
     \PYG{c+cp}{\PYGZsh{}}\PYG{c+cp}{pragma omp parallel }
     \PYG{p}{\PYGZob{}}
-        \PYG{n}{rank}  \PYG{o}{=} \PYG{n}{omp\PYGZus{}get\PYGZus{}thread\PYGZus{}num}\PYG{p}{(}\PYG{p}{)}\PYG{p}{;}
+        \PYG{n}{id} \PYG{o}{=} \PYG{n}{omp\PYGZus{}get\PYGZus{}thread\PYGZus{}num}\PYG{p}{(}\PYG{p}{)}\PYG{p}{;}
         \PYG{n}{numThreads} \PYG{o}{=} \PYG{n}{omp\PYGZus{}get\PYGZus{}num\PYGZus{}threads}\PYG{p}{(}\PYG{p}{)}\PYG{p}{;}
-        \PYG{n}{printf}\PYG{p}{(}\PYG{l+s}{"}\PYG{l+s}{Hello from thread \PYGZpc{}d of \PYGZpc{}d}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s}{"}\PYG{p}{,} \PYG{n}{rank}\PYG{p}{,} \PYG{n}{numThreads}\PYG{p}{)}\PYG{p}{;}
+        \PYG{n}{printf}\PYG{p}{(}\PYG{l+s}{"}\PYG{l+s}{Hello from thread \PYGZpc{}d of \PYGZpc{}d}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s}{"}\PYG{p}{,} \PYG{n}{id}\PYG{p}{,} \PYG{n}{numThreads}\PYG{p}{)}\PYG{p}{;}
     \PYG{p}{\PYGZcb{}}
 
+    \PYG{n}{printf}\PYG{p}{(}\PYG{l+s}{"}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s}{"}\PYG{p}{)}\PYG{p}{;}
     \PYG{k}{return} \PYG{l+m+mi}{0}\PYG{p}{;}
 \PYG{p}{\PYGZcb{}}
 \end{Verbatim}
 
+\emph{file: patternlets/OpenMP/03.spmd2/spmd2.c}
 
-\subsection{3. Master-Worker Implementation Strategy}
+
+\subsection{4. Barrier}
+\label{SharedMemory/OpenMP_Patternlets:barrier}
+Note what happens with and without the commented pragma on line 35.
+
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{c+cm}{/* barrier.c}
+\PYG{c+cm}{ * ... illustrates the use of the OpenMP barrier command,}
+\PYG{c+cm}{ * 	using the commandline to control the number of threads...}
+\PYG{c+cm}{ *}
+\PYG{c+cm}{ * Joel Adams, Calvin College, May 2013.}
+\PYG{c+cm}{ *}
+\PYG{c+cm}{ * Usage: ./barrier [numThreads]}
+\PYG{c+cm}{ * }
+\PYG{c+cm}{ * Exercise:}
+\PYG{c+cm}{ * - Compile \PYGZam{} run several times, noting interleaving of outputs.}
+\PYG{c+cm}{ * - Uncomment the barrier directive, recompile, rerun,}
+\PYG{c+cm}{ *   and note the change in the outputs.}
+\PYG{c+cm}{ */}
+
+
+
+\PYG{c+cp}{\PYGZsh{}}\PYG{c+cp}{include \PYGZlt{}stdio.h\PYGZgt{}}
+\PYG{c+cp}{\PYGZsh{}}\PYG{c+cp}{include \PYGZlt{}omp.h\PYGZgt{}}
+\PYG{c+cp}{\PYGZsh{}}\PYG{c+cp}{include \PYGZlt{}stdlib.h\PYGZgt{}}
+
+\PYG{k+kt}{int} \PYG{n+nf}{main}\PYG{p}{(}\PYG{k+kt}{int} \PYG{n}{argc}\PYG{p}{,} \PYG{k+kt}{char}\PYG{o}{*}\PYG{o}{*} \PYG{n}{argv}\PYG{p}{)} \PYG{p}{\PYGZob{}}
+    \PYG{k+kt}{int} \PYG{n}{id}\PYG{p}{,} \PYG{n}{numThreads}\PYG{p}{;}
+
+    \PYG{n}{printf}\PYG{p}{(}\PYG{l+s}{"}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s}{"}\PYG{p}{)}\PYG{p}{;}
+    \PYG{k}{if} \PYG{p}{(}\PYG{n}{argc} \PYG{o}{\PYGZgt{}} \PYG{l+m+mi}{1}\PYG{p}{)} \PYG{p}{\PYGZob{}}
+        \PYG{n}{omp\PYGZus{}set\PYGZus{}num\PYGZus{}threads}\PYG{p}{(} \PYG{n}{atoi}\PYG{p}{(}\PYG{n}{argv}\PYG{p}{[}\PYG{l+m+mi}{1}\PYG{p}{]}\PYG{p}{)} \PYG{p}{)}\PYG{p}{;}
+    \PYG{p}{\PYGZcb{}}
+
+    \PYG{c+cp}{\PYGZsh{}}\PYG{c+cp}{pragma omp parallel }
+    \PYG{p}{\PYGZob{}}
+        \PYG{n}{id} \PYG{o}{=} \PYG{n}{omp\PYGZus{}get\PYGZus{}thread\PYGZus{}num}\PYG{p}{(}\PYG{p}{)}\PYG{p}{;}
+        \PYG{n}{numThreads} \PYG{o}{=} \PYG{n}{omp\PYGZus{}get\PYGZus{}num\PYGZus{}threads}\PYG{p}{(}\PYG{p}{)}\PYG{p}{;}
+        \PYG{n}{printf}\PYG{p}{(}\PYG{l+s}{"}\PYG{l+s}{Thread \PYGZpc{}d of \PYGZpc{}d is BEFORE the barrier.}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s}{"}\PYG{p}{,} \PYG{n}{id}\PYG{p}{,} \PYG{n}{numThreads}\PYG{p}{)}\PYG{p}{;}
+
+\PYG{c+c1}{//        \PYGZsh{}pragma omp barrier }
+
+        \PYG{n}{printf}\PYG{p}{(}\PYG{l+s}{"}\PYG{l+s}{Thread \PYGZpc{}d of \PYGZpc{}d is AFTER the barrier.}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s}{"}\PYG{p}{,} \PYG{n}{id}\PYG{p}{,} \PYG{n}{numThreads}\PYG{p}{)}\PYG{p}{;}
+    \PYG{p}{\PYGZcb{}}
+
+    \PYG{n}{printf}\PYG{p}{(}\PYG{l+s}{"}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s}{"}\PYG{p}{)}\PYG{p}{;}
+    \PYG{k}{return} \PYG{l+m+mi}{0}\PYG{p}{;}
+\PYG{p}{\PYGZcb{}}
+\end{Verbatim}
+
+\emph{file: patternlets/OpenMP/04.barrier/barrier.c}
+
+
+\subsection{5. Master-Worker Implementation Strategy}
 \label{SharedMemory/OpenMP_Patternlets:master-worker-implementation-strategy}
 \begin{Verbatim}[commandchars=\\\{\}]
 \PYG{c+cm}{/* masterWorker.c}
@@ -715,7 +1215,9 @@ Here we enter the number of threads to use on the command line.
 \PYG{k+kt}{int} \PYG{n+nf}{main}\PYG{p}{(}\PYG{k+kt}{int} \PYG{n}{argc}\PYG{p}{,} \PYG{k+kt}{char}\PYG{o}{*}\PYG{o}{*} \PYG{n}{argv}\PYG{p}{)} \PYG{p}{\PYGZob{}}
     \PYG{k+kt}{int} \PYG{n}{id} \PYG{o}{=} \PYG{o}{-}\PYG{l+m+mi}{1}\PYG{p}{,} \PYG{n}{numThreads} \PYG{o}{=} \PYG{o}{-}\PYG{l+m+mi}{1}\PYG{p}{;}
 
-\PYG{c+c1}{//    \PYGZsh{}pragma omp parallel}
+    \PYG{n}{printf}\PYG{p}{(}\PYG{l+s}{"}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s}{"}\PYG{p}{)}\PYG{p}{;}
+
+    \PYG{c+cp}{\PYGZsh{}}\PYG{c+cp}{pragma omp parallel}
     \PYG{p}{\PYGZob{}}
         \PYG{n}{id} \PYG{o}{=} \PYG{n}{omp\PYGZus{}get\PYGZus{}thread\PYGZus{}num}\PYG{p}{(}\PYG{p}{)}\PYG{p}{;}
         \PYG{n}{numThreads} \PYG{o}{=} \PYG{n}{omp\PYGZus{}get\PYGZus{}num\PYGZus{}threads}\PYG{p}{(}\PYG{p}{)}\PYG{p}{;}
@@ -723,18 +1225,22 @@ Here we enter the number of threads to use on the command line.
         \PYG{k}{if} \PYG{p}{(} \PYG{n}{id} \PYG{o}{=}\PYG{o}{=} \PYG{l+m+mi}{0} \PYG{p}{)} \PYG{p}{\PYGZob{}}  \PYG{c+c1}{// thread with ID 0 is master}
             \PYG{n}{printf}\PYG{p}{(}\PYG{l+s}{"}\PYG{l+s}{Greetings from the master, \PYGZsh{} \PYGZpc{}d of \PYGZpc{}d threads}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s}{"}\PYG{p}{,}
 			    \PYG{n}{id}\PYG{p}{,} \PYG{n}{numThreads}\PYG{p}{)}\PYG{p}{;}
-        \PYG{p}{\PYGZcb{}} \PYG{k}{else} \PYG{p}{\PYGZob{}}          \PYG{c+c1}{// threads with IDs \PYGZgt{} 0 are workers}
+        \PYG{p}{\PYGZcb{}} \PYG{k}{else} \PYG{p}{\PYGZob{}}          \PYG{c+c1}{// threads with IDs \PYGZgt{} 0 are workers }
             \PYG{n}{printf}\PYG{p}{(}\PYG{l+s}{"}\PYG{l+s}{Greetings from a worker, \PYGZsh{} \PYGZpc{}d of \PYGZpc{}d threads}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s}{"}\PYG{p}{,}
 			    \PYG{n}{id}\PYG{p}{,} \PYG{n}{numThreads}\PYG{p}{)}\PYG{p}{;}
         \PYG{p}{\PYGZcb{}}
     \PYG{p}{\PYGZcb{}}
 
+    \PYG{n}{printf}\PYG{p}{(}\PYG{l+s}{"}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s}{"}\PYG{p}{)}\PYG{p}{;}
+
     \PYG{k}{return} \PYG{l+m+mi}{0}\PYG{p}{;}
 \PYG{p}{\PYGZcb{}}
 \end{Verbatim}
 
+\emph{file: patternlets/OpenMP/05.masterWorker/masterWorker.c}
 
-\subsection{4. Shared Data Decomposition Pattern:  blocking of threads in a parallel for loop}
+
+\subsection{6. Shared Data Decomposition Pattern:  blocking of threads in a parallel for loop}
 \label{SharedMemory/OpenMP_Patternlets:shared-data-decomposition-pattern-blocking-of-threads-in-a-parallel-for-loop}
 \begin{Verbatim}[commandchars=\\\{\}]
 \PYG{c+cm}{/* parallelForBlocks.c}
@@ -752,25 +1258,30 @@ Here we enter the number of threads to use on the command line.
 \PYG{c+cp}{\PYGZsh{}}\PYG{c+cp}{include \PYGZlt{}stdlib.h\PYGZgt{}}
 
 \PYG{k+kt}{int} \PYG{n+nf}{main}\PYG{p}{(}\PYG{k+kt}{int} \PYG{n}{argc}\PYG{p}{,} \PYG{k+kt}{char}\PYG{o}{*}\PYG{o}{*} \PYG{n}{argv}\PYG{p}{)} \PYG{p}{\PYGZob{}}
-    \PYG{k+kt}{int} \PYG{n}{rank}\PYG{p}{,} \PYG{n}{i}\PYG{p}{;}
+    \PYG{k}{const} \PYG{k+kt}{int} \PYG{n}{REPS} \PYG{o}{=} \PYG{l+m+mi}{8}\PYG{p}{;}
+    \PYG{k+kt}{int} \PYG{n}{id}\PYG{p}{,} \PYG{n}{i}\PYG{p}{;}
 
+    \PYG{n}{printf}\PYG{p}{(}\PYG{l+s}{"}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s}{"}\PYG{p}{)}\PYG{p}{;}
     \PYG{k}{if} \PYG{p}{(}\PYG{n}{argc} \PYG{o}{\PYGZgt{}} \PYG{l+m+mi}{1}\PYG{p}{)} \PYG{p}{\PYGZob{}}
         \PYG{n}{omp\PYGZus{}set\PYGZus{}num\PYGZus{}threads}\PYG{p}{(} \PYG{n}{atoi}\PYG{p}{(}\PYG{n}{argv}\PYG{p}{[}\PYG{l+m+mi}{1}\PYG{p}{]}\PYG{p}{)} \PYG{p}{)}\PYG{p}{;}
     \PYG{p}{\PYGZcb{}}
 
-    \PYG{c+cp}{\PYGZsh{}}\PYG{c+cp}{pragma omp parallel for private(rank, i) }
-    \PYG{k}{for} \PYG{p}{(}\PYG{n}{i} \PYG{o}{=} \PYG{l+m+mi}{0}\PYG{p}{;} \PYG{n}{i} \PYG{o}{\PYGZlt{}} \PYG{l+m+mi}{8}\PYG{p}{;} \PYG{n}{i}\PYG{o}{+}\PYG{o}{+}\PYG{p}{)} \PYG{p}{\PYGZob{}}
-        \PYG{n}{rank}  \PYG{o}{=} \PYG{n}{omp\PYGZus{}get\PYGZus{}thread\PYGZus{}num}\PYG{p}{(}\PYG{p}{)}\PYG{p}{;}
+    \PYG{c+cp}{\PYGZsh{}}\PYG{c+cp}{pragma omp parallel for private(id, i) }
+    \PYG{k}{for} \PYG{p}{(}\PYG{n}{i} \PYG{o}{=} \PYG{l+m+mi}{0}\PYG{p}{;} \PYG{n}{i} \PYG{o}{\PYGZlt{}} \PYG{n}{REPS}\PYG{p}{;} \PYG{n}{i}\PYG{o}{+}\PYG{o}{+}\PYG{p}{)} \PYG{p}{\PYGZob{}}
+        \PYG{n}{id} \PYG{o}{=} \PYG{n}{omp\PYGZus{}get\PYGZus{}thread\PYGZus{}num}\PYG{p}{(}\PYG{p}{)}\PYG{p}{;}
         \PYG{n}{printf}\PYG{p}{(}\PYG{l+s}{"}\PYG{l+s}{Thread \PYGZpc{}d performed iteration \PYGZpc{}d}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s}{"}\PYG{p}{,} 
-                 \PYG{n}{rank}\PYG{p}{,} \PYG{n}{i}\PYG{p}{)}\PYG{p}{;}
+                 \PYG{n}{id}\PYG{p}{,} \PYG{n}{i}\PYG{p}{)}\PYG{p}{;}
     \PYG{p}{\PYGZcb{}}
 
+    \PYG{n}{printf}\PYG{p}{(}\PYG{l+s}{"}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s}{"}\PYG{p}{)}\PYG{p}{;}
     \PYG{k}{return} \PYG{l+m+mi}{0}\PYG{p}{;}
 \PYG{p}{\PYGZcb{}}
 \end{Verbatim}
 
+\emph{file: patternlets/OpenMP/06.parallelForLoop-blocks/parallelForBlocks.c}
 
-\subsection{5. Shared Data Decomposition Pattern:  striping of threads in a parallel for loop}
+
+\subsection{7. Shared Data Decomposition Pattern:  striping of threads in a parallel for loop}
 \label{SharedMemory/OpenMP_Patternlets:shared-data-decomposition-pattern-striping-of-threads-in-a-parallel-for-loop}
 \begin{Verbatim}[commandchars=\\\{\}]
 \PYG{c+cm}{/* parallelForStripes.c}
@@ -788,30 +1299,35 @@ Here we enter the number of threads to use on the command line.
 \PYG{c+cp}{\PYGZsh{}}\PYG{c+cp}{include \PYGZlt{}stdlib.h\PYGZgt{}}
 
 \PYG{k+kt}{int} \PYG{n+nf}{main}\PYG{p}{(}\PYG{k+kt}{int} \PYG{n}{argc}\PYG{p}{,} \PYG{k+kt}{char}\PYG{o}{*}\PYG{o}{*} \PYG{n}{argv}\PYG{p}{)} \PYG{p}{\PYGZob{}}
+    \PYG{k}{const} \PYG{k+kt}{int} \PYG{n}{REPS} \PYG{o}{=} \PYG{l+m+mi}{8}\PYG{p}{;}
 
+    \PYG{n}{printf}\PYG{p}{(}\PYG{l+s}{"}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s}{"}\PYG{p}{)}\PYG{p}{;}
     \PYG{k}{if} \PYG{p}{(}\PYG{n}{argc} \PYG{o}{\PYGZgt{}} \PYG{l+m+mi}{1}\PYG{p}{)} \PYG{p}{\PYGZob{}}
         \PYG{n}{omp\PYGZus{}set\PYGZus{}num\PYGZus{}threads}\PYG{p}{(} \PYG{n}{atoi}\PYG{p}{(}\PYG{n}{argv}\PYG{p}{[}\PYG{l+m+mi}{1}\PYG{p}{]}\PYG{p}{)} \PYG{p}{)}\PYG{p}{;}
     \PYG{p}{\PYGZcb{}}
 
     \PYG{c+cp}{\PYGZsh{}}\PYG{c+cp}{pragma omp parallel}
     \PYG{p}{\PYGZob{}}
-        \PYG{k+kt}{int} \PYG{n}{rank}  \PYG{o}{=} \PYG{n}{omp\PYGZus{}get\PYGZus{}thread\PYGZus{}num}\PYG{p}{(}\PYG{p}{)}\PYG{p}{;}
+        \PYG{k+kt}{int} \PYG{n}{id} \PYG{o}{=} \PYG{n}{omp\PYGZus{}get\PYGZus{}thread\PYGZus{}num}\PYG{p}{(}\PYG{p}{)}\PYG{p}{;}
         \PYG{k+kt}{int} \PYG{n}{numThreads} \PYG{o}{=} \PYG{n}{omp\PYGZus{}get\PYGZus{}num\PYGZus{}threads}\PYG{p}{(}\PYG{p}{)}\PYG{p}{;}
         \PYG{k+kt}{int} \PYG{n}{i}\PYG{p}{;}
-        \PYG{k}{for} \PYG{p}{(}\PYG{n}{i} \PYG{o}{=} \PYG{n}{rank}\PYG{p}{;} \PYG{n}{i} \PYG{o}{\PYGZlt{}} \PYG{l+m+mi}{8}\PYG{p}{;} \PYG{n}{i} \PYG{o}{+}\PYG{o}{=} \PYG{n}{numThreads}\PYG{p}{)} \PYG{p}{\PYGZob{}}
+        \PYG{k}{for} \PYG{p}{(}\PYG{n}{i} \PYG{o}{=} \PYG{n}{id}\PYG{p}{;} \PYG{n}{i} \PYG{o}{\PYGZlt{}} \PYG{n}{REPS}\PYG{p}{;} \PYG{n}{i} \PYG{o}{+}\PYG{o}{=} \PYG{n}{numThreads}\PYG{p}{)} \PYG{p}{\PYGZob{}}
             \PYG{n}{printf}\PYG{p}{(}\PYG{l+s}{"}\PYG{l+s}{Thread \PYGZpc{}d performed iteration \PYGZpc{}d}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s}{"}\PYG{p}{,} 
-                     \PYG{n}{rank}\PYG{p}{,} \PYG{n}{i}\PYG{p}{)}\PYG{p}{;}
+                     \PYG{n}{id}\PYG{p}{,} \PYG{n}{i}\PYG{p}{)}\PYG{p}{;}
         \PYG{p}{\PYGZcb{}}
     \PYG{p}{\PYGZcb{}}
 
+    \PYG{n}{printf}\PYG{p}{(}\PYG{l+s}{"}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s}{"}\PYG{p}{)}\PYG{p}{;}
     \PYG{k}{return} \PYG{l+m+mi}{0}\PYG{p}{;}
 \PYG{p}{\PYGZcb{}}
 \end{Verbatim}
 
+\emph{file: atternlets/OpenMP/07.parallelForLoop-stripes/parallelForStripes.c}
 
-\subsection{6. Collective Communication: Reduction}
+
+\subsection{8. Collective Communication: Reduction}
 \label{SharedMemory/OpenMP_Patternlets:collective-communication-reduction}
-Once processes have performed independent concurrent computations, possibly
+Once threads have performed independent concurrent computations, possibly
 on some portion of decomposed data, it is quite commen to then \emph{reduce}
 those individual computations into one value. In this example, an array of randomly assigned integers represents a set of shared data. All values
 in the array are summed together by using the OpenMP
@@ -855,7 +1371,7 @@ which is computed in line 61.
    \PYG{k}{return} \PYG{l+m+mi}{0}\PYG{p}{;}
 \PYG{p}{\PYGZcb{}} 
 
-\PYG{c+c1}{// fill array with random values}
+\PYG{c+cm}{/* fill array with random values */}
 \PYG{k+kt}{void} \PYG{n+nf}{initialize}\PYG{p}{(}\PYG{k+kt}{int}\PYG{o}{*} \PYG{n}{a}\PYG{p}{,} \PYG{k+kt}{int} \PYG{n}{n}\PYG{p}{)} \PYG{p}{\PYGZob{}}
    \PYG{k+kt}{int} \PYG{n}{i}\PYG{p}{;}
    \PYG{k}{for} \PYG{p}{(}\PYG{n}{i} \PYG{o}{=} \PYG{l+m+mi}{0}\PYG{p}{;} \PYG{n}{i} \PYG{o}{\PYGZlt{}} \PYG{n}{n}\PYG{p}{;} \PYG{n}{i}\PYG{o}{+}\PYG{o}{+}\PYG{p}{)} \PYG{p}{\PYGZob{}}
@@ -863,7 +1379,7 @@ which is computed in line 61.
    \PYG{p}{\PYGZcb{}}
 \PYG{p}{\PYGZcb{}}
 
-\PYG{c+c1}{// sum the array sequentially}
+\PYG{c+cm}{/* sum the array sequentially */}
 \PYG{k+kt}{int} \PYG{n+nf}{sequentialSum}\PYG{p}{(}\PYG{k+kt}{int}\PYG{o}{*} \PYG{n}{a}\PYG{p}{,} \PYG{k+kt}{int} \PYG{n}{n}\PYG{p}{)} \PYG{p}{\PYGZob{}}
    \PYG{k+kt}{int} \PYG{n}{sum} \PYG{o}{=} \PYG{l+m+mi}{0}\PYG{p}{;}
    \PYG{k+kt}{int} \PYG{n}{i}\PYG{p}{;}
@@ -873,7 +1389,7 @@ which is computed in line 61.
    \PYG{k}{return} \PYG{n}{sum}\PYG{p}{;}
 \PYG{p}{\PYGZcb{}}
 
-\PYG{c+c1}{// sum the array using multiple threads}
+\PYG{c+cm}{/* sum the array using multiple threads */}
 \PYG{k+kt}{int} \PYG{n+nf}{parallelSum}\PYG{p}{(}\PYG{k+kt}{int}\PYG{o}{*} \PYG{n}{a}\PYG{p}{,} \PYG{k+kt}{int} \PYG{n}{n}\PYG{p}{)} \PYG{p}{\PYGZob{}}
    \PYG{k+kt}{int} \PYG{n}{sum} \PYG{o}{=} \PYG{l+m+mi}{0}\PYG{p}{;}
    \PYG{k+kt}{int} \PYG{n}{i}\PYG{p}{;}
@@ -885,8 +1401,10 @@ which is computed in line 61.
 \PYG{p}{\PYGZcb{}}
 \end{Verbatim}
 
+\emph{file: patternlets/OpenMP/08.parallelForLoop-reduction/reduction.c}
 
-\subsection{7. Shared Data Pattern: Parallel-for-loop needs non-shared, private variables}
+
+\subsection{9. Shared Data Pattern: Parallel-for-loop needs non-shared, private variables}
 \label{SharedMemory/OpenMP_Patternlets:shared-data-pattern-parallel-for-loop-needs-non-shared-private-variables}
 \begin{Verbatim}[commandchars=\\\{\}]
 \PYG{c+cm}{/* private.c}
@@ -910,6 +1428,7 @@ which is computed in line 61.
     \PYG{k+kt}{int} \PYG{n}{i}\PYG{p}{,} \PYG{n}{j}\PYG{p}{,} \PYG{n}{ok} \PYG{o}{=} \PYG{l+m+mi}{1}\PYG{p}{;}
     \PYG{k+kt}{int} \PYG{n}{m}\PYG{p}{[}\PYG{n}{SIZE}\PYG{p}{]}\PYG{p}{[}\PYG{n}{SIZE}\PYG{p}{]}\PYG{p}{;}
 
+    \PYG{n}{printf}\PYG{p}{(}\PYG{l+s}{"}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s}{"}\PYG{p}{)}\PYG{p}{;}
     \PYG{c+c1}{// set all array entries to 1}
 \PYG{c+c1}{//    \PYGZsh{}pragma omp parallel for                     // A}
 \PYG{c+c1}{//    \PYGZsh{}pragma omp parallel for private(j)          // B}
@@ -937,8 +1456,10 @@ which is computed in line 61.
 \PYG{p}{\PYGZcb{}}
 \end{Verbatim}
 
+\emph{file: patternlets/OpenMP/09.parallelForLoop-private/private.c}
 
-\subsection{8. Race Condition: missing the mutual exclusion patterm}
+
+\subsection{10. Race Condition: missing the mutual exclusion patterm}
 \label{SharedMemory/OpenMP_Patternlets:race-condition-missing-the-mutual-exclusion-patterm}
 \begin{Verbatim}[commandchars=\\\{\}]
 \PYG{c+cm}{/* atomic.c}
@@ -991,8 +1512,10 @@ which is computed in line 61.
 \PYG{p}{\PYGZcb{}}
 \end{Verbatim}
 
+\emph{file: patternlets/OpenMP/10.mutualExclusion-atomic/atomic.c}
 
-\subsection{9. Mutual Exclusion: two ways to ensure}
+
+\subsection{11. Mutual Exclusion: two ways to ensure}
 \label{SharedMemory/OpenMP_Patternlets:mutual-exclusion-two-ways-to-ensure}
 \begin{Verbatim}[commandchars=\\\{\}]
 \PYG{c+cm}{/* critical.c}
@@ -1048,8 +1571,10 @@ which is computed in line 61.
 \PYG{p}{\PYGZcb{}}
 \end{Verbatim}
 
+\emph{file: patternlets/OpenMP/11.mutualExclusion-critical/critical.c}
 
-\subsection{10.  Mutual Exclusion Pattern: compare performance}
+
+\subsection{12.  Mutual Exclusion Pattern: compare performance}
 \label{SharedMemory/OpenMP_Patternlets:mutual-exclusion-pattern-compare-performance}
 \begin{Verbatim}[commandchars=\\\{\}]
 \PYG{c+cm}{/* critical.c}
@@ -1114,8 +1639,10 @@ which is computed in line 61.
 \PYG{p}{\PYGZcb{}}
 \end{Verbatim}
 
+\emph{file: patternlets/OpenMP/12.mutualExclusion-critical2/critical2.c}
 
-\subsection{11. Task Decomposition Pattern using OpenMP section directive}
+
+\subsection{13. Task Decomposition Pattern using OpenMP section directive}
 \label{SharedMemory/OpenMP_Patternlets:task-decomposition-pattern-using-openmp-section-directive}
 \begin{Verbatim}[commandchars=\\\{\}]
 \PYG{c+cm}{/* sections.c}
@@ -1160,6 +1687,8 @@ which is computed in line 61.
     \PYG{k}{return} \PYG{l+m+mi}{0}\PYG{p}{;}
 \PYG{p}{\PYGZcb{}}
 \end{Verbatim}
+
+\emph{file: patternlets/OpenMP/13.sections/sections.c}
 
 
 

@@ -33,7 +33,8 @@ int main (int argc, char *argv[]) {
         mtype,                 /* message type */
         rows,                  /* rows of matrix A sent to each worker */
 		averow, extra, offset, /* used to determine rows sent to each worker */
-        i, j, k, rc;           /* misc */
+        i, j, k;               /* misc */
+        errorCode = 1;         /* error code initialized for MPI_Abort */
 
     double      a[ROWA][COLA],           /* matrix A to be multiplied */
                 b[COLA][COLB],           /* matrix B to be multiplied */
@@ -50,7 +51,7 @@ int main (int argc, char *argv[]) {
     /* Need at least two processes, a master and a worker */
     if (numtasks < 2 ) {
         printf("Need at least two MPI tasks. Quitting...\n");
-        MPI_Abort(MPI_COMM_WORLD, rc);
+        MPI_Abort(MPI_COMM_WORLD, errorCode);
         exit(1);
     }
 
@@ -93,7 +94,7 @@ int main (int argc, char *argv[]) {
             // ..............
             // end TO DO
             /* the first process gets row 0 to some rows, and so on */
-            offset = offset + rows; 
+            offset = offset + rows;
         }
 
         /* Receive results from worker tasks */
