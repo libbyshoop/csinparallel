@@ -3,7 +3,7 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-Welcome to Programming with the Intel Phi Coprocessor's documentation!
+Welcome to Programming with the Intel Phi Coprocessor
 ======================================================================
 
 Contents:
