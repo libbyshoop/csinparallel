@@ -1,0 +1,2 @@
+\frametitle {Sample CUDA Implementation (kernel launch)}
+\input{cuda-launch.tex}

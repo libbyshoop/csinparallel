@@ -1,0 +1,8 @@
+\begin{lstlisting}
+void compute_next_generation(const unsigned char** grid_in, unsigned char** grid_out, int width, int height)
+{
+	dim3 block(16, 16, 1);
+	dim3 grid(width / block.x, height / block.y, 1);
+	kernel<<< grid, block>>>(grid_in, grid_out, width, height);
+}
+\end{lstlisting}

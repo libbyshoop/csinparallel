@@ -1,0 +1,11 @@
+\begin{lstlisting}
+void compute_next_generation(const unsigned char** grid_in, unsigned char** grid_out, int width, int height) {
+	for (int y = 1; y < height - 1; y++) {
+		for (int x = 1; x < width - 1; x++) {
+			unsigned char num_neighbors =
+				grid_in[y+1][x-1] + grid_in[y+1][x] + grid_in[y+1][x+1] + grid_in[y][x-1] + grid_in[y][x+1] + grid_in[y-1][x-1] + grid_in[y-1][x] + grid_in[y-1][x+1];
+			grid_out[y][x] =  ((num_neighbors == 3) || (cell(x, y) && num_neighbors == 2));
+		}
+	}
+}
+\end{lstlisting}
