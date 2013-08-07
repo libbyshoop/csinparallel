@@ -1,0 +1,22 @@
+\begin{thebibliography}{1}
+
+\bibitem{gol}
+Conway's {G}ame of {L}ife.
+\newblock \url{http://www.conwaylife.com/wiki/Conway%27s_Game_of_Life}.
+
+\bibitem{cuda_prog_guide}
+NVidia Corporation.
+\newblock {\em NVIDIA CUDA C Programming Guide}, 3.2 edition, October 2010.
+
+\bibitem{tm}
+Paul Rendell.
+\newblock This is a {T}uring {M}achine implemented in {C}onway's {G}ame of
+  {L}ife.
+\newblock \url{http://rendell-attic.org/gol/tm.htm}, 2000.
+
+\bibitem{wolfram}
+Stephen Wolfram.
+\newblock Statistical mechanics of cellular automata.
+\newblock {\em Reviews of Modern Physics}, 55(3):601--644, July 1983.
+
+\end{thebibliography}

@@ -1,0 +1,10 @@
+\begin{table}[H]
+\caption{Running time for the 50x50 grid}
+	\begin{tabular}{c|c|c|c|c|}
+	& \multicolumn{4}{c}{\bf Number of Generations} \\ \hline
+				& 1 & 100 & 10000 & 1000000 \\ \hline
+	{\tt openmp-life} (1 thread)& 0 ms & 3 ms & 295 ms & 29503 ms \\ \hline
+	{\tt openmp-life} (2 threads)& 0 ms & 2 ms & 345 ms & 36831 ms \\ \hline
+	{\tt cuda-life}   & 0 ms & 2 ms & 280 ms  &  28286 ms    \\ \hline
+	\end{tabular}
+\end{table}

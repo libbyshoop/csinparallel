@@ -1,0 +1,13 @@
+			     Computer Science 445 Final Project
+
+					    Eric Biggers
+
+		CUDA and OpenMP Implementations of Conway's Game of Life
+
+
+Paper is located at `paper/paper.pdf'.
+Presentation is located at `presentation/presentation.pdf'.
+Code is located in the directory `code'.  See the README in that directory for
+more information.
+
+

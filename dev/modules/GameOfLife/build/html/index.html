@@ -1,0 +1,161 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Game Of Life &mdash; Game of Life</title>
+    
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="Game of Life" href="#" />
+    <link rel="next" title="Resource and Customization" href="0-ResourceCustomization/resourcecustomization.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="0-ResourceCustomization/resourcecustomization.html" title="Resource and Customization"
+             accesskey="N">next</a> |</li>
+        <li><a href="#">Game of Life</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="game-of-life">
+<h1>Game Of Life<a class="headerlink" href="#game-of-life" title="Permalink to this headline">¶</a></h1>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="0-ResourceCustomization/resourcecustomization.html">Resource and Customization</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="0-ResourceCustomization/resourcecustomization.html#source-code">Source Code</a></li>
+<li class="toctree-l2"><a class="reference internal" href="0-ResourceCustomization/resourcecustomization.html#prerequisite-on-hardware-and-software">Prerequisite on Hardware and Software</a></li>
+<li class="toctree-l2"><a class="reference internal" href="0-ResourceCustomization/resourcecustomization.html#customize-makefile">Customize Makefile</a></li>
+<li class="toctree-l2"><a class="reference internal" href="0-ResourceCustomization/resourcecustomization.html#notes">Notes</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="1-Introduction/introduction.html">Introduction to the Game of Life</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="1-Introduction/introduction.html#algorithm">Algorithm</a></li>
+<li class="toctree-l2"><a class="reference internal" href="1-Introduction/introduction.html#parallelization">Parallelization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="1-Introduction/introduction.html#compiling">Compiling</a></li>
+<li class="toctree-l2"><a class="reference internal" href="1-Introduction/introduction.html#options">Options</a></li>
+<li class="toctree-l2"><a class="reference internal" href="1-Introduction/introduction.html#running">Running</a></li>
+<li class="toctree-l2"><a class="reference internal" href="1-Introduction/introduction.html#implementation">Implementation</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="2-ProgramStructure/programstructure.html">Program Structure</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="2-ProgramStructure/programstructure.html#id1">Program Structure</a></li>
+<li class="toctree-l2"><a class="reference internal" href="2-ProgramStructure/programstructure.html#life-c">Life.c</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="3-DataStructure/datastructure.html">Data Structure</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="3-DataStructure/datastructure.html#display-t-struct">display_t struct</a></li>
+<li class="toctree-l2"><a class="reference internal" href="3-DataStructure/datastructure.html#life-t-struct">life_t struct</a></li>
+<li class="toctree-l2"><a class="reference internal" href="3-DataStructure/datastructure.html#cuda-t-struct">cuda_t struct</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="4-InitializationPhase/initialization.html">Initialization Phase</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="4-InitializationPhase/initialization.html#setup-basics">Setup Basics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="4-InitializationPhase/initialization.html#initialize-grids">Initialize Grids</a></li>
+<li class="toctree-l2"><a class="reference internal" href="4-InitializationPhase/initialization.html#display-functions">Display Functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="4-InitializationPhase/initialization.html#cuda-functions">CUDA Functions</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="5-ExecutionPhase/execution.html">Execution Phase</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="5-ExecutionPhase/execution.html#do-draw">do_draw()</a></li>
+<li class="toctree-l2"><a class="reference internal" href="5-ExecutionPhase/execution.html#copy-bounds">copy_bounds()</a></li>
+<li class="toctree-l2"><a class="reference internal" href="5-ExecutionPhase/execution.html#eval-rules">eval_rules()</a></li>
+<li class="toctree-l2"><a class="reference internal" href="5-ExecutionPhase/execution.html#kernel-functions">kernel_functions()</a></li>
+<li class="toctree-l2"><a class="reference internal" href="5-ExecutionPhase/execution.html#update-grid">update_grid()</a></li>
+<li class="toctree-l2"><a class="reference internal" href="5-ExecutionPhase/execution.html#cuda-finish">cuda_finish()</a></li>
+<li class="toctree-l2"><a class="reference internal" href="5-ExecutionPhase/execution.html#throttle">throttle()</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="6-FinalizationPhase/finalization.html">Finalization Phase</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="6-FinalizationPhase/finalization.html#cuda-finish">cuda_finish()</a></li>
+<li class="toctree-l2"><a class="reference internal" href="6-FinalizationPhase/finalization.html#cleanup">cleanup()</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="7-Timing/timing.html">Timing Functions</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="7-Timing/timing.html#starttimer-usec">startTimer_usec()</a></li>
+<li class="toctree-l2"><a class="reference internal" href="7-Timing/timing.html#endtimer-usec">endTimer_usec()</a></li>
+<li class="toctree-l2"><a class="reference internal" href="7-Timing/timing.html#get-max-time">get_max_time()</a></li>
+<li class="toctree-l2"><a class="reference internal" href="7-Timing/timing.html#write-stats">write_stats()</a></li>
+<li class="toctree-l2"><a class="reference internal" href="7-Timing/timing.html#printstats">printStats()</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="#">
+              <img class="logo" src="_static/CSInParallel200wide.png" alt="Logo"/>
+            </a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="0-ResourceCustomization/resourcecustomization.html"
+                        title="next chapter">Resource and Customization</a></p>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="0-ResourceCustomization/resourcecustomization.html" title="Resource and Customization"
+             >next</a> |</li>
+        <li><a href="#">Game of Life</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright This work is licensed under a Creative Commons Attribution-ShareAlike 3.0 Unported License.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>

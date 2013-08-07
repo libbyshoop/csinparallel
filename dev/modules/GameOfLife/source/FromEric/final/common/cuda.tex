@@ -1,0 +1,11 @@
+\begin{lstlisting}
+__global__ void kernel(const unsigned char** grid_in, unsigned char** grid_out, int width, int height) {
+	int x = (blockIdx.x * blockDim.x) + threadIdx.x;
+	int y = (blockIdx.y * blockDim.y) + threadIdx.y;
+	if (x > 0 && x < width - 1 && y > 0 && y < height - 1) {
+		unsigned char num_neighbors = grid_in[y+1][x-1] + grid_in[y+1][x] + grid_in[y+1][x+1] + grid_in[y][x-1] + grid_in[y][x+1] + grid_in[y-1][x-1] + grid_in[y-1][x] + grid_in[y-1][x+1];
+
+		grid_out[y][x] =  ((num_neighbors == 3) || (cell(x, y) && num_neighbors == 2));
+	}
+}
+\end{lstlisting}

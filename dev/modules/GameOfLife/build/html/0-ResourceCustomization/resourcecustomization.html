@@ -1,0 +1,158 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Resource and Customization &mdash; Game of Life</title>
+    
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="top" title="Game of Life" href="../index.html" />
+    <link rel="next" title="Introduction to the Game of Life" href="../1-Introduction/introduction.html" />
+    <link rel="prev" title="Game Of Life" href="../index.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../1-Introduction/introduction.html" title="Introduction to the Game of Life"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="../index.html" title="Game Of Life"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../index.html">Game of Life</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="resource-and-customization">
+<h1>Resource and Customization<a class="headerlink" href="#resource-and-customization" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="source-code">
+<h2>Source Code<a class="headerlink" href="#source-code" title="Permalink to this headline">¶</a></h2>
+<p><a class="reference download internal" href="../_downloads/GameOfLife.zip"><tt class="xref download docutils literal"><span class="pre">Download</span> <span class="pre">GameOfLife.zip</span></tt></a></p>
+<p><a class="reference download internal" href="../_downloads/StatKit.zip"><tt class="xref download docutils literal"><span class="pre">Download</span> <span class="pre">StatKit.zip</span></tt></a></p>
+<p><strong>Please put the StatKit folder outside of GameOfLife folder.</strong></p>
+</div>
+<div class="section" id="prerequisite-on-hardware-and-software">
+<h2>Prerequisite on Hardware and Software<a class="headerlink" href="#prerequisite-on-hardware-and-software" title="Permalink to this headline">¶</a></h2>
+<p>In order to compile and run the code, you will need the following hardware and software:</p>
+<ul class="simple">
+<li>Machines with multicore processors (Intel i7 or Xeon)</li>
+<li>Cluster (LittleFe, Selkie by Macalester College, or Helios by St. Olaf College)</li>
+<li>Nvidia&#8217;s Graphics Card (Tesla, Geforce, Quadro)</li>
+<li>OpenMP library for OpenMP operations</li>
+<li>OpenMPI library for MPI operations (Normally OpenMPI should be installed on clusters. However, you can install it on a stand alone machine as well. It would only simulate MPI operations through TCP/IP)</li>
+<li>CUDA library for CUDA operations.</li>
+</ul>
+</div>
+<div class="section" id="customize-makefile">
+<h2>Customize Makefile<a class="headerlink" href="#customize-makefile" title="Permalink to this headline">¶</a></h2>
+<p>The source code is compiled and tested on LittleFe and <em>Macalester College</em>&#8216;s Nuggle server. Therefore, most of the library path in the makefile is customized for these machines. Before compiling or running the code, you will need to customize the makefile for your own installation.</p>
+<p><strong>C Compiler</strong></p>
+<p>We use <em>gcc</em> and <em>icc</em> as standard compiler.</p>
+<p><strong>OpenMP Macro</strong></p>
+<p>We discovered that different C compilers has different OpenMP macros. <em>gcc</em> uses -fopenmp while <em>icc</em> uses -openmp. Make sure the macro you put in matches your C compiler.</p>
+<p><strong>CUDA Library Path</strong></p>
+<p>You will need to change the CUDA library path to match your own machine.</p>
+<p><strong>machinefile</strong></p>
+<p>MPI requires a machinefile for <em>mpirun</em> command. You will need to customize machinefile to match your own installation.</p>
+</div>
+<div class="section" id="notes">
+<h2>Notes<a class="headerlink" href="#notes" title="Permalink to this headline">¶</a></h2>
+<ol class="arabic simple">
+<li>LittleFe has Nvidia&#8217;s Ion graphics card, which is a rather low end product. Running CUDA only version and CUDA-MPI hybrid version with display will cause problems because limited GPU resources. We recommend running these versions with <strong>&#8211;no-display</strong> option.</li>
+<li>If you are running MPI on a single machine instead of on a cluster, MPI+OpenMP hybrid version can be really slow due to MPI and OpenMP are using multicore architecture in the same time.</li>
+</ol>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../index.html">
+              <img class="logo" src="../_static/CSInParallel200wide.png" alt="Logo"/>
+            </a></p>
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Resource and Customization</a><ul>
+<li><a class="reference internal" href="#source-code">Source Code</a></li>
+<li><a class="reference internal" href="#prerequisite-on-hardware-and-software">Prerequisite on Hardware and Software</a></li>
+<li><a class="reference internal" href="#customize-makefile">Customize Makefile</a></li>
+<li><a class="reference internal" href="#notes">Notes</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="../index.html"
+                        title="previous chapter">Game Of Life</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="../1-Introduction/introduction.html"
+                        title="next chapter">Introduction to the Game of Life</a></p>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../1-Introduction/introduction.html" title="Introduction to the Game of Life"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="../index.html" title="Game Of Life"
+             >previous</a> |</li>
+        <li><a href="../index.html">Game of Life</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright This work is licensed under a Creative Commons Attribution-ShareAlike 3.0 Unported License.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>
