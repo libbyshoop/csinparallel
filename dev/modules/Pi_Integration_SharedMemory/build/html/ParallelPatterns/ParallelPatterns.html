@@ -1,0 +1,151 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Parallel Patterns &mdash; Pi Using Numerical Integration: Shared Memory</title>
+    
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="top" title="Pi Using Numerical Integration: Shared Memory" href="../index.html" />
+    <link rel="next" title="References" href="../References/References.html" />
+    <link rel="prev" title="Pi Using Numerical Integration: Windows Threads" href="../WindowsThreads/WindowsThreads.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../References/References.html" title="References"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="../WindowsThreads/WindowsThreads.html" title="Pi Using Numerical Integration: Windows Threads"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../index.html">Pi Using Numerical Integration: Shared Memory</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="parallel-patterns">
+<h1>Parallel Patterns<a class="headerlink" href="#parallel-patterns" title="Permalink to this headline">¶</a></h1>
+<p>If you have not yet done so, read the introdutory material found <a class="reference external" href="&quot;Link/back/to/Intro&quot;">here</a>.</p>
+<div class="section" id="parallel-algorithm-strategy-patterns">
+<h2>Parallel algorithm strategy patterns.<a class="headerlink" href="#parallel-algorithm-strategy-patterns" title="Permalink to this headline">¶</a></h2>
+<p>These example programs for computing pi as an area of a semicircle exhibit a number of parallel design patterns.  Here, we will list many of the patterns present in some of our solutions of the problem of computing pi.</p>
+<blockquote>
+<div><ul class="simple">
+<li>Most of our parallel implementations exhibit the <strong>Geometric decomposition</strong> parallel-algorithm strategy pattern.  For example, in the OpenMP solution , the OpenMP system parallelizes a  for  loop by dividing its loop-control range into subranges.  We can view each subrange as a rectangle-based geometric approximation of some portion of the semicircle.  In fact, we use the pattern name Geometric Decomposition for any decomposition into “chunks” of data, such as contiguous subranges of a loop-control range, even if the resulting computation does not correspond to a geometric figure.</li>
+</ul>
+</div></blockquote>
+</div>
+<div class="section" id="implementation-strategy-patterns">
+<h2>Implementation strategy patterns.<a class="headerlink" href="#implementation-strategy-patterns" title="Permalink to this headline">¶</a></h2>
+<p>There are two types of patterns at this level: <em>program structure</em> patterns focus on organizing a program;  and <em>data structure</em> patterns describe common data structures specific to parallel programming.  Several such patterns appear among the code examples above.</p>
+<blockquote>
+<div><ul class="simple">
+<li>The OpenMP solution exemplifies the <strong>Loop parallel</strong> program-structure pattern, because the OpenMP pragma requests that the summation loop be carried out in parallel, using OpenMP’s automatic mechanism for carrying out subranges of the summation in parallel. The TBB implementation pi_area_tbb.c provides another example, through its use of  tbb::parallel_reduce  which performs a multithreaded sum over subranges.</li>
+<li>The Pthreads, Windows threads, and Go code examples illustrate the <strong>Master-worker</strong> algorithm strategy pattern, in which one thread assigns work tasks to worker threads or processes, seeking a balanced load.  When those tasks have varying execution times, a program may seek load balancing by having workers process one task at a time and return for a next task.  However, each of these cases achieves load balancing by assigning tasks known to require about the same time to each worker (i.e., adding up areas of nearly equal numbers of rectangles per worker).</li>
+<li>The Pthreads and Windows threads implementations also show a <strong>Fork-join</strong> algorithm strategy pattern, in the way they create, launch, and await completion of their threads.  The Go implementation also demonstrates that pattern, accomplishing the “join” operation on each goroutine (process or thread) by collecting that thread’s results over the shared communication channel.</li>
+</ul>
+</div></blockquote>
+</div>
+<div class="section" id="concurrent-execution-patterns">
+<h2>Concurrent execution patterns.<a class="headerlink" href="#concurrent-execution-patterns" title="Permalink to this headline">¶</a></h2>
+<p>This level consists of <em>advancing program counters</em> patterns, which concern the timing relationships for executing instructions among different threads or processes, and <em>coordination</em> patterns, which provide mechanisms for processes or threads to correctly access the data they need (cf. interprocess communication).  Our examples illustrate several concurrent-execution patterns.</p>
+<blockquote>
+<div><ul class="simple">
+<li>The <strong>Thread pool</strong> advancing-program-counter pattern appears in the Pthreads and Windows threads code examples, in that those implementations each create an array of threads for parallel computation (here, in order to serve as worker threads in a master-worker strategy).  Programs with multiple parallel segments may reuse such threads for subsequent parallel operations;  however, this simple example has only one portion of parallel code, so these programs use their threads only once each.</li>
+<li>The reduce operations in the OpenMP and TBB  implementations present the <strong>Collective communication</strong> coordination pattern.</li>
+<li>The <strong>Mutual exclusion</strong> coordination pattern appears in the  pthread_mutex_t  variable  gLock  in the Pthreads example, and in the  CRITICAL_SECTION  variable  gCS  in the Windows threads example.</li>
+<li>Finally, the Go code illustrates the <strong>Message passing</strong> coordination pattern, when goroutines computing subtotals of areas of rectangles communicate those results to the original process using the channel  parts .</li>
+</ul>
+</div></blockquote>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../index.html">
+              <img class="logo" src="../_static/CSInParallel200wide.png" alt="Logo"/>
+            </a></p>
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Parallel Patterns</a><ul>
+<li><a class="reference internal" href="#parallel-algorithm-strategy-patterns">Parallel algorithm strategy patterns.</a></li>
+<li><a class="reference internal" href="#implementation-strategy-patterns">Implementation strategy patterns.</a></li>
+<li><a class="reference internal" href="#concurrent-execution-patterns">Concurrent execution patterns.</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="../WindowsThreads/WindowsThreads.html"
+                        title="previous chapter">Pi Using Numerical Integration: Windows Threads</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="../References/References.html"
+                        title="next chapter">References</a></p>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../References/References.html" title="References"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="../WindowsThreads/WindowsThreads.html" title="Pi Using Numerical Integration: Windows Threads"
+             >previous</a> |</li>
+        <li><a href="../index.html">Pi Using Numerical Integration: Shared Memory</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright This work is licensed under a Creative Commons Attribution-ShareAlike 3.0 Unported License.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2b1.
+    </div>
+  </body>
+</html>

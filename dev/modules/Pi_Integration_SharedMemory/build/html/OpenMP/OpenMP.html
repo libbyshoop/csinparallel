@@ -1,0 +1,193 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Pi Using Numerical Integration: Open MP &mdash; Pi Using Numerical Integration: Shared Memory</title>
+    
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="top" title="Pi Using Numerical Integration: Shared Memory" href="../index.html" />
+    <link rel="next" title="Pi Using Numerical Integration: TBB" href="../TBB/TBB.html" />
+    <link rel="prev" title="Pi Using Numerical Integration: Haskell" href="../Haskell/Haskell.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../TBB/TBB.html" title="Pi Using Numerical Integration: TBB"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="../Haskell/Haskell.html" title="Pi Using Numerical Integration: Haskell"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../index.html">Pi Using Numerical Integration: Shared Memory</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="pi-using-numerical-integration-open-mp">
+<h1>Pi Using Numerical Integration: Open MP<a class="headerlink" href="#pi-using-numerical-integration-open-mp" title="Permalink to this headline">¶</a></h1>
+<p>This is the simplest parallelization strategy we will consider for this problem.  The example inserts one OpenMP pragma to parallelize the loop for computing areas of rectangles and summing those areas, as shown below. In this case, the loop iterations must be independent in order to execute in parallel.Notice how the computation of the midpoint for each rectangle, x, is done within the loop rather than relying on adding the width of each segment from the initial midpoint value (in the downloadable serial code).</p>
+<div class="highlight-python"><pre>sum = 0;
+h = 2.0 / n_rect;
+/* NOTE: i is automatically private, and n_rect, and h are shared */
+#pragma omp parallel for private( x ) reduction(+: sum)
+for( i = 0; i &lt; n_rect; i++ ) {
+    x = -1 + ( i + 0.5 ) * h;
+    sum += sqrt( 1 - x * x ) * h;
+}
+pi = sum*2.0;</pre>
+</div>
+<dl class="docutils">
+<dt><em>Comments on the code</em>:</dt>
+<dd><ul class="first last simple">
+<li>None of the OpenMP threads in the parallelized  for  loop will modify any of the variables  n_rect   or  h   so it is safe for those variables to be shared among the threads.</li>
+<li>The   omp parallel for  pragma parallelizes a  for  loop by giving different threads their own subrange of values of the loop-control variable ( i  in this case).  Hence, that variable  i  is automatically private or local to each thread. The “work” variable, x, must be private to each thread or a race condition will result. This can be done through the private() clause or declaring the x variable within the parallel region (within the for-loop).</li>
+<li>The variable  sum  (which holds a partial sum of rectangle areas) must be computed locally for each thread, in order to avoid a race condition.  As each thread finishes its work, its resulting value of  sum  (representing that thread’s subtotal of areas of rectangles) must be added to a grand total in order to produce the correct (global) value of  sum  after the  for  loop is finished.  This subtotalling/grand totalling procedure is accomplished using an OpenMP  reduction()  clause. The calues also ensures that threads use a local version of sum.</li>
+<li>The number of OpenMP threads used does <em>not</em> need to match the number of cores on your system.  The number of threads can be controlled by setting the environment variable OMP_NUM_THREADS at runtime.  The function omp_set_num_threads() may be used to set the number of threads from within the code.</li>
+</ul>
+</dd>
+</dl>
+<div class="section" id="further-exploration">
+<h2>Further Exploration<a class="headerlink" href="#further-exploration" title="Permalink to this headline">¶</a></h2>
+<p>Download the <a class="reference external" href="https://code.google.com/p/eapf-tech-pack-practicum/source/browse/trunk/pi_integration/pi_area_omp.c">serial</a> and <a class="reference external" href="https://code.google.com/p/eapf-tech-pack-practicum/source/browse/trunk/pi_integration/pi_area_omp.c">OpenMP</a> codes. Build and run them. Compare the timing results you collected for the sequential program to the time performance of this parallel program using various numbers of threads using OMP_NUM_THREADS.  Does the parallel program perform better?  Is the speed up as much as you would expect?  If not, can you hypothesize why?</p>
+</div>
+<div class="section" id="complete-code">
+<h2>Complete Code<a class="headerlink" href="#complete-code" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-python"><pre>/* Estimate pi as twice the area under a semicircle
+ Command-line arguments (optional, default values below).
+  1. first command line arg is integer number of rectangles to use
+  2. if two command-line args, second arg is number of OpenMP threads
+ WARNING:  minimal error checking is performed on these command-line args */
+
+#include &lt;stdio.h&gt;
+#include &lt;math.h&gt;
+#include &lt;stdlib.h&gt;
+
+/* parameters that may be overridden on the command-line */
+long n_rect = 10485760;         /* default number of rectangles */
+int threadct = 8;               /* default number of OpenMP threads to use */
+
+int main(int argc, char** argv) {
+double a = -1.0, b = 1.0;  /* lower and upper interval endpoints */
+double h;               /* width of a rectangle subinterval */
+double f(double x);     /* declare function that defines curve */
+double sum;             /* accumulates areas all rectangles so far */
+long i;  /* loop control */
+ /* parse command-line arguments, if any */
+if (argc &gt; 1)
+n_rect = strtol(argv[1], NULL, 10);
+if (argc &gt; 2)
+    threadct = strtol(argv[2], NULL, 10);
+if (n_rect &lt;= 0 || threadct &lt;= 0) {
+    printf("Error in command-line argument(s)\n");
+        return 1;  /* indicates error exit */
+}
+
+h = (b - a)/n_rect;
+
+/* compute the estimate */
+ sum = 0;
+#pragma omp parallel for num_threads(threadct) \
+shared (a, n_rect, h) private(i) reduction(+: sum)
+for (i = 0; i &lt; n_rect; i++) {
+     sum += f(a + (i+0.5)*h) * h;
+}
+printf("With n = %d rectangles and %d threads, ", n_rect, threadct);
+printf("the estimate of pi is %.20g\n", sum);
+return 0;
+}
+
+double f(double x) {
+return 2*sqrt(1-x*x);
+}</pre>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../index.html">
+              <img class="logo" src="../_static/CSInParallel200wide.png" alt="Logo"/>
+            </a></p>
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Pi Using Numerical Integration: Open MP</a><ul>
+<li><a class="reference internal" href="#further-exploration">Further Exploration</a></li>
+<li><a class="reference internal" href="#complete-code">Complete Code</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="../Haskell/Haskell.html"
+                        title="previous chapter">Pi Using Numerical Integration: Haskell</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="../TBB/TBB.html"
+                        title="next chapter">Pi Using Numerical Integration: TBB</a></p>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../TBB/TBB.html" title="Pi Using Numerical Integration: TBB"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="../Haskell/Haskell.html" title="Pi Using Numerical Integration: Haskell"
+             >previous</a> |</li>
+        <li><a href="../index.html">Pi Using Numerical Integration: Shared Memory</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright This work is licensed under a Creative Commons Attribution-ShareAlike 3.0 Unported License.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2b1.
+    </div>
+  </body>
+</html>

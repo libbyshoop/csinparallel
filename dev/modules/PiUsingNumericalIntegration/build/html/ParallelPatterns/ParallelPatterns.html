@@ -1,0 +1,132 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Looking Ahead: Parallel Patterns &mdash; Pi Using Numerical Integration</title>
+    
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="top" title="Pi Using Numerical Integration" href="../index.html" />
+    <link rel="next" title="Example Implementations" href="../ExampleImplementations/ExampleImplementations.html" />
+    <link rel="prev" title="Implementation Strategies" href="../ImplementationStrategies/ImplementationStrategies.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../ExampleImplementations/ExampleImplementations.html" title="Example Implementations"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="../ImplementationStrategies/ImplementationStrategies.html" title="Implementation Strategies"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../index.html">Pi Using Numerical Integration</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="looking-ahead-parallel-patterns">
+<h1>Looking Ahead: Parallel Patterns<a class="headerlink" href="#looking-ahead-parallel-patterns" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="parallel-design-patterns">
+<h2>Parallel Design Patterns<a class="headerlink" href="#parallel-design-patterns" title="Permalink to this headline">¶</a></h2>
+<dl class="docutils">
+<dt>As described in the module Introduction to Parallel Design Patterns, the OPL system of parallel patterns is organized into four levels.</dt>
+<dd><ul class="first last simple">
+<li>The top level, called the <strong>Application Architecture Level</strong>, consists of structural and computational patterns for designing large pieces of software (whether or not that software will be implemented with parallelism).</li>
+<li>Implementing this problem will not require a large software application – it’s more on the scale of a particular iterative computation <em>within</em> an application. Therefore, we will not need to consider a combination of structural and computational patterns to solve this problem. We need only find a way to add up many areas of rectangles, then multiply by 2.</li>
+<li>The next level of OPL patterns is the <strong>Parallel Algorithms Strategy Level</strong>. Two patterns at this level relate to our discussion above.
+- The <strong>Data parallel</strong> pattern involves applying the same computational operations to multiple data values, assuming that those operations can be performed independently for different data values. We can consider the values xias our multiple data values, and the rectangle-area computation as our operations.
+- The <strong>Geometric decomposition pattern</strong> involves breaking a large computation up into smaller “chunks” that we can compute in parallel. If we use a large number of rectangles N in our area approximation, we can apply this pattern by having multiple parallel computations that each add the areas of a subset of the rectangles.</li>
+</ul>
+</dd>
+</dl>
+<p><strong>Note</strong>: These patterns (as we have just described them) indicate strategies for designing parallel solutions to our problem which will prove useful when we write parallel code to compute π. However, our problem may not quite fit the exact OPL definitions of these terms. In particular, OPL refers to a data structure for both of these pattern names, whereas we might simply add up areas of rectangles in a loop without an explicit data
+structure of values. Also, the OPL <strong>Geometric decomposition pattern</strong> refers to concurrently updatable “chunks,” whereas our “chunks” of data values will never change. Nevertheless, these two algorithmic strategy patterns will help guide us to good parallelizations for given computational platforms.</p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../index.html">
+              <img class="logo" src="../_static/CSInParallel200wide.png" alt="Logo"/>
+            </a></p>
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Looking Ahead: Parallel Patterns</a><ul>
+<li><a class="reference internal" href="#parallel-design-patterns">Parallel Design Patterns</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="../ImplementationStrategies/ImplementationStrategies.html"
+                        title="previous chapter">Implementation Strategies</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="../ExampleImplementations/ExampleImplementations.html"
+                        title="next chapter">Example Implementations</a></p>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../ExampleImplementations/ExampleImplementations.html" title="Example Implementations"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="../ImplementationStrategies/ImplementationStrategies.html" title="Implementation Strategies"
+             >previous</a> |</li>
+        <li><a href="../index.html">Pi Using Numerical Integration</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright This work is licensed under a Creative Commons Attribution-ShareAlike 3.0 Unported License.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2b1.
+    </div>
+  </body>
+</html>

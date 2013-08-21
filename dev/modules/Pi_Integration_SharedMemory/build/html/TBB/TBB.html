@@ -1,0 +1,148 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Pi Using Numerical Integration: TBB &mdash; Pi Using Numerical Integration: Shared Memory</title>
+    
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="top" title="Pi Using Numerical Integration: Shared Memory" href="../index.html" />
+    <link rel="next" title="Pi Using Numerical Integration: Windows Threads" href="../WindowsThreads/WindowsThreads.html" />
+    <link rel="prev" title="Pi Using Numerical Integration: Open MP" href="../OpenMP/OpenMP.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../WindowsThreads/WindowsThreads.html" title="Pi Using Numerical Integration: Windows Threads"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="../OpenMP/OpenMP.html" title="Pi Using Numerical Integration: Open MP"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../index.html">Pi Using Numerical Integration: Shared Memory</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="pi-using-numerical-integration-tbb">
+<h1>Pi Using Numerical Integration: TBB<a class="headerlink" href="#pi-using-numerical-integration-tbb" title="Permalink to this headline">¶</a></h1>
+<p>There are two major parts to the TBB solution. The first, after the required #include lines to import the TBB definitions, is the call to parallel_reduce(). This algorithm call will take a range (0, num_rect), and a body object (area), and a partitioner as parameters. The range will be divided into sub-ranges until a sub-range is deemed small enough, which is the function of the partitioner. This range will be encapsulated into a task that can be executed by a thread.</p>
+<p>Once the computation is complete, the sum of all the rectangle areas computed for the smallest sub-ranges has been gathered (reduced) into the sum component of the area object. Multiply this value by 2.0 to compute the approximation of pi.</p>
+<div class="highlight-python"><pre>#include "tbb/parallel_reduce.h"
+#include "tbb/task_scheduler_init.h"
+#include "tbb/blocked_range.h"
+
+using namespace std;
+using namespace tbb;
+long long num_rect =  1000000000;
+. . .
+double pi;
+double width = 1./(double)num_rect;
+MyPi area(&amp;width);  //construct MyPi with initializer of step(&amp;width)
+parallel_reduce(blocked_range&lt;size_t&gt;(0,num_rect),
+               area,
+               auto_partitioner());
+pi = area.sum * 2.0;</pre>
+</div>
+<p>The second major part of the solution is the body class MyPi defined below. This class defines the operator() method with the body of the serial code loop. Once a task has been defined (sub-range has been deemed indivisible), the loop in the operator() method computes the midpoint of the associated rectangle for each value within the range of the task. From this, the area of that rectangle is computed and added to the object’s sum component.</p>
+<p>Once the entire range within a task has been used, the sum components from different tasks are added together through the join() method.  This method accepts the sum from some other task and adds it to the local sum of the current task. This sum can then be used in another join() operation until the final sum of all tasks has been added together. This final result is then available through the sum component of the original body object used in the parallel_reduce() call.</p>
+<div class="highlight-python"><pre>class MyPi {
+double *const my_h;
+
+public:
+double sum;
+
+void operator()( const blocked_range&lt;size_t&gt;&amp; r ) {
+double h = *my_h;
+double x;
+     for (size_t i = r.begin(); i != r.end(); ++i){
+       x = -1 + (i + 0.5) * h;
+       sum = sum + sqrt(1.0 - x*x) * h;
+       }
+}
+void join( const MyPi&amp; y ) {sum += y.sum;}
+
+MyPi(double *const step) : my_h(h), sum(0) {}
+MyPi( MyPi&amp; x, split ) : my_h(x.my_h), sum(0) {}
+};</pre>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../index.html">
+              <img class="logo" src="../_static/CSInParallel200wide.png" alt="Logo"/>
+            </a></p>
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="../OpenMP/OpenMP.html"
+                        title="previous chapter">Pi Using Numerical Integration: Open MP</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="../WindowsThreads/WindowsThreads.html"
+                        title="next chapter">Pi Using Numerical Integration: Windows Threads</a></p>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../WindowsThreads/WindowsThreads.html" title="Pi Using Numerical Integration: Windows Threads"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="../OpenMP/OpenMP.html" title="Pi Using Numerical Integration: Open MP"
+             >previous</a> |</li>
+        <li><a href="../index.html">Pi Using Numerical Integration: Shared Memory</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright This work is licensed under a Creative Commons Attribution-ShareAlike 3.0 Unported License.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2b1.
+    </div>
+  </body>
+</html>

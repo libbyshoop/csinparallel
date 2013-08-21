@@ -1,0 +1,147 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Parallel Patterns &mdash; Pi Using Numerical Integration: Distributed &amp; Accelerated</title>
+    
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="top" title="Pi Using Numerical Integration: Distributed &amp; Accelerated" href="../index.html" />
+    <link rel="next" title="References" href="../References/References.html" />
+    <link rel="prev" title="Pi Using Numerical Integration: MPI" href="../MPI/MPI.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../References/References.html" title="References"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="../MPI/MPI.html" title="Pi Using Numerical Integration: MPI"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../index.html">Pi Using Numerical Integration: Distributed &amp; Accelerated</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="parallel-patterns">
+<h1>Parallel Patterns<a class="headerlink" href="#parallel-patterns" title="Permalink to this headline">¶</a></h1>
+<p>If you have not yet done so, read the introdutory material found <a class="reference external" href="&quot;Link/back/to/Intro&quot;">here</a>.</p>
+<div class="section" id="parallel-algorithm-strategy-patterns">
+<h2>Parallel algorithm strategy patterns.<a class="headerlink" href="#parallel-algorithm-strategy-patterns" title="Permalink to this headline">¶</a></h2>
+<p>These example programs for computing pi as an area of a semicircle exhibit a number of parallel design patterns.  Here, we will list many of the patterns present in some of our solutions of the problem of computing pi. Our example codes all illustrate the <strong>Geometric decomposition</strong>, but few fit OPL’s <strong>Data parallel</strong> parallel-algorithm strategy pattern.</p>
+<blockquote>
+<div><ul class="simple">
+<li>Many programmers might say that these programs also shows “data parallelism,” since they process different data in different threads or processes.  In fact, some authors consider nearly any parallel computation to exhibit “data parallelism” (and other authors argue that nearly any parallel computation exemplifies “task parallelism”).  We will follow the OPL group and narrow the <strong>Data parallel</strong> parallel-algorithm strategy pattern to situations that apply a stream of instructions to elements of a data structure.  By this definition, the Array Building Blocks implementation and arguably the CUDA implementation qualify as using the <strong>Data parallel</strong> pattern.</li>
+</ul>
+</div></blockquote>
+</div>
+<div class="section" id="implementation-strategy-patterns">
+<h2>Implementation strategy patterns.<a class="headerlink" href="#implementation-strategy-patterns" title="Permalink to this headline">¶</a></h2>
+<p>There are two types of patterns at this level: <em>program structure</em> patterns focus on organizing a program;  and <em>data structure</em> patterns describe common data structures specific to parallel programming.  Several such patterns appear among the code examples above.</p>
+<blockquote>
+<div><ul class="simple">
+<li>The <strong>Strict data parallel</strong> program-structure pattern provides a particular approach to implementing the higher-level <strong>Data parallel</strong>     algorithm strategy pattern, which we may think of as an alternative to a <strong>Loop parallel</strong> implementation:  instead of visiting each value in turn, we think of processing all the values simultaneously, applying a single instruction stream to each of those values in parallel.  The ArBB code provides a higher-level example of this pattern, and the CUDA implementation shows that pattern at a lower level (i.e., closer to the hardware architecture).</li>
+<li>Finally, we note that the ArBB code illustrates the <strong>Distributed array</strong> data structure pattern.</li>
+</ul>
+</div></blockquote>
+</div>
+<div class="section" id="concurrent-execution-patterns">
+<h2>Concurrent execution patterns.<a class="headerlink" href="#concurrent-execution-patterns" title="Permalink to this headline">¶</a></h2>
+<p>This level consists of <em>advancing program counters</em> patterns, which concern the timing relationships for executing instructions among different threads or processes, and <em>coordination</em> patterns, which provide mechanisms for processes or threads to correctly access the data they need (cf. interprocess communication).  Our examples illustrate several concurrent-execution patterns.</p>
+<blockquote>
+<div><ul class="simple">
+<li>The <strong>SIMD (Single Instruction Multiple Data)</strong> advancing-program-counter pattern appears in both the ArBB code and the CUDA code.  This pattern refines the <strong>Strict data parallel</strong> pattern, by specifying that concurrent execution should happen without programming how it will happen.</li>
+</ul>
+</div></blockquote>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../index.html">
+              <img class="logo" src="../_static/CSInParallel200wide.png" alt="Logo"/>
+            </a></p>
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Parallel Patterns</a><ul>
+<li><a class="reference internal" href="#parallel-algorithm-strategy-patterns">Parallel algorithm strategy patterns.</a></li>
+<li><a class="reference internal" href="#implementation-strategy-patterns">Implementation strategy patterns.</a></li>
+<li><a class="reference internal" href="#concurrent-execution-patterns">Concurrent execution patterns.</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="../MPI/MPI.html"
+                        title="previous chapter">Pi Using Numerical Integration: MPI</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="../References/References.html"
+                        title="next chapter">References</a></p>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../References/References.html" title="References"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="../MPI/MPI.html" title="Pi Using Numerical Integration: MPI"
+             >previous</a> |</li>
+        <li><a href="../index.html">Pi Using Numerical Integration: Distributed &amp; Accelerated</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright This work is licensed under a Creative Commons Attribution-ShareAlike 3.0 Unported License.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2b1.
+    </div>
+  </body>
+</html>
