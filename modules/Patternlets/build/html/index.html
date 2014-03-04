@@ -26,7 +26,7 @@
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
     <link rel="top" title="Parallel Patternlets" href="#" />
-    <link rel="next" title="Message Passing Parallel Patternlets" href="MessagePassing/MPI_Patternlets.html" /> 
+    <link rel="next" title="Parallel Programming Patterns" href="PatternsIntro.html" /> 
   </head>
   <body>
     <div class="related">
@@ -36,7 +36,7 @@
           <a href="genindex.html" title="General Index"
              accesskey="I">index</a></li>
         <li class="right" >
-          <a href="MessagePassing/MPI_Patternlets.html" title="Message Passing Parallel Patternlets"
+          <a href="PatternsIntro.html" title="Parallel Programming Patterns"
              accesskey="N">next</a> |</li>
         <li><a href="#">Parallel Patternlets</a> &raquo;</li> 
       </ul>
@@ -49,31 +49,10 @@
             
   <div class="section" id="parallel-patternlets">
 <h1>Parallel Patternlets<a class="headerlink" href="#parallel-patternlets" title="Permalink to this headline">¶</a></h1>
-<p>This document contains simple examples of basic elements that are combined to form
-patterns often used in
-programs employing parallelism.  The examples are separated between
-two major <em>coordination patterns</em>:</p>
-<blockquote>
-<div><ol class="arabic simple">
-<li>message passing used on single multiprocessor machines or clusters of distributed computers, and</li>
-<li>mutual exclusion between threads executing concurrently on a single shared memory system.</li>
-</ol>
-</div></blockquote>
-<p>Both sets of examples are illustrated
-with the C programming language, using standard popular available libraries.
-The message passing example uses
-a C library called MPI (Message Passing Interface).  The mutual Exclusion/shared memory
-examples use the OpenMP library.</p>
-</div>
-<div class="section" id="source-code">
-<h1>Source Code<a class="headerlink" href="#source-code" title="Permalink to this headline">¶</a></h1>
-<p>Please download all examples from this tarball:
-<a class="reference download internal" href="_downloads/patternlets2.tgz"><tt class="xref download docutils literal"><span class="pre">patternlets.tgz</span></tt></a></p>
-</div>
-<div class="section" id="patternlet-examples">
-<h1>Patternlet Examples<a class="headerlink" href="#patternlet-examples" title="Permalink to this headline">¶</a></h1>
+<p>This document contains simple examples of basic elements that are combined to form patterns often used in programs employing parallelism.  We call these examples <em>patternlets</em> because they are deliberately trivial, small, yet functioning programs that illustrate a basic shell of how a particular parallel pattern is created in a program.  They are starting points you can use to create realistic working programs of your own that use the patterns.  Before diving into the examples, first there will be some background on parallel programming patterns.</p>
 <div class="toctree-wrapper compound">
 <ul>
+<li class="toctree-l1"><a class="reference internal" href="PatternsIntro.html">Parallel Programming Patterns</a></li>
 <li class="toctree-l1"><a class="reference internal" href="MessagePassing/MPI_Patternlets.html">Message Passing Parallel Patternlets</a></li>
 <li class="toctree-l1"><a class="reference internal" href="SharedMemory/OpenMP_Patternlets.html">Shared Memory Parallel Patternlets in OpenMP</a></li>
 </ul>
@@ -89,31 +68,9 @@ examples use the OpenMP library.</p>
             <p class="logo"><a href="#">
               <img class="logo" src="_static/CSInParallel200wide.png" alt="Logo"/>
             </a></p>
-  <h3><a href="#">Table Of Contents</a></h3>
-  <ul>
-<li><a class="reference internal" href="#">Parallel Patternlets</a></li>
-<li><a class="reference internal" href="#source-code">Source Code</a></li>
-<li><a class="reference internal" href="#patternlet-examples">Patternlet Examples</a><ul>
-</ul>
-</li>
-</ul>
-
   <h4>Next topic</h4>
-  <p class="topless"><a href="MessagePassing/MPI_Patternlets.html"
-                        title="next chapter">Message Passing Parallel Patternlets</a></p>
-<div id="searchbox" style="display: none">
-  <h3>Quick search</h3>
-    <form class="search" action="search.html" method="get">
-      <input type="text" name="q" />
-      <input type="submit" value="Go" />
-      <input type="hidden" name="check_keywords" value="yes" />
-      <input type="hidden" name="area" value="default" />
-    </form>
-    <p class="searchtip" style="font-size: 90%">
-    Enter search terms or a module, class or function name.
-    </p>
-</div>
-<script type="text/javascript">$('#searchbox').show(0);</script>
+  <p class="topless"><a href="PatternsIntro.html"
+                        title="next chapter">Parallel Programming Patterns</a></p>
         </div>
       </div>
       <div class="clearer"></div>
@@ -125,7 +82,7 @@ examples use the OpenMP library.</p>
           <a href="genindex.html" title="General Index"
              >index</a></li>
         <li class="right" >
-          <a href="MessagePassing/MPI_Patternlets.html" title="Message Passing Parallel Patternlets"
+          <a href="PatternsIntro.html" title="Parallel Programming Patterns"
              >next</a> |</li>
         <li><a href="#">Parallel Patternlets</a> &raquo;</li> 
       </ul>

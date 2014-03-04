@@ -102,6 +102,11 @@ pygments_style = 'sphinx'
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
 html_theme = 'default'
+html_theme_options = {
+    "stickysidebar": "true",
+}
+#!!!!!!!! LS: The above didn't work. Can change it globally on my Mac laptop here:
+#/Library/Frameworks/Python.framework/Versions/2.7/lib/python2.7/site-packages/Sphinx-1.1.3-py2.7.egg/sphinx/themes/default/
 
 # Theme options are theme-specific and customize the look and feel of a theme
 # further.  For a list of options available for each theme, see the
@@ -141,8 +146,11 @@ html_static_path = ['_static']
 #html_use_smartypants = True
 
 # Custom sidebar templates, maps document names to template names.
+#  Docs: http://sphinx-doc.org/config.html     search for 'sidebar'
 #html_sidebars = {}
-
+html_sidebars = {
+   '**': ['localtoc.html', 'relations.html'],
+   }
 # Additional templates that should be rendered to pages, maps page names to
 # template names.
 #html_additional_pages = {}
