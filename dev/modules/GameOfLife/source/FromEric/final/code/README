@@ -1,0 +1,42 @@
+This is an implementation of Conway's Game of Life.  It uses the "brute-force"
+algorithm and shows the grid in a window using OpenGL.  
+
+*************************  
+Building the executables 
+-------------------------
+
+Two executables can be built:
+
+`openmp-life', which uses OpenMP for the computation. To build this executable,
+type `make openmp-life'.
+
+`cuda-life', which uses CUDA for the computation. To build this executable, type
+`make cuda-life'.
+
+The OpenGL library, the OpenGL Utility library, the OpenGL Utility Toolkit
+library, and the OpenGL Extension Wrangler library are required.  Also,
+`cuda-life' (obviously) requires CUDA.  (We have all this stuff on the
+LittleFe.)
+
+***********************
+Running the executables
+-----------------------
+
+Run either executable with the `--help' argument to see the command line
+options.  Running either executable with no command line options will start up a
+simulation using a default pattern (the R pentonimo).
+
+When I was testing the program I would connect to the LittleFe using a VNC
+viewer, then run the program using VirtualGL:
+
+vncviewer littlefe::5901
+vglrun ~/life/cuda-life
+
+*************
+Pattern files 
+-------------
+
+The directory `patterns' contains some patterns.  Some were found on the
+Internet and some are distributed with Golly.  The ones in `patterns/lifep' seem
+to work all right.
+

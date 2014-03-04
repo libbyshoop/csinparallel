@@ -1,0 +1,21 @@
+This is pdfTeX, Version 3.1415926-2.3-1.40.12 (TeX Live 2012/dev/Arch Linux) (format=pdflatex 2011.12.8)  15 DEC 2011 23:13
+entering extended mode
+ restricted \write18 enabled.
+ %&-line parsing enabled.
+**presentation.tex
+
+! Emergency stop.
+<*> presentation.tex
+                    
+End of file on the terminal!
+
+ 
+Here is how much of TeX's memory you used:
+ 5 strings out of 493633
+ 126 string characters out of 3148775
+ 49245 words of memory out of 3000000
+ 3405 multiletter control sequences out of 15000+200000
+ 3640 words of font info for 14 fonts, out of 3000000 for 9000
+ 831 hyphenation exceptions out of 8191
+ 0i,0n,0p,20b,6s stack positions out of 5000i,500n,10000p,200000b,50000s
+!  ==> Fatal error occurred, no output PDF file produced!

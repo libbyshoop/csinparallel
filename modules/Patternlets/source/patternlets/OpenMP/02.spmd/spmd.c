@@ -13,7 +13,6 @@
 
 #include <stdio.h>
 #include <omp.h>
-#include <stdlib.h>
 
 int main(int argc, char** argv) {
     printf("\n");

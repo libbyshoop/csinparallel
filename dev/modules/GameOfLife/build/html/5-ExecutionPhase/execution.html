@@ -1,0 +1,146 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Execution Phase &mdash; Game of Life</title>
+    
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="top" title="Game of Life" href="../index.html" />
+    <link rel="next" title="Finalization Phase" href="../6-FinalizationPhase/finalization.html" />
+    <link rel="prev" title="Initialization Phase" href="../4-InitializationPhase/initialization.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../6-FinalizationPhase/finalization.html" title="Finalization Phase"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="../4-InitializationPhase/initialization.html" title="Initialization Phase"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../index.html">Game of Life</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="execution-phase">
+<h1>Execution Phase<a class="headerlink" href="#execution-phase" title="Permalink to this headline">¶</a></h1>
+<p>In this phase, we will perform most of the simulation.</p>
+<div class="section" id="do-draw">
+<h2>do_draw()<a class="headerlink" href="#do-draw" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="copy-bounds">
+<h2>copy_bounds()<a class="headerlink" href="#copy-bounds" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="eval-rules">
+<h2>eval_rules()<a class="headerlink" href="#eval-rules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="kernel-functions">
+<h2>kernel_functions()<a class="headerlink" href="#kernel-functions" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="update-grid">
+<h2>update_grid()<a class="headerlink" href="#update-grid" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="cuda-finish">
+<h2>cuda_finish()<a class="headerlink" href="#cuda-finish" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="throttle">
+<h2>throttle()<a class="headerlink" href="#throttle" title="Permalink to this headline">¶</a></h2>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../index.html">
+              <img class="logo" src="../_static/CSInParallel200wide.png" alt="Logo"/>
+            </a></p>
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Execution Phase</a><ul>
+<li><a class="reference internal" href="#do-draw">do_draw()</a></li>
+<li><a class="reference internal" href="#copy-bounds">copy_bounds()</a></li>
+<li><a class="reference internal" href="#eval-rules">eval_rules()</a></li>
+<li><a class="reference internal" href="#kernel-functions">kernel_functions()</a></li>
+<li><a class="reference internal" href="#update-grid">update_grid()</a></li>
+<li><a class="reference internal" href="#cuda-finish">cuda_finish()</a></li>
+<li><a class="reference internal" href="#throttle">throttle()</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="../4-InitializationPhase/initialization.html"
+                        title="previous chapter">Initialization Phase</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="../6-FinalizationPhase/finalization.html"
+                        title="next chapter">Finalization Phase</a></p>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../6-FinalizationPhase/finalization.html" title="Finalization Phase"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="../4-InitializationPhase/initialization.html" title="Initialization Phase"
+             >previous</a> |</li>
+        <li><a href="../index.html">Game of Life</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright This work is licensed under a Creative Commons Attribution-ShareAlike 3.0 Unported License.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>

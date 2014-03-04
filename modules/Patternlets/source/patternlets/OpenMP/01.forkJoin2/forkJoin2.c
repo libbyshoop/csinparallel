@@ -13,9 +13,8 @@
  * - Uncomment 'Part IV', recompile, rerun.
  */
 
-#include <stdio.h>
-#include <omp.h>
-#include <stdlib.h>
+#include <stdio.h>    // printf()
+#include <omp.h>      // OpenMP
 
 int main(int argc, char** argv) {
 
