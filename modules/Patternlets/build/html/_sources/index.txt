@@ -3,35 +3,16 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
+**********************
 Parallel Patternlets
-=====================
+**********************
 
-This document contains simple examples of basic elements that are combined to form
-patterns often used in
-programs employing parallelism.  The examples are separated between
-two major *coordination patterns*: 
-	
-	1. message passing used on single multiprocessor machines or clusters of distributed computers, and 
-	2. mutual exclusion between threads executing concurrently on a single shared memory system.  
-
-Both sets of examples are illustrated
-with the C programming language, using standard popular available libraries.
-The message passing example uses
-a C library called MPI (Message Passing Interface).  The mutual Exclusion/shared memory
-examples use the OpenMP library.
-
-Source Code
-===========
-
-Please download all examples from this tarball: 
-:download:`patternlets.tgz <patternlets.tgz>`
-
-Patternlet Examples
-===================
+This document contains simple examples of basic elements that are combined to form patterns often used in programs employing parallelism.  We call these examples *patternlets* because they are deliberately trivial, small, yet functioning programs that illustrate a basic shell of how a particular parallel pattern is created in a program.  They are starting points you can use to create realistic working programs of your own that use the patterns.  Before diving into the examples, first there will be some background on parallel programming patterns.
 
 .. toctree::
 	:maxdepth: 1
 
+	PatternsIntro
 	MessagePassing/MPI_Patternlets
 	SharedMemory/OpenMP_Patternlets
 

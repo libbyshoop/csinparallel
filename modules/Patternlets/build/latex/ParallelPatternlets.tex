@@ -13,7 +13,7 @@
 
 
 \title{Parallel Patternlets}
-\date{July 26, 2013}
+\date{March 03, 2014}
 \release{}
 \author{CSinParallel Project}
 \newcommand{\sphinxlogo}{}
@@ -117,36 +117,96 @@
 \phantomsection\label{index::doc}
 
 
-This document contains simple examples of basic elements that are combined to form
-patterns often used in
-programs employing parallelism.  The examples are separated between
-two major \emph{coordination patterns}:
+This document contains simple examples of basic elements that are combined to form patterns often used in programs employing parallelism.  We call these examples \emph{patternlets} because they are deliberately trivial, small, yet functioning programs that illustrate a basic shell of how a particular parallel pattern is created in a program.  They are starting points you can use to create realistic working programs of your own that use the patterns.  Before diving into the examples, first there will be some background on parallel programming patterns.
+
+
+\chapter{Parallel Programming Patterns}
+\label{PatternsIntro:parallel-programming-patterns}\label{PatternsIntro::doc}\label{PatternsIntro:parallel-patternlets}
+Like all programs, parallel programs contain many \textbf{patterns}: useful ways of writing code that are used repeatedly by most developers because they work well in parctice.  These patterns have been documented by developers over time so that useful ways of organizing and writing good parallel code can be learned by new programmers (and even seasoned veterans).
+
+
+\section{An organization of parallel patterns}
+\label{PatternsIntro:an-organization-of-parallel-patterns}
+When writing parallel programs, developers use patterns that can be grouped into two main categories:
 \begin{enumerate}
 \item {} 
-message passing used on single multiprocessor machines or clusters of distributed computers, and
+Strategies
 
 \item {} 
-mutual exclusion between threads executing concurrently on a single shared memory system.
+Concurrent Execution Mechanisms
 
 \end{enumerate}
 
-Both sets of examples are illustrated
-with the C programming language, using standard popular available libraries.
-The message passing example uses
-a C library called MPI (Message Passing Interface).  The mutual Exclusion/shared memory
-examples use the OpenMP library.
+
+\subsection{Strategies}
+\label{PatternsIntro:strategies}
+When you set out to write a program, whether it is parallel or not, you should be considering two prinary stratigic considerations:
+\begin{enumerate}
+\item {} 
+What \emph{algorithmic strategies} to use
+
+\item {} 
+Given the algorithmic strategies, what \emph{implementation strategies} to use
+
+\end{enumerate}
+
+In the examples in this document we introduce some well-used patterns for both algorithmic strategies and implementation strategies.  Parallel algorithmic strategies primarily have to do with making choices about what tasks can be done concurrently by multiple processing units executing concurrently.  Parallel programs often make use of several patterns of implementation strategies.  Some of these patterns contribute to the overall structure of the program, and others are concerned with how the data that is being computed by multiple processing units is structured.  As you will see, the patternlets introduce more algorithmic strategy patterns and program structure implementation strategy patterns than data structure implementation strategy patterns.
 
 
-\chapter{Source Code}
-\label{index:source-code}\label{index:parallel-patternlets}
-Please download all examples from this tarball:
-\code{patternlets.tgz}
+\subsection{Concurrent Execution Mechanisms}
+\label{PatternsIntro:concurrent-execution-mechanisms}
+There are a number of parallel code patterns that are closely related to the system or hardware that a program is being written for and the software library used to enable parallelism, or concurrent execution.  These \emph{concurrent execution} patterns fall into two major categories:
+\begin{enumerate}
+\item {} 
+\emph{Process/Thread control} patterns, which dictate how the processing units of parallel execution on the hardware (either a process or a thread, depending on the hardware and software used) are controlled at run time.  For the patternlets described in this document, the software libraries that provide system parallelism have these patterns built into them, so they will be hidden from the programmer.
+
+\item {} 
+\emph{Coordination} patterns, which set up how multiple concurrently running tasks on processing units coordinate to complete the parallel computation desired.
+
+\end{enumerate}
+
+In parallel processing, most software uses one of
+two major \emph{coordination patterns}:
+\begin{enumerate}
+\item {} 
+\textbf{message passing} between concurrent processes on either single multiprocessor machines or clusters of distributed computers, and
+
+\item {} 
+\textbf{mutual exclusion} between threads executing concurrently on a single shared memory system.
+
+\end{enumerate}
+
+These two types of computation are often realized using two very popular C/C++ libraries:
+\begin{enumerate}
+\item {} 
+MPI, or Message Passing Interface, for message passing.
+
+\item {} 
+OpenMP for threaded, shared memory applications.
+
+\end{enumerate}
+
+OpenMP is built on a lower-level POSIX library called Pthreads, which can also be used by itself on shared memory systems.
+
+A third emerging type of parallel implementation involves a \emph{hybrid computation} that uses both of the above patterns together, using a cluster of computers, each of which executes multiple threads.  This type of hybrid program often uses MPI and OpenMP together in one program, which runs on multiple computers in a cluster.
+
+This document is split into chapters of examples.  There are examples for message passing using MPI and shared memory using OpenMP.
+(In the future we will include shared memory examples using Pthreads, and hybrid computations using a compbination of MPI and OPneMP.)
+
+Most of the examples are illustrated
+with the C programming language, using standard popular available libraries. In a few cases, C++
+is used to illustrate a particular difference in code execution between the two languages.
+
+There are many small examples that serve to illustrate a common pattern.  They are designed for you to try compiling and running on your own to see how they work.  For each example, there are comments within the code to guide you as you try them out.  In some cases, there may be code snippets that you can comment and/or uncomment to see how the execution of the code changes after you do so and re-compile it.
+
+Depending on you interest, you can now explore MPI Patternlets or OpneMP Patternlets.
+
+{\hyperref[MessagePassing/MPI_Patternlets::doc]{\emph{Message Passing Parallel Patternlets}}}
+
+{\hyperref[SharedMemory/OpenMP_Patternlets::doc]{\emph{Shared Memory Parallel Patternlets in OpenMP}}}
 
 
-\chapter{Patternlet Examples}
-\label{index:patternlet-examples}
-
-\section{Message Passing Parallel Patternlets}
+\chapter{Message Passing Parallel Patternlets}
 \label{MessagePassing/MPI_Patternlets:message-passing-parallel-patternlets}\label{MessagePassing/MPI_Patternlets::doc}
 Parallel programs contain \emph{patterns}:  code that recurs over and over again
 in solutions to many problems.  The following examples show very simple
@@ -157,16 +217,16 @@ single pultiprocessor machine or a cluster
 of machines.
 
 
-\subsection{Source Code}
+\section{Source Code}
 \label{MessagePassing/MPI_Patternlets:source-code}
 Please download all examples from this tarball:
-\code{patternlets.tgz}
+\code{MPI.tgz}
 
 A C code file for each example below can be found in subdirectories of the MPI directory,
 along with a makefile and an example of how to execute the program.
 
 
-\subsection{0. Single Program, Multiple Data}
+\section{0. Single Program, Multiple Data}
 \label{MessagePassing/MPI_Patternlets:single-program-multiple-data}
 First let us illustrate the basic components of an MPI program,
 which by its nature uses a single program that runs on each process.
@@ -208,7 +268,7 @@ for its variables.  This is why we call it single program, multiple data.
 \emph{file: patternlets/MPI/00.spmd/spmd.c}
 
 
-\subsection{1. The Master-Worker Implementation Strategy Pattern}
+\section{1. The Master-Worker Implementation Strategy Pattern}
 \label{MessagePassing/MPI_Patternlets:the-master-worker-implementation-strategy-pattern}
 \begin{Verbatim}[commandchars=\\\{\}]
 \PYG{c+cm}{/* masterServer.c}
@@ -244,7 +304,7 @@ for its variables.  This is why we call it single program, multiple data.
 \emph{file: patternlets/MPI/01.masterWorker/masterWorker.c}
 
 
-\subsection{2. Message passing 1, using Send-Receive of a single value}
+\section{2. Message passing 1, using Send-Receive of a single value}
 \label{MessagePassing/MPI_Patternlets:message-passing-1-using-send-receive-of-a-single-value}
 \begin{Verbatim}[commandchars=\\\{\}]
 \PYG{c+cm}{/* messagePassing.c}
@@ -293,7 +353,7 @@ for its variables.  This is why we call it single program, multiple data.
 \emph{file: patternlets/MPI/02.messagePassing/messagePassing.c}
 
 
-\subsection{3. Message passing 2,  using Send-Receive of an array of values}
+\section{3. Message passing 2,  using Send-Receive of an array of values}
 \label{MessagePassing/MPI_Patternlets:message-passing-2-using-send-receive-of-an-array-of-values}
 \begin{Verbatim}[commandchars=\\\{\}]
 \PYG{c+cm}{/* messagePassing2.c}
@@ -374,7 +434,7 @@ for its variables.  This is why we call it single program, multiple data.
 \emph{file: patternlets/MPI/03.messagePassing2/messagePassing2.c}
 
 
-\subsection{4. A. Data Decomposition: on \emph{slices} using parallel-for (textual version)}
+\section{4. A. Data Decomposition: on \emph{slices} using parallel-for (textual version)}
 \label{MessagePassing/MPI_Patternlets:a-data-decomposition-on-slices-using-parallel-for-textual-version}
 In this example, the data being decomposed is simply the set of integers
 from zero to REPS * numProcesses, which are used in the for loop.
@@ -412,7 +472,7 @@ from zero to REPS * numProcesses, which are used in the for loop.
 \emph{file: patternlets/MPI/04.parallelForLoop-slices/textual/parallelForSlices.c}
 
 
-\subsection{4. B. Data Decomposition: on \emph{slices} using parallel-for (visual version)}
+\section{4. B. Data Decomposition: on \emph{slices} using parallel-for (visual version)}
 \label{MessagePassing/MPI_Patternlets:b-data-decomposition-on-slices-using-parallel-for-visual-version}
 In this example, we can visually see how the slicing of data used in iterations
 of a nested for loop is working.  Run it to see the effect!
@@ -515,7 +575,7 @@ of a nested for loop is working.  Run it to see the effect!
 \emph{file: patternlets/MPI/04.parallelForLoop-slices/visual/parallelForSlices.c}
 
 
-\subsection{5. A. Data Decomposition: on \emph{blocks} using parallel-for (textual version)}
+\section{5. A. Data Decomposition: on \emph{blocks} using parallel-for (textual version)}
 \label{MessagePassing/MPI_Patternlets:a-data-decomposition-on-blocks-using-parallel-for-textual-version}
 This is a basic example that does not yet include a data array, though
 it would typically be used when each process would be working on a portion
@@ -563,7 +623,7 @@ of an array that could have been looped over in a sequential solution.
 \emph{file: patternlets/MPI/05.parallelForLoop-blocks/textual/parallelForBlocks.c}
 
 
-\subsection{5. B. Data Decomposition: on \emph{blocks} using parallel-for (visual version)}
+\section{5. B. Data Decomposition: on \emph{blocks} using parallel-for (visual version)}
 \label{MessagePassing/MPI_Patternlets:b-data-decomposition-on-blocks-using-parallel-for-visual-version}
 In this example you can see how blocks of values within a matrix might be
 assigned to each process.  Run it to see the effect!
@@ -672,7 +732,7 @@ assigned to each process.  Run it to see the effect!
 \emph{file: atternlets/MPI/05.parallelForLoop-blocks/visual/parallelForBlocks.c}
 
 
-\subsection{6. Broadcast: a special form of message passing}
+\section{6. Broadcast: a special form of message passing}
 \label{MessagePassing/MPI_Patternlets:broadcast-a-special-form-of-message-passing}
 This example shows how to ensure that all processes have a copy of an array
 created by a single \emph{master} node.
@@ -728,7 +788,7 @@ created by a single \emph{master} node.
 \emph{file: patternlets/MPI/06.broadcast/broadcast.c}
 
 
-\subsection{7. Collective Communication: Reduction}
+\section{7. Collective Communication: Reduction}
 \label{MessagePassing/MPI_Patternlets:collective-communication-reduction}
 Once processes have performed independent concurrent computations, possibly
 on some portion of decomposed data, it is quite commen to then \emph{reduce}
@@ -776,7 +836,7 @@ MPI\_MAX in the following code.
 \emph{file: patternlets/MPI/07.reduction/reduction.c}
 
 
-\subsection{8. Collective communication: Scatter for message-passing data decomposition}
+\section{8. Collective communication: Scatter for message-passing data decomposition}
 \label{MessagePassing/MPI_Patternlets:collective-communication-scatter-for-message-passing-data-decomposition}
 If processes can independently work on portions of a larger data array
 using the geometric data decomposition pattern,
@@ -822,7 +882,7 @@ a copy of its portion of the array.
 \emph{file: patternlets/MPI/08.scatter/scatter.c}
 
 
-\subsection{9. Collective communication: Gather for message-passing data decomposition}
+\section{9. Collective communication: Gather for message-passing data decomposition}
 \label{MessagePassing/MPI_Patternlets:collective-communication-gather-for-message-passing-data-decomposition}
 If processes can independently work on portions of a larger data array
 using the geometric data decomposition pattern,
@@ -877,7 +937,7 @@ a copy of its portion of the array back to the root, or master process.
 \emph{file: patternlets/MPI/09.gather/gather.c}
 
 
-\subsection{10. Collective Communication: Barrier}
+\section{10. Collective Communication: Barrier}
 \label{MessagePassing/MPI_Patternlets:collective-communication-barrier}
 This simple example shows the use of a barrier: a point at which all processes
 must complete the code above it before moving on and running the code below it.
@@ -921,42 +981,99 @@ must complete the code above it before moving on and running the code below it.
 \emph{file: patternlets/MPI/10.barrier/barrier.c}
 
 
-\section{Shared Memory Parallel Patternlets in OpenMP}
+\chapter{Shared Memory Parallel Patternlets in OpenMP}
 \label{SharedMemory/OpenMP_Patternlets:shared-memory-parallel-patternlets-in-openmp}\label{SharedMemory/OpenMP_Patternlets::doc}
 When writing programs for shared-memory hardware with multiple cores,
 a programmer could use a
 low-level thread package, such as pthreads. An alternative is to use
 a compiler that processes OpenMP \emph{pragmas}, which are compiler directives that
 enable the compiler to generate threaded code.  Whereas pthreads uses an \textbf{explicit}
-multithreading mosel in which the programmer must explicitly create and manage threads,
+multithreading model in which the programmer must explicitly create and manage threads,
 OpenMP uses an \textbf{implicit} multithreading model in which the library handles
 thread creation and management, thus making the programmer's task much simpler and
-less error-prone.
+less error-prone.  OpenMP is a standard that compilers who implement it must adhere to.
 
-The following are examples of C code with OpenMP pragmas
-The firrst three are basic illustrations to get used to the OpenMP pragmas.
-The rest illustrate how to implement particular patterns and what can
-go wrong when mutual exclusion is not properly ensured.
+The following are examples of C code with OpenMP pragmas.  There is one C++
+example that is used to illustrate a point about that language. The first
+three are basic illustrations so you can get used to the OpenMP pragmas and
+conceptualize the two primary patterns used as
+\textbf{program structure implementation strategies} that almost all shared-memory
+parallel programs have:
+\begin{itemize}
+\item {} 
+\textbf{fork/join}:  forking threads and joining them back, and
 
-Note: by default OpenMP uses the \textbf{Thread Pool} pattern of concurrent execution.
+\item {} 
+\textbf{single program, multiple data}:  writing one program in which separate threads maybe performing different computations simultaneously on different data, some of which might be shared in memory.
+
+\end{itemize}
+
+The rest of the examples illustrate how to implement other patterns
+along with the above two and what can go wrong when mutual exclusion
+is not properly ensured.
+
+Note: by default OpenMP uses the \textbf{Thread Pool} pattern of concurrent execution control.
 OpenMP programs initialze a group of threads to be used by a given program
 (often called a pool of threads).  These threads will execute concurrently
-during portions of the code specified by the programmer.
+during portions of the code specified by the programmer.  In addition, the \textbf{multiple instructtion, multiple data} pattern is used in OpenMP programs because multiple threads can be exituting different instructions on different data in memory at the same point in time.
 
 
-\subsection{Source Code}
+\section{Source Code}
 \label{SharedMemory/OpenMP_Patternlets:source-code}
 Please download all examples from this tarball:
-\code{patternlets.tgz}
+\code{openMP.tgz}
 
-A C code file for each example below can be found in subdirectories of the OpenMP directory,
-along with a makefile.
+A C code file and a Makefile or each example below can be found in
+subdirectories of the openMP directory created by extracting the above tarball.
+The number for each example below corresponds to one used in subdirectory
+names containing each one.
+
+To compile and run these examples, you will need a C compiler with OpenMP.  The gnu C compiler is OpenMP compliant.  We assume you are building and executing these on a unix command line.
 
 
-\subsection{0. The basic fork-join pattern}
-\label{SharedMemory/OpenMP_Patternlets:the-basic-fork-join-pattern}
-The \emph{omp parallel} pragma on line 22, when uncommented, tells the compiler to
-fork a set of threads to execute that particular line of code.
+\section{Patternlets Grouped By Type}
+\label{SharedMemory/OpenMP_Patternlets:patternlets-grouped-by-type}
+If you are working on these for the first time, you may want to visit them in order.  If you are returning to review a particular patternlet or the pattern categorization diagram, you can refer to them individually.
+
+{\hyperref[SharedMemory/ProgStructure_Barrier::doc]{\emph{Shared Memory Program Structure and Coordination Patterns}}}
+
+{\hyperref[SharedMemory/DataDecomp_Reduction::doc]{\emph{Data Decomposition Algorithm Strategies and Related Coordination Strategies}}}
+
+{\hyperref[SharedMemory/MutualExclusion::doc]{\emph{Patterns used when threads share data values}}}
+
+{\hyperref[SharedMemory/TaskDecomp::doc]{\emph{Task Decomposition Algorithm Strategies}}}
+
+{\hyperref[SharedMemory/patterns_diagram::doc]{\emph{Categorizing Patterns}}}
+
+
+\subsection{Shared Memory Program Structure and Coordination Patterns}
+\label{SharedMemory/ProgStructure_Barrier:shared-memory-program-structure-and-coordination-patterns}\label{SharedMemory/ProgStructure_Barrier::doc}
+
+\subsubsection{0. Program Structure Implementation Strategy: The basic fork-join pattern}
+\label{SharedMemory/ProgStructure_Barrier:program-structure-implementation-strategy-the-basic-fork-join-pattern}
+\emph{file: openMP/00.forkJoin/forkJoin.c}
+
+\emph{Build inside 00.forkJoin directory:}
+
+\begin{Verbatim}[commandchars=\\\{\}]
+make forkjoin
+\end{Verbatim}
+
+\emph{Execute on the command line inside 00.forkJoin directory:}
+
+\begin{Verbatim}[commandchars=\\\{\}]
+./forkjoin
+\end{Verbatim}
+
+The \emph{omp parallel} pragma on line 21, when uncommented, tells the compiler to
+fork a set of threads to execute the next line of code (later you will see how this is done for a block of code).  You can conceptualize how this works using the following diagram, where time is moving from left to right:
+
+\includegraphics{ForkJoin.png}
+
+Observe what happens on the machine
+where you are running this code, both when you have the pragma commented (no fork) and when you uncomment it (adding a fork).
+
+Note that in OpenMP the join is implicit and does not require a pragma directive.
 
 \begin{Verbatim}[commandchars=\\\{\},numbers=left,firstnumber=1,stepnumber=1]
 \PYG{c+cm}{/* forkJoin.c}
@@ -972,9 +1089,8 @@ fork a set of threads to execute that particular line of code.
 \PYG{c+cm}{ *    recompile \PYGZam{} run, compare results.}
 \PYG{c+cm}{ */}
 
-\PYG{c+cp}{\PYGZsh{}}\PYG{c+cp}{include \PYGZlt{}stdio.h\PYGZgt{}}
-\PYG{c+cp}{\PYGZsh{}}\PYG{c+cp}{include \PYGZlt{}omp.h\PYGZgt{}}
-\PYG{c+cp}{\PYGZsh{}}\PYG{c+cp}{include \PYGZlt{}stdlib.h\PYGZgt{}}
+\PYG{c+cp}{\PYGZsh{}}\PYG{c+cp}{include \PYGZlt{}stdio.h\PYGZgt{}     }\PYG{c+c1}{// printf()}
+\PYG{c+cp}{\PYGZsh{}}\PYG{c+cp}{include \PYGZlt{}omp.h\PYGZgt{}       }\PYG{c+c1}{// OpenMP}
 
 \PYG{k+kt}{int} \PYG{n+nf}{main}\PYG{p}{(}\PYG{k+kt}{int} \PYG{n}{argc}\PYG{p}{,} \PYG{k+kt}{char}\PYG{o}{*}\PYG{o}{*} \PYG{n}{argv}\PYG{p}{)} \PYG{p}{\PYGZob{}}
 
@@ -989,13 +1105,33 @@ fork a set of threads to execute that particular line of code.
 \PYG{p}{\PYGZcb{}}
 \end{Verbatim}
 
-\emph{file: patternlets/OpenMP/00.forkJoin/forkJoin.c}
 
+\subsubsection{1. Program Structure Implementation Strategy: Fork-join with setting the number of threads}
+\label{SharedMemory/ProgStructure_Barrier:program-structure-implementation-strategy-fork-join-with-setting-the-number-of-threads}
+\emph{file openMP/01.forkJoin2/forkJoin2.c}
 
-\subsection{1. Fork-join: setting the number of threads}
-\label{SharedMemory/OpenMP_Patternlets:fork-join-setting-the-number-of-threads}
-Note how there is an OpenMP function for setting the number of threads to use in
-the next `fork'.
+\emph{Build inside 01.forkJoin2 directory:}
+
+\begin{Verbatim}[commandchars=\\\{\}]
+make forkjoin2
+\end{Verbatim}
+
+\emph{Execute on the command line inside 01.forkJoin2 directory:}
+
+\begin{Verbatim}[commandchars=\\\{\}]
+./forkjoin2
+\end{Verbatim}
+
+This code illustrates that one program can fork and join more than once
+and that programmers can set the number of threads to use in the parallel forked code.
+
+Note on line 28 there is an OpenMP function called \emph{omp\_set\_num\_threads}
+for setting the number of threads to use for each
+\emph{fork}, which occur when the omp\_parallel pragma is used.
+Also note on line 35 that you can set the number of threads for the very next
+fork indicated by an omp\_parallel pragma by augmenting the pragma as shown in line 35.
+Follow the instructions in the header of the code file to understand the difference
+between these.
 
 \begin{Verbatim}[commandchars=\\\{\},numbers=left,firstnumber=1,stepnumber=1]
 \PYG{c+cm}{/* forkJoin2.c}
@@ -1013,9 +1149,8 @@ the next `fork'.
 \PYG{c+cm}{ * - Uncomment 'Part IV', recompile, rerun.}
 \PYG{c+cm}{ */}
 
-\PYG{c+cp}{\PYGZsh{}}\PYG{c+cp}{include \PYGZlt{}stdio.h\PYGZgt{}}
-\PYG{c+cp}{\PYGZsh{}}\PYG{c+cp}{include \PYGZlt{}omp.h\PYGZgt{}}
-\PYG{c+cp}{\PYGZsh{}}\PYG{c+cp}{include \PYGZlt{}stdlib.h\PYGZgt{}}
+\PYG{c+cp}{\PYGZsh{}}\PYG{c+cp}{include \PYGZlt{}stdio.h\PYGZgt{}    }\PYG{c+c1}{// printf()}
+\PYG{c+cp}{\PYGZsh{}}\PYG{c+cp}{include \PYGZlt{}omp.h\PYGZgt{}      }\PYG{c+c1}{// OpenMP}
 
 \PYG{k+kt}{int} \PYG{n+nf}{main}\PYG{p}{(}\PYG{k+kt}{int} \PYG{n}{argc}\PYG{p}{,} \PYG{k+kt}{char}\PYG{o}{*}\PYG{o}{*} \PYG{n}{argv}\PYG{p}{)} \PYG{p}{\PYGZob{}}
 
@@ -1047,19 +1182,49 @@ the next `fork'.
 \PYG{p}{\PYGZcb{}}
 \end{Verbatim}
 
-\emph{file patternlets/OpenMP/01.forkJoin2/forkJoin2.c}
 
+\subsubsection{2. Program Structure Implementation Strategy: Single Program, multiple data}
+\label{SharedMemory/ProgStructure_Barrier:program-structure-implementation-strategy-single-program-multiple-data}
+\emph{file: openMP/02.spmd/spmd.c}
 
-\subsection{2. Single Program, multiple data}
-\label{SharedMemory/OpenMP_Patternlets:single-program-multiple-data}
+\emph{Build inside 02.spmd directory:}
+
+\begin{Verbatim}[commandchars=\\\{\}]
+make spmd
+\end{Verbatim}
+
+\emph{Execute on the command line inside 02.spmd directory:}
+
+\begin{Verbatim}[commandchars=\\\{\}]
+./spmd
+\end{Verbatim}
+
 Note how there are OpenMP functions to
 obtain a thread number and the total number of threads.
-We have one program, but multiple threads executing,
+We have one program, but multiple threads executing in the forked section,
 each with a copy of the id and num\_threads variables.
+Programmers write one program, but write it in such a way that
+each thread has its own data values for particular variables.
+This is why this is called the \emph{single program, multiple data} (SPMD) pattern.
 
-When the pragma is uncommented, note what the default number of threads
+Most parallel programs use this SPMD pattern, because writing one program
+is ultimately the most efficient method for programmers.  It does require you
+as a programmer to understand how this works, however.  Think carefully about
+how each thread executing in parallel has its own set of variables.  Conceptually,
+it looks like this, where each thread has its own memory for the variables id and numThreads:
+
+\includegraphics{ForkJoin_SPMD.png}
+
+When the pragma is uncommented in the code below, note what the default number of threads
 is.  Here the threads are forked and execute the block of code insode the
-curly braces on lines 22 through 26.
+curly braces on lines 22 through 26.  This is how we can have a block of code executed
+concurrently on each thread.
+
+When you execute the parallel version containing the pragma (uncommenting line 20),
+what do you observe about the order of the printed lines?  Run the program multiple times--
+does the ordering change?  This illustrates an important point about threaded programs:
+\emph{the ordering of execution of statements between threads is not guaranteed.}  This is also
+illustrated in the diagram above.
 
 \begin{Verbatim}[commandchars=\\\{\},numbers=left,firstnumber=1,stepnumber=1]
 \PYG{c+cm}{/* spmd.c}
@@ -1077,7 +1242,6 @@ curly braces on lines 22 through 26.
 
 \PYG{c+cp}{\PYGZsh{}}\PYG{c+cp}{include \PYGZlt{}stdio.h\PYGZgt{}}
 \PYG{c+cp}{\PYGZsh{}}\PYG{c+cp}{include \PYGZlt{}omp.h\PYGZgt{}}
-\PYG{c+cp}{\PYGZsh{}}\PYG{c+cp}{include \PYGZlt{}stdlib.h\PYGZgt{}}
 
 \PYG{k+kt}{int} \PYG{n+nf}{main}\PYG{p}{(}\PYG{k+kt}{int} \PYG{n}{argc}\PYG{p}{,} \PYG{k+kt}{char}\PYG{o}{*}\PYG{o}{*} \PYG{n}{argv}\PYG{p}{)} \PYG{p}{\PYGZob{}}
     \PYG{n}{printf}\PYG{p}{(}\PYG{l+s}{"}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s}{"}\PYG{p}{)}\PYG{p}{;}
@@ -1094,14 +1258,28 @@ curly braces on lines 22 through 26.
 \PYG{p}{\PYGZcb{}}
 \end{Verbatim}
 
-\emph{file: patternlets/OpenMP/02.spmd/spmd.c}
 
+\subsubsection{3. Program Structure Implementation Strategy: Single Program, multiple data with user-defined number of threads}
+\label{SharedMemory/ProgStructure_Barrier:program-structure-implementation-strategy-single-program-multiple-data-with-user-defined-number-of-threads}
+\emph{file: openMP/03.spmd2/spmd2.c}
 
-\subsection{3. Single Program, multiple data}
-\label{SharedMemory/OpenMP_Patternlets:id1}
-Here we enter the number of threads to use on the command line.
+\emph{Build inside 03.spmd2 directory:}
 
 \begin{Verbatim}[commandchars=\\\{\}]
+make spmd2
+\end{Verbatim}
+
+\emph{Execute on the command line inside 03.spmd2 directory:}
+
+\begin{Verbatim}[commandchars=\\\{\}]
+./spmd2 4
+Replace 4 with other values for the number of threads
+\end{Verbatim}
+
+Here we enter the number of threads to use on the command line.  This is a useful way to
+make your code versatile so that you can use as many threads as you would like.
+
+\begin{Verbatim}[commandchars=\\\{\},numbers=left,firstnumber=1,stepnumber=1]
 \PYG{c+cm}{/* spmd2.c}
 \PYG{c+cm}{ * ... illustrates the SPMD pattern in OpenMP,}
 \PYG{c+cm}{ * 	using the commandline arguments }
@@ -1140,14 +1318,36 @@ Here we enter the number of threads to use on the command line.
 \PYG{p}{\PYGZcb{}}
 \end{Verbatim}
 
-\emph{file: patternlets/OpenMP/03.spmd2/spmd2.c}
 
+\subsubsection{4. Coordination: Synchronization with a Barrier}
+\label{SharedMemory/ProgStructure_Barrier:coordination-synchronization-with-a-barrier}
+\emph{file: openMP/04.barrier/barrier.c}
 
-\subsection{4. Barrier}
-\label{SharedMemory/OpenMP_Patternlets:barrier}
-Note what happens with and without the commented pragma on line 35.
+\emph{Build inside 04.barrier directory:}
 
 \begin{Verbatim}[commandchars=\\\{\}]
+make barrier
+\end{Verbatim}
+
+\emph{Execute on the command line inside 04.barrier directory:}
+
+\begin{Verbatim}[commandchars=\\\{\}]
+./barrier 4
+Replace 4 with other values for the number of threads
+\end{Verbatim}
+
+The barrier pattern is used in parallel programs to ensure that all threads complete
+a parallel section of code before execution continues. This can be necessary when
+threads are generating computed data (in an array, for example) that needs to be
+completed for use in another computation.
+
+Conceptually, the running code is excuting like this:
+
+\includegraphics{ForkJoin_Barrier.png}
+
+Note what happens with and without the commented pragma on line 35.
+
+\begin{Verbatim}[commandchars=\\\{\},numbers=left,firstnumber=1,stepnumber=1]
 \PYG{c+cm}{/* barrier.c}
 \PYG{c+cm}{ * ... illustrates the use of the OpenMP barrier command,}
 \PYG{c+cm}{ * 	using the commandline to control the number of threads...}
@@ -1159,18 +1359,14 @@ Note what happens with and without the commented pragma on line 35.
 \PYG{c+cm}{ * Exercise:}
 \PYG{c+cm}{ * - Compile \PYGZam{} run several times, noting interleaving of outputs.}
 \PYG{c+cm}{ * - Uncomment the barrier directive, recompile, rerun,}
-\PYG{c+cm}{ *   and note the change in the outputs.}
+\PYG{c+cm}{ *    and note the change in the outputs.}
 \PYG{c+cm}{ */}
-
-
 
 \PYG{c+cp}{\PYGZsh{}}\PYG{c+cp}{include \PYGZlt{}stdio.h\PYGZgt{}}
 \PYG{c+cp}{\PYGZsh{}}\PYG{c+cp}{include \PYGZlt{}omp.h\PYGZgt{}}
 \PYG{c+cp}{\PYGZsh{}}\PYG{c+cp}{include \PYGZlt{}stdlib.h\PYGZgt{}}
 
 \PYG{k+kt}{int} \PYG{n+nf}{main}\PYG{p}{(}\PYG{k+kt}{int} \PYG{n}{argc}\PYG{p}{,} \PYG{k+kt}{char}\PYG{o}{*}\PYG{o}{*} \PYG{n}{argv}\PYG{p}{)} \PYG{p}{\PYGZob{}}
-    \PYG{k+kt}{int} \PYG{n}{id}\PYG{p}{,} \PYG{n}{numThreads}\PYG{p}{;}
-
     \PYG{n}{printf}\PYG{p}{(}\PYG{l+s}{"}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s}{"}\PYG{p}{)}\PYG{p}{;}
     \PYG{k}{if} \PYG{p}{(}\PYG{n}{argc} \PYG{o}{\PYGZgt{}} \PYG{l+m+mi}{1}\PYG{p}{)} \PYG{p}{\PYGZob{}}
         \PYG{n}{omp\PYGZus{}set\PYGZus{}num\PYGZus{}threads}\PYG{p}{(} \PYG{n}{atoi}\PYG{p}{(}\PYG{n}{argv}\PYG{p}{[}\PYG{l+m+mi}{1}\PYG{p}{]}\PYG{p}{)} \PYG{p}{)}\PYG{p}{;}
@@ -1178,8 +1374,8 @@ Note what happens with and without the commented pragma on line 35.
 
     \PYG{c+cp}{\PYGZsh{}}\PYG{c+cp}{pragma omp parallel }
     \PYG{p}{\PYGZob{}}
-        \PYG{n}{id} \PYG{o}{=} \PYG{n}{omp\PYGZus{}get\PYGZus{}thread\PYGZus{}num}\PYG{p}{(}\PYG{p}{)}\PYG{p}{;}
-        \PYG{n}{numThreads} \PYG{o}{=} \PYG{n}{omp\PYGZus{}get\PYGZus{}num\PYGZus{}threads}\PYG{p}{(}\PYG{p}{)}\PYG{p}{;}
+        \PYG{k+kt}{int} \PYG{n}{id} \PYG{o}{=} \PYG{n}{omp\PYGZus{}get\PYGZus{}thread\PYGZus{}num}\PYG{p}{(}\PYG{p}{)}\PYG{p}{;}
+        \PYG{k+kt}{int} \PYG{n}{numThreads} \PYG{o}{=} \PYG{n}{omp\PYGZus{}get\PYGZus{}num\PYGZus{}threads}\PYG{p}{(}\PYG{p}{)}\PYG{p}{;}
         \PYG{n}{printf}\PYG{p}{(}\PYG{l+s}{"}\PYG{l+s}{Thread \PYGZpc{}d of \PYGZpc{}d is BEFORE the barrier.}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s}{"}\PYG{p}{,} \PYG{n}{id}\PYG{p}{,} \PYG{n}{numThreads}\PYG{p}{)}\PYG{p}{;}
 
 \PYG{c+c1}{//        \PYGZsh{}pragma omp barrier }
@@ -1192,35 +1388,58 @@ Note what happens with and without the commented pragma on line 35.
 \PYG{p}{\PYGZcb{}}
 \end{Verbatim}
 
-\emph{file: patternlets/OpenMP/04.barrier/barrier.c}
 
+\subsubsection{5. Program Structure: The Master-Worker Implementation Strategy}
+\label{SharedMemory/ProgStructure_Barrier:program-structure-the-master-worker-implementation-strategy}
+\emph{file: openMP/05.masterWorker/masterWorker.c}
 
-\subsection{5. Master-Worker Implementation Strategy}
-\label{SharedMemory/OpenMP_Patternlets:master-worker-implementation-strategy}
+\emph{Build inside 05.masterWorker directory:}
+
 \begin{Verbatim}[commandchars=\\\{\}]
+make masterWorker
+\end{Verbatim}
+
+\emph{Execute on the command line inside 05.masterWorker directory:}
+
+\begin{Verbatim}[commandchars=\\\{\}]
+./masterWorker 4
+Replace 4 with other values for the number of threads
+\end{Verbatim}
+
+Once you have mastered the notion of fork-join and single-program, multiple data,
+the next common pattern that programmers use in association with these patterns
+is to have one thread, called the master, execute one block of code when it forks while the rest
+of the threads, called workers, execute a different block of code when they fork.
+This is illustrated in this simple example (useful code would be more complicated).
+
+\begin{Verbatim}[commandchars=\\\{\},numbers=left,firstnumber=1,stepnumber=1]
 \PYG{c+cm}{/* masterWorker.c}
 \PYG{c+cm}{ * ... illustrates the master-worker pattern in OpenMP}
 \PYG{c+cm}{ *}
 \PYG{c+cm}{ * Joel Adams, Calvin College, November 2009.}
+\PYG{c+cm}{ *}
 \PYG{c+cm}{ * Usage: ./masterWorker}
+\PYG{c+cm}{ *}
 \PYG{c+cm}{ * Exercise: }
 \PYG{c+cm}{ * - Compile and run as is.}
 \PYG{c+cm}{ * - Uncomment \PYGZsh{}pragma directive, re-compile and re-run}
 \PYG{c+cm}{ * - Compare and trace the different executions.}
 \PYG{c+cm}{ */}
 
-\PYG{c+cp}{\PYGZsh{}}\PYG{c+cp}{include \PYGZlt{}stdio.h\PYGZgt{}}
-\PYG{c+cp}{\PYGZsh{}}\PYG{c+cp}{include \PYGZlt{}omp.h\PYGZgt{}}
+\PYG{c+cp}{\PYGZsh{}}\PYG{c+cp}{include \PYGZlt{}stdio.h\PYGZgt{}   }\PYG{c+c1}{// printf()}
+\PYG{c+cp}{\PYGZsh{}}\PYG{c+cp}{include \PYGZlt{}stdlib.h\PYGZgt{}   }\PYG{c+c1}{// atoi()}
+\PYG{c+cp}{\PYGZsh{}}\PYG{c+cp}{include \PYGZlt{}omp.h\PYGZgt{}     }\PYG{c+c1}{// OpenMP}
 
 \PYG{k+kt}{int} \PYG{n+nf}{main}\PYG{p}{(}\PYG{k+kt}{int} \PYG{n}{argc}\PYG{p}{,} \PYG{k+kt}{char}\PYG{o}{*}\PYG{o}{*} \PYG{n}{argv}\PYG{p}{)} \PYG{p}{\PYGZob{}}
-    \PYG{k+kt}{int} \PYG{n}{id} \PYG{o}{=} \PYG{o}{-}\PYG{l+m+mi}{1}\PYG{p}{,} \PYG{n}{numThreads} \PYG{o}{=} \PYG{o}{-}\PYG{l+m+mi}{1}\PYG{p}{;}
-
     \PYG{n}{printf}\PYG{p}{(}\PYG{l+s}{"}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s}{"}\PYG{p}{)}\PYG{p}{;}
+    \PYG{k}{if} \PYG{p}{(}\PYG{n}{argc} \PYG{o}{\PYGZgt{}} \PYG{l+m+mi}{1}\PYG{p}{)} \PYG{p}{\PYGZob{}}
+        \PYG{n}{omp\PYGZus{}set\PYGZus{}num\PYGZus{}threads}\PYG{p}{(} \PYG{n}{atoi}\PYG{p}{(}\PYG{n}{argv}\PYG{p}{[}\PYG{l+m+mi}{1}\PYG{p}{]}\PYG{p}{)} \PYG{p}{)}\PYG{p}{;}
+    \PYG{p}{\PYGZcb{}}
 
-    \PYG{c+cp}{\PYGZsh{}}\PYG{c+cp}{pragma omp parallel}
+\PYG{c+c1}{//    \PYGZsh{}pragma omp parallel }
     \PYG{p}{\PYGZob{}}
-        \PYG{n}{id} \PYG{o}{=} \PYG{n}{omp\PYGZus{}get\PYGZus{}thread\PYGZus{}num}\PYG{p}{(}\PYG{p}{)}\PYG{p}{;}
-        \PYG{n}{numThreads} \PYG{o}{=} \PYG{n}{omp\PYGZus{}get\PYGZus{}num\PYGZus{}threads}\PYG{p}{(}\PYG{p}{)}\PYG{p}{;}
+        \PYG{k+kt}{int} \PYG{n}{id} \PYG{o}{=} \PYG{n}{omp\PYGZus{}get\PYGZus{}thread\PYGZus{}num}\PYG{p}{(}\PYG{p}{)}\PYG{p}{;}
+        \PYG{k+kt}{int} \PYG{n}{numThreads} \PYG{o}{=} \PYG{n}{omp\PYGZus{}get\PYGZus{}num\PYGZus{}threads}\PYG{p}{(}\PYG{p}{)}\PYG{p}{;}
 
         \PYG{k}{if} \PYG{p}{(} \PYG{n}{id} \PYG{o}{=}\PYG{o}{=} \PYG{l+m+mi}{0} \PYG{p}{)} \PYG{p}{\PYGZob{}}  \PYG{c+c1}{// thread with ID 0 is master}
             \PYG{n}{printf}\PYG{p}{(}\PYG{l+s}{"}\PYG{l+s}{Greetings from the master, \PYGZsh{} \PYGZpc{}d of \PYGZpc{}d threads}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s}{"}\PYG{p}{,}
@@ -1237,38 +1456,74 @@ Note what happens with and without the commented pragma on line 35.
 \PYG{p}{\PYGZcb{}}
 \end{Verbatim}
 
-\emph{file: patternlets/OpenMP/05.masterWorker/masterWorker.c}
 
+\subsection{Data Decomposition Algorithm Strategies and Related Coordination Strategies}
+\label{SharedMemory/DataDecomp_Reduction::doc}\label{SharedMemory/DataDecomp_Reduction:data-decomposition-algorithm-strategies-and-related-coordination-strategies}
 
-\subsection{6. Shared Data Decomposition Pattern:  blocking of threads in a parallel for loop}
-\label{SharedMemory/OpenMP_Patternlets:shared-data-decomposition-pattern-blocking-of-threads-in-a-parallel-for-loop}
+\subsubsection{6. Shared Data Decomposition Algorithm Strategy:  chunks of data per thread using a parallel for loop implementation strategy}
+\label{SharedMemory/DataDecomp_Reduction:shared-data-decomposition-algorithm-strategy-chunks-of-data-per-thread-using-a-parallel-for-loop-implementation-strategy}
+\emph{file: openMP/06.parallelLoop-equalChunks/parallelLoopEqualChunks.c}
+
+\emph{Build inside 06.parallelLoop-equalChunks directory:}
+
 \begin{Verbatim}[commandchars=\\\{\}]
-\PYG{c+cm}{/* parallelForBlocks.c}
-\PYG{c+cm}{ * ... illustrates the use of OpenMP's default parallel for loop}
-\PYG{c+cm}{ *  	in which threads iterate through blocks of the index range}
+make parallelLoopEqualChunks
+\end{Verbatim}
+
+\emph{Execute on the command line inside 06.parallelLoop-equalChunks directory:}
+
+\begin{Verbatim}[commandchars=\\\{\}]
+./parallelLoopEqualChunks 4
+Replace 4 with other values for the number of threads, or leave off
+\end{Verbatim}
+
+An iterative for loop is a remarkably common pattern in all programming, primarily used to
+perform a calculation N times, often over a set of data containing N elements, using each
+element in turn inside the for loop.  If there are no dependencies between the calculations
+(i.e. the order of them is not important), then the code inside the loop can be split
+between forked threads.  When doing this, a decision the programmer needs to make is to
+decide how to partition the work between the threads by answering this question:
+\begin{itemize}
+\item {} 
+How many and which iterations of the loop will each thread complete on its own?
+
+\end{itemize}
+
+We refer to this as the \textbf{data decomposition} pattern because we are decomposing the
+amount of work to be done (typically on a set of data) across multiple threads.
+In the following code, this is done in OpenMP using the \emph{omp parallel for} pragma
+just in front of the for statement (line 27) in the following code.
+
+\begin{Verbatim}[commandchars=\\\{\},numbers=left,firstnumber=1,stepnumber=1]
+\PYG{c+cm}{/* parallelLoopEqualChunks.c}
+\PYG{c+cm}{ * ... illustrates the use of OpenMP's default parallel for loop in which}
+\PYG{c+cm}{ *  	threads iterate through equal sized chunks of the index range}
 \PYG{c+cm}{ *	(cache-beneficial when accessing adjacent memory locations).}
 \PYG{c+cm}{ *}
 \PYG{c+cm}{ * Joel Adams, Calvin College, November 2009.}
-\PYG{c+cm}{ * Usage: ./parallelForBlocks [numThreads]}
+\PYG{c+cm}{ *}
+\PYG{c+cm}{ * Usage: ./parallelLoopEqualChunks [numThreads]}
+\PYG{c+cm}{ *}
 \PYG{c+cm}{ * Exercise}
+\PYG{c+cm}{ * - Compile and run, comparing output to source code}
+\PYG{c+cm}{ * - try with different numbers of threads, e.g.: 2, 3, 4, 6, 8}
 \PYG{c+cm}{ */}
 
-\PYG{c+cp}{\PYGZsh{}}\PYG{c+cp}{include \PYGZlt{}stdio.h\PYGZgt{}}
-\PYG{c+cp}{\PYGZsh{}}\PYG{c+cp}{include \PYGZlt{}omp.h\PYGZgt{}}
-\PYG{c+cp}{\PYGZsh{}}\PYG{c+cp}{include \PYGZlt{}stdlib.h\PYGZgt{}}
+\PYG{c+cp}{\PYGZsh{}}\PYG{c+cp}{include \PYGZlt{}stdio.h\PYGZgt{}    }\PYG{c+c1}{// printf()}
+\PYG{c+cp}{\PYGZsh{}}\PYG{c+cp}{include \PYGZlt{}stdlib.h\PYGZgt{}   }\PYG{c+c1}{// atoi()}
+\PYG{c+cp}{\PYGZsh{}}\PYG{c+cp}{include \PYGZlt{}omp.h\PYGZgt{}      }\PYG{c+c1}{// OpenMP}
 
 \PYG{k+kt}{int} \PYG{n+nf}{main}\PYG{p}{(}\PYG{k+kt}{int} \PYG{n}{argc}\PYG{p}{,} \PYG{k+kt}{char}\PYG{o}{*}\PYG{o}{*} \PYG{n}{argv}\PYG{p}{)} \PYG{p}{\PYGZob{}}
-    \PYG{k}{const} \PYG{k+kt}{int} \PYG{n}{REPS} \PYG{o}{=} \PYG{l+m+mi}{8}\PYG{p}{;}
-    \PYG{k+kt}{int} \PYG{n}{id}\PYG{p}{,} \PYG{n}{i}\PYG{p}{;}
+    \PYG{k}{const} \PYG{k+kt}{int} \PYG{n}{REPS} \PYG{o}{=} \PYG{l+m+mi}{16}\PYG{p}{;}
 
     \PYG{n}{printf}\PYG{p}{(}\PYG{l+s}{"}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s}{"}\PYG{p}{)}\PYG{p}{;}
     \PYG{k}{if} \PYG{p}{(}\PYG{n}{argc} \PYG{o}{\PYGZgt{}} \PYG{l+m+mi}{1}\PYG{p}{)} \PYG{p}{\PYGZob{}}
         \PYG{n}{omp\PYGZus{}set\PYGZus{}num\PYGZus{}threads}\PYG{p}{(} \PYG{n}{atoi}\PYG{p}{(}\PYG{n}{argv}\PYG{p}{[}\PYG{l+m+mi}{1}\PYG{p}{]}\PYG{p}{)} \PYG{p}{)}\PYG{p}{;}
     \PYG{p}{\PYGZcb{}}
 
-    \PYG{c+cp}{\PYGZsh{}}\PYG{c+cp}{pragma omp parallel for private(id, i) }
-    \PYG{k}{for} \PYG{p}{(}\PYG{n}{i} \PYG{o}{=} \PYG{l+m+mi}{0}\PYG{p}{;} \PYG{n}{i} \PYG{o}{\PYGZlt{}} \PYG{n}{REPS}\PYG{p}{;} \PYG{n}{i}\PYG{o}{+}\PYG{o}{+}\PYG{p}{)} \PYG{p}{\PYGZob{}}
-        \PYG{n}{id} \PYG{o}{=} \PYG{n}{omp\PYGZus{}get\PYGZus{}thread\PYGZus{}num}\PYG{p}{(}\PYG{p}{)}\PYG{p}{;}
+    \PYG{c+cp}{\PYGZsh{}}\PYG{c+cp}{pragma omp parallel for  }
+    \PYG{k}{for} \PYG{p}{(}\PYG{k+kt}{int} \PYG{n}{i} \PYG{o}{=} \PYG{l+m+mi}{0}\PYG{p}{;} \PYG{n}{i} \PYG{o}{\PYGZlt{}} \PYG{n}{REPS}\PYG{p}{;} \PYG{n}{i}\PYG{o}{+}\PYG{o}{+}\PYG{p}{)} \PYG{p}{\PYGZob{}}
+        \PYG{k+kt}{int} \PYG{n}{id} \PYG{o}{=} \PYG{n}{omp\PYGZus{}get\PYGZus{}thread\PYGZus{}num}\PYG{p}{(}\PYG{p}{)}\PYG{p}{;}
         \PYG{n}{printf}\PYG{p}{(}\PYG{l+s}{"}\PYG{l+s}{Thread \PYGZpc{}d performed iteration \PYGZpc{}d}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s}{"}\PYG{p}{,} 
                  \PYG{n}{id}\PYG{p}{,} \PYG{n}{i}\PYG{p}{)}\PYG{p}{;}
     \PYG{p}{\PYGZcb{}}
@@ -1278,20 +1533,61 @@ Note what happens with and without the commented pragma on line 35.
 \PYG{p}{\PYGZcb{}}
 \end{Verbatim}
 
-\emph{file: patternlets/OpenMP/06.parallelForLoop-blocks/parallelForBlocks.c}
+Once you run this code, verify that the default behavior for this pragma is this
+sort of decomposition of iterations of the loop to threads, when you set the
+number of threads to 4 on the command line:
+
+\includegraphics{ParalleFor_Chunks-4_threads-1.png}
+
+What happens when the number of iterations (16 in this code) is not evenly divisible by the number of threads?  Try several cases to be certain how the compiler splits up the work.
+This type of decomposition is commonly used when accessing data that is stored in
+consecutive memory locations (such as an array) that might be cached by each thread.
 
 
-\subsection{7. Shared Data Decomposition Pattern:  striping of threads in a parallel for loop}
-\label{SharedMemory/OpenMP_Patternlets:shared-data-decomposition-pattern-striping-of-threads-in-a-parallel-for-loop}
+\subsubsection{7. Shared Data Decomposition Algorithm Strategy:  one iteration per thread in a a parallel for loop implementation strategy}
+\label{SharedMemory/DataDecomp_Reduction:shared-data-decomposition-algorithm-strategy-one-iteration-per-thread-in-a-a-parallel-for-loop-implementation-strategy}
+\emph{file: openMP/07.parallelLoop-chunksOf1/parallelLoopChunksOf1.c}
+
+\emph{Build inside 07.parallelLoop-chunksOf1 directory:}
+
 \begin{Verbatim}[commandchars=\\\{\}]
-\PYG{c+cm}{/* parallelForStripes.c}
+make parallelLoopChunksOf1
+\end{Verbatim}
+
+\emph{Execute on the command line inside 07.parallelLoop-chunksOf1 directory:}
+
+\begin{Verbatim}[commandchars=\\\{\}]
+./parallelLoopChunksOf1 4
+Replace 4 with other values for the number of threads, or leave off
+\end{Verbatim}
+
+You can imagine other ways of assigning threads to iterations of a loop besides that
+shown above for four threads and 16 iterations.  A simple decomposition sometimes used
+when your loop is not accessing consecutive memory locations would be to let each
+thread do one iteration, up to N threads, then
+start again with thread 0 taking the next iteration.  This is declared in OpenMP
+using the pragma on line 31 of the following code.  Also note that the commented code
+below it is an alternative explicit way of doing it.  The schedule clause is the preferred style
+when using OpenMP and is more versatile, because you can easily change the \emph{chunk size}
+that each thread will work on.
+
+\begin{Verbatim}[commandchars=\\\{\},numbers=left,firstnumber=1,stepnumber=1]
+\PYG{c+cm}{/* parallelLoopChunksOf1.c}
 \PYG{c+cm}{ * ... illustrates how to make OpenMP map threads to }
-\PYG{c+cm}{ *	parallel for-loop iterations in 'stripes' instead of blocks}
-\PYG{c+cm}{ *	(use only when not accesssing memory).}
+\PYG{c+cm}{ *	parallel loop iterations in chunks of size 1}
+\PYG{c+cm}{ *	(use when not accesssing memory).}
 \PYG{c+cm}{ *}
 \PYG{c+cm}{ * Joel Adams, Calvin College, November 2009.}
 \PYG{c+cm}{ *}
-\PYG{c+cm}{ * Usage: ./parallelForStripes [numThreads]}
+\PYG{c+cm}{ * Usage: ./parallelLoopChunksOf1 [numThreads]}
+\PYG{c+cm}{ *}
+\PYG{c+cm}{ * Exercise:}
+\PYG{c+cm}{ * 1. Compile and run, comparing output to source code,}
+\PYG{c+cm}{ *    and to the output of the 'equal chunks' version.}
+\PYG{c+cm}{ * 2. Uncomment the "commented out" code below,}
+\PYG{c+cm}{ *    and verify that both loops produce the same output.}
+\PYG{c+cm}{ *    The first loop is simpler but more restrictive;}
+\PYG{c+cm}{ *    the second loop is more complex but less restrictive.}
 \PYG{c+cm}{ */}
 
 \PYG{c+cp}{\PYGZsh{}}\PYG{c+cp}{include \PYGZlt{}stdio.h\PYGZgt{}}
@@ -1299,40 +1595,81 @@ Note what happens with and without the commented pragma on line 35.
 \PYG{c+cp}{\PYGZsh{}}\PYG{c+cp}{include \PYGZlt{}stdlib.h\PYGZgt{}}
 
 \PYG{k+kt}{int} \PYG{n+nf}{main}\PYG{p}{(}\PYG{k+kt}{int} \PYG{n}{argc}\PYG{p}{,} \PYG{k+kt}{char}\PYG{o}{*}\PYG{o}{*} \PYG{n}{argv}\PYG{p}{)} \PYG{p}{\PYGZob{}}
-    \PYG{k}{const} \PYG{k+kt}{int} \PYG{n}{REPS} \PYG{o}{=} \PYG{l+m+mi}{8}\PYG{p}{;}
+    \PYG{k}{const} \PYG{k+kt}{int} \PYG{n}{REPS} \PYG{o}{=} \PYG{l+m+mi}{16}\PYG{p}{;}
 
     \PYG{n}{printf}\PYG{p}{(}\PYG{l+s}{"}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s}{"}\PYG{p}{)}\PYG{p}{;}
     \PYG{k}{if} \PYG{p}{(}\PYG{n}{argc} \PYG{o}{\PYGZgt{}} \PYG{l+m+mi}{1}\PYG{p}{)} \PYG{p}{\PYGZob{}}
         \PYG{n}{omp\PYGZus{}set\PYGZus{}num\PYGZus{}threads}\PYG{p}{(} \PYG{n}{atoi}\PYG{p}{(}\PYG{n}{argv}\PYG{p}{[}\PYG{l+m+mi}{1}\PYG{p}{]}\PYG{p}{)} \PYG{p}{)}\PYG{p}{;}
     \PYG{p}{\PYGZcb{}}
 
-    \PYG{c+cp}{\PYGZsh{}}\PYG{c+cp}{pragma omp parallel}
-    \PYG{p}{\PYGZob{}}
+    \PYG{c+cp}{\PYGZsh{}}\PYG{c+cp}{pragma omp parallel for schedule(static,1)}
+    \PYG{k}{for} \PYG{p}{(}\PYG{k+kt}{int} \PYG{n}{i} \PYG{o}{=} \PYG{l+m+mi}{0}\PYG{p}{;} \PYG{n}{i} \PYG{o}{\PYGZlt{}} \PYG{n}{REPS}\PYG{p}{;} \PYG{n}{i}\PYG{o}{+}\PYG{o}{+}\PYG{p}{)} \PYG{p}{\PYGZob{}}
         \PYG{k+kt}{int} \PYG{n}{id} \PYG{o}{=} \PYG{n}{omp\PYGZus{}get\PYGZus{}thread\PYGZus{}num}\PYG{p}{(}\PYG{p}{)}\PYG{p}{;}
-        \PYG{k+kt}{int} \PYG{n}{numThreads} \PYG{o}{=} \PYG{n}{omp\PYGZus{}get\PYGZus{}num\PYGZus{}threads}\PYG{p}{(}\PYG{p}{)}\PYG{p}{;}
-        \PYG{k+kt}{int} \PYG{n}{i}\PYG{p}{;}
-        \PYG{k}{for} \PYG{p}{(}\PYG{n}{i} \PYG{o}{=} \PYG{n}{id}\PYG{p}{;} \PYG{n}{i} \PYG{o}{\PYGZlt{}} \PYG{n}{REPS}\PYG{p}{;} \PYG{n}{i} \PYG{o}{+}\PYG{o}{=} \PYG{n}{numThreads}\PYG{p}{)} \PYG{p}{\PYGZob{}}
-            \PYG{n}{printf}\PYG{p}{(}\PYG{l+s}{"}\PYG{l+s}{Thread \PYGZpc{}d performed iteration \PYGZpc{}d}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s}{"}\PYG{p}{,} 
-                     \PYG{n}{id}\PYG{p}{,} \PYG{n}{i}\PYG{p}{)}\PYG{p}{;}
-        \PYG{p}{\PYGZcb{}}
+        \PYG{n}{printf}\PYG{p}{(}\PYG{l+s}{"}\PYG{l+s}{Thread \PYGZpc{}d performed iteration \PYGZpc{}d}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s}{"}\PYG{p}{,} 
+                 \PYG{n}{id}\PYG{p}{,} \PYG{n}{i}\PYG{p}{)}\PYG{p}{;}
     \PYG{p}{\PYGZcb{}}
 
+\PYG{c+cm}{/*}
+\PYG{c+cm}{    printf("\PYGZbs{}n---\PYGZbs{}n\PYGZbs{}n");}
+
+\PYG{c+cm}{    \PYGZsh{}pragma omp parallel}
+\PYG{c+cm}{    \PYGZob{}}
+\PYG{c+cm}{        int id = omp\PYGZus{}get\PYGZus{}thread\PYGZus{}num();}
+\PYG{c+cm}{        int numThreads = omp\PYGZus{}get\PYGZus{}num\PYGZus{}threads();}
+\PYG{c+cm}{        for (int i = id; i \PYGZlt{} REPS; i += numThreads) \PYGZob{}}
+\PYG{c+cm}{            printf("Thread \PYGZpc{}d performed iteration \PYGZpc{}d\PYGZbs{}n", }
+\PYG{c+cm}{                     id, i);}
+\PYG{c+cm}{        \PYGZcb{}}
+\PYG{c+cm}{    \PYGZcb{}}
+\PYG{c+cm}{*/}
     \PYG{n}{printf}\PYG{p}{(}\PYG{l+s}{"}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s}{"}\PYG{p}{)}\PYG{p}{;}
     \PYG{k}{return} \PYG{l+m+mi}{0}\PYG{p}{;}
 \PYG{p}{\PYGZcb{}}
 \end{Verbatim}
 
-\emph{file: atternlets/OpenMP/07.parallelForLoop-stripes/parallelForStripes.c}
+This can be made even more
+efficient if the next available thread simply takes the next iteration.
+In OpenMP, this is done by using \emph{dynamic} scheduling instead of the static scheduling shown
+in the above code.  Also note that the number of iterations, or chunk size, could
+be greater than 1 inside the schedule clause.
 
 
-\subsection{8. Collective Communication: Reduction}
-\label{SharedMemory/OpenMP_Patternlets:collective-communication-reduction}
+\subsubsection{8. Coordination Using Collective Communication: Reduction}
+\label{SharedMemory/DataDecomp_Reduction:coordination-using-collective-communication-reduction}
+\emph{file: openMP/08.reduction/reduction.c}
+
+\emph{Build inside 08.reduction directory:}
+
+\begin{Verbatim}[commandchars=\\\{\}]
+make reduction
+\end{Verbatim}
+
+\emph{Execute on the command line inside 08.reduction directory:}
+
+\begin{Verbatim}[commandchars=\\\{\}]
+./reduction 4
+Replace 4 with other values for the number of threads, or leave off
+\end{Verbatim}
+
 Once threads have performed independent concurrent computations, possibly
-on some portion of decomposed data, it is quite commen to then \emph{reduce}
-those individual computations into one value. In this example, an array of randomly assigned integers represents a set of shared data. All values
+on some portion of decomposed data, it is quite common to then \emph{reduce}
+those individual computations into one value. This type of operation is
+called a \textbf{collective communication} pattern because the threads must somehow
+work together to create the final desired single value.
+
+In this example, an array of randomly assigned integers represents a set of shared data (a more realistic program would perform a computation
+that creates meaningful data values; this is just an example).
+Note the common sequential code pattern found in the function called \emph{sequentialSum} in the code
+below (starting line 51): a for loop is used to sum up all the values in the array.
+
+Next let's consider how this can be done in parallel with threads.
+Somehow the threads must implicitly \emph{communicate} to keep the overall sum updated
+as each of them works on a portion of the array.
+In the \emph{parallelSum} function, line 64 shows a special clause that
+can be used with the parallel for pragma in OpenMP for this. All values
 in the array are summed together by using the OpenMP
 parallel for pragma with the \emph{reduction(+:sum)} clause on the variable \textbf{sum},
-which is computed in line 61.
+which is computed in line 66.
 
 \begin{Verbatim}[commandchars=\\\{\},numbers=left,firstnumber=1,stepnumber=1]
 \PYG{c+cm}{/* reduction.c}
@@ -1341,19 +1678,19 @@ which is computed in line 61.
 \PYG{c+cm}{ * Joel Adams, Calvin College, November 2009.}
 \PYG{c+cm}{ *}
 \PYG{c+cm}{ * Usage: ./reduction }
+\PYG{c+cm}{ *}
 \PYG{c+cm}{ * Exercise:}
 \PYG{c+cm}{ * - Compile and run.  Note that correct output is produced.}
-\PYG{c+cm}{ * - Uncomment \PYGZsh{}pragma in function parallelSum() }
+\PYG{c+cm}{ * - Uncomment \PYGZsh{}pragma in function parallelSum(), }
 \PYG{c+cm}{ *    but leave its reduction clause commented out}
 \PYG{c+cm}{ * - Recompile and rerun.  Note that correct output is NOT produced.}
 \PYG{c+cm}{ * - Uncomment 'reduction(+:sum)' clause of \PYGZsh{}pragma in parallelSum()}
 \PYG{c+cm}{ * - Recompile and rerun.  Note that correct output is produced again.}
 \PYG{c+cm}{ */}
 
-\PYG{c+cp}{\PYGZsh{}}\PYG{c+cp}{include \PYGZlt{}stdio.h\PYGZgt{}}
-\PYG{c+cp}{\PYGZsh{}}\PYG{c+cp}{include \PYGZlt{}omp.h\PYGZgt{}}
-\PYG{c+cp}{\PYGZsh{}}\PYG{c+cp}{include \PYGZlt{}stdlib.h\PYGZgt{}}
-\PYG{c+cp}{\PYGZsh{}}\PYG{c+cp}{include \PYGZlt{}assert.h\PYGZgt{}}
+\PYG{c+cp}{\PYGZsh{}}\PYG{c+cp}{include \PYGZlt{}stdio.h\PYGZgt{}   }\PYG{c+c1}{// printf()}
+\PYG{c+cp}{\PYGZsh{}}\PYG{c+cp}{include \PYGZlt{}omp.h\PYGZgt{}     }\PYG{c+c1}{// OpenMP}
+\PYG{c+cp}{\PYGZsh{}}\PYG{c+cp}{include \PYGZlt{}stdlib.h\PYGZgt{}  }\PYG{c+c1}{// rand()}
 
 \PYG{k+kt}{void} \PYG{n}{initialize}\PYG{p}{(}\PYG{k+kt}{int}\PYG{o}{*} \PYG{n}{a}\PYG{p}{,} \PYG{k+kt}{int} \PYG{n}{n}\PYG{p}{)}\PYG{p}{;}
 \PYG{k+kt}{int} \PYG{n}{sequentialSum}\PYG{p}{(}\PYG{k+kt}{int}\PYG{o}{*} \PYG{n}{a}\PYG{p}{,} \PYG{k+kt}{int} \PYG{n}{n}\PYG{p}{)}\PYG{p}{;}
@@ -1364,9 +1701,14 @@ which is computed in line 61.
 \PYG{k+kt}{int} \PYG{n+nf}{main}\PYG{p}{(}\PYG{k+kt}{int} \PYG{n}{argc}\PYG{p}{,} \PYG{k+kt}{char}\PYG{o}{*}\PYG{o}{*} \PYG{n}{argv}\PYG{p}{)} \PYG{p}{\PYGZob{}}
    \PYG{k+kt}{int} \PYG{n}{array}\PYG{p}{[}\PYG{n}{SIZE}\PYG{p}{]}\PYG{p}{;}
 
+   \PYG{k}{if} \PYG{p}{(}\PYG{n}{argc} \PYG{o}{\PYGZgt{}} \PYG{l+m+mi}{1}\PYG{p}{)} \PYG{p}{\PYGZob{}}
+        \PYG{n}{mp\PYGZus{}set\PYGZus{}num\PYGZus{}threads}\PYG{p}{(} \PYG{n}{atoi}\PYG{p}{(}\PYG{n}{argv}\PYG{p}{[}\PYG{l+m+mi}{1}\PYG{p}{]}\PYG{p}{)} \PYG{p}{)}\PYG{p}{;}
+   \PYG{p}{\PYGZcb{}}
+
    \PYG{n}{initialize}\PYG{p}{(}\PYG{n}{array}\PYG{p}{,} \PYG{n}{SIZE}\PYG{p}{)}\PYG{p}{;}
-   \PYG{n}{assert}\PYG{p}{(} \PYG{n}{sequentialSum}\PYG{p}{(}\PYG{n}{array}\PYG{p}{,} \PYG{n}{SIZE}\PYG{p}{)} \PYG{o}{=}\PYG{o}{=} \PYG{n}{parallelSum}\PYG{p}{(}\PYG{n}{array}\PYG{p}{,} \PYG{n}{SIZE}\PYG{p}{)} \PYG{p}{)}\PYG{p}{;}
-   \PYG{n}{printf}\PYG{p}{(}\PYG{l+s}{"}\PYG{l+s}{Sequential and parallel functions produced the same result}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s}{"}\PYG{p}{)}\PYG{p}{;}
+   \PYG{n}{printf}\PYG{p}{(}\PYG{l+s}{"}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s}{Sequential sum: }\PYG{l+s+se}{\PYGZbs{}t}\PYG{l+s}{\PYGZpc{}d}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s}{Parallel sum: }\PYG{l+s+se}{\PYGZbs{}t}\PYG{l+s}{\PYGZpc{}d}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s}{"}\PYG{p}{,}
+            \PYG{n}{sequentialSum}\PYG{p}{(}\PYG{n}{array}\PYG{p}{,} \PYG{n}{SIZE}\PYG{p}{)}\PYG{p}{,}
+            \PYG{n}{parallelSum}\PYG{p}{(}\PYG{n}{array}\PYG{p}{,} \PYG{n}{SIZE}\PYG{p}{)} \PYG{p}{)}\PYG{p}{;}
 
    \PYG{k}{return} \PYG{l+m+mi}{0}\PYG{p}{;}
 \PYG{p}{\PYGZcb{}} 
@@ -1401,19 +1743,44 @@ which is computed in line 61.
 \PYG{p}{\PYGZcb{}}
 \end{Verbatim}
 
-\emph{file: patternlets/OpenMP/08.parallelForLoop-reduction/reduction.c}
+
+\paragraph{Something to think about}
+\label{SharedMemory/DataDecomp_Reduction:something-to-think-about}
+Do you have an ideas about why the parallel for pragma without the reduction clause did not
+produce the correct result?  The next few examples will hopefully shed some light on this.
 
 
-\subsection{9. Shared Data Pattern: Parallel-for-loop needs non-shared, private variables}
-\label{SharedMemory/OpenMP_Patternlets:shared-data-pattern-parallel-for-loop-needs-non-shared-private-variables}
+\subsection{Patterns used when threads share data values}
+\label{SharedMemory/MutualExclusion:patterns-used-when-threads-share-data-values}\label{SharedMemory/MutualExclusion::doc}
+
+\subsubsection{9. Shared Data Algorithm Strategy: Parallel-for-loop pattern needs non-shared, private variables}
+\label{SharedMemory/MutualExclusion:shared-data-algorithm-strategy-parallel-for-loop-pattern-needs-non-shared-private-variables}
+\emph{file: openMP/09.private/private.c}
+
+\emph{Build inside 09.private directory:}
+
 \begin{Verbatim}[commandchars=\\\{\}]
+make private
+\end{Verbatim}
+
+\emph{Execute on the command line inside 09.private directory:}
+
+\begin{Verbatim}[commandchars=\\\{\}]
+./private
+\end{Verbatim}
+
+In this example, you will try a parallel for loop where an additional variables (i, j in the code) cannot be shared by all of the threads, but must instead be \emph{private} to each thread, which means that each thread has its own copy of that variable.  In this case, the outer loop is being split into chunks and given to each thread, but the inner loop is being executed by each thread for each of the elements in its chunk.  The loop counting variables must be maintained separately by each thread.  Because they were initially declared outside the loops at the begininning of the program, by default these variables are shared by all the threads.
+
+\begin{Verbatim}[commandchars=\\\{\},numbers=left,firstnumber=1,stepnumber=1]
 \PYG{c+cm}{/* private.c}
 \PYG{c+cm}{ * ... illustrates why private variables are needed with OpenMP's parallel for loop}
 \PYG{c+cm}{ *}
 \PYG{c+cm}{ * Joel Adams, Calvin College, November 2009.}
+\PYG{c+cm}{ *}
 \PYG{c+cm}{ * Usage: ./private }
+\PYG{c+cm}{ *}
 \PYG{c+cm}{ * Exercise: }
-\PYG{c+cm}{ * - Run, noting that the serial program produces correct results}
+\PYG{c+cm}{ * - Run, noting that the sequential program produces correct results}
 \PYG{c+cm}{ * - Uncomment line A, recompile/run and compare}
 \PYG{c+cm}{ * - Recomment line A, uncomment line B, recompile/run and compare}
 \PYG{c+cm}{ */}
@@ -1431,7 +1798,7 @@ which is computed in line 61.
     \PYG{n}{printf}\PYG{p}{(}\PYG{l+s}{"}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s}{"}\PYG{p}{)}\PYG{p}{;}
     \PYG{c+c1}{// set all array entries to 1}
 \PYG{c+c1}{//    \PYGZsh{}pragma omp parallel for                     // A}
-\PYG{c+c1}{//    \PYGZsh{}pragma omp parallel for private(j)          // B}
+\PYG{c+c1}{//    \PYGZsh{}pragma omp parallel for private(i,j)        // B}
     \PYG{k}{for} \PYG{p}{(}\PYG{n}{i} \PYG{o}{=} \PYG{l+m+mi}{0}\PYG{p}{;} \PYG{n}{i} \PYG{o}{\PYGZlt{}} \PYG{n}{SIZE}\PYG{p}{;} \PYG{n}{i}\PYG{o}{+}\PYG{o}{+}\PYG{p}{)} \PYG{p}{\PYGZob{}}
         \PYG{k}{for} \PYG{p}{(}\PYG{n}{j} \PYG{o}{=} \PYG{l+m+mi}{0}\PYG{p}{;} \PYG{n}{j} \PYG{o}{\PYGZlt{}} \PYG{n}{SIZE}\PYG{p}{;} \PYG{n}{j}\PYG{o}{+}\PYG{o}{+}\PYG{p}{)} \PYG{p}{\PYGZob{}}
             \PYG{n}{m}\PYG{p}{[}\PYG{n}{i}\PYG{p}{]}\PYG{p}{[}\PYG{n}{j}\PYG{p}{]} \PYG{o}{=} \PYG{l+m+mi}{1}\PYG{p}{;}
@@ -1456,78 +1823,97 @@ which is computed in line 61.
 \PYG{p}{\PYGZcb{}}
 \end{Verbatim}
 
-\emph{file: patternlets/OpenMP/09.parallelForLoop-private/private.c}
 
+\subsubsection{10. Race Condition: missing the mutual exclusion coordination pattern}
+\label{SharedMemory/MutualExclusion:race-condition-missing-the-mutual-exclusion-coordination-pattern}
+\emph{file: openMP/10.mutualExclusion-atomic/atomic.c}
 
-\subsection{10. Race Condition: missing the mutual exclusion patterm}
-\label{SharedMemory/OpenMP_Patternlets:race-condition-missing-the-mutual-exclusion-patterm}
+\emph{Build inside 10.mutualExclusion-atomic directory:}
+
 \begin{Verbatim}[commandchars=\\\{\}]
+make atomic
+\end{Verbatim}
+
+\emph{Execute on the command line inside 10.mutualExclusion-atomic directory:}
+
+\begin{Verbatim}[commandchars=\\\{\}]
+./atomic
+\end{Verbatim}
+
+When a variable must be shared by all the threads, as in this example below, an issue called a \emph{race condition} can occur when the threads are updating that variable concurrently.  This happens because there are multiple underlying machine instructions needed to complete the update of the memory location and each thread must execute all of them atomically before another thread does so, thus ensuring \textbf{mutual exclusion} between the threads when updating a shared variable.  This is done using the OpneMP pragma shown in this code.
+
+\begin{Verbatim}[commandchars=\\\{\},numbers=left,firstnumber=1,stepnumber=1]
 \PYG{c+cm}{/* atomic.c}
-\PYG{c+cm}{ * ... illustrates a race condition when multiple threads write to a shared variable}
-\PYG{c+cm}{ *  (and explores OpenMP private variables and atomic operations).}
+\PYG{c+cm}{ * ... illustrates a race condition when multiple threads read from / }
+\PYG{c+cm}{ *  write to a shared variable (and explores OpenMP atomic operations).}
 \PYG{c+cm}{ *}
 \PYG{c+cm}{ * Joel Adams, Calvin College, November 2009.}
+\PYG{c+cm}{ *}
 \PYG{c+cm}{ * Usage: ./atomic}
+\PYG{c+cm}{ *}
 \PYG{c+cm}{ * Exercise:}
-\PYG{c+cm}{ *  - Compile and run 10 times; note that it always produces the final balance 0}
-\PYG{c+cm}{ *  - To parallelize, uncomment A1+A2, recompile and rerun, compare results}
-\PYG{c+cm}{ *  - Try 1: recomment A1+A2, uncomment B1+B2, recompile/run, compare}
-\PYG{c+cm}{ *  - To fix: recomment B1+B2, uncomment A1+A2, C1+C2, recompile and rerun, compare}
+\PYG{c+cm}{ *  - Compile and run 10 times; note that it always produces the correct balance: \PYGZdl{}1,000,000.00}
+\PYG{c+cm}{ *  - To parallelize, uncomment A, recompile and rerun multiple times, compare results}
+\PYG{c+cm}{ *  - To fix: uncomment B, recompile and rerun, compare}
 \PYG{c+cm}{ */}
 
-\PYG{c+cp}{\PYGZsh{}}\PYG{c+cp}{include\PYGZlt{}stdio.h\PYGZgt{}}
-\PYG{c+cp}{\PYGZsh{}}\PYG{c+cp}{include\PYGZlt{}omp.h\PYGZgt{}}
+\PYG{c+cp}{\PYGZsh{}}\PYG{c+cp}{include \PYGZlt{}stdio.h\PYGZgt{}  }\PYG{c+c1}{// printf()}
+\PYG{c+cp}{\PYGZsh{}}\PYG{c+cp}{include \PYGZlt{}omp.h\PYGZgt{}    }\PYG{c+c1}{// OpenMP}
 
 \PYG{k+kt}{int} \PYG{n+nf}{main}\PYG{p}{(}\PYG{p}{)} \PYG{p}{\PYGZob{}}
     \PYG{k}{const} \PYG{k+kt}{int} \PYG{n}{REPS} \PYG{o}{=} \PYG{l+m+mi}{1000000}\PYG{p}{;}
     \PYG{k+kt}{int} \PYG{n}{i}\PYG{p}{;}
     \PYG{k+kt}{double} \PYG{n}{balance} \PYG{o}{=} \PYG{l+m+mf}{0.0}\PYG{p}{;}
   
-    \PYG{n}{printf}\PYG{p}{(}\PYG{l+s}{"}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s}{Your starting bank account balance is \PYGZpc{}0.2f}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s}{"}\PYG{p}{,} \PYG{n}{balance}\PYG{p}{)}\PYG{p}{;}
+    \PYG{n}{printf}\PYG{p}{(}\PYG{l+s}{"}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s}{Your starting bank account balance is \PYGZpc{}0.2f}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s}{"}\PYG{p}{,} 
+               \PYG{n}{balance}\PYG{p}{)}\PYG{p}{;}
 
     \PYG{c+c1}{// simulate many deposits}
-\PYG{c+c1}{//    \PYGZsh{}pragma omp parallel for                      // A1}
-\PYG{c+c1}{//    \PYGZsh{}pragma omp parallel for private(balance)     // B1}
+    \PYG{c+c1}{// \PYGZsh{}pragma omp parallel for                      // A}
     \PYG{k}{for} \PYG{p}{(}\PYG{n}{i} \PYG{o}{=} \PYG{l+m+mi}{0}\PYG{p}{;} \PYG{n}{i} \PYG{o}{\PYGZlt{}} \PYG{n}{REPS}\PYG{p}{;} \PYG{n}{i}\PYG{o}{+}\PYG{o}{+}\PYG{p}{)} \PYG{p}{\PYGZob{}}
-\PYG{c+c1}{//        \PYGZsh{}pragma omp atomic                        // C1}
-        \PYG{n}{balance} \PYG{o}{+}\PYG{o}{=} \PYG{l+m+mf}{10.0}\PYG{p}{;}
+        \PYG{c+c1}{// \PYGZsh{}pragma omp atomic                        // B}
+        \PYG{n}{balance} \PYG{o}{+}\PYG{o}{=} \PYG{l+m+mf}{1.0}\PYG{p}{;}
     \PYG{p}{\PYGZcb{}}
 
-    \PYG{n}{printf}\PYG{p}{(}\PYG{l+s}{"}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s}{After \PYGZpc{}d \PYGZdl{}10 deposits, your balance is \PYGZpc{}0.2f}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s}{"}\PYG{p}{,} 
+    \PYG{n}{printf}\PYG{p}{(}\PYG{l+s}{"}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s}{After \PYGZpc{}d \PYGZdl{}1 deposits, your balance is \PYGZdl{}\PYGZpc{}0.2f}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s}{"}\PYG{p}{,} 
 		\PYG{n}{REPS}\PYG{p}{,} \PYG{n}{balance}\PYG{p}{)}\PYG{p}{;}
-
-    \PYG{c+c1}{// simulate the same number of withdrawals}
-\PYG{c+c1}{//    \PYGZsh{}pragma omp parallel for                      // A2}
-\PYG{c+c1}{//    \PYGZsh{}pragma omp parallel for private(balance)     // B2}
-    \PYG{k}{for} \PYG{p}{(}\PYG{n}{i} \PYG{o}{=} \PYG{l+m+mi}{0}\PYG{p}{;} \PYG{n}{i} \PYG{o}{\PYGZlt{}} \PYG{n}{REPS}\PYG{p}{;} \PYG{n}{i}\PYG{o}{+}\PYG{o}{+}\PYG{p}{)} \PYG{p}{\PYGZob{}}
-\PYG{c+c1}{//        \PYGZsh{}pragma omp atomic                          // C2}
-        \PYG{n}{balance} \PYG{o}{-}\PYG{o}{=} \PYG{l+m+mf}{10.0}\PYG{p}{;}
-    \PYG{p}{\PYGZcb{}}
-
-    \PYG{c+c1}{// balance should be zero}
-    \PYG{n}{printf}\PYG{p}{(}\PYG{l+s}{"}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s}{After \PYGZpc{}d \PYGZdl{}10 withdrawals, your balance is \PYGZpc{}0.2f}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s}{"}\PYG{p}{,} 
-            \PYG{n}{REPS}\PYG{p}{,} \PYG{n}{balance}\PYG{p}{)}\PYG{p}{;}
 
     \PYG{k}{return} \PYG{l+m+mi}{0}\PYG{p}{;}
 \PYG{p}{\PYGZcb{}}
 \end{Verbatim}
 
-\emph{file: patternlets/OpenMP/10.mutualExclusion-atomic/atomic.c}
 
+\subsubsection{11. The Mutual Exclusion Coordination Pattern: two ways to ensure}
+\label{SharedMemory/MutualExclusion:the-mutual-exclusion-coordination-pattern-two-ways-to-ensure}
+\emph{file: openMP/11.mutualExclusion-critical/critical.c}
 
-\subsection{11. Mutual Exclusion: two ways to ensure}
-\label{SharedMemory/OpenMP_Patternlets:mutual-exclusion-two-ways-to-ensure}
+\emph{Build inside 11.mutualExclusion-critical directory:}
+
 \begin{Verbatim}[commandchars=\\\{\}]
+make critical
+\end{Verbatim}
+
+\emph{Execute on the command line inside 11.mutualExclusion-critical directory:}
+
+\begin{Verbatim}[commandchars=\\\{\}]
+./critical
+\end{Verbatim}
+
+Here is another way to ensure \textbf{mutual exclusion} in OpenMP.
+
+\begin{Verbatim}[commandchars=\\\{\},numbers=left,firstnumber=1,stepnumber=1]
 \PYG{c+cm}{/* critical.c}
-\PYG{c+cm}{ * ... fixes a race condition when multiple threads write to a shared variable}
-\PYG{c+cm}{ *  	using the OpenMP critical directive.}
+\PYG{c+cm}{ * ... fixes a race condition when multiple threads read from / }
+\PYG{c+cm}{ *  write to a shared variable	using the OpenMP critical directive.}
 \PYG{c+cm}{ *}
 \PYG{c+cm}{ * Joel Adams, Calvin College, November 2009.}
+\PYG{c+cm}{ *}
 \PYG{c+cm}{ * Usage: ./critical}
+\PYG{c+cm}{ *}
 \PYG{c+cm}{ * Exercise:}
-\PYG{c+cm}{ *  - Compile and run several times; note that it always produces the final balance 0}
-\PYG{c+cm}{ *  - Comment out A1+A2; recompile/run and note incorrect result}
-\PYG{c+cm}{ *  - To fix: uncomment B1a+B1b+B1c, B2a+B2b+B2c, recompile and rerun, compare}
+\PYG{c+cm}{ *  - Compile and run several times; note that it always produces the correct balance \PYGZdl{}1,000,000.00 }
+\PYG{c+cm}{ *  - Comment out A; recompile/run, and note incorrect result}
+\PYG{c+cm}{ *  - To fix: uncomment B1+B2+B3, recompile and rerun, compare}
 \PYG{c+cm}{ */}
 
 \PYG{c+cp}{\PYGZsh{}}\PYG{c+cp}{include\PYGZlt{}stdio.h\PYGZgt{}}
@@ -1543,56 +1929,59 @@ which is computed in line 61.
     \PYG{c+c1}{// simulate many deposits}
     \PYG{c+cp}{\PYGZsh{}}\PYG{c+cp}{pragma omp parallel for}
     \PYG{k}{for} \PYG{p}{(}\PYG{n}{i} \PYG{o}{=} \PYG{l+m+mi}{0}\PYG{p}{;} \PYG{n}{i} \PYG{o}{\PYGZlt{}} \PYG{n}{REPS}\PYG{p}{;} \PYG{n}{i}\PYG{o}{+}\PYG{o}{+}\PYG{p}{)} \PYG{p}{\PYGZob{}}
-        \PYG{c+cp}{\PYGZsh{}}\PYG{c+cp}{pragma omp atomic                          }\PYG{c+c1}{// A1}
-\PYG{c+c1}{//        \PYGZsh{}pragma omp critical                      // B1a}
-\PYG{c+c1}{//        \PYGZob{}                                         // B1b}
-        \PYG{n}{balance} \PYG{o}{+}\PYG{o}{=} \PYG{l+m+mf}{10.0}\PYG{p}{;}
-\PYG{c+c1}{//        \PYGZcb{}                                         // B1c}
+        \PYG{c+cp}{\PYGZsh{}}\PYG{c+cp}{pragma omp atomic                          }\PYG{c+c1}{// A}
+\PYG{c+c1}{//        \PYGZsh{}pragma omp critical                      // B1}
+\PYG{c+c1}{//        \PYGZob{}                                         // B2}
+        \PYG{n}{balance} \PYG{o}{+}\PYG{o}{=} \PYG{l+m+mf}{1.0}\PYG{p}{;}
+\PYG{c+c1}{//        \PYGZcb{}                                         // B3}
     \PYG{p}{\PYGZcb{}}
 
-    \PYG{n}{printf}\PYG{p}{(}\PYG{l+s}{"}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s}{After \PYGZpc{}d \PYGZdl{}10 deposits, your balance is \PYGZpc{}0.2f}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s}{"}\PYG{p}{,} 
-		\PYG{n}{REPS}\PYG{p}{,} \PYG{n}{balance}\PYG{p}{)}\PYG{p}{;}
-
-    \PYG{c+c1}{// simulate the same number of withdrawals}
-    \PYG{c+cp}{\PYGZsh{}}\PYG{c+cp}{pragma omp parallel for}
-    \PYG{k}{for} \PYG{p}{(}\PYG{n}{i} \PYG{o}{=} \PYG{l+m+mi}{0}\PYG{p}{;} \PYG{n}{i} \PYG{o}{\PYGZlt{}} \PYG{n}{REPS}\PYG{p}{;} \PYG{n}{i}\PYG{o}{+}\PYG{o}{+}\PYG{p}{)} \PYG{p}{\PYGZob{}}
-        \PYG{c+cp}{\PYGZsh{}}\PYG{c+cp}{pragma omp atomic                          }\PYG{c+c1}{// A2}
-\PYG{c+c1}{//        \PYGZsh{}pragma omp critical                      // B2a}
-\PYG{c+c1}{//        \PYGZob{}                                         // B2b}
-        \PYG{n}{balance} \PYG{o}{-}\PYG{o}{=} \PYG{l+m+mf}{10.0}\PYG{p}{;}
-\PYG{c+c1}{//        \PYGZcb{}                                         // B2c}
-  \PYG{p}{\PYGZcb{}}
-
-    \PYG{c+c1}{// balance should be zero}
-    \PYG{n}{printf}\PYG{p}{(}\PYG{l+s}{"}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s}{After \PYGZpc{}d \PYGZdl{}10 withdrawals, your balance is \PYGZpc{}0.2f}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s}{"}\PYG{p}{,} 
+    \PYG{n}{printf}\PYG{p}{(}\PYG{l+s}{"}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s}{After \PYGZpc{}d \PYGZdl{}1 deposits, your balance is \PYGZpc{}0.2f}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s}{"}\PYG{p}{,} 
 		\PYG{n}{REPS}\PYG{p}{,} \PYG{n}{balance}\PYG{p}{)}\PYG{p}{;}
 
     \PYG{k}{return} \PYG{l+m+mi}{0}\PYG{p}{;}
 \PYG{p}{\PYGZcb{}}
 \end{Verbatim}
 
-\emph{file: patternlets/OpenMP/11.mutualExclusion-critical/critical.c}
 
+\subsubsection{12.  Mutual Exclusion Coordination Pattern: compare performance}
+\label{SharedMemory/MutualExclusion:mutual-exclusion-coordination-pattern-compare-performance}
+\emph{file: openMP/12.mutualExclusion-critical2/critical2.c}
 
-\subsection{12.  Mutual Exclusion Pattern: compare performance}
-\label{SharedMemory/OpenMP_Patternlets:mutual-exclusion-pattern-compare-performance}
+\emph{Build inside 12.mutualExclusion-critical2 directory:}
+
 \begin{Verbatim}[commandchars=\\\{\}]
-\PYG{c+cm}{/* critical.c}
+make critical2
+\end{Verbatim}
+
+\emph{Execute on the command line inside 12.mutualExclusion-critical2 directory:}
+
+\begin{Verbatim}[commandchars=\\\{\}]
+./critical2
+\end{Verbatim}
+
+Here is an example of how to compare the performance of using the atomic pragme directive and the critical pragma directive.  Note that there is a function in OpenMP that lets you obtain the current time, which enables us to determine how long it took to run a particular section of our program.
+
+\begin{Verbatim}[commandchars=\\\{\},numbers=left,firstnumber=1,stepnumber=1]
+\PYG{c+cm}{/* critical2.c}
 \PYG{c+cm}{ * ... compares the performance of OpenMP's critical and atomic directives}
 \PYG{c+cm}{ *}
 \PYG{c+cm}{ * Joel Adams, Calvin College, November 2009.}
-\PYG{c+cm}{ * Usage: ./critical}
+\PYG{c+cm}{ *}
+\PYG{c+cm}{ * Usage: ./critical2}
+\PYG{c+cm}{ *}
 \PYG{c+cm}{ * Exercise:}
 \PYG{c+cm}{ *  - Compile, run, compare times for critical vs. atomic}
-\PYG{c+cm}{ *  - Compute how much more costly critical is than atomic, on average}
-\PYG{c+cm}{ *  - Create an expression setting a shared variable that atomic cannot handle (research)}
+\PYG{c+cm}{ *  - Note how much more costly critical is than atomic}
+\PYG{c+cm}{ *  - Research: Create an expression that, when assigned to balance,}
+\PYG{c+cm}{ *     critical can handle but atomic cannot }
 \PYG{c+cm}{ */}
 
 \PYG{c+cp}{\PYGZsh{}}\PYG{c+cp}{include\PYGZlt{}stdio.h\PYGZgt{}}
 \PYG{c+cp}{\PYGZsh{}}\PYG{c+cp}{include\PYGZlt{}omp.h\PYGZgt{}}
 
 \PYG{k+kt}{void} \PYG{n+nf}{print}\PYG{p}{(}\PYG{k+kt}{char}\PYG{o}{*} \PYG{n}{label}\PYG{p}{,} \PYG{k+kt}{int} \PYG{n}{reps}\PYG{p}{,} \PYG{k+kt}{double} \PYG{n}{balance}\PYG{p}{,} \PYG{k+kt}{double} \PYG{n}{total}\PYG{p}{,} \PYG{k+kt}{double} \PYG{n}{average}\PYG{p}{)} \PYG{p}{\PYGZob{}}
-    \PYG{n}{printf}\PYG{p}{(}\PYG{l+s}{"}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s}{After \PYGZpc{}d \PYGZdl{}10 deposits using '\PYGZpc{}s': }\PYG{l+s}{\PYGZbs{}}
+    \PYG{n}{printf}\PYG{p}{(}\PYG{l+s}{"}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s}{After \PYGZpc{}d \PYGZdl{}1 deposits using '\PYGZpc{}s': }\PYG{l+s}{\PYGZbs{}}
 \PYG{l+s}{            }\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s+se}{\PYGZbs{}t}\PYG{l+s}{- balance = \PYGZpc{}0.2f, }\PYG{l+s}{\PYGZbs{}}
 \PYG{l+s}{            }\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s+se}{\PYGZbs{}t}\PYG{l+s}{- total time = \PYGZpc{}0.12f, }\PYG{l+s}{\PYGZbs{}}
 \PYG{l+s}{            }\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s+se}{\PYGZbs{}t}\PYG{l+s}{- average time per deposit = \PYGZpc{}0.12f}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s}{"}\PYG{p}{,} 
@@ -1605,7 +1994,8 @@ which is computed in line 61.
     \PYG{k+kt}{double} \PYG{n}{balance} \PYG{o}{=} \PYG{l+m+mf}{0.0}\PYG{p}{,}
            \PYG{n}{startTime} \PYG{o}{=} \PYG{l+m+mf}{0.0}\PYG{p}{,} 
            \PYG{n}{stopTime} \PYG{o}{=} \PYG{l+m+mf}{0.0}\PYG{p}{,}
-           \PYG{n}{totalTime} \PYG{o}{=} \PYG{l+m+mf}{0.0}\PYG{p}{;}
+           \PYG{n}{atomicTime} \PYG{o}{=} \PYG{l+m+mf}{0.0}\PYG{p}{,}
+           \PYG{n}{criticalTime} \PYG{o}{=} \PYG{l+m+mf}{0.0}\PYG{p}{;}
   
     \PYG{n}{printf}\PYG{p}{(}\PYG{l+s}{"}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s}{Your starting bank account balance is \PYGZpc{}0.2f}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s}{"}\PYG{p}{,} \PYG{n}{balance}\PYG{p}{)}\PYG{p}{;}
 
@@ -1614,40 +2004,162 @@ which is computed in line 61.
     \PYG{c+cp}{\PYGZsh{}}\PYG{c+cp}{pragma omp parallel for }
     \PYG{k}{for} \PYG{p}{(}\PYG{n}{i} \PYG{o}{=} \PYG{l+m+mi}{0}\PYG{p}{;} \PYG{n}{i} \PYG{o}{\PYGZlt{}} \PYG{n}{REPS}\PYG{p}{;} \PYG{n}{i}\PYG{o}{+}\PYG{o}{+}\PYG{p}{)} \PYG{p}{\PYGZob{}}
         \PYG{c+cp}{\PYGZsh{}}\PYG{c+cp}{pragma omp atomic}
-        \PYG{n}{balance} \PYG{o}{+}\PYG{o}{=} \PYG{l+m+mf}{10.0}\PYG{p}{;}
+        \PYG{n}{balance} \PYG{o}{+}\PYG{o}{=} \PYG{l+m+mf}{1.0}\PYG{p}{;}
     \PYG{p}{\PYGZcb{}}
     \PYG{n}{stopTime} \PYG{o}{=} \PYG{n}{omp\PYGZus{}get\PYGZus{}wtime}\PYG{p}{(}\PYG{p}{)}\PYG{p}{;}
-    \PYG{n}{totalTime} \PYG{o}{=} \PYG{n}{stopTime} \PYG{o}{-} \PYG{n}{startTime}\PYG{p}{;}
-    \PYG{n}{print}\PYG{p}{(}\PYG{l+s}{"}\PYG{l+s}{atomic}\PYG{l+s}{"}\PYG{p}{,} \PYG{n}{REPS}\PYG{p}{,} \PYG{n}{balance}\PYG{p}{,} \PYG{n}{totalTime}\PYG{p}{,} \PYG{n}{totalTime}\PYG{o}{/}\PYG{n}{REPS}\PYG{p}{)}\PYG{p}{;}
+    \PYG{n}{atomicTime} \PYG{o}{=} \PYG{n}{stopTime} \PYG{o}{-} \PYG{n}{startTime}\PYG{p}{;}
+    \PYG{n}{print}\PYG{p}{(}\PYG{l+s}{"}\PYG{l+s}{atomic}\PYG{l+s}{"}\PYG{p}{,} \PYG{n}{REPS}\PYG{p}{,} \PYG{n}{balance}\PYG{p}{,} \PYG{n}{atomicTime}\PYG{p}{,} \PYG{n}{atomicTime}\PYG{o}{/}\PYG{n}{REPS}\PYG{p}{)}\PYG{p}{;}
 
 
     \PYG{c+c1}{// simulate the same number of deposits using critical}
-    \PYG{n}{balance} \PYG{o}{=} \PYG{l+m+mi}{0}\PYG{p}{;}
+    \PYG{n}{balance} \PYG{o}{=} \PYG{l+m+mf}{0.0}\PYG{p}{;}
     \PYG{n}{startTime} \PYG{o}{=} \PYG{n}{omp\PYGZus{}get\PYGZus{}wtime}\PYG{p}{(}\PYG{p}{)}\PYG{p}{;}
     \PYG{c+cp}{\PYGZsh{}}\PYG{c+cp}{pragma omp parallel for }
     \PYG{k}{for} \PYG{p}{(}\PYG{n}{i} \PYG{o}{=} \PYG{l+m+mi}{0}\PYG{p}{;} \PYG{n}{i} \PYG{o}{\PYGZlt{}} \PYG{n}{REPS}\PYG{p}{;} \PYG{n}{i}\PYG{o}{+}\PYG{o}{+}\PYG{p}{)} \PYG{p}{\PYGZob{}}
          \PYG{c+cp}{\PYGZsh{}}\PYG{c+cp}{pragma omp critical}
          \PYG{p}{\PYGZob{}}
-             \PYG{n}{balance} \PYG{o}{+}\PYG{o}{=} \PYG{l+m+mf}{10.0}\PYG{p}{;}
+             \PYG{n}{balance} \PYG{o}{+}\PYG{o}{=} \PYG{l+m+mf}{1.0}\PYG{p}{;}
          \PYG{p}{\PYGZcb{}}
     \PYG{p}{\PYGZcb{}}
     \PYG{n}{stopTime} \PYG{o}{=} \PYG{n}{omp\PYGZus{}get\PYGZus{}wtime}\PYG{p}{(}\PYG{p}{)}\PYG{p}{;}
-    \PYG{n}{totalTime} \PYG{o}{=} \PYG{n}{stopTime} \PYG{o}{-} \PYG{n}{startTime}\PYG{p}{;}
-    \PYG{n}{print}\PYG{p}{(}\PYG{l+s}{"}\PYG{l+s}{critical}\PYG{l+s}{"}\PYG{p}{,} \PYG{n}{REPS}\PYG{p}{,} \PYG{n}{balance}\PYG{p}{,} \PYG{n}{totalTime}\PYG{p}{,} \PYG{n}{totalTime}\PYG{o}{/}\PYG{n}{REPS}\PYG{p}{)}\PYG{p}{;}
+    \PYG{n}{criticalTime} \PYG{o}{=} \PYG{n}{stopTime} \PYG{o}{-} \PYG{n}{startTime}\PYG{p}{;}
+    \PYG{n}{print}\PYG{p}{(}\PYG{l+s}{"}\PYG{l+s}{critical}\PYG{l+s}{"}\PYG{p}{,} \PYG{n}{REPS}\PYG{p}{,} \PYG{n}{balance}\PYG{p}{,} \PYG{n}{criticalTime}\PYG{p}{,} \PYG{n}{criticalTime}\PYG{o}{/}\PYG{n}{REPS}\PYG{p}{)}\PYG{p}{;}
+
+    \PYG{n}{printf}\PYG{p}{(}\PYG{l+s}{"}\PYG{l+s}{criticalTime / atomicTime ratio: \PYGZpc{}0.12f}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s}{"}\PYG{p}{,} 
+             \PYG{n}{criticalTime} \PYG{o}{/} \PYG{n}{atomicTime}\PYG{p}{)}\PYG{p}{;}
 
     \PYG{k}{return} \PYG{l+m+mi}{0}\PYG{p}{;}
 \PYG{p}{\PYGZcb{}}
 \end{Verbatim}
 
-\emph{file: patternlets/OpenMP/12.mutualExclusion-critical2/critical2.c}
 
+\subsubsection{13.  Mutual Exclusion Coordination Pattern: language difference}
+\label{SharedMemory/MutualExclusion:mutual-exclusion-coordination-pattern-language-difference}
+\emph{file: openMP/13.mutualExclusion-critical3/critical2.c}
 
-\subsection{13. Task Decomposition Pattern using OpenMP section directive}
-\label{SharedMemory/OpenMP_Patternlets:task-decomposition-pattern-using-openmp-section-directive}
+\emph{Build inside 13.mutualExclusion-critical3 directory:}
+
 \begin{Verbatim}[commandchars=\\\{\}]
+make critical3
+\end{Verbatim}
+
+\emph{Execute on the command line inside 13.mutualExclusion-critical3 directory:}
+
+\begin{Verbatim}[commandchars=\\\{\}]
+./critical3
+\end{Verbatim}
+
+The following is a C++ code example to illustrate some language differences between C and C++.  Try the exercises described in the code below.
+
+\begin{Verbatim}[commandchars=\\\{\},numbers=left,firstnumber=1,stepnumber=1]
+\PYG{c+cm}{/* critical3.cpp}
+\PYG{c+cm}{ * ... compares the use of OpenMP's critical and atomic directives,}
+\PYG{c+cm}{ *  providing an example of when critical works but atomic does not.}
+\PYG{c+cm}{ *}
+\PYG{c+cm}{ * Joel Adams, Calvin College, February 2014.}
+\PYG{c+cm}{ *}
+\PYG{c+cm}{ * Usage: ./critical3}
+\PYG{c+cm}{ *}
+\PYG{c+cm}{ * Exercise:}
+\PYG{c+cm}{ *  - Compile, run, note behavior.}
+\PYG{c+cm}{ *  - Uncomment \PYGZsh{}pragma on line A, note behavior as threads 'race'}
+\PYG{c+cm}{ *     to insert values into cout (a shared output stream).}
+\PYG{c+cm}{ *  - Uncomment \PYGZsh{}pragma on line B, try to compile, note error message.}
+\PYG{c+cm}{ *  - Recomment \PYGZsh{}pragma on line B; uncomment \PYGZsh{}pragma on line C,}
+\PYG{c+cm}{ *     recompile, rerun, note results.}
+\PYG{c+cm}{ */}
+
+\PYG{c+cp}{\PYGZsh{}}\PYG{c+cp}{include \PYGZlt{}iostream\PYGZgt{}      }\PYG{c+c1}{// cout, \PYGZlt{}\PYGZlt{}, etc.}
+\PYG{c+cp}{\PYGZsh{}}\PYG{c+cp}{include\PYGZlt{}omp.h\PYGZgt{}          }\PYG{c+c1}{// openMP }
+\PYG{k}{using} \PYG{k}{namespace} \PYG{n}{std}\PYG{p}{;}
+
+\PYG{k+kt}{int} \PYG{n}{main}\PYG{p}{(}\PYG{p}{)} \PYG{p}{\PYGZob{}}
+    \PYG{n}{cout} \PYG{o}{\PYGZlt{}}\PYG{o}{\PYGZlt{}} \PYG{l+s}{"}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s}{Before ...}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s}{"} \PYG{o}{\PYGZlt{}}\PYG{o}{\PYGZlt{}} \PYG{n}{endl}\PYG{p}{;}
+
+\PYG{c+c1}{//    \PYGZsh{}pragma omp parallel                        // A}
+    \PYG{p}{\PYGZob{}}
+        \PYG{k+kt}{int} \PYG{n}{id} \PYG{o}{=} \PYG{n}{omp\PYGZus{}get\PYGZus{}thread\PYGZus{}num}\PYG{p}{(}\PYG{p}{)}\PYG{p}{;}
+        \PYG{k+kt}{int} \PYG{n}{numThreads} \PYG{o}{=} \PYG{n}{omp\PYGZus{}get\PYGZus{}num\PYGZus{}threads}\PYG{p}{(}\PYG{p}{)}\PYG{p}{;}
+\PYG{c+c1}{//        \PYGZsh{}pragma omp atomic                      // B}
+\PYG{c+c1}{//        \PYGZsh{}pragma omp critical                    // C}
+        \PYG{n}{cout} \PYG{o}{\PYGZlt{}}\PYG{o}{\PYGZlt{}} \PYG{l+s}{"}\PYG{l+s}{Hello from thread \PYGZsh{}}\PYG{l+s}{"} \PYG{o}{\PYGZlt{}}\PYG{o}{\PYGZlt{}} \PYG{n}{id} 
+             \PYG{o}{\PYGZlt{}}\PYG{o}{\PYGZlt{}} \PYG{l+s}{"}\PYG{l+s}{ out of }\PYG{l+s}{"} \PYG{o}{\PYGZlt{}}\PYG{o}{\PYGZlt{}} \PYG{n}{numThreads} \PYG{o}{\PYGZlt{}}\PYG{o}{\PYGZlt{}} \PYG{n}{endl}\PYG{p}{;}
+    \PYG{p}{\PYGZcb{}}
+
+    \PYG{n}{cout} \PYG{o}{\PYGZlt{}}\PYG{o}{\PYGZlt{}} \PYG{l+s}{"}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s}{After ...}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s}{"} \PYG{o}{\PYGZlt{}}\PYG{o}{\PYGZlt{}} \PYG{n}{endl}\PYG{p}{;}
+\PYG{p}{\PYGZcb{}}
+\end{Verbatim}
+
+
+\paragraph{Some Explanation}
+\label{SharedMemory/MutualExclusion:some-explanation}
+A C line like this:
+\begin{quote}
+
+printf(``Hello from thread \#\%d of \%dn'', id, numThreads);
+\end{quote}
+
+is a single function call that is pretty much performed atomically, so you get pretty good output like.
+
+\begin{Verbatim}[commandchars=\\\{\}]
+Hello from thread \#0 of 4
+Hello from thread \#2 of 4
+Hello from thread \#3 of 4
+Hello from thread \#1 of 4
+\end{Verbatim}
+
+By contrast, the C++ line:
+\begin{quote}
+
+cout \textless{}\textless{} ``Hello from thread \#'' \textless{}\textless{} id \textless{}\textless{} '' of '' \textless{}\textless{} numThreads \textless{}\textless{} endl;
+\end{quote}
+
+has 5 different function calls, so the outputs from these functions get interleaved within the shared stream cout as the threads `race' to write to it.  You may have observed output similar to this:
+\begin{quote}
+
+Hello from thread \#Hello from thread\#Hello from thread\#0 of 4Hello from thread\#
+
+2 of 43 of 4
+
+1 of 4
+\end{quote}
+
+The other facet that this particular patternlet shows is that OpenMP's atomic directive will not fix this -- it is too complex for atomic, so the compiler flags that as an error.  To make this statement execute indivisiblly, you need to use the critical directive, providing a pretty simple case where critical works and atomic does not.
+
+
+\subsection{Task Decomposition Algorithm Strategies}
+\label{SharedMemory/TaskDecomp:task-decomposition-algorithm-strategies}\label{SharedMemory/TaskDecomp::doc}
+All threaded programs have some form of task decomposition, that is, delineating which threads will do what tasks in parallel at certain points in the program. We have seen one way of dictating this by using the master-worker implementation, where one thread does one task and all the others to another.  Here we introduce a more general approach that can be used.
+
+
+\subsubsection{14. Task Decomposition Algorithm Strategy using OpenMP section directive}
+\label{SharedMemory/TaskDecomp:task-decomposition-algorithm-strategy-using-openmp-section-directive}
+\emph{file: openMP/14.sections/sections.c}
+
+\emph{Build inside 14.sections directory:}
+
+\begin{Verbatim}[commandchars=\\\{\}]
+make sections
+\end{Verbatim}
+
+\emph{Execute on the command line inside 14.sections directory:}
+
+\begin{Verbatim}[commandchars=\\\{\}]
+./sections
+\end{Verbatim}
+
+This example shows how to create a program with arbitrary separate tasks that run concurrently.  This is useful if you have tasks that are not dependent on one another.
+
+\begin{Verbatim}[commandchars=\\\{\},numbers=left,firstnumber=1,stepnumber=1]
 \PYG{c+cm}{/* sections.c}
-\PYG{c+cm}{ * ... illustrates the use of OpenMP's parallel section/sections directives...}
+\PYG{c+cm}{ * ... illustrates the use of OpenMP's parallel section/sections directives,}
+\PYG{c+cm}{ *      which can be used for task parallelism...}
+\PYG{c+cm}{ *}
 \PYG{c+cm}{ * Joel Adams, Calvin College, November 2009.}
+\PYG{c+cm}{ *}
+\PYG{c+cm}{ * Usage: ./sections}
+\PYG{c+cm}{ *}
+\PYG{c+cm}{ * Exercise: Compile, run (several times), compare output to source code.}
 \PYG{c+cm}{ */}
 
 \PYG{c+cp}{\PYGZsh{}}\PYG{c+cp}{include \PYGZlt{}stdio.h\PYGZgt{}}
@@ -1662,22 +2174,22 @@ which is computed in line 61.
     \PYG{p}{\PYGZob{}}
         \PYG{c+cp}{\PYGZsh{}}\PYG{c+cp}{pragma omp section }
         \PYG{p}{\PYGZob{}}
-            \PYG{n}{printf}\PYG{p}{(}\PYG{l+s}{"}\PYG{l+s}{Section A performed by thread \PYGZpc{}d}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s}{"}\PYG{p}{,} 
+            \PYG{n}{printf}\PYG{p}{(}\PYG{l+s}{"}\PYG{l+s}{Task/section A performed by thread \PYGZpc{}d}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s}{"}\PYG{p}{,} 
                     \PYG{n}{omp\PYGZus{}get\PYGZus{}thread\PYGZus{}num}\PYG{p}{(}\PYG{p}{)} \PYG{p}{)}\PYG{p}{;} 
         \PYG{p}{\PYGZcb{}}
         \PYG{c+cp}{\PYGZsh{}}\PYG{c+cp}{pragma omp section }
         \PYG{p}{\PYGZob{}}
-            \PYG{n}{printf}\PYG{p}{(}\PYG{l+s}{"}\PYG{l+s}{Section B performed by thread \PYGZpc{}d}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s}{"}\PYG{p}{,}
+            \PYG{n}{printf}\PYG{p}{(}\PYG{l+s}{"}\PYG{l+s}{Task/section B performed by thread \PYGZpc{}d}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s}{"}\PYG{p}{,}
                     \PYG{n}{omp\PYGZus{}get\PYGZus{}thread\PYGZus{}num}\PYG{p}{(}\PYG{p}{)} \PYG{p}{)}\PYG{p}{;} 
         \PYG{p}{\PYGZcb{}}
         \PYG{c+cp}{\PYGZsh{}}\PYG{c+cp}{pragma omp section}
         \PYG{p}{\PYGZob{}}
-            \PYG{n}{printf}\PYG{p}{(}\PYG{l+s}{"}\PYG{l+s}{Section C performed by thread \PYGZpc{}d}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s}{"}\PYG{p}{,}
+            \PYG{n}{printf}\PYG{p}{(}\PYG{l+s}{"}\PYG{l+s}{Task/section C performed by thread \PYGZpc{}d}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s}{"}\PYG{p}{,}
                     \PYG{n}{omp\PYGZus{}get\PYGZus{}thread\PYGZus{}num}\PYG{p}{(}\PYG{p}{)} \PYG{p}{)}\PYG{p}{;} 
         \PYG{p}{\PYGZcb{}}
         \PYG{c+cp}{\PYGZsh{}}\PYG{c+cp}{pragma omp section }
         \PYG{p}{\PYGZob{}}
-                \PYG{n}{printf}\PYG{p}{(}\PYG{l+s}{"}\PYG{l+s}{Section D performed by thread \PYGZpc{}d}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s}{"}\PYG{p}{,} 
+                \PYG{n}{printf}\PYG{p}{(}\PYG{l+s}{"}\PYG{l+s}{Task/section D performed by thread \PYGZpc{}d}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s}{"}\PYG{p}{,} 
                          \PYG{n}{omp\PYGZus{}get\PYGZus{}thread\PYGZus{}num}\PYG{p}{(}\PYG{p}{)} \PYG{p}{)}\PYG{p}{;} 
         \PYG{p}{\PYGZcb{}}
     \PYG{p}{\PYGZcb{}}
@@ -1688,7 +2200,14 @@ which is computed in line 61.
 \PYG{p}{\PYGZcb{}}
 \end{Verbatim}
 
-\emph{file: patternlets/OpenMP/13.sections/sections.c}
+
+\subsection{Categorizing Patterns}
+\label{SharedMemory/patterns_diagram::doc}\label{SharedMemory/patterns_diagram:categorizing-patterns}
+There has been a fair amount of work by several researchers who have catergorized patterns found in parallel programs.  We have shown you simple examples of several of them that are very common when writing OpenMP programs that use shared memory.  Now that you have seen them, you can try to imagine the patterns falling into the categories shown on the following diagram:
+
+\includegraphics{OMP_Patterns.png}
+
+Most programs you will write will include patterns for an Algorithm Strategy (both data decomposition and task decomposition), some of the Implementation Strategies (if not all), and some of the Coordination Mechanisms.  The patternlets show simple examples that you can use as a guide.  In OpenMP, most programs use various shared data in memory as their data structure implementation strategy. The Process/Thread Control Mechanism patterns are built in to any OpenMP program. Multiple Instruction, Multiple Data (MIMD) is built in because forked threads operate independently on different data. Likewise, pools of threads are part of every compiled OpenMP threaded program.
 
 
 
