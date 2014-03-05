@@ -8,7 +8,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Infectious Disease &mdash; Pandemic Without MPI</title>
+    <title>Infectious Disease &mdash; Pandemic Exemplar with OpenMP</title>
     
     <link rel="stylesheet" href="../_static/default.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
@@ -25,9 +25,9 @@
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
-    <link rel="top" title="Pandemic Without MPI" href="../index.html" />
+    <link rel="top" title="Pandemic Exemplar with OpenMP" href="../index.html" />
     <link rel="next" title="Program Structure" href="../1-ProgramStructure/programstructure.html" />
-    <link rel="prev" title="Pandemic Without MPI" href="../index.html" /> 
+    <link rel="prev" title="Pandemic Modeling Exemplar using OpenMP" href="../index.html" /> 
   </head>
   <body>
     <div class="related">
@@ -40,9 +40,9 @@
           <a href="../1-ProgramStructure/programstructure.html" title="Program Structure"
              accesskey="N">next</a> |</li>
         <li class="right" >
-          <a href="../index.html" title="Pandemic Without MPI"
+          <a href="../index.html" title="Pandemic Modeling Exemplar using OpenMP"
              accesskey="P">previous</a> |</li>
-        <li><a href="../index.html">Pandemic Without MPI</a> &raquo;</li> 
+        <li><a href="../index.html">Pandemic Exemplar with OpenMP</a> &raquo;</li> 
       </ul>
     </div>  
 
@@ -66,7 +66,7 @@ algorithm, and explore the scaling of the coded implementation on high
 performance cluster resources.</p>
 <p><strong>Pre-assessment Rubric</strong></p>
 <p>This rubric is to gauge students’ initial knowledge and experience with
-the materials presented in this module. Students are asked to rate their
+the materials presented in this module. Students can be asked to rate their
 knowledge and experience on the following scale and in the following
 subject areas:</p>
 <blockquote>
@@ -83,13 +83,14 @@ subject areas:</p>
 <li>Disease modeling</li>
 <li>Parallel Algorithm Design</li>
 <li>Parallel Hardware</li>
-<li>MPI programming</li>
 <li>OpenMP programming</li>
-<li>Using a cluster</li>
+<li>CUDA programming</li>
 <li>Scaling parallel code</li>
 </ul>
 </div></blockquote>
-<p><strong>Model</strong></p>
+<p>Each of these topics is mentioned to some degree in the material that follows. Some familiarity with each of these is assumed, except that the disease modeling is explained here.</p>
+<div class="section" id="model">
+<h2>Model<a class="headerlink" href="#model" title="Permalink to this headline">¶</a></h2>
 <p>The model makes certain assumptions about the spread of the disease. In
 particular, it assumes that the disease spreads from one person to
 another person with some “contagiousness factor”, that is, some percent
@@ -144,7 +145,9 @@ the description.</p>
 <li>Can spawn threads to do work for it.</li>
 <li>Keeps count of how many susceptible, infected, immune, and <em>dead</em> people exist.</li>
 </ul>
-<p><strong>Introduction to Parallelism</strong></p>
+</div>
+<div class="section" id="introduction-to-parallelism">
+<h2>Introduction to Parallelism<a class="headerlink" href="#introduction-to-parallelism" title="Permalink to this headline">¶</a></h2>
 <p>In parallel processing, rather than having a single program execute
 tasks in a sequence, the program is split among multiple “execution
 flows” executing tasks in parallel, i.e. at the same time. The term
@@ -191,8 +194,9 @@ which are computers connected by a network. These computers may
 themselves have multi-core CPUs, which allows for hybrid parallelism:
 shared memory between the cores and message passing between the compute
 nodes.</p>
-<hr class="docutils" />
-<p><strong>Motivation for Parallelism</strong></p>
+</div>
+<div class="section" id="motivation-for-parallelism">
+<h2>Motivation for Parallelism<a class="headerlink" href="#motivation-for-parallelism" title="Permalink to this headline">¶</a></h2>
 <p>We now know what parallelism is, but why should we use it? The three
 motivations we will discuss here are speedup, accuracy, and scaling.
 These are all compelling advantages for using parallelism, but some also
@@ -240,8 +244,8 @@ its serial regions. Amdahl’s Law is represented as an equation in Figure
 <li>1 – P = the proportion of the program that cannot be made parallel</li>
 <li>N = the number of processors</li>
 </ul>
-<hr class="docutils" />
-<p><strong>Figure 2: Amdahl’s Law</strong></p>
+<div class="section" id="amdahls-law">
+<h3>Amdahl’s Law<a class="headerlink" href="#amdahls-law" title="Permalink to this headline">¶</a></h3>
 <p>Amdahl’s Law provides a strong and fundamental argument against
 utilizing parallel processing to achieve speedup. However, it does not
 provide a strong argument against using it to achieve accuracy or
@@ -251,36 +255,32 @@ available to the program. The advantages of parallelism for scaling are
 summarized by John Gustafson in Gustafson’s Law, which says that bigger
 problems can be modeled in the same amount of time as smaller problems
 if the processor count is increased. Gustafson’s Law is represented as
-an equation in Figure 3.</p>
+an equation:</p>
 <p>Speedup(N) = <img class="math" src="../_images/math/4cf8a95741445486b25d66f187e971d935f1a59d.png" alt="N–(1–P)*(N–1)"/></p>
 <p>where</p>
 <ul class="simple">
 <li>N = the number of processors</li>
 <li>1–P = the proportion of the program that cannot be made parallel</li>
 </ul>
-<hr class="docutils" />
-<p><strong>Figure 3: Gustafson’s Law</strong></p>
+</div>
+<div class="section" id="gustafsons-law">
+<h3>Gustafson’s Law<a class="headerlink" href="#gustafsons-law" title="Permalink to this headline">¶</a></h3>
 <p>Amdahl’s Law reveals the limitations of what is known as “strong
 scaling”, in which the number of processes remains constant as the
 problem size increases. Gustafson’s Law reveals the promise of “weak
 scaling”, in which the number of processes increases along with the
-problem size. These concepts will be explored further in Exercise 4.</p>
-<hr class="docutils" />
-<p><strong>Code</strong></p>
+problem size.</p>
+</div>
+<div class="section" id="code">
+<h3>Code<a class="headerlink" href="#code" title="Permalink to this headline">¶</a></h3>
 <p>The code in this module is written in the C programming language, chosen
 for its ubiquity in scientific computing as well as its well-defined use
 of MPI and OpenMP.</p>
-<p>The code is attached to this module in pandemic.zip. After unpacking
+<p>The code is available for download in archive files. After unpacking
 this using an archive utility, use of the code will require the use of a
 command line terminal. C is a compiled language, so it must be run
-through a compiler first to check for any syntax errors in the code. To
-compile the code in all its forms of parallelism, enter “make all” in
-the terminal. For other compilation options, see the Makefile. To run
-the program, enter “./pandemic.serial” to run the serial (non-parallel)
-version, “./pandemic.openmp” to run the OpenMP version, “mpirun –np
-&lt;number of processes&gt; pandemic.mpi” to run the MPI
-version, or “mpirun –np &lt;number of processes&gt;
-pandemic.hybrid” to run the hybrid OpenMP/MPI version. Each version of
+through a compiler first to check for any syntax errors in the code.</p>
+<p>Each version of
 the code can be run with different options by appending arguments to the
 end of commands, as in “./pandemic.serial –n 100”. These options are
 described below:</p>
@@ -296,8 +296,7 @@ described below:</p>
 <li>–D &lt;the deadliness factor of the disease&gt;</li>
 <li>–m &lt;the number of actual microseconds in between days of the model&gt; – this is used to slow or speed up the animation of the model</li>
 </ul>
-<p>To help better understand the code, students can consult the data
-structures section below.</p>
+<p>To help better understand the code, please follow along the rest of this document.</p>
 <table class="docutils footnote" frame="void" id="id5" rules="none">
 <colgroup><col class="label" /><col /></colgroup>
 <tbody valign="top">
@@ -323,6 +322,8 @@ structures section below.</p>
 </tbody>
 </table>
 </div>
+</div>
+</div>
 
 
           </div>
@@ -333,25 +334,27 @@ structures section below.</p>
             <p class="logo"><a href="../index.html">
               <img class="logo" src="../_static/CSInParallel200wide.png" alt="Logo"/>
             </a></p>
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Infectious Disease</a><ul>
+<li><a class="reference internal" href="#model">Model</a></li>
+<li><a class="reference internal" href="#introduction-to-parallelism">Introduction to Parallelism</a></li>
+<li><a class="reference internal" href="#motivation-for-parallelism">Motivation for Parallelism</a><ul>
+<li><a class="reference internal" href="#amdahls-law">Amdahl’s Law</a></li>
+<li><a class="reference internal" href="#gustafsons-law">Gustafson’s Law</a></li>
+<li><a class="reference internal" href="#code">Code</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
   <h4>Previous topic</h4>
   <p class="topless"><a href="../index.html"
-                        title="previous chapter">Pandemic Without MPI</a></p>
+                        title="previous chapter">Pandemic Modeling Exemplar using OpenMP</a></p>
   <h4>Next topic</h4>
   <p class="topless"><a href="../1-ProgramStructure/programstructure.html"
                         title="next chapter">Program Structure</a></p>
-<div id="searchbox" style="display: none">
-  <h3>Quick search</h3>
-    <form class="search" action="../search.html" method="get">
-      <input type="text" name="q" />
-      <input type="submit" value="Go" />
-      <input type="hidden" name="check_keywords" value="yes" />
-      <input type="hidden" name="area" value="default" />
-    </form>
-    <p class="searchtip" style="font-size: 90%">
-    Enter search terms or a module, class or function name.
-    </p>
-</div>
-<script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
       </div>
       <div class="clearer"></div>
@@ -366,13 +369,13 @@ structures section below.</p>
           <a href="../1-ProgramStructure/programstructure.html" title="Program Structure"
              >next</a> |</li>
         <li class="right" >
-          <a href="../index.html" title="Pandemic Without MPI"
+          <a href="../index.html" title="Pandemic Modeling Exemplar using OpenMP"
              >previous</a> |</li>
-        <li><a href="../index.html">Pandemic Without MPI</a> &raquo;</li> 
+        <li><a href="../index.html">Pandemic Exemplar with OpenMP</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">
-        &copy; Copyright 2013, CSInParallel Project.
+        &copy; Copyright 2013, CSinParallel Project.
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
     </div>
   </body>

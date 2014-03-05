@@ -53,8 +53,8 @@ source_suffix = '.rst'
 master_doc = 'index'
 
 # General information about the project.
-project = u'Pandemic Without MPI'
-copyright = u'2013, CSInParallel Project'
+project = u'Pandemic Exemplar with OpenMP'
+copyright = u'2013, CSinParallel Project'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
@@ -116,7 +116,7 @@ html_theme = 'default'
 
 # The name for this set of Sphinx documents.  If None, it defaults to
 # "<project> v<release> documentation".
-html_title = 'Pandemic Without MPI'
+html_title = 'Pandemic Exemplar with OpenMP'
 
 # A shorter title for the navigation bar.  Default is the same as html_title.
 #html_short_title = None
@@ -145,6 +145,9 @@ html_static_path = ['_static']
 
 # Custom sidebar templates, maps document names to template names.
 #html_sidebars = {}
+html_sidebars = {
+   '**': ['localtoc.html', 'relations.html'],
+   }
 
 # Additional templates that should be rendered to pages, maps page names to
 # template names.
@@ -177,7 +180,7 @@ html_show_sourcelink = False
 #html_file_suffix = None
 
 # Output file base name for HTML help builder.
-htmlhelp_basename = 'PandemicWithoutMPIdoc'
+htmlhelp_basename = 'PandemicOpneMPdoc'
 
 
 # -- Options for LaTeX output --------------------------------------------------
@@ -197,8 +200,8 @@ latex_elements = {
 # Grouping the document tree into LaTeX files. List of tuples
 # (source start file, target name, title, author, documentclass [howto/manual]).
 latex_documents = [
-  ('index', 'PandemicWithoutMPI.tex', u'Pandemic Without MPI',
-   u'CSInParallel Project', 'manual'),
+  ('index', 'PandemicOpneMP.tex', u'Pandemic Exemplar with OpenMP',
+   u'CSinParallel Project', 'manual'),
 ]
 
 # The name of an image file (relative to this directory) to place at the top of
@@ -227,8 +230,8 @@ latex_documents = [
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
 man_pages = [
-    ('index', 'pandemicwithoutmpi', u'Pandemic Without MPI',
-     [u'CSInParallel Project'], 1)
+    ('index', 'pandemic_omp', u'Pandemic Exemplar with OpenMP',
+     [u'CSinParallel Project'], 1)
 ]
 
 # If true, show URL addresses after external links.
@@ -241,8 +244,8 @@ man_pages = [
 # (source start file, target name, title, author,
 #  dir menu entry, description, category)
 texinfo_documents = [
-  ('index', 'PandemicWithoutMPI', u'Pandemic Without MPI',
-   u'CSInParallel Project', 'PandemicWithoutMPI', 'One line description of project.',
+  ('index', 'PandemicOMP', u'Pandemic Exemplar with OpenMP',
+   u'CSinParallel Project', 'PandemicOMP', 'Pandemic Exemplar with Serial and OpenMP versions.',
    'Miscellaneous'),
 ]
 

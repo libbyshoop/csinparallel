@@ -8,7 +8,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Finish Functions &mdash; Pandemic Without MPI</title>
+    <title>Finish Functions &mdash; Pandemic Exemplar with OpenMP</title>
     
     <link rel="stylesheet" href="../_static/default.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
@@ -25,8 +25,8 @@
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
-    <link rel="top" title="Pandemic Without MPI" href="../index.html" />
-    <link rel="next" title="Including OpenMP" href="../8-OpenMP/openmp.html" />
+    <link rel="top" title="Pandemic Exemplar with OpenMP" href="../index.html" />
+    <link rel="next" title="Build and Run" href="../7.1-BuildAndRun/build.html" />
     <link rel="prev" title="Core Functions" href="../6-Core/core.html" /> 
   </head>
   <body>
@@ -37,12 +37,12 @@
           <a href="../genindex.html" title="General Index"
              accesskey="I">index</a></li>
         <li class="right" >
-          <a href="../8-OpenMP/openmp.html" title="Including OpenMP"
+          <a href="../7.1-BuildAndRun/build.html" title="Build and Run"
              accesskey="N">next</a> |</li>
         <li class="right" >
           <a href="../6-Core/core.html" title="Core Functions"
              accesskey="P">previous</a> |</li>
-        <li><a href="../index.html">Pandemic Without MPI</a> &raquo;</li> 
+        <li><a href="../index.html">Pandemic Exemplar with OpenMP</a> &raquo;</li> 
       </ul>
     </div>  
 
@@ -89,8 +89,8 @@ factor.</p>
 to the heap using the <strong>free</strong> function. We do this in the reverse order
 than we used <strong>malloc</strong>, so <strong>environment</strong> will come first and <strong>x_locations</strong>
 will come last.</p>
-<div class="highlight-c"><div class="highlight"><pre><span class="cp">    // free text display environment</span>
-<span class="cp">	#ifdef TEXT_DISPLAY </span>
+<div class="highlight-c"><div class="highlight"><pre>    <span class="c1">// free text display environment</span>
+	<span class="cp">#ifdef TEXT_DISPLAY </span>
 	<span class="kt">int</span> <span class="n">current_location_x</span><span class="p">;</span>
 	<span class="k">for</span><span class="p">(</span><span class="n">current_location_x</span> <span class="o">=</span> <span class="n">constant</span><span class="o">-&gt;</span><span class="n">environment_width</span> <span class="o">-</span> <span class="mi">1</span><span class="p">;</span> 
 		<span class="n">current_location_x</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">current_location_x</span><span class="o">--</span><span class="p">)</span>
@@ -98,7 +98,7 @@ will come last.</p>
 		<span class="n">free</span><span class="p">(</span><span class="n">dpy</span><span class="o">-&gt;</span><span class="n">environment</span><span class="p">[</span><span class="n">current_location_x</span><span class="p">]);</span>
 	<span class="p">}</span>
 	<span class="n">free</span><span class="p">(</span><span class="n">dpy</span><span class="o">-&gt;</span><span class="n">environment</span><span class="p">);</span>
-<span class="cp">	#endif</span>
+	<span class="cp">#endif</span>
 
 	<span class="c1">// free arrays allocated in global struct</span>
 	<span class="n">free</span><span class="p">(</span><span class="n">global</span><span class="o">-&gt;</span><span class="n">x_locations</span><span class="p">);</span>
@@ -134,21 +134,8 @@ will come last.</p>
   <p class="topless"><a href="../6-Core/core.html"
                         title="previous chapter">Core Functions</a></p>
   <h4>Next topic</h4>
-  <p class="topless"><a href="../8-OpenMP/openmp.html"
-                        title="next chapter">Including OpenMP</a></p>
-<div id="searchbox" style="display: none">
-  <h3>Quick search</h3>
-    <form class="search" action="../search.html" method="get">
-      <input type="text" name="q" />
-      <input type="submit" value="Go" />
-      <input type="hidden" name="check_keywords" value="yes" />
-      <input type="hidden" name="area" value="default" />
-    </form>
-    <p class="searchtip" style="font-size: 90%">
-    Enter search terms or a module, class or function name.
-    </p>
-</div>
-<script type="text/javascript">$('#searchbox').show(0);</script>
+  <p class="topless"><a href="../7.1-BuildAndRun/build.html"
+                        title="next chapter">Build and Run</a></p>
         </div>
       </div>
       <div class="clearer"></div>
@@ -160,16 +147,16 @@ will come last.</p>
           <a href="../genindex.html" title="General Index"
              >index</a></li>
         <li class="right" >
-          <a href="../8-OpenMP/openmp.html" title="Including OpenMP"
+          <a href="../7.1-BuildAndRun/build.html" title="Build and Run"
              >next</a> |</li>
         <li class="right" >
           <a href="../6-Core/core.html" title="Core Functions"
              >previous</a> |</li>
-        <li><a href="../index.html">Pandemic Without MPI</a> &raquo;</li> 
+        <li><a href="../index.html">Pandemic Exemplar with OpenMP</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">
-        &copy; Copyright 2013, CSInParallel Project.
+        &copy; Copyright 2013, CSinParallel Project.
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
     </div>
   </body>

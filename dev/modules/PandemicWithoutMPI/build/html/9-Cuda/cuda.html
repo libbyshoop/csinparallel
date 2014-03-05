@@ -8,7 +8,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Including CUDA &mdash; Pandemic Without MPI</title>
+    <title>Including CUDA &mdash; Pandemic Exemplar with OpenMP</title>
     
     <link rel="stylesheet" href="../_static/default.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
@@ -25,8 +25,7 @@
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
-    <link rel="top" title="Pandemic Without MPI" href="../index.html" />
-    <link rel="prev" title="Including OpenMP" href="../8-OpenMP/openmp.html" /> 
+    <link rel="top" title="Pandemic Exemplar with OpenMP" href="../index.html" /> 
   </head>
   <body>
     <div class="related">
@@ -35,10 +34,7 @@
         <li class="right" style="margin-right: 10px">
           <a href="../genindex.html" title="General Index"
              accesskey="I">index</a></li>
-        <li class="right" >
-          <a href="../8-OpenMP/openmp.html" title="Including OpenMP"
-             accesskey="P">previous</a> |</li>
-        <li><a href="../index.html">Pandemic Without MPI</a> &raquo;</li> 
+        <li><a href="../index.html">Pandemic Exemplar with OpenMP</a> &raquo;</li> 
       </ul>
     </div>  
 
@@ -209,13 +205,13 @@
     <span class="n">cudaMalloc</span><span class="p">((</span><span class="kt">void</span><span class="o">**</span><span class="p">)</span><span class="o">&amp;</span><span class="n">cuda</span><span class="o">-&gt;</span><span class="n">num_immune_dev</span><span class="p">,</span> <span class="k">sizeof</span><span class="p">(</span><span class="kt">int</span><span class="p">));</span>
     <span class="n">cudaMalloc</span><span class="p">((</span><span class="kt">void</span><span class="o">**</span><span class="p">)</span><span class="o">&amp;</span><span class="n">cuda</span><span class="o">-&gt;</span><span class="n">num_dead_dev</span><span class="p">,</span> <span class="k">sizeof</span><span class="p">(</span><span class="kt">int</span><span class="p">));</span>
     <span class="n">cudaMalloc</span><span class="p">((</span><span class="kt">void</span><span class="o">**</span><span class="p">)</span><span class="o">&amp;</span><span class="n">cuda</span><span class="o">-&gt;</span><span class="n">num_infected_dev</span><span class="p">,</span> <span class="k">sizeof</span><span class="p">(</span><span class="kt">int</span><span class="p">));</span>
-<span class="cp">    #ifdef SHOW_RESULTS</span>
+    <span class="cp">#ifdef SHOW_RESULTS</span>
     <span class="c1">// stats variables in stats struct</span>
     <span class="n">cudaMalloc</span><span class="p">((</span><span class="kt">void</span><span class="o">**</span><span class="p">)</span><span class="o">&amp;</span><span class="n">cuda</span><span class="o">-&gt;</span><span class="n">num_infections_dev</span><span class="p">,</span> <span class="k">sizeof</span><span class="p">(</span><span class="kt">int</span><span class="p">));</span>
     <span class="n">cudaMalloc</span><span class="p">((</span><span class="kt">void</span><span class="o">**</span><span class="p">)</span><span class="o">&amp;</span><span class="n">cuda</span><span class="o">-&gt;</span><span class="n">num_infection_attempts_dev</span><span class="p">,</span> <span class="k">sizeof</span><span class="p">(</span><span class="kt">int</span><span class="p">));</span>
     <span class="n">cudaMalloc</span><span class="p">((</span><span class="kt">void</span><span class="o">**</span><span class="p">)</span><span class="o">&amp;</span><span class="n">cuda</span><span class="o">-&gt;</span><span class="n">num_deaths_dev</span><span class="p">,</span> <span class="k">sizeof</span><span class="p">(</span><span class="kt">int</span><span class="p">));</span>
     <span class="n">cudaMalloc</span><span class="p">((</span><span class="kt">void</span><span class="o">**</span><span class="p">)</span><span class="o">&amp;</span><span class="n">cuda</span><span class="o">-&gt;</span><span class="n">num_recovery_attempts_dev</span><span class="p">,</span> <span class="k">sizeof</span><span class="p">(</span><span class="kt">int</span><span class="p">));</span>
-<span class="cp">    #endif</span>
+    <span class="cp">#endif</span>
 </pre></div>
 </div>
 <p>After allocating structure, we need to set up the random number generator. Since all the GPU device code are executed on GPU device instead of on CPU, functions like <strong>random()</strong> will not work. Therefore, we need to use <a class="reference external" href="http://docs.nvidia.com/cuda/curand/index.html">NVIDIA cuRAND</a> library to generate all the random numbers. According to the documentation of cuRAND library, the normal sequence of operations to generate random number for CUDA GPU device can be divided into seven steps. <strong>cuda_init()</strong> function will cover three steps, <strong>cuda_run()</strong> function will cover three steps, and <strong>cuda_finish()</strong> function will cover the last step.</p>
@@ -344,10 +340,10 @@
 <div class="highlight-c"><div class="highlight"><pre>    <span class="c1">// set up shared memory</span>
     <span class="kt">int</span> <span class="o">*</span><span class="n">num_infected</span> <span class="o">=</span> <span class="p">(</span><span class="kt">int</span><span class="o">*</span><span class="p">)</span><span class="n">array</span><span class="p">;</span> 
     <span class="kt">int</span> <span class="o">*</span><span class="n">num_susceptible</span> <span class="o">=</span> <span class="p">(</span><span class="kt">int</span><span class="o">*</span><span class="p">)</span><span class="o">&amp;</span><span class="n">num_infected</span><span class="p">[</span><span class="n">numThread</span><span class="p">];</span>
-<span class="cp">    #ifdef SHOW_RESULTS</span>
+    <span class="cp">#ifdef SHOW_RESULTS</span>
     <span class="kt">int</span> <span class="o">*</span><span class="n">num_infection_attempts</span> <span class="o">=</span> <span class="p">(</span><span class="kt">int</span><span class="o">*</span><span class="p">)</span><span class="o">&amp;</span><span class="n">num_susceptible</span><span class="p">[</span><span class="n">numThread</span><span class="p">];</span>
     <span class="kt">int</span> <span class="o">*</span><span class="n">num_infections</span> <span class="o">=</span> <span class="p">(</span><span class="kt">int</span><span class="o">*</span><span class="p">)</span><span class="o">&amp;</span><span class="n">num_infection_attempts</span><span class="p">[</span><span class="n">numThread</span><span class="p">];</span>
-<span class="cp">    #endif</span>
+    <span class="cp">#endif</span>
 </pre></div>
 </div>
 <p>we set the pointer of the first array as the pointer of the shared memory array. Then, we set the pointer of the second array as the pointer exactly <strong>numThread</strong> away from the pointer of the first array. We are essentially dividing the initial shared memory array into four equal sized arrays.</p>
@@ -355,22 +351,22 @@
 <div class="highlight-c"><div class="highlight"><pre>    <span class="c1">// reset the shared memory</span>
     <span class="n">num_infected</span><span class="p">[</span><span class="n">blockId</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
     <span class="n">num_susceptible</span><span class="p">[</span><span class="n">blockId</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
-<span class="cp">    #ifdef SHOW_RESULTS</span>
+    <span class="cp">#ifdef SHOW_RESULTS</span>
     <span class="n">num_infection_attempts</span><span class="p">[</span><span class="n">blockId</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
     <span class="n">num_infections</span><span class="p">[</span><span class="n">blockId</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
-<span class="cp">    #endif</span>
+    <span class="cp">#endif</span>
 </pre></div>
 </div>
 <p>Again this is very important. Shared memory will not clear itself after usage, and failing to clear shared memory before usage usually meaning you are starting from what ever values the shared memory is left with from last CUDA operations.</p>
 <p>When we are updating counters, instead of adding one to or subtracting one from the actual counter located on GPU device, in this case the <strong>num_infected_dev</strong> or <strong>num_susceptible_dev</strong>counter, we add one to or subtract one from the thread&#8217;s corresponding array elements.</p>
-<div class="highlight-c"><div class="highlight"><pre><span class="cp">            #ifdef SHOW_RESULTS</span>
+<div class="highlight-c"><div class="highlight"><pre>            <span class="cp">#ifdef SHOW_RESULTS</span>
             <span class="n">num_infection_attempts</span><span class="p">[</span><span class="n">blockId</span><span class="p">]</span><span class="o">++</span><span class="p">;</span>
-<span class="cp">            #endif</span>
+            <span class="cp">#endif</span>
             <span class="n">num_infected</span><span class="p">[</span><span class="n">blockId</span><span class="p">]</span><span class="o">++</span><span class="p">;</span>
             <span class="n">num_susceptible</span><span class="p">[</span><span class="n">blockId</span><span class="p">]</span><span class="o">--</span><span class="p">;</span>
-<span class="cp">            #ifdef SHOW_RESULTS</span>
+            <span class="cp">#ifdef SHOW_RESULTS</span>
             <span class="n">num_infections</span><span class="p">[</span><span class="n">blockId</span><span class="p">]</span><span class="o">++</span><span class="p">;</span>
-<span class="cp">            #endif</span>
+            <span class="cp">#endif</span>
 </pre></div>
 </div>
 <p>Finally, we need to add up the values in each array to obtain the final result. We do this using CUDA binary tree reduction. This is the official way to perform reduction operations in CUDA. The basic idea is that you create a half point on the array, use the first half thread to add the values of second half thread. This means that the array shrinks to one half of its original size. Then you can do another reduction, which will shrinks the array to one fourth of its original size. When the operation is done, the correct sum is stored at the first element of the array.The following is the implementation:</p>
@@ -379,10 +375,10 @@
             <span class="k">if</span> <span class="p">(</span><span class="n">blockId</span> <span class="o">&lt;</span> <span class="n">i</span><span class="p">){</span>
                 <span class="n">num_infected</span><span class="p">[</span><span class="n">blockId</span><span class="p">]</span> <span class="o">+=</span> <span class="n">num_infected</span><span class="p">[</span><span class="n">blockId</span> <span class="o">+</span> <span class="n">i</span><span class="p">];</span>
                 <span class="n">num_susceptible</span><span class="p">[</span><span class="n">blockId</span><span class="p">]</span> <span class="o">+=</span> <span class="n">num_susceptible</span><span class="p">[</span><span class="n">blockId</span> <span class="o">+</span> <span class="n">i</span><span class="p">];</span>
-<span class="cp">                #ifdef SHOW_RESULTS</span>
+                <span class="cp">#ifdef SHOW_RESULTS</span>
                 <span class="n">num_infection_attempts</span><span class="p">[</span><span class="n">blockId</span><span class="p">]</span> <span class="o">+=</span> <span class="n">num_infection_attempts</span><span class="p">[</span><span class="n">blockId</span> <span class="o">+</span> <span class="n">i</span><span class="p">];</span>
                 <span class="n">num_infections</span><span class="p">[</span><span class="n">blockId</span><span class="p">]</span> <span class="o">+=</span> <span class="n">num_infections</span><span class="p">[</span><span class="n">blockId</span> <span class="o">+</span> <span class="n">i</span><span class="p">];</span>
-<span class="cp">                #endif</span>
+                <span class="cp">#endif</span>
             <span class="p">}</span>
             <span class="n">__syncthreads</span><span class="p">();</span>
             <span class="n">i</span> <span class="o">/=</span> <span class="mi">2</span><span class="p">;</span> 
@@ -399,10 +395,10 @@
             <span class="k">for</span><span class="p">(</span><span class="n">i</span><span class="o">=</span><span class="mi">1</span><span class="p">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="n">numThread</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">){</span>
                 <span class="n">num_infected</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+=</span> <span class="n">num_infected</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
                 <span class="n">num_susceptible</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+=</span> <span class="n">num_susceptible</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
-<span class="cp">                #ifdef SHOW_RESULTS</span>
+                <span class="cp">#ifdef SHOW_RESULTS</span>
                 <span class="n">num_infection_attempts</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+=</span> <span class="n">num_infection_attempts</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
                 <span class="n">num_infections</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+=</span> <span class="n">num_infections</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
-<span class="cp">                #endif</span>
+                <span class="cp">#endif</span>
             <span class="p">}</span>
         <span class="p">}</span>
 </pre></div>
@@ -412,10 +408,10 @@
 <div class="highlight-c"><div class="highlight"><pre>    <span class="k">if</span><span class="p">(</span><span class="n">blockId</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
         <span class="n">atomicAdd</span><span class="p">(</span><span class="n">num_infected_dev</span><span class="p">,</span> <span class="n">num_infected</span><span class="p">[</span><span class="mi">0</span><span class="p">]);</span>
         <span class="n">atomicAdd</span><span class="p">(</span><span class="n">num_susceptible_dev</span><span class="p">,</span> <span class="n">num_susceptible</span><span class="p">[</span><span class="mi">0</span><span class="p">]);</span>
-<span class="cp">        #ifdef SHOW_RESULTS</span>
+        <span class="cp">#ifdef SHOW_RESULTS</span>
         <span class="n">atomicAdd</span><span class="p">(</span><span class="n">num_infection_attempts_dev</span><span class="p">,</span> <span class="n">num_infection_attempts</span><span class="p">[</span><span class="mi">0</span><span class="p">]);</span>
         <span class="n">atomicAdd</span><span class="p">(</span><span class="n">num_infections_dev</span><span class="p">,</span> <span class="n">num_infections</span><span class="p">[</span><span class="mi">0</span><span class="p">]);</span>
-<span class="cp">        #endif</span>
+        <span class="cp">#endif</span>
 </pre></div>
 </div>
 <div class="figure align-center">
@@ -431,9 +427,9 @@
 </pre></div>
 </div>
 <p>Note in the code that if we have <strong>SHOW_RESULTS</strong> enabled, we increment the <strong>num_recovery_attempts_dev</strong> variable. This helps us keep track of the number of attempted recoveries, which will help us calculate the actual deadliness of the disease at the end of the simulation.</p>
-<div class="highlight-c"><div class="highlight"><pre><span class="cp">        #ifdef SHOW_RESULTS</span>
+<div class="highlight-c"><div class="highlight"><pre>        <span class="cp">#ifdef SHOW_RESULTS</span>
         <span class="n">num_recovery_attempts</span><span class="p">[</span><span class="n">blockId</span><span class="p">]</span><span class="o">++</span><span class="p">;</span>
-<span class="cp">        #endif</span>
+        <span class="cp">#endif</span>
 </pre></div>
 </div>
 <p>After this, if a random number less than 100 is less than the deadliness factor, then</p>
@@ -450,9 +446,9 @@
 <div class="highlight-c"><div class="highlight"><pre>            <span class="c1">// The thread updates the counters</span>
             <span class="n">num_dead</span><span class="p">[</span><span class="n">blockId</span><span class="p">]</span><span class="o">++</span><span class="p">;</span>
             <span class="n">num_infected</span><span class="p">[</span><span class="n">blockId</span><span class="p">]</span><span class="o">--</span><span class="p">;</span>
-<span class="cp">            #ifdef SHOW_RESULTS</span>
+            <span class="cp">#ifdef SHOW_RESULTS</span>
             <span class="n">num_deaths</span><span class="p">[</span><span class="n">blockId</span><span class="p">]</span><span class="o">++</span><span class="p">;</span>
-<span class="cp">            #endif</span>
+            <span class="cp">#endif</span>
 </pre></div>
 </div>
 <div class="figure align-center">
@@ -530,7 +526,7 @@
         <span class="n">cuda</span><span class="o">-&gt;</span><span class="n">num_deaths_int</span> <span class="o">=</span> <span class="p">(</span><span class="kt">int</span><span class="p">)</span><span class="n">stats</span><span class="o">-&gt;</span><span class="n">num_deaths</span><span class="p">;</span>
         <span class="n">cuda</span><span class="o">-&gt;</span><span class="n">num_recovery_attempts_int</span> <span class="o">=</span> <span class="p">(</span><span class="kt">int</span><span class="p">)</span><span class="n">stats</span><span class="o">-&gt;</span><span class="n">num_recovery_attempts</span><span class="p">;</span>
 
-<span class="cp">        #ifdef SHOW_RESULTS</span>
+        <span class="cp">#ifdef SHOW_RESULTS</span>
         <span class="c1">// copy arrays in global struct</span>
         <span class="n">cudaMemcpy</span><span class="p">(</span><span class="n">cuda</span><span class="o">-&gt;</span><span class="n">num_infections_dev</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">cuda</span><span class="o">-&gt;</span><span class="n">num_infections_int</span><span class="p">,</span> <span class="k">sizeof</span><span class="p">(</span><span class="kt">int</span><span class="p">),</span> <span class="n">cudaMemcpyHostToDevice</span><span class="p">);</span>
         <span class="n">cudaMemcpy</span><span class="p">(</span><span class="n">cuda</span><span class="o">-&gt;</span><span class="n">num_infection_attempts_dev</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">cuda</span><span class="o">-&gt;</span><span class="n">num_infection_attempts_int</span><span class="p">,</span> <span class="k">sizeof</span><span class="p">(</span><span class="kt">int</span><span class="p">),</span> <span class="n">cudaMemcpyHostToDevice</span><span class="p">);</span>
@@ -546,7 +542,7 @@
         <span class="n">cudaMemcpy</span><span class="p">(</span><span class="n">cuda</span><span class="o">-&gt;</span><span class="n">num_immune_dev</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">global</span><span class="o">-&gt;</span><span class="n">num_immune</span><span class="p">,</span> <span class="k">sizeof</span><span class="p">(</span><span class="kt">int</span><span class="p">),</span> <span class="n">cudaMemcpyHostToDevice</span><span class="p">);</span>
         <span class="n">cudaMemcpy</span><span class="p">(</span><span class="n">cuda</span><span class="o">-&gt;</span><span class="n">num_dead_dev</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">global</span><span class="o">-&gt;</span><span class="n">num_dead</span><span class="p">,</span> <span class="k">sizeof</span><span class="p">(</span><span class="kt">int</span><span class="p">),</span> <span class="n">cudaMemcpyHostToDevice</span><span class="p">);</span>
         <span class="n">cudaMemcpy</span><span class="p">(</span><span class="n">cuda</span><span class="o">-&gt;</span><span class="n">num_infected_dev</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">global</span><span class="o">-&gt;</span><span class="n">num_infected</span><span class="p">,</span> <span class="k">sizeof</span><span class="p">(</span><span class="kt">int</span><span class="p">),</span> <span class="n">cudaMemcpyHostToDevice</span><span class="p">);</span>
-<span class="cp">        #endif</span>
+        <span class="cp">#endif</span>
     <span class="p">}</span>
 </pre></div>
 </div>
@@ -644,8 +640,8 @@
         <span class="n">cudaMemcpy</span><span class="p">(</span><span class="o">&amp;</span><span class="n">global</span><span class="o">-&gt;</span><span class="n">num_susceptible</span><span class="p">,</span> <span class="n">cuda</span><span class="o">-&gt;</span><span class="n">num_susceptible_dev</span><span class="p">,</span> <span class="k">sizeof</span><span class="p">(</span><span class="kt">int</span><span class="p">),</span> <span class="n">cudaMemcpyDeviceToHost</span><span class="p">);</span>
         <span class="n">cudaMemcpy</span><span class="p">(</span><span class="o">&amp;</span><span class="n">global</span><span class="o">-&gt;</span><span class="n">num_immune</span><span class="p">,</span> <span class="n">cuda</span><span class="o">-&gt;</span><span class="n">num_immune_dev</span><span class="p">,</span> <span class="k">sizeof</span><span class="p">(</span><span class="kt">int</span><span class="p">),</span> <span class="n">cudaMemcpyDeviceToHost</span><span class="p">);</span>
         <span class="n">cudaMemcpy</span><span class="p">(</span><span class="o">&amp;</span><span class="n">global</span><span class="o">-&gt;</span><span class="n">num_dead</span><span class="p">,</span> <span class="n">cuda</span><span class="o">-&gt;</span><span class="n">num_dead_dev</span><span class="p">,</span> <span class="k">sizeof</span><span class="p">(</span><span class="kt">int</span><span class="p">),</span> <span class="n">cudaMemcpyDeviceToHost</span><span class="p">);</span>
-<span class="cp">        </span>
-<span class="cp">        #ifdef SHOW_RESULTS</span>
+        
+        <span class="cp">#ifdef SHOW_RESULTS</span>
         <span class="c1">// copy stats variables in stats struct</span>
         <span class="n">cudaMemcpy</span><span class="p">(</span><span class="o">&amp;</span><span class="n">cuda</span><span class="o">-&gt;</span><span class="n">num_infections_int</span><span class="p">,</span> <span class="n">cuda</span><span class="o">-&gt;</span><span class="n">num_infections_dev</span><span class="p">,</span> <span class="k">sizeof</span><span class="p">(</span><span class="kt">int</span><span class="p">),</span> <span class="n">cudaMemcpyDeviceToHost</span><span class="p">);</span>
         <span class="n">cudaMemcpy</span><span class="p">(</span><span class="o">&amp;</span><span class="n">cuda</span><span class="o">-&gt;</span><span class="n">num_infection_attempts_int</span><span class="p">,</span> <span class="n">cuda</span><span class="o">-&gt;</span><span class="n">num_infection_attempts_dev</span><span class="p">,</span> <span class="k">sizeof</span><span class="p">(</span><span class="kt">int</span><span class="p">),</span> <span class="n">cudaMemcpyDeviceToHost</span><span class="p">);</span>
@@ -656,7 +652,7 @@
         <span class="n">stats</span><span class="o">-&gt;</span><span class="n">num_infection_attempts</span> <span class="o">=</span> <span class="p">(</span><span class="kt">double</span><span class="p">)</span><span class="n">cuda</span><span class="o">-&gt;</span><span class="n">num_infection_attempts_int</span><span class="p">;</span>
         <span class="n">stats</span><span class="o">-&gt;</span><span class="n">num_deaths</span> <span class="o">=</span> <span class="p">(</span><span class="kt">double</span><span class="p">)</span><span class="n">cuda</span><span class="o">-&gt;</span><span class="n">num_deaths_int</span><span class="p">;</span>
         <span class="n">stats</span><span class="o">-&gt;</span><span class="n">num_recovery_attempts</span> <span class="o">=</span> <span class="p">(</span><span class="kt">double</span><span class="p">)</span><span class="n">cuda</span><span class="o">-&gt;</span><span class="n">num_recovery_attempts_int</span><span class="p">;</span>
-<span class="cp">        #endif</span>
+        <span class="cp">#endif</span>
     <span class="p">}</span>
 </pre></div>
 </div>
@@ -745,22 +741,6 @@
 </li>
 </ul>
 
-  <h4>Previous topic</h4>
-  <p class="topless"><a href="../8-OpenMP/openmp.html"
-                        title="previous chapter">Including OpenMP</a></p>
-<div id="searchbox" style="display: none">
-  <h3>Quick search</h3>
-    <form class="search" action="../search.html" method="get">
-      <input type="text" name="q" />
-      <input type="submit" value="Go" />
-      <input type="hidden" name="check_keywords" value="yes" />
-      <input type="hidden" name="area" value="default" />
-    </form>
-    <p class="searchtip" style="font-size: 90%">
-    Enter search terms or a module, class or function name.
-    </p>
-</div>
-<script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
       </div>
       <div class="clearer"></div>
@@ -771,14 +751,11 @@
         <li class="right" style="margin-right: 10px">
           <a href="../genindex.html" title="General Index"
              >index</a></li>
-        <li class="right" >
-          <a href="../8-OpenMP/openmp.html" title="Including OpenMP"
-             >previous</a> |</li>
-        <li><a href="../index.html">Pandemic Without MPI</a> &raquo;</li> 
+        <li><a href="../index.html">Pandemic Exemplar with OpenMP</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">
-        &copy; Copyright 2013, CSInParallel Project.
+        &copy; Copyright 2013, CSinParallel Project.
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
     </div>
   </body>

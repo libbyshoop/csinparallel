@@ -2,7 +2,7 @@
 Including OpenMP
 *****************
 
-:download:`Download Pandemic-OMP.zip <Pandemic-OMP.zip>`
+:download:`Download Pandemic-OMP.tgz <Pandemic-OMP.tgz>`
 
 It is really easy to include OpenMP features into existing code we have. All we need to do is to identify all the functions that could use OpenMP. There are in total 5 functions that could use OpenMP to increase performance. The first function is the **init_array()** function in *Initialize.h* file. The next four functions are all the core functions inside *Core.h* file.
 

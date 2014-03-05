@@ -4,7 +4,7 @@
 # You can set these variables from the command line.
 SPHINXOPTS    =
 SPHINXBUILD   = sphinx-build
-PAPER         =
+PAPER         = letter
 BUILDDIR      = build
 
 # User-friendly check for sphinx-build
@@ -114,6 +114,7 @@ latexpdf:
 	$(SPHINXBUILD) -b latex $(ALLSPHINXOPTS) $(BUILDDIR)/latex
 	@echo "Running LaTeX files through pdflatex..."
 	$(MAKE) -C $(BUILDDIR)/latex all-pdf
+	tar -czf $(BUILDDIR)/latex.tar.gz $(BUILDDIR)/latex
 	@echo "pdflatex finished; the PDF files are in $(BUILDDIR)/latex."
 
 latexpdfja:

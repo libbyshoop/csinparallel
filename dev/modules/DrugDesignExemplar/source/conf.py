@@ -172,7 +172,9 @@ html_static_path = ['_static']
 
 # Custom sidebar templates, maps document names to template names.
 #html_sidebars = {}
-
+html_sidebars = {
+   '**': ['localtoc.html', 'relations.html'],
+   }
 
 # Additional templates that should be rendered to pages, maps page names to
 # template names.
@@ -242,8 +244,8 @@ latex_elements = {
 # Grouping the document tree into LaTeX files. List of tuples
 # (source start file, target name, title, author, documentclass [howto/manual]).
 latex_documents = [
-('index', 'Drug Design Exemplar.tex', u'Drug Design Exemplar',
-u'CSInParallel Project', 'manual'),
+('index', 'DrugDesignExemplar.tex', u'Drug Design Exemplar',
+u'CSinParallel Project', 'manual'),
 ]
 
 

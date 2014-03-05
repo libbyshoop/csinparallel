@@ -8,7 +8,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Pandemic Without MPI &mdash; Pandemic Without MPI</title>
+    <title>Pandemic Modeling Exemplar using OpenMP &mdash; Pandemic Exemplar with OpenMP</title>
     
     <link rel="stylesheet" href="_static/default.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -25,7 +25,7 @@
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
-    <link rel="top" title="Pandemic Without MPI" href="#" />
+    <link rel="top" title="Pandemic Exemplar with OpenMP" href="#" />
     <link rel="next" title="Infectious Disease" href="0-Introduction/introduction.html" /> 
   </head>
   <body>
@@ -38,7 +38,7 @@
         <li class="right" >
           <a href="0-Introduction/introduction.html" title="Infectious Disease"
              accesskey="N">next</a> |</li>
-        <li><a href="#">Pandemic Without MPI</a> &raquo;</li> 
+        <li><a href="#">Pandemic Exemplar with OpenMP</a> &raquo;</li> 
       </ul>
     </div>  
 
@@ -47,8 +47,10 @@
         <div class="bodywrapper">
           <div class="body">
             
-  <div class="section" id="pandemic-without-mpi">
-<h1>Pandemic Without MPI<a class="headerlink" href="#pandemic-without-mpi" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="pandemic-modeling-exemplar-using-openmp">
+<h1>Pandemic Modeling Exemplar using OpenMP<a class="headerlink" href="#pandemic-modeling-exemplar-using-openmp" title="Permalink to this headline">¶</a></h1>
+<p>This example contains a fully functional simulation of the type of modeling done by epidemiologists to answer the question: what happens when an infectious disease hits a population?  Code for an original serial version is provided and described in detail.  Next, descriptions of a parallel version using OpenMP is provided, where the code is modified from the original serial version.</p>
+<p><strong>Acknowledgment</strong>: Many thanks to Aaron Weeden of the Shodor Foundation for the original version of this material and code.</p>
 <div class="toctree-wrapper compound">
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="0-Introduction/introduction.html">Infectious Disease</a></li>
@@ -59,8 +61,9 @@
 <li class="toctree-l1"><a class="reference internal" href="5-Display/display.html">Display Functions</a></li>
 <li class="toctree-l1"><a class="reference internal" href="6-Core/core.html">Core Functions</a></li>
 <li class="toctree-l1"><a class="reference internal" href="7-Finalize/finalize.html">Finish Functions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="7.1-BuildAndRun/build.html">Build and Run</a></li>
 <li class="toctree-l1"><a class="reference internal" href="8-OpenMP/openmp.html">Including OpenMP</a></li>
-<li class="toctree-l1"><a class="reference internal" href="9-Cuda/cuda.html">Including CUDA</a></li>
+<li class="toctree-l1"><a class="reference internal" href="8.1-ompBuildAndRun/omp_build.html">Build and Run the Parallel Version</a></li>
 </ul>
 </div>
 </div>
@@ -77,19 +80,6 @@
   <h4>Next topic</h4>
   <p class="topless"><a href="0-Introduction/introduction.html"
                         title="next chapter">Infectious Disease</a></p>
-<div id="searchbox" style="display: none">
-  <h3>Quick search</h3>
-    <form class="search" action="search.html" method="get">
-      <input type="text" name="q" />
-      <input type="submit" value="Go" />
-      <input type="hidden" name="check_keywords" value="yes" />
-      <input type="hidden" name="area" value="default" />
-    </form>
-    <p class="searchtip" style="font-size: 90%">
-    Enter search terms or a module, class or function name.
-    </p>
-</div>
-<script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
       </div>
       <div class="clearer"></div>
@@ -103,11 +93,11 @@
         <li class="right" >
           <a href="0-Introduction/introduction.html" title="Infectious Disease"
              >next</a> |</li>
-        <li><a href="#">Pandemic Without MPI</a> &raquo;</li> 
+        <li><a href="#">Pandemic Exemplar with OpenMP</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">
-        &copy; Copyright 2013, CSInParallel Project.
+        &copy; Copyright 2013, CSinParallel Project.
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
     </div>
   </body>
