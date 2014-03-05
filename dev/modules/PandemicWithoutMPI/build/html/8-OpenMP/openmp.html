@@ -8,7 +8,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Including OpenMP &mdash; Pandemic Without MPI</title>
+    <title>Including OpenMP &mdash; Pandemic Exemplar with OpenMP</title>
     
     <link rel="stylesheet" href="../_static/default.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
@@ -25,9 +25,9 @@
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
-    <link rel="top" title="Pandemic Without MPI" href="../index.html" />
-    <link rel="next" title="Including CUDA" href="../9-Cuda/cuda.html" />
-    <link rel="prev" title="Finish Functions" href="../7-Finalize/finalize.html" /> 
+    <link rel="top" title="Pandemic Exemplar with OpenMP" href="../index.html" />
+    <link rel="next" title="Build and Run the Parallel Version" href="../8.1-ompBuildAndRun/omp_build.html" />
+    <link rel="prev" title="Build and Run" href="../7.1-BuildAndRun/build.html" /> 
   </head>
   <body>
     <div class="related">
@@ -37,12 +37,12 @@
           <a href="../genindex.html" title="General Index"
              accesskey="I">index</a></li>
         <li class="right" >
-          <a href="../9-Cuda/cuda.html" title="Including CUDA"
+          <a href="../8.1-ompBuildAndRun/omp_build.html" title="Build and Run the Parallel Version"
              accesskey="N">next</a> |</li>
         <li class="right" >
-          <a href="../7-Finalize/finalize.html" title="Finish Functions"
+          <a href="../7.1-BuildAndRun/build.html" title="Build and Run"
              accesskey="P">previous</a> |</li>
-        <li><a href="../index.html">Pandemic Without MPI</a> &raquo;</li> 
+        <li><a href="../index.html">Pandemic Exemplar with OpenMP</a> &raquo;</li> 
       </ul>
     </div>  
 
@@ -53,7 +53,7 @@
             
   <div class="section" id="including-openmp">
 <h1>Including OpenMP<a class="headerlink" href="#including-openmp" title="Permalink to this headline">¶</a></h1>
-<p><a class="reference download internal" href="../_downloads/Pandemic-OMP.zip"><tt class="xref download docutils literal"><span class="pre">Download</span> <span class="pre">Pandemic-OMP.zip</span></tt></a></p>
+<p><a class="reference download internal" href="../_downloads/Pandemic-OMP.tgz"><tt class="xref download docutils literal"><span class="pre">Download</span> <span class="pre">Pandemic-OMP.tgz</span></tt></a></p>
 <p>It is really easy to include OpenMP features into existing code we have. All we need to do is to identify all the functions that could use OpenMP. There are in total 5 functions that could use OpenMP to increase performance. The first function is the <strong>init_array()</strong> function in <em>Initialize.h</em> file. The next four functions are all the core functions inside <em>Core.h</em> file.</p>
 <div class="section" id="in-initialize-h">
 <h2>In Initialize.h<a class="headerlink" href="#in-initialize-h" title="Permalink to this headline">¶</a></h2>
@@ -61,7 +61,7 @@
 <h3>init_array()<a class="headerlink" href="#init-array" title="Permalink to this headline">¶</a></h3>
 <p>This function can be divided into four parts: the first part sets the states of the initially infected people and sets the count of infected people. The second part sets states of the rest of the people and sets the of susceptible people. The third part sets random x and y locations for each people. The last part initilize the number of days infected of each people to 0.</p>
 <p>Normally, to include OpenMP, all we need is to put <strong>#pragma omp parallel</strong> in front of each of the for loops. However, our case is a little tricky. The problem is that we are reducing two counters in the first two parts of the function. Different from most parallel structure, reduction in OpenMP is pretty easy to implement. We just need to add a reduction literal,</p>
-<div class="highlight-c"><div class="highlight"><pre><span class="cp">    #pragma omp parallel for private(current_person_id) \</span>
+<div class="highlight-c"><div class="highlight"><pre>    <span class="cp">#pragma omp parallel for private(current_person_id) \</span>
 <span class="cp">        reduction(+:num_infected_local)</span>
 </pre></div>
 </div>
@@ -86,10 +86,10 @@
 <div class="section" id="move">
 <h3>move()<a class="headerlink" href="#move" title="Permalink to this headline">¶</a></h3>
 <p>This function is easy to parallelize because it does not perform any reduction. However, we need to specify the variables that is private to each OpenMP threads. <strong>current_person_id</strong> is iterator that is clearly private. <strong>x_move_direction</strong> and <strong>y_move_direction</strong> are different for every thread, which means they are private as well.</p>
-<div class="highlight-c"><div class="highlight"><pre><span class="cp">    #ifdef _OPENMP</span>
-<span class="cp">    #pragma omp parallel for private(current_person_id, x_move_direction, \</span>
+<div class="highlight-c"><div class="highlight"><pre>    <span class="cp">#ifdef _OPENMP</span>
+    <span class="cp">#pragma omp parallel for private(current_person_id, x_move_direction, \</span>
 <span class="cp">        y_move_direction)</span>
-<span class="cp">    #endif </span>
+    <span class="cp">#endif </span>
 </pre></div>
 </div>
 </div>
@@ -106,12 +106,12 @@
 </pre></div>
 </div>
 <p>OpenMP initialization</p>
-<div class="highlight-c"><div class="highlight"><pre><span class="cp">    #ifdef _OPENMP</span>
-<span class="cp">    #pragma omp parallel for private(current_person_id, num_infected_nearby, \</span>
+<div class="highlight-c"><div class="highlight"><pre>    <span class="cp">#ifdef _OPENMP</span>
+    <span class="cp">#pragma omp parallel for private(current_person_id, num_infected_nearby, \</span>
 <span class="cp">        my_person) reduction(+:num_infection_attempts_local) \</span>
 <span class="cp">        reduction(+:num_infected_local) reduction(+:num_susceptible_local) \</span>
 <span class="cp">        reduction(+:num_infections_local)</span>
-<span class="cp">    #endif </span>
+    <span class="cp">#endif </span>
 </pre></div>
 </div>
 <p>Put local instances back to global struct</p>
@@ -137,12 +137,12 @@
 </pre></div>
 </div>
 <p>OpenMP initialization</p>
-<div class="highlight-c"><div class="highlight"><pre><span class="cp">    #ifdef _OPENMP</span>
-<span class="cp">    #pragma omp parallel for private(current_person_id) \</span>
+<div class="highlight-c"><div class="highlight"><pre>    <span class="cp">#ifdef _OPENMP</span>
+    <span class="cp">#pragma omp parallel for private(current_person_id) \</span>
 <span class="cp">        reduction(+:num_recovery_attempts_local) reduction(+:num_dead_local) \</span>
 <span class="cp">        reduction(+:num_infected_local) reduction(+:num_deaths_local) \</span>
 <span class="cp">        reduction(+:num_immune_local)</span>
-<span class="cp">    #endif </span>
+    <span class="cp">#endif </span>
 </pre></div>
 </div>
 <p>Put local instances back to global struct</p>
@@ -158,9 +158,9 @@
 <div class="section" id="update-days-infected">
 <h3>update_days_infected()<a class="headerlink" href="#update-days-infected" title="Permalink to this headline">¶</a></h3>
 <p>We don&#8217;t have any reduction in this function, which means that the parallelization is relatively easy.</p>
-<div class="highlight-c"><div class="highlight"><pre><span class="cp">    #ifdef _OPENMP </span>
-<span class="cp">        #pragma omp parallel for private(current_person_id)</span>
-<span class="cp">    #endif</span>
+<div class="highlight-c"><div class="highlight"><pre>    <span class="cp">#ifdef _OPENMP </span>
+        <span class="cp">#pragma omp parallel for private(current_person_id)</span>
+    <span class="cp">#endif</span>
 </pre></div>
 </div>
 </div>
@@ -195,24 +195,11 @@
 </ul>
 
   <h4>Previous topic</h4>
-  <p class="topless"><a href="../7-Finalize/finalize.html"
-                        title="previous chapter">Finish Functions</a></p>
+  <p class="topless"><a href="../7.1-BuildAndRun/build.html"
+                        title="previous chapter">Build and Run</a></p>
   <h4>Next topic</h4>
-  <p class="topless"><a href="../9-Cuda/cuda.html"
-                        title="next chapter">Including CUDA</a></p>
-<div id="searchbox" style="display: none">
-  <h3>Quick search</h3>
-    <form class="search" action="../search.html" method="get">
-      <input type="text" name="q" />
-      <input type="submit" value="Go" />
-      <input type="hidden" name="check_keywords" value="yes" />
-      <input type="hidden" name="area" value="default" />
-    </form>
-    <p class="searchtip" style="font-size: 90%">
-    Enter search terms or a module, class or function name.
-    </p>
-</div>
-<script type="text/javascript">$('#searchbox').show(0);</script>
+  <p class="topless"><a href="../8.1-ompBuildAndRun/omp_build.html"
+                        title="next chapter">Build and Run the Parallel Version</a></p>
         </div>
       </div>
       <div class="clearer"></div>
@@ -224,16 +211,16 @@
           <a href="../genindex.html" title="General Index"
              >index</a></li>
         <li class="right" >
-          <a href="../9-Cuda/cuda.html" title="Including CUDA"
+          <a href="../8.1-ompBuildAndRun/omp_build.html" title="Build and Run the Parallel Version"
              >next</a> |</li>
         <li class="right" >
-          <a href="../7-Finalize/finalize.html" title="Finish Functions"
+          <a href="../7.1-BuildAndRun/build.html" title="Build and Run"
              >previous</a> |</li>
-        <li><a href="../index.html">Pandemic Without MPI</a> &raquo;</li> 
+        <li><a href="../index.html">Pandemic Exemplar with OpenMP</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">
-        &copy; Copyright 2013, CSInParallel Project.
+        &copy; Copyright 2013, CSinParallel Project.
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
     </div>
   </body>

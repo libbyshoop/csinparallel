@@ -20,7 +20,7 @@ performance cluster resources.
 **Pre-assessment Rubric**
 
 This rubric is to gauge students’ initial knowledge and experience with
-the materials presented in this module. Students are asked to rate their
+the materials presented in this module. Students can be asked to rate their
 knowledge and experience on the following scale and in the following
 subject areas:
 
@@ -44,15 +44,17 @@ subject areas:
 
    * Parallel Hardware
 
-   * MPI programming
-
    * OpenMP programming
 
-   * Using a cluster
+   * CUDA programming
 
    * Scaling parallel code
 
-**Model**
+
+Each of these topics is mentioned to some degree in the material that follows. Some familiarity with each of these is assumed, except that the disease modeling is explained here.
+
+Model
+******
 
 The model makes certain assumptions about the spread of the disease. In
 particular, it assumes that the disease spreads from one person to
@@ -119,7 +121,8 @@ the description.
 
 * Keeps count of how many susceptible, infected, immune, and *dead* people exist.
 
-**Introduction to Parallelism**
+Introduction to Parallelism
+******************************
 
 In parallel processing, rather than having a single program execute
 tasks in a sequence, the program is split among multiple “execution
@@ -173,9 +176,9 @@ themselves have multi-core CPUs, which allows for hybrid parallelism:
 shared memory between the cores and message passing between the compute
 nodes.
 
-***********************************************************************
 
-**Motivation for Parallelism**
+Motivation for Parallelism
+*****************************
 
 We now know what parallelism is, but why should we use it? The three
 motivations we will discuss here are speedup, accuracy, and scaling.
@@ -233,9 +236,10 @@ where
 
 * N = the number of processors
 
-***********************************************************************
 
-**Figure 2: Amdahl’s Law**
+
+Amdahl’s Law
+============
 
 Amdahl’s Law provides a strong and fundamental argument against
 utilizing parallel processing to achieve speedup. However, it does not
@@ -246,7 +250,7 @@ available to the program. The advantages of parallelism for scaling are
 summarized by John Gustafson in Gustafson’s Law, which says that bigger
 problems can be modeled in the same amount of time as smaller problems
 if the processor count is increased. Gustafson’s Law is represented as
-an equation in Figure 3.
+an equation:
 
 Speedup(N) = :math:`N–(1–P)*(N–1)`
 
@@ -256,35 +260,30 @@ where
 
 * 1–P = the proportion of the program that cannot be made parallel
 
-***********************************************************************
 
-**Figure 3: Gustafson’s Law**
+Gustafson’s Law
+================
 
 Amdahl’s Law reveals the limitations of what is known as “strong
 scaling”, in which the number of processes remains constant as the
 problem size increases. Gustafson’s Law reveals the promise of “weak
 scaling”, in which the number of processes increases along with the
-problem size. These concepts will be explored further in Exercise 4.
+problem size. 
 
-***********************************************************************
 
-**Code**
+Code
+====
 
 The code in this module is written in the C programming language, chosen
 for its ubiquity in scientific computing as well as its well-defined use
 of MPI and OpenMP.
 
-The code is attached to this module in pandemic.zip. After unpacking
+The code is available for download in archive files. After unpacking
 this using an archive utility, use of the code will require the use of a
 command line terminal. C is a compiled language, so it must be run
-through a compiler first to check for any syntax errors in the code. To
-compile the code in all its forms of parallelism, enter “make all” in
-the terminal. For other compilation options, see the Makefile. To run
-the program, enter “./pandemic.serial” to run the serial (non-parallel)
-version, “./pandemic.openmp” to run the OpenMP version, “mpirun –np
-\<number of processes\> pandemic.mpi” to run the MPI
-version, or “mpirun –np \<number of processes\>
-pandemic.hybrid” to run the hybrid OpenMP/MPI version. Each version of
+through a compiler first to check for any syntax errors in the code. 
+
+Each version of
 the code can be run with different options by appending arguments to the
 end of commands, as in “./pandemic.serial –n 100”. These options are
 described below:
@@ -309,8 +308,7 @@ described below:
 
 * –m \<the number of actual microseconds in between days of the model\> – this is used to slow or speed up the animation of the model
 
-To help better understand the code, students can consult the data
-structures section below.
+To help better understand the code, please follow along the rest of this document.
 
 .. [1]
    For original documentation and code developed by Aaron Weeden, please go to original pandemic_.

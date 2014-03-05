@@ -1,0 +1,10 @@
+\select@language {english}
+\contentsline {chapter}{\numberline {1}Introduction}{2}{chapter.1}
+\contentsline {section}{\numberline {1.1}Background: Drug Design}{2}{section.1.1}
+\contentsline {section}{\numberline {1.2}Algorithmic Strategy}{3}{section.1.2}
+\contentsline {chapter}{\numberline {2}A Sequential Solution}{4}{chapter.2}
+\contentsline {section}{\numberline {2.1}Problem Definition}{4}{section.2.1}
+\contentsline {section}{\numberline {2.2}Implementation}{4}{section.2.2}
+\contentsline {subsection}{\numberline {2.2.1}The Code}{5}{subsection.2.2.1}
+\contentsline {subsection}{\numberline {2.2.2}Comments}{5}{subsection.2.2.2}
+\contentsline {subsection}{\numberline {2.2.3}Questions for Exploration}{6}{subsection.2.2.3}

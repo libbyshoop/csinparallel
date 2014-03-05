@@ -2,7 +2,7 @@
 Program Structure
 *****************
 
-:download:`Download Pandemic-Serial.zip <Pandemic-Serial.zip>`
+:download:`Download Pandemic-Serial.tgz <Pandemic-Serial.tgz>`
 
 There are in total 8 files in this program.
 
@@ -36,7 +36,7 @@ Program Structure
 
     Overall Program Structurer
 
-The CUDA functions or *CUDA.cu* file is not included in the file table. The main program does not need these functions or the file. However, we will be using them in the last chapter where we include CUDA functions into the program.
+The CUDA functions in the *CUDA.cu* file is not included in the file table, even though they are shown in the diagram. The initial serial program does not need these functions or the file. However, we will be using them later in a CUDA version of this code.
 
 The rest of the module will go through each of the code files. We can start with the *Pandemic.c* file.
 

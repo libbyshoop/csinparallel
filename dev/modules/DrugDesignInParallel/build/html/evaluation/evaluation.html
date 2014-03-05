@@ -1,0 +1,160 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Evaluating the Implementations &mdash; Drug Design in Parallel</title>
+    
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+    <link rel="top" title="Drug Design in Parallel" href="../index.html" />
+    <link rel="prev" title="Hadoop Solution" href="../hadoop/hadoop.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../hadoop/hadoop.html" title="Hadoop Solution"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../index.html">Drug Design in Parallel</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="evaluating-the-implementations">
+<h1>Evaluating the Implementations<a class="headerlink" href="#evaluating-the-implementations" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="strategic-simplifications-of-the-problem">
+<h2>Strategic simplifications of the problem<a class="headerlink" href="#strategic-simplifications-of-the-problem" title="Permalink to this headline">¶</a></h2>
+<p>We consider the effects of some of the simplifying choices we have made.</p>
+<ul class="simple">
+<li>Our string-comparison algorithm for the “map” stage only vaguely suggests the chemistry computations of an actual docking algorithm.  However, the computational complexity properties of our representative algorithm allow us to generate lengthy computation time by increasing the length of ligands (and having a long protein).</li>
+<li>Our implementations generate all of the candidate ligands before proceeding to process any of them. As mentioned in exercises, it might be reasonable to generate new ligands as a result of processing. The implementations <a class="reference download internal" href="../_downloads/dd_serial1.cpp"><tt class="xref download docutils literal"><span class="pre">dd_serial.cpp</span></tt></a> and <a class="reference download internal" href="../_downloads/dd_boost1.cpp"><tt class="xref download docutils literal"><span class="pre">dd_boost.cpp</span></tt></a> use a queue of ligands to generate the “map” stage work, and could be adapted to enable new ligands to be generated while others are being processed. We could also modify the Go implementation <a class="reference download internal" href="../_downloads/dd_go.go"><tt class="xref download docutils literal"><span class="pre">dd_go.go</span></tt></a> similarly, since we could dynamically add new ligands to the channel <tt class="docutils literal"><span class="pre">ligands</span></tt>.</li>
+<li>The amount of time it takes to process a ligand depends greatly on its length. This sometimes shows up in tests of performance: testing a <em>few</em> more ligands might require a <em>great deal</em> more time to compute. This may or may not fit with the computational pattern of a realistic docking algorithm. If one wants to model more consistent running time per ligand, the minimum length of ligands could be raised or lengths of ligands could be held constant.</li>
+</ul>
+</div>
+<div class="section" id="the-impact-of-scheduling-threads">
+<h2>The impact of scheduling threads<a class="headerlink" href="#the-impact-of-scheduling-threads" title="Permalink to this headline">¶</a></h2>
+<p>The way we schedule work for threads in our various parallel implmenentations may have a sizable impact on running time, since different ligands may vary greatly in computational time in our simplified model.</p>
+<ul class="simple">
+<li>By default, OpenMP’s <tt class="docutils literal"><span class="pre">omp</span> <span class="pre">parallel</span> <span class="pre">for</span></tt>, as used by <a class="reference download internal" href="../_downloads/dd_omp1.cpp"><tt class="xref download docutils literal"><span class="pre">dd_omp.cpp</span></tt></a>, presumably divides the vector of ligands into roughly equal segments, one per thread. With small <tt class="docutils literal"><span class="pre">nligands</span></tt>, if one segment contains more lengthy ligands than another, it may disproportionately extend the running time of the entire program, with one thread taking considerably longer than the others. With large <tt class="docutils literal"><span class="pre">nligands</span></tt>, we expect less variability in the computational load for the threads.</li>
+<li>In our Boost thread implementation <a class="reference download internal" href="../_downloads/dd_boost1.cpp"><tt class="xref download docutils literal"><span class="pre">dd_boost.cpp</span></tt></a>, each thread draws a new ligand to process as soon as it finishes its current ligand. Likewise, the Go code <a class="reference download internal" href="../_downloads/dd_go.go"><tt class="xref download docutils literal"><span class="pre">dd_go.go</span></tt></a> draws ligands from the channel named  ligands . This scheduling strategy should have a load-balancing effect, unless a thread draws a long ligand late in the “map” stage. One might try reordering the generated ligands in order to achieve better load balancing. For example, if ligands were sorted from longest to shortest before the “map” stage in the Boost thread implementation, the amount of imbalance of loads is limited by the shortness of the final ligands.</li>
+</ul>
+</div>
+<div class="section" id="barriers-to-performance-improvement">
+<h2>Barriers to performance improvement<a class="headerlink" href="#barriers-to-performance-improvement" title="Permalink to this headline">¶</a></h2>
+<p>The degree of parallelism in these implementations is theoretically limited by the implicit barrier after each stage of processing.</p>
+<ul class="simple">
+<li>In all of our implementations, the task generation stage produces all ligands before proceeding to any the “map” stage.  In a different algorithm, parallel processing of ligands might begin as soon as those ligands appear in the task queue. We wouldn’t expect much speedup from this optimization in our example, since generating a ligand requires little time, but generation of tasks might take much longer in other problems, and allowing threads to process those tasks sooner might increase performance in those cases.</li>
+<li>The “map” stage produces all key-value pairs before those pairs are sorted and reduced. This barrier occurs implicitly when finishing the <tt class="docutils literal"><span class="pre">omp</span> <span class="pre">parallel</span> <span class="pre">for</span></tt> pragma in our OpenMP implementation <a class="reference download internal" href="../_downloads/dd_omp1.cpp"><tt class="xref download docutils literal"><span class="pre">dd_omp.cpp</span></tt></a>, and as part of the map-reduce framework Hadoop used by <a class="reference download internal" href="../_downloads/dd_hadoop.java"><tt class="xref download docutils literal"><span class="pre">dd_hadoop.java</span></tt></a>. That barrier appears explicitly in the loop of <tt class="docutils literal"><span class="pre">join()</span></tt> calls in our Boost threads code <a class="reference download internal" href="../_downloads/dd_boost1.cpp"><tt class="xref download docutils literal"><span class="pre">dd_boost.cpp</span></tt></a>. At the point of the barrier, some threads (or processes) have nothing to do while other threads complete their work.</li>
+<li>Perhaps threads that finish early could help carry out a parallel sort of the pairs, for better thread utilization, but identifying and implementing such a sort takes us beyond the scope of this example.</li>
+<li>The other stages are executed sequentially, so the &#8220;barrier&#8221; after each of those stages has no effect on computation time.</li>
+</ul>
+</div>
+<div class="section" id="the-convenience-of-a-framework">
+<h2>The convenience of a framework<a class="headerlink" href="#the-convenience-of-a-framework" title="Permalink to this headline">¶</a></h2>
+<p>Using a map-reduce framework such as Hadoop enables a programmer to reuse an effective infrastructure of parallel code, for greater productivity and reliability. A Hadoop implementation hides parallel algorithm complexities such as managing the granularity, load balancing, collective communication, and synchronization to maintain the thread-safe task queue, which are common to map-reduce problems and easily represented in a general map-reduce framework. Also, the fault-tolerance properties of Hadoop make it a scalable tool for computing with extremely large data on very large clusters.</p>
+</div>
+<div class="section" id="looking-ahead-parallel-patterns">
+<h2>Looking ahead: Parallel patterns<a class="headerlink" href="#looking-ahead-parallel-patterns" title="Permalink to this headline">¶</a></h2>
+<ul>
+<li><p class="first">Structural and computational patterns (Application architecture level): <span class="uline">Map-reduce</span> is a structural pattern. Our map-reduce algorithms represented in <tt class="docutils literal"><span class="pre">MR::run()</span></tt> methods for parallel implementations use a <span class="uline">Master-worker</span> structural pattern, in which one thread launches multiple worker threads and collects their results.</p>
+</li>
+<li><dl class="first docutils">
+<dt>Program structure patterns:</dt>
+<dd><ul class="first last simple">
+<li>We use the <span class="uline">Strict data parallelism</span> pattern in parallel implementations of this exemplar, in which we apply our <tt class="docutils literal"><span class="pre">Map()</span></tt> algorithm to each element of the task queue (or vector) for independent computation.</li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><p class="first">Implementation strategy patterns:</p>
+<blockquote>
+<div><ul class="simple">
+<li>In the case of OpenMP and Hadoop, the master-worker computation is provided by the underlying runtime or framework. In addition, the Boost threads code exhibits an explicit <span class="uline">Fork-join</span> program-structure pattern. The OpenMP code’s <tt class="docutils literal"><span class="pre">omp</span> <span class="pre">parallel</span> <span class="pre">for</span></tt> pragma implements the <span class="uline">Loop parallel</span> program-structure pattern, as does the Boost threads code with its <tt class="docutils literal"><span class="pre">while</span></tt> loop, and the Go implementation with its <tt class="docutils literal"><span class="pre">for</span></tt> loop in its “map” stage. In addition, Hadoop proceeds using an internal <span class="uline">Bulk synchronous parallel (BSP)</span> program-structure pattern, in which each stage completes its computation, communicates results, and waits for all threads to complete before the next stage begins. The <tt class="docutils literal"><span class="pre">MR::run()</span></tt> methods of our C++ parallel implementations for multicore computers also wait for each stage to complete before proceeding to the next, which is similar to the classical BSP model for distributed computing. The Go implementation exhibits BSP at both ends of its sort stage, when it constructs an array of all pairs and completes its sorting algorithm. Most of our implementations use a <span class="uline">Task queue</span> program-structure pattern, in which the task queue helps with load balancing of variable-length tasks.</li>
+<li>Besides these program-structure patterns, our examples also illustrate some <em>data-structure</em> patterns, namely <span class="uline">Shared array</span> (which we’ve implemented using TBB’s thread-safe <tt class="docutils literal"><span class="pre">concurrent_vector</span></tt>) and <span class="uline">Shared queue</span> (TBB’s <tt class="docutils literal"><span class="pre">concurrent_bounded_queue</span></tt>). Arguably, the use of channels <tt class="docutils literal"><span class="pre">ligands</span></tt> and <tt class="docutils literal"><span class="pre">pairs</span></tt> in the Go implementation constitutes a <span class="uline">Shared queue</span> as well.</li>
+</ul>
+</div></blockquote>
+</li>
+<li><p class="first">We named our array of threads <tt class="docutils literal"><span class="pre">pool</span></tt> in the Boost threads implementation in view of the <span class="uline">Thread pool</span> pattern for advancing the program counter. Note that OpenMP also manages a thread pool, and that most runtime implementations of OpenMP create all the threads they’ll need at the outset of a program and reuse them as needed for parallel operations throughout that program. Go also manages its own pool of goroutines (threads). The Go example demonstrates the <span class="uline">Message passing</span> coordination pattern. We used no other explicit coordination patterns in our examples, although the TBB shared data structures internally employ (scalable) <span class="uline">Mutual exclusion</span> in order to avoid race conditions.</p>
+</li>
+</ul>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Having developed solutions to our drug-design example using a pattern methodology, we emphasize that methodology does not prescribe one “right” order for considering patterns. For example, if one does not think of map-reduce as a familiar pattern, it could make sense to examine parallel algorithmic strategy patterns before proceeding to implementation strategy patterns. Indeed, an expert in applying patterns will possess well-honed skills in insightfully traversing the hierarchical web of patterns at various levels, in search of excellent solutions.</p>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../index.html">
+              <img class="logo" src="../_static/CSInParallel200wide.png" alt="Logo"/>
+            </a></p>
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Evaluating the Implementations</a><ul>
+<li><a class="reference internal" href="#strategic-simplifications-of-the-problem">Strategic simplifications of the problem</a></li>
+<li><a class="reference internal" href="#the-impact-of-scheduling-threads">The impact of scheduling threads</a></li>
+<li><a class="reference internal" href="#barriers-to-performance-improvement">Barriers to performance improvement</a></li>
+<li><a class="reference internal" href="#the-convenience-of-a-framework">The convenience of a framework</a></li>
+<li><a class="reference internal" href="#looking-ahead-parallel-patterns">Looking ahead: Parallel patterns</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="../hadoop/hadoop.html"
+                        title="previous chapter">Hadoop Solution</a></p>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../hadoop/hadoop.html" title="Hadoop Solution"
+             >previous</a> |</li>
+        <li><a href="../index.html">Drug Design in Parallel</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright This work is licensed under a Creative Commons Attribution-ShareAlike 3.0 Unported License.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>

@@ -1,0 +1,22 @@
+\BOOKMARK [0][-]{chapter.1}{OpenMP Solution}{}% 1
+\BOOKMARK [1][-]{section.1.1}{Implementation}{chapter.1}% 2
+\BOOKMARK [1][-]{section.1.2}{Further Notes}{chapter.1}% 3
+\BOOKMARK [1][-]{section.1.3}{Questions for Exploration}{chapter.1}% 4
+\BOOKMARK [0][-]{chapter.2}{Boost Threads Solution}{}% 5
+\BOOKMARK [1][-]{section.2.1}{Further Notes}{chapter.2}% 6
+\BOOKMARK [1][-]{section.2.2}{Questions for exploration}{chapter.2}% 7
+\BOOKMARK [0][-]{chapter.3}{Go Solution}{}% 8
+\BOOKMARK [1][-]{section.3.1}{Further Notes}{chapter.3}% 9
+\BOOKMARK [1][-]{section.3.2}{Questions for exploration}{chapter.3}% 10
+\BOOKMARK [1][-]{section.3.3}{Further Notes}{chapter.3}% 11
+\BOOKMARK [1][-]{section.3.4}{Questions for exploration}{chapter.3}% 12
+\BOOKMARK [0][-]{chapter.4}{Hadoop Solution}{}% 13
+\BOOKMARK [1][-]{section.4.1}{Further Notes}{chapter.4}% 14
+\BOOKMARK [1][-]{section.4.2}{Questions for exploration}{chapter.4}% 15
+\BOOKMARK [1][-]{section.4.3}{Readings about map-reduce frameworks and Hadoop}{chapter.4}% 16
+\BOOKMARK [0][-]{chapter.5}{Evaluating the Implementations}{}% 17
+\BOOKMARK [1][-]{section.5.1}{Strategic simplifications of the problem}{chapter.5}% 18
+\BOOKMARK [1][-]{section.5.2}{The impact of scheduling threads}{chapter.5}% 19
+\BOOKMARK [1][-]{section.5.3}{Barriers to performance improvement}{chapter.5}% 20
+\BOOKMARK [1][-]{section.5.4}{The convenience of a framework}{chapter.5}% 21
+\BOOKMARK [1][-]{section.5.5}{Looking ahead: Parallel patterns}{chapter.5}% 22

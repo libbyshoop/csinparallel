@@ -68,7 +68,14 @@ div.related a {
     color: #ffffff;
 }
 
+/*  This fixes the sidebar so that it stays visible as body text is scrolled*/
 div.sphinxsidebar {
+    top: 30px;
+    bottom: 70px;
+    margin: 0;
+    position: fixed;
+    overflow: auto;
+    height: auto;
 }
 
 div.sphinxsidebar h3 {
