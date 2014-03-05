@@ -1,0 +1,128 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Display Functions &mdash; Pandemic Exemplar with OpenMP</title>
+    
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="top" title="Pandemic Exemplar with OpenMP" href="../index.html" />
+    <link rel="next" title="Core Functions" href="../6-Core/core.html" />
+    <link rel="prev" title="Infection Functions" href="../4-Infection/infection.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../6-Core/core.html" title="Core Functions"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="../4-Infection/infection.html" title="Infection Functions"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../index.html">Pandemic Exemplar with OpenMP</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="display-functions">
+<h1>Display Functions<a class="headerlink" href="#display-functions" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="init-display">
+<h2>init_display<a class="headerlink" href="#init-display" title="Permalink to this headline">¶</a></h2>
+<p>Rank 0 initializes the graphics display.
+The code uses X to handle graphics display.</p>
+</div>
+<div class="section" id="do-display">
+<h2>do_display<a class="headerlink" href="#do-display" title="Permalink to this headline">¶</a></h2>
+<p>If display is enabled, Rank 0 displays a graphic of the current day</p>
+<div class="figure align-center">
+<img alt="image" src="../_images/img-19.png" />
+</div>
+</div>
+<div class="section" id="close-display">
+<h2>close_display<a class="headerlink" href="#close-display" title="Permalink to this headline">¶</a></h2>
+<p>If X display is enabled, then Rank 0 destroys the X Window and closes the display</p>
+</div>
+<div class="section" id="throttle">
+<h2>throttle<a class="headerlink" href="#throttle" title="Permalink to this headline">¶</a></h2>
+<p>In order for better display, we wait between frames of animation.</p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../index.html">
+              <img class="logo" src="../_static/CSInParallel200wide.png" alt="Logo"/>
+            </a></p>
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Display Functions</a><ul>
+<li><a class="reference internal" href="#init-display">init_display</a></li>
+<li><a class="reference internal" href="#do-display">do_display</a></li>
+<li><a class="reference internal" href="#close-display">close_display</a></li>
+<li><a class="reference internal" href="#throttle">throttle</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="../4-Infection/infection.html"
+                        title="previous chapter">Infection Functions</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="../6-Core/core.html"
+                        title="next chapter">Core Functions</a></p>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../6-Core/core.html" title="Core Functions"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="../4-Infection/infection.html" title="Infection Functions"
+             >previous</a> |</li>
+        <li><a href="../index.html">Pandemic Exemplar with OpenMP</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2013, CSinParallel Project.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>

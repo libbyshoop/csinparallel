@@ -1,0 +1,105 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Looking Ahead &mdash; Drug Design in Parallel</title>
+    
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+    <link rel="top" title="Drug Design in Parallel" href="../index.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li><a href="../index.html">Drug Design in Parallel</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="looking-ahead">
+<h1>Looking Ahead<a class="headerlink" href="#looking-ahead" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="parallel-patterns">
+<h2>Parallel patterns<a class="headerlink" href="#parallel-patterns" title="Permalink to this headline">¶</a></h2>
+<ol class="arabic">
+<li><p class="first">Structural and computational patterns (Application architecture level). Map-reduce is the structural pattern.</p>
+</li>
+<li><p class="first">Parallel algorithm strategy patterns. We use the Data parallelism pattern in parallel implementations of this exemplar, in which we apply our <tt class="docutils literal"><span class="pre">Map()</span></tt> algorithm to each element of the task queue (or vector) for independent computation.</p>
+</li>
+<li><p class="first">Implementation strategy patterns.</p>
+<blockquote>
+<div><ul class="simple">
+<li>Our map-reduce algorithms represented in <tt class="docutils literal"><span class="pre">MR::run()</span></tt> methods for parallel implementations use a <span class="uline">Master-worker</span> program-structure pattern, in which one thread launches multiple worker threads and collects their results. In the case of OpenMP and Hadoop, the master-worker computation is provided by the underlying runtime or framework. In addition, the Boost threads code exhibits an explicit <span class="uline">Fork-join</span> program-structure pattern, and the OpenMP code’s <tt class="docutils literal"><span class="pre">omp</span> <span class="pre">parallel</span> <span class="pre">for</span></tt> pragma implements the <span class="uline">Loop parallel</span> program-structure pattern, as does the Boost threads code, with its <tt class="docutils literal"><span class="pre">while</span></tt> loop, and the Go implementation with its <tt class="docutils literal"><span class="pre">for</span></tt> loop in its “map” stage. In addition, Hadoop proceeds using an internal <span class="uline">Bulk synchronous parallel (BSP)</span> program-structure pattern, in which each stage completes its computation, communicates results and waits for all threads to complete before the next stage begins. The <tt class="docutils literal"><span class="pre">MR::run()</span></tt> methods of our C++ parallel implementations for multicore computers also wait for each stage to complete before proceeding to the next, which is similar to the classical BSP model for distributed computing. The Go implementation exhibits BSP at both ends of its sort stage, when it constructs an array of all pairs and completes its sorting algorithm. Most of our implementations use a <span class="uline">Task queue</span> program-structure pattern, in which the task queue helps with load balancing of variable-length tasks.</li>
+<li>Besides these program-structure patterns, our examples also illustrate some <em>data-structure</em> patterns, namely <span class="uline">Shared array</span> (which we’ve implemented using TBB’s thread-safe <tt class="docutils literal"><span class="pre">concurrent_vector</span></tt>) and <span class="uline">Shared queue</span> (TBB’s <tt class="docutils literal"><span class="pre">concurrent_bounded_queue</span></tt>). Arguably, the use of channels <tt class="docutils literal"><span class="pre">ligands</span></tt> and <tt class="docutils literal"><span class="pre">pairs</span></tt> in the Go implementation constitutes a <span class="uline">Shared queue</span> as well.</li>
+</ul>
+</div></blockquote>
+</li>
+<li><p class="first">We named our array of threads <tt class="docutils literal"><span class="pre">pool</span></tt> in the Boost threads implementation in view of the <span class="uline">Thread pool advancing-program-counter</span> pattern. Note that OpenMP also manages a thread pool, and that most runtime implementations of OpenMP create all the threads they’ll need at the outset of a program and reuse them as needed for parallel operations throughout that program. Go also manages its own pool of goroutines (threads). The Go example demonstrates the <span class="uline">Message passing coordination</span> pattern. We used no other explicit coordination patterns in our examples, although the TBB shared data structures internally employ (scalable) <span class="uline">Mutual exclusion</span> in order to avoid race conditions.</p>
+</li>
+</ol>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../index.html">
+              <img class="logo" src="../_static/CSInParallel200wide.png" alt="Logo"/>
+            </a></p>
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Looking Ahead</a><ul>
+<li><a class="reference internal" href="#parallel-patterns">Parallel patterns</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li><a href="../index.html">Drug Design in Parallel</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright This work is licensed under a Creative Commons Attribution-ShareAlike 3.0 Unported License.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>

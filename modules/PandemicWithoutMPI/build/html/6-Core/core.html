@@ -1,0 +1,330 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Core Functions &mdash; Pandemic Exemplar with OpenMP</title>
+    
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="top" title="Pandemic Exemplar with OpenMP" href="../index.html" />
+    <link rel="next" title="Finish Functions" href="../7-Finalize/finalize.html" />
+    <link rel="prev" title="Display Functions" href="../5-Display/display.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../7-Finalize/finalize.html" title="Finish Functions"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="../5-Display/display.html" title="Display Functions"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../index.html">Pandemic Exemplar with OpenMP</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="core-functions">
+<h1>Core Functions<a class="headerlink" href="#core-functions" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="move">
+<h2>move<a class="headerlink" href="#move" title="Permalink to this headline">¶</a></h2>
+<p>If the person is not dead, then</p>
+<div class="highlight-c"><div class="highlight"><pre>        <span class="k">if</span><span class="p">(</span><span class="n">states</span><span class="p">[</span><span class="n">current_person_id</span><span class="p">]</span> <span class="o">!=</span> <span class="n">DEAD</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>First, the function randomly picks whether the person moves left or right
+or does not move in the x dimension.</p>
+<p>The code uses (random() % 3) - 1; to achieve this. (random() % 3)
+returns either 0, 1, or 2. Subtracting 1 from this produces -1, 0, or 1.
+This means the person can move to the right, stay in place (0), or move
+to the left (-1).</p>
+<p>then the function randomly picks whether the person moves up or down or
+does not move in the y dimension. This is similar to movement in x dimension.</p>
+<div class="highlight-c"><div class="highlight"><pre>            <span class="c1">// The thread randomly picks whether the person moves left </span>
+            <span class="c1">// or right or does not move in the x dimension</span>
+            <span class="n">x_move_direction</span> <span class="o">=</span> <span class="p">(</span><span class="n">random</span><span class="p">()</span> <span class="o">%</span> <span class="mi">3</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">;</span>
+
+            <span class="c1">// The thread randomly picks whether the person moves up</span>
+            <span class="c1">// or down or does not move in the y dimension</span>
+            <span class="n">y_move_direction</span> <span class="o">=</span> <span class="p">(</span><span class="n">random</span><span class="p">()</span> <span class="o">%</span> <span class="mi">3</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>Next, If the person will remain in the bounds of the environment after
+moving, then</p>
+<p>We check this by making sure the person’s x location is greater than or
+equal to 0 and less than the width of the environment and that the
+person’s y location is greater than or equal to 0 and less than the
+height of the environment. In the code, it looks like this:</p>
+<div class="highlight-c"><div class="highlight"><pre>            <span class="k">if</span><span class="p">((</span><span class="n">x_locations</span><span class="p">[</span><span class="n">current_person_id</span><span class="p">]</span> <span class="o">+</span> <span class="n">x_move_direction</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">)</span>
+                <span class="o">&amp;&amp;</span> <span class="p">(</span><span class="n">x_locations</span><span class="p">[</span><span class="n">current_person_id</span><span class="p">]</span> 
+                    <span class="o">+</span> <span class="n">x_move_direction</span> <span class="o">&lt;</span> <span class="n">environment_width</span><span class="p">)</span>
+                <span class="o">&amp;&amp;</span> <span class="p">(</span><span class="n">y_locations</span><span class="p">[</span><span class="n">current_person_id</span><span class="p">]</span> 
+                    <span class="o">+</span> <span class="n">y_move_direction</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">)</span>
+                <span class="o">&amp;&amp;</span> <span class="p">(</span><span class="n">y_locations</span><span class="p">[</span><span class="n">current_person_id</span><span class="p">]</span> 
+                    <span class="o">+</span> <span class="n">y_move_direction</span> <span class="o">&lt;</span> <span class="n">environment_height</span><span class="p">))</span>
+</pre></div>
+</div>
+<p>Finally, The function moves the person</p>
+<div class="figure align-center">
+<img alt="image" src="../_images/img-20.png" />
+</div>
+<div class="highlight-c"><div class="highlight"><pre>                <span class="n">x_locations</span><span class="p">[</span><span class="n">current_person_id</span><span class="p">]</span> 
+                <span class="o">+=</span> <span class="n">x_move_direction</span><span class="p">;</span>
+                <span class="n">y_locations</span><span class="p">[</span><span class="n">current_person_id</span><span class="p">]</span> 
+                <span class="o">+=</span> <span class="n">y_move_direction</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>The function is able to achieve this by simply changing values in the
+<strong>x_locations</strong> and <strong>y_locations</strong> arrays.</p>
+</div>
+<div class="section" id="susceptible">
+<h2>susceptible<a class="headerlink" href="#susceptible" title="Permalink to this headline">¶</a></h2>
+<p>For each people, the function to do the following</p>
+<div class="highlight-c"><div class="highlight"><pre>    <span class="k">for</span><span class="p">(</span><span class="n">current_person_id</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">current_person_id</span> 
+        <span class="o">&lt;=</span> <span class="n">global</span><span class="o">-&gt;</span><span class="n">number_of_people</span> <span class="o">-</span> <span class="mi">1</span><span class="p">;</span> <span class="n">current_person_id</span><span class="o">++</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>If the person is susceptible,</p>
+<div class="highlight-c"><div class="highlight"><pre>        <span class="k">if</span><span class="p">(</span><span class="n">states</span><span class="p">[</span><span class="n">current_person_id</span><span class="p">]</span> <span class="o">==</span> <span class="n">SUSCEPTIBLE</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>For each of the infected people or until the number of infected people nearby is 1, the function does the following</p>
+<div class="highlight-c"><div class="highlight"><pre>            <span class="k">for</span><span class="p">(</span><span class="n">my_person</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">my_person</span> <span class="o">&lt;=</span> <span class="n">global</span><span class="o">-&gt;</span><span class="n">num_infected</span> <span class="o">-</span> <span class="mi">1</span>
+                <span class="o">&amp;&amp;</span> <span class="n">num_infected_nearby</span> <span class="o">&lt;</span> <span class="mi">1</span><span class="p">;</span> <span class="n">my_person</span><span class="o">++</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>If the person is within the infection radius, then</p>
+<div class="highlight-c"><div class="highlight"><pre>                <span class="k">if</span><span class="p">((</span><span class="n">x_locations</span><span class="p">[</span><span class="n">current_person_id</span><span class="p">]</span> 
+                    <span class="o">&gt;</span> <span class="n">infected_x_locations</span><span class="p">[</span><span class="n">my_person</span><span class="p">]</span> <span class="o">-</span> <span class="n">infection_radius</span><span class="p">)</span>
+                    <span class="o">&amp;&amp;</span> <span class="p">(</span><span class="n">x_locations</span><span class="p">[</span><span class="n">current_person_id</span><span class="p">]</span> 
+                        <span class="o">&lt;</span> <span class="n">infected_x_locations</span><span class="p">[</span><span class="n">my_person</span><span class="p">]</span> <span class="o">+</span> <span class="n">infection_radius</span><span class="p">)</span>
+                    <span class="o">&amp;&amp;</span> <span class="p">(</span><span class="n">y_locations</span><span class="p">[</span><span class="n">current_person_id</span><span class="p">]</span>
+                        <span class="o">&gt;</span> <span class="n">infected_y_locations</span><span class="p">[</span><span class="n">my_person</span><span class="p">]</span> <span class="o">-</span> <span class="n">infection_radius</span><span class="p">)</span>
+                    <span class="o">&amp;&amp;</span> <span class="p">(</span><span class="n">y_locations</span><span class="p">[</span><span class="n">current_person_id</span><span class="p">]</span>
+                        <span class="o">&lt;</span> <span class="n">infected_y_locations</span><span class="p">[</span><span class="n">my_person</span><span class="p">]</span> <span class="o">+</span> <span class="n">infection_radius</span><span class="p">))</span>
+</pre></div>
+</div>
+<p>Finally, the function increments the number of infected people nearby</p>
+<div class="highlight-c"><div class="highlight"><pre>                    <span class="n">num_infected_nearby</span><span class="o">++</span><span class="p">;</span>
+</pre></div>
+</div>
+<div class="figure align-center">
+<img alt="image" src="../_images/img-21.png" />
+</div>
+<p>This is where a large chunk of the algorithm’s computation occurs. Each
+susceptible person must be computed with each infected person to
+determine how many infected people are nearby each person. Two nested
+loops means many computations. In this step, the computation is fairly
+simple, however. The function simply increments the
+<strong>num_infected_nearby</strong> variable.</p>
+<p>Note in the code that if the number of infected nearby is greater than
+or equal to 1 and we have <strong>SHOW_RESULTS</strong> enabled, we increment the
+<strong>num_infection_attempts</strong> variable. This helps us keep track of the
+number of attempted infections, which will help us calculate the actual
+contagiousness of the disease at the end of the simulation.</p>
+<p>If there is at least one infected person nearby, and a random
+number less than 100 is less than or equal to the contagiousness factor,
+then</p>
+<div class="highlight-c"><div class="highlight"><pre>            <span class="k">if</span><span class="p">(</span><span class="n">num_infected_nearby</span> <span class="o">&gt;=</span> <span class="mi">1</span> <span class="o">&amp;&amp;</span> <span class="p">(</span><span class="n">random</span><span class="p">()</span> <span class="o">%</span> <span class="mi">100</span><span class="p">)</span> 
+                <span class="o">&lt;=</span> <span class="n">contagiousness_factor</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Recall that the contagiousness factor is the likelihood that the disease
+will be spread. We measure this as a number less than 100. For example,
+if there is a 30% chance of contagiousness, we use 30 as the value of
+the contagiousness factor. To figure out if the disease is spread for
+any given interaction of people, we find a random number less than 100
+and check if it is less than or equal to the contagiousness factor,
+because this will be equivalent to calculating the odds of actually
+spreading the disease (e.g. there is a 30% chance of spreading the
+disease and also a 30% chance that a random number less than 100 will be
+less than or equal to 30).</p>
+<p>The function changes the state to infected</p>
+<div class="highlight-c"><div class="highlight"><pre>                <span class="n">states</span><span class="p">[</span><span class="n">current_person_id</span><span class="p">]</span> <span class="o">=</span> <span class="n">INFECTED</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>The function updates the counters</p>
+<div class="highlight-c"><div class="highlight"><pre>                <span class="c1">// The thread updates the counters</span>
+                <span class="n">global</span><span class="o">-&gt;</span><span class="n">num_infected</span><span class="o">++</span><span class="p">;</span>
+                <span class="n">global</span><span class="o">-&gt;</span><span class="n">num_susceptible</span><span class="o">--</span><span class="p">;</span>
+</pre></div>
+</div>
+<div class="figure align-center">
+<img alt="image" src="../_images/img-22.png" />
+</div>
+<p>These steps are as simple as updating the <strong>states</strong> array by
+<strong>states[my_current_person_id] = INFECTED</strong>, incrementing the
+<strong>num_infected</strong> variable, and decrementing the <strong>num_susceptible</strong>
+variable.</p>
+<p>Note in the code that if the infection succeeds and we have
+<strong>SHOW_RESULTS</strong> enabled, we increment the <strong>num_infections variable</strong>.
+This helps us keep track of the actual number of infections, which will
+help us calculate the actual contagiousness of the disease at the end of
+the simulation.</p>
+</div>
+<div class="section" id="infected">
+<h2>infected<a class="headerlink" href="#infected" title="Permalink to this headline">¶</a></h2>
+<p>For each people, the function to do the following</p>
+<div class="highlight-c"><div class="highlight"><pre>    <span class="k">for</span><span class="p">(</span><span class="n">current_person_id</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">current_person_id</span> 
+        <span class="o">&lt;=</span> <span class="n">global</span><span class="o">-&gt;</span><span class="n">number_of_people</span> <span class="o">-</span> <span class="mi">1</span><span class="p">;</span> <span class="n">current_person_id</span><span class="o">++</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>If the person is infected and has been for the full duration of the disease, then</p>
+<div class="highlight-c"><div class="highlight"><pre>        <span class="k">if</span><span class="p">(</span><span class="n">states</span><span class="p">[</span><span class="n">current_person_id</span><span class="p">]</span> <span class="o">==</span> <span class="n">INFECTED</span>
+            <span class="o">&amp;&amp;</span> <span class="n">num_days_infected</span><span class="p">[</span><span class="n">current_person_id</span><span class="p">]</span> 
+            <span class="o">==</span> <span class="n">duration_of_disease</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Note in the code that if we have <strong>SHOW_RESULTS</strong> enabled, we increment the
+<strong>num_recovery_attempts</strong> variable. This helps us keep track of the
+number of attempted recoveries, which will help us calculate the actual
+deadliness of the disease at the end of the simulation.</p>
+<div class="highlight-c"><div class="highlight"><pre>            <span class="n">stats</span><span class="o">-&gt;</span><span class="n">num_recovery_attempts</span><span class="o">++</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>If a random number less than 100 is less than the deadliness factor, then</p>
+<div class="highlight-c"><div class="highlight"><pre>            <span class="k">if</span><span class="p">((</span><span class="n">random</span><span class="p">()</span> <span class="o">%</span> <span class="mi">100</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">deadliness_factor</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The function changes the person’s state to dead</p>
+<div class="highlight-c"><div class="highlight"><pre>                <span class="n">states</span><span class="p">[</span><span class="n">current_person_id</span><span class="p">]</span> <span class="o">=</span> <span class="n">DEAD</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>The function updates the counters</p>
+<div class="highlight-c"><div class="highlight"><pre>                <span class="c1">// The thread updates the counters</span>
+                <span class="n">global</span><span class="o">-&gt;</span><span class="n">num_dead</span><span class="o">++</span><span class="p">;</span>
+                <span class="n">global</span><span class="o">-&gt;</span><span class="n">num_infected</span><span class="o">--</span><span class="p">;</span>
+</pre></div>
+</div>
+<div class="figure align-center">
+<img alt="image" src="../_images/img-23.png" />
+</div>
+<p>This step is effectively the same as function susceptible, considering deadliness instead of contagiousness. The difference here is the following step:</p>
+<p>Otherwise,</p>
+<p>The function changes the person’s state to immune</p>
+<div class="highlight-c"><div class="highlight"><pre>                <span class="n">states</span><span class="p">[</span><span class="n">current_person_id</span><span class="p">]</span> <span class="o">=</span> <span class="n">IMMUNE</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>The function updates the counters</p>
+<div class="highlight-c"><div class="highlight"><pre>                <span class="c1">// The thread updates the counters</span>
+                <span class="n">global</span><span class="o">-&gt;</span><span class="n">num_immune</span><span class="o">++</span><span class="p">;</span>
+                <span class="n">global</span><span class="o">-&gt;</span><span class="n">num_infected</span><span class="o">--</span><span class="p">;</span>
+</pre></div>
+</div>
+<div class="figure align-center">
+<img alt="image" src="../_images/img-24.png" />
+</div>
+<p>If deadliness fails, then immunity succeeds.</p>
+<p>Note in the code that if the person dies and we have <strong>SHOW_RESULTS</strong>
+enabled, we increment the <strong>num_deaths</strong> variable. This helps us keep
+track of the actual number of deaths, which will help us calculate the
+actual deadliness of the disease at the end of the simulation.</p>
+<div class="highlight-c"><div class="highlight"><pre>                <span class="c1">// The thread updates stats counter</span>
+                <span class="cp">#ifdef SHOW_RESULTS</span>
+                    <span class="n">stats</span><span class="o">-&gt;</span><span class="n">num_deaths</span><span class="o">++</span><span class="p">;</span>
+                <span class="cp">#endif</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="update-days-infected">
+<h2>update_days_infected<a class="headerlink" href="#update-days-infected" title="Permalink to this headline">¶</a></h2>
+<p>For each people, the function to do the following</p>
+<div class="highlight-c"><div class="highlight"><pre>    <span class="k">for</span><span class="p">(</span><span class="n">current_person_id</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">current_person_id</span> 
+        <span class="o">&lt;=</span> <span class="n">global</span><span class="o">-&gt;</span><span class="n">number_of_people</span> <span class="o">-</span> <span class="mi">1</span><span class="p">;</span> <span class="n">current_person_id</span><span class="o">++</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>If the person is infected, then</p>
+<div class="highlight-c"><div class="highlight"><pre>        <span class="k">if</span><span class="p">(</span><span class="n">states</span><span class="p">[</span><span class="n">current_person_id</span><span class="p">]</span> <span class="o">==</span> <span class="n">INFECTED</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Increment the number of days the person has been infected</p>
+<div class="highlight-c"><div class="highlight"><pre>            <span class="n">num_days_infected</span><span class="p">[</span><span class="n">current_person_id</span><span class="p">]</span><span class="o">++</span><span class="p">;</span>
+</pre></div>
+</div>
+<div class="figure align-center">
+<img alt="image" src="../_images/img-25.png" />
+</div>
+<p>This is achieved by incrementing each member of the
+<strong>num_days_infected</strong> array, which can be done as follows:
+<strong>num_days_infected[my_current_person_id]++</strong></p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../index.html">
+              <img class="logo" src="../_static/CSInParallel200wide.png" alt="Logo"/>
+            </a></p>
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Core Functions</a><ul>
+<li><a class="reference internal" href="#move">move</a></li>
+<li><a class="reference internal" href="#susceptible">susceptible</a></li>
+<li><a class="reference internal" href="#infected">infected</a></li>
+<li><a class="reference internal" href="#update-days-infected">update_days_infected</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="../5-Display/display.html"
+                        title="previous chapter">Display Functions</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="../7-Finalize/finalize.html"
+                        title="next chapter">Finish Functions</a></p>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../7-Finalize/finalize.html" title="Finish Functions"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="../5-Display/display.html" title="Display Functions"
+             >previous</a> |</li>
+        <li><a href="../index.html">Pandemic Exemplar with OpenMP</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2013, CSinParallel Project.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>
