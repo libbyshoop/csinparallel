@@ -13,7 +13,7 @@
 
 
 \title{Multicore Programming with OpenMP}
-\date{July 26, 2013}
+\date{March 07, 2014}
 \release{}
 \author{CSInParallel Project}
 \newcommand{\sphinxlogo}{}
@@ -710,7 +710,7 @@ double end = omp\_get\_wtime();
 double time1 = end - start;
 
 //print out the resulting elapsed time
-cout \textless{}\textless{} "Time for paralel computation section: "\textless{}\textless{} time1 \textless{}\textless{} "  milliseconds." \textless{}\textless{} endl;
+cout \textless{}\textless{} "Time for paralel computation section: "\textless{}\textless{} time1 \textless{}\textless{} "  seconds." \textless{}\textless{} endl;
 ...
 \end{Verbatim}
 \setbox0\vbox{
@@ -874,7 +874,7 @@ qsub -l select=1:ncpus=32 -v 'p=32, n=10485760'
 
 \section{Investigating ‘scalability’}
 \label{timingAndScalability/TimingOnMTLandscalability:investigating-scalability}
-Scalability is the ability of a parallel program to run ingreasingly larger problems.  In our simple program, the \emph{problem size} is the number of trapazoids whose area are computed.  You will now conduct some investigations of two types of scalability of parallel programs:
+Scalability is the ability of a parallel program to run increasingly larger problems.  In our simple program, the \emph{problem size} is the number of trapazoids whose area are computed.  You will now conduct some investigations of two types of scalability of parallel programs:
 \begin{itemize}
 \item {} 
 \textbf{stong scalability}

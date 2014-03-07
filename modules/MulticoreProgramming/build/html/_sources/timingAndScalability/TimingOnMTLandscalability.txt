@@ -89,7 +89,7 @@ We can use this in the code in the following way:
 	double time1 = end - start;
 
 	//print out the resulting elapsed time
-	cout << "Time for paralel computation section: "<< time1 << "  milliseconds." << endl;
+	cout << "Time for paralel computation section: "<< time1 << "  seconds." << endl;
 	...
 
 .. topic:: To Do
@@ -226,7 +226,7 @@ user account):
 Investigating ‘scalability’
 ----------------------------
 
-Scalability is the ability of a parallel program to run ingreasingly larger problems.  In our simple program, the *problem size* is the number of trapazoids whose area are computed.  You will now conduct some investigations of two types of scalability of parallel programs:
+Scalability is the ability of a parallel program to run increasingly larger problems.  In our simple program, the *problem size* is the number of trapazoids whose area are computed.  You will now conduct some investigations of two types of scalability of parallel programs:
 
 * **stong scalability** 
 * **weak scalbility**
