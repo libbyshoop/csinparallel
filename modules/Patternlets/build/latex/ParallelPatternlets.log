@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-2.3-1.40.12 (TeX Live 2011) (format=pdflatex 2011.7.3)  3 MAR 2014 21:24
+This is pdfTeX, Version 3.1415926-2.3-1.40.12 (TeX Live 2011) (format=pdflatex 2011.7.3)  7 MAR 2014 15:19
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -999,18 +999,18 @@ File: ForkJoin.png Graphic file (type png)
 Package pdftex.def Info: ForkJoin.png used on input line 1071.
 (pdftex.def)             Requested size: 469.755pt x 282.5613pt.
  [19 <./ForkJoin.png>] [20] [21]
-<ForkJoin_SPMD.png, id=240, 1334.9875pt x 823.075pt>
+<ForkJoin_SPMD.png, id=240, 1365.1pt x 1766.6pt>
 File: ForkJoin_SPMD.png Graphic file (type png)
  <use ForkJoin_SPMD.png>
 Package pdftex.def Info: ForkJoin_SPMD.png used on input line 1216.
-(pdftex.def)             Requested size: 1334.98427pt x 823.07298pt.
+(pdftex.def)             Requested size: 1365.09668pt x 1766.5957pt.
 File: ForkJoin_SPMD.png Graphic file (type png)
 
 <use ForkJoin_SPMD.png>
 Package pdftex.def Info: ForkJoin_SPMD.png used on input line 1216.
-(pdftex.def)             Requested size: 469.755pt x 289.62534pt.
- [22 <./ForkJoin_SPMD.png>] [23]
-<ForkJoin_Barrier.png, id=252, 1736.4875pt x 823.075pt>
+(pdftex.def)             Requested size: 469.755pt x 607.91422pt.
+ [22] [23 <./ForkJoin_SPMD.png>] [24]
+<ForkJoin_Barrier.png, id=256, 1736.4875pt x 823.075pt>
 File: ForkJoin_Barrier.png Graphic file (type png)
 
 <use ForkJoin_Barrier.png>
@@ -1020,8 +1020,8 @@ File: ForkJoin_Barrier.png Graphic file (type png)
  <use ForkJoin_Barrier.png>
 Package pdftex.def Info: ForkJoin_Barrier.png used on input line 1346.
 (pdftex.def)             Requested size: 469.755pt x 222.66022pt.
- [24 <./ForkJoin_Barrier.png>] [25] [26]
-<ParalleFor_Chunks-4_threads-1.png, id=269, 271.0125pt x 572.1375pt>
+ [25] [26 <./ForkJoin_Barrier.png>] [27] [28]
+<ParalleFor_Chunks-4_threads-1.png, id=278, 271.0125pt x 572.1375pt>
 File: ParalleFor_Chunks-4_threads-1.png Graphic file (type png)
 
 <use ParalleFor_Chunks-4_threads-1.png>
@@ -1034,7 +1034,7 @@ File: ParalleFor_Chunks-4_threads-1.png Graphic file (type png)
 Package pdftex.def Info: ParalleFor_Chunks-4_threads-1.png used on input line 1
 540.
 (pdftex.def)             Requested size: 271.01183pt x 572.1361pt.
- [27] [28 <./ParalleFor_Chunks-4_threads-1.png>] [29] [30]
+ [29] [30 <./ParalleFor_Chunks-4_threads-1.png>] [31] [32]
 Underfull \vbox (badness 10000) detected at line 1744
  []
 
@@ -1042,11 +1042,11 @@ Underfull \vbox (badness 10000) detected at line 1744
 Underfull \vbox (badness 10000) detected at line 1744
  []
 
-[31]
+[33]
 LaTeX Font Info:    Font shape `T1/phv/bx/n' in size <9> not available
 (Font)              Font shape `T1/phv/b/n' tried instead on input line 1747.
- [32] [33] [34] [35] [36] [37] [38]
-<OMP_Patterns.png, id=332, 580.1675pt x 520.94624pt>
+ [34] [35] [36] [37] [38] [39] [40]
+<OMP_Patterns.png, id=340, 580.1675pt x 520.94624pt>
 File: OMP_Patterns.png Graphic file (type png)
  <use OMP_Patterns.png>
 Package pdftex.def Info: OMP_Patterns.png used on input line 2208.
@@ -1056,9 +1056,9 @@ File: OMP_Patterns.png Graphic file (type png)
 <use OMP_Patterns.png>
 Package pdftex.def Info: OMP_Patterns.png used on input line 2208.
 (pdftex.def)             Requested size: 469.755pt x 421.80518pt.
- [39] (./ParallelPatternlets.ind)
+ [41] (./ParallelPatternlets.ind)
 Package atveryend Info: Empty hook `BeforeClearDocument' on input line 2216.
- [40 <./OMP_Patterns.png (PNG copy)>]
+ [42 <./OMP_Patterns.png (PNG copy)>]
 Package atveryend Info: Empty hook `AfterLastShipout' on input line 2216.
  (./ParallelPatternlets.aux)
 Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 2216.
@@ -1069,9 +1069,9 @@ Package rerunfilecheck Info: File `ParallelPatternlets.out' has not changed.
 Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 2216.
  ) 
 Here is how much of TeX's memory you used:
- 8910 strings out of 493633
- 127265 string characters out of 3143378
- 230542 words of memory out of 3000000
+ 8912 strings out of 493633
+ 127277 string characters out of 3143378
+ 230540 words of memory out of 3000000
  11921 multiletter control sequences out of 15000+200000
  68154 words of font info for 73 fonts, out of 3000000 for 9000
  832 hyphenation exceptions out of 8191
@@ -1085,10 +1085,10 @@ ype1/urw/helvetic/uhvbo8a.pfb></usr/local/texlive/2011/texmf-dist/fonts/type1/u
 rw/times/utmb8a.pfb></usr/local/texlive/2011/texmf-dist/fonts/type1/urw/times/u
 tmr8a.pfb></usr/local/texlive/2011/texmf-dist/fonts/type1/urw/times/utmri8a.pfb
 >
-Output written on ParallelPatternlets.pdf (42 pages, 369171 bytes).
+Output written on ParallelPatternlets.pdf (44 pages, 376660 bytes).
 PDF statistics:
- 395 PDF objects out of 1000 (max. 8388607)
- 330 compressed objects within 4 object streams
- 98 named destinations out of 1000 (max. 500000)
+ 404 PDF objects out of 1000 (max. 8388607)
+ 337 compressed objects within 4 object streams
+ 100 named destinations out of 1000 (max. 500000)
  186 words of extra memory for PDF output out of 10000 (max. 10000000)
 

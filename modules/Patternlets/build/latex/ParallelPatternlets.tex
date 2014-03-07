@@ -13,7 +13,7 @@
 
 
 \title{Parallel Patternlets}
-\date{March 03, 2014}
+\date{March 07, 2014}
 \release{}
 \author{CSinParallel Project}
 \newcommand{\sphinxlogo}{}
@@ -122,7 +122,7 @@ This document contains simple examples of basic elements that are combined to fo
 
 \chapter{Parallel Programming Patterns}
 \label{PatternsIntro:parallel-programming-patterns}\label{PatternsIntro::doc}\label{PatternsIntro:parallel-patternlets}
-Like all programs, parallel programs contain many \textbf{patterns}: useful ways of writing code that are used repeatedly by most developers because they work well in parctice.  These patterns have been documented by developers over time so that useful ways of organizing and writing good parallel code can be learned by new programmers (and even seasoned veterans).
+Like all programs, parallel programs contain many \textbf{patterns}: useful ways of writing code that are used repeatedly by most developers because they work well in practice.  These patterns have been documented by developers over time so that useful ways of organizing and writing good parallel code can be learned by new programmers (and even seasoned veterans).
 
 
 \section{An organization of parallel patterns}
@@ -140,7 +140,7 @@ Concurrent Execution Mechanisms
 
 \subsection{Strategies}
 \label{PatternsIntro:strategies}
-When you set out to write a program, whether it is parallel or not, you should be considering two prinary stratigic considerations:
+When you set out to write a program, whether it is parallel or not, you should be considering two primary strategic considerations:
 \begin{enumerate}
 \item {} 
 What \emph{algorithmic strategies} to use
@@ -191,7 +191,7 @@ OpenMP is built on a lower-level POSIX library called Pthreads, which can also b
 A third emerging type of parallel implementation involves a \emph{hybrid computation} that uses both of the above patterns together, using a cluster of computers, each of which executes multiple threads.  This type of hybrid program often uses MPI and OpenMP together in one program, which runs on multiple computers in a cluster.
 
 This document is split into chapters of examples.  There are examples for message passing using MPI and shared memory using OpenMP.
-(In the future we will include shared memory examples using Pthreads, and hybrid computations using a compbination of MPI and OPneMP.)
+(In the future we will include shared memory examples using Pthreads, and hybrid computations using a combination of MPI and OpenMP.)
 
 Most of the examples are illustrated
 with the C programming language, using standard popular available libraries. In a few cases, C++
@@ -199,7 +199,7 @@ is used to illustrate a particular difference in code execution between the two 
 
 There are many small examples that serve to illustrate a common pattern.  They are designed for you to try compiling and running on your own to see how they work.  For each example, there are comments within the code to guide you as you try them out.  In some cases, there may be code snippets that you can comment and/or uncomment to see how the execution of the code changes after you do so and re-compile it.
 
-Depending on you interest, you can now explore MPI Patternlets or OpneMP Patternlets.
+Depending on you interest, you can now explore MPI Patternlets or OpenMP Patternlets.
 
 {\hyperref[MessagePassing/MPI_Patternlets::doc]{\emph{Message Passing Parallel Patternlets}}}
 
@@ -1013,9 +1013,9 @@ along with the above two and what can go wrong when mutual exclusion
 is not properly ensured.
 
 Note: by default OpenMP uses the \textbf{Thread Pool} pattern of concurrent execution control.
-OpenMP programs initialze a group of threads to be used by a given program
+OpenMP programs initialize a group of threads to be used by a given program
 (often called a pool of threads).  These threads will execute concurrently
-during portions of the code specified by the programmer.  In addition, the \textbf{multiple instructtion, multiple data} pattern is used in OpenMP programs because multiple threads can be exituting different instructions on different data in memory at the same point in time.
+during portions of the code specified by the programmer.  In addition, the \textbf{multiple instruction, multiple data} pattern is used in OpenMP programs because multiple threads can be executing different instructions on different data in memory at the same point in time.
 
 
 \section{Source Code}
@@ -1023,12 +1023,12 @@ during portions of the code specified by the programmer.  In addition, the \text
 Please download all examples from this tarball:
 \code{openMP.tgz}
 
-A C code file and a Makefile or each example below can be found in
+A C code file and a Makefile for each example below can be found in
 subdirectories of the openMP directory created by extracting the above tarball.
 The number for each example below corresponds to one used in subdirectory
 names containing each one.
 
-To compile and run these examples, you will need a C compiler with OpenMP.  The gnu C compiler is OpenMP compliant.  We assume you are building and executing these on a unix command line.
+To compile and run these examples, you will need a C compiler with OpenMP.  The GNU C compiler is OpenMP compliant.  We assume you are building and executing these on a Unix command line.
 
 
 \section{Patternlets Grouped By Type}
@@ -1216,7 +1216,7 @@ it looks like this, where each thread has its own memory for the variables id an
 \includegraphics{ForkJoin_SPMD.png}
 
 When the pragma is uncommented in the code below, note what the default number of threads
-is.  Here the threads are forked and execute the block of code insode the
+is.  Here the threads are forked and execute the block of code inside the
 curly braces on lines 22 through 26.  This is how we can have a block of code executed
 concurrently on each thread.
 
@@ -1345,7 +1345,7 @@ Conceptually, the running code is excuting like this:
 
 \includegraphics{ForkJoin_Barrier.png}
 
-Note what happens with and without the commented pragma on line 35.
+Note what happens with and without the commented pragma on line 31.
 
 \begin{Verbatim}[commandchars=\\\{\},numbers=left,firstnumber=1,stepnumber=1]
 \PYG{c+cm}{/* barrier.c}
@@ -1544,8 +1544,8 @@ This type of decomposition is commonly used when accessing data that is stored i
 consecutive memory locations (such as an array) that might be cached by each thread.
 
 
-\subsubsection{7. Shared Data Decomposition Algorithm Strategy:  one iteration per thread in a a parallel for loop implementation strategy}
-\label{SharedMemory/DataDecomp_Reduction:shared-data-decomposition-algorithm-strategy-one-iteration-per-thread-in-a-a-parallel-for-loop-implementation-strategy}
+\subsubsection{7. Shared Data Decomposition Algorithm Strategy:  one iteration per thread in a parallel for loop implementation strategy}
+\label{SharedMemory/DataDecomp_Reduction:shared-data-decomposition-algorithm-strategy-one-iteration-per-thread-in-a-parallel-for-loop-implementation-strategy}
 \emph{file: openMP/07.parallelLoop-chunksOf1/parallelLoopChunksOf1.c}
 
 \emph{Build inside 07.parallelLoop-chunksOf1 directory:}
@@ -1769,7 +1769,7 @@ make private
 ./private
 \end{Verbatim}
 
-In this example, you will try a parallel for loop where an additional variables (i, j in the code) cannot be shared by all of the threads, but must instead be \emph{private} to each thread, which means that each thread has its own copy of that variable.  In this case, the outer loop is being split into chunks and given to each thread, but the inner loop is being executed by each thread for each of the elements in its chunk.  The loop counting variables must be maintained separately by each thread.  Because they were initially declared outside the loops at the begininning of the program, by default these variables are shared by all the threads.
+In this example, you will try a parallel for loop where additional variables (i, j in the code) cannot be shared by all of the threads, but must instead be \emph{private} to each thread, which means that each thread has its own copy of that variable.  In this case, the outer loop is being split into chunks and given to each thread, but the inner loop is being executed by each thread for each of the elements in its chunk.  The loop counting variables must be maintained separately by each thread.  Because they were initially declared outside the loops at the begininning of the program, by default these variables are shared by all the threads.
 
 \begin{Verbatim}[commandchars=\\\{\},numbers=left,firstnumber=1,stepnumber=1]
 \PYG{c+cm}{/* private.c}
@@ -1840,7 +1840,7 @@ make atomic
 ./atomic
 \end{Verbatim}
 
-When a variable must be shared by all the threads, as in this example below, an issue called a \emph{race condition} can occur when the threads are updating that variable concurrently.  This happens because there are multiple underlying machine instructions needed to complete the update of the memory location and each thread must execute all of them atomically before another thread does so, thus ensuring \textbf{mutual exclusion} between the threads when updating a shared variable.  This is done using the OpneMP pragma shown in this code.
+When a variable must be shared by all the threads, as in this example below, an issue called a \emph{race condition} can occur when the threads are updating that variable concurrently.  This happens because there are multiple underlying machine instructions needed to complete the update of the memory location and each thread must execute all of them atomically before another thread does so, thus ensuring \textbf{mutual exclusion} between the threads when updating a shared variable.  This is done using the OpenMP pragma shown in this code.
 
 \begin{Verbatim}[commandchars=\\\{\},numbers=left,firstnumber=1,stepnumber=1]
 \PYG{c+cm}{/* atomic.c}
@@ -1960,7 +1960,7 @@ make critical2
 ./critical2
 \end{Verbatim}
 
-Here is an example of how to compare the performance of using the atomic pragme directive and the critical pragma directive.  Note that there is a function in OpenMP that lets you obtain the current time, which enables us to determine how long it took to run a particular section of our program.
+Here is an example of how to compare the performance of using the atomic pragma directive and the critical pragma directive.  Note that there is a function in OpenMP that lets you obtain the current time, which enables us to determine how long it took to run a particular section of our program.
 
 \begin{Verbatim}[commandchars=\\\{\},numbers=left,firstnumber=1,stepnumber=1]
 \PYG{c+cm}{/* critical2.c}
@@ -2124,7 +2124,7 @@ Hello from thread \#Hello from thread\#Hello from thread\#0 of 4Hello from threa
 1 of 4
 \end{quote}
 
-The other facet that this particular patternlet shows is that OpenMP's atomic directive will not fix this -- it is too complex for atomic, so the compiler flags that as an error.  To make this statement execute indivisiblly, you need to use the critical directive, providing a pretty simple case where critical works and atomic does not.
+The other facet that this particular patternlet shows is that OpenMP's atomic directive will not fix this -- it is too complex for atomic, so the compiler flags that as an error.  To make this statement execute indivisibly, you need to use the critical directive, providing a pretty simple case where critical works and atomic does not.
 
 
 \subsection{Task Decomposition Algorithm Strategies}
