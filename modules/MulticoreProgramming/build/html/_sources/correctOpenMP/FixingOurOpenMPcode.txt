@@ -79,7 +79,7 @@ According to the OpenMP Tutorial, here is how the reduction is being done inside
 
          "A private copy for each listed variable is created for each thread.  At the end of the reduction, the reduction operation is applied to all private copies of the shared variable, and the final result is written to the global shared variable."
 
-Thus, a variable such as ``integral`` that is decalred in a reduction clause is both private to each thread and ultimately a shared variable.
+Thus, a variable such as ``integral`` that is declared in a reduction clause is both private to each thread and ultimately a shared variable.
 
 
 .. topic:: To Do
