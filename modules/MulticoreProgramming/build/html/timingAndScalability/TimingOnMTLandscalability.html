@@ -8,7 +8,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Timing and Performance on Intel Manycore Testing Lab &mdash; Multicore Programming with OpenMP</title>
+    <title>Timing and Performance on Multicore machines &mdash; Multicore Programming with OpenMP</title>
     
     <link rel="stylesheet" href="../_static/default.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
@@ -47,8 +47,8 @@
         <div class="bodywrapper">
           <div class="body">
             
-  <div class="section" id="timing-and-performance-on-intel-manycore-testing-lab">
-<h1>Timing and Performance on Intel Manycore Testing Lab<a class="headerlink" href="#timing-and-performance-on-intel-manycore-testing-lab" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="timing-and-performance-on-multicore-machines">
+<h1>Timing and Performance on Multicore machines<a class="headerlink" href="#timing-and-performance-on-multicore-machines" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="timing-performance">
 <h2>Timing performance<a class="headerlink" href="#timing-performance" title="Permalink to this headline">¶</a></h2>
 <p>We would like to know how long it takes to run various versions of our
@@ -74,8 +74,7 @@ user 0.04
 sys 0.00</pre>
 </div>
 <p>Here, we use the full path /usr/bin/time&nbsp;to insure that we are accessing
-the time program&nbsp;instead of a shell built-in command. The -p&nbsp;flag
-produces output in a format comparable to what we will see in the MTL.</p>
+the time program&nbsp;instead of a shell built-in command.</p>
 <p>The real&nbsp;time measures actual time elapsed during the running of your
 command trap-omp. user&nbsp;measures the amount of time executing user code,
 and sys&nbsp;measures the time executing in Linux kernel code.</p>
@@ -140,23 +139,24 @@ code, even if you are not using OpenMP library functions or pragmas. This will c
 </div>
 <div class="section" id="using-the-mtl">
 <h2>Using the MTL<a class="headerlink" href="#using-the-mtl" title="Permalink to this headline">¶</a></h2>
+<p>If you have access to Intel&#8217;s Manycore Testing Lab (MTL), you can try some experimenting.  You may also use another machine that your instructor will give you access to.</p>
 <p>Let’s try using many more threads and really experiment with multicore
 programming! You will need to use a ‘terminal’ on Macs or ‘Putty’ on
 PCs. &nbsp;If you are off campus, you will need to ssh into a machine on your campus before
 then logging into the MTL machine at Intel’s headquarters in Oregon.</p>
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
-<p class="last">Macalester&#8217;s local machine that you can use is selkie.</p>
+<p class="last">Macalester&#8217;s machine that you can use is nuggle.macalester.edu.</p>
 </div>
 <p>You can login to the MTL computer, as follows</p>
-<div class="highlight-python"><pre>ssh accountname@192.55.51.81</pre>
+<div class="highlight-python"><pre>ssh accountname@207.108.8.131</pre>
 </div>
 <p>Use one of the special MTL student account usernames provided to you, together with
 the password distributed to the class.</p>
 <p>Next, copy your program from your laptop or local linux machine to the MTL machine.
 One way to do this is to use another window (to
 keep for copying your code), then enter the following command <em>from the directory where your code is located</em>:</p>
-<div class="highlight-python"><pre>scp trap-omp.C accountname@192.55.51.81:</pre>
+<div class="highlight-python"><pre>scp trap-omp.C accountname@207.108.8.131:</pre>
 </div>
 <p>After making this copy, login into the MTL machine 192.55.51.81&nbsp;in another window.</p>
 <p>On the MTL machine, compile and test run your program.</p>
@@ -325,7 +325,7 @@ printf("Time spent: %.6f\\n", time_spent);</pre>
             </a></p>
   <h3><a href="../index.html">Table Of Contents</a></h3>
   <ul>
-<li><a class="reference internal" href="#">Timing and Performance on Intel Manycore Testing Lab</a><ul>
+<li><a class="reference internal" href="#">Timing and Performance on Multicore machines</a><ul>
 <li><a class="reference internal" href="#timing-performance">Timing performance</a><ul>
 <li><a class="reference internal" href="#simple-less-accurate-way-linux-time-program">Simple, less accurate way:&nbsp;linux <strong>time</strong> program</a></li>
 <li><a class="reference internal" href="#additional-accuracy-using-openmp-functions-for-timing-code">Additional accuracy: Using OpenMP functions for timing code</a></li>
@@ -350,19 +350,6 @@ printf("Time spent: %.6f\\n", time_spent);</pre>
   <h4>Previous topic</h4>
   <p class="topless"><a href="../correctOpenMP/FixingOurOpenMPcode.html"
                         title="previous chapter">Creating a correct threaded version</a></p>
-<div id="searchbox" style="display: none">
-  <h3>Quick search</h3>
-    <form class="search" action="../search.html" method="get">
-      <input type="text" name="q" />
-      <input type="submit" value="Go" />
-      <input type="hidden" name="check_keywords" value="yes" />
-      <input type="hidden" name="area" value="default" />
-    </form>
-    <p class="searchtip" style="font-size: 90%">
-    Enter search terms or a module, class or function name.
-    </p>
-</div>
-<script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
       </div>
       <div class="clearer"></div>
