@@ -1,0 +1,221 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Vector Addition Lab &mdash; Cuda Vector Addition 1 documentation</title>
+    
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="top" title="Cuda Vector Addition 1 documentation" href="../index.html" />
+    <link rel="next" title="More Exercises" href="../2-MoreExercises/MoreExercises.html" />
+    <link rel="prev" title="Programming in CUDA" href="../0-Introduction/Introduction.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../2-MoreExercises/MoreExercises.html" title="More Exercises"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="../0-Introduction/Introduction.html" title="Programming in CUDA"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../index.html">Cuda Vector Addition 1 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="vector-addition-lab">
+<h1>Vector Addition Lab<a class="headerlink" href="#vector-addition-lab" title="Permalink to this headline">¶</a></h1>
+<div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<p class="last">The Unified Memory parts of this lab may not work on your machine.
+Run the devices program found in the last section to find out if
+your machine is compatable</p>
+</div>
+<div class="section" id="research-questions">
+<h2>Research Questions<a class="headerlink" href="#research-questions" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li>For what size prolem is the CUDA computation faster than the sequential
+computation?</li>
+<li>What effect does using Unified Memory have on the speed of our program?</li>
+</ul>
+</div>
+<div class="section" id="getting-started">
+<h2>Getting started<a class="headerlink" href="#getting-started" title="Permalink to this headline">¶</a></h2>
+<p>Download and extract
+<a class="reference download internal" href="../_downloads/vectorAdd.tar.gz"><tt class="xref download docutils literal"><span class="pre">vectorAdd.tar.gz</span></tt></a>
+and extract it with <tt class="docutils literal"><span class="pre">tar</span> <span class="pre">-xzvf</span> <span class="pre">vectorAdd.tar.gz</span></tt>
+Open vectorAdd.cu and vectorAdd6.cu and familiarize yourself with the code.
+Compile and run the programs.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">skip compiling vectorAdd6.cu if your machine is incompatable</p>
+</div>
+<p>Run the programs and see what happens.</p>
+</div>
+<div class="section" id="exercise">
+<h2>Exercise<a class="headerlink" href="#exercise" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="part-one-cudamemcpy">
+<h3>Part One: cudaMemcpy<a class="headerlink" href="#part-one-cudamemcpy" title="Permalink to this headline">¶</a></h3>
+<p>Using omp_get_wtime() modify vectorAdd.cu so that it reports</p>
+<ol class="arabic simple">
+<li>The time required by the CUDA computation specifically<ol class="loweralpha">
+<li>The time spent allocating A, B, and C</li>
+<li>The time spent copying A and B from the Host to the device</li>
+<li>The time spent computing the sum of A and B into C</li>
+<li>The time spent copying C from the device to the host</li>
+<li>The total time of the CUDA computation (i.e., the sum of a-d)</li>
+</ol>
+</li>
+<li>The time required by the sequential computation</li>
+</ol>
+<p>None of these times should include any I/O so make sure you comment out
+the printf() statements.</p>
+<p>Use the Makefile to build your modified version of the program.
+When it compiles successfully run it as follows:</p>
+<p><tt class="docutils literal"><span class="pre">./vectorAdd</span></tt></p>
+<p>The program&#8217;s default array size is 50,000 elements</p>
+<p>In a spreadsheet record and label your times in a column labeld 50,000. Which
+is faster, the CUDA version or the CPU version?</p>
+<p>Repeat this problem with a larger array. Run it again with 500,000 elements.</p>
+<p><tt class="docutils literal"><span class="pre">./vectorAdd</span> <span class="pre">500000</span></tt></p>
+<p>Record your results. Repeat the process again wih 5,000,000 elements,
+50,000,000 and 500,000,000 elements. How do these times compare?
+Were you able to run all of them succesfully? If not why?</p>
+<p>Create a line chart, with one line for the sequential code&#8217;s
+times and one line for the CUDA code&#8217;s total times.
+Your X-axis should be labeled with 50,000 500,000
+5,000,000 and 50,000,000 your Y-axis should be the time.</p>
+<p>Then create a &#8220;stacked&#8221; barchart of the CUDA times with the same X and Y axes
+as your first chart.. For each X-axis value, this chart should &#8220;stack&#8221;
+the CUDA computation&#8217;s</p>
+<ol class="arabic simple">
+<li>allocation time</li>
+<li>host-to-device transfer time</li>
+<li>computation time</li>
+<li>device-to-host transfer time</li>
+</ol>
+<p>What observations can you make about the CUDA vs the sequential computations?
+How much time does the CUDA computation spend transferring data compared to computing?
+What is the answer to our first research question?</p>
+</div>
+<div class="section" id="part-two-unified-memory">
+<h3>Part Two: Unified Memory<a class="headerlink" href="#part-two-unified-memory" title="Permalink to this headline">¶</a></h3>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">skip this section if your device is not compatable with Unified Memory.</p>
+</div>
+<p>Using omp_get_wtime() modify vectorAdd6.cu so that it reports</p>
+<ol class="arabic simple">
+<li>The time spent allocating A, B, and C</li>
+<li>The time spent computing the sum of A and B into C</li>
+<li>The total time of the CUDA computation (i.e., the sum of a and b)</li>
+</ol>
+<p>Again, none of these times should include any I/O so make sure you comment out
+the printf() statements.</p>
+<p>Run your program using</p>
+<p><tt class="docutils literal"><span class="pre">./vectorAdd6</span></tt></p>
+<p>Record your results using 50,000 500,000 5,000,000 and
+50,000,000 elements. How do these times compare?</p>
+<p>Add this new data to the line chart and stacked bar charts from part one.
+How does using unified memory compare to using <tt class="docutils literal"><span class="pre">cudaMemcpy</span></tt>?
+What is the bottleneck for the <tt class="docutils literal"><span class="pre">cudaMemcpy</span></tt> version? What about
+the unified memory version?</p>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Vector Addition Lab</a><ul>
+<li><a class="reference internal" href="#research-questions">Research Questions</a></li>
+<li><a class="reference internal" href="#getting-started">Getting started</a></li>
+<li><a class="reference internal" href="#exercise">Exercise</a><ul>
+<li><a class="reference internal" href="#part-one-cudamemcpy">Part One: cudaMemcpy</a></li>
+<li><a class="reference internal" href="#part-two-unified-memory">Part Two: Unified Memory</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="../0-Introduction/Introduction.html"
+                        title="previous chapter">Programming in CUDA</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="../2-MoreExercises/MoreExercises.html"
+                        title="next chapter">More Exercises</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="../_sources/1-VectorAdd/VectorAdd.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../2-MoreExercises/MoreExercises.html" title="More Exercises"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="../0-Introduction/Introduction.html" title="Programming in CUDA"
+             >previous</a> |</li>
+        <li><a href="../index.html">Cuda Vector Addition 1 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2014, CSInParallel Project.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
+    </div>
+  </body>
+</html>

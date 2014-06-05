@@ -1,0 +1,177 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>More Exercises &mdash; Cuda Vector Addition 1 documentation</title>
+    
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="top" title="Cuda Vector Addition 1 documentation" href="../index.html" />
+    <link rel="prev" title="Vector Addition Lab" href="../1-VectorAdd/VectorAdd.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../1-VectorAdd/VectorAdd.html" title="Vector Addition Lab"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../index.html">Cuda Vector Addition 1 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="more-exercises">
+<h1>More Exercises<a class="headerlink" href="#more-exercises" title="Permalink to this headline">¶</a></h1>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">If your device is incompatable with CUDA 6, don&#8217;t edit or build the files ending with a 6</p>
+</div>
+<div class="section" id="exercise-ii-vector-multiplication">
+<h2>Exercise II: Vector Multiplication<a class="headerlink" href="#exercise-ii-vector-multiplication" title="Permalink to this headline">¶</a></h2>
+<p>Let&#8217;s try the same research questions, but using a more expensive operation like multiplication.</p>
+<p>In your vectorAdd directory, run</p>
+<blockquote>
+<div><tt class="docutils literal"><span class="pre">make</span> <span class="pre">clean</span></tt></div></blockquote>
+<p>to remove the binary. Then run</p>
+<blockquote>
+<div><p><tt class="docutils literal"><span class="pre">cd</span> <span class="pre">..</span></tt></p>
+<p><tt class="docutils literal"><span class="pre">cp</span> <span class="pre">-r</span> <span class="pre">vectorAdd</span> <span class="pre">vectorMult</span></tt></p>
+</div></blockquote>
+<p>to create a copy of your vectorAdd folder named vectorMult. Inside there,
+rename vectorAdd.cu and vectorAdd6.cu vectorMult.cu and vectorMult6.cu
+and modify the Makefile to build vectorMult and vectorMult 6 instead of vectorAdd and vectorAdd6.
+Then edit vectorMult.cu and vectorMult6.cu so that they store the
+product of A[i] times B[i] in C[i] instead of the sum.
+Note that for both programs you will need to change:</p>
+<ul class="simple">
+<li>The CUDA version.</li>
+<li>The verification test for the CUDA version.</li>
+<li>The sequential version.</li>
+<li>The verification test for the sequential version.</li>
+</ul>
+<p>Then build vectorMult and vectorMult6 and run them using 50,000
+500,000 5,000,000 and 50,000,000 element arrays.
+Record the timings for each of these in your spreadsheet,
+and create charts to help us visualize the results
+like you did with the vectorAdd programs.</p>
+<p>What are the answers to our research questions?
+How do your results compare to those of Exercise I?</p>
+</div>
+<div class="section" id="exercise-iii-vector-square-root">
+<h2>Exercise III: Vector Square Root<a class="headerlink" href="#exercise-iii-vector-square-root" title="Permalink to this headline">¶</a></h2>
+<p>Let&#8217;s try the same research questions, but this time using an even
+more expensive operation AND reducing the amount of data we&#8217;re transferring.
+Calculating a square root is a more expensive operation than multiplication, so let&#8217;s try that.</p>
+<p>As in Exercise II, clean and make a copy of your vectorMult folder named vectorRoot.
+Inside it, rename vectorMult.cu and vectorMult6.cu vectorRoot.cu and vectorRoot6.cu respectively.
+Modify the Makefile to build vectorRoot and vectorRoot6.</p>
+<p>Then edit vectorRoot.cu and vectorRoot6.cu so they compute the square root of A[i] in C[i].</p>
+<p>Then build vectorRoot and vectorRoot6 and run them using 50,000
+500,000 5,000,000 and 50,000,000 element arrays.
+As before, record the timings for each of these in your
+spreadsheet, and create charts to help us visualize the results.</p>
+<p>What are the answers to our research questions?
+How do these results compare to those of Exercises I and II?</p>
+</div>
+<div class="section" id="exercise-iv-vector-square">
+<h2>Exercise IV: Vector Square<a class="headerlink" href="#exercise-iv-vector-square" title="Permalink to this headline">¶</a></h2>
+<p>Let&#8217;s try the same research questions one more time.
+This time, we will use a less expensive operation than square root,
+but keep the amount of data we&#8217;re transferring the same.</p>
+<p>As in Part III, clean and make a copy of your vectorRoot folder named vectorSquare.
+Inside it, rename vectorRoot.cu and vectorRoot6.cu vectorSquare.cu and vectorSquare6.cu respectively.
+Modify the Makefile to build vectorSquare and vectorSquare6.</p>
+<p>Then edit vectorSquare.cu and vectorSquare6.cu so they compute the square of A[i] in C[i].</p>
+<p>Then build vectorSquare and vectorSquare6 and run them using 50,000
+500,000 5,000,000 and 50,000,000 array elements.
+As before, record the timings for each of these in your spreadsheet,
+and create charts to help us visualize the results.</p>
+<p>What are the answers to our research questions?
+How do your results compare to those of the previous parts?</p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">More Exercises</a><ul>
+<li><a class="reference internal" href="#exercise-ii-vector-multiplication">Exercise II: Vector Multiplication</a></li>
+<li><a class="reference internal" href="#exercise-iii-vector-square-root">Exercise III: Vector Square Root</a></li>
+<li><a class="reference internal" href="#exercise-iv-vector-square">Exercise IV: Vector Square</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="../1-VectorAdd/VectorAdd.html"
+                        title="previous chapter">Vector Addition Lab</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="../_sources/2-MoreExercises/MoreExercises.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../1-VectorAdd/VectorAdd.html" title="Vector Addition Lab"
+             >previous</a> |</li>
+        <li><a href="../index.html">Cuda Vector Addition 1 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2014, CSInParallel Project.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
+    </div>
+  </body>
+</html>
