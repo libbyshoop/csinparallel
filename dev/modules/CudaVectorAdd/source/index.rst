@@ -18,6 +18,7 @@ Contents:
 
     0-Introduction/Introduction 
     1-VectorAdd/VectorAdd
+    2-MoreExercises/MoreExercises
 
 
 .. comment

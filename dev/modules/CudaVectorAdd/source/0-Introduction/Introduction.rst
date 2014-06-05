@@ -64,7 +64,7 @@ Instead they use ``cudaMalloc()`` and ``cudaMemcpy()`` to allocate and transfer 
 
 
 To transfer memory between the devices we use ``cudaMemcpy()`` which takes a pointer to the destination, a pointer to the source, a size, and a fourth value representing the direction of the data flow.
-This last value must be ``cudaDeviceToHost`` or ``cudaHostToDevice``
+This last value should be ``cudaMemcpyDeviceToHost`` or ``cudaMemcpyHostToDevice``
 Once you're done with memory allocated using either method you can free it by calling ``cudaFree()`` on the pointer.
 
 .. code-block:: c
@@ -74,11 +74,11 @@ Once you're done with memory allocated using either method you can free it by ca
     int *ptr, *dev_ptr;
     initialize_ptr(ptr);
     cudaMalloc((void**)&ptr, SIZE * sizeof(int));
-    cudaMemcpy(dev_ptr, ptr, SIZE * sizeof(int), cudaHostToDevice);
+    cudaMemcpy(dev_ptr, ptr, SIZE * sizeof(int), cudaMemcpyHostToDevice);
 
             ...Perform GPU Operations ...
 
-    cudaMemcpy(ptr, dev_ptr, SIZE * sizeof(int), cudaDeviceToHost);
+    cudaMemcpy(ptr, dev_ptr, SIZE * sizeof(int), cudaMemcpyDeviceToHost);
     cudaFree(dev_ptr);
     free(ptr);
 
@@ -125,7 +125,7 @@ CUDA threads are created by functions called kernels which must be ``__global__`
 Kernels are launched with an extra set of parameters enclosed by ``<<<`` and ``>>>`` the first argument is a ``dim3`` representing the grid dimensions and the second is another ``dim3`` representing the block dimensions.
 You can also use ``int``\ s instead of ``dim3``\ s, this will create a Nx1x1 grid.
 After a kernel is launched, it creates the number of threads specified and runs each of them.
-CUDA automatically waits for the devices to finish before you can access memory using ``cudaMemcpy()`` although if you're using unified memory with ``cudaMalloc`` you will need to call ``cudaDeviceSynchronize()`` to force the CPU to wait for the GPU. 
+CUDA automatically waits for the devices to finish before you can access memory using ``cudaMemcpy()`` although if you're using unified memory with ``cudaMallocManaged()`` you will need to call ``cudaDeviceSynchronize()`` to force the CPU to wait for the GPU. 
 
 .. code-block:: c
     :emphasize-lines: 1
