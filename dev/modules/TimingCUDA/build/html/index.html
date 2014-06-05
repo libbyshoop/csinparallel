@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>CUDA Vector Addition module &mdash; Cuda Vector Addition 1 documentation</title>
+    <title>Timing CUDA Operations &mdash; Timing CUDA Operations</title>
     
     <link rel="stylesheet" href="_static/default.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -14,7 +14,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    './',
-        VERSION:     '1',
+        VERSION:     '',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -23,7 +23,8 @@
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
-    <link rel="top" title="Cuda Vector Addition 1 documentation" href="#" />
+    <link rel="shortcut icon" href="_static/favicon.ico"/>
+    <link rel="top" title="Timing CUDA Operations" href="#" />
     <link rel="next" title="Programming in CUDA" href="0-Introduction/Introduction.html" /> 
   </head>
   <body>
@@ -36,7 +37,7 @@
         <li class="right" >
           <a href="0-Introduction/Introduction.html" title="Programming in CUDA"
              accesskey="N">next</a> |</li>
-        <li><a href="#">Cuda Vector Addition 1 documentation</a> &raquo;</li> 
+        <li><a href="#">Timing CUDA Operations</a> &raquo;</li> 
       </ul>
     </div>  
 
@@ -45,10 +46,17 @@
         <div class="bodywrapper">
           <div class="body">
             
-  <div class="section" id="cuda-vector-addition-module">
-<h1>CUDA Vector Addition module<a class="headerlink" href="#cuda-vector-addition-module" title="Permalink to this headline">¶</a></h1>
-<p>THis Module was written in 2014 by Jeffrey Lyman (<a class="reference external" href="mailto:JLyman&#37;&#52;&#48;macalester&#46;edu">JLyman<span>&#64;</span>macalester<span>&#46;</span>edu</a>)</p>
-<p>The purpose of this document is to teach students the basics of CUDA programming and to give them an understanding of when it is appropriate to offload work to the GPU.</p>
+  <div class="section" id="timing-cuda-operations">
+<h1>Timing CUDA Operations<a class="headerlink" href="#timing-cuda-operations" title="Permalink to this headline">¶</a></h1>
+<p>This module was created by Joel Adams of Calvin College and extended and adapted
+for CSInParallel by Jeffrey Lyman in 2014 (<a class="reference external" href="mailto:JLyman&#37;&#52;&#48;macalester&#46;edu">JLyman<span>&#64;</span>macalester<span>&#46;</span>edu</a>)</p>
+<p>The purpose of this document is to teach students the basics of
+CUDA programming and to give them an understanding of when it is
+appropriate to offload work to the GPU.</p>
+<p>Though completion of Vector Addition, multipliction, square root,
+and squaring programs, students will gain an understanding of
+when the overhead of creating threads and copying memory is worth
+the speedup of CPU coding</p>
 </div>
 <div class="section" id="contents">
 <h1>Contents:<a class="headerlink" href="#contents" title="Permalink to this headline">¶</a></h1>
@@ -67,20 +75,18 @@
       </div>
       <div class="sphinxsidebar">
         <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="#">
+              <img class="logo" src="_static/CSInParallel200wide.png" alt="Logo"/>
+            </a></p>
   <h3><a href="#">Table Of Contents</a></h3>
   <ul>
-<li><a class="reference internal" href="#">CUDA Vector Addition module</a></li>
+<li><a class="reference internal" href="#">Timing CUDA Operations</a></li>
 <li><a class="reference internal" href="#contents">Contents:</a></li>
 </ul>
 
   <h4>Next topic</h4>
   <p class="topless"><a href="0-Introduction/Introduction.html"
                         title="next chapter">Programming in CUDA</a></p>
-  <h3>This Page</h3>
-  <ul class="this-page-menu">
-    <li><a href="_sources/index.txt"
-           rel="nofollow">Show Source</a></li>
-  </ul>
 <div id="searchbox" style="display: none">
   <h3>Quick search</h3>
     <form class="search" action="search.html" method="get">
@@ -107,11 +113,11 @@
         <li class="right" >
           <a href="0-Introduction/Introduction.html" title="Programming in CUDA"
              >next</a> |</li>
-        <li><a href="#">Cuda Vector Addition 1 documentation</a> &raquo;</li> 
+        <li><a href="#">Timing CUDA Operations</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">
-        &copy; Copyright 2014, CSInParallel Project.
+        &copy; Copyright This work is licensed under a Creative Commons Attribution-ShareAlike 3.0 Unported License.
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
     </div>
   </body>
