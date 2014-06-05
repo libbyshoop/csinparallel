@@ -46,7 +46,7 @@ As you begin your work to create a new module, you will want to **be certain tha
 are doing your work on a new branch that you create from the develop branch**.  Once you have your clone of the project, you can create your own sub-vranch of the devlop branch by:
 
     1. Navigate to the clone directory named ``csinparallel``
-    2. Execute this on the connamd line: 
+    2. Execute this on the command line: 
         ``git checkout -b <your-branch-name> develop``
 
 .. warning:: The text inside and including the brackets < > above is a single name for your branch. We suggest a name such as *ls-dev*, where ls should be replaced by your initials, your first or last name, or a combination of those.
@@ -111,11 +111,20 @@ Bolded answers require the user to type something, not just hit enter.
 
 > Create Windows command file? (Y/n) [y]: [hit enter]
 
-Modifying the conf.py File
-##########################
+Setting up the Default Config
+#############################
 
 
-In ``/GitHub/csinparallel/dev/modules/YourModuleName/source``, run the configuration script. To do this, copy the file :download:`confscript.py <confscript.py>` into this folder, and double click on it or enter ``python confscript.py`` into a terminal or command line.  Follow the directions to enter your module's name (in plain English) and a short description when prompted.
+Copy the example config files into ``/GitHub/csinparallel/dev/modules/YourModuleName/source``, and run the configuration script. To do this, execute the following commands
+
+.. code-block:: sh
+
+    cd Github/csinparallel/dev/modules/YoutModuleName/source
+    cp ../../example/source/confscript.py ./
+    cp ../../example/source/_static/* _static/
+    python2 confscript.py
+
+Follow the directions to enter your module's name (in plain English) and a short description when prompted.
 
 Optional: Enabling LaTeX
 ************************
@@ -140,14 +149,6 @@ and then find your computer's tex paths and add them to the appropriate fields.
 
 Making the Module
 #################
-
-Open the Makefile (not make.bat) and find the latexpdf entry. Add this line:
-
-    ``tar -czf $(BUILDDIR)/latex.tar.gz $(BUILDDIR)/latex`` 
-
-indented with a tab and on a line by itself after this line:
-
-    ``$(MAKE) -C $(BUILDDIR)/latex all-pdf``
 
 You now have enough of a start to see results! From ``csinparallel/dev/modules/YourModuleName``, enter ``make html``. This will render HTML files from your ``source`` folder and place them in your ``build`` folder. Click on one to open it! 
 

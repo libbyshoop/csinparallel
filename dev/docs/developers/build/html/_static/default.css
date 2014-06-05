@@ -4,7 +4,7 @@
  *
  * Sphinx stylesheet -- default theme.
  *
- * :copyright: Copyright 2007-2013 by the Sphinx team, see AUTHORS.
+ * :copyright: Copyright 2007-2011 by the Sphinx team, see AUTHORS.
  * :license: BSD, see LICENSE for details.
  *
  */
@@ -16,14 +16,16 @@
 body {
     font-family: sans-serif;
     font-size: 100%;
-    background-color: #11303d;
+    /*background-color: #11303d;*/
+    background-color: #4f5145;
     color: #000;
     margin: 0;
     padding: 0;
 }
 
 div.document {
-    background-color: #1c4e63;
+    /*background-color: #1c4e63;*/
+    background-color: #34362e;
 }
 
 div.documentwrapper {
@@ -36,7 +38,8 @@ div.bodywrapper {
 }
 
 div.body {
-    background-color: #ffffff;
+    /*background-color: #ffffff;*/
+    background-color: #efefe1;
     color: #000000;
     padding: 0 20px 30px 20px;
 }
@@ -55,7 +58,8 @@ div.footer a {
 }
 
 div.related {
-    background-color: #133f52;
+    /*background-color: #133f52;*/
+    background-color: #272822;
     line-height: 30px;
     color: #ffffff;
 }
@@ -64,8 +68,19 @@ div.related a {
     color: #ffffff;
 }
 
+/*  This fixes the sidebar so that it stays visible as body text is scrolled*/
 div.sphinxsidebar {
+    top: 30px;
+    bottom: 70px;
+    margin: 0;
+    position: fixed;
+    overflow: auto;
+    height: auto;
 }
+
+
+
+
 
 div.sphinxsidebar h3 {
     font-family: 'Trebuchet MS', sans-serif;
@@ -104,7 +119,8 @@ div.sphinxsidebar ul {
 }
 
 div.sphinxsidebar a {
-    color: #98dbcc;
+    /*color: #98dbcc;*/
+    color: #ffe792;
 }
 
 div.sphinxsidebar input {
@@ -142,7 +158,8 @@ div.body h4,
 div.body h5,
 div.body h6 {
     font-family: 'Trebuchet MS', sans-serif;
-    background-color: #f2f2f2;
+    /*background-color: #f2f2f2;*/
+    background-color: #ddddc0;
     font-weight: normal;
     color: #20435c;
     border-bottom: 1px solid #ccc;
@@ -191,7 +208,8 @@ div.admonition ul, div.admonition ol {
 }
 
 div.note {
-    background-color: #eee;
+    /*background-color: #eee;*/
+    background-color: #d5d5d5;
     border: 1px solid #ccc;
 }
 
@@ -219,7 +237,8 @@ p.admonition-title:after {
 
 pre {
     padding: 5px;
-    background-color: #eeffcc;
+    /*background-color: #eeffcc;*/
+    background-color: #faffcc;
     color: #333333;
     line-height: 120%;
     border: 1px solid #ac9;
@@ -230,12 +249,13 @@ pre {
 tt {
     background-color: #ecf0f3;
     padding: 0 1px 0 1px;
-    /*font-size: 0.95em;*/
-    font-family:"Lucida Console", Monaco, monospace;
+    /*font-size: 1.35em;*/
+	font-family:"Lucida Console", Monaco, monospace;
 }
 
 th {
-    background-color: #ede;
+    /*background-color: #ede;*/
+   background-color: #bbddcd;
 }
 
 .warning tt {
@@ -248,11 +268,6 @@ th {
 
 .viewcode-back {
     font-family: sans-serif;
-}
-
-.red {
-    color:red;
-    font-weight:bold;
 }
 
 div.viewcode-block:target {

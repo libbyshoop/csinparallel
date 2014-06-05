@@ -1,5 +1,3 @@
-
-
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
@@ -68,7 +66,7 @@ You can <a class="reference external" href="https://github.com/libbyshoop/csinpa
 you will next want to <em>clone</em> a copy of the current state of the project on your own machine. The github clients available from github.com will enable you to clone the project, once you are a collaborator.  You can even do this directly from the
 <a class="reference external" href="https://github.com/libbyshoop/csinparallel">project page on github</a>.</p>
 <p>Find your directory containing the cloned copy of the repository (on Windows, it usually puts itself in <tt class="docutils literal"><span class="pre">My</span> <span class="pre">Documents</span></tt>). It should be a directory called csinparallel.You will see the following directory structure:</p>
-<div class="highlight-python"><pre>csinparallel/modules/_____Module Name Here_______/source
+<div class="highlight-python"><div class="highlight"><pre>csinparallel/modules/_____Module Name Here_______/source
                                                  /build
             /images
             /docs
@@ -76,7 +74,8 @@ you will next want to <em>clone</em> a copy of the current state of the project 
                                                      /build
                 /images
                 /docs
-            /README.rst</pre>
+            /README.rst
+</pre></div>
 </div>
 <p>Modules that are ready for production will be in the top directory shown above.
 Modules that are under development will be under the directory named &#8216;dev&#8217;.</p>
@@ -95,7 +94,7 @@ are doing your work on a new branch that you create from the develop branch</str
 <li><p class="first">Navigate to the clone directory named <tt class="docutils literal"><span class="pre">csinparallel</span></tt></p>
 </li>
 <li><dl class="first docutils">
-<dt>Execute this on the connamd line:</dt>
+<dt>Execute this on the command line:</dt>
 <dd><p class="first last"><tt class="docutils literal"><span class="pre">git</span> <span class="pre">checkout</span> <span class="pre">-b</span> <span class="pre">&lt;your-branch-name&gt;</span> <span class="pre">develop</span></tt></p>
 </dd>
 </dl>
@@ -140,9 +139,16 @@ to begin. Next, follow these directions below to go through the setup process.</
 <p>&gt; Create Windows command file? (Y/n) [y]: [hit enter]</p>
 </div>
 </div>
-<div class="section" id="modifying-the-conf-py-file">
-<h2>Modifying the conf.py File<a class="headerlink" href="#modifying-the-conf-py-file" title="Permalink to this headline">¶</a></h2>
-<p>In <tt class="docutils literal"><span class="pre">/GitHub/csinparallel/dev/modules/YourModuleName/source</span></tt>, run the configuration script. To do this, copy the file <a class="reference download internal" href="../_downloads/confscript.py"><tt class="xref download docutils literal"><span class="pre">confscript.py</span></tt></a> into this folder, and double click on it or enter <tt class="docutils literal"><span class="pre">python</span> <span class="pre">confscript.py</span></tt> into a terminal or command line.  Follow the directions to enter your module&#8217;s name (in plain English) and a short description when prompted.</p>
+<div class="section" id="setting-up-the-default-config">
+<h2>Setting up the Default Config<a class="headerlink" href="#setting-up-the-default-config" title="Permalink to this headline">¶</a></h2>
+<p>Copy the example config files into <tt class="docutils literal"><span class="pre">/GitHub/csinparallel/dev/modules/YourModuleName/source</span></tt>, and run the configuration script. To do this, run the following commands</p>
+<div class="highlight-sh"><div class="highlight"><pre><span class="nb">cd </span>Github/csinparallel/dev/modules/YoutModuleName/source
+cp ../../example/source/confscript.py ./
+cp ../../example/source/_static/* _static/
+python2 confscript.py
+</pre></div>
+</div>
+<p>Follow the directions to enter your module&#8217;s name (in plain English) and a short description when prompted.</p>
 <div class="section" id="optional-enabling-latex">
 <h3>Optional: Enabling LaTeX<a class="headerlink" href="#optional-enabling-latex" title="Permalink to this headline">¶</a></h3>
 <p>Most module editors will not need to create LaTeX versions of their modules. If you really want to, though, you&#8217;ll need to open conf.py and change <tt class="docutils literal"><span class="pre">extentions</span> <span class="pre">=</span> <span class="pre">['sphinx.ext.pngmath']</span></tt> to the following:</p>
@@ -166,12 +172,6 @@ to begin. Next, follow these directions below to go through the setup process.</
 </div>
 <div class="section" id="making-the-module">
 <h2>Making the Module<a class="headerlink" href="#making-the-module" title="Permalink to this headline">¶</a></h2>
-<p>Open the Makefile (not make.bat) and find the latexpdf entry. Add this line:</p>
-<blockquote>
-<div><tt class="docutils literal"><span class="pre">tar</span> <span class="pre">-czf</span> <span class="pre">$(BUILDDIR)/latex.tar.gz</span> <span class="pre">$(BUILDDIR)/latex</span></tt></div></blockquote>
-<p>indented with a tab and on a line by itself after this line:</p>
-<blockquote>
-<div><tt class="docutils literal"><span class="pre">$(MAKE)</span> <span class="pre">-C</span> <span class="pre">$(BUILDDIR)/latex</span> <span class="pre">all-pdf</span></tt></div></blockquote>
 <p>You now have enough of a start to see results! From <tt class="docutils literal"><span class="pre">csinparallel/dev/modules/YourModuleName</span></tt>, enter <tt class="docutils literal"><span class="pre">make</span> <span class="pre">html</span></tt>. This will render HTML files from your <tt class="docutils literal"><span class="pre">source</span></tt> folder and place them in your <tt class="docutils literal"><span class="pre">build</span></tt> folder. Click on one to open it!</p>
 <p>The next section of this tutorial will outline how to begin to make changes to what you see here.</p>
 </div>
@@ -221,7 +221,7 @@ to begin. Next, follow these directions below to go through the setup process.</
     </div>
     <div class="footer">
         &copy; Copyright This work is licensed under a Creative Commons Attribution-ShareAlike 3.0 Unported License.
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
     </div>
   </body>
 </html>
