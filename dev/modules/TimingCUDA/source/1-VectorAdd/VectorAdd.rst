@@ -3,13 +3,24 @@ Vector Addition Lab
 *******************
 
 .. warning:: The Unified Memory parts of this lab may not work on your machine.
-    Run the devices program found in the last section to find out if 
-    your machine is compatable
+    Run 
+    
+    ``/usr/local/cuda/samples/1_Utilities/deviceQuery/deviceQuery`` 
+
+    and check that your device's CUDA capability is >= 
+    3.0 If the command gives you an error, you may need
+    to compile the samples like so
+
+    .. code-block:: bash
+
+        cd /usr/local/cuda/samples/1_Utilities/deviceQuery
+        sudo make
+        ./deviceQuery
 
 Research Questions
 ##################
 
-- For what size prolem is the CUDA computation faster than the sequential 
+- For what size problem is the CUDA computation faster than the sequential 
   computation?
 
 - What effect does using Unified Memory have on the speed of our program?
@@ -23,7 +34,7 @@ and extract it with ``tar -xzvf vectorAdd.tar.gz``
 Open vectorAdd.cu and vectorAdd6.cu and familiarize yourself with the code.
 Compile and run the programs.
 
-.. note:: skip compiling vectorAdd6.cu if your machine is incompatable
+.. note:: don't compile vectorAdd6.cu if your machine is incompatable
 
 Run the programs and see what happens.
 

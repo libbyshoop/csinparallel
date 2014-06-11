@@ -54,14 +54,22 @@
 <h1>Vector Addition Lab<a class="headerlink" href="#vector-addition-lab" title="Permalink to this headline">¶</a></h1>
 <div class="admonition warning">
 <p class="first admonition-title">Warning</p>
-<p class="last">The Unified Memory parts of this lab may not work on your machine.
-Run the devices program found in the last section to find out if
-your machine is compatable</p>
+<p>The Unified Memory parts of this lab may not work on your machine.
+Run</p>
+<p><tt class="docutils literal"><span class="pre">/usr/local/cuda/samples/1_Utilities/deviceQuery/deviceQuery</span></tt></p>
+<p>and check that your device&#8217;s CUDA capability is &gt;=
+3.0 If the command gives you an error, you may need
+to compile the samples like so</p>
+<div class="last highlight-bash"><div class="highlight"><pre><span class="nb">cd</span> /usr/local/cuda/samples/1_Utilities/deviceQuery
+sudo make
+./deviceQuery
+</pre></div>
+</div>
 </div>
 <div class="section" id="research-questions">
 <h2>Research Questions<a class="headerlink" href="#research-questions" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
-<li>For what size prolem is the CUDA computation faster than the sequential
+<li>For what size problem is the CUDA computation faster than the sequential
 computation?</li>
 <li>What effect does using Unified Memory have on the speed of our program?</li>
 </ul>
@@ -75,7 +83,7 @@ Open vectorAdd.cu and vectorAdd6.cu and familiarize yourself with the code.
 Compile and run the programs.</p>
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
-<p class="last">skip compiling vectorAdd6.cu if your machine is incompatable</p>
+<p class="last">don&#8217;t compile vectorAdd6.cu if your machine is incompatable</p>
 </div>
 <p>Run the programs and see what happens.</p>
 </div>

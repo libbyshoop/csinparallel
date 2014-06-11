@@ -16,17 +16,6 @@ It allows us to transfer memory between the GPU and CPU and run code on both pro
 CUDA code is written in an extended version of C and CUDA files have the prefix ``.cu`` 
 They are compiled by NVIDIA's nvcc compiler.
 
-Getting Started
-###############
-
-Your instructor will show you how to set up CUDA on your machine or provide you with access 
-to a machine with CUDA already installed.
-Download the 
-:download:`devices.tar.gz <../source_files/devices.tar.gz>`
-and extract it with ``tar -xzvf devices.tar.gz``
-Change into the directory and compile it with ``make devices`` and run ``./devices`` It
-will print out information about your graphics card that will be referenced later in this section.
-
 Challenges
 ##########
 
@@ -45,7 +34,23 @@ Memory management in CUDA
 CUDA 6 Unified Memory
 *********************
 
-.. warning:: This section is for CUDA 6 only. The following methods won't work on all devices. Check the output of the devices program to see if your machine is CUDA six compatable.
+.. warning:: This section is for CUDA 6 only. 
+    The following methods won't work on all devices. 
+    You must use Windows or Linux and have a device with
+    compute capability >= 3.0. To find the 
+    compute capability of your device run 
+
+    ``/usr/local/cuda/samples/1_Utilities/deviceQuery/deviceQuery``
+
+    and look at the CUDA capablity line.
+    If that command doesn't work you may have to build
+    the code:
+
+    .. code-block:: bash
+
+        cd /usr/local/cuda/samples/1_Utilities/deviceQuery
+        sudo make
+        ./deviceQuery
 
 GPUs have their own dedicated RAM that is seperate from the RAM the CPU can use.
 If we want both the CPU and GPU to be able to access a value we must tell our program to allocate unified memory.
@@ -90,15 +95,17 @@ You will see why later on in the lab.
 Host Code vs. Device Code
 #########################
 
-Because CPU code and GPU code are not interchangeable we must tell the compiler whether our functions will run on the CPU or the GPU.
+Because CPU code and GPU code use different instruction 
+sets we must tell the compiler whether our functions
+will run on the CPU or the GPU.
 We do this with three new modifiers. 
 
 #. ``__global__`` functions run on the GPU and can be called anywhere in the program. 
    These functions are called kernels because they contain the information threads used to create threads.
-#. ``__device__`` functions run on the GPU and can only be called by ``__global__`` and other ``__device__`` methods. 
+#. ``__device__`` functions run on the GPU and can only be called by ``__global__`` and other ``__device__`` methods.
    They tend to be helper methods called by threads.
 #. ``__host__`` functions are run on the CPU and can only be called by other ``__host__`` methods.
-   If you don't add one of these modifiers to a function definition the compiler assumes it's a ``__host__`` function.
+   If you don't add one of these modifiers to a function definition the compiler assumes it's a ``__host__`` function. It's also possible for a function to be both ``__host__`` and ``__device__`` this is useful because it allows you to test GPU functions on the CPU.
 
 Threads
 #######
@@ -118,7 +125,12 @@ Threads in the same block all have access to a local shared memory which is fast
 CUDA provides a handy type, ``dim3`` to keep track of these dimensions you can declare dimensions like this ``dim3 myDimensions(1,2,3);`` 
 Both blocks and grids use this type even though grids are 2D.
 To use a ``dim3`` as a grid dimension, leave out the last argument or set it to one.
-Each device has it's own limit on the dimensions of blocks, the devices program will show you the specifications of your GPU.
+Each device has it's own limit on the dimensions of blocks.
+Run 
+
+``/usr/local/cuda/samples/1_Utilities/deviceQuery/deviceQuery`` 
+
+to find the limits for your device.
 
 Kernels
 #######
@@ -154,4 +166,8 @@ Compiling
 CUDA code is compiled with NVIDIA's own compiler nvcc.
 You can still use makefiles like you do with regular c.
 To make sure your code is taking full advantage of your device's capabilities use the flag
-``-gencode arch=compute_XX,code=sm_XX`` you can find the correct values of the Xs by running the devices program.
+``-gencode arch=compute_XX,code=sm_XX`` you can find the correct values of the Xs by running 
+
+``/usr/local/cuda/samples/1_Utilities/deviceQuery/deviceQuery`` 
+
+and using at the output of the CUDA capability line without the period.

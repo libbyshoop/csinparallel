@@ -26,7 +26,7 @@
     <link rel="shortcut icon" href="../_static/favicon.ico"/>
     <link rel="top" title="Timing CUDA Operations" href="../index.html" />
     <link rel="next" title="Vector Addition Lab" href="../1-VectorAdd/VectorAdd.html" />
-    <link rel="prev" title="CUDA Vector Addition module" href="../index.html" /> 
+    <link rel="prev" title="Timing CUDA Operations" href="../index.html" /> 
   </head>
   <body>
     <div class="related">
@@ -39,7 +39,7 @@
           <a href="../1-VectorAdd/VectorAdd.html" title="Vector Addition Lab"
              accesskey="N">next</a> |</li>
         <li class="right" >
-          <a href="../index.html" title="CUDA Vector Addition module"
+          <a href="../index.html" title="Timing CUDA Operations"
              accesskey="P">previous</a> |</li>
         <li><a href="../index.html">Timing CUDA Operations</a> &raquo;</li> 
       </ul>
@@ -64,16 +64,6 @@ It allows us to transfer memory between the GPU and CPU and run code on both pro
 CUDA code is written in an extended version of C and CUDA files have the prefix <tt class="docutils literal"><span class="pre">.cu</span></tt>
 They are compiled by NVIDIA&#8217;s nvcc compiler.</p>
 </div>
-<div class="section" id="getting-started">
-<h2>Getting Started<a class="headerlink" href="#getting-started" title="Permalink to this headline">¶</a></h2>
-<p>Your instructor will show you how to set up CUDA on your machine or provide you with access
-to a machine with CUDA already installed.
-Download the
-<a class="reference download internal" href="../_downloads/devices.tar.gz"><tt class="xref download docutils literal"><span class="pre">devices.tar.gz</span></tt></a>
-and extract it with <tt class="docutils literal"><span class="pre">tar</span> <span class="pre">-xzvf</span> <span class="pre">devices.tar.gz</span></tt>
-Change into the directory and compile it with <tt class="docutils literal"><span class="pre">make</span> <span class="pre">devices</span></tt> and run <tt class="docutils literal"><span class="pre">./devices</span></tt> It
-will print out information about your graphics card that will be referenced later in this section.</p>
-</div>
 <div class="section" id="challenges">
 <h2>Challenges<a class="headerlink" href="#challenges" title="Permalink to this headline">¶</a></h2>
 <p>CUDA programming is fundamentally different from regular programming because the code is run on two seperate processors, the host CPU and the device GPU.
@@ -90,7 +80,20 @@ This makes coding more difficult because</p>
 <h3>CUDA 6 Unified Memory<a class="headerlink" href="#cuda-6-unified-memory" title="Permalink to this headline">¶</a></h3>
 <div class="admonition warning">
 <p class="first admonition-title">Warning</p>
-<p class="last">This section is for CUDA 6 only. The following methods won&#8217;t work on all devices. Check the output of the devices program to see if your machine is CUDA six compatable.</p>
+<p>This section is for CUDA 6 only.
+The following methods won&#8217;t work on all devices.
+You must use Windows or Linux and have a device with
+compute capability &gt;= 3.0. To find the
+compute capability of your device run</p>
+<p><tt class="docutils literal"><span class="pre">/usr/local/cuda/samples/1_Utilities/deviceQuery/deviceQuery</span></tt></p>
+<p>and look at the CUDA capablity line.
+If that command doesn&#8217;t work you may have to build
+the code:</p>
+<div class="last highlight-bash"><div class="highlight"><pre><span class="nb">cd</span> /usr/local/cuda/samples/1_Utilities/deviceQuery
+sudo make
+./deviceQuery
+</pre></div>
+</div>
 </div>
 <p>GPUs have their own dedicated RAM that is seperate from the RAM the CPU can use.
 If we want both the CPU and GPU to be able to access a value we must tell our program to allocate unified memory.</p>
@@ -137,7 +140,9 @@ You will see why later on in the lab.</p>
 </div>
 <div class="section" id="host-code-vs-device-code">
 <h2>Host Code vs. Device Code<a class="headerlink" href="#host-code-vs-device-code" title="Permalink to this headline">¶</a></h2>
-<p>Because CPU code and GPU code are not interchangeable we must tell the compiler whether our functions will run on the CPU or the GPU.
+<p>Because CPU code and GPU code use different instruction
+sets we must tell the compiler whether our functions
+will run on the CPU or the GPU.
 We do this with three new modifiers.</p>
 <ol class="arabic simple">
 <li><tt class="docutils literal"><span class="pre">__global__</span></tt> functions run on the GPU and can be called anywhere in the program.
@@ -145,7 +150,7 @@ These functions are called kernels because they contain the information threads 
 <li><tt class="docutils literal"><span class="pre">__device__</span></tt> functions run on the GPU and can only be called by <tt class="docutils literal"><span class="pre">__global__</span></tt> and other <tt class="docutils literal"><span class="pre">__device__</span></tt> methods.
 They tend to be helper methods called by threads.</li>
 <li><tt class="docutils literal"><span class="pre">__host__</span></tt> functions are run on the CPU and can only be called by other <tt class="docutils literal"><span class="pre">__host__</span></tt> methods.
-If you don&#8217;t add one of these modifiers to a function definition the compiler assumes it&#8217;s a <tt class="docutils literal"><span class="pre">__host__</span></tt> function.</li>
+If you don&#8217;t add one of these modifiers to a function definition the compiler assumes it&#8217;s a <tt class="docutils literal"><span class="pre">__host__</span></tt> function. It&#8217;s also possible for a function to be both <tt class="docutils literal"><span class="pre">__host__</span></tt> and <tt class="docutils literal"><span class="pre">__device__</span></tt> this is useful because it allows you to test GPU functions on the CPU.</li>
 </ol>
 </div>
 <div class="section" id="threads">
@@ -159,7 +164,10 @@ Threads in the same block all have access to a local shared memory which is fast
 <p>CUDA provides a handy type, <tt class="docutils literal"><span class="pre">dim3</span></tt> to keep track of these dimensions you can declare dimensions like this <tt class="docutils literal"><span class="pre">dim3</span> <span class="pre">myDimensions(1,2,3);</span></tt>
 Both blocks and grids use this type even though grids are 2D.
 To use a <tt class="docutils literal"><span class="pre">dim3</span></tt> as a grid dimension, leave out the last argument or set it to one.
-Each device has it&#8217;s own limit on the dimensions of blocks, the devices program will show you the specifications of your GPU.</p>
+Each device has it&#8217;s own limit on the dimensions of blocks.
+Run</p>
+<p><tt class="docutils literal"><span class="pre">/usr/local/cuda/samples/1_Utilities/deviceQuery/deviceQuery</span></tt></p>
+<p>to find the limits for your device.</p>
 </div>
 <div class="section" id="kernels">
 <h2>Kernels<a class="headerlink" href="#kernels" title="Permalink to this headline">¶</a></h2>
@@ -192,7 +200,9 @@ For a one dimensional grid and a one dimesional block this formula is <tt class=
 <p>CUDA code is compiled with NVIDIA&#8217;s own compiler nvcc.
 You can still use makefiles like you do with regular c.
 To make sure your code is taking full advantage of your device&#8217;s capabilities use the flag
-<tt class="docutils literal"><span class="pre">-gencode</span> <span class="pre">arch=compute_XX,code=sm_XX</span></tt> you can find the correct values of the Xs by running the devices program.</p>
+<tt class="docutils literal"><span class="pre">-gencode</span> <span class="pre">arch=compute_XX,code=sm_XX</span></tt> you can find the correct values of the Xs by running</p>
+<p><tt class="docutils literal"><span class="pre">/usr/local/cuda/samples/1_Utilities/deviceQuery/deviceQuery</span></tt></p>
+<p>and using at the output of the CUDA capability line without the period.</p>
 </div>
 </div>
 
@@ -210,7 +220,6 @@ To make sure your code is taking full advantage of your device&#8217;s capabilit
 <li><a class="reference internal" href="#">Programming in CUDA</a><ul>
 <li><a class="reference internal" href="#introduction">Introduction</a></li>
 <li><a class="reference internal" href="#what-is-cuda">What is CUDA?</a></li>
-<li><a class="reference internal" href="#getting-started">Getting Started</a></li>
 <li><a class="reference internal" href="#challenges">Challenges</a></li>
 <li><a class="reference internal" href="#memory-management-in-cuda">Memory management in CUDA</a><ul>
 <li><a class="reference internal" href="#cuda-6-unified-memory">CUDA 6 Unified Memory</a></li>
@@ -227,7 +236,7 @@ To make sure your code is taking full advantage of your device&#8217;s capabilit
 
   <h4>Previous topic</h4>
   <p class="topless"><a href="../index.html"
-                        title="previous chapter">CUDA Vector Addition module</a></p>
+                        title="previous chapter">Timing CUDA Operations</a></p>
   <h4>Next topic</h4>
   <p class="topless"><a href="../1-VectorAdd/VectorAdd.html"
                         title="next chapter">Vector Addition Lab</a></p>
@@ -258,7 +267,7 @@ To make sure your code is taking full advantage of your device&#8217;s capabilit
           <a href="../1-VectorAdd/VectorAdd.html" title="Vector Addition Lab"
              >next</a> |</li>
         <li class="right" >
-          <a href="../index.html" title="CUDA Vector Addition module"
+          <a href="../index.html" title="Timing CUDA Operations"
              >previous</a> |</li>
         <li><a href="../index.html">Timing CUDA Operations</a> &raquo;</li> 
       </ul>
