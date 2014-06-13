@@ -23,7 +23,7 @@ in your lectures.
    :maxdepth: 1
 
    0-Architecture/Architecture
-
+   1-Mandelbrot/Mandelbrot
 
 
 .. comment
