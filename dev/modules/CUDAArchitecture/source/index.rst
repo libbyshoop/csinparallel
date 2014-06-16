@@ -24,6 +24,7 @@ in your lectures.
 
    0-Architecture/Architecture
    1-Mandelbrot/Mandelbrot
+   2-Findings/Findings
 
 
 .. comment
