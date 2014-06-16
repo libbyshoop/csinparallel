@@ -2,76 +2,86 @@ Choosing the right Dimensions
 =============================
 
 One of the most important elements of CUDA programming is
-choosing the right number of blocks and threads for the 
-problem size. We must first answer the question, what effect
-does the CUDA architectue have on execution times for problems
-with different thread dimensions?
+choosing the right grid and block dimensions for the 
+problem size. However it's not always clear which dimensions
+to choose so we created an expiriment to answer the following
+question: What effect do the grid and block dimensions have 
+on execution times?
 
-To answer these questions, we wrote a 
-:download:`script <test.sh>` to run our code for every 
+To answer this questions, we wrote a 
+:download:`script <test.sh>` to run our mandelbrot code
+for every 
 block size between 1 and 512 and every number of threads 
 per block between 1 and 512 which produced 262,144 data
-points. We chose these points because our picture is
-512x512 with the largest dimensions there is one thread 
-working per pixel.
+points. We chose these ranges because our picture is
+512x512 so each thread will calculate the value of at least
+one pixel.
 
 The device we ran the tests on was a Jetson TK1 which has
 one Streaming Multiprocessor with 192 CUDA cores. To ensure
-that our code was the only thing running on the Jetson, we
+that our code was the only thing running on the GPU, we
 first disabled the X server.
 
 Results
 #######
 
-We created a 3D graph of our results where the z axis is the
-log\ :sub:`2`\ (time) (we took the log so that all results
-fit neatly on the graph).
+This is a 3D graph of our results where the z axis is the
+log\ :sub:`2`\ (time) we took the log so that all results
+fit neatly on the graph.
 
-.. figure:: 
+.. figure:: mediumPlot.png
+    :align: center
+    :figclass: align-center
+    :width: 768
+    :height: 768
+    :alt: Execution time
+
 
 
 There are a number of interesting things to note about this
 graph:
 
-- There are convex lines running through the middle of the 
-  graph
+- Trials with one block and many threads are faster than
+  trials with many blocks of one thread each.
 
-- There are spikes in execution time after every 32 threads
-  per block
+- There are horizontal lines indicating a spike in execution
+  time after every 32 threads per block
 
 - 512 threads per 512 blocks was the fastest execution time
 
-- x threads in 1 block is faster than 1 thread in x blocks
+- There are convex lines running through the middle of the 
+  graph
 
 Each of these observations relates directly to CUDA's
-architecture and the specifics of the code. 
+architecture or the specifics of the code. 
 
-x threads in 1 block is always faster than 1 thread in x
-blocks. This is because only one block at a time can be run
+Many threads in 1 block is always faster than many blocks of one thread because only one block at a time can be run
 on any given CUDA core, therefore when the blocks are divided
 into warps, there is only one thread per core versus 32
-threads per core when there is only one block.
+threads per core.
 
-Warp size also explains the horizontal lines ever multiple of
-32 threads per block. When threads per block is a multiple of
-32, each block uses the full resources of any given CUDA core
-, but when there are (32 * x) + 1 threads, every block uses
+Warp size also explains the horizontal lines every
+32 threads per block. When block are are evenly divisible
+into warps of 32, each block uses the full resources of the
+CUDA cores on which it is run, but when there are (32 * x) + 
+1 threads, every block uses
 a full CUDA core to run only one thread, which accounts for 
 the slowdown.
 
 512x512 is the fastest execution time even though the GPU
-can't runn that many threads at a time. this is because 
-creating threads is a very inexpensive operation on CUDA
+can't run that many threads at a time. This is because 
+it is inexpensive to create threads on a CUDA card.
 cards and having one pixel per thread allows the GPU to
-most efficently schedule it's resources.
+most efficently schedule warps as the CUDA cores become free.
 
 The convex lines appear for a few different reasons. The
-having to do with our code. When the picture is evenly
+first has to do with our code. When the picture is evenly
 divisible by the total number of threads and blocks, each 
-thread performs the same amount of work. Secondly when block
-and grid dimensions are about roughly equal, the block
-and warp schedulers share the work of dividing the threads
-rather than counting exclusively on one of them.
+thread performs the same amount of work so the CUDA cores
+don't have to wait for threads calculating extra pixels. 
+Second, when block and grid dimensions are about roughly 
+equal, the block and warp schedulers share the work of 
+dividing the threads.
 
 CUDA best practices
 ###################
