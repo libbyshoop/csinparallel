@@ -55,7 +55,7 @@ to choose so we created an expiriment to answer the following
 question: What effect do the grid and block dimensions have
 on execution times?</p>
 <p>To answer this questions, we wrote a
-<tt class="xref download docutils literal"><span class="pre">script</span></tt> to run our mandelbrot code
+<a class="reference download internal" href="../_downloads/testMandelbrot.sh"><tt class="xref download docutils literal"><span class="pre">script</span></tt></a> to run our mandelbrot code
 for every
 block size between 1 and 512 and every number of threads
 per block between 1 and 512 which produced 262,144 data
@@ -68,11 +68,12 @@ that our code was the only thing running on the GPU, we
 first disabled the X server.</p>
 <div class="section" id="results">
 <h2>Results<a class="headerlink" href="#results" title="Permalink to this headline">¶</a></h2>
-<p>This is a 3D graph of our results where the z axis is the
+<p>This is a 3D graph of our <a class="reference download internal" href="../_downloads/results.txt"><tt class="xref download docutils literal"><span class="pre">results</span></tt></a>
+where the z axis is the
 log<sub>2</sub>(time) we took the log so that all results
 fit neatly on the graph.</p>
 <div class="align-center figure">
-<a class="reference internal image-reference" href="2-Findings/mediumPlot.png"><img alt="Execution time" src="2-Findings/mediumPlot.png" style="width: 768px; height: 768px;" /></a>
+<a class="reference internal image-reference" href="../_images/MediumPlot.png"><img alt="Execution time" src="../_images/MediumPlot.png" style="width: 768px; height: 510px;" /></a>
 </div>
 <p>There are a number of interesting things to note about this
 graph:</p>

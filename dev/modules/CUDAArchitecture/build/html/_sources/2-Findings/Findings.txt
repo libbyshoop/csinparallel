@@ -9,7 +9,7 @@ question: What effect do the grid and block dimensions have
 on execution times?
 
 To answer this questions, we wrote a 
-:download:`script <test.sh>` to run our mandelbrot code
+:download:`script <testMandelbrot.sh>` to run our mandelbrot code
 for every 
 block size between 1 and 512 and every number of threads 
 per block between 1 and 512 which produced 262,144 data
@@ -25,18 +25,17 @@ first disabled the X server.
 Results
 #######
 
-This is a 3D graph of our results where the z axis is the
+This is a 3D graph of our :download:`results <results.txt>`
+where the z axis is the
 log\ :sub:`2`\ (time) we took the log so that all results
 fit neatly on the graph.
 
-.. figure:: mediumPlot.png
+.. figure:: MediumPlot.png
     :align: center
     :figclass: align-center
     :width: 768
-    :height: 768
+    :height: 510
     :alt: Execution time
-
-
 
 There are a number of interesting things to note about this
 graph:

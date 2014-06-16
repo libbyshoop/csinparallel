@@ -25,7 +25,8 @@ first disabled the X server.
 Results
 #######
 
-This is a 3D graph of our results where the z axis is the
+This is a 3D graph of our :download:`results <results.txt>`
+where the z axis is the
 log\ :sub:`2`\ (time) we took the log so that all results
 fit neatly on the graph.
 
@@ -33,10 +34,8 @@ fit neatly on the graph.
     :align: center
     :figclass: align-center
     :width: 768
-    :height: 768
+    :height: 510
     :alt: Execution time
-
-
 
 There are a number of interesting things to note about this
 graph:
