@@ -2,7 +2,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#define WIDTH 10        /* number of elements in each array */
+#define WIDTH 4096        /* number of elements in each array */
 #define MAX_NAME 80     /* lenght of character array for name of the nodes */
 #define FROM_MASTER 1   /* message sent from master */
 #define FROM_WORKER 2   /* message sent from workers*/

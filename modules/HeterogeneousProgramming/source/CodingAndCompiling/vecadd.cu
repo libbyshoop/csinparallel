@@ -2,9 +2,10 @@
 #include <cuda.h>
 
 /* kernel function */
-__global__ void kernel(int *a, int *b, int *c) {
+__global__ void kernel(int *a, int *b, int *c, int size) {
     int index = blockIdx.x * blockDim.x + threadIdx.x;
-    c[index] = a[index] + b[index];
+    if (index < size)
+        c[index] = a[index] + b[index];
 }
 
 /* function to be called in the MPI program, and size is the number of elements in array */
@@ -23,7 +24,7 @@ extern "C" void run_kernel(int *a, int *b, int *c, int size, int nblocks, int nt
     cudaMemcpy(dev_b, b, sizeof(int)*size, cudaMemcpyHostToDevice);
 
     /* Calling the kernel function to do calculation */
-    kernel<<<nblocks, nthreads>>>(dev_a, dev_b, dev_c);
+    kernel<<<nblocks, nthreads>>>(dev_a, dev_b, dev_c, size);
 
     /* Copy the result array from device to host*/
     cudaMemcpy(c, dev_c, sizeof(int)*size, cudaMemcpyDeviceToHost);
