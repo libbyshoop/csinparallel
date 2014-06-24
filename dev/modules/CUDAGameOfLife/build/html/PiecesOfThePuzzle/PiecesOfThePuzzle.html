@@ -1,3 +1,5 @@
+
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
@@ -53,19 +55,13 @@
 <h1>Pieces of the Puzzle<a class="headerlink" href="#pieces-of-the-puzzle" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="contents">
 <h2>Contents<a class="headerlink" href="#contents" title="Permalink to this headline">¶</a></h2>
-<ul>
-<li><dl class="first docutils">
-<dt><a class="reference internal" href="#pieces-of-the-puzzle">Pieces of the Puzzle</a></dt>
-<dd><ul class="first last simple">
+<ul class="simple">
 <li><a class="reference internal" href="#an-illustrative-example">An Illustrative Example</a></li>
+<li><a class="reference internal" href="#how-the-cuda-code-is-different">How the CUDA code is different</a></li>
 <li><a class="reference internal" href="#execution-configuration">Execution Configuration</a></li>
 <li><a class="reference internal" href="#memory-management">Memory Management</a></li>
 </ul>
-</dd>
-</dl>
-</li>
-</ul>
-<p>CUDA encourages an approach to solving parrallelizable problems that is likely unfamiliar and novel. CUDA also exposes a level of control that can be daunting, but promises the programmer the ability to squeeze out every ounce of performance from their CUDA-enabled GPU. Because of these unique features, learning to understand how to write CUDA programs is akin to solving a jigsaw puzzle — you must grasp a few different concepts before the bigger picture comes together.</p>
+<p>CUDA encourages an approach to solving parallelizable problems that is likely unfamiliar and novel. CUDA also exposes a level of control that can be daunting, but promises the programmer the ability to squeeze out every ounce of performance from their CUDA-enabled GPU. Because of these unique features, learning to write CUDA programs is akin to solving a jigsaw puzzle — you must grasp a few different concepts before the bigger picture comes together.</p>
 <p>A good way to learn CUDA is to compare typical CPU-only code with CUDA code. We&#8217;ll show you an example in the next section. Pay attention to what&#8217;s different and <em>why</em>; doing so should reveal how programming in CUDA is a unique. After the example, we&#8217;ll go into more detail about some of the pieces of the puzzle.</p>
 </div>
 <div class="section" id="an-illustrative-example">
@@ -238,7 +234,7 @@ cudaError_t cudaMemcpy(void *dst, const void *src, size_t size, enum cudaMemcpyK
     </div>
     <div class="footer">
         &copy; Copyright This work is licensed under a Creative Commons Attribution-ShareAlike 3.0 Unported License.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2b1.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
     </div>
   </body>
 </html>
