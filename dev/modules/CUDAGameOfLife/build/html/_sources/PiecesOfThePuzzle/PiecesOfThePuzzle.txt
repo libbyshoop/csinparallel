@@ -5,12 +5,12 @@ Pieces of the Puzzle
 Contents
 ~~~~~~~~~
 
-* `Pieces of the Puzzle`_
-	- `An Illustrative Example`_
-	- `Execution Configuration`_
-	- `Memory Management`_
+* `An Illustrative Example`_
+* `How the CUDA code is different`_
+* `Execution Configuration`_
+* `Memory Management`_
 
-CUDA encourages an approach to solving parrallelizable problems that is likely unfamiliar and novel. CUDA also exposes a level of control that can be daunting, but promises the programmer the ability to squeeze out every ounce of performance from their CUDA-enabled GPU. Because of these unique features, learning to understand how to write CUDA programs is akin to solving a jigsaw puzzle — you must grasp a few different concepts before the bigger picture comes together.
+CUDA encourages an approach to solving parallelizable problems that is likely unfamiliar and novel. CUDA also exposes a level of control that can be daunting, but promises the programmer the ability to squeeze out every ounce of performance from their CUDA-enabled GPU. Because of these unique features, learning to write CUDA programs is akin to solving a jigsaw puzzle — you must grasp a few different concepts before the bigger picture comes together.
 
 A good way to learn CUDA is to compare typical CPU-only code with CUDA code. We'll show you an example in the next section. Pay attention to what's different and *why*; doing so should reveal how programming in CUDA is a unique. After the example, we'll go into more detail about some of the pieces of the puzzle.
 
@@ -43,6 +43,7 @@ The solutions for the elements in ``result`` are computed sequentially -- one el
     	    ... // copy the input vectors to the GPU's memory
     	    add_vectors_kernel<<<1, length>>>(result_dev, a_dev, b_dev);
 	}
+
 Now that you've seen some CUDA, see if this makes sense (it's OK if it doesn't yet). A kernel (indicated by the ``__global__`` keyword) is a bit of code that runs on the GPU. One executes many copies of the ``kernel`` at a time by creating a grid of ``blocks``. Each block is composed of ``threads``, where each thread executes a single copy of the kernel. Each thread is given a unique ID so that it can differentiate itself from the other threads.
 
 How the CUDA code is different
@@ -103,6 +104,7 @@ In the previous examples, we have explained how to setup an execution configurat
 	2. copy data from the host to the allocated device memory
 	#. invoke the kernel
 	#. copy the results from the device to the host
+
 To give an example of how this is achieved we will look back at the vector addition example::
 
 	__global__ void add_vectors_kernel(int *results_dev, int *a_dev, int *b_dev) {

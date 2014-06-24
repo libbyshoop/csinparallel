@@ -17,7 +17,6 @@ To this day, commodity CPUs are only capable of running around 6 real simultaneo
 
 	Image source:  *NVIDIA CUDA Programming Guide v. 4.0* (pg. 3)
 
-
 CUDA was developed and released by NVIDIA in 2006. The goal of CUDA was to provide a standard general purpose computing architecture and instruction. All NVIDIA cards released since 2006 are CUDA enabled.
 
 ..
