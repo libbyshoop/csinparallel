@@ -82,6 +82,47 @@ Second, when block and grid dimensions are about roughly
 equal, the block and warp schedulers share the work of 
 dividing the threads.
 
+Adding More Streaming Multiprocessors
+#####################################
+
+We executed our code again on a GeForce GTX 480 card that 
+has 15 SMs with 32 CUDA cores each. 
+
+.. figure:: Dev0Medium.png
+    :align: center
+    :figclass: align-center
+    :width: 768
+    :height: 510
+    :alt: Execution time
+
+This graph also features horizontal lines at multiples of 
+32 coresponding to the warp size, concave lines, and a top
+execution speed at 512x512. However there are 2 important
+differences.
+
+First, one block of many threads and many blocks with one
+thread each take about the same amount of time to execute.
+When many blocks of one thread are executed 32 of them can
+be assigned to any given SM. They each preform run one
+thread per CUDA core so 15*32=480 threads can be run
+simultaneously. When one block of many threads is executed
+It runs on one SM and the threads are broken up into warps
+of 32 to run on the 32 CUDA cores so 32*32=1024 threads 
+can run at once. However since we never run blocks with more
+than 512 threads the difference between many threads
+and many blocks is quite small.
+
+The Second difference is a series of valleys running 
+perpendicular to the warp lines about every 15 blocks.
+These valleys come from the way blocks are distributed
+between the SMs. When the block size is a multiple of the
+number of SMs, each processor will do the about same
+amount of work. However, as the number of blocks increases
+this difference becomes less and less important because
+the blocks don't all take the same amount of time to execute
+and so it's possible for three blocks to execute on one SM
+in the time it takes for another to execute 2.
+
 CUDA best practices
 ###################
 
@@ -94,3 +135,5 @@ From these results we can draw up a list of best practices:
 #. Keep the amount of work each thread does constant, it's inefficent to have one thread perform calculations for two pixels while the rest only calculate one.
 
 #. When in doubt use more threads not less, creating threads is inexpensive.
+
+#. Try to have a block size that is a multiple of the numberof SMs on your device, this is less important than the other tips.

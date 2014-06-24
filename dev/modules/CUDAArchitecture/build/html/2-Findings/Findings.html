@@ -113,6 +113,39 @@ Second, when block and grid dimensions are about roughly
 equal, the block and warp schedulers share the work of
 dividing the threads.</p>
 </div>
+<div class="section" id="adding-more-streaming-multiprocessors">
+<h2>Adding More Streaming Multiprocessors<a class="headerlink" href="#adding-more-streaming-multiprocessors" title="Permalink to this headline">¶</a></h2>
+<p>We executed our code again on a GeForce GTX 480 card that
+has 15 SMs with 32 CUDA cores each.</p>
+<div class="align-center figure">
+<a class="reference internal image-reference" href="../_images/Dev0Medium.png"><img alt="Execution time" src="../_images/Dev0Medium.png" style="width: 768px; height: 510px;" /></a>
+</div>
+<p>This graph also features horizontal lines at multiples of
+32 coresponding to the warp size, concave lines, and a top
+execution speed at 512x512. However there are 2 important
+differences.</p>
+<p>First, one block of many threads and many blocks with one
+thread each take about the same amount of time to execute.
+When many blocks of one thread are executed 32 of them can
+be assigned to any given SM. They each preform run one
+thread per CUDA core so 15*32=480 threads can be run
+simultaneously. When one block of many threads is executed
+It runs on one SM and the threads are broken up into warps
+of 32 to run on the 32 CUDA cores so 32*32=1024 threads
+can run at once. However since we never run blocks with more
+than 512 threads the difference between many threads
+and many blocks is quite small.</p>
+<p>The Second difference is a series of valleys running
+perpendicular to the warp lines about every 15 blocks.
+These valleys come from the way blocks are distributed
+between the SMs. When the block size is a multiple of the
+number of SMs, each processor will do the about same
+amount of work. However, as the number of blocks increases
+this difference becomes less and less important because
+the blocks don&#8217;t all take the same amount of time to execute
+and so it&#8217;s possible for three blocks to execute on one SM
+in the time it takes for another to execute 2.</p>
+</div>
 <div class="section" id="cuda-best-practices">
 <h2>CUDA best practices<a class="headerlink" href="#cuda-best-practices" title="Permalink to this headline">¶</a></h2>
 <p>From these results we can draw up a list of best practices:</p>
@@ -121,6 +154,7 @@ dividing the threads.</p>
 <li>Keep the number of threads per block and the number of blocks as close to equal as you can without violating the first tip</li>
 <li>Keep the amount of work each thread does constant, it&#8217;s inefficent to have one thread perform calculations for two pixels while the rest only calculate one.</li>
 <li>When in doubt use more threads not less, creating threads is inexpensive.</li>
+<li>Try to have a block size that is a multiple of the numberof SMs on your device, this is less important than the other tips.</li>
 </ol>
 </div>
 </div>
@@ -138,6 +172,7 @@ dividing the threads.</p>
   <ul>
 <li><a class="reference internal" href="#">Choosing the right Dimensions</a><ul>
 <li><a class="reference internal" href="#results">Results</a></li>
+<li><a class="reference internal" href="#adding-more-streaming-multiprocessors">Adding More Streaming Multiprocessors</a></li>
 <li><a class="reference internal" href="#cuda-best-practices">CUDA best practices</a></li>
 </ul>
 </li>
