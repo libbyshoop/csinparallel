@@ -38,8 +38,10 @@ tends towards infinity. If we plot the real values of C on the X
 axis and the imaginary values of C on the Y axis we get a two 
 dimensional fractal shape.
 
-If that doesn't help just think of the strange but pretty shape 
-that's on the cover of every math textbook published since 1980.
+.. figure:: set.jpg
+    :align: center
+    :figclass: align-center
+    :alt: The Mandelbrot Set
 
 Coding the Mandelbrot set
 #########################
@@ -82,8 +84,9 @@ floating point multiplications, our code looks like this:
     }
 
 But wait didn't we say in the last module that conditionals 
-don't speed up CUDA code? Yes, usually they don't however
-due to the nature of the mandelbrot set it is very likely
+should be avoided? Yes, when a thread returns early, it's
+just dead weight in the warp, howerver due to the nature of
+the mandelbrot set it is very likely
 that some warps have threads that all terminate before 
 reaching ``max_iter`` so in some cases it will give us a
 slight speed up. If the warp contains a point within the 
@@ -126,6 +129,13 @@ In order to compensate for block and grid dimensions that
 do not easily divide the picture we make the first threads
 pick up the 'slack.' This is also the reason why we are not
 using 2 dimensional grids and blocks.
+
+.. warning::
+    Always try to make your threads do the same amount of work.
+    Scheduling extra work for some threads is inefficient since
+    the other threads in the warp will have to wait for them to 
+    finish anyway. This code is purposefully messy so that it 
+    runs for any problem size.
 
 That's the meat of the program, feel free to explore the
 it on your own, most of the rest of the program is dedicated

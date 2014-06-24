@@ -22,11 +22,15 @@ Streaming Multiprocessors are composed of several CUDA cores.
 The exact numbers depend on your device, see the Finding your
 Device Specifications sections for details. 
 
-Each of these cores can perform instructions on a warp of 
-threads simultaneously. Warp is a term that comes from weaving 
-and simply means a group of threads. All CUDA cards to date have
-used a warp size of 32. Essentially this means that one CUDA core
-can perform one instruction on 32 threads in only 4 clock cycles!
+CUDA cores are grouped together to perform instructions on
+a warp of threads. Warp simply means a group of threads and
+all CUDA cards to date use a warp size of 32.
+Depending on the model, the cores may be
+double or quadruple pumped so that the execute one instruction
+on two or four threads in as many clock cycles.
+For instance, Tesla devices use a group of 8 quadpumped cores
+to execute a single warp. If there are less than 32 threads in
+the warp, it will still take as long to execute the instructions.
 
 Virtual Architecture
 ####################
@@ -44,10 +48,9 @@ SM becomes free.
 
 Once a block is assigned to an SM, it's threads are split into
 warps by the warp scheduler and executed on the CUDA cores. 
-If a thread terminates before the other threads in its warp then
-it will continue to take up 'space' in the warp even though no 
-instructions are being run on it. For this reason, conditionals 
-in device code rarely provide speedup.
+Since all the same instruction is executed on each thread in the
+warp simultaneously it's generally a bad idea to have
+conditionals in kernel code.
 
 Furthermore warps are always allocated the same way
 if theads 0-31 are execute in a warp for one block, they will be
@@ -56,25 +59,9 @@ executed in the same warp for every block in the grid.
 Because a warp's context (it's registers, program counter etc.)
 stays on chip for the life of the warp, there is no additional
 cost to switching between warps vs executing the next step of a 
-given warp.
-
-.. figure:: splittingblocks.png
-    :align: center
-    :alt: blocks are assigned to available SMs
-    :figclass: align-center
-    :width: 512px
-    :height: 512px
-
-    *Thread blocks are assigned to available SMs*
-    
-.. figure:: warpscheduling.png
-    :align: center
-    :alt: SMs divide blocks into warps and execute them on CUDA cores
-    :figclass: align-center
-    :width: 512px
-    :height: 512px
-
-    *SMs divide blocks into warps and execute them on CUDA cores*
+given warp. This allows the GPU to switch to hide some of it's
+memory latency by switching to a new warp while it waits for a
+costly read.
 
 CUDA Memory
 ###########
