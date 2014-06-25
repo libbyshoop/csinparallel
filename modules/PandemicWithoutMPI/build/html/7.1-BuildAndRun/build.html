@@ -1,0 +1,226 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Build and Run &mdash; Pandemic Exemplar with OpenMP</title>
+    
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="top" title="Pandemic Exemplar with OpenMP" href="../index.html" />
+    <link rel="next" title="Including OpenMP" href="../8-OpenMP/openmp.html" />
+    <link rel="prev" title="Finish Functions" href="../7-Finalize/finalize.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../8-OpenMP/openmp.html" title="Including OpenMP"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="../7-Finalize/finalize.html" title="Finish Functions"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../index.html">Pandemic Exemplar with OpenMP</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="build-and-run">
+<h1>Build and Run<a class="headerlink" href="#build-and-run" title="Permalink to this headline">¶</a></h1>
+<p>When you create the executable for this program, you will need to set some flags that are particular for your machine, particularly if you want to run it with the graphical display, which uses the X11 library.  This should work on linux machines and Mac OS X machines that have X11 installed.</p>
+<p>Lines 12-14 in the Makefile, shown below and included with the code, are where you set paths to the X11 library and include directories.  On some linux machines you may not need to set either of these, which is why they are commented out.</p>
+<p>If you want to use a text display instead of the graphical X11 display, uncomment line 20 and comment line 22.  When rigging the code to test for performance, you might want to eliminate the display of each iteration completely, in which case you can comment line 20 and 22.</p>
+<div class="highlight-basemake"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42</pre></div></td><td class="code"><div class="highlight"><pre><span class="c"># DESCRIPTION:  Makefile for serial code in C</span>
+<span class="c"># AUTHOR:       Yu Zhao, Macalester College</span>
+<span class="c"># DATE:         Original for Area Under A Curve module, September, 2011.</span>
+<span class="c">#	Modified for Infectious Disease module, November, 2011. by Aaron Weedon</span>
+<span class="c">#	Modified for Infectious Disease module, July, 2013, by Yu Zhao</span>
+
+<span class="c"># Code prefix</span>
+<span class="nv">PROGRAM_PREFIX</span><span class="o">=</span>Pandemic
+
+<span class="c"># Compilers and flags</span>
+<span class="nv">CC</span><span class="o">=</span>gcc
+<span class="c">#XLIB_LOC=/opt/X11/lib    #Mac OS X XQuartz installed here</span>
+<span class="c">#XLIB_LOC=/usr/X11R6/lib   #some unix systems may have this</span>
+<span class="c">#XLIB_INC=/opt/X11/include</span>
+
+ifdef ICC
+	<span class="nv">CC</span><span class="o">=</span>icc
+endif
+
+<span class="c">#CFLAGS+=-DTEXT_DISPLAY # Uncomment to show text display</span>
+
+CFLAGS+<span class="o">=</span>-DX_DISPLAY -I <span class="k">$(</span>XLIB_INC<span class="k">)</span> -L<span class="k">$(</span>XLIB_LOC<span class="k">)</span> -lX11 <span class="c"># Uncomment to show X display</span>
+
+CFLAGS+<span class="o">=</span>-DSHOW_RESULTS <span class="c"># Uncomment to make the program print its results</span>
+
+<span class="c"># Source files</span>
+<span class="nv">SRCS</span><span class="o">=</span><span class="k">$(</span>PROGRAM_PREFIX<span class="k">)</span>.c
+
+<span class="c"># Make targets</span>
+all: <span class="k">$(</span>PROGRAM_PREFIX<span class="k">)</span>-serial
+
+clean: 
+	rm -f <span class="k">$(</span>PROGRAM_PREFIX<span class="k">)</span>-serial
+
+run:
+	./<span class="k">$(</span>PROGRAM_PREFIX<span class="k">)</span>-serial
+
+<span class="c"># Make rules</span>
+<span class="k">$(</span>PROGRAM_PREFIX<span class="k">)</span>-serial: <span class="k">$(</span>SRCS<span class="k">)</span>
+	<span class="k">$(</span>CC<span class="k">)</span> -o <span class="k">$(</span>PROGRAM_PREFIX<span class="k">)</span>-serial <span class="k">$(</span>SRCS<span class="k">)</span> <span class="k">$(</span>CFLAGS<span class="k">)</span> 
+
+<span class="k">$(</span>SRCS<span class="k">)</span>: Core.h Defaults.h Display.h Finalize.h Infection.h Initialize.h
+</pre></div>
+</td></tr></table></div>
+<div class="section" id="build">
+<h2>Build<a class="headerlink" href="#build" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">make</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="run">
+<h2>Run<a class="headerlink" href="#run" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-python"><pre>./Pandemic-serial</pre>
+</div>
+<p>The default values start with a simulation of approximately 50 people.</p>
+<p>To see what elements of the computation you can change, try this:</p>
+<div class="highlight-python"><pre>./Pandemic-serial -?</pre>
+</div>
+<p>It should give you something like this:</p>
+<div class="highlight-python"><pre>./Pandemic-serial: illegal option -- ?
+
+Usage: ./Pandemic-serial [-n number_of_people][-i num_initially_infected
+[-w environment_width][-h environment_height][-t total_number_of_days]
+[-T duration_of_disease][-c contagiousness_factor][-d infection_radius]
+[-D deadliness_factor][-m microseconds_per_day]</pre>
+</div>
+<p>Note that these are defined and set in the <em>parse_args()</em> function in Initialize.h.</p>
+<p>If you comment out lines 20 and 22 of the Makefile shown above, you can try getting some preliminary basic sense of how fast the program runs with various sizes of the problem (in this case the number of people).  First, comment lines 20 and 22 in the Makefile and do the following:</p>
+<div class="highlight-python"><pre>make clean
+make</pre>
+</div>
+<p>Then execute various problem sizes, taking no time between iterations, as follows:</p>
+<div class="highlight-python"><pre>time ./Pandemic-serial -n 20000 -m 0</pre>
+</div>
+<p>Experiment by changing the value of n higher and lower.  You should see the program take more time as you increase the number of people.  Experiment with some of the other parameters also. Do some investigation of what the unix time command does.  This is a very rough way to see how fast your program runs.  There are preferable ways to instrument the code itself that you could investigate.</p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../index.html">
+              <img class="logo" src="../_static/CSInParallel200wide.png" alt="Logo"/>
+            </a></p>
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Build and Run</a><ul>
+<li><a class="reference internal" href="#build">Build</a></li>
+<li><a class="reference internal" href="#run">Run</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="../7-Finalize/finalize.html"
+                        title="previous chapter">Finish Functions</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="../8-OpenMP/openmp.html"
+                        title="next chapter">Including OpenMP</a></p>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../8-OpenMP/openmp.html" title="Including OpenMP"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="../7-Finalize/finalize.html" title="Finish Functions"
+             >previous</a> |</li>
+        <li><a href="../index.html">Pandemic Exemplar with OpenMP</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2013, CSinParallel Project.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>

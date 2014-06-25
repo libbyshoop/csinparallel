@@ -1,4 +1,4 @@
-Timing and Performance on Intel Manycore Testing Lab
+Timing and Performance on Multicore machines
 =====================================================
 
 Timing performance
@@ -34,8 +34,7 @@ might display the following output:
 	sys 0.00
 
 Here, we use the full path /usr/bin/time to insure that we are accessing
-the time program instead of a shell built-in command. The -p flag
-produces output in a format comparable to what we will see in the MTL.
+the time program instead of a shell built-in command. 
 
 The real time measures actual time elapsed during the running of your
 command trap-omp. user measures the amount of time executing user code,
@@ -89,7 +88,7 @@ We can use this in the code in the following way:
 	double time1 = end - start;
 
 	//print out the resulting elapsed time
-	cout << "Time for paralel computation section: "<< time1 << "  milliseconds." << endl;
+	cout << "Time for paralel computation section: "<< time1 << "  seconds." << endl;
 	...
 
 .. topic:: To Do
@@ -109,19 +108,21 @@ code, even if you are not using OpenMP library functions or pragmas. This will c
 Using the MTL
 -------------
 
+If you have access to Intel's Manycore Testing Lab (MTL), you can try some experimenting.  You may also use another machine that your instructor will give you access to.
+
 Let’s try using many more threads and really experiment with multicore
 programming! You will need to use a ‘terminal’ on Macs or ‘Putty’ on
 PCs.  If you are off campus, you will need to ssh into a machine on your campus before
 then logging into the MTL machine at Intel’s headquarters in Oregon.
 
 .. !!!!!!!!!!!!!!!!! LOCAL CHANGE !!!!!!!!!!!!!!!!!!!!!!!!!!
-.. note:: Macalester's local machine that you can use is selkie.
+.. note:: Macalester's machine that you can use is nuggle.macalester.edu.
 
 
 You can login to the MTL computer, as follows
 ::
 
-	ssh accountname@192.55.51.81
+	ssh accountname@207.108.8.131
 
 Use one of the special MTL student account usernames provided to you, together with
 the password distributed to the class.
@@ -131,7 +132,7 @@ One way to do this is to use another window (to
 keep for copying your code), then enter the following command *from the directory where your code is located*:
 ::
 
-	scp trap-omp.C accountname@192.55.51.81:
+	scp trap-omp.C accountname@207.108.8.131:
 
 After making this copy, login into the MTL machine 192.55.51.81 in another window.
 
@@ -226,7 +227,7 @@ user account):
 Investigating ‘scalability’
 ----------------------------
 
-Scalability is the ability of a parallel program to run ingreasingly larger problems.  In our simple program, the *problem size* is the number of trapazoids whose area are computed.  You will now conduct some investigations of two types of scalability of parallel programs:
+Scalability is the ability of a parallel program to run increasingly larger problems.  In our simple program, the *problem size* is the number of trapazoids whose area are computed.  You will now conduct some investigations of two types of scalability of parallel programs:
 
 * **stong scalability** 
 * **weak scalbility**

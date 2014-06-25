@@ -2,6 +2,7 @@
 Components of a Module
 **********************
 
+
 Sphinx, check. Github, check. CSS, check. You can create the content of the module
 that can be used by instructors for courses. However, there are more elements to a module, some of which a module author/developer is responsible for, and some of which the CSinParallel project is responsible for, and some of which is a joint effort.
 
@@ -44,9 +45,10 @@ The level of proficiency you expect of students is at your discretion, given the
 Create module content
 *********************
 
+
 Initially, this can be in any format. We can assist you from there to make publication-quality versions using sphinx by creating .rst files, or you can get started on this yourself.  A `tool called pandoc <http://johnmacfarlane.net/pandoc/>`_ works quite well for converting your original content into a .rst file that you can work with.
 
-For the actual .rst files, see the previous template section for eaxamples of rst formatting. How exactly you format your content depends on who you envision the audience being: are you creating material students would interact with directly, or that instructors would absorb and teach from?
+For the actual .rst files, see the template section. How exactly you format your content depends on who you envision the audience being: are you creating material students would interact with directly, or that instructors would absorb and teach from?
 
 
 Write teaching notes and tips
@@ -107,4 +109,5 @@ Develop assessment instruments
 
 As part of the CSinParallel project, we will assess most modules as they are used by
 instructors in courses.  We will develop assessment instruments for this purpose.
+
 

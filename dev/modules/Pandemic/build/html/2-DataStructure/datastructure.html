@@ -26,8 +26,8 @@
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
     <link rel="top" title="Pandemic Exemplar (for those with some experience)" href="../index.html" />
-    <link rel="next" title="Init Functions" href="../3-InitFunctions/initfunctions.html" />
-    <link rel="prev" title="Infectious Disease" href="../1-Introduction/introduction.html" /> 
+    <link rel="next" title="Initialize Functions" href="../3-Initialize/initialize.html" />
+    <link rel="prev" title="Program Structure" href="../1-ProgramStructure/programstructure.html" /> 
   </head>
   <body>
     <div class="related">
@@ -37,10 +37,10 @@
           <a href="../genindex.html" title="General Index"
              accesskey="I">index</a></li>
         <li class="right" >
-          <a href="../3-InitFunctions/initfunctions.html" title="Init Functions"
+          <a href="../3-Initialize/initialize.html" title="Initialize Functions"
              accesskey="N">next</a> |</li>
         <li class="right" >
-          <a href="../1-Introduction/introduction.html" title="Infectious Disease"
+          <a href="../1-ProgramStructure/programstructure.html" title="Program Structure"
              accesskey="P">previous</a> |</li>
         <li><a href="../index.html">Pandemic Exemplar (for those with some experience)</a> &raquo;</li> 
       </ul>
@@ -60,63 +60,11 @@ private to the processes that use them, but public to the threads within
 that process. Variables are thus named from a thread’s perspective; “my”
 variables are ones that I use, “our” variables are ones that I and the
 other threads in my process use.</p>
-<div class="section" id="display-t-struct">
-<h2>display_t struct<a class="headerlink" href="#display-t-struct" title="Permalink to this headline">¶</a></h2>
-<div class="highlight-c"><div class="highlight"><pre><span class="k">struct</span> <span class="n">display_t</span> 
-<span class="p">{</span>
-<span class="cp">    #ifdef TEXT_DISPLAY</span>
-    <span class="c1">// Array of character arrays, a.k.a. array of character pointers,</span>
-    <span class="c1">// for text display </span>
-    <span class="kt">char</span> <span class="o">**</span><span class="n">environment</span><span class="p">;</span>
-<span class="cp">    #endif</span>
-
-<span class="cp">    #ifdef X_DISPLAY</span>
-    <span class="c1">// Declare X-related variables </span>
-    <span class="n">Display</span>         <span class="o">*</span><span class="n">display</span><span class="p">;</span>
-    <span class="n">Window</span>          <span class="n">window</span><span class="p">;</span>
-    <span class="kt">int</span>             <span class="n">screen</span><span class="p">;</span>
-    <span class="n">Atom</span>            <span class="n">delete_window</span><span class="p">;</span>
-    <span class="n">GC</span>              <span class="n">gc</span><span class="p">;</span>
-    <span class="n">XColor</span>          <span class="n">infected_color</span><span class="p">;</span>
-    <span class="n">XColor</span>          <span class="n">immune_color</span><span class="p">;</span>
-    <span class="n">XColor</span>          <span class="n">susceptible_color</span><span class="p">;</span>
-    <span class="n">XColor</span>          <span class="n">dead_color</span><span class="p">;</span>
-    <span class="n">Colormap</span>        <span class="n">colormap</span><span class="p">;</span>
-    <span class="kt">char</span>            <span class="o">*</span><span class="n">red</span><span class="p">;</span>
-    <span class="kt">char</span>            <span class="o">*</span><span class="n">green</span><span class="p">;</span>
-    <span class="kt">char</span>            <span class="o">*</span><span class="n">black</span><span class="p">;</span>
-    <span class="kt">char</span>            <span class="o">*</span><span class="n">white</span><span class="p">;</span>
-<span class="cp">    #endif</span>
-<span class="p">};</span>
-</pre></div>
-</div>
-<p><strong>environment</strong></p>
-<p>2D array, holds an ASCII representation of the environment (see “state” under “Person” in the “Model” section). This variable is used only when we are using Text Display.</p>
-<p><strong>display</strong></p>
-<p>Display, display pointer for the connection to the X server</p>
-<p><strong>window</strong></p>
-<p>Window, variable to hold the window id.</p>
-<p><strong>screen</strong></p>
-<p>Screen, variable to hold default screen</p>
-<p><strong>delete_window</strong></p>
-<p><strong>gc</strong></p>
-<p><strong>infected_color</strong></p>
-<p><strong>immune_color</strong></p>
-<p><strong>susceptible_color</strong></p>
-<p><strong>dead_color</strong></p>
-<p><strong>red</strong></p>
-<p>array of char, holds value #FF0000, which is the hex code for color red.</p>
-<p><strong>green</strong></p>
-<p>array of char, holds value #00FF00, which is the hex code for color green.</p>
-<p><strong>black</strong></p>
-<p>array of char, holds value #000000, which is the hex code for color black.</p>
-<p><strong>white</strong></p>
-<p>array of char, holds value #FFFFFF, which is the hex code for color white.</p>
-<p><strong>colormap</strong></p>
-</div>
 <div class="section" id="global-t-struct">
 <h2>global_t struct<a class="headerlink" href="#global-t-struct" title="Permalink to this headline">¶</a></h2>
-<div class="highlight-c"><div class="highlight"><pre><span class="k">struct</span> <span class="n">global_t</span> 
+<div class="highlight-c"><div class="highlight"><pre><span class="c1">// All the data needed globally. Holds EVERYONE&#39;s location, </span>
+<span class="c1">// states and other necessary counters.</span>
+<span class="k">struct</span> <span class="n">global_t</span> 
 <span class="p">{</span>
     <span class="c1">// people counters</span>
     <span class="kt">int</span> <span class="n">total_number_of_people</span><span class="p">;</span>
@@ -136,47 +84,31 @@ other threads in my process use.</p>
 </pre></div>
 </div>
 <p><strong>total_number_of_people</strong></p>
-<p>the total number of all people in the
-simulation; the sum of people assigned to each process. The value of
-this variable can be specified on the command line with the –n option.</p>
+<p>the total number of all people in the simulation; the sum of people assigned to each process. The value of this variable can be specified on the command line with the –n option.</p>
 <p><strong>total_num_initially_infected</strong></p>
-<p>the total number of people who are
-initially infected; the sum of initially infected people assigned to
-each process. The value of this variable can be specified on the command
-line with the –i option. This is a subset of the total number of people,
-so the value of this variable must be smaller or equal to the value for
-total_number_of_people.</p>
+<p>the total number of people who are initially infected; the sum of initially infected people assigned to each process. The value of this variable can be specified on the command line with the –i option. This is a subset of the total number of people, so the value of this variable must be smaller or equal to the value for <strong>total_number_of_people</strong>.</p>
 <p><strong>total_num_infected</strong></p>
-<p>the total number of infected people; the sum of
-the number of infected people assigned to each process. This value
-changes throughout the course of the simulation.</p>
+<p>the total number of infected people; the sum of the number of infected people assigned to each process. This value changes throughout the course of the simulation.</p>
 <p><strong>x_locations</strong></p>
-<p>array, holds the x locations of all of the people; only
-used if the environment needs to be displayed; otherwise,
-our_x_locations is used.</p>
+<p>array, holds the x locations of all of the people; only used if the environment needs to be displayed; otherwise, <strong>our_x_locations</strong> is used.</p>
 <p><strong>y_locations</strong></p>
-<p>array, holds the y locations of all of the people; only
-used if the environment needs to be displayed; otherwise,
-our_y_locations is used.</p>
+<p>array, holds the y locations of all of the people; only used if the environment needs to be displayed; otherwise, <strong>our_y_locations</strong> is used.</p>
 <p><strong>their_infected_x_locations</strong></p>
-<p>array, used in step XIV.H of the
-algorithm to keep track of the x locations of the infected people for
-which each process is responsible.</p>
+<p>array, used in <strong>susceptible()</strong> function to keep track of the x locations of the infected people for which each process is responsible.</p>
 <p><strong>their_infected_y_locations</strong></p>
-<p>array, used in step XIV.H of the
-algorithm to keep track of the y locations of the infected people for
-which each process is responsible.</p>
+<p>array, used in step <strong>susceptible()</strong> function to keep track of the y locations of the infected people for which each process is responsible.</p>
 <p><strong>states</strong></p>
-<p>array, holds the states of all of the people; only used if the
-environment needs to be displayed; otherwise, our_states is used.</p>
+<p>array, holds the states of all of the people; only used if the environment needs to be displayed; otherwise, <strong>our_states</strong> is used.</p>
 <p><strong>total_number_of_processes</strong></p>
-<p>used to keep track of how many processes
-are being used. If MPI is disabled, the value of this variable will be
-1. If it is enabled, the value is set in step I of the algorithm.</p>
+<p>used to keep track of how many processes are being used. If MPI is disabled, the value of this variable will be 1. If it is enabled, the value is set in <strong>init()</strong> function.</p>
 </div>
 <div class="section" id="our-t-struct">
 <h2>our_t struct<a class="headerlink" href="#our-t-struct" title="Permalink to this headline">¶</a></h2>
-<div class="highlight-c"><div class="highlight"><pre><span class="k">struct</span> <span class="n">our_t</span> 
+<div class="highlight-c"><div class="highlight"><pre><span class="c1">// All the data private to each node: Data being used by </span>
+<span class="c1">// each process on a node in a cluster when using MPI.</span>
+<span class="c1">// Each process holds data for location, states and </span>
+<span class="c1">// other necessary counters for a subset of people.</span>
+<span class="k">struct</span> <span class="n">our_t</span> 
 <span class="p">{</span>
     <span class="c1">// current day</span>
     <span class="kt">int</span> <span class="n">current_day</span><span class="p">;</span>
@@ -204,55 +136,38 @@ are being used. If MPI is disabled, the value of this variable will be
 </pre></div>
 </div>
 <p><strong>our_current_day</strong></p>
-<p>a loop iterator representing the ID of the current
-day being simulated by the current process.</p>
+<p>a loop iterator representing the ID of the current day being simulated by the current process.</p>
 <p><strong>our_rank</strong></p>
-<p>used to keep track of the rank of the current process. If
-MPI is disabled, the value of this variable will be 0. If it is enabled,
-the value is set in step I of the algorithm.</p>
+<p>used to keep track of the rank of the current process. If MPI is disabled, the value of this variable will be 0. If it is enabled, the value is set in <strong>init()</strong> function.</p>
 <p><strong>our_number_of_people</strong></p>
-<p>the number of people for which the current
-process is responsible. This will be a number less than or equal to the
-total number of people. The value is determined in steps IV and V of the
-algorithm.</p>
+<p>the number of people for which the current process is responsible. This will be a number less than or equal to the total number of people. The value is determined in <strong>find_size()</strong> function.</p>
 <p><strong>our_num_initially_infected</strong></p>
-<p>the count of initially infected people
-for which the current process is responsible.</p>
+<p>the count of initially infected people for which the current process is responsible.</p>
 <p><strong>our_num_infected</strong></p>
-<p>the count of infected people for which the current
-process is responsible.</p>
+<p>a count of the number of infected people for which the current process is responsible.</p>
 <p><strong>our_num_susceptible</strong></p>
-<p>a count of the number of susceptible people for
-which the current process is responsible.</p>
+<p>a count of the number of susceptible people for which the current process is responsible.</p>
 <p><strong>our_num_immune</strong></p>
-<p>a count of the number of immune people for which the
-current process is responsible.</p>
+<p>a count of the number of immune people for which the current process is responsible.</p>
 <p><strong>our_num_dead</strong></p>
-<p>a count of the number of dead people for which the
-current process is responsible.</p>
+<p>a count of the number of dead people for which the current process is responsible.</p>
 <p><strong>our_x_locations</strong></p>
-<p>array, holds the x locations of all the people for
-which the current process is responsible.</p>
+<p>array, holds the x locations of all the people for which the current process is responsible.</p>
 <p><strong>our_y_locations</strong></p>
-<p>array, holds the y locations of all the people for
-which the current process is responsible.</p>
+<p>array, holds the y locations of all the people for which the current process is responsible.</p>
 <p><strong>our_infected_x_locations</strong></p>
-<p>array, holds the x locations of all the
-infected people for which the current process is responsible.</p>
+<p>array, holds the x locations of all the infected people for which the current process is responsible.</p>
 <p><strong>our_infected_y_locations</strong></p>
-<p>array, holds the y locations of all the
-infected people for which the current process is responsible.</p>
+<p>array, holds the y locations of all the infected people for which the current process is responsible.</p>
 <p><strong>our_states</strong></p>
-<p>array, holds the states of all the people for which the
-current process is responsible.</p>
+<p>array, holds the states of all the people for which the current process is responsible.</p>
 <p><strong>our_num_days_infected</strong></p>
-<p>our_num_days_infected – array, used to keep track of the number of
-days each person has been infected for which the current process is
-responsible.</p>
+<p>array, used to keep track of the number of days each person has been infected for which the current process is responsible.</p>
 </div>
 <div class="section" id="const-t-struct">
 <h2>const_t struct<a class="headerlink" href="#const-t-struct" title="Permalink to this headline">¶</a></h2>
-<div class="highlight-c"><div class="highlight"><pre><span class="k">struct</span> <span class="n">const_t</span> 
+<div class="highlight-c"><div class="highlight"><pre><span class="c1">// Data being used as constant</span>
+<span class="k">struct</span> <span class="n">const_t</span> 
 <span class="p">{</span>
     <span class="c1">// environment</span>
     <span class="kt">int</span> <span class="n">environment_width</span><span class="p">;</span>
@@ -269,36 +184,28 @@ responsible.</p>
 </pre></div>
 </div>
 <p><strong>environment_width</strong></p>
-<p>environment_width – indicates how wide the environment is; used to draw
-the environment and to make sure people stay within the bounds of the
-environment.</p>
+<p>indicates how wide the environment is; used to draw the environment and to make sure people stay within the bounds of the environment.</p>
 <p><strong>environment_height</strong></p>
-<p>environment_height – indicates how high the environment is; used to
-draw the environment and to make sure people stay within the bounds of
-the environment.</p>
+<p>indicates how high the environment is; used to draw the environment and to make sure people stay within the bounds of the environment.</p>
 <p><strong>infection_radius</strong></p>
-<p>see the Model section above. The value of this
-variable can be specified on the command line with the –d option.</p>
+<p>see the Introduction Chapter above. The value of this variable can be specified on the command line with the –d option.</p>
 <p><strong>duration_of_disease</strong></p>
-<p>see the Model section above. The value of this
-variable can be specified on the command line with the –T option.</p>
+<p>see the Introduction Chapter above. The value of this variable can be specified on the command line with the –T option.</p>
 <p><strong>contagiousness_factor</strong></p>
-<p>see the Model section above. The value of this
-variable can be specified on the command line with the –c option.</p>
+<p>see the Introduction Chapter above. The value of this variable can be specified on the command line with the –c option.</p>
 <p><strong>deadliness_factor</strong></p>
-<p>see the Model section above. The value of this
-variable can be specified on the command line with the –D option.</p>
+<p>see the Introduction Chapter above. The value of this variable can be specified on the command line with the –D option.</p>
 <p><strong>total_number_of_days</strong></p>
-<p>the total number of days over which to run the
-simulation.</p>
+<p>the total number of days over which to run the simulation.</p>
 <p><strong>microseconds_per_day</strong></p>
-<p>used to tell how many microseconds to freeze in
-between frames of animation. The value of this variable can be specified
-on the command line with the –m option.</p>
+<p>used to tell how many microseconds to freeze in between frames of animation. The value of this variable can be specified on the command line with the –m option.</p>
 </div>
 <div class="section" id="stats-t-struct">
 <h2>stats_t struct<a class="headerlink" href="#stats-t-struct" title="Permalink to this headline">¶</a></h2>
-<div class="highlight-c"><div class="highlight"><pre><span class="k">struct</span> <span class="n">stats_t</span> 
+<div class="highlight-c"><div class="highlight"><pre><span class="c1">// Stats data private to each node: Data being used by </span>
+<span class="c1">// each process on a node in a cluster when using MPI. </span>
+<span class="c1">// Each process holds stats data for a subset of people.</span>
+<span class="k">struct</span> <span class="n">stats_t</span> 
 <span class="p">{</span>
     <span class="kt">double</span> <span class="n">our_num_infections</span><span class="p">;</span>
     <span class="kt">double</span> <span class="n">our_num_infection_attempts</span><span class="p">;</span>
@@ -308,35 +215,75 @@ on the command line with the –m option.</p>
 </pre></div>
 </div>
 <p><strong>our_num_infections</strong></p>
-<p>used to count the number of actual infections
-that take place (in which an infected person transmits the disease to a
-susceptible person). Only used if the showing of results is enabled
-(i.e., if the program is to print out final results from the
-simulation). Used to determine the actual contagiousness of the disease,
-which can be compared to the contagiousness factor by the user.</p>
+<p>used to count the number of actual infections that take place (in which an infected person transmits the disease to a susceptible person). Only used if the showing of results is enabled (i.e., if the program is to print out final results from the simulation). Used to determine the actual contagiousness of the disease, which can be compared to the contagiousness factor by the user.</p>
 <p><strong>our_num_infection_attempts</strong></p>
-<p>used to count the number of times a
-susceptible person is within an infection radius of an infected person,
-even if the infection fails. Only used if the showing of results is
-enabled (i.e., if the program is to print out final results from the
-simulation). Used to determine the actual contagiousness of the disease,
-which can be compared to the contagiousness factor by the user.</p>
+<p>used to count the number of times a susceptible person is within an infection radius of an infected person, even if the infection fails. Only used if the showing of results is enabled (i.e., if the program is to print out final results from the simulation). Used to determine the actual contagiousness of the disease, which can be compared to the contagiousness factor by the user.</p>
 <p><strong>our_num_deaths</strong></p>
-<p>used to count the number of times a person dies. Only
-used if the showing of results is enabled (i.e., if the program is to
-print out final results from the simulation). Used to determine the
-actual deadliness of the disease, which can be compared to the
-deadliness factor by the user.</p>
+<p>used to count the number of times a person dies. Only used if the showing of results is enabled (i.e., if the program is to print out final results from the simulation). Used to determine the actual deadliness of the disease, which can be compared to the deadliness factor by the user.</p>
 <p><strong>our_num_recovery_attempts</strong></p>
-<p>used to count the number of times an
-infected person is able to become immune. Only used if the showing of
-results is enabled (i.e., if the program is to print out final results
-from the simulation). Used to determine the actual deadliness of the
-disease, which can be compared to the deadliness factor by the user.</p>
+<p>used to count the number of times an infected person is able to become immune. Only used if the showing of results is enabled (i.e., if the program is to print out final results from the simulation). Used to determine the actual deadliness of the disease, which can be compared to the deadliness factor by the user.</p>
+</div>
+<div class="section" id="display-t-struct">
+<h2>display_t struct<a class="headerlink" href="#display-t-struct" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-c"><div class="highlight"><pre><span class="c1">// Data being used for the X display</span>
+<span class="k">struct</span> <span class="n">display_t</span> 
+<span class="p">{</span>
+<span class="cp">    #ifdef TEXT_DISPLAY</span>
+    <span class="c1">// Array of character arrays for text display </span>
+    <span class="kt">char</span> <span class="o">**</span><span class="n">environment</span><span class="p">;</span>
+<span class="cp">    #endif</span>
+
+<span class="cp">    #ifdef X_DISPLAY</span>
+    <span class="c1">// Declare X-related variables </span>
+    <span class="n">Display</span>         <span class="o">*</span><span class="n">display</span><span class="p">;</span>
+    <span class="n">Window</span>          <span class="n">window</span><span class="p">;</span>
+    <span class="kt">int</span>             <span class="n">screen</span><span class="p">;</span>
+    <span class="n">Atom</span>            <span class="n">delete_window</span><span class="p">;</span>
+    <span class="n">GC</span>              <span class="n">gc</span><span class="p">;</span>
+    <span class="n">XColor</span>          <span class="n">infected_color</span><span class="p">;</span>
+    <span class="n">XColor</span>          <span class="n">immune_color</span><span class="p">;</span>
+    <span class="n">XColor</span>          <span class="n">susceptible_color</span><span class="p">;</span>
+    <span class="n">XColor</span>          <span class="n">dead_color</span><span class="p">;</span>
+    <span class="n">Colormap</span>        <span class="n">colormap</span><span class="p">;</span>
+    <span class="kt">char</span>            <span class="o">*</span><span class="n">red</span><span class="p">;</span>
+    <span class="kt">char</span>            <span class="o">*</span><span class="n">green</span><span class="p">;</span>
+    <span class="kt">char</span>            <span class="o">*</span><span class="n">black</span><span class="p">;</span>
+    <span class="kt">char</span>            <span class="o">*</span><span class="n">white</span><span class="p">;</span>
+<span class="cp">    #endif</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<p><strong>environment</strong></p>
+<p>2D array, holds an ASCII representation of the environment (see “state” under “Person” in the Introduction Chapter). This variable is used only when we are using Text Display.</p>
+<p><strong>display</strong></p>
+<p>Display, display pointer for the connection to the X server</p>
+<p><strong>window</strong></p>
+<p>Window, variable to holds the window id.</p>
+<p><strong>screen</strong></p>
+<p>Screen, variable to holds default screen</p>
+<p><strong>delete_window</strong></p>
+<p><strong>gc</strong></p>
+<p><strong>infected_color</strong></p>
+<p><strong>immune_color</strong></p>
+<p><strong>susceptible_color</strong></p>
+<p><strong>dead_color</strong></p>
+<p><strong>red</strong></p>
+<p>array of char, holds value #FF0000, which is the hex code for color red.</p>
+<p><strong>green</strong></p>
+<p>array of char, holds value #00FF00, which is the hex code for color green.</p>
+<p><strong>black</strong></p>
+<p>array of char, holds value #000000, which is the hex code for color black.</p>
+<p><strong>white</strong></p>
+<p>array of char, holds value #FFFFFF, which is the hex code for color white.</p>
+<p><strong>colormap</strong></p>
 </div>
 <div class="section" id="cuda-t-struct">
 <h2>cuda_t struct<a class="headerlink" href="#cuda-t-struct" title="Permalink to this headline">¶</a></h2>
-<div class="highlight-c"><div class="highlight"><pre><span class="k">struct</span> <span class="n">cuda_t</span> 
+<div class="highlight-c"><div class="highlight"><pre><span class="c1">// All the data needed for CUDA operation: CUDA needs memory </span>
+<span class="c1">// pointers and other information on CPU side. As more than</span>
+<span class="c1">// one function (mainly used by CUDA.cu) need to use these </span>
+<span class="c1">// data, we decided to use a struct to hold all these data.</span>
+<span class="k">struct</span> <span class="n">cuda_t</span> 
 <span class="p">{</span>
 <span class="cp">    // only CUDA-only version and MPICUDA version can see what </span>
 <span class="cp">    // is inside the cuda_t struct, and all other versions </span>
@@ -416,23 +363,23 @@ disease, which can be compared to the deadliness factor by the user.</p>
 <p><strong>our_num_recovery_attempts_dev</strong></p>
 <p>pointer, pointed to the memory location on device of counter <strong>our_num_recovery_attempts_dev</strong>, a copy of <strong>our_num_recovery_attempts</strong> on host memory.</p>
 <p><strong>our_num_infections_int</strong></p>
-<p>int, hold temporary instances of <strong>our_num_infections</strong> when we cast it into a int.</p>
+<p>int, holds temporary instance of <strong>our_num_infections</strong> when we cast it into a int.</p>
 <p><strong>our_num_infection_attempts_int</strong></p>
-<p>int, hold temporary instances of <strong>our_num_infection_attempts</strong> when we cast it into a int.</p>
+<p>int, holds temporary instance of <strong>our_num_infection_attempts</strong> when we cast it into a int.</p>
 <p><strong>our_num_deaths_int</strong></p>
-<p>int, hold temporary instances of <strong>our_num_deaths</strong> when we cast it into a int.</p>
+<p>int, holds temporary instance of <strong>our_num_deaths</strong> when we cast it into a int.</p>
 <p><strong>our_num_recovery_attempts_int</strong></p>
-<p>int, hold temporary instances of <strong>our_num_recovery_attempts</strong> when we cast it into a int.</p>
+<p>int, holds temporary instance of <strong>our_num_recovery_attempts</strong> when we cast it into a int.</p>
 <p><strong>our_size</strong></p>
-<p>int, hold the size of any integer arrays inside <strong>our_t</strong> struct.</p>
+<p>int, holds the size of any <strong>integer</strong> arrays inside <strong>our_t</strong> struct.</p>
 <p><strong>their_size</strong></p>
-<p>int, hold the size of any integer arrays inside <strong>global_t</strong> struct.</p>
+<p>int, holds the size of any <strong>integer</strong> arrays inside <strong>global_t</strong> struct.</p>
 <p><strong>our_states_size</strong></p>
-<p>int, hold the size of any char arrays inside <strong>our_t</strong> struct.</p>
+<p>int, holds the size of any <strong>char</strong> arrays inside <strong>our_t</strong> struct.</p>
 <p><strong>numThread</strong></p>
-<p>int, hold the number of threads per block, or block size.</p>
+<p>int, holds the number of threads per block, or block size.</p>
 <p><strong>numBlock</strong></p>
-<p>int, hold the number of blocks per grid, or grid size.</p>
+<p>int, holds the number of blocks per grid, or grid size.</p>
 </div>
 </div>
 
@@ -448,22 +395,22 @@ disease, which can be compared to the deadliness factor by the user.</p>
   <h3><a href="../index.html">Table Of Contents</a></h3>
   <ul>
 <li><a class="reference internal" href="#">Data Structures</a><ul>
-<li><a class="reference internal" href="#display-t-struct">display_t struct</a></li>
 <li><a class="reference internal" href="#global-t-struct">global_t struct</a></li>
 <li><a class="reference internal" href="#our-t-struct">our_t struct</a></li>
 <li><a class="reference internal" href="#const-t-struct">const_t struct</a></li>
 <li><a class="reference internal" href="#stats-t-struct">stats_t struct</a></li>
+<li><a class="reference internal" href="#display-t-struct">display_t struct</a></li>
 <li><a class="reference internal" href="#cuda-t-struct">cuda_t struct</a></li>
 </ul>
 </li>
 </ul>
 
   <h4>Previous topic</h4>
-  <p class="topless"><a href="../1-Introduction/introduction.html"
-                        title="previous chapter">Infectious Disease</a></p>
+  <p class="topless"><a href="../1-ProgramStructure/programstructure.html"
+                        title="previous chapter">Program Structure</a></p>
   <h4>Next topic</h4>
-  <p class="topless"><a href="../3-InitFunctions/initfunctions.html"
-                        title="next chapter">Init Functions</a></p>
+  <p class="topless"><a href="../3-Initialize/initialize.html"
+                        title="next chapter">Initialize Functions</a></p>
 <div id="searchbox" style="display: none">
   <h3>Quick search</h3>
     <form class="search" action="../search.html" method="get">
@@ -488,10 +435,10 @@ disease, which can be compared to the deadliness factor by the user.</p>
           <a href="../genindex.html" title="General Index"
              >index</a></li>
         <li class="right" >
-          <a href="../3-InitFunctions/initfunctions.html" title="Init Functions"
+          <a href="../3-Initialize/initialize.html" title="Initialize Functions"
              >next</a> |</li>
         <li class="right" >
-          <a href="../1-Introduction/introduction.html" title="Infectious Disease"
+          <a href="../1-ProgramStructure/programstructure.html" title="Program Structure"
              >previous</a> |</li>
         <li><a href="../index.html">Pandemic Exemplar (for those with some experience)</a> &raquo;</li> 
       </ul>

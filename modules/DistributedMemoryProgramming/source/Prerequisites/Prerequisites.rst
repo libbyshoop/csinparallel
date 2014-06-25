@@ -42,10 +42,9 @@ Hello World by Sending messages:
 
 **Activity 3, Improved Vector-Matrix Multiplication**
 
-:download:`download vector_matrix_imp_todo.c <dist_example_code/vector_matrix_imp_todo.c>`
+:download:`download vector_matrix_mpi_todo.c <dist_example_code/vector_matrix_mpi_todo.c>`
 
-:download:`download vector_matrix_imp.c <
-dist_example_code/vector_matrix_imp.c>`
+:download:`download vector_matrix_mpi.c <dist_example_code/vector_matrix_mpi.c>`
 
 **Activity 4, Matrix-Matrix Multiplication**
 

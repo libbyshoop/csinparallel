@@ -1,0 +1,45 @@
+\begin{thebibliography}{1}
+
+\bibitem{gol}
+Conway's {G}ame of {L}ife.
+\newblock \url{http://www.conwaylife.com/wiki/Conway%27s_Game_of_Life}.
+
+\bibitem{opencl}
+Khronos Group.
+\newblock Open{CL} - the open standard for parallel programming of
+  heterogeneous systems.
+\newblock \url{http://www.khronos.org/opencl/}.
+
+\bibitem{cuda_prog_guide}
+NVidia Corporation.
+\newblock {\em NVIDIA CUDA C Programming Guide}, 3.2 edition, October 2010.
+
+\bibitem{fermi}
+NVidia Corporation.
+\newblock {\em Tuning CUDA Applications for Fermi}, 1.0 edition, February 2010.
+
+\bibitem{tm}
+Paul Rendell.
+\newblock This is a {T}uring {M}achine implemented in {C}onway's {G}ame of
+  {L}ife.
+\newblock \url{http://rendell-attic.org/gol/tm.htm}, 2000.
+
+\bibitem{utm}
+Paul Rendell.
+\newblock This is a {U}niversal {T}uring {M}achine ({UTM}) implemented in
+  {C}onway's {G}ame of {L}ife.
+\newblock \url{http://rendell-attic.org/gol/utm/index.htm}, 2010.
+
+\bibitem{constructor}
+Andrew~J. Wade.
+\newblock Universal constructor based spaceship.
+\newblock
+  \url{http://conwaylife.com/forums/viewtopic.php?f=2&t=399&p=2327#p2327},
+  2010.
+
+\bibitem{wolfram}
+Stephen Wolfram.
+\newblock Statistical mechanics of cellular automata.
+\newblock {\em Reviews of Modern Physics}, 55(3):601--644, July 1983.
+
+\end{thebibliography}

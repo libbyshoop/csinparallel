@@ -1,0 +1,187 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Initialization Phase &mdash; Game of Life</title>
+    
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="top" title="Game of Life" href="../index.html" />
+    <link rel="next" title="Execution Phase" href="../5-ExecutionPhase/execution.html" />
+    <link rel="prev" title="Data Structure" href="../3-DataStructure/datastructure.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../5-ExecutionPhase/execution.html" title="Execution Phase"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="../3-DataStructure/datastructure.html" title="Data Structure"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../index.html">Game of Life</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="initialization-phase">
+<h1>Initialization Phase<a class="headerlink" href="#initialization-phase" title="Permalink to this headline">¶</a></h1>
+<p>In this phase, we mainly do three things. We would first set up basics of the program, such as default values. We then initialize girds for later use. We finally set up display windows.</p>
+<div class="section" id="setup-basics">
+<h2>Setup Basics<a class="headerlink" href="#setup-basics" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="seed-random">
+<h3>seed_random()<a class="headerlink" href="#seed-random" title="Permalink to this headline">¶</a></h3>
+</div>
+<div class="section" id="parse-args">
+<h3>parse_args()<a class="headerlink" href="#parse-args" title="Permalink to this headline">¶</a></h3>
+</div>
+<div class="section" id="usage">
+<h3>usage()<a class="headerlink" href="#usage" title="Permalink to this headline">¶</a></h3>
+</div>
+<div class="section" id="handle-columns">
+<h3>handle_columns()<a class="headerlink" href="#handle-columns" title="Permalink to this headline">¶</a></h3>
+</div>
+</div>
+<div class="section" id="initialize-grids">
+<h2>Initialize Grids<a class="headerlink" href="#initialize-grids" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="init-grids">
+<h3>init_grids()<a class="headerlink" href="#init-grids" title="Permalink to this headline">¶</a></h3>
+</div>
+<div class="section" id="allocate-grids">
+<h3>allocate_grids()<a class="headerlink" href="#allocate-grids" title="Permalink to this headline">¶</a></h3>
+</div>
+<div class="section" id="randomize-grid">
+<h3>randomize_grid()<a class="headerlink" href="#randomize-grid" title="Permalink to this headline">¶</a></h3>
+<p><strong>rand_double()</strong></p>
+</div>
+</div>
+<div class="section" id="display-functions">
+<h2>Display Functions<a class="headerlink" href="#display-functions" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="setwindowdimention">
+<h3>setWindowDimention()<a class="headerlink" href="#setwindowdimention" title="Permalink to this headline">¶</a></h3>
+</div>
+<div class="section" id="setupwindow">
+<h3>setupWindow()<a class="headerlink" href="#setupwindow" title="Permalink to this headline">¶</a></h3>
+</div>
+<div class="section" id="movewindow">
+<h3>moveWindow()<a class="headerlink" href="#movewindow" title="Permalink to this headline">¶</a></h3>
+</div>
+</div>
+<div class="section" id="cuda-functions">
+<h2>CUDA Functions<a class="headerlink" href="#cuda-functions" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="cuda-init">
+<h3>cuda_init()<a class="headerlink" href="#cuda-init" title="Permalink to this headline">¶</a></h3>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../index.html">
+              <img class="logo" src="../_static/CSInParallel200wide.png" alt="Logo"/>
+            </a></p>
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Initialization Phase</a><ul>
+<li><a class="reference internal" href="#setup-basics">Setup Basics</a><ul>
+<li><a class="reference internal" href="#seed-random">seed_random()</a></li>
+<li><a class="reference internal" href="#parse-args">parse_args()</a></li>
+<li><a class="reference internal" href="#usage">usage()</a></li>
+<li><a class="reference internal" href="#handle-columns">handle_columns()</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#initialize-grids">Initialize Grids</a><ul>
+<li><a class="reference internal" href="#init-grids">init_grids()</a></li>
+<li><a class="reference internal" href="#allocate-grids">allocate_grids()</a></li>
+<li><a class="reference internal" href="#randomize-grid">randomize_grid()</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#display-functions">Display Functions</a><ul>
+<li><a class="reference internal" href="#setwindowdimention">setWindowDimention()</a></li>
+<li><a class="reference internal" href="#setupwindow">setupWindow()</a></li>
+<li><a class="reference internal" href="#movewindow">moveWindow()</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#cuda-functions">CUDA Functions</a><ul>
+<li><a class="reference internal" href="#cuda-init">cuda_init()</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="../3-DataStructure/datastructure.html"
+                        title="previous chapter">Data Structure</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="../5-ExecutionPhase/execution.html"
+                        title="next chapter">Execution Phase</a></p>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../5-ExecutionPhase/execution.html" title="Execution Phase"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="../3-DataStructure/datastructure.html" title="Data Structure"
+             >previous</a> |</li>
+        <li><a href="../index.html">Game of Life</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright This work is licensed under a Creative Commons Attribution-ShareAlike 3.0 Unported License.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>

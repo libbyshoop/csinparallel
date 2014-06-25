@@ -1,0 +1,137 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Activities &mdash; Finding the Area Under the Curve</title>
+    
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="top" title="Finding the Area Under the Curve" href="../index.html" />
+    <link rel="prev" title="Finding the Area Under the Curve Using Striping" href="../Striping/striping.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../Striping/striping.html" title="Finding the Area Under the Curve Using Striping"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../index.html">Finding the Area Under the Curve</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="activities">
+<h1>Activities<a class="headerlink" href="#activities" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="activity-2-striping-in-mpi">
+<h2>ACTIVITY 2 - Striping in MPI<a class="headerlink" href="#activity-2-striping-in-mpi" title="Permalink to this headline">¶</a></h2>
+<p>Write a loop that will result in striping among the nodes. Note: compile using: <strong>make area.c-mpi STRIPING=1</strong>.</p>
+<p>Download the solution: <a class="reference download internal" href="../_downloads/area_MPI_striping.tgz"><tt class="xref download docutils literal"><span class="pre">area_MPI_striping</span></tt></a>.</p>
+</div>
+<div class="section" id="activity-3-striping-in-openmp">
+<h2>ACTIVITY 3 - Striping in OpenMP<a class="headerlink" href="#activity-3-striping-in-openmp" title="Permalink to this headline">¶</a></h2>
+<p>Write a loop that will result in striping among the threads on the master node.</p>
+<p>Note: compile using:
+<strong>make area.c-openmp,</strong> and/or <strong>make area.c-mpi-openmp</strong></p>
+<p>The outcome should match this result:</p>
+<div class="align-center figure">
+<a class="reference internal image-reference" href="../_images/omp_striping.png"><img alt="omp-striping" src="../_images/omp_striping.png" style="width: 400px; height: 400px;" /></a>
+<p class="caption">Screenshot taken from a machine with 4 cores.</p>
+</div>
+</div>
+<div class="section" id="activity-4a-striping-in-mpi-openmp-blocking-striping">
+<h2>ACTIVITY 4a - Striping in MPI+OpenMP (blocking+striping)<a class="headerlink" href="#activity-4a-striping-in-mpi-openmp-blocking-striping" title="Permalink to this headline">¶</a></h2>
+<p>Write a loop that will result in blocking among the nodes and striping among the threads within each node.</p>
+<p>Note: compile using <strong>make area.c-mpi-openmp STRIPING=1</strong></p>
+<p>Download the solution: <a class="reference download internal" href="../_downloads/area_hybrid_blocking_striping.tgz"><tt class="xref download docutils literal"><span class="pre">area_hybrid_blocking_striping</span></tt></a>.</p>
+</div>
+<div class="section" id="activity-4b-striping-in-mpi-openmp-striping-striping">
+<h2>ACTIVITY 4b - Striping in MPI+OpenMP (striping+striping)<a class="headerlink" href="#activity-4b-striping-in-mpi-openmp-striping-striping" title="Permalink to this headline">¶</a></h2>
+<p>Write a loop that will result in striping among the nodes and the threads within each node.
+Note: compile using <strong>make area.c-mpi-openmp STRIPING=1</strong></p>
+<p>Download the solution: <a class="reference download internal" href="../_downloads/area_hybrid_striping.tgz"><tt class="xref download docutils literal"><span class="pre">area_hybrid_striping</span></tt></a>.</p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../index.html">
+              <img class="logo" src="../_static/CSInParallel200wide.png" alt="Logo"/>
+            </a></p>
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Activities</a><ul>
+<li><a class="reference internal" href="#activity-2-striping-in-mpi">ACTIVITY 2 - Striping in MPI</a></li>
+<li><a class="reference internal" href="#activity-3-striping-in-openmp">ACTIVITY 3 - Striping in OpenMP</a></li>
+<li><a class="reference internal" href="#activity-4a-striping-in-mpi-openmp-blocking-striping">ACTIVITY 4a - Striping in MPI+OpenMP (blocking+striping)</a></li>
+<li><a class="reference internal" href="#activity-4b-striping-in-mpi-openmp-striping-striping">ACTIVITY 4b - Striping in MPI+OpenMP (striping+striping)</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="../Striping/striping.html"
+                        title="previous chapter">Finding the Area Under the Curve Using Striping</a></p>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../Striping/striping.html" title="Finding the Area Under the Curve Using Striping"
+             >previous</a> |</li>
+        <li><a href="../index.html">Finding the Area Under the Curve</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright This work is licensed under a Creative Commons Attribution-ShareAlike 3.0 Unported License.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2b1.
+    </div>
+  </body>
+</html>

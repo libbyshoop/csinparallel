@@ -2,137 +2,80 @@
 Shared Memory Parallel Patternlets in OpenMP
 ********************************************
 
+
 When writing programs for shared-memory hardware with multiple cores, 
 a programmer could use a
 low-level thread package, such as pthreads. An alternative is to use
 a compiler that processes OpenMP *pragmas*, which are compiler directives that
 enable the compiler to generate threaded code.  Whereas pthreads uses an **explicit**
-multithreading mosel in which the programmer must explicitly create and manage threads,
+multithreading model in which the programmer must explicitly create and manage threads,
 OpenMP uses an **implicit** multithreading model in which the library handles
 thread creation and management, thus making the programmer's task much simpler and
-less error-prone.
+less error-prone.  OpenMP is a standard that compilers who implement it must adhere to. 
 
-The following are examples of C code with OpenMP pragmas
-The firrst three are basic illustrations to get used to the OpenMP pragmas.
-The rest illustrate how to implement particular patterns and what can
-go wrong when mutual exclusion is not properly ensured.
+The following are examples of C code with OpenMP pragmas.  There is one C++
+example that is used to illustrate a point about that language. The first
+three are basic illustrations so you can get used to the OpenMP pragmas and
+conceptualize the two primary patterns used as
+**program structure implementation strategies** that almost all shared-memory
+parallel programs have:
 
-Note: by default OpenMP uses the **Thread Pool** pattern of concurrent execution.
-OpenMP programs initialze a group of threads to be used by a given program 
+	* **fork/join**:  forking threads and joining them back, and 
+	* **single program, multiple data**:  writing one program in which separate threads maybe performing different computations simultaneously on different data, some of which might be shared in memory.
+
+The rest of the examples illustrate how to implement other patterns
+along with the above two and what can go wrong when mutual exclusion
+is not properly ensured.
+
+Note: by default OpenMP uses the **Thread Pool** pattern of concurrent execution control.
+OpenMP programs initialize a group of threads to be used by a given program 
 (often called a pool of threads).  These threads will execute concurrently
-during portions of the code specified by the programmer.
+during portions of the code specified by the programmer.  In addition, the **multiple instruction, multiple data** pattern is used in OpenMP programs because multiple threads can be executing different instructions on different data in memory at the same point in time.
 
 Source Code
 ************
 
 Please download all examples from this tarball: 
-:download:`patternlets.tgz <../patternlets.tgz>`
+:download:`openMP.tgz <../patternlets/openMP.tgz>`
 
-A C code file for each example below can be found in subdirectories of the OpenMP directory,
-along with a makefile.
+A C code file and a Makefile for each example below can be found in 
+subdirectories of the openMP directory created by extracting the above tarball.  
+The number for each example below corresponds to one used in subdirectory 
+names containing each one.
 
-0. The OMP parallel pragma
+To compile and run these examples, you will need a C compiler with OpenMP.  The GNU C compiler is OpenMP compliant.  We assume you are building and executing these on a Unix command line.
+
+
+Patternlets Grouped By Type
 ***************************
 
-The `omp parallel` pragma on line 18, when uncommented, tells the compiler to
-fork a set of threads to execute that particular line of code.
+If you are working on these for the first time, you may want to visit them in order.  If you are returning to review a particular patternlet or the pattern categorization diagram, you can refer to them individually.
 
-.. literalinclude::
-	../patternlets/OpenMP/00.simpleParallel/simpleParallel.c
-	:language: c
-	:linenos:
+:doc:`ProgStructure_Barrier`
 
-1. Hello, World: default number of OpenMP threads
-***********************************************************
+:doc:`DataDecomp_Reduction`
 
-Note how there are OpenMP functions to
-obtain a thread number and the total number of threads.
-When the pragma is uncommented, note what the default number of threads
-is.  Here the threads are forked and execute the block of code insode the
-curly braces on lines 18 through 20.
+:doc:`MutualExclusion`
 
-.. literalinclude:: 
-	../patternlets/OpenMP/01.parallelHello/parallelHello.c
-    :language: c
-    :linenos:
+:doc:`TaskDecomp`
 
-2. Hello, World
-***************
- 
-Here we enter the number of threads to use on the command line.
+:doc:`patterns_diagram`
 
-.. literalinclude::
-	../patternlets/OpenMP/02.parallelHello2/parallelHello2.c
-    :language: c
+.. toctree::
+	:hidden: 
 
-3. Master-Worker Implementation Strategy
-*****************************************
+	ProgStructure_Barrier
+	DataDecomp_Reduction
+	MutualExclusion
+	TaskDecomp
+	patterns_diagram
+	
 
-.. literalinclude::
-	../patternlets/OpenMP/03.masterWorker/masterWorker.c
-    :language: c
 
-4. Shared Data Decomposition Pattern:  blocking of threads in a parallel for loop
-*********************************************************************************
 
-.. literalinclude::
-	../patternlets/OpenMP/04.parallelForBlocks/parallelForBlocks.c
-    :language: c
 
-5. Shared Data Decomposition Pattern:  striping of threads in a parallel for loop
-*********************************************************************************
 
-.. literalinclude::
-	../patternlets/OpenMP/05.parallelForStripes/parallelForStripes.c
-    :language: c
 
-6. Collective Communication: Reduction
-***************************************
 
-Once processes have performed independent concurrent computations, possibly
-on some portion of decomposed data, it is quite commen to then *reduce*
-those individual computations into one value. In this example, an array of randomly assigned integers represents a set of shared data. All values
-in the array are summed together by using the OpenMP
-parallel for pragma with the `reduction(+:sum)` clause on the variable **sum**,
-which is computed in line 61.
 
-.. literalinclude::
-	../patternlets/OpenMP/06.reduction/reduction.c
-    :language: c
-    :linenos:
-
-7. Shared Data Pattern: Parallel-for-loop needs non-shared, private variables
-******************************************************************************
-
-.. literalinclude::
-	../patternlets/OpenMP/07.private/private.c
-    :language: c
-
-8. Race Condition: missing the mutual exclusion patterm
-********************************************************
-
-.. literalinclude::
-	../patternlets/OpenMP/08.atomic/atomic.c
-    :language: c
-
-9. Mutual Exclusion: two ways to ensure
-****************************************
-
-.. literalinclude::
-	../patternlets/OpenMP/09.critical/critical.c
-    :language: c
-
-10.  Mutual Exclusion Pattern: compare performance
-**************************************************
-
-.. literalinclude::
-	../patternlets/OpenMP/10.critical2/critical.c
-    :language: c
-
-11. Task Decomposition Pattern using OpenMP section directive
-**************************************************************
-
-.. literalinclude::
-	../patternlets/OpenMP/11.sections/sections.c
-    :language: c
 

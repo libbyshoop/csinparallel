@@ -1,0 +1,171 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Parallel Computing with Haskell using Quicksort &mdash; Parallel Haskell</title>
+    
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="top" title="Parallel Haskell" href="../index.html" />
+    <link rel="next" title="Riemann Integral and Performance" href="../RiemannIntegral/RiemannIntegral.html" />
+    <link rel="prev" title="Introduction" href="../Introduction/Introduction.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../RiemannIntegral/RiemannIntegral.html" title="Riemann Integral and Performance"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="../Introduction/Introduction.html" title="Introduction"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../index.html">Parallel Haskell</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="parallel-computing-with-haskell-using-quicksort">
+<h1>Parallel Computing with Haskell using Quicksort<a class="headerlink" href="#parallel-computing-with-haskell-using-quicksort" title="Permalink to this headline">¶</a></h1>
+<p>When teaching parallel computing at the undergraduate level, the selection of a programming language is important. When choosing, there are two routes that an instructor can take <sup>[4]</sup>. The first is to choose a programming language whose computation is parallelized through low-level additions. The alternative is to use a language whose computation can be parallelized through high-level abstraction. This module explores the latter route, which will increasingly lead to functional programming <sup>[4]</sup>.</p>
+<p>Students must be taught that computationally expensive problems can be divided into pieces and evaluated in parallel on multiple cores. The modern curriculum introduces parallel computing through the use of low-level programming languages and tools. Haskell is an interesting alternative because of its abstract parallel functions, which can make it much easier to program in parallel by removing many of the problems associated with lower-level parallelism <sup>[6]</sup>.</p>
+<p>We began our education in Haskell with the book, <em>Learn You a Haskell for Great Good</em>, by Miran Lipovaça
+<sup>[5]</sup>, and we supplemented this with selections from <em>Real World Haskell by Sullivan</em> <sup>[12]</sup>. These publications,
+along with other research conducted on the parallel language constructs available in Haskell, provided us
+with a sufficient foundation in parallel programming.</p>
+<p>Haskell is a purely functional, deterministic programming language. It has a static, strong, type system
+with automatic type inference. The upshot is that the output of its functions will always be the same
+regardless of whether it is running on one or multiple cores. This eliminates deadlock and race condition
+errors that can plague traditional approaches to and parallel programming <sup>[6]</sup>. Additionally, the abstraction
+in the parallel functions in Haskell allows for the programs to run on a range of hardware <sup>[6]</sup>. These
+advantages lead us to ask the question: can a functional programming paradigm be an effective tool to teach
+undergraduate students parallel computing?</p>
+<p>To answer this question, instructors must weigh the benefits of Haskell against the overhead of teaching
+undergraduate students a new programming language and the functional paradigm. Haskell has a variety
+of contructs available for parallel programming. When imported, the <tt class="docutils literal"><span class="pre">Control.Concurrent</span></tt> module allows
+the programmer to explicitly generate new threads. <em>Real World Haskell</em> defines a thread as &#8220;an IO action
+that executes independently from other threads&#8221; <sup>[12]</sup>. To create a new thread, we use the <tt class="docutils literal"><span class="pre">forkIO</span></tt> function.
+We are not going to use the <tt class="docutils literal"><span class="pre">Control.Concurrent</span></tt> module in our lesson plan or assignment. We have found
+that the concurrency module is ineffective in producing elegant parallel solutions to the problems we have
+proposed. For more information about concurrent programming in Haskell, see <em>Real World Haskell</em>.</p>
+<p>A higher level parallel solution is the <tt class="docutils literal"><span class="pre">Control.Parallel</span></tt> module, which allows the use of the <tt class="docutils literal"><span class="pre">par</span></tt> and
+<tt class="docutils literal"><span class="pre">pseq</span></tt> functions. With these two functions we are able to take a sequential program and easily change it
+so that it can be evaluated in parallel. <tt class="docutils literal"><span class="pre">par</span></tt> evaluates its left argument while simultaneously executing the
+right argument. <tt class="docutils literal"><span class="pre">pseq</span></tt> evaluates the expression on the left to <a class="reference external" href="http://www.haskell.org/haskellwiki/Weak_head_normal_form">weak head normal form</a> before returning the
+one to the right. <tt class="docutils literal"><span class="pre">par</span></tt> and <tt class="docutils literal"><span class="pre">pseq</span></tt> are often used together to parallelize code. Here is an example of how we
+would implement <tt class="docutils literal"><span class="pre">par</span></tt> and <tt class="docutils literal"><span class="pre">pseq</span></tt> into a quicksort algorithm. The first snippet of code is a simple sequential
+quicksort algorithm, the second demonstrates where you would insert the <tt class="docutils literal"><span class="pre">par</span></tt> and <tt class="docutils literal"><span class="pre">pseq</span></tt> functions.</p>
+<div class="highlight-python"><pre>1   import Control.Parallel
+2
+3
+4   -- A non-parallel quicksort
+5   quicksort :: Ord a =&gt; [a] -&gt; [a]
+6   quicksort (x:xs) = smaller ++ x:larger
+7        where
+8               smaller = quicksort [y | y &lt;- xs, y &lt; x]
+9               larger = quicksort [y | y &lt;- xs, y &gt;= x]
+10   quicksort _ = []
+11
+12   -- A parallel quicksort
+13   parQuicksort :: Ord a =&gt; [a] -&gt; [a]
+14   parQuicksort (x:xs) = ($! smaller) `par` (($! smaller) `pseq`
+15                                              (smaller ++ x:larger))
+16      where
+17              smaller = parQuicksort [y | y &lt;- xs, y &lt; x]
+18              larger = parQuicksort [y | y &lt;- xs, y &gt;= x]
+19   parQuicksort _ = []</pre>
+</div>
+<div class="section" id="ghc-compilation-and-runtime-options">
+<h2>GHC Compilation and Runtime Options<a class="headerlink" href="#ghc-compilation-and-runtime-options" title="Permalink to this headline">¶</a></h2>
+<p>When compiling our parallel programs in Haskell, we experienced faster run times by including the following GHC run time options. By including the <tt class="docutils literal"><span class="pre">-rtsopts</span></tt> tag in our compilation statement we are able to include all of the runtime settings (<tt class="docutils literal"><span class="pre">RTS</span></tt>) features of Haskell. The <tt class="docutils literal"><span class="pre">-threaded</span></tt> tag, tells the compiler that the program will be run in parallel. Finally, the <tt class="docutils literal"><span class="pre">-O</span></tt> tag optimizes the program <sup>[3]</sup>. All of these should be included when first compiling a program, in a statement similar to the following.</p>
+<p><tt class="docutils literal"><span class="pre">ghc</span> <span class="pre">-threaded</span> <span class="pre">-rtsopts</span> <span class="pre">-O</span> <span class="pre">--make</span> <span class="pre">myProgram.hs</span></tt></p>
+<p>Options can be passed to the GHC run time system. The <tt class="docutils literal"><span class="pre">+RTS</span></tt> command line option starts the run time options and <tt class="docutils literal"><span class="pre">-RTS</span></tt> ends them. Anything between these two tags are options for the run time system. All arguments after <tt class="docutils literal"><span class="pre">-RTS</span></tt> are arguments for the program. When we use the <tt class="docutils literal"><span class="pre">getArgs</span></tt> function from the <tt class="docutils literal"><span class="pre">System.Environment</span></tt> module to read the command line arguments, no run time options will be read <sup>[12]</sup>. The performance of a parallel Haskell program can sometimes be improved by increasing the heap size of the program <sup>[3]</sup>. This will reduce the number of garbage collections at run time. The stack and heap sizes are specified by the run time options. For example, <tt class="docutils literal"><span class="pre">-K100MB</span></tt> specifies a 100MB stack size and <tt class="docutils literal"><span class="pre">-H500MB</span></tt> specifies a 500MB heap size <sup>[2]</sup>. In addition to increasing the size of the stack and heap, we disable parallel load-balance garbage collection with the <tt class="docutils literal"><span class="pre">-qb</span></tt> option. The <tt class="docutils literal"><span class="pre">-N</span></tt> option is used to specify the number of cores that the Haskell program should run on. The <tt class="docutils literal"><span class="pre">-s</span></tt> option is used to print useful run time statistics. The full command used to run the program is:</p>
+<p><tt class="docutils literal"><span class="pre">./myProgram</span> <span class="pre">+RTS</span> <span class="pre">-N{number</span> <span class="pre">of</span> <span class="pre">cores}</span> <span class="pre">-qb</span> <span class="pre">-H{heap</span> <span class="pre">size}</span> <span class="pre">-k{stack</span> <span class="pre">size}</span> <span class="pre">-s</span> <span class="pre">-RTS</span></tt></p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../index.html">
+              <img class="logo" src="../_static/CSInParallel200wide.png" alt="Logo"/>
+            </a></p>
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Parallel Computing with Haskell using Quicksort</a><ul>
+<li><a class="reference internal" href="#ghc-compilation-and-runtime-options">GHC Compilation and Runtime Options</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="../Introduction/Introduction.html"
+                        title="previous chapter">Introduction</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="../RiemannIntegral/RiemannIntegral.html"
+                        title="next chapter">Riemann Integral and Performance</a></p>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../RiemannIntegral/RiemannIntegral.html" title="Riemann Integral and Performance"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="../Introduction/Introduction.html" title="Introduction"
+             >previous</a> |</li>
+        <li><a href="../index.html">Parallel Haskell</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright This work is licensed under a Creative Commons Attribution-ShareAlike 3.0 Unported License.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2b1.
+    </div>
+  </body>
+</html>

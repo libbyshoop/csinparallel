@@ -1,0 +1,48 @@
+This is BibTeX, Version 0.99d (TeX Live 2012/dev/Arch Linux)
+Capacity: max_strings=35307, hash_size=35307, hash_prime=30011
+The top-level auxiliary file: paper.aux
+The style file: plain.bst
+Database file #1: refs.bib
+Warning--to sort, need author or key in gol
+You've used 8 entries,
+            2118 wiz_defined-function locations,
+            531 strings with 4831 characters,
+and the built_in function-call counts, 1622 in all, are:
+= -- 162
+> -- 38
+< -- 0
++ -- 18
+- -- 10
+* -- 76
+:= -- 258
+add.period$ -- 21
+call.type$ -- 8
+change.case$ -- 31
+chr.to.int$ -- 0
+cite$ -- 9
+duplicate$ -- 62
+empty$ -- 173
+format.name$ -- 10
+if$ -- 357
+int.to.chr$ -- 0
+int.to.str$ -- 8
+missing$ -- 1
+newline$ -- 40
+num.names$ -- 10
+pop$ -- 46
+preamble$ -- 1
+purify$ -- 23
+quote$ -- 0
+skip$ -- 54
+stack$ -- 0
+substring$ -- 67
+swap$ -- 8
+text.length$ -- 0
+text.prefix$ -- 0
+top$ -- 0
+type$ -- 32
+warning$ -- 1
+while$ -- 12
+width$ -- 9
+write$ -- 77
+(There was 1 warning)
