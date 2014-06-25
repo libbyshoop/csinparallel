@@ -53,12 +53,14 @@ are doing your work on a new branch that you create from the develop branch**.  
 
 As an alternative to this second step, you can use your github client to make a new sub-branch off the develop branch.  Look for a small plus sign on the develop branch in the list of branches.
 
-In a later section of this documentation we describe tthe workflow with git in greater detail.  Note for now that *your new work will always be done in the dev/modules directory*, where you can create a brand new module.
+In a later section of this documentation we describe the workflow with git in greater detail.  Note for now that *your new work will always be done in the dev/modules directory*, where you can create a brand new module.
+
 
 Creating a Module
 #################
 
 
+Find your GitHub directory (on Windows, it usually puts itself in ``My Documents``). If you forked the repository, you'll have a directory called csinparallel.
 Navigate to ``csinparallel/dev/modules``, and enter ``sphinx-quickstart``
 to begin. Next, follow these directions below to go through the setup process.
 
@@ -111,6 +113,7 @@ Bolded answers require the user to type something, not just hit enter.
 
 Modifying the conf.py File
 ##########################
+
 
 In ``/GitHub/csinparallel/dev/modules/YourModuleName/source``, run the configuration script. To do this, copy the file :download:`confscript.py <confscript.py>` into this folder, and double click on it or enter ``python confscript.py`` into a terminal or command line.  Follow the directions to enter your module's name (in plain English) and a short description when prompted.
 

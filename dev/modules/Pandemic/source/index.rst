@@ -9,14 +9,15 @@ Welcome to Pandemic Exemplar (for those with some experience)'s documentation!
 .. toctree::
    :maxdepth: 1
 
-   1-Introduction/introduction
+   0-Introduction/introduction
+   1-ProgramStructure/programstructure
    2-DataStructure/datastructure
-   3-InitFunctions/initfunctions
-   4-MPIFunctions/mpifunctions
-   5-CoreFunctions/corefunctions
-   5-CudaFunctions/cudafunctions
-   6-DisplayFunctions/displayfunctions
-   7-FinishFunctions/finishfunctions
+   3-Initialize/initialize
+   4-Infection/infection
+   5-Display/display
+   6-Core/core
+   6-Cuda/cuda
+   7-Finalize/finalize
 
 .. comment
 	* :ref:`genindex`

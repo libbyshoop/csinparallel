@@ -1,0 +1,152 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Finding the Area Under the Curve Using Blocking &mdash; Finding the Area Under the Curve</title>
+    
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="top" title="Finding the Area Under the Curve" href="../index.html" />
+    <link rel="next" title="Finding the Area Under the Curve Using Striping" href="../Striping/striping.html" />
+    <link rel="prev" title="Computing Area Under the Curve" href="../ComputingArea/computing.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../Striping/striping.html" title="Finding the Area Under the Curve Using Striping"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="../ComputingArea/computing.html" title="Computing Area Under the Curve"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../index.html">Finding the Area Under the Curve</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="finding-the-area-under-the-curve-using-blocking">
+<h1>Finding the Area Under the Curve Using Blocking<a class="headerlink" href="#finding-the-area-under-the-curve-using-blocking" title="Permalink to this headline">¶</a></h1>
+<p>Once each process has the number of rectangles it is responsible for it can start looping through this number, calculate and store the area one by one. If this loop is parallelized using OpenMP by default OpenMP will split the data in half amongst the threads. By each process or thread having its own set of rectangles to loop through, we have employed the concept of blocking as a way of parallel computation. The following code excerpt shows the loop:</p>
+<div class="highlight-c"><pre>    /* instead of giving the rest of rectangles to the last process, write an
+    improved version of this function with a solution in which the number of rectangles
+    will be distributed equally*/
+}
+
+/***************************************************************************
+ * Find boundaries of each rectangle and calculate the area for each*
+ ***************************************************************************/
+void get_rectangle_area(struct area_t * area) {
+  struct display_t * d = &amp;(area-&gt;d);
+  struct rec_t * rect = &amp;(area-&gt;rect);
+  struct curve_t * curve = &amp;(area-&gt;curve);
+  int current_rectangle;
+  double current_left,current_height;
+
+  #ifdef OMP
+  #pragma omp parallel for private(current_rectangle, current_left, current_height)
+  #endif
+  for(current_rectangle = 0; current_rectangle &lt; rect-&gt;private_num_rect; current_rectangle++)
+  {
+    /* Calculate the x-value of the left side of the rectangle */
+    current_left = curve-&gt;my_xleft + current_rectangle *rect-&gt;width;
+    
+    /* Calculate the height of the rectangle */
+    current_height = FUNC(area, current_left);
+    
+    /* Calculate the area of the rectangle and add it to the sum private to each process*/
+    area-&gt;my_sum += rect-&gt;width * current_height;
+    
+    /*Draw the current rectangle*/
+    if(area-&gt;do_display){
+      if(area-&gt;circle){
+	current_left = curve-&gt;circle_my_xleft + current_rectangle*rect-&gt;circle_width; 
+	current_height = scale_circle(current_left);
+      }
+      if(area-&gt;sin){
+	current_left = curve-&gt;sin_my_xleft + current_rectangle*rect-&gt;sin_width;
+	current_height = scale_sin(current_left);
+</pre>
+</div>
+<p>The next image shows how the blocking is done using OpenMP only on the head node. Each thread has its unique color.</p>
+<a class="reference internal image-reference" href="../_images/openmp.png"><img alt="openmp" class="align-center" src="../_images/openmp.png" style="width: 350px; height: 700px;" /></a>
+<p>The source code can be downloaded <a class="reference download internal" href="../_downloads/area.tgz"><tt class="xref download docutils literal"><span class="pre">here</span></tt></a>.</p>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../index.html">
+              <img class="logo" src="../_static/CSInParallel200wide.png" alt="Logo"/>
+            </a></p>
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="../ComputingArea/computing.html"
+                        title="previous chapter">Computing Area Under the Curve</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="../Striping/striping.html"
+                        title="next chapter">Finding the Area Under the Curve Using Striping</a></p>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../Striping/striping.html" title="Finding the Area Under the Curve Using Striping"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="../ComputingArea/computing.html" title="Computing Area Under the Curve"
+             >previous</a> |</li>
+        <li><a href="../index.html">Finding the Area Under the Curve</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright This work is licensed under a Creative Commons Attribution-ShareAlike 3.0 Unported License.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2b1.
+    </div>
+  </body>
+</html>

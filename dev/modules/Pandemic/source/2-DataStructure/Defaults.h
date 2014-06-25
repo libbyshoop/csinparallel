@@ -1,3 +1,13 @@
+/* Parallelization: Infectious Disease
+ * By Aaron Weeden, Shodor Education Foundation, Inc.
+ * November 2011
+ * Modified by Yu Zhao, Macalester College.
+ * July 2013
+ * (Modularized the original code and added CUDA Programming)
+ *
+ * Note on naming scheme:  Variables that begin with "our" are private to
+ * processes on a node in a cluster and shared by threads. */
+
 #ifndef PANDEMIC_DEFAULTS_H
 #define PANDEMIC_DEFAULTS_H
 
@@ -26,34 +36,6 @@ const int DEFAULT_MICROSECS = 100000;
 const int DEFAULT_SIZE = 50;
 const int DEFAULT_INIT_INFECTED = 1;
 
-// All the data needed for an X display
-struct display_t 
-{
-    #ifdef TEXT_DISPLAY
-    // Array of character arrays, a.k.a. array of character pointers,
-    // for text display 
-    char **environment;
-    #endif
-
-    #ifdef X_DISPLAY
-    // Declare X-related variables 
-    Display         *display;
-    Window          window;
-    int             screen;
-    Atom            delete_window;
-    GC              gc;
-    XColor          infected_color;
-    XColor          immune_color;
-    XColor          susceptible_color;
-    XColor          dead_color;
-    Colormap        colormap;
-    char            *red;
-    char            *green;
-    char            *black;
-    char            *white;
-    #endif
-};
-
 // All the data needed globally. Holds EVERYONE's location, 
 // states and other necessary counters.
 struct global_t 
@@ -74,8 +56,10 @@ struct global_t
     int total_number_of_processes;
 };
 
-// All the data needed locally. Holds people's location, 
-// states and other necessary counters on each node.
+// All the data private to each node: Data being used by 
+// each process on a node in a cluster when using MPI.
+// Each process holds data for location, states and 
+// other necessary counters for a subset of people.
 struct our_t 
 {
     // current day
@@ -102,7 +86,7 @@ struct our_t
     int *our_num_days_infected;
 };
 
-// All the data needed as constant
+// Data being used as constant
 struct const_t 
 {
     // environment
@@ -118,7 +102,9 @@ struct const_t
     int microseconds_per_day;
 };
 
-// All the data needed to show stats in results
+// Stats data private to each node: Data being used by 
+// each process on a node in a cluster when using MPI. 
+// Each process holds stats data for a subset of people.
 struct stats_t 
 {
     double our_num_infections;
@@ -127,7 +113,37 @@ struct stats_t
     double our_num_recovery_attempts; 
 };
 
-// All the data needed for CUDA operation
+// Data being used for the X display
+struct display_t 
+{
+    #ifdef TEXT_DISPLAY
+    // Array of character arrays for text display 
+    char **environment;
+    #endif
+
+    #ifdef X_DISPLAY
+    // Declare X-related variables 
+    Display         *display;
+    Window          window;
+    int             screen;
+    Atom            delete_window;
+    GC              gc;
+    XColor          infected_color;
+    XColor          immune_color;
+    XColor          susceptible_color;
+    XColor          dead_color;
+    Colormap        colormap;
+    char            *red;
+    char            *green;
+    char            *black;
+    char            *white;
+    #endif
+};
+
+// All the data needed for CUDA operation: CUDA needs memory 
+// pointers and other information on CPU side. As more than
+// one function (mainly used by CUDA.cu) need to use these 
+// data, we decided to use a struct to hold all these data.
 struct cuda_t 
 {
     // only CUDA-only version and MPICUDA version can see what 

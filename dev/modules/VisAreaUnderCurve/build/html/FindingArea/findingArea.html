@@ -1,0 +1,121 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Finding the Area Unde the Curve &mdash; Finding the Area Under the Curve</title>
+    
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="top" title="Finding the Area Under the Curve" href="../index.html" />
+    <link rel="next" title="Computing Area Under the Curve" href="../ComputingArea/computing.html" />
+    <link rel="prev" title="Dividing Large Sized Problems" href="../DividingLargeSizedProblems/dividing.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../ComputingArea/computing.html" title="Computing Area Under the Curve"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="../DividingLargeSizedProblems/dividing.html" title="Dividing Large Sized Problems"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../index.html">Finding the Area Under the Curve</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="finding-the-area-unde-the-curve">
+<h1>Finding the Area Unde the Curve<a class="headerlink" href="#finding-the-area-unde-the-curve" title="Permalink to this headline">¶</a></h1>
+<p>Integration or finding the area under a curve is a very important concept from calculus applied in life sciences, engineering and economics.</p>
+<p>The basic concept behind finding the area under a curve is <strong>approximating the area with rectangles</strong>.</p>
+<p>Given two endpoints on the curve we can split this region into numerous small rectangles. The more rectangles we choose, the smaller they become, and the closer they approximate the curve. Therefore, choosing a larger amount of rectangles yields to more accurate results. Mathematically, the number of rectangles can approach infinity. In the code samples found here the number of rectangles specified may approach a large number. An exception to this would be if the calculation was to be visualized, as the width of a rectangle cannot be smaller than the pixel size of the screen used for display.</p>
+<p>There exist functions whose area we either know or can calculate exactly without integration. Such functions can provide a clear guideline to see how accurate our program is. Here we choose to examine the following functions:</p>
+<ul class="simple">
+<li>linear function <em>f</em> (<em>x</em>) = <em>x</em> in the positive range</li>
+<li>the unit circle in the range [0,1]</li>
+<li><em>f</em> (<em>x</em>) = sin(<em>x</em>) in the range [0, pi ]</li>
+</ul>
+<p>The area of a linear function in the positive range is equivalent to the area of a triangle, which is 0.5 x height x width.</p>
+<p>The area of a quarter unit circle is quarter pi.</p>
+<p>Finally, the are of the sin function in the range from 0 to pi is exactly 2.</p>
+<p>It is important to keep these facts in mind as they will help us determine the correctness of our program.</p>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../index.html">
+              <img class="logo" src="../_static/CSInParallel200wide.png" alt="Logo"/>
+            </a></p>
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="../DividingLargeSizedProblems/dividing.html"
+                        title="previous chapter">Dividing Large Sized Problems</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="../ComputingArea/computing.html"
+                        title="next chapter">Computing Area Under the Curve</a></p>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../ComputingArea/computing.html" title="Computing Area Under the Curve"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="../DividingLargeSizedProblems/dividing.html" title="Dividing Large Sized Problems"
+             >previous</a> |</li>
+        <li><a href="../index.html">Finding the Area Under the Curve</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright This work is licensed under a Creative Commons Attribution-ShareAlike 3.0 Unported License.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2b1.
+    </div>
+  </body>
+</html>

@@ -39,10 +39,10 @@ Try the simple examples
 Log into your cluster and make sure that you have the following example files in your account:
 
 Simplest Hello World Example:
-:download:`download hellompi.c <dist_example_code/hellompi.c>`
+:download:`download hellompi.c <hellompi.c>`
 
 Hello World by Sending messages:
-:download:`download example2.c <dist_example_code/example2.c>`
+:download:`download example2.c <example2.c>`
 
 You can specifically compile the simplest example like this: ::
 
