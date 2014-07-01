@@ -1,0 +1,180 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Excercise &mdash; Basic CUDA Fundamentals</title>
+    
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+    <link rel="top" title="Basic CUDA Fundamentals" href="../index.html" />
+    <link rel="prev" title="Introduction" href="../Introduction/Introduction.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../Introduction/Introduction.html" title="Introduction"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../index.html">Basic CUDA Fundamentals</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="excercise">
+<h1>Excercise<a class="headerlink" href="#excercise" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="cuda-files-to-download">
+<h2>CUDA Files to Download<a class="headerlink" href="#cuda-files-to-download" title="Permalink to this headline">¶</a></h2>
+<p>You should download <a class="reference download internal" href="../_downloads/addVectors.cu"><tt class="xref download docutils literal"><span class="pre">addVectors.cu</span></tt></a> and <a class="reference download internal" href="../_downloads/divergence.cu"><tt class="xref download docutils literal"><span class="pre">divergence.cu</span></tt></a> for use in this excercies.</p>
+</div>
+<div class="section" id="understanding-cuda">
+<h2>Understanding CUDA<a class="headerlink" href="#understanding-cuda" title="Permalink to this headline">¶</a></h2>
+<p>Now you will examine some of the factors that affect the performance of programs that use the graphics processing unit (GPU). In particular, you’ll see the cost of transferring data back and forth to the graphics card and how the different threads are joined together.</p>
+<p>Let’s begin by compiling this program:</p>
+<div class="highlight-c"><div class="highlight"><pre><span class="n">nvcc</span> <span class="o">-</span><span class="n">o</span> <span class="n">addVectors</span> <span class="n">addVectors</span><span class="p">.</span><span class="n">cu</span>
+</pre></div>
+</div>
+<p>nvcc is the name of the compiler for CUDA, the -o addVectors part is telling the compiler that you’d like to create an executable called “addVectors”, and the last part is the name of the file to compile. If you get any error messages, let me know; this probably means that there is a problem with your .cshrc or with copying the file. Once you’ve successfully compiled, you can run the program with the following:</p>
+<div class="highlight-c"><div class="highlight"><pre><span class="p">.</span><span class="o">/</span><span class="n">addVectors</span>
+</pre></div>
+</div>
+<p>You should get a printout with a time and a list of even numbers from 0 to 18.</p>
+<p>Now let’s examine the code itself. Open the file <tt class="docutils literal"><span class="pre">addVectors.cu</span></tt>.</p>
+<p>Right near the top of the file is the definition of the function kernel:</p>
+<div class="highlight-c"><div class="highlight"><pre><span class="n">__global__</span> <span class="kt">void</span> <span class="nf">kernel</span><span class="p">(</span><span class="kt">int</span><span class="o">*</span> <span class="n">res</span><span class="p">,</span> <span class="kt">int</span><span class="o">*</span> <span class="n">a</span><span class="p">,</span> <span class="kt">int</span><span class="o">*</span> <span class="n">b</span><span class="p">)</span> <span class="p">{</span>
+   <span class="c1">//function that runs on GPU to do the addition</span>
+   <span class="c1">//sets res[i] = a[i] + b[i]; each thread is responsible for one value of i</span>
+
+   <span class="kt">int</span> <span class="n">thread_id</span> <span class="o">=</span> <span class="n">threadIdx</span><span class="p">.</span><span class="n">x</span> <span class="o">+</span> <span class="n">blockIdx</span><span class="p">.</span><span class="n">x</span><span class="o">*</span><span class="n">blockDim</span><span class="p">.</span><span class="n">x</span><span class="p">;</span>
+   <span class="k">if</span><span class="p">(</span><span class="n">thread_id</span> <span class="o">&lt;</span> <span class="n">N</span><span class="p">)</span> <span class="p">{</span>
+      <span class="n">res</span><span class="p">[</span><span class="n">thread_id</span><span class="p">]</span> <span class="o">=</span> <span class="n">a</span><span class="p">[</span><span class="n">thread_id</span><span class="p">]</span> <span class="o">+</span> <span class="n">b</span><span class="p">[</span><span class="n">thread_id</span><span class="p">];</span>
+   <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>This code mostly looks like something you would see in C or Java except for some details of the top line. If you have previously worked with Java but not with C, <tt class="docutils literal"><span class="pre">int*</span></tt> is (for our purposes) equivalent to <tt class="docutils literal"><span class="pre">int[]</span></tt> in Java and the global part denotes this function as a kernel that can run on the GPU. The first line of code in the function body sets <tt class="docutils literal"><span class="pre">thread</span> <span class="pre">id</span></tt> as a unique identifier for each thread. Its value is calculated as the number of the thread within its block <tt class="docutils literal"><span class="pre">threadIdx.x</span></tt> plus the product of its block number <tt class="docutils literal"><span class="pre">blockIdx.x</span></tt> and the size of each block <tt class="docutils literal"><span class="pre">blockDim.x</span></tt>; recall that threads are organized into blocks to simplify the bookkeeping for the tremendous number of threads in CUDA programs. The id value is then used as the index into the arrays so that each thread performs exactly one of the additions in the array sum.</p>
+</div>
+<div class="section" id="modifying-cuda">
+<h2>Modifying CUDA<a class="headerlink" href="#modifying-cuda" title="Permalink to this headline">¶</a></h2>
+<p>Next, let’s modify the CUDA code. Begin by changing the value next to the <tt class="docutils literal"><span class="pre">N</span></tt> in the setting of the array length (right above the declaration of kernel). In order for the program to take a measurable amount of time, set this to 1 million (1000000). Since we don’t want to actually see the vector sum (one million numbers would make quite a mess for output), go down to the &#8220;verify results&#8221; part of the code (2nd to last “paragraph” of code in the file). Change this for loop to only print if it finds an index <tt class="docutils literal"><span class="pre">i</span></tt> such that <tt class="docutils literal"><span class="pre">res[i]</span> <span class="pre">!=</span> <span class="pre">a[i]+b[i]</span></tt>, i.e. the program has failed to correctly add the vectors.</p>
+<p>Once you’ve made these changes, it’s time to exit the editor and recompile the program.  Then type the same compilation command as before (the one with nvcc). Now when you run the program, there shouldn’t be any output other than the time, which will be significantly larger (about 4 milliseconds).</p>
+<p>Let’s see how this time breaks down between the data transfer between the main system (call the host) and the graphics card. Open the file again and we’ll comment out the line that calls the kernel. Use your text editor to search for this line, if you search for “kernel” you will find the as the third occurrence.</p>
+<p>Now comment out this line and the “verify” paragraph (down a couple of paragraphs). Then recompile, and run the program again. The program is now transferring the data back and forth, but not actually performing the addition. You’ll see that the running time hasn’t changed much. This program spends most of its time transferring data because the computation does very little to each piece of data and can do that part in parallel.</p>
+<p>To see this another way, open the file again and uncomment the kernel call and the verify paragraph. Then comment out the lines that transfer the data to the GPU; these are in the the paragraph commented as “transfer a and b to the GPU” (use the search function to find it). Then modify the kernel to set <tt class="docutils literal"><span class="pre">res[thread_id]</span></tt> to an arbitrary integer value instead of <tt class="docutils literal"><span class="pre">a[thread</span> <span class="pre">id]</span> <span class="pre">+</span> <span class="pre">b[thread</span> <span class="pre">id]</span></tt>. (The program initializes <tt class="docutils literal"><span class="pre">a[i]</span></tt> and <tt class="docutils literal"><span class="pre">b[i]</span></tt> to both be <tt class="docutils literal"><span class="pre">i</span></tt>; see the “set up contents of a and b” paragraph.) The resulting program should be equivalent to the original one except that instead of having the CPU initialize the vectors and then copy them to the graphics card, the graphics card is using its knowledge of their value to compute the sum, thus avoiding the first data transfer. Recompile and rerun this program; now the time is considerably less than the 4 milliseconds we started with. (We’re no longer copying the two vectors, which are each a million entries long...)</p>
+<p>If you have additional time, copy the file divergence.cu from the course directory, adapting the command we used to copy addVectors.cu. This file contains two kernels, creatively named kernel 1 and kernel 2. Examine them and verify that they should produce the same result. The running time is quite different however; find the line in main that calls kernel 2 and change it to call kernel 1 so that you can look at the difference in running time. This difference is caused by the fact that CUDA threads operate in lockstep; each thread in a warp spends time for each instruction that any thread in that warp wants to execute.</p>
+</div>
+<div class="section" id="questions">
+<h2>Questions<a class="headerlink" href="#questions" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li>Describe the basic interaction between the CPU and GPU in a CUDA program.</li>
+<li>The first activity in the CUDA lab involved commenting out various data transfer operations in the program. What did this part of the lab demonstrate?</li>
+<li>Next, we compared the running time of two different procedures to run on the GPU.</li>
+</ul>
+<div class="highlight-c"><div class="highlight"><pre><span class="n">__global__</span> <span class="kt">void</span> <span class="n">kernel_1</span><span class="p">(</span><span class="kt">int</span> <span class="o">*</span><span class="n">a</span><span class="p">)</span>
+<span class="kt">int</span> <span class="n">tid</span> <span class="o">=</span> <span class="n">threadIdx</span><span class="p">.</span><span class="n">x</span><span class="p">;</span>
+<span class="kt">int</span> <span class="n">cell</span> <span class="o">=</span> <span class="n">tid</span> <span class="o">%</span> <span class="mi">32</span><span class="p">;</span>
+<span class="n">a</span><span class="p">[</span><span class="n">cell</span><span class="p">]</span><span class="o">++</span><span class="p">;</span>
+<span class="p">}</span>
+
+
+<span class="n">__global__</span> <span class="kt">void</span> <span class="n">kernel_2</span><span class="p">(</span><span class="kt">int</span> <span class="o">*</span><span class="n">a</span><span class="p">)</span> <span class="p">{</span>
+<span class="kt">int</span> <span class="n">tid</span> <span class="o">=</span> <span class="n">threadIdx</span><span class="p">.</span><span class="n">x</span><span class="p">;</span>
+<span class="kt">int</span> <span class="n">cell</span> <span class="o">=</span> <span class="n">tid</span> <span class="o">%</span> <span class="mi">32</span><span class="p">;</span>
+<span class="k">switch</span><span class="p">(</span><span class="n">cell</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">case</span> <span class="mi">0</span>:
+      <span class="n">a</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">++</span><span class="p">;</span>
+      <span class="k">break</span><span class="p">;</span>
+    <span class="k">case</span> <span class="mi">1</span>:
+      <span class="p">...</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li>What did this part of the lab demonstrate?</li>
+</ul>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../index.html">
+              <img class="logo" src="../_static/CSInParallel200wide.png" alt="Logo"/>
+            </a></p>
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Excercise</a><ul>
+<li><a class="reference internal" href="#cuda-files-to-download">CUDA Files to Download</a></li>
+<li><a class="reference internal" href="#understanding-cuda">Understanding CUDA</a></li>
+<li><a class="reference internal" href="#modifying-cuda">Modifying CUDA</a></li>
+<li><a class="reference internal" href="#questions">Questions</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="../Introduction/Introduction.html"
+                        title="previous chapter">Introduction</a></p>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../Introduction/Introduction.html" title="Introduction"
+             >previous</a> |</li>
+        <li><a href="../index.html">Basic CUDA Fundamentals</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright This work is licensed under a Creative Commons Attribution-ShareAlike 3.0 Unported License.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
+    </div>
+  </body>
+</html>
