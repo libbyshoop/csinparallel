@@ -24,7 +24,9 @@
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
     <link rel="shortcut icon" href="../_static/favicon.ico"/>
-    <link rel="top" title="Basic CUDA Fundamentals" href="../index.html" /> 
+    <link rel="top" title="Basic CUDA Fundamentals" href="../index.html" />
+    <link rel="next" title="Excercise" href="../Excercise/Excercise.html" />
+    <link rel="prev" title="Basic CUDA Fundamentals" href="../index.html" /> 
   </head>
   <body>
     <div class="related">
@@ -33,6 +35,12 @@
         <li class="right" style="margin-right: 10px">
           <a href="../genindex.html" title="General Index"
              accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../Excercise/Excercise.html" title="Excercise"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="../index.html" title="Basic CUDA Fundamentals"
+             accesskey="P">previous</a> |</li>
         <li><a href="../index.html">Basic CUDA Fundamentals</a> &raquo;</li> 
       </ul>
     </div>  
@@ -46,27 +54,27 @@
 <h1>Introduction<a class="headerlink" href="#introduction" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="what-is-a-gpu">
 <h2>What is a GPU?<a class="headerlink" href="#what-is-a-gpu" title="Permalink to this headline">¶</a></h2>
-<p>Modified from <a class="reference external" href="http://selkie.macalester.edu/csinparallel/modules/GPUProgramming/build/html/Introduction/Introduction.html">The GPU Programming module</a> by Libby Shoop and Yu Zhao.</p>
+<p><em>Modified from</em> <a class="reference external" href="http://selkie.macalester.edu/csinparallel/modules/GPUProgramming/build/html/Introduction/Introduction.html">The GPU Programming module</a> <em>by Libby Shoop and Yu Zhao.</em></p>
 <p>A Graphics Processing Unit (GPU) is an electronic circuit that uses rapid memory manipulation and massive parallel data processing to accelerate the building of images intended for output to a display. Right now, GPUs are used in almost all customer end personal computers, game consoles, professional workstations, and cell phones.</p>
 <p>Before GPUs were introduced, CPUs did all the graphic processing tasks. In the early 1990s, computer manufacturers began to include GPUs into computer system with the aim of accelerating common graphics routines. After two decades of development, GPUs eventually outpaced CPUs as they actually have more transistors, are clocked faster, and have capability to do parallel computation more efficiently. GPUs these days have become so complex that they are basically computers in themselves, with their own memory, buses and processors. As GPUs harnessed more and more horsepower, GPU manufacturers (such as NVIDIA and ATI/AMD) found a way to use GPUs for more general purposes rather than just graphics or videos. This gave birth to the Compute Unified Device Architecture structure and CUDA C Programming Language, NVIDIA’s response on facilitating the development of General Purpose Graphics Processing Unit (GPGPU).</p>
 </div>
 <div class="section" id="how-do-gpus-and-cpus-differ">
 <h2>How do GPUs and CPUs differ?<a class="headerlink" href="#how-do-gpus-and-cpus-differ" title="Permalink to this headline">¶</a></h2>
 <p>GPUs and CPUs differ greatly, especially in that GPUs have highly parallel structures which make them work more effectively than CPUs if used on data that they can partition and process in parallel.</p>
-<p>CPUs and GPUs differ in computational capability because GPUs are specialized for compute-intensive and highly parallel computation in order to render graphics. CPUs will operate better in situations that require using large caches, which repeatedly read the same memory location. GPU caches only need to have enough space to store a few texture elements, so GPUs work better for sequential data processing than for data caching or flow control. Problems can have effective parallel solutions when: the same problem instruction? code? unit of code? arithmetic instruction unit? process? algorithm? needs to be executed for each element, which requires less sophisticated flow control; and when the problem has a massive dataset and high arithmetic intensity, which reduces the need for low latency memory.</p>
+<p>CPUs and GPUs differ in computational capability because GPUs are specialized for compute-intensive and highly parallel computation in order to render graphics. CPUs will operate better in situations that require using large caches, which repeatedly read the same memory location. GPU caches only need to have enough space to store a few texture elements, so GPUs work better for sequential data processing than for data caching or flow control. Problems can have effective parallel solutions when: the same code instruction needs to be executed for each element, which requires less sophisticated flow control; and when the problem has a massive dataset and high arithmetic intensity, which reduces the need for low latency memory.</p>
 <div class="figure align-center">
 <img alt="../_images/CPUGPU.png" src="../_images/CPUGPU.png" />
-<p class="caption">This figured originally made for the NVIDIA CUDA Programming Guide.</p>
+<p class="caption"><em>This figured originally made for the NVIDIA CUDA Programming Guide.</em></p>
 </div>
 <p>The figure above shows the different between CPU and GPU in their structure. Cache is designed for data caching; Control is designed for flow control; ALU (Arithmetic Logic Unit) is designed for data processing.</p>
 </div>
 <div class="section" id="transfering-data">
 <h2>Transfering Data<a class="headerlink" href="#transfering-data" title="Permalink to this headline">¶</a></h2>
-<p>Modified from a book on the NVIDIA Developer&#8217;s Zone website: <a class="reference external" href="http://http.developer.nvidia.com/GPUGems2/gpugems2_chapter32.html">GPU Gems 2</a>, by Ian Buck.</p>
+<p><em>Modified from a book on the NVIDIA Developer&#8217;s Zone website:</em> <a class="reference external" href="http://http.developer.nvidia.com/GPUGems2/gpugems2_chapter32.html">GPU Gems 2</a>, <em>by Ian Buck.</em></p>
 <p>One final performance consideration when using the GPU as a computing platform is the issue of download and readback. Before we even start computing on the GPU, we need to transfer our initial data down to the graphics card. Likewise, if the results of the computation are needed by the CPU, we need to read the data back from the GPU. Performing the computation on the CPU does not require these extra operations. When comparing against the CPU, we must consider the performance impact of downloading and reading back data.</p>
 <div class="figure align-center">
 <img alt="../_images/transfer.png" src="../_images/transfer.png" />
-<p class="caption">Figure made by David Bunde.</p>
+<p class="caption"><em>Figure made by David Bunde.</em></p>
 </div>
 <p>Consider the example of adding two large vectors on the GPU. Executing a fragment program that simply fetches two floating-point values, adds them, and writes the result will certainly run faster than it would on a CPU implementation, for reasons explained earlier. However, if we add the cost of downloading the vector data and reading back the results to the CPU, we are much better off simply performing the vector add on the CPU. Peak texture download and readback rates for today&#8217;s PCI Express graphics cards max out around 3.2 GB/sec. A 3.0 GHz Pentium 4 can add two large vectors at a rate of approximately 700 megaflops (millions of floating-point operations per second, or Mflops). [2] So before we could even download both of the vectors to the GPU, the CPU could have completed the vector addition.</p>
 <p>To avoid this penalty, we need to amortize the cost of the download and readback of our data. For simulation applications, this is less of a problem, because most such algorithms iterate over the data many times before returning. However, if you plan to use the GPU to speed up linear algebra operators (such as vector add), make sure you are doing enough operations on the data to cover the additional cost of download and readback.</p>
@@ -97,6 +105,12 @@
 </li>
 </ul>
 
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="../index.html"
+                        title="previous chapter">Basic CUDA Fundamentals</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="../Excercise/Excercise.html"
+                        title="next chapter">Excercise</a></p>
 <div id="searchbox" style="display: none">
   <h3>Quick search</h3>
     <form class="search" action="../search.html" method="get">
@@ -120,6 +134,12 @@
         <li class="right" style="margin-right: 10px">
           <a href="../genindex.html" title="General Index"
              >index</a></li>
+        <li class="right" >
+          <a href="../Excercise/Excercise.html" title="Excercise"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="../index.html" title="Basic CUDA Fundamentals"
+             >previous</a> |</li>
         <li><a href="../index.html">Basic CUDA Fundamentals</a> &raquo;</li> 
       </ul>
     </div>

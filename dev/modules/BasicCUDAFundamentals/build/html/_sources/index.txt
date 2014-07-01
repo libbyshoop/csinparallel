@@ -6,11 +6,14 @@
 Basic CUDA Fundamentals
 ===================================================
 
+An introduction to GPU programming using CUDA to add vectors and explore issues of data transfer overhead costs and thread execution in warps.
 
 .. toctree::
    :maxdepth: 1
 
    Introduction/Introduction
+   Excercise/Excercise
+   
 
 
 
