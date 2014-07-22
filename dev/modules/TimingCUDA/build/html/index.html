@@ -1,3 +1,5 @@
+
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
@@ -13,7 +15,7 @@
     
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
-        URL_ROOT:    './',
+        URL_ROOT:    '',
         VERSION:     '',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
@@ -32,11 +34,8 @@
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
-          <a href="genindex.html" title="General Index"
-             accesskey="I">index</a></li>
-        <li class="right" >
           <a href="0-Introduction/Introduction.html" title="Programming in CUDA"
-             accesskey="N">next</a> |</li>
+             accesskey="N">next</a></li>
         <li><a href="#">Timing CUDA Operations</a> &raquo;</li> 
       </ul>
     </div>  
@@ -53,13 +52,18 @@ for CSInParallel by Jeffrey Lyman in 2014 (<a class="reference external" href="m
 <p>The purpose of this document is to teach students the basics of
 CUDA programming and to give them an understanding of when it is
 appropriate to offload work to the GPU.</p>
-<p>Though completion of Vector Addition, multipliction, square root,
+<p>Through completion of Vector Addition, multipliction, square root,
 and squaring programs, students will gain an understanding of
 when the overhead of creating threads and copying memory is worth
-the speedup of CPU coding</p>
-</div>
-<div class="section" id="contents">
-<h1>Contents:<a class="headerlink" href="#contents" title="Permalink to this headline">¶</a></h1>
+the speedup of GPU coding.</p>
+<p><strong>Prerequisites</strong></p>
+<ul class="simple">
+<li>Some knowledge of C coding and using makefiles.</li>
+<li>An ability to create directories and use the command line in unix.</li>
+<li>Access to a computer with a reasonably capable GPU card.</li>
+</ul>
+<p><strong>Contents</strong></p>
+<p>This activity contains three parts, linked below.  First there is a short introduction to setting up code in CUDA to run on a GPU. Then you will try running vector addition code on your GPU machine. Lastly, you will experiment with various types of operations and large sizes of arrays to determine when it is worthwhile to use a GPU for general-purpose computing.</p>
 <div class="toctree-wrapper compound">
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="0-Introduction/Introduction.html">Programming in CUDA</a></li>
@@ -78,28 +82,9 @@ the speedup of CPU coding</p>
             <p class="logo"><a href="#">
               <img class="logo" src="_static/CSInParallel200wide.png" alt="Logo"/>
             </a></p>
-  <h3><a href="#">Table Of Contents</a></h3>
-  <ul>
-<li><a class="reference internal" href="#">Timing CUDA Operations</a></li>
-<li><a class="reference internal" href="#contents">Contents:</a></li>
-</ul>
-
   <h4>Next topic</h4>
   <p class="topless"><a href="0-Introduction/Introduction.html"
                         title="next chapter">Programming in CUDA</a></p>
-<div id="searchbox" style="display: none">
-  <h3>Quick search</h3>
-    <form class="search" action="search.html" method="get">
-      <input type="text" name="q" />
-      <input type="submit" value="Go" />
-      <input type="hidden" name="check_keywords" value="yes" />
-      <input type="hidden" name="area" value="default" />
-    </form>
-    <p class="searchtip" style="font-size: 90%">
-    Enter search terms or a module, class or function name.
-    </p>
-</div>
-<script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
       </div>
       <div class="clearer"></div>
@@ -108,17 +93,14 @@ the speedup of CPU coding</p>
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
-          <a href="genindex.html" title="General Index"
-             >index</a></li>
-        <li class="right" >
           <a href="0-Introduction/Introduction.html" title="Programming in CUDA"
-             >next</a> |</li>
+             >next</a></li>
         <li><a href="#">Timing CUDA Operations</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">
         &copy; Copyright This work is licensed under a Creative Commons Attribution-ShareAlike 3.0 Unported License.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
     </div>
   </body>
 </html>

@@ -13,7 +13,7 @@
 
 
 \title{GPU Programming}
-\date{July 24, 2012}
+\date{July 21, 2014}
 \release{}
 \author{CSInParallel Project}
 \newcommand{\sphinxlogo}{}
@@ -31,72 +31,79 @@
     \PYG@it{\PYG@bf{\PYG@ff{#1}}}}}}}
 \def\PYG#1#2{\PYG@reset\PYG@toks#1+\relax+\PYG@do{#2}}
 
-\def\PYG@tok@gd{\def\PYG@tc##1{\textcolor[rgb]{0.63,0.00,0.00}{##1}}}
-\def\PYG@tok@gu{\let\PYG@bf=\textbf\def\PYG@tc##1{\textcolor[rgb]{0.50,0.00,0.50}{##1}}}
-\def\PYG@tok@gt{\def\PYG@tc##1{\textcolor[rgb]{0.00,0.25,0.82}{##1}}}
-\def\PYG@tok@gs{\let\PYG@bf=\textbf}
-\def\PYG@tok@gr{\def\PYG@tc##1{\textcolor[rgb]{1.00,0.00,0.00}{##1}}}
-\def\PYG@tok@cm{\let\PYG@it=\textit\def\PYG@tc##1{\textcolor[rgb]{0.25,0.50,0.56}{##1}}}
-\def\PYG@tok@vg{\def\PYG@tc##1{\textcolor[rgb]{0.73,0.38,0.84}{##1}}}
-\def\PYG@tok@m{\def\PYG@tc##1{\textcolor[rgb]{0.13,0.50,0.31}{##1}}}
-\def\PYG@tok@mh{\def\PYG@tc##1{\textcolor[rgb]{0.13,0.50,0.31}{##1}}}
-\def\PYG@tok@cs{\def\PYG@tc##1{\textcolor[rgb]{0.25,0.50,0.56}{##1}}\def\PYG@bc##1{\colorbox[rgb]{1.00,0.94,0.94}{##1}}}
-\def\PYG@tok@ge{\let\PYG@it=\textit}
-\def\PYG@tok@vc{\def\PYG@tc##1{\textcolor[rgb]{0.73,0.38,0.84}{##1}}}
-\def\PYG@tok@il{\def\PYG@tc##1{\textcolor[rgb]{0.13,0.50,0.31}{##1}}}
-\def\PYG@tok@go{\def\PYG@tc##1{\textcolor[rgb]{0.19,0.19,0.19}{##1}}}
-\def\PYG@tok@cp{\def\PYG@tc##1{\textcolor[rgb]{0.00,0.44,0.13}{##1}}}
-\def\PYG@tok@gi{\def\PYG@tc##1{\textcolor[rgb]{0.00,0.63,0.00}{##1}}}
-\def\PYG@tok@gh{\let\PYG@bf=\textbf\def\PYG@tc##1{\textcolor[rgb]{0.00,0.00,0.50}{##1}}}
-\def\PYG@tok@ni{\let\PYG@bf=\textbf\def\PYG@tc##1{\textcolor[rgb]{0.84,0.33,0.22}{##1}}}
-\def\PYG@tok@nl{\let\PYG@bf=\textbf\def\PYG@tc##1{\textcolor[rgb]{0.00,0.13,0.44}{##1}}}
-\def\PYG@tok@nn{\let\PYG@bf=\textbf\def\PYG@tc##1{\textcolor[rgb]{0.05,0.52,0.71}{##1}}}
-\def\PYG@tok@no{\def\PYG@tc##1{\textcolor[rgb]{0.38,0.68,0.84}{##1}}}
-\def\PYG@tok@na{\def\PYG@tc##1{\textcolor[rgb]{0.25,0.44,0.63}{##1}}}
-\def\PYG@tok@nb{\def\PYG@tc##1{\textcolor[rgb]{0.00,0.44,0.13}{##1}}}
-\def\PYG@tok@nc{\let\PYG@bf=\textbf\def\PYG@tc##1{\textcolor[rgb]{0.05,0.52,0.71}{##1}}}
-\def\PYG@tok@nd{\let\PYG@bf=\textbf\def\PYG@tc##1{\textcolor[rgb]{0.33,0.33,0.33}{##1}}}
-\def\PYG@tok@ne{\def\PYG@tc##1{\textcolor[rgb]{0.00,0.44,0.13}{##1}}}
-\def\PYG@tok@nf{\def\PYG@tc##1{\textcolor[rgb]{0.02,0.16,0.49}{##1}}}
-\def\PYG@tok@si{\let\PYG@it=\textit\def\PYG@tc##1{\textcolor[rgb]{0.44,0.63,0.82}{##1}}}
-\def\PYG@tok@s2{\def\PYG@tc##1{\textcolor[rgb]{0.25,0.44,0.63}{##1}}}
-\def\PYG@tok@vi{\def\PYG@tc##1{\textcolor[rgb]{0.73,0.38,0.84}{##1}}}
-\def\PYG@tok@nt{\let\PYG@bf=\textbf\def\PYG@tc##1{\textcolor[rgb]{0.02,0.16,0.45}{##1}}}
-\def\PYG@tok@nv{\def\PYG@tc##1{\textcolor[rgb]{0.73,0.38,0.84}{##1}}}
-\def\PYG@tok@s1{\def\PYG@tc##1{\textcolor[rgb]{0.25,0.44,0.63}{##1}}}
-\def\PYG@tok@gp{\let\PYG@bf=\textbf\def\PYG@tc##1{\textcolor[rgb]{0.78,0.36,0.04}{##1}}}
-\def\PYG@tok@sh{\def\PYG@tc##1{\textcolor[rgb]{0.25,0.44,0.63}{##1}}}
-\def\PYG@tok@ow{\let\PYG@bf=\textbf\def\PYG@tc##1{\textcolor[rgb]{0.00,0.44,0.13}{##1}}}
-\def\PYG@tok@sx{\def\PYG@tc##1{\textcolor[rgb]{0.78,0.36,0.04}{##1}}}
-\def\PYG@tok@bp{\def\PYG@tc##1{\textcolor[rgb]{0.00,0.44,0.13}{##1}}}
-\def\PYG@tok@c1{\let\PYG@it=\textit\def\PYG@tc##1{\textcolor[rgb]{0.25,0.50,0.56}{##1}}}
-\def\PYG@tok@kc{\let\PYG@bf=\textbf\def\PYG@tc##1{\textcolor[rgb]{0.00,0.44,0.13}{##1}}}
-\def\PYG@tok@c{\let\PYG@it=\textit\def\PYG@tc##1{\textcolor[rgb]{0.25,0.50,0.56}{##1}}}
-\def\PYG@tok@mf{\def\PYG@tc##1{\textcolor[rgb]{0.13,0.50,0.31}{##1}}}
-\def\PYG@tok@err{\def\PYG@bc##1{\fcolorbox[rgb]{1.00,0.00,0.00}{1,1,1}{##1}}}
-\def\PYG@tok@kd{\let\PYG@bf=\textbf\def\PYG@tc##1{\textcolor[rgb]{0.00,0.44,0.13}{##1}}}
-\def\PYG@tok@ss{\def\PYG@tc##1{\textcolor[rgb]{0.32,0.47,0.09}{##1}}}
-\def\PYG@tok@sr{\def\PYG@tc##1{\textcolor[rgb]{0.14,0.33,0.53}{##1}}}
-\def\PYG@tok@mo{\def\PYG@tc##1{\textcolor[rgb]{0.13,0.50,0.31}{##1}}}
-\def\PYG@tok@mi{\def\PYG@tc##1{\textcolor[rgb]{0.13,0.50,0.31}{##1}}}
-\def\PYG@tok@kn{\let\PYG@bf=\textbf\def\PYG@tc##1{\textcolor[rgb]{0.00,0.44,0.13}{##1}}}
-\def\PYG@tok@o{\def\PYG@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
-\def\PYG@tok@kr{\let\PYG@bf=\textbf\def\PYG@tc##1{\textcolor[rgb]{0.00,0.44,0.13}{##1}}}
-\def\PYG@tok@s{\def\PYG@tc##1{\textcolor[rgb]{0.25,0.44,0.63}{##1}}}
-\def\PYG@tok@kp{\def\PYG@tc##1{\textcolor[rgb]{0.00,0.44,0.13}{##1}}}
-\def\PYG@tok@w{\def\PYG@tc##1{\textcolor[rgb]{0.73,0.73,0.73}{##1}}}
-\def\PYG@tok@kt{\def\PYG@tc##1{\textcolor[rgb]{0.56,0.13,0.00}{##1}}}
-\def\PYG@tok@sc{\def\PYG@tc##1{\textcolor[rgb]{0.25,0.44,0.63}{##1}}}
-\def\PYG@tok@sb{\def\PYG@tc##1{\textcolor[rgb]{0.25,0.44,0.63}{##1}}}
-\def\PYG@tok@k{\let\PYG@bf=\textbf\def\PYG@tc##1{\textcolor[rgb]{0.00,0.44,0.13}{##1}}}
-\def\PYG@tok@se{\let\PYG@bf=\textbf\def\PYG@tc##1{\textcolor[rgb]{0.25,0.44,0.63}{##1}}}
-\def\PYG@tok@sd{\let\PYG@it=\textit\def\PYG@tc##1{\textcolor[rgb]{0.25,0.44,0.63}{##1}}}
+\expandafter\def\csname PYG@tok@gd\endcsname{\def\PYG@tc##1{\textcolor[rgb]{0.63,0.00,0.00}{##1}}}
+\expandafter\def\csname PYG@tok@gu\endcsname{\let\PYG@bf=\textbf\def\PYG@tc##1{\textcolor[rgb]{0.50,0.00,0.50}{##1}}}
+\expandafter\def\csname PYG@tok@gt\endcsname{\def\PYG@tc##1{\textcolor[rgb]{0.00,0.25,0.82}{##1}}}
+\expandafter\def\csname PYG@tok@gs\endcsname{\let\PYG@bf=\textbf}
+\expandafter\def\csname PYG@tok@gr\endcsname{\def\PYG@tc##1{\textcolor[rgb]{1.00,0.00,0.00}{##1}}}
+\expandafter\def\csname PYG@tok@cm\endcsname{\let\PYG@it=\textit\def\PYG@tc##1{\textcolor[rgb]{0.25,0.50,0.56}{##1}}}
+\expandafter\def\csname PYG@tok@vg\endcsname{\def\PYG@tc##1{\textcolor[rgb]{0.73,0.38,0.84}{##1}}}
+\expandafter\def\csname PYG@tok@m\endcsname{\def\PYG@tc##1{\textcolor[rgb]{0.13,0.50,0.31}{##1}}}
+\expandafter\def\csname PYG@tok@mh\endcsname{\def\PYG@tc##1{\textcolor[rgb]{0.13,0.50,0.31}{##1}}}
+\expandafter\def\csname PYG@tok@cs\endcsname{\def\PYG@tc##1{\textcolor[rgb]{0.25,0.50,0.56}{##1}}\def\PYG@bc##1{\setlength{\fboxsep}{0pt}\colorbox[rgb]{1.00,0.94,0.94}{\strut ##1}}}
+\expandafter\def\csname PYG@tok@ge\endcsname{\let\PYG@it=\textit}
+\expandafter\def\csname PYG@tok@vc\endcsname{\def\PYG@tc##1{\textcolor[rgb]{0.73,0.38,0.84}{##1}}}
+\expandafter\def\csname PYG@tok@il\endcsname{\def\PYG@tc##1{\textcolor[rgb]{0.13,0.50,0.31}{##1}}}
+\expandafter\def\csname PYG@tok@go\endcsname{\def\PYG@tc##1{\textcolor[rgb]{0.19,0.19,0.19}{##1}}}
+\expandafter\def\csname PYG@tok@cp\endcsname{\def\PYG@tc##1{\textcolor[rgb]{0.00,0.44,0.13}{##1}}}
+\expandafter\def\csname PYG@tok@gi\endcsname{\def\PYG@tc##1{\textcolor[rgb]{0.00,0.63,0.00}{##1}}}
+\expandafter\def\csname PYG@tok@gh\endcsname{\let\PYG@bf=\textbf\def\PYG@tc##1{\textcolor[rgb]{0.00,0.00,0.50}{##1}}}
+\expandafter\def\csname PYG@tok@ni\endcsname{\let\PYG@bf=\textbf\def\PYG@tc##1{\textcolor[rgb]{0.84,0.33,0.22}{##1}}}
+\expandafter\def\csname PYG@tok@nl\endcsname{\let\PYG@bf=\textbf\def\PYG@tc##1{\textcolor[rgb]{0.00,0.13,0.44}{##1}}}
+\expandafter\def\csname PYG@tok@nn\endcsname{\let\PYG@bf=\textbf\def\PYG@tc##1{\textcolor[rgb]{0.05,0.52,0.71}{##1}}}
+\expandafter\def\csname PYG@tok@no\endcsname{\def\PYG@tc##1{\textcolor[rgb]{0.38,0.68,0.84}{##1}}}
+\expandafter\def\csname PYG@tok@na\endcsname{\def\PYG@tc##1{\textcolor[rgb]{0.25,0.44,0.63}{##1}}}
+\expandafter\def\csname PYG@tok@nb\endcsname{\def\PYG@tc##1{\textcolor[rgb]{0.00,0.44,0.13}{##1}}}
+\expandafter\def\csname PYG@tok@nc\endcsname{\let\PYG@bf=\textbf\def\PYG@tc##1{\textcolor[rgb]{0.05,0.52,0.71}{##1}}}
+\expandafter\def\csname PYG@tok@nd\endcsname{\let\PYG@bf=\textbf\def\PYG@tc##1{\textcolor[rgb]{0.33,0.33,0.33}{##1}}}
+\expandafter\def\csname PYG@tok@ne\endcsname{\def\PYG@tc##1{\textcolor[rgb]{0.00,0.44,0.13}{##1}}}
+\expandafter\def\csname PYG@tok@nf\endcsname{\def\PYG@tc##1{\textcolor[rgb]{0.02,0.16,0.49}{##1}}}
+\expandafter\def\csname PYG@tok@si\endcsname{\let\PYG@it=\textit\def\PYG@tc##1{\textcolor[rgb]{0.44,0.63,0.82}{##1}}}
+\expandafter\def\csname PYG@tok@s2\endcsname{\def\PYG@tc##1{\textcolor[rgb]{0.25,0.44,0.63}{##1}}}
+\expandafter\def\csname PYG@tok@vi\endcsname{\def\PYG@tc##1{\textcolor[rgb]{0.73,0.38,0.84}{##1}}}
+\expandafter\def\csname PYG@tok@nt\endcsname{\let\PYG@bf=\textbf\def\PYG@tc##1{\textcolor[rgb]{0.02,0.16,0.45}{##1}}}
+\expandafter\def\csname PYG@tok@nv\endcsname{\def\PYG@tc##1{\textcolor[rgb]{0.73,0.38,0.84}{##1}}}
+\expandafter\def\csname PYG@tok@s1\endcsname{\def\PYG@tc##1{\textcolor[rgb]{0.25,0.44,0.63}{##1}}}
+\expandafter\def\csname PYG@tok@gp\endcsname{\let\PYG@bf=\textbf\def\PYG@tc##1{\textcolor[rgb]{0.78,0.36,0.04}{##1}}}
+\expandafter\def\csname PYG@tok@sh\endcsname{\def\PYG@tc##1{\textcolor[rgb]{0.25,0.44,0.63}{##1}}}
+\expandafter\def\csname PYG@tok@ow\endcsname{\let\PYG@bf=\textbf\def\PYG@tc##1{\textcolor[rgb]{0.00,0.44,0.13}{##1}}}
+\expandafter\def\csname PYG@tok@sx\endcsname{\def\PYG@tc##1{\textcolor[rgb]{0.78,0.36,0.04}{##1}}}
+\expandafter\def\csname PYG@tok@bp\endcsname{\def\PYG@tc##1{\textcolor[rgb]{0.00,0.44,0.13}{##1}}}
+\expandafter\def\csname PYG@tok@c1\endcsname{\let\PYG@it=\textit\def\PYG@tc##1{\textcolor[rgb]{0.25,0.50,0.56}{##1}}}
+\expandafter\def\csname PYG@tok@kc\endcsname{\let\PYG@bf=\textbf\def\PYG@tc##1{\textcolor[rgb]{0.00,0.44,0.13}{##1}}}
+\expandafter\def\csname PYG@tok@c\endcsname{\let\PYG@it=\textit\def\PYG@tc##1{\textcolor[rgb]{0.25,0.50,0.56}{##1}}}
+\expandafter\def\csname PYG@tok@mf\endcsname{\def\PYG@tc##1{\textcolor[rgb]{0.13,0.50,0.31}{##1}}}
+\expandafter\def\csname PYG@tok@err\endcsname{\def\PYG@bc##1{\setlength{\fboxsep}{0pt}\fcolorbox[rgb]{1.00,0.00,0.00}{1,1,1}{\strut ##1}}}
+\expandafter\def\csname PYG@tok@kd\endcsname{\let\PYG@bf=\textbf\def\PYG@tc##1{\textcolor[rgb]{0.00,0.44,0.13}{##1}}}
+\expandafter\def\csname PYG@tok@ss\endcsname{\def\PYG@tc##1{\textcolor[rgb]{0.32,0.47,0.09}{##1}}}
+\expandafter\def\csname PYG@tok@sr\endcsname{\def\PYG@tc##1{\textcolor[rgb]{0.14,0.33,0.53}{##1}}}
+\expandafter\def\csname PYG@tok@mo\endcsname{\def\PYG@tc##1{\textcolor[rgb]{0.13,0.50,0.31}{##1}}}
+\expandafter\def\csname PYG@tok@mi\endcsname{\def\PYG@tc##1{\textcolor[rgb]{0.13,0.50,0.31}{##1}}}
+\expandafter\def\csname PYG@tok@kn\endcsname{\let\PYG@bf=\textbf\def\PYG@tc##1{\textcolor[rgb]{0.00,0.44,0.13}{##1}}}
+\expandafter\def\csname PYG@tok@o\endcsname{\def\PYG@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\expandafter\def\csname PYG@tok@kr\endcsname{\let\PYG@bf=\textbf\def\PYG@tc##1{\textcolor[rgb]{0.00,0.44,0.13}{##1}}}
+\expandafter\def\csname PYG@tok@s\endcsname{\def\PYG@tc##1{\textcolor[rgb]{0.25,0.44,0.63}{##1}}}
+\expandafter\def\csname PYG@tok@kp\endcsname{\def\PYG@tc##1{\textcolor[rgb]{0.00,0.44,0.13}{##1}}}
+\expandafter\def\csname PYG@tok@w\endcsname{\def\PYG@tc##1{\textcolor[rgb]{0.73,0.73,0.73}{##1}}}
+\expandafter\def\csname PYG@tok@kt\endcsname{\def\PYG@tc##1{\textcolor[rgb]{0.56,0.13,0.00}{##1}}}
+\expandafter\def\csname PYG@tok@sc\endcsname{\def\PYG@tc##1{\textcolor[rgb]{0.25,0.44,0.63}{##1}}}
+\expandafter\def\csname PYG@tok@sb\endcsname{\def\PYG@tc##1{\textcolor[rgb]{0.25,0.44,0.63}{##1}}}
+\expandafter\def\csname PYG@tok@k\endcsname{\let\PYG@bf=\textbf\def\PYG@tc##1{\textcolor[rgb]{0.00,0.44,0.13}{##1}}}
+\expandafter\def\csname PYG@tok@se\endcsname{\let\PYG@bf=\textbf\def\PYG@tc##1{\textcolor[rgb]{0.25,0.44,0.63}{##1}}}
+\expandafter\def\csname PYG@tok@sd\endcsname{\let\PYG@it=\textit\def\PYG@tc##1{\textcolor[rgb]{0.25,0.44,0.63}{##1}}}
 
 \def\PYGZbs{\char`\\}
 \def\PYGZus{\char`\_}
 \def\PYGZob{\char`\{}
 \def\PYGZcb{\char`\}}
 \def\PYGZca{\char`\^}
+\def\PYGZam{\char`\&}
+\def\PYGZlt{\char`\<}
+\def\PYGZgt{\char`\>}
+\def\PYGZsh{\char`\#}
+\def\PYGZpc{\char`\%}
+\def\PYGZdl{\char`\$}
+\def\PYGZti{\char`\~}
 % for compatibility with earlier versions
 \def\PYGZat{@}
 \def\PYGZlb{[}
@@ -118,14 +125,14 @@
 \label{Introduction/Introduction:what-is-gpu}
 \href{http://en.wikipedia.org/wiki/GPU}{Graphics Processing Unit} (GPU), is an electronic circuit that, through rapid memory manipulation and massive parallel data processing, accelerates the building of images intended for output to a display. Right now, GPUs are used in almost all customer end personal computers, game consoles, professional workstations and even the cell phone you are holding.
 
-Before GPU was introduced, CPU did all the graphic processing tasks. In the early 1990s, computer manufactures began to include GPU into computer system with the aim of accelerating common graphics routines. After two decades of development, GPUs eventually outpaced CPUs as they actually had more transistors, ran faster and capable of doing parallel computation more efficiently. GPU these days become so complex that they are basically computers in themselves, with their own memory, buses and processors. Therefore, sometimes GPU is like an extra brain (supplemental processors) to the computer system. As GPU harnessed more and more horsepower, GPU manufactures, such as NVIDIA and ATI/AMD, found a way to use GPUs  for more general purposes, not just for graphics or videos. This gave birth to CUDA structure and CUDA C Programming Language, NVIDIA's response on facilitating the development of \href{http://en.wikipedia.org/wiki/GPGPU}{General Purpose Graphics Processing Unit} (GPGPU).
+Before GPU was introduced, CPU did all the graphic processing tasks. In the early 1990s, computer manufactures began to include GPU into computer systems with the aim of accelerating common graphics routines. After two decades of development, GPUs eventually outpaced CPUs as they actually had more transistors, ran faster and were capable of doing parallel computation more efficiently. GPUs became so complex that they are basically computers in themselves, with their own memory, buses and processors. Therefore, sometimes GPU is like an extra brain (supplemental processors) to the computer system. As GPU harnessed more and more horsepower, GPU manufactures, such as NVIDIA and ATI/AMD, found a way to use GPUs  for more general purposes, not just for graphics or videos. This gave birth to CUDA structure and CUDA C Programming Language, NVIDIA's response on facilitating the development of \href{http://en.wikipedia.org/wiki/GPGPU}{General Purpose Graphics Processing Unit} (GPGPU).
 
 
 \section{What is the difference between GPU and CPU?}
 \label{Introduction/Introduction:general-purpose-graphics-processing-unit}\label{Introduction/Introduction:what-is-the-difference-between-gpu-and-cpu}
-The major difference between GPU and CPU is that GPU has highly parallel structure which makes it more effective than CPU if used on data that can be partitioned and processed in parallel. To be more specific, GPU is highly optimized to perform advanced calculations such as floating-point arithmetic, matrix arithmetic and so on.
+The major difference between GPU and CPU is that GPU has a highly parallel structure which makes it more effective than CPU if used on data that can be partitioned and processed in parallel. To be more specific, GPU is highly optimized to perform advanced calculations such as floating-point arithmetic, matrix arithmetic and so on.
 
-The reason behind the difference of computation capability between CPU and GPU is that GPU is specialized for compute-intensive and highly parallel computation, which is exactly what you need to render graphics. The design of GPU is more of data processing than data caching and flow control. If a problem can be processed in parallel, it usually means that: first, same problem is executed for each element, which requires less sophisticated flow control; second, dataset is massive and problem has high arithmetic intensity, which reduces the need for low latency memory.
+The reason behind the difference of computation capability between CPU and GPU is that GPU is specialized for compute-intensive and highly parallel computations, which is exactly what you need to render graphics. The design of GPU is more of data processing than data caching and flow control. If a problem can be processed in parallel, it usually means two things: first, same problem is executed for each element, which requires less sophisticated flow control; second, dataset is massive and problem has high arithmetic intensity, which reduces the need for low latency memory.
 \begin{figure}[htbp]
 \centering
 \capstart
@@ -133,22 +140,22 @@ The reason behind the difference of computation capability between CPU and GPU i
 \includegraphics{CPUGPU.png}
 \caption{This figure is from the \href{http://developer.download.nvidia.com/compute/DevZone/docs/html/C/doc/CUDA\_C\_Programming\_Guide.pdf}{NVIDIA CUDA Programming Guide}}\end{figure}
 
-The graph above shows the different between CPU and GPU in their structure. \textbf{Cache} is designed for data caching; \textbf{Control} is designed for flow control; \textbf{ALU} (Arithmetic Logic Unit) is designed for data processing.
+The graph above shows the differences between CPU and GPU in their structure. \textbf{Cache} is designed for data caching; \textbf{Control} is designed for flow control; \textbf{ALU} (Arithmetic Logic Unit) is designed for data processing.
 
-In the NVISION 08 Conference organized by NVIDIA corporation, employers from NVIDIA used a rather interesting yet straight forward example illustrating the difference between CPU and GPU. You can watch the video by clicking the link below and hope it can give you a better idea what the difference between GPU and CPU is.
+In the NVISION 08 Conference organized by the NVIDIA corporation, employers from NVIDIA used a rather interesting yet straight forward example illustrating the difference between CPU and GPU. You can watch the video by clicking the link below and hope it can give you a better idea about what the difference between GPU and CPU is.
 \href{http://www.NVIDIA.com/object/nvision08\_gpu\_v\_cpu.html}{Video}
 
 
 \section{What is the advantage of using GPU for computation?}
 \label{Introduction/Introduction:nvidia-cuda-programming-guide}\label{Introduction/Introduction:what-is-the-advantage-of-using-gpu-for-computation}
-Nowadays, most of the scientific researches require massive data processing. What scientist usually do right now is have all the data being processed on supercomputing clusters. Although most universities have constructed their own parallel computing clusters, researchers still need to compete for time to use the shared resources that not only cost millions to build and maintain, but also consume hundreds of kilowatts of power.
+Nowadays, most of the scientific researches require massive data processing. What scientist usually do right now is to have all the data being processed on supercomputing clusters. Although most universities have constructed their own parallel computing clusters, researchers still need to compete for time to use the shared resources that not only cost millions to build and maintain, but also consume hundreds of kilowatts of power.
 
-Different from traditional supercomputers that is built with many CPU cores, supercomputers with GPU structure can achieve same level of performance with less cost and lower power consumption. \href{http://en.wikipedia.org/wiki/Nvidia\_Tesla\_\_Personal\_Supercomputer}{Personal Supercomputer} (PSC) based on NVIDIA's \href{http://www.nvidia.com/object/tesla-supercomputing-solutions.html}{Tesla} companion processors, was first introduced in 2008. The first generation four-GPU \href{http://www.nvidia.com/object/tesla-supercomputing-solutions.html}{Tesla} personal supercomputer have 4 Teraflops of parallel supercomputing performance, more than enough for most small researches. All it takes is 4 \href{http://www.nvidia.com/object/tesla-supercomputing-solutions.html}{Tesla} C1060 GPUs with 960 cores and two Intel Xeon processors. Moreover, Personal supercomputer is also very energy efficient as it can even run off a 110 volt wall circuit. Although supercomputer with GPUs cannot match the performance of the top ranking supercomputers that cost millions even billions, it is more than enough for researchers to perform daily research related computations in subjects like bioscience, life science, physics and geology.
+Different from traditional supercomputers that are built with many CPU cores, supercomputers with a GPU structure can achieve same level of performance with less cost and lower power consumption. \href{http://en.wikipedia.org/wiki/Nvidia\_Tesla\_\_Personal\_Supercomputer}{Personal Supercomputer} (PSC) based on NVIDIA's \href{http://www.nvidia.com/object/tesla-supercomputing-solutions.html}{Tesla} companion processors, was first introduced in 2008. The first generation four-GPU \href{http://www.nvidia.com/object/tesla-supercomputing-solutions.html}{Tesla} personal supercomputer have 4 Teraflops of parallel supercomputing performance, more than enough for most small researches. All it takes is 4 \href{http://www.nvidia.com/object/tesla-supercomputing-solutions.html}{Tesla} C1060 GPUs with 960 cores and two Intel Xeon processors. Moreover, Personal supercomputer is also very energy efficient as it can even run off a 110 volt wall circuit. Although supercomputer with GPUs cannot match the performance of the top ranking supercomputers that cost millions even billions, it is more than enough for researchers to perform daily research related computations in subjects like bioscience, life science, physics and geology.
 
 
 \section{What are the important parts inside a GPU?}
 \label{Introduction/Introduction:tesla}\label{Introduction/Introduction:what-are-the-important-parts-inside-a-gpu}
-Although modern GPU are basically computers themselves, they still serve as a part of computer system. A modern GPU is connected with the host through high speed I/O bus slot, usually a PCI-Express slot. Modern GPUs are extremely energy consuming. Some of the GPUs alone consumes hundreds watts of power, sometimes higher than all other parts of the computer system combined. Part of the reason that GPUs require such power supply is that they have much complex  structure and can perform much sophisticated task than other parts of computer system. Owe to its high capability, GPU needs its own memory, control chipset as well as many processors.
+Although modern GPUs are basically computers themselves, they still serve as a part of a computer system. A modern GPU is connected with the host through a high speed I/O bus slot, usually a PCI-Express slot. Modern GPUs are extremely energy consuming. Some of the GPUs alone consume hundreds watts of power, sometimes higher than all other parts of the computer system combined. Part of the reason that GPUs require such power supply is that they have much complex  structure and can perform much sophisticated task than other parts of computer system. Owe to its high capability, GPU needs its own memory, control chipset as well as many processors.
 \begin{figure}[htbp]
 \centering
 \capstart
@@ -156,49 +163,52 @@ Although modern GPU are basically computers themselves, they still serve as a pa
 \includegraphics{CUDA.png}
 \caption{This figure is inspired by the figure found in \href{http://www.pgroup.com/lit/articles/insider/v2n1a5.htm}{Understanding the CUDA Data Parallel Threading Model: A Primer} written by Michael Wolfe from The Portland Group}\end{figure}
 
-GPUs these days usually equipped with several gigabytes of on-board memory for user configuration. GPUs designed for daily use like gaming and video rendering, such as NVIDIA's \href{http://www.nvidia.com/object/geforce\_family.html}{Geforce} series GPUs and ATI/AMD's \href{http://www.amd.com/us/products/desktop/graphics/pages/desktop-graphics.aspx}{Radeon} series GPUs, have on-board memory capacity ranging from several hundreds megabytes to several gigabytes. Professional GPUs designed for high-definition image processing and General Purpose Computation, such as the \href{http://www.nvidia.com/object/tesla-supercomputing-solutions.html}{Tesla} Companion Processor we are using, usually have memory up to 5 or 6 gigabytes. Data is transferred between the GPU on-board memory and host memory through a method called DMA (Direct Memory Access). One thing needs mentioning is that CUDA C programming language supports direct access of the host memory from GPU end under certain restrictions. As GPU is designed for compute intensive operations, device memory usually supports high data bandwidth with not deeply cached memory hierarchy.
+GPUs these days are usually equipped with several gigabytes of on-board memory for user configuration. GPUs designed for daily use like gaming and video rendering, such as NVIDIA's \href{http://www.nvidia.com/object/geforce\_family.html}{Geforce} series GPUs and ATI/AMD's \href{http://www.amd.com/us/products/desktop/graphics/pages/desktop-graphics.aspx}{Radeon} series GPUs, have on-board memory capacity ranging from several hundreds megabytes to several gigabytes. Professional GPUs designed for high-definition image processing and General Purpose Computation, such as the \href{http://www.nvidia.com/object/tesla-supercomputing-solutions.html}{Tesla} Companion Processor we are using, usually have memory up to 5 or 6 gigabytes. Data are transferred between the GPU on-board memory and host memory through a method called DMA (Direct Memory Access). One thing worth mentioning is that CUDA C programming language supports direct access of the host memory from GPU end under certain restrictions. As GPU is designed for compute-intensive operations, device memory usually supports high data bandwidth with not deeply cached memory hierarchy.
 
-GPUs from NVIDIA has many processors, what they call streaming Processors (SP). Each streaming processor is capable of executing a sequential thread. For a GPU with \emph{Fermi} architecture, like the one we are using, every 32 streaming processors is organized in a Streaming Multiprocessor (SM). A GPU can have one or more multiprocessors on board. For example, the \href{http://www.nvidia.com/object/tesla-supercomputing-solutions.html}{Tesla} C2075 GPU card we are using, has 14 multiprocessors built in. Except for 32 streaming processors, each multiprocessor also equipped with 2 warp scheduler, 2 special function units (4 in some GPUs), a set of 32-bit registers and 64KB of configurable shared memory. Warp scheduler is responsible for threads control; SFU handles transcendentals and double-precision operations. For a GPU with \emph{Kepler} architecture, every 192 streaming processors is organized in a multiprocessor. There are also more warp schedulers and SFUs built in.
+GPUs from NVIDIA have many processors, called streaming Processors (SP). Each streaming processor is capable of executing a sequential thread. For a GPU with \emph{Fermi} architecture, like the one we are using, every 32 streaming processors is organized in a Streaming Multiprocessor (SM). A GPU can have one or more multiprocessors on board. For example, the \href{http://www.nvidia.com/object/tesla-supercomputing-solutions.html}{Tesla} C2075 GPU card we are using, has 14 multiprocessors built in. Except for 32 streaming processors, each multiprocessor is also equipped with 2 warp scheduler, 2 special function units (4 in some GPUs), a set of 32-bit registers and 64KB of configurable shared memory. A warp scheduler is responsible for threads control; SFU handles transcendentals and double-precision operations. For a GPU with \emph{Kepler} architecture, every 192 streaming processor is organized in a multiprocessor. There are also more warp schedulers and SFUs built in.
 
-Shared memory, or L1 cache, is a small data cache that can be configured through software. Shared memory is also shared among all the streaming processors within one multiprocessor. Compared with on-board memory, shared memory is low-latency (usually register speed) and has high bandwidth. Each multiprocessor has 64KB of shared memory that can be configured by user using special commands in host code. Share memory is distributed to software-managed data cache and hardware data cache. User can choose to assign either 48KB to software-managed data cache (SW) and 16KB to hardware data cache (HW) or the other way around.
+Shared memory, or L1 cache, is a small data cache that can be configured through software. Shared memory is also shared among all the streaming processors within one multiprocessor. Compared with on-board memory, shared memory is low-latency (usually register speed) and has high bandwidth. Each multiprocessor has 64KB of shared memory that can be configured by using special commands in host code. Shared memory is distributed to software-managed data cache and hardware data cache. The user can choose to assign either 48KB to software-managed data cache (SW) and 16KB to hardware data cache (HW) or the other way around.
 
 
 \section{How does CUDA connect with hardware?}
 \label{Introduction/Introduction:understanding-the-cuda-data-parallel-threading-model-a-primer}\label{Introduction/Introduction:how-does-cuda-connect-with-hardware}
-When the host code invokes a kernel grid through CUDA program, blocks in the grid are distributed to different multiprocessors based on available execution capacity of each multiprocessor. Each multiprocessor is capable of process one or more blocks throughout the kernel execution. However, each block can only be processed by one multiprocessor.
+When the host code invokes a kernel grid through a CUDA program, blocks in the grid are distributed to different multiprocessors based on available execution capacity of each multiprocessor. Each multiprocessor is capable of processing one or more blocks throughout the kernel execution. However, each block can only be processed by one multiprocessor.
 
-Fermi architecture supports up to 48 active warps on each multiprocessor. The advantage of having many active warps in process at the same time is the significantly reduction of memory latency. Traditionally, memory latency is reduced by adding more cache memory hierarchy into the system. However, by using high degree of multithreading, GPUs can also effectively reduce memory latency. What happens is that when one warp stalls on memory operation, multiprocessor can select another warp and begin to process that one.
+Fermi architecture supports up to 48 active warps on each multiprocessor. The advantage of having many active warps in a process at the same time is significant reduction of memory latency. Traditionally, memory latency is reduced by adding more cache memory hierarchy into the system. However, by using high degree of multithreading, GPUs can also effectively reduce memory latency. What happens is that when one warp stalls on memory operation, the multiprocessor can select another warp and begin to process that one.
 
-When a block is processed by a multiprocessor, threads in this block is further divided into groups of 32 threads, what NVIDIA calls a warp. Although 32 streaming processors in a block and 32 threads in a warp seems to be a good match for each multiprocessor to process each warp in one clock cycle, the reality is somehow different. As mentioned previously, each multiprocessor has two warp schedulers, which enables it to process two warps simultaneously. After the partition, each warp gets scheduled by a warp scheduler for execution. Each warp scheduler pumps 16 threads (half warp) into a group of 16 streaming processors for execution. Therefore, it would take two clock cycles to process each warp and one multiprocessor can process two warps in two clock cycles. For double-precision operations, each multiprocessor would combine two groups of streaming processors so that they act as a multiprocessor with 16 double-precision streaming processors.
+When a block is processed by a multiprocessor, threads in this block are further divided into groups of 32 threads, what NVIDIA calls a warp. Although 32 streaming processors in a block and 32 threads in a warp seems to be a good match for each multiprocessor to process each warp in one clock cycle, the reality is somehow different. As mentioned previously, each multiprocessor has two warp schedulers, which enables it to process two warps simultaneously. After the partition, each warp gets scheduled by a warp scheduler for execution. Each warp scheduler pumps 16 threads (half warp) into a group of 16 streaming processors for execution. Therefore, it would take two clock cycles to process each warp and one multiprocessor can process two warps in two clock cycles. For double-precision operations, each multiprocessor would combine two groups of streaming processors so that they act as a multiprocessor with 16 double-precision streaming processors.
 
 
 \section{Is CUDA the only GPU programming language available?}
 \label{Introduction/Introduction:is-cuda-the-only-gpu-programming-language-available}
-When we are learning CUDA C programming language, it is important for you to know that C programming language is not the only language that can be bind with CUDA structure. NVIDIA also made available other programming languages such as Fortran, Java and Python as binding languages with CUDA.
+When we are learning CUDA C programming language, it is important for you to know that the C programming language is not the only language that can be bound with CUDA structure. NVIDIA also made other programming languages available such as Fortran, Java and Python as binding languages with CUDA.
 
-Furthermore, NVIDIA is not the only company manufacturing GPU cards, which means CUDA is not the only GPU programming MPI available. When NVIDIA are developing CUDA, AMD/ATI responded with \href{http://www.amd.com/stream/}{ATI Stream}, their GPGPU technology for AMD/ATI Radeon series GPUs. \href{http://www.amd.com/stream/}{ATI Stream} technology uses \href{http://en.wikipedia.org/wiki/OpenCL}{OpenCL} as its binding language.
+Furthermore, NVIDIA is not the only company manufacturing GPU cards, which means CUDA is not the only GPU programming MPI available. When NVIDIA were developing CUDA, AMD/ATI responded with \href{http://www.amd.com/stream/}{ATI Stream}, their GPGPU technology for AMD/ATI Radeon series GPUs. \href{http://www.amd.com/stream/}{ATI Stream} technology uses \href{http://en.wikipedia.org/wiki/OpenCL}{OpenCL} as its binding language.
 
 
 \chapter{CUDA Intro}
 \label{CUDAIntro/CUDAIntro:opencl}\label{CUDAIntro/CUDAIntro::doc}\label{CUDAIntro/CUDAIntro:cuda-intro}
-Before we proceed to our first example, please follow the following instructions to set up your working environment.
+Before we proceed to our first example, please follow the following instructions to set up your working environment.  The directory/folder structure needed for these examples is a folder called GPUProgramming with two folders inside of it, one called \emph{common} (from a tarball) and one called examples (you should make). Here's how to make them:
 \begin{enumerate}
 \item {} 
-Download the follow file. \code{download common.tar.gz}
+Create a top-level working folder for the code you will examine and run, called \code{GPUProgramming}.
 
 \item {} 
-Extract all the files.
+Download the following file: \code{download common.tar.gz}
 
 \item {} 
-Create a empty folder \textbf{common} and then put extracted files into it.
+Extract all the files in \code{GPUProgramming}, which should create a folder \textbf{common}.
 
 \item {} 
-Put the common folder \textbf{outside} of your source code folder.
+Create another folder called \code{examples} inside \code{GPUProgramming}. The examples folder will contain the CUDA code examples below.
+
+\item {} 
+Be sure to keep the common folder \textbf{outside} of your examples source code folder (this is because the example code includes code from ../common).
 
 \end{enumerate}
 
 \begin{notice}{note}{Note:}
-In side the common folder are source code that contains helper functions. These include some handle error functions and APIs required for the later graphic programs, such as ray-tracing.
+Inside the common folder is the source code that contains helper functions. These include some error handling functions and APIs required for the later graphic programs, such as ray-tracing.
 \end{notice}
 
 
@@ -213,21 +223,23 @@ This copy of code is a derivative based on the original code and designed for ed
 
 \section{An Example of Vector Addition}
 \label{CUDAIntro/CUDAIntro:nvidia-corporation}\label{CUDAIntro/CUDAIntro:an-example-of-vector-addition}
-We will start our CUDA journey by learning a very simple example, the vector addition example. It basically takes two vectors that have same dimensions, adds them together and then returns the new vector back.
+We will start our CUDA journey by learning a very simple example, the vector addition example. It basically takes two vectors that have the same dimensions, adds them together and then returns the new vector back.
 
 Vector Addition source file:
 \code{VA-GPU-11.cu}
 
+Get this source file and open it in an editor or terminal window so that you can follow along as sections of the code are explained here.
+
 
 \subsection{The Device Code}
 \label{CUDAIntro/CUDAIntro:the-device-code}
-As you may notice in your background reading about CUDA programming, CUDA programs execute in two separated places. One is called host, another is called device. In our example, the add() function executes on the device (our GPU) and the rest of the C program executes on our CPU.
+As you may have noticed in your background reading about CUDA programming, CUDA programs execute in two separate places. One is called the host (your CPU), another is called device (your GPU). In our example, the add() function executes on the device (our GPU) and the rest of the C program executes on our CPU.
 
 \begin{Verbatim}[commandchars=\\\{\}]
 \PYG{n}{\PYGZus{}\PYGZus{}global\PYGZus{}\PYGZus{}} \PYG{k+kt}{void} \PYG{n+nf}{add}\PYG{p}{(} \PYG{k+kt}{int} \PYG{o}{*}\PYG{n}{a}\PYG{p}{,} \PYG{k+kt}{int} \PYG{o}{*}\PYG{n}{b}\PYG{p}{,} \PYG{k+kt}{int} \PYG{o}{*}\PYG{n}{c} \PYG{p}{)} \PYG{p}{\PYGZob{}}    
     \PYG{k+kt}{int} \PYG{n}{tid} \PYG{o}{=} \PYG{l+m+mi}{0}\PYG{p}{;}
     \PYG{c+c1}{// loop over all the element in the vector}
-    \PYG{k}{while} \PYG{p}{(}\PYG{n}{tid} \PYG{o}{\textless{}} \PYG{n}{N}\PYG{p}{)}\PYG{p}{\PYGZob{}}
+    \PYG{k}{while} \PYG{p}{(}\PYG{n}{tid} \PYG{o}{\PYGZlt{}} \PYG{n}{N}\PYG{p}{)}\PYG{p}{\PYGZob{}}
         \PYG{n}{c}\PYG{p}{[}\PYG{n}{tid}\PYG{p}{]} \PYG{o}{=} \PYG{n}{a}\PYG{p}{[}\PYG{n}{tid}\PYG{p}{]} \PYG{o}{+} \PYG{n}{b}\PYG{p}{[}\PYG{n}{tid}\PYG{p}{]}\PYG{p}{;}
         \PYG{n}{tid} \PYG{o}{+}\PYG{o}{=} \PYG{l+m+mi}{1}\PYG{p}{;} \PYG{c+c1}{// we are using one thread in one block}
     \PYG{p}{\PYGZcb{}}
@@ -242,7 +254,7 @@ You might notice that this code is much like standard C code except for the \tex
         \PYG{n}{tid} \PYG{o}{+}\PYG{o}{=} \PYG{l+m+mi}{1}\PYG{p}{;} \PYG{c+c1}{// we are using one thread in one block}
 \end{Verbatim}
 
-where we only add 1 to the \emph{tid}. In the later examples, where we will be using more cores of the GPU, you will see difference of CUDA C programming language and Standard C programming language.
+where we only add 1 to the \emph{tid}. In the later examples, where we will be using more cores of the GPU, you will see differences between CUDA C programming language and Standard C programming language.
 
 
 \subsection{The Host Code}
@@ -253,7 +265,7 @@ where we only add 1 to the \emph{tid}. In the later examples, where we will be u
 \medskip
 
 
-Different from device code, the host code is more complicated and require more explanation. We advice you to download the source file provided at the beginning of this page and have it open in a separate window. We divided the host code into several parts for the purpose of easier explanation. However, looking at the host code as a whole might be helpful, especially for CUDA programming, where host codes are usually highly organized and structured.
+Unlike the device code, the host code is more complicated and requires more explanation. We advise you to download the source file provided at the beginning of this page and have it open in a separate window. We divided the host code into several parts for the purpose of easier explanation. However, looking at the host code as a whole might be helpful, especially for CUDA programming, where host codes are usually highly organized and structured.
 \end{minipage}}
 \begin{center}\setlength{\fboxsep}{5pt}\shadowbox{\box0}\end{center}
 
@@ -269,7 +281,7 @@ Different from device code, the host code is more complicated and require more e
     \PYG{n}{c} \PYG{o}{=} \PYG{p}{(}\PYG{k+kt}{int}\PYG{o}{*}\PYG{p}{)}\PYG{n}{malloc}\PYG{p}{(} \PYG{n}{N} \PYG{o}{*} \PYG{k}{sizeof}\PYG{p}{(}\PYG{k+kt}{int}\PYG{p}{)} \PYG{p}{)}\PYG{p}{;}
 
     \PYG{c+c1}{// fill arrays 'a' and 'b' on the CPU}
-    \PYG{k}{for} \PYG{p}{(}\PYG{k+kt}{int} \PYG{n}{i}\PYG{o}{=}\PYG{l+m+mi}{0}\PYG{p}{;} \PYG{n}{i}\PYG{o}{\textless{}}\PYG{n}{N}\PYG{p}{;} \PYG{n}{i}\PYG{o}{+}\PYG{o}{+}\PYG{p}{)} \PYG{p}{\PYGZob{}}
+    \PYG{k}{for} \PYG{p}{(}\PYG{k+kt}{int} \PYG{n}{i}\PYG{o}{=}\PYG{l+m+mi}{0}\PYG{p}{;} \PYG{n}{i}\PYG{o}{\PYGZlt{}}\PYG{n}{N}\PYG{p}{;} \PYG{n}{i}\PYG{o}{+}\PYG{o}{+}\PYG{p}{)} \PYG{p}{\PYGZob{}}
         \PYG{n}{a}\PYG{p}{[}\PYG{n}{i}\PYG{p}{]} \PYG{o}{=} \PYG{o}{-}\PYG{n}{i}\PYG{p}{;}
         \PYG{n}{b}\PYG{p}{[}\PYG{n}{i}\PYG{p}{]} \PYG{o}{=} \PYG{n}{i} \PYG{o}{*} \PYG{n}{i}\PYG{p}{;}
     \PYG{p}{\PYGZcb{}}
@@ -280,23 +292,23 @@ As shown in the code block above, similar to standard C programming, we first ne
 
 \subsubsection{The Event API}
 \label{CUDAIntro/CUDAIntro:the-event-api}
-Before we go any further, we need to first learn ways of measuring performance in CUDA runtime. How do we measure performance? Well, in the simplest yet most direct way, how fast can the program run. To be more specific, we will try to time the program.
+Before we go any further, we need to first learn ways of measuring performance in CUDA runtime. How do we measure performance? That is, how fast can the program run? To be more specific, we will try to time the program.
 
-The tool we use to measure the time GPU spends on a task is CUDA \href{http://developer.download.nvidia.com/compute/cuda/4\_2/rel/toolkit/docs/online/group\_\_CUDART\_\_MEMORY\_g48efa06b81cc031b2aa6fdc2e9930741.html\#g48efa06b81cc031b2aa6fdc2e9930741}{Event API}.
+The tool we use to measure the time GPU spends on a task is the CUDA \href{http://developer.download.nvidia.com/compute/cuda/4\_2/rel/toolkit/docs/online/group\_\_CUDART\_\_MEMORY\_g48efa06b81cc031b2aa6fdc2e9930741.html\#g48efa06b81cc031b2aa6fdc2e9930741}{Event API}.
 
 \begin{Verbatim}[commandchars=\\\{\}]
     \PYG{c+c1}{// define events in the field}
     \PYG{n}{cudaEvent\PYGZus{}t}     \PYG{n}{start}\PYG{p}{,} \PYG{n}{stop}\PYG{p}{;}
     \PYG{c+c1}{// create two events we need}
-    \PYG{n}{HANDLE\PYGZus{}ERROR}\PYG{p}{(} \PYG{n}{cudaEventCreate}\PYG{p}{(} \PYG{o}{\&}\PYG{n}{start} \PYG{p}{)} \PYG{p}{)}\PYG{p}{;}
-    \PYG{n}{HANDLE\PYGZus{}ERROR}\PYG{p}{(} \PYG{n}{cudaEventCreate}\PYG{p}{(} \PYG{o}{\&}\PYG{n}{stop} \PYG{p}{)} \PYG{p}{)}\PYG{p}{;}
+    \PYG{n}{HANDLE\PYGZus{}ERROR}\PYG{p}{(} \PYG{n}{cudaEventCreate}\PYG{p}{(} \PYG{o}{\PYGZam{}}\PYG{n}{start} \PYG{p}{)} \PYG{p}{)}\PYG{p}{;}
+    \PYG{n}{HANDLE\PYGZus{}ERROR}\PYG{p}{(} \PYG{n}{cudaEventCreate}\PYG{p}{(} \PYG{o}{\PYGZam{}}\PYG{n}{stop} \PYG{p}{)} \PYG{p}{)}\PYG{p}{;}
     \PYG{c+c1}{// instruct the runtime to record the event start. }
     \PYG{n}{HANDLE\PYGZus{}ERROR}\PYG{p}{(} \PYG{n}{cudaEventRecord}\PYG{p}{(} \PYG{n}{start}\PYG{p}{,} \PYG{l+m+mi}{0} \PYG{p}{)} \PYG{p}{)}\PYG{p}{;}
 \end{Verbatim}
 
-The first step of using event is declaring the event. In this example. we declared two events, one called start, which will record the start event and another called stop, which will record the stop event. After declaring the events, we can use the command \href{http://developer.download.nvidia.com/compute/cuda/4\_2/rel/toolkit/docs/online/group\_\_CUDART\_\_EVENT\_ga324d5ce3fbf46899b15e5e42ff9cfa5.html\#ga324d5ce3fbf46899b15e5e42ff9cfa5}{cudaEventRecord()} to record a event. You can think of recording a event as initializing it. You may also notice that we pass this command a second argument (0 in this case). In our example, this argument is actually useless. However, if you are really interested in this, you can read more about CUDA stream.
+The first step of using an event is declaring the event. In this example we declared two events, one called start, which will record the start event and another called stop, which will record the stop event. After declaring the events, we can use the command \href{http://developer.download.nvidia.com/compute/cuda/4\_2/rel/toolkit/docs/online/group\_\_CUDART\_\_EVENT\_ga324d5ce3fbf46899b15e5e42ff9cfa5.html\#ga324d5ce3fbf46899b15e5e42ff9cfa5}{cudaEventRecord()} to record an event. You can think of recording an event as initializing it. You may also notice that we pass this command a second argument (0 in this case). In our example this argument is actually useless. If you are really interested in this, however, you can read more about CUDA streams.
 
-You can see we that there is another function HANDLE\_ERROR() around each of the commands. For the moment, this function does not do anything than returning the error if CUDA commands run into any.
+We can see that there is another function HANDLE\_ERROR() around each of the commands. For the moment, this function does not do anything but returning errors if CUDA commands run into any.
 \setbox0\vbox{
 \begin{minipage}{0.95\linewidth}
 \textbf{Why would we use Event API?}
@@ -304,9 +316,9 @@ You can see we that there is another function HANDLE\_ERROR() around each of the
 \medskip
 
 
-If you are C programming language veteran you may ask the question: why don't we use the the timing functions in standard C, such as \emph{clock()} or \emph{timeval} structure, to perform this task? Well, this is a really good question.
+If you are a C programming language veteran you may ask the question: why don't we use the the timing functions in standard C, such as \emph{clock()} or \emph{timeval} structure, to perform this task? This is a really good question.
 
-The fundamental motivation of using \href{http://developer.download.nvidia.com/compute/cuda/4\_2/rel/toolkit/docs/online/group\_\_CUDART\_\_MEMORY\_g48efa06b81cc031b2aa6fdc2e9930741.html\#g48efa06b81cc031b2aa6fdc2e9930741}{Event API} instead of timing functions in standard C lies on the difference between CPU and GPU computation. To be more specific, GPU is a companion computation device, which means every time CPU has to call GPU to do computations. However, when GPU is doing computation, CPU does not wait for it to finish its task, instead CPU will continue to execute next line of code while GPU is still working on previous call. This \emph{asynchronous} feature of GPU computation structure leads to possible inaccuracy when measuring time using standard C timing functions. Therefore, \href{http://developer.download.nvidia.com/compute/cuda/4\_2/rel/toolkit/docs/online/group\_\_CUDART\_\_MEMORY\_g48efa06b81cc031b2aa6fdc2e9930741.html\#g48efa06b81cc031b2aa6fdc2e9930741}{Event API} become needed.
+The fundamental motivation of using \href{http://developer.download.nvidia.com/compute/cuda/4\_2/rel/toolkit/docs/online/group\_\_CUDART\_\_MEMORY\_g48efa06b81cc031b2aa6fdc2e9930741.html\#g48efa06b81cc031b2aa6fdc2e9930741}{Event API} instead of timing functions in standard C lies on the differences between CPU and GPU computation. To be more specific, GPU is a companion computation device, which means the CPU has to call GPU to do computations every time. However, when the GPU is doing a computation, the CPU does not wait for it to finish its task, instead the CPU will continue to execute the next line of code while GPU is still working on the previous call. This \emph{asynchronous} feature of the GPU computation structure leads to possible inaccuracy when measuring time using standard C timing functions. Therefore, \href{http://developer.download.nvidia.com/compute/cuda/4\_2/rel/toolkit/docs/online/group\_\_CUDART\_\_MEMORY\_g48efa06b81cc031b2aa6fdc2e9930741.html\#g48efa06b81cc031b2aa6fdc2e9930741}{Event API} becomes needed.
 \end{minipage}}
 \begin{center}\setlength{\fboxsep}{5pt}\shadowbox{\box0}\end{center}
 
@@ -315,16 +327,16 @@ The fundamental motivation of using \href{http://developer.download.nvidia.com/c
 \label{CUDAIntro/CUDAIntro:the-cudamalloc-function}
 \begin{Verbatim}[commandchars=\\\{\}]
     \PYG{c+c1}{// allocate memory on the GPU}
-    \PYG{n}{HANDLE\PYGZus{}ERROR}\PYG{p}{(} \PYG{n}{cudaMalloc}\PYG{p}{(} \PYG{p}{(}\PYG{k+kt}{void}\PYG{o}{*}\PYG{o}{*}\PYG{p}{)}\PYG{o}{\&}\PYG{n}{dev\PYGZus{}a}\PYG{p}{,} \PYG{n}{N} \PYG{o}{*} \PYG{k}{sizeof}\PYG{p}{(}\PYG{k+kt}{int}\PYG{p}{)} \PYG{p}{)} \PYG{p}{)}\PYG{p}{;}
-    \PYG{n}{HANDLE\PYGZus{}ERROR}\PYG{p}{(} \PYG{n}{cudaMalloc}\PYG{p}{(} \PYG{p}{(}\PYG{k+kt}{void}\PYG{o}{*}\PYG{o}{*}\PYG{p}{)}\PYG{o}{\&}\PYG{n}{dev\PYGZus{}b}\PYG{p}{,} \PYG{n}{N} \PYG{o}{*} \PYG{k}{sizeof}\PYG{p}{(}\PYG{k+kt}{int}\PYG{p}{)} \PYG{p}{)} \PYG{p}{)}\PYG{p}{;}
-    \PYG{n}{HANDLE\PYGZus{}ERROR}\PYG{p}{(} \PYG{n}{cudaMalloc}\PYG{p}{(} \PYG{p}{(}\PYG{k+kt}{void}\PYG{o}{*}\PYG{o}{*}\PYG{p}{)}\PYG{o}{\&}\PYG{n}{dev\PYGZus{}c}\PYG{p}{,} \PYG{n}{N} \PYG{o}{*} \PYG{k}{sizeof}\PYG{p}{(}\PYG{k+kt}{int}\PYG{p}{)} \PYG{p}{)} \PYG{p}{)}\PYG{p}{;}
+    \PYG{n}{HANDLE\PYGZus{}ERROR}\PYG{p}{(} \PYG{n}{cudaMalloc}\PYG{p}{(} \PYG{p}{(}\PYG{k+kt}{void}\PYG{o}{*}\PYG{o}{*}\PYG{p}{)}\PYG{o}{\PYGZam{}}\PYG{n}{dev\PYGZus{}a}\PYG{p}{,} \PYG{n}{N} \PYG{o}{*} \PYG{k}{sizeof}\PYG{p}{(}\PYG{k+kt}{int}\PYG{p}{)} \PYG{p}{)} \PYG{p}{)}\PYG{p}{;}
+    \PYG{n}{HANDLE\PYGZus{}ERROR}\PYG{p}{(} \PYG{n}{cudaMalloc}\PYG{p}{(} \PYG{p}{(}\PYG{k+kt}{void}\PYG{o}{*}\PYG{o}{*}\PYG{p}{)}\PYG{o}{\PYGZam{}}\PYG{n}{dev\PYGZus{}b}\PYG{p}{,} \PYG{n}{N} \PYG{o}{*} \PYG{k}{sizeof}\PYG{p}{(}\PYG{k+kt}{int}\PYG{p}{)} \PYG{p}{)} \PYG{p}{)}\PYG{p}{;}
+    \PYG{n}{HANDLE\PYGZus{}ERROR}\PYG{p}{(} \PYG{n}{cudaMalloc}\PYG{p}{(} \PYG{p}{(}\PYG{k+kt}{void}\PYG{o}{*}\PYG{o}{*}\PYG{p}{)}\PYG{o}{\PYGZam{}}\PYG{n}{dev\PYGZus{}c}\PYG{p}{,} \PYG{n}{N} \PYG{o}{*} \PYG{k}{sizeof}\PYG{p}{(}\PYG{k+kt}{int}\PYG{p}{)} \PYG{p}{)} \PYG{p}{)}\PYG{p}{;}
 \end{Verbatim}
 
-Just like standard C programming language, you need to allocate memory for variables before you start to use them. The command \href{http://developer.download.nvidia.com/compute/cuda/4\_2/rel/toolkit/docs/online/group\_\_CUDART\_\_MEMORY\_gc63ffd93e344b939d6399199d8b12fef.html\#gc63ffd93e344b939d6399199d8b12fef}{cudaMalloc()}, similar to \emph{malloc()} command in standard C, tells the CUDA runtime to allocate the memory on the device (Memory of GPU), instead of on the host (Memory of CPU). The first argument is a pointer points to where you want to hold the address of the newly allocated memory.
+Just like the standard C programming language, you need to allocate memory for variables before you start using them. The command \href{http://developer.download.nvidia.com/compute/cuda/4\_2/rel/toolkit/docs/online/group\_\_CUDART\_\_MEMORY\_gc63ffd93e344b939d6399199d8b12fef.html\#gc63ffd93e344b939d6399199d8b12fef}{cudaMalloc()}, similar to \emph{malloc()} command in standard C, tells the CUDA runtime to allocate memory on the device (Memory of GPU), instead of on the host (Memory of CPU). The first argument is a pointer that points to where you want to hold the address of the newly allocated memory.
 
-For some reasons, you are not allowed to modify memory allocated on the device (GPU) from host directly in CUDA C programming language. Instead, you need to use two other method to access device memory. You can do it by either using device pointers in the device code, or you can use the \href{http://developer.download.nvidia.com/compute/cuda/4\_2/rel/toolkit/docs/online/group\_\_CUDART\_\_MEMORY\_g48efa06b81cc031b2aa6fdc2e9930741.html\#g48efa06b81cc031b2aa6fdc2e9930741}{cudaMemcpy()} method.
+Because the memory units on the host are separate from those on the GPU, you are not allowed to modify memory allocated on the device (GPU) from the host directly in CUDA C programming language. Instead, you need to use two other methods to access the device memory. You can do it by either using device pointers in the device code, or you can use the \href{http://developer.download.nvidia.com/compute/cuda/4\_2/rel/toolkit/docs/online/group\_\_CUDART\_\_MEMORY\_g48efa06b81cc031b2aa6fdc2e9930741.html\#g48efa06b81cc031b2aa6fdc2e9930741}{cudaMemcpy()} method.
 
-The way to use pointers in the device code is exactly the same as we did in the host code. In other words, pointer in CUDA C is exactly the same as Standard C. However, there is one thing you need to pay attention to, host pointers can only access memory (usually CPU memory) from host code, you cannot access device memory directly. On the other hand, device pointers can only access memory (usually GPU memory) from device code as well.
+The way to use pointers in the device code is exactly the same as we did in the host code. In other words, a pointer in CUDA C is exactly the same as in standard C. However, there is one thing you need to pay attention to. Host pointers can only access memory (usually CPU memory) from host code, you cannot access device memory directly. On the other hand, device pointers can only access GPU memory from device code as well.
 
 
 \subsubsection{The cudaMemcpy() Function}
@@ -337,17 +349,17 @@ The way to use pointers in the device code is exactly the same as we did in the 
                               \PYG{n}{cudaMemcpyHostToDevice} \PYG{p}{)} \PYG{p}{)}\PYG{p}{;}
 \end{Verbatim}
 
-As mentioned in last section, We can also use \href{http://developer.download.nvidia.com/compute/cuda/4\_2/rel/toolkit/docs/online/group\_\_CUDART\_\_MEMORY\_g48efa06b81cc031b2aa6fdc2e9930741.html\#g48efa06b81cc031b2aa6fdc2e9930741}{cudaMemcpy()} from host code to access memory on a device. \textbf{This command is the typical way of transferring data between host and device.} Again this call is similar to standard C call \emph{memcpy()}, but requires more parameters. The first argument identifies the destination pointer; the second identifies the source pointer. The last parameter to the call is \href{http://developer.download.nvidia.com/compute/cuda/4\_2/rel/toolkit/docs/online/group\_\_CUDART\_\_TYPES\_g18fa99055ee694244a270e4d5101e95b.html\#gg18fa99055ee694244a270e4d5101e95b1a03d03a676ea8ec51b9b1e193617568}{cudaMemcpyHostToDevice}, telling the runtime that the source pointer is a host pointer and the destination pointer is a device pointer.
+As mentioned in the last section, we can use \href{http://developer.download.nvidia.com/compute/cuda/4\_2/rel/toolkit/docs/online/group\_\_CUDART\_\_MEMORY\_g48efa06b81cc031b2aa6fdc2e9930741.html\#g48efa06b81cc031b2aa6fdc2e9930741}{cudaMemcpy()} from host code to place data in memory on a device. \textbf{This command is the typical way of transferring data between host and device.} This call is similar to the standard C call \emph{memcpy()}, but requires more parameters. The first argument identifies the destination pointer; the second identifies the source pointer. The last parameter to the call is \href{http://developer.download.nvidia.com/compute/cuda/4\_2/rel/toolkit/docs/online/group\_\_CUDART\_\_TYPES\_g18fa99055ee694244a270e4d5101e95b.html\#gg18fa99055ee694244a270e4d5101e95b1a03d03a676ea8ec51b9b1e193617568}{cudaMemcpyHostToDevice}, telling the runtime that the source pointer is a host pointer and the destination pointer is a device pointer.
 
 
 \subsubsection{The Kernel Invocation}
 \label{CUDAIntro/CUDAIntro:the-kernel-invocation}
+The following line in main() is the call for device code to be executed, in this case the function add(), which was shown earlier. You may notice that this call is similar to a normal function call but has additional code in it, notably the \textless{}\textless{}\textless{} , the \textgreater{}\textgreater{}\textgreater{}, and what lies in between them (the triple angle brackets). We will talk about what they represent in later examples. At this point all you need to know is that they are telling the GPU to use only one thread to execute the program.
+
 \begin{Verbatim}[commandchars=\\\{\}]
     \PYG{c+c1}{// kernel invocation code}
-    \PYG{n}{add}\PYG{o}{\textless{}}\PYG{o}{\textless{}}\PYG{o}{\textless{}}\PYG{l+m+mi}{1}\PYG{p}{,}\PYG{l+m+mi}{1}\PYG{o}{\textgreater{}}\PYG{o}{\textgreater{}}\PYG{o}{\textgreater{}}\PYG{p}{(} \PYG{n}{dev\PYGZus{}a}\PYG{p}{,} \PYG{n}{dev\PYGZus{}b}\PYG{p}{,} \PYG{n}{dev\PYGZus{}c} \PYG{p}{)}\PYG{p}{;}
+    \PYG{n}{add}\PYG{o}{\PYGZlt{}}\PYG{o}{\PYGZlt{}}\PYG{o}{\PYGZlt{}}\PYG{l+m+mi}{1}\PYG{p}{,}\PYG{l+m+mi}{1}\PYG{o}{\PYGZgt{}}\PYG{o}{\PYGZgt{}}\PYG{o}{\PYGZgt{}}\PYG{p}{(} \PYG{n}{dev\PYGZus{}a}\PYG{p}{,} \PYG{n}{dev\PYGZus{}b}\PYG{p}{,} \PYG{n}{dev\PYGZus{}c} \PYG{p}{)}\PYG{p}{;}
 \end{Verbatim}
-
-The following line is the call for device code from host code. You may notice that this call is similar to a normal function call but has additional code in it. We will talk about what they represent in later examples. At this point all you need to know is that they are they are telling the GPU to use only one thread to execute the program.
 
 
 \subsubsection{More cudaMemcpy() Function}
@@ -358,7 +370,7 @@ The following line is the call for device code from host code. You may notice th
                               \PYG{n}{cudaMemcpyDeviceToHost} \PYG{p}{)} \PYG{p}{)}\PYG{p}{;}
 \end{Verbatim}
 
-In previous section we have seen how CUDA runtime transfer data from Host to Device, this time we will see how to transfer data back to host. Notice that this time device memory is source and host memory is destination. Therefore, we are using argument \href{http://developer.download.nvidia.com/compute/cuda/4\_2/rel/toolkit/docs/online/group\_\_CUDART\_\_TYPES\_g18fa99055ee694244a270e4d5101e95b.html\#gg18fa99055ee694244a270e4d5101e95b1a03d03a676ea8ec51b9b1e193617568}{cudaMemcpyDeviceToHost}.
+In the previous section we have seen how CUDA runtime transfers data from Host to Device. This time we will see how to transfer data back to the host. Notice that this time device memory is the source and host memory is the destination. Therefore, we are using the argument \href{http://developer.download.nvidia.com/compute/cuda/4\_2/rel/toolkit/docs/online/group\_\_CUDART\_\_TYPES\_g18fa99055ee694244a270e4d5101e95b.html\#gg18fa99055ee694244a270e4d5101e95b1a03d03a676ea8ec51b9b1e193617568}{cudaMemcpyDeviceToHost}.
 
 
 \subsubsection{Timing using Event API}
@@ -368,22 +380,24 @@ In previous section we have seen how CUDA runtime transfer data from Host to Dev
     \PYG{n}{HANDLE\PYGZus{}ERROR}\PYG{p}{(} \PYG{n}{cudaEventRecord}\PYG{p}{(} \PYG{n}{stop}\PYG{p}{,} \PYG{l+m+mi}{0} \PYG{p}{)} \PYG{p}{)}\PYG{p}{;}
     \PYG{n}{HANDLE\PYGZus{}ERROR}\PYG{p}{(} \PYG{n}{cudaEventSynchronize}\PYG{p}{(} \PYG{n}{stop} \PYG{p}{)} \PYG{p}{)}\PYG{p}{;}
     \PYG{k+kt}{float}   \PYG{n}{elapsedTime}\PYG{p}{;}
-    \PYG{n}{HANDLE\PYGZus{}ERROR}\PYG{p}{(} \PYG{n}{cudaEventElapsedTime}\PYG{p}{(} \PYG{o}{\&}\PYG{n}{elapsedTime}\PYG{p}{,}
+    \PYG{n}{HANDLE\PYGZus{}ERROR}\PYG{p}{(} \PYG{n}{cudaEventElapsedTime}\PYG{p}{(} \PYG{o}{\PYGZam{}}\PYG{n}{elapsedTime}\PYG{p}{,}
                                         \PYG{n}{start}\PYG{p}{,} \PYG{n}{stop} \PYG{p}{)} \PYG{p}{)}\PYG{p}{;}
-    \PYG{n}{printf}\PYG{p}{(} \PYG{l+s}{"}\PYG{l+s}{Time to generate:  \%3.1f ms}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s}{"}\PYG{p}{,} \PYG{n}{elapsedTime} \PYG{p}{)}\PYG{p}{;}
+    \PYG{n}{printf}\PYG{p}{(} \PYG{l+s}{"}\PYG{l+s}{Time to generate:  \PYGZpc{}3.1f ms}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s}{"}\PYG{p}{,} \PYG{n}{elapsedTime} \PYG{p}{)}\PYG{p}{;}
 \end{Verbatim}
 
-We have seen how to declare and record a \href{http://developer.download.nvidia.com/compute/cuda/4\_2/rel/toolkit/docs/online/group\_\_CUDART\_\_MEMORY\_g48efa06b81cc031b2aa6fdc2e9930741.html\#g48efa06b81cc031b2aa6fdc2e9930741}{Event API} in CUDA C, but have not elaborate how to use such tool to measure performance. The basic idea is that we first declare event start and event stop. Then at the beginning of the program we record event start and at the end of the program we record event stop. The last step is to calculate the elapsed time between two events.
+We have seen how to declare and record an \href{http://developer.download.nvidia.com/compute/cuda/4\_2/rel/toolkit/docs/online/group\_\_CUDART\_\_MEMORY\_g48efa06b81cc031b2aa6fdc2e9930741.html\#g48efa06b81cc031b2aa6fdc2e9930741}{Event API} in CUDA C, but have not elaborated on how to use such a tool to measure performance. The basic idea is that we first declare an event start and an event stop. Then at the beginning of the program we record event start and at the end of the program we record event stop. The last step is to calculate the elapsed time between two events.
 
-As shown in the code block above, we again use command \href{http://developer.download.nvidia.com/compute/cuda/4\_2/rel/toolkit/docs/online/group\_\_CUDART\_\_EVENT\_ga324d5ce3fbf46899b15e5e42ff9cfa5.html\#ga324d5ce3fbf46899b15e5e42ff9cfa5}{cudaEventRecord()} to instruct the runtime to record the event stop. Then we proceed to the last step, which is get elapsed time using command \href{http://developer.download.nvidia.com/compute/cuda/4\_2/rel/toolkit/docs/online/group\_\_CUDART\_\_EVENT\_g14c387cc57ce2e328f6669854e6020a5.html\#g14c387cc57ce2e328f6669854e6020a5}{cudaEventElapsedTime()}.
+As shown in the code block above, we again use the command \href{http://developer.download.nvidia.com/compute/cuda/4\_2/rel/toolkit/docs/online/group\_\_CUDART\_\_EVENT\_ga324d5ce3fbf46899b15e5e42ff9cfa5.html\#ga324d5ce3fbf46899b15e5e42ff9cfa5}{cudaEventRecord()} to instruct the runtime to record the event stop. Then we proceed to the last step, which is to get the elapsed time using the command \href{http://developer.download.nvidia.com/compute/cuda/4\_2/rel/toolkit/docs/online/group\_\_CUDART\_\_EVENT\_g14c387cc57ce2e328f6669854e6020a5.html\#g14c387cc57ce2e328f6669854e6020a5}{cudaEventElapsedTime()}.
 
-However, there is still a problem with timing GPU code in this way. The CUDA C programming language, though is derived from standard C, has many characteristics that is different from standard C. We have mentioned in previous section that CUDA C is asynchronous. This is a example to jog your memory. Suppose we are running a program to do matrices multiplication, and host calls the GPU to do the computation. As GPU begins executing our code, the CPU proceeds to the next line of code instead of waiting GPU to finish its work. If we want the stop event to record the correct time, we need to make sure that our event is recorded after the GPU finishes everything prior to the call to \href{http://developer.download.nvidia.com/compute/cuda/4\_2/rel/toolkit/docs/online/group\_\_CUDART\_\_EVENT\_ga324d5ce3fbf46899b15e5e42ff9cfa5.html\#ga324d5ce3fbf46899b15e5e42ff9cfa5}{cudaEventRecord()}. To address this problem, CUDA C calls the function \href{http://developer.download.nvidia.com/compute/cuda/4\_2/rel/toolkit/docs/online/group\_\_CUDART\_\_EVENT\_g08241bcf5c5cb686b1882a8492f1e2d9.html\#g08241bcf5c5cb686b1882a8492f1e2d9}{cudaEventSynchronize()} to synchronize the stop event.
+However, there is still a problem with timing GPU code in this way. Though the CUDA C programming language though is derived from standard C, it has many characteristics that are different from standard C. We have mentioned in previous sections that CUDA C is asynchronous. This is an example to jog your memory. Suppose we are running a program to do matrix multiplication, and the host calls the GPU to do the computation. As GPU begins executing our code, the CPU proceeds to the next line of code instead of waiting for the GPU to finish its work. If we want the stop the event to record the correct time, we need to make sure that our event is recorded after the GPU finishes everything prior to the call to \href{http://developer.download.nvidia.com/compute/cuda/4\_2/rel/toolkit/docs/online/group\_\_CUDART\_\_EVENT\_ga324d5ce3fbf46899b15e5e42ff9cfa5.html\#ga324d5ce3fbf46899b15e5e42ff9cfa5}{cudaEventRecord()}. To address this problem, CUDA C calls the function \href{http://developer.download.nvidia.com/compute/cuda/4\_2/rel/toolkit/docs/online/group\_\_CUDART\_\_EVENT\_g08241bcf5c5cb686b1882a8492f1e2d9.html\#g08241bcf5c5cb686b1882a8492f1e2d9}{cudaEventSynchronize()} to synchronize the stop event.
 
-The \href{http://developer.download.nvidia.com/compute/cuda/4\_2/rel/toolkit/docs/online/group\_\_CUDART\_\_EVENT\_g08241bcf5c5cb686b1882a8492f1e2d9.html\#g08241bcf5c5cb686b1882a8492f1e2d9}{cudaEventSynchronize()} function is essentially instructing the runtime to create a barrier to block CPU from executing further instructions until the GPU has reached the stop event.
+The \href{http://developer.download.nvidia.com/compute/cuda/4\_2/rel/toolkit/docs/online/group\_\_CUDART\_\_EVENT\_g08241bcf5c5cb686b1882a8492f1e2d9.html\#g08241bcf5c5cb686b1882a8492f1e2d9}{cudaEventSynchronize()} function is essentially instructing the runtime to create a barrier to block the CPU from executing further instructions until the GPU has reached the stop event.
 
 Another caveat worth mentioning is that CUDA events are implemented directly on the GPU. Therefore they cannot be used for timing device code mixed with host code. In other words, you will get unreliable results if you attempt to use CUDA events to time more than kernel executions and memory copies involving the device.
 
-you should include and only include kernel execution and memory copies involving the device in between start event and stop event. Anything more included could lead to unreliable results.
+\begin{notice}{note}{Note:}
+You should only include kernel execution and memory copies involving the device in between start event and stop event in CUDA. Anything more included could lead to unreliable results.
+\end{notice}
 
 
 \subsubsection{The cudaFree() Function}
@@ -399,9 +413,9 @@ you should include and only include kernel execution and memory copies involving
     \PYG{n}{HANDLE\PYGZus{}ERROR}\PYG{p}{(} \PYG{n}{cudaEventDestroy}\PYG{p}{(} \PYG{n}{stop} \PYG{p}{)} \PYG{p}{)}\PYG{p}{;}
 \end{Verbatim}
 
-When you are reading the section about \href{http://developer.download.nvidia.com/compute/cuda/4\_2/rel/toolkit/docs/online/group\_\_CUDART\_\_MEMORY\_gc63ffd93e344b939d6399199d8b12fef.html\#gc63ffd93e344b939d6399199d8b12fef}{cudaMalloc()}, It may occur to you that we might a call different from the call \emph{free()} to free memory on the device. You are absolutely right. To free memory allocated on the device, we need to use command \href{http://developer.download.nvidia.com/compute/cuda/4\_2/rel/toolkit/docs/online/group\_\_CUDART\_\_MEMORY\_gb17fef862d4d1fefb9dba35bd62a187e.html\#gb17fef862d4d1fefb9dba35bd62a187e}{cudaFree()} instead of free().
+While reading the section about \href{http://developer.download.nvidia.com/compute/cuda/4\_2/rel/toolkit/docs/online/group\_\_CUDART\_\_MEMORY\_gc63ffd93e344b939d6399199d8b12fef.html\#gc63ffd93e344b939d6399199d8b12fef}{cudaMalloc()}, it may occur to you that we made a call different from the call \emph{free()} to free memory on the device. To free memory allocated on the device, we need to use command \href{http://developer.download.nvidia.com/compute/cuda/4\_2/rel/toolkit/docs/online/group\_\_CUDART\_\_MEMORY\_gb17fef862d4d1fefb9dba35bd62a187e.html\#gb17fef862d4d1fefb9dba35bd62a187e}{cudaFree()} instead of free().
 
-To finish up the code, we need to free memory allocate on the CPU as well.
+To finish up the code, we need to free memory allocated on the CPU as well.
 
 \begin{Verbatim}[commandchars=\\\{\}]
     \PYG{c+c1}{// free memory allocated on the CPU}
@@ -410,7 +424,39 @@ To finish up the code, we need to free memory allocate on the CPU as well.
     \PYG{n}{free}\PYG{p}{(} \PYG{n}{c} \PYG{p}{)}\PYG{p}{;}
 \end{Verbatim}
 
-You can add the following code verify whether the GPU has done the task correctly or not. This time we are using CPU to verify GPU's work. We can do this in this problem due to small data size and simple computation.
+The following code is useful to verify whether the GPU has done the task correctly or not. This time we are using CPU to verify GPU's work. We can do this in this problem due to a small data size and simple computation.
+
+\begin{Verbatim}[commandchars=\\\{\}]
+    \PYG{n}{bool} \PYG{n}{success} \PYG{o}{=} \PYG{n+nb}{true}\PYG{p}{;}
+    \PYG{k}{for} \PYG{p}{(}\PYG{k+kt}{int} \PYG{n}{i}\PYG{o}{=}\PYG{l+m+mi}{0}\PYG{p}{;} \PYG{n}{i}\PYG{o}{\PYGZlt{}}\PYG{n}{N}\PYG{p}{;} \PYG{n}{i}\PYG{o}{+}\PYG{o}{+}\PYG{p}{)} \PYG{p}{\PYGZob{}}
+        \PYG{k}{if} \PYG{p}{(}\PYG{p}{(}\PYG{n}{a}\PYG{p}{[}\PYG{n}{i}\PYG{p}{]} \PYG{o}{+} \PYG{n}{b}\PYG{p}{[}\PYG{n}{i}\PYG{p}{]}\PYG{p}{)} \PYG{o}{!}\PYG{o}{=} \PYG{n}{c}\PYG{p}{[}\PYG{n}{i}\PYG{p}{]}\PYG{p}{)} \PYG{p}{\PYGZob{}}
+            \PYG{n}{printf}\PYG{p}{(} \PYG{l+s}{"}\PYG{l+s}{Error:  \PYGZpc{}d + \PYGZpc{}d != \PYGZpc{}d}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s}{"}\PYG{p}{,} \PYG{n}{a}\PYG{p}{[}\PYG{n}{i}\PYG{p}{]}\PYG{p}{,} \PYG{n}{b}\PYG{p}{[}\PYG{n}{i}\PYG{p}{]}\PYG{p}{,} \PYG{n}{c}\PYG{p}{[}\PYG{n}{i}\PYG{p}{]} \PYG{p}{)}\PYG{p}{;}
+            \PYG{n}{success} \PYG{o}{=} \PYG{n+nb}{false}\PYG{p}{;}
+        \PYG{p}{\PYGZcb{}}
+    \PYG{p}{\PYGZcb{}}
+    \PYG{k}{if} \PYG{p}{(}\PYG{n}{success}\PYG{p}{)}  \PYG{n}{printf}\PYG{p}{(} \PYG{l+s}{"}\PYG{l+s}{We did it!}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s}{"} \PYG{p}{)}\PYG{p}{;}
+\end{Verbatim}
+
+
+\subsection{Compiling the code and executing this example}
+\label{CUDAIntro/CUDAIntro:compiling-the-code-and-executing-this-example}
+From the \emph{examples} folder where your file VA-GPU-11.cu is located, you compile the code using the \textbf{nvcc} compiler.  On unix machines we do this on the command line like this:
+
+\begin{Verbatim}[commandchars=\\\{\}]
+nvcc -o VA-GPU-11 VA-GPU-11.cu
+\end{Verbatim}
+
+Run the executable called \emph{VA-GPU-11}.  On unix machines we do this on the command line like this:
+
+\begin{Verbatim}[commandchars=\\\{\}]
+./VA-GPU-11
+\end{Verbatim}
+
+This example is only using one thread on the GPU card, so it is not yet a parallel programming example.  Furthermore, you would never go to the trouble of moving data just to use one of the many cores available on the GPU card! Continue on to see how we take advantage of those cores.
+
+\begin{notice}{note}{Note:}
+Before moving on, execute this code a few times and record how much time it takes on your CUDA-enabled GOU.
+\end{notice}
 
 
 \bigskip\hrule{}\bigskip
@@ -419,28 +465,28 @@ You can add the following code verify whether the GPU has done the task correctl
 
 \section{Vector Addition with Blocks}
 \label{CUDAIntro/CUDAIntro:vector-addition-with-blocks}\label{CUDAIntro/CUDAIntro:cudamemcpydevicetohost}
-We have learned some basic concepts in CUDA C in our last example. Starting from this example, we will begin to learn how to write CUDA language that will explore the potential of our GPU card.
+We have learned some basic concepts in CUDA C in our last example. Starting from this next example, we will begin to learn how to write CUDA language that will explore the potential of our GPU card.
 
-Vector Addition with Blocks source file:
-\code{VA-GPU-N1.cu}
+Download this Vector Addition with Blocks source file:
+\code{VA-GPU-N1.cu}  into the examples directory where you placed the previous example code file.
 
 
 \subsection{Block}
 \label{CUDAIntro/CUDAIntro:block}
-Recall that in the previous example, we use the code
+Recall that in the previous example, we used the code
 
 \begin{Verbatim}[commandchars=\\\{\}]
-    \PYG{n}{add}\PYG{o}{\textless{}}\PYG{o}{\textless{}}\PYG{o}{\textless{}}\PYG{l+m+mi}{1}\PYG{p}{,}\PYG{l+m+mi}{1}\PYG{o}{\textgreater{}}\PYG{o}{\textgreater{}}\PYG{o}{\textgreater{}}\PYG{p}{(} \PYG{n}{dev\PYGZus{}a}\PYG{p}{,} \PYG{n}{dev\PYGZus{}b}\PYG{p}{,} \PYG{n}{dev\PYGZus{}c} \PYG{p}{)}\PYG{p}{;}
+    \PYG{n}{add}\PYG{o}{\PYGZlt{}}\PYG{o}{\PYGZlt{}}\PYG{o}{\PYGZlt{}}\PYG{l+m+mi}{1}\PYG{p}{,}\PYG{l+m+mi}{1}\PYG{o}{\PYGZgt{}}\PYG{o}{\PYGZgt{}}\PYG{o}{\PYGZgt{}}\PYG{p}{(} \PYG{n}{dev\PYGZus{}a}\PYG{p}{,} \PYG{n}{dev\PYGZus{}b}\PYG{p}{,} \PYG{n}{dev\PYGZus{}c} \PYG{p}{)}\PYG{p}{;}
 \end{Verbatim}
 
-to call for device kernels and we left those two numbers in the triple angle brackets unexplained. Well, the first number tells the kernel how many parallel blocks we would like to use to execute the instruction. For example, if we launch the kernel \textless{}\textless{}\textless{}16,1\textgreater{}\textgreater{}\textgreater{}, we are essentially creating 16 copies of the kernel and running them in parallel. We call each of these parallel invocations a block.
+to run device `kernel' code and we left those two numbers in the triple angle brackets unexplained. Well, the first number tells the kernel how many parallel blocks we would like to use to execute the function. For example, if we launch the kernel function with \textless{}\textless{}\textless{}16,1\textgreater{}\textgreater{}\textgreater{}, we are essentially creating 16 copies of the kernel function and running them in parallel.  CUDA developers call each of these parallel invocations a \emph{block}.
 
-Blocks are organized into a one-dimensional, two-dimensional, or three-dimensional grid. Why do we need two-dimensional or even three-dimensional grid? why can't we just stick with one-dimensional? Well, it turned out that for problems with two or more dimensional domains, such as matrices multiplication or image processing (don't forget the reason GPU been exist is to process image faster), it is often convenient and more efficient to use two or more dimensional indexing. Right now, nVidia GPUs that support CUDA structure can assign up to 65536 blocks in each dimension of the grid, that is in total $65536 \times 65536 \times 65536$ blocks in a grid.
+Blocks are organized into a one-dimensional, two-dimensional, or three-dimensional grid. Why do we need a two-dimensional or even a three-dimensional grid? Why can't we just stick with the one-dimensional grid? Well, it turns out that for problems with two or more dimensional domains, such as matrix multiplication or image processing (don't forget the reason GPU been exist is to process images faster), it is often convenient and more efficient to use two or more dimensional indexing. Right now, nVidia GPUs that support CUDA structure can assign up to 65536 blocks in each dimension of the grid, that is in total $65536 \times 65536 \times 65536$ blocks in a grid.
 
 \begin{notice}{note}{Note:}
-Some of the books may refer grid in CUDA has top two-dimensions. On the other hand, some books (including the official CUDA Programming Guide provided by NVIDIA) may suggest that grid can be three-dimensional. It turns out that older GPU units are not powerful enough to run grid in three-dimensions. Therefore older books might refer CUDA has only two-dimensional grid. However, as GPUs get more and more powerful, NVIDIA enable newer GPUs to utilize three-dimensional grid.
+Some books imply that the grid in CUDA has at most two-dimensions. On the other hand, some books (including the official CUDA Programming Guide provided by NVIDIA) suggest that the grid can be three-dimensional. It turns out that older GPU units are not powerful enough to run grids in three-dimensions. Therefore older books might argue that CUDA has only a two-dimensional grid. However, as GPUs get more and more powerful, NVIDIA enable newer GPUs to utilize three-dimensional grids.
 
-To see whether your device support three-dimensional grid or not, please run the following source code and see the Compute Capability entry in the output. If it is 2.x or 3.x, then your device supports three-dimensional grid. If it is 1.x or less, you can only use two-dimensional grid. \code{download enum\_gpu.cu}
+To see whether your device supports three-dimensional grids or not, please run the following source code and see the Compute Capability entry in the output. If it is 2.x or 3.x, then your device supports three-dimensional grids. If it is 1.x or less, you can only use two-dimensional grids. \code{download enum\_gpu.cu}
 \end{notice}
 
 
@@ -452,7 +498,7 @@ To see whether your device support three-dimensional grid or not, please run the
     \PYG{c+c1}{// keep track of the index}
     \PYG{k+kt}{int} \PYG{n}{tid} \PYG{o}{=} \PYG{n}{blockIdx}\PYG{p}{.}\PYG{n}{x}\PYG{p}{;}
 
-    \PYG{k}{while} \PYG{p}{(}\PYG{n}{tid} \PYG{o}{\textless{}} \PYG{n}{N}\PYG{p}{)} \PYG{p}{\PYGZob{}}
+    \PYG{k}{while} \PYG{p}{(}\PYG{n}{tid} \PYG{o}{\PYGZlt{}} \PYG{n}{N}\PYG{p}{)} \PYG{p}{\PYGZob{}}
         \PYG{n}{c}\PYG{p}{[}\PYG{n}{tid}\PYG{p}{]} \PYG{o}{=} \PYG{n}{a}\PYG{p}{[}\PYG{n}{tid}\PYG{p}{]} \PYG{o}{+} \PYG{n}{b}\PYG{p}{[}\PYG{n}{tid}\PYG{p}{]}\PYG{p}{;}
         \PYG{n}{tid} \PYG{o}{+}\PYG{o}{=} \PYG{n}{numBlock}\PYG{p}{;} \PYG{c+c1}{// shift by the total number of blocks}
     \PYG{p}{\PYGZcb{}}
@@ -461,33 +507,33 @@ To see whether your device support three-dimensional grid or not, please run the
 
 This is the complete device code.
 
-We have mentioned that there are one, two and three-dimensional grids. To index different blocks in a grid, we use the built-in variables CUDA runtime defines for us: blockIdx. blockIdx is a three-component vector, so that threads can be identified using one-dimensional, two-dimensional or three-dimensional index. To access different component in this vector, we use blockIdx.x, blockIdx.y and blockIdx.z.
+We have mentioned that there are one, two and three-dimensional grids. To index different blocks in a grid, we use the built-in variables CUDA runtime defines for us: blockIdx. The variable blockIdx is a three-component vector, so that threads can be identified using a one-dimensional, two-dimensional or three-dimensional index. To access different components in this vector, we use blockIdx.x, blockIdx.y and blockIdx.z.
 
 \begin{Verbatim}[commandchars=\\\{\}]
     \PYG{c+c1}{// keep track of the index}
     \PYG{k+kt}{int} \PYG{n}{tid} \PYG{o}{=} \PYG{n}{blockIdx}\PYG{p}{.}\PYG{n}{x}\PYG{p}{;}
 \end{Verbatim}
 
-Since we have multiple blocks doing the same task, we need to keep track of these blocks so that the kernel can pass right data to them and bring right data back. Since we have only 1 thread in each block, we can simply use blockIdx to track index.
+Since we have multiple blocks performing the same task, we need to keep track of these blocks so that the kernel can pass the right data to them and bring the right data back. Since we have only 1 thread in each block, we can simply use blockIdx to track the index.
 
 \begin{Verbatim}[commandchars=\\\{\}]
         \PYG{n}{tid} \PYG{o}{+}\PYG{o}{=} \PYG{n}{numBlock}\PYG{p}{;} \PYG{c+c1}{// shift by the total number of blocks}
 \end{Verbatim}
 
-Although we have multiple blocks (1 thread per block) working simultaneously after one block finish one computation, this does not necessary mean block will only perform one time of computation. Normally, we could have problem size that is larger than the number of blocks we have. Therefore, we need each block to perform more than one time of computation. We do this by adding a stride to the tid after the while loop finish one round. In this example, we want tid to shift to the next data point by the total number of blocks.
+Although we have multiple blocks (1 thread per block) working simultaneously after one block finishes one computation, this does not necessarily mean a block will only perform one time of computation. Normally, we could have a problem size that is larger than the number of blocks we have. Therefore, we need each block to perform more than one time of computation. We do this by adding a stride to the tid after the while loop finishes one round. In this example, we want tid to shift to the next data point by the total number of blocks.
 
 
 \subsection{The Host Code}
 \label{CUDAIntro/CUDAIntro:id2}
 \begin{Verbatim}[commandchars=\\\{\}]
-    \PYG{n}{add}\PYG{o}{\textless{}}\PYG{o}{\textless{}}\PYG{o}{\textless{}}\PYG{n}{numBlock}\PYG{p}{,}\PYG{n}{numThread}\PYG{o}{\textgreater{}}\PYG{o}{\textgreater{}}\PYG{o}{\textgreater{}}\PYG{p}{(} \PYG{n}{dev\PYGZus{}a}\PYG{p}{,} \PYG{n}{dev\PYGZus{}b}\PYG{p}{,} \PYG{n}{dev\PYGZus{}c} \PYG{p}{)}\PYG{p}{;}
+    \PYG{n}{add}\PYG{o}{\PYGZlt{}}\PYG{o}{\PYGZlt{}}\PYG{o}{\PYGZlt{}}\PYG{n}{numBlock}\PYG{p}{,}\PYG{n}{numThread}\PYG{o}{\PYGZgt{}}\PYG{o}{\PYGZgt{}}\PYG{o}{\PYGZgt{}}\PYG{p}{(} \PYG{n}{dev\PYGZus{}a}\PYG{p}{,} \PYG{n}{dev\PYGZus{}b}\PYG{p}{,} \PYG{n}{dev\PYGZus{}c} \PYG{p}{)}\PYG{p}{;}
 \end{Verbatim}
 
-Except kernel invocation part of the host code, everything else is the same. However, as we are calling \textbf{numBlock} and \textbf{numThread} in the code, we need to define them at the very beginning of the source code file.
+Except the kernel invocation part of the host code, everything else is the same. However, as we are calling \textbf{numBlock} and \textbf{numThread} in the code, we need to define them at the very beginning of the source code file.
 
 \begin{Verbatim}[commandchars=\\\{\}]
-\PYG{c+cp}{\#}\PYG{c+cp}{define numThread 1 }\PYG{c+c1}{// in this example we keep one thread in one block}
-\PYG{c+cp}{\#}\PYG{c+cp}{define numBlock 128 }\PYG{c+c1}{// in this example we use multiple blocks}
+\PYG{c+cp}{\PYGZsh{}}\PYG{c+cp}{define numThread 1 }\PYG{c+c1}{// in this example we keep one thread in one block}
+\PYG{c+cp}{\PYGZsh{}}\PYG{c+cp}{define numBlock 128 }\PYG{c+c1}{// in this example we use multiple blocks}
 \end{Verbatim}
 
 
@@ -503,17 +549,17 @@ Vector Addition with Blocks and Threads source file:
 
 \subsection{Threads}
 \label{CUDAIntro/CUDAIntro:threads}
-In the last example, we learned how to launch multiple blocks in CUDA C programs. This time, we will see how to split parallel blocks. CUDA runtime allow us to split block into threads. Recall that in the previous example, we use the code
+In the last example we learned how to launch multiple blocks in CUDA C programs. This time, we will see how to split parallel blocks. CUDA runtime allows us to split blocks into threads. Recall that in the previous example we use the code
 
 \begin{Verbatim}[commandchars=\\\{\}]
-    \PYG{n}{add}\PYG{o}{\textless{}}\PYG{o}{\textless{}}\PYG{o}{\textless{}}\PYG{n}{numBlock}\PYG{p}{,}\PYG{n}{numThread}\PYG{o}{\textgreater{}}\PYG{o}{\textgreater{}}\PYG{o}{\textgreater{}}\PYG{p}{(} \PYG{n}{dev\PYGZus{}a}\PYG{p}{,} \PYG{n}{dev\PYGZus{}b}\PYG{p}{,} \PYG{n}{dev\PYGZus{}c} \PYG{p}{)}\PYG{p}{;}
+    \PYG{n}{add}\PYG{o}{\PYGZlt{}}\PYG{o}{\PYGZlt{}}\PYG{o}{\PYGZlt{}}\PYG{n}{numBlock}\PYG{p}{,}\PYG{n}{numThread}\PYG{o}{\PYGZgt{}}\PYG{o}{\PYGZgt{}}\PYG{o}{\PYGZgt{}}\PYG{p}{(} \PYG{n}{dev\PYGZus{}a}\PYG{p}{,} \PYG{n}{dev\PYGZus{}b}\PYG{p}{,} \PYG{n}{dev\PYGZus{}c} \PYG{p}{)}\PYG{p}{;}
 \end{Verbatim}
 
-to call for device kernels where numBlock is 128 and numThread remain as 1, the second number represents how many threads we want in each block.
+to call for device kernels where numBlock is 128 and numThread remain as 1. The second number represents how many threads we want in each block.
 
-Here comes the question, why do we need two sets of parallel organization system? Why do we need not only blocks in grid, but also threads in blocks? Is there any advantages in one over the other? Well, there are advantages that we will cover in later examples, so for now, please bear with us.
+Here comes the question, why do we need two sets of parallel organization system? Why do we need not only blocks in grid, but also threads in blocks? Are there any advantages in one over the other? Well, there are advantages that we will cover in later examples, so for now, please bear with us.
 
-Just like blocks is organized in up to three-dimensional grid, threads can also be organized in one, two or three-dimensional blocks. Just like there is a limit on number of blocks in a grid, there is also a limit on number of threads in a block. Right now, for most of the high-end nVidia GPUs, this limit is 1024. Be really careful here, 1024 is the total number of threads in a block, \textbf{not} the limit \textbf{per dimension} like in the grid. Most of the nVidia GPUs that is two or three year old, the limit might be 512. You can query the maxThreadsPerBlock field of the device properties structure to find out which number you have.
+Just like blocks are organized in up to three-dimensional grids, threads can also be organized in one, two or three-dimensional blocks. Just like there is a limit on the number of blocks in a grid, there is also a limit on the number of threads in a block. Right now, for most of the high-end nVidia GPUs, this limit is 1024. Be really careful here, 1024 is the total number of threads in a block, \textbf{not} the limit \textbf{per dimension} like in the grid. Most of the nVidia GPUs that are two or three year old, the limit might be 512. You can query the maxThreadsPerBlock field of the device properties structure to find out which number you have.
 
 
 \subsection{The Device Code}
@@ -524,7 +570,7 @@ Just like blocks is organized in up to three-dimensional grid, threads can also 
     \PYG{c+c1}{// keep track of the index}
     \PYG{k+kt}{int} \PYG{n}{tid} \PYG{o}{=} \PYG{n}{threadIdx}\PYG{p}{.}\PYG{n}{x} \PYG{o}{+} \PYG{n}{blockIdx}\PYG{p}{.}\PYG{n}{x} \PYG{o}{*} \PYG{n}{numBlock}\PYG{p}{;}
 
-    \PYG{k}{while} \PYG{p}{(}\PYG{n}{tid} \PYG{o}{\textless{}} \PYG{n}{N}\PYG{p}{)} \PYG{p}{\PYGZob{}}
+    \PYG{k}{while} \PYG{p}{(}\PYG{n}{tid} \PYG{o}{\PYGZlt{}} \PYG{n}{N}\PYG{p}{)} \PYG{p}{\PYGZob{}}
         \PYG{n}{c}\PYG{p}{[}\PYG{n}{tid}\PYG{p}{]} \PYG{o}{=} \PYG{n}{a}\PYG{p}{[}\PYG{n}{tid}\PYG{p}{]} \PYG{o}{+} \PYG{n}{b}\PYG{p}{[}\PYG{n}{tid}\PYG{p}{]}\PYG{p}{;}
         \PYG{n}{tid} \PYG{o}{+}\PYG{o}{=} \PYG{n}{numThread} \PYG{o}{*} \PYG{n}{numBlock}\PYG{p}{;}\PYG{c+c1}{// shift by the total number of thread in a grid}
     \PYG{p}{\PYGZcb{}}
@@ -540,26 +586,26 @@ Just like we use CUDA built-in variables to index blocks in a grid, we use varia
     \PYG{k+kt}{int} \PYG{n}{tid} \PYG{o}{=} \PYG{n}{threadIdx}\PYG{p}{.}\PYG{n}{x} \PYG{o}{+} \PYG{n}{blockIdx}\PYG{p}{.}\PYG{n}{x} \PYG{o}{*} \PYG{n}{numBlock}\PYG{p}{;}
 \end{Verbatim}
 
-The thread handles the data at its thread id. Recall that earlier we are using tid = blockIdx.x only. Now, as we are using multiple threads per block, we have to keep track of not only blockId, but also the threadId as well.
+The thread handles the data at its thread id. Recall that earlier we were using tid = blockIdx.x only. Now, as we are using multiple threads per block, we have to keep track of not only blockId, but also the threadId as well.
 
 \begin{Verbatim}[commandchars=\\\{\}]
         \PYG{n}{tid} \PYG{o}{+}\PYG{o}{=} \PYG{n}{numThread} \PYG{o}{*} \PYG{n}{numBlock}\PYG{p}{;}\PYG{c+c1}{// shift by the total number of thread in a grid}
 \end{Verbatim}
 
-Since we have multiple threads in multiple blocks working simultaneously, after one thread in one block finish one computation, we want it to shift to the next data point by the total number of threads in the system. in this example, total number of threads is number of blocks times threads per block.
+Since we have multiple threads in multiple blocks working simultaneously, after one thread in one block finishes one computation, we want it to shift to the next data point by the total number of threads in the system. In this example, total number of threads is the number of blocks times threads per block.
 
 
 \subsection{The Host Code}
 \label{CUDAIntro/CUDAIntro:id4}
 \begin{Verbatim}[commandchars=\\\{\}]
-    \PYG{n}{add}\PYG{o}{\textless{}}\PYG{o}{\textless{}}\PYG{o}{\textless{}}\PYG{n}{numBlock}\PYG{p}{,}\PYG{n}{numThread}\PYG{o}{\textgreater{}}\PYG{o}{\textgreater{}}\PYG{o}{\textgreater{}}\PYG{p}{(} \PYG{n}{dev\PYGZus{}a}\PYG{p}{,} \PYG{n}{dev\PYGZus{}b}\PYG{p}{,} \PYG{n}{dev\PYGZus{}c} \PYG{p}{)}\PYG{p}{;}
+    \PYG{n}{add}\PYG{o}{\PYGZlt{}}\PYG{o}{\PYGZlt{}}\PYG{o}{\PYGZlt{}}\PYG{n}{numBlock}\PYG{p}{,}\PYG{n}{numThread}\PYG{o}{\PYGZgt{}}\PYG{o}{\PYGZgt{}}\PYG{o}{\PYGZgt{}}\PYG{p}{(} \PYG{n}{dev\PYGZus{}a}\PYG{p}{,} \PYG{n}{dev\PYGZus{}b}\PYG{p}{,} \PYG{n}{dev\PYGZus{}c} \PYG{p}{)}\PYG{p}{;}
 \end{Verbatim}
 
-Except kernel invocation part of the host code, everything else is the same. However, as we are calling \textbf{numBlock} and \textbf{numThread} in the code, we need to define them at the very beginning of the source code file.
+Except the kernel invocation part of the host code, everything else is the same. However, as we are calling \textbf{numBlock} and \textbf{numThread} in the code, we need to define them at the very beginning of the source code file.
 
 \begin{Verbatim}[commandchars=\\\{\}]
-\PYG{c+cp}{\#}\PYG{c+cp}{define numThread 128 }\PYG{c+c1}{// in this example we use multiple threads}
-\PYG{c+cp}{\#}\PYG{c+cp}{define numBlock 128 }\PYG{c+c1}{// in this example keep on using multiple blocks}
+\PYG{c+cp}{\PYGZsh{}}\PYG{c+cp}{define numThread 128 }\PYG{c+c1}{// in this example we use multiple threads}
+\PYG{c+cp}{\PYGZsh{}}\PYG{c+cp}{define numBlock 128 }\PYG{c+c1}{// in this example keep on using multiple blocks}
 \end{Verbatim}
 
 
@@ -591,7 +637,7 @@ Vector Dot Product source file:
     \PYG{c+c1}{// keep track of the index}
     \PYG{k+kt}{int} \PYG{n}{tid} \PYG{o}{=} \PYG{n}{threadIdx}\PYG{p}{.}\PYG{n}{x} \PYG{o}{+} \PYG{n}{blockIdx}\PYG{p}{.}\PYG{n}{x} \PYG{o}{*} \PYG{n}{numThread}\PYG{p}{;}
 
-    \PYG{k}{while} \PYG{p}{(}\PYG{n}{tid} \PYG{o}{\textless{}} \PYG{n}{N}\PYG{p}{)} \PYG{p}{\PYGZob{}}
+    \PYG{k}{while} \PYG{p}{(}\PYG{n}{tid} \PYG{o}{\PYGZlt{}} \PYG{n}{N}\PYG{p}{)} \PYG{p}{\PYGZob{}}
          \PYG{n}{c}\PYG{p}{[}\PYG{n}{tid}\PYG{p}{]} \PYG{o}{=} \PYG{n}{a}\PYG{p}{[}\PYG{n}{tid}\PYG{p}{]} \PYG{o}{*} \PYG{n}{b}\PYG{p}{[}\PYG{n}{tid}\PYG{p}{]}\PYG{p}{;}
          \PYG{n}{tid} \PYG{o}{+}\PYG{o}{=} \PYG{n}{numThread} \PYG{o}{*} \PYG{n}{numBlock}\PYG{p}{;} \PYG{c+c1}{// shift by the total number of thread in a grid}
     \PYG{p}{\PYGZcb{}}
@@ -615,27 +661,27 @@ The device code is pretty straight forward. Each thread multiplies a pair of cor
     \PYG{n}{c} \PYG{o}{=} \PYG{p}{(}\PYG{k+kt}{float}\PYG{o}{*}\PYG{p}{)}\PYG{n}{malloc}\PYG{p}{(} \PYG{n}{N}\PYG{o}{*}\PYG{k}{sizeof}\PYG{p}{(}\PYG{k+kt}{float}\PYG{p}{)} \PYG{p}{)}\PYG{p}{;}
 
     \PYG{c+c1}{// fill in the host memory with data}
-    \PYG{k}{for} \PYG{p}{(}\PYG{k+kt}{int} \PYG{n}{i}\PYG{o}{=}\PYG{l+m+mi}{0}\PYG{p}{;} \PYG{n}{i}\PYG{o}{\textless{}}\PYG{n}{N}\PYG{p}{;} \PYG{n}{i}\PYG{o}{+}\PYG{o}{+}\PYG{p}{)} \PYG{p}{\PYGZob{}}
+    \PYG{k}{for} \PYG{p}{(}\PYG{k+kt}{int} \PYG{n}{i}\PYG{o}{=}\PYG{l+m+mi}{0}\PYG{p}{;} \PYG{n}{i}\PYG{o}{\PYGZlt{}}\PYG{n}{N}\PYG{p}{;} \PYG{n}{i}\PYG{o}{+}\PYG{o}{+}\PYG{p}{)} \PYG{p}{\PYGZob{}}
         \PYG{n}{a}\PYG{p}{[}\PYG{n}{i}\PYG{p}{]} \PYG{o}{=} \PYG{n}{i}\PYG{p}{;}
         \PYG{n}{b}\PYG{p}{[}\PYG{n}{i}\PYG{p}{]} \PYG{o}{=} \PYG{n}{i}\PYG{o}{*}\PYG{l+m+mi}{2}\PYG{p}{;}
     \PYG{p}{\PYGZcb{}}
 
     \PYG{c+c1}{// start the timer }
     \PYG{n}{cudaEvent\PYGZus{}t}     \PYG{n}{start}\PYG{p}{,} \PYG{n}{stop}\PYG{p}{;}
-    \PYG{n}{HANDLE\PYGZus{}ERROR}\PYG{p}{(} \PYG{n}{cudaEventCreate}\PYG{p}{(} \PYG{o}{\&}\PYG{n}{start} \PYG{p}{)} \PYG{p}{)}\PYG{p}{;}
-    \PYG{n}{HANDLE\PYGZus{}ERROR}\PYG{p}{(} \PYG{n}{cudaEventCreate}\PYG{p}{(} \PYG{o}{\&}\PYG{n}{stop} \PYG{p}{)} \PYG{p}{)}\PYG{p}{;}
+    \PYG{n}{HANDLE\PYGZus{}ERROR}\PYG{p}{(} \PYG{n}{cudaEventCreate}\PYG{p}{(} \PYG{o}{\PYGZam{}}\PYG{n}{start} \PYG{p}{)} \PYG{p}{)}\PYG{p}{;}
+    \PYG{n}{HANDLE\PYGZus{}ERROR}\PYG{p}{(} \PYG{n}{cudaEventCreate}\PYG{p}{(} \PYG{o}{\PYGZam{}}\PYG{n}{stop} \PYG{p}{)} \PYG{p}{)}\PYG{p}{;}
     \PYG{n}{HANDLE\PYGZus{}ERROR}\PYG{p}{(} \PYG{n}{cudaEventRecord}\PYG{p}{(} \PYG{n}{start}\PYG{p}{,} \PYG{l+m+mi}{0} \PYG{p}{)} \PYG{p}{)}\PYG{p}{;}
 
     \PYG{c+c1}{// allocate the memory on the GPU}
-    \PYG{n}{HANDLE\PYGZus{}ERROR}\PYG{p}{(} \PYG{n}{cudaMalloc}\PYG{p}{(} \PYG{p}{(}\PYG{k+kt}{void}\PYG{o}{*}\PYG{o}{*}\PYG{p}{)}\PYG{o}{\&}\PYG{n}{dev\PYGZus{}a}\PYG{p}{,} \PYG{n}{N}\PYG{o}{*}\PYG{k}{sizeof}\PYG{p}{(}\PYG{k+kt}{float}\PYG{p}{)} \PYG{p}{)} \PYG{p}{)}\PYG{p}{;}
-    \PYG{n}{HANDLE\PYGZus{}ERROR}\PYG{p}{(} \PYG{n}{cudaMalloc}\PYG{p}{(} \PYG{p}{(}\PYG{k+kt}{void}\PYG{o}{*}\PYG{o}{*}\PYG{p}{)}\PYG{o}{\&}\PYG{n}{dev\PYGZus{}b}\PYG{p}{,} \PYG{n}{N}\PYG{o}{*}\PYG{k}{sizeof}\PYG{p}{(}\PYG{k+kt}{float}\PYG{p}{)} \PYG{p}{)} \PYG{p}{)}\PYG{p}{;}
-    \PYG{n}{HANDLE\PYGZus{}ERROR}\PYG{p}{(} \PYG{n}{cudaMalloc}\PYG{p}{(} \PYG{p}{(}\PYG{k+kt}{void}\PYG{o}{*}\PYG{o}{*}\PYG{p}{)}\PYG{o}{\&}\PYG{n}{dev\PYGZus{}c}\PYG{p}{,} \PYG{n}{N}\PYG{o}{*}\PYG{k}{sizeof}\PYG{p}{(}\PYG{k+kt}{float}\PYG{p}{)} \PYG{p}{)} \PYG{p}{)}\PYG{p}{;}
+    \PYG{n}{HANDLE\PYGZus{}ERROR}\PYG{p}{(} \PYG{n}{cudaMalloc}\PYG{p}{(} \PYG{p}{(}\PYG{k+kt}{void}\PYG{o}{*}\PYG{o}{*}\PYG{p}{)}\PYG{o}{\PYGZam{}}\PYG{n}{dev\PYGZus{}a}\PYG{p}{,} \PYG{n}{N}\PYG{o}{*}\PYG{k}{sizeof}\PYG{p}{(}\PYG{k+kt}{float}\PYG{p}{)} \PYG{p}{)} \PYG{p}{)}\PYG{p}{;}
+    \PYG{n}{HANDLE\PYGZus{}ERROR}\PYG{p}{(} \PYG{n}{cudaMalloc}\PYG{p}{(} \PYG{p}{(}\PYG{k+kt}{void}\PYG{o}{*}\PYG{o}{*}\PYG{p}{)}\PYG{o}{\PYGZam{}}\PYG{n}{dev\PYGZus{}b}\PYG{p}{,} \PYG{n}{N}\PYG{o}{*}\PYG{k}{sizeof}\PYG{p}{(}\PYG{k+kt}{float}\PYG{p}{)} \PYG{p}{)} \PYG{p}{)}\PYG{p}{;}
+    \PYG{n}{HANDLE\PYGZus{}ERROR}\PYG{p}{(} \PYG{n}{cudaMalloc}\PYG{p}{(} \PYG{p}{(}\PYG{k+kt}{void}\PYG{o}{*}\PYG{o}{*}\PYG{p}{)}\PYG{o}{\PYGZam{}}\PYG{n}{dev\PYGZus{}c}\PYG{p}{,} \PYG{n}{N}\PYG{o}{*}\PYG{k}{sizeof}\PYG{p}{(}\PYG{k+kt}{float}\PYG{p}{)} \PYG{p}{)} \PYG{p}{)}\PYG{p}{;}
 
     \PYG{c+c1}{// copy the arrays 'a' and 'b' to the GPU}
     \PYG{n}{HANDLE\PYGZus{}ERROR}\PYG{p}{(} \PYG{n}{cudaMemcpy}\PYG{p}{(} \PYG{n}{dev\PYGZus{}a}\PYG{p}{,} \PYG{n}{a}\PYG{p}{,} \PYG{n}{N}\PYG{o}{*}\PYG{k}{sizeof}\PYG{p}{(}\PYG{k+kt}{float}\PYG{p}{)}\PYG{p}{,} \PYG{n}{cudaMemcpyHostToDevice} \PYG{p}{)} \PYG{p}{)}\PYG{p}{;}
     \PYG{n}{HANDLE\PYGZus{}ERROR}\PYG{p}{(} \PYG{n}{cudaMemcpy}\PYG{p}{(} \PYG{n}{dev\PYGZus{}b}\PYG{p}{,} \PYG{n}{b}\PYG{p}{,} \PYG{n}{N}\PYG{o}{*}\PYG{k}{sizeof}\PYG{p}{(}\PYG{k+kt}{float}\PYG{p}{)}\PYG{p}{,} \PYG{n}{cudaMemcpyHostToDevice} \PYG{p}{)} \PYG{p}{)}\PYG{p}{;} 
 
-    \PYG{n}{dot}\PYG{o}{\textless{}}\PYG{o}{\textless{}}\PYG{o}{\textless{}}\PYG{n}{numBlock}\PYG{p}{,}\PYG{n}{numThread}\PYG{o}{\textgreater{}}\PYG{o}{\textgreater{}}\PYG{o}{\textgreater{}}\PYG{p}{(} \PYG{n}{dev\PYGZus{}a}\PYG{p}{,} \PYG{n}{dev\PYGZus{}b}\PYG{p}{,} \PYG{n}{dev\PYGZus{}c} \PYG{p}{)}\PYG{p}{;}
+    \PYG{n}{dot}\PYG{o}{\PYGZlt{}}\PYG{o}{\PYGZlt{}}\PYG{o}{\PYGZlt{}}\PYG{n}{numBlock}\PYG{p}{,}\PYG{n}{numThread}\PYG{o}{\PYGZgt{}}\PYG{o}{\PYGZgt{}}\PYG{o}{\PYGZgt{}}\PYG{p}{(} \PYG{n}{dev\PYGZus{}a}\PYG{p}{,} \PYG{n}{dev\PYGZus{}b}\PYG{p}{,} \PYG{n}{dev\PYGZus{}c} \PYG{p}{)}\PYG{p}{;}
 
     \PYG{c+c1}{// copy the array 'c' back from the GPU to the CPU}
     \PYG{n}{HANDLE\PYGZus{}ERROR}\PYG{p}{(} \PYG{n}{cudaMemcpy}\PYG{p}{(} \PYG{n}{c}\PYG{p}{,} \PYG{n}{dev\PYGZus{}c}\PYG{p}{,} \PYG{n}{N}\PYG{o}{*}\PYG{k}{sizeof}\PYG{p}{(}\PYG{k+kt}{float}\PYG{p}{)}\PYG{p}{,} \PYG{n}{cudaMemcpyDeviceToHost} \PYG{p}{)} \PYG{p}{)}\PYG{p}{;}
@@ -644,18 +690,18 @@ The device code is pretty straight forward. Each thread multiplies a pair of cor
     \PYG{n}{HANDLE\PYGZus{}ERROR}\PYG{p}{(} \PYG{n}{cudaEventRecord}\PYG{p}{(} \PYG{n}{stop}\PYG{p}{,} \PYG{l+m+mi}{0} \PYG{p}{)} \PYG{p}{)}\PYG{p}{;}
     \PYG{n}{HANDLE\PYGZus{}ERROR}\PYG{p}{(} \PYG{n}{cudaEventSynchronize}\PYG{p}{(} \PYG{n}{stop} \PYG{p}{)} \PYG{p}{)}\PYG{p}{;}
     \PYG{k+kt}{float}   \PYG{n}{elapsedTime}\PYG{p}{;}
-    \PYG{n}{HANDLE\PYGZus{}ERROR}\PYG{p}{(} \PYG{n}{cudaEventElapsedTime}\PYG{p}{(} \PYG{o}{\&}\PYG{n}{elapsedTime}\PYG{p}{,}
+    \PYG{n}{HANDLE\PYGZus{}ERROR}\PYG{p}{(} \PYG{n}{cudaEventElapsedTime}\PYG{p}{(} \PYG{o}{\PYGZam{}}\PYG{n}{elapsedTime}\PYG{p}{,}
                                         \PYG{n}{start}\PYG{p}{,} \PYG{n}{stop} \PYG{p}{)} \PYG{p}{)}\PYG{p}{;}
-    \PYG{n}{printf}\PYG{p}{(} \PYG{l+s}{"}\PYG{l+s}{Time to generate:  \%3.1f ms}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s}{"}\PYG{p}{,} \PYG{n}{elapsedTime} \PYG{p}{)}\PYG{p}{;}
+    \PYG{n}{printf}\PYG{p}{(} \PYG{l+s}{"}\PYG{l+s}{Time to generate:  \PYGZpc{}3.1f ms}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s}{"}\PYG{p}{,} \PYG{n}{elapsedTime} \PYG{p}{)}\PYG{p}{;}
 
     \PYG{c+c1}{// finish up on the CPU side}
     \PYG{n}{sum} \PYG{o}{=} \PYG{l+m+mi}{0}\PYG{p}{;}
-    \PYG{k}{for} \PYG{p}{(}\PYG{k+kt}{int} \PYG{n}{i}\PYG{o}{=}\PYG{l+m+mi}{0}\PYG{p}{;} \PYG{n}{i}\PYG{o}{\textless{}}\PYG{n}{N}\PYG{p}{;} \PYG{n}{i}\PYG{o}{+}\PYG{o}{+}\PYG{p}{)} \PYG{p}{\PYGZob{}}
+    \PYG{k}{for} \PYG{p}{(}\PYG{k+kt}{int} \PYG{n}{i}\PYG{o}{=}\PYG{l+m+mi}{0}\PYG{p}{;} \PYG{n}{i}\PYG{o}{\PYGZlt{}}\PYG{n}{N}\PYG{p}{;} \PYG{n}{i}\PYG{o}{+}\PYG{o}{+}\PYG{p}{)} \PYG{p}{\PYGZob{}}
         \PYG{n}{sum} \PYG{o}{+}\PYG{o}{=} \PYG{n}{c}\PYG{p}{[}\PYG{n}{i}\PYG{p}{]}\PYG{p}{;}
     \PYG{p}{\PYGZcb{}}
 
-\PYG{c+cp}{    \#}\PYG{c+cp}{define sum\PYGZus{}squares(x)  (x*(x+1)*(2*x+1)}\PYG{c+cp}{/}\PYG{c+cp}{6)}
-    \PYG{n}{printf}\PYG{p}{(} \PYG{l+s}{"}\PYG{l+s}{Does GPU value \%.6g = \%.6g?}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s}{"}\PYG{p}{,} \PYG{n}{sum}\PYG{p}{,}
+    \PYG{c+cp}{\PYGZsh{}}\PYG{c+cp}{define sum\PYGZus{}squares(x)  (x*(x+1)*(2*x+1)}\PYG{c+cp}{/}\PYG{c+cp}{6)}
+    \PYG{n}{printf}\PYG{p}{(} \PYG{l+s}{"}\PYG{l+s}{Does GPU value \PYGZpc{}.6g = \PYGZpc{}.6g?}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s}{"}\PYG{p}{,} \PYG{n}{sum}\PYG{p}{,}
              \PYG{l+m+mi}{2} \PYG{o}{*} \PYG{n}{sum\PYGZus{}squares}\PYG{p}{(} \PYG{p}{(}\PYG{k+kt}{float}\PYG{p}{)}\PYG{p}{(}\PYG{n}{N} \PYG{o}{-} \PYG{l+m+mi}{1}\PYG{p}{)} \PYG{p}{)} \PYG{p}{)}\PYG{p}{;}
 
     \PYG{c+c1}{// free memory on the gpu side}
@@ -684,7 +730,7 @@ First is that we need to declare one more pointer for the host code. In the vect
 \begin{Verbatim}[commandchars=\\\{\}]
     \PYG{c+c1}{// finish up on the CPU side}
     \PYG{n}{sum} \PYG{o}{=} \PYG{l+m+mi}{0}\PYG{p}{;}
-    \PYG{k}{for} \PYG{p}{(}\PYG{k+kt}{int} \PYG{n}{i}\PYG{o}{=}\PYG{l+m+mi}{0}\PYG{p}{;} \PYG{n}{i}\PYG{o}{\textless{}}\PYG{n}{N}\PYG{p}{;} \PYG{n}{i}\PYG{o}{+}\PYG{o}{+}\PYG{p}{)} \PYG{p}{\PYGZob{}}
+    \PYG{k}{for} \PYG{p}{(}\PYG{k+kt}{int} \PYG{n}{i}\PYG{o}{=}\PYG{l+m+mi}{0}\PYG{p}{;} \PYG{n}{i}\PYG{o}{\PYGZlt{}}\PYG{n}{N}\PYG{p}{;} \PYG{n}{i}\PYG{o}{+}\PYG{o}{+}\PYG{p}{)} \PYG{p}{\PYGZob{}}
         \PYG{n}{sum} \PYG{o}{+}\PYG{o}{=} \PYG{n}{c}\PYG{p}{[}\PYG{n}{i}\PYG{p}{]}\PYG{p}{;}
     \PYG{p}{\PYGZcb{}}
 \end{Verbatim}
@@ -694,8 +740,8 @@ Another difference is that we need to add up all the elements in the returned ve
 You can verify the result by adding the following code into the host code.
 
 \begin{Verbatim}[commandchars=\\\{\}]
-\PYG{c+cp}{    \#}\PYG{c+cp}{define sum\PYGZus{}squares(x)  (x*(x+1)*(2*x+1)}\PYG{c+cp}{/}\PYG{c+cp}{6)}
-    \PYG{n}{printf}\PYG{p}{(} \PYG{l+s}{"}\PYG{l+s}{Does GPU value \%.6g = \%.6g?}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s}{"}\PYG{p}{,} \PYG{n}{sum}\PYG{p}{,}
+    \PYG{c+cp}{\PYGZsh{}}\PYG{c+cp}{define sum\PYGZus{}squares(x)  (x*(x+1)*(2*x+1)}\PYG{c+cp}{/}\PYG{c+cp}{6)}
+    \PYG{n}{printf}\PYG{p}{(} \PYG{l+s}{"}\PYG{l+s}{Does GPU value \PYGZpc{}.6g = \PYGZpc{}.6g?}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s}{"}\PYG{p}{,} \PYG{n}{sum}\PYG{p}{,}
              \PYG{l+m+mi}{2} \PYG{o}{*} \PYG{n}{sum\PYGZus{}squares}\PYG{p}{(} \PYG{p}{(}\PYG{k+kt}{float}\PYG{p}{)}\PYG{p}{(}\PYG{n}{N} \PYG{o}{-} \PYG{l+m+mi}{1}\PYG{p}{)} \PYG{p}{)} \PYG{p}{)}\PYG{p}{;}
 \end{Verbatim}
 
@@ -736,7 +782,7 @@ Vector Dot Product with Reduction source file:
     \PYG{k+kt}{int} \PYG{n}{cacheIndex} \PYG{o}{=} \PYG{n}{threadIdx}\PYG{p}{.}\PYG{n}{x}\PYG{p}{;}
 
     \PYG{k+kt}{float}   \PYG{n}{temp} \PYG{o}{=} \PYG{l+m+mi}{0}\PYG{p}{;}
-    \PYG{k}{while} \PYG{p}{(}\PYG{n}{tid} \PYG{o}{\textless{}} \PYG{n}{N}\PYG{p}{)} \PYG{p}{\PYGZob{}}
+    \PYG{k}{while} \PYG{p}{(}\PYG{n}{tid} \PYG{o}{\PYGZlt{}} \PYG{n}{N}\PYG{p}{)} \PYG{p}{\PYGZob{}}
         \PYG{n}{temp} \PYG{o}{+}\PYG{o}{=} \PYG{n}{a}\PYG{p}{[}\PYG{n}{tid}\PYG{p}{]} \PYG{o}{*} \PYG{n}{b}\PYG{p}{[}\PYG{n}{tid}\PYG{p}{]}\PYG{p}{;}
         \PYG{n}{tid} \PYG{o}{+}\PYG{o}{=} \PYG{n}{numThread} \PYG{o}{*} \PYG{n}{numBlock}\PYG{p}{;}\PYG{c+c1}{// increase by the total number of thread in a grid}
     \PYG{p}{\PYGZcb{}}
@@ -750,7 +796,7 @@ Vector Dot Product with Reduction source file:
     \PYG{c+c1}{// for reductions, numThread must be a power of 2 because of the following code}
     \PYG{k+kt}{int} \PYG{n}{i} \PYG{o}{=} \PYG{n}{numThread}\PYG{o}{/}\PYG{l+m+mi}{2}\PYG{p}{;}
     \PYG{k}{while} \PYG{p}{(}\PYG{n}{i} \PYG{o}{!}\PYG{o}{=} \PYG{l+m+mi}{0}\PYG{p}{)} \PYG{p}{\PYGZob{}}
-        \PYG{k}{if} \PYG{p}{(}\PYG{n}{cacheIndex} \PYG{o}{\textless{}} \PYG{n}{i}\PYG{p}{)}
+        \PYG{k}{if} \PYG{p}{(}\PYG{n}{cacheIndex} \PYG{o}{\PYGZlt{}} \PYG{n}{i}\PYG{p}{)}
             \PYG{n}{cache}\PYG{p}{[}\PYG{n}{cacheIndex}\PYG{p}{]} \PYG{o}{+}\PYG{o}{=} \PYG{n}{cache}\PYG{p}{[}\PYG{n}{cacheIndex} \PYG{o}{+} \PYG{n}{i}\PYG{p}{]}\PYG{p}{;}
         \PYG{n}{\PYGZus{}\PYGZus{}syncthreads}\PYG{p}{(}\PYG{p}{)}\PYG{p}{;}
         \PYG{n}{i} \PYG{o}{/}\PYG{o}{=} \PYG{l+m+mi}{2}\PYG{p}{;}
@@ -771,7 +817,7 @@ In the two lines of code above, we declared a cache in shared memory for this bl
 
 \begin{Verbatim}[commandchars=\\\{\}]
     \PYG{k+kt}{float}   \PYG{n}{temp} \PYG{o}{=} \PYG{l+m+mi}{0}\PYG{p}{;}
-    \PYG{k}{while} \PYG{p}{(}\PYG{n}{tid} \PYG{o}{\textless{}} \PYG{n}{N}\PYG{p}{)} \PYG{p}{\PYGZob{}}
+    \PYG{k}{while} \PYG{p}{(}\PYG{n}{tid} \PYG{o}{\PYGZlt{}} \PYG{n}{N}\PYG{p}{)} \PYG{p}{\PYGZob{}}
         \PYG{n}{temp} \PYG{o}{+}\PYG{o}{=} \PYG{n}{a}\PYG{p}{[}\PYG{n}{tid}\PYG{p}{]} \PYG{o}{*} \PYG{n}{b}\PYG{p}{[}\PYG{n}{tid}\PYG{p}{]}\PYG{p}{;}
         \PYG{n}{tid} \PYG{o}{+}\PYG{o}{=} \PYG{n}{numThread} \PYG{o}{*} \PYG{n}{numBlock}\PYG{p}{;}\PYG{c+c1}{// increase by the total number of thread in a grid}
 \end{Verbatim}
@@ -806,7 +852,7 @@ After we make sure all the elements in cache is filled, we can proceed to the re
     \PYG{c+c1}{// for reductions, numThread must be a power of 2 because of the following code}
     \PYG{k+kt}{int} \PYG{n}{i} \PYG{o}{=} \PYG{n}{numThread}\PYG{o}{/}\PYG{l+m+mi}{2}\PYG{p}{;}
     \PYG{k}{while} \PYG{p}{(}\PYG{n}{i} \PYG{o}{!}\PYG{o}{=} \PYG{l+m+mi}{0}\PYG{p}{)} \PYG{p}{\PYGZob{}}
-        \PYG{k}{if} \PYG{p}{(}\PYG{n}{cacheIndex} \PYG{o}{\textless{}} \PYG{n}{i}\PYG{p}{)}
+        \PYG{k}{if} \PYG{p}{(}\PYG{n}{cacheIndex} \PYG{o}{\PYGZlt{}} \PYG{n}{i}\PYG{p}{)}
             \PYG{n}{cache}\PYG{p}{[}\PYG{n}{cacheIndex}\PYG{p}{]} \PYG{o}{+}\PYG{o}{=} \PYG{n}{cache}\PYG{p}{[}\PYG{n}{cacheIndex} \PYG{o}{+} \PYG{n}{i}\PYG{p}{]}\PYG{p}{;}
         \PYG{n}{\PYGZus{}\PYGZus{}syncthreads}\PYG{p}{(}\PYG{p}{)}\PYG{p}{;}
         \PYG{n}{i} \PYG{o}{/}\PYG{o}{=} \PYG{l+m+mi}{2}\PYG{p}{;}
@@ -831,7 +877,7 @@ In general, the host code of the shared memory version is very similar to that o
 
 \begin{Verbatim}[commandchars=\\\{\}]
     \PYG{n}{partial\PYGZus{}c} \PYG{o}{=} \PYG{p}{(}\PYG{k+kt}{float}\PYG{o}{*}\PYG{p}{)}\PYG{n}{malloc}\PYG{p}{(} \PYG{n}{numBlock}\PYG{o}{*}\PYG{k}{sizeof}\PYG{p}{(}\PYG{k+kt}{float}\PYG{p}{)} \PYG{p}{)}\PYG{p}{;}
-    \PYG{n}{HANDLE\PYGZus{}ERROR}\PYG{p}{(} \PYG{n}{cudaMalloc}\PYG{p}{(} \PYG{p}{(}\PYG{k+kt}{void}\PYG{o}{*}\PYG{o}{*}\PYG{p}{)}\PYG{o}{\&}\PYG{n}{dev\PYGZus{}partial\PYGZus{}c}\PYG{p}{,}
+    \PYG{n}{HANDLE\PYGZus{}ERROR}\PYG{p}{(} \PYG{n}{cudaMalloc}\PYG{p}{(} \PYG{p}{(}\PYG{k+kt}{void}\PYG{o}{*}\PYG{o}{*}\PYG{p}{)}\PYG{o}{\PYGZam{}}\PYG{n}{dev\PYGZus{}partial\PYGZus{}c}\PYG{p}{,}
                               \PYG{n}{numBlock}\PYG{o}{*}\PYG{k}{sizeof}\PYG{p}{(}\PYG{k+kt}{float}\PYG{p}{)} \PYG{p}{)} \PYG{p}{)}\PYG{p}{;}
 \end{Verbatim}
 
@@ -840,7 +886,7 @@ In the above two lines of code, in the previous example, we declared two sets of
 Another point worth mentioning is that we define the numBlock in the following way instead of assign a number to it.
 
 \begin{Verbatim}[commandchars=\\\{\}]
-\PYG{c+cp}{\#}\PYG{c+cp}{define imin(a,b) (a\textless{}b?a:b)}
+\PYG{c+cp}{\PYGZsh{}}\PYG{c+cp}{define imin(a,b) (a\PYGZlt{}b?a:b)}
 \PYG{k}{const} \PYG{k+kt}{int} \PYG{n}{numBlock} \PYG{o}{=} \PYG{n}{imin}\PYG{p}{(} \PYG{l+m+mi}{32}\PYG{p}{,} \PYG{p}{(}\PYG{n}{N}\PYG{o}{+}\PYG{n}{numThread}\PYG{o}{-}\PYG{l+m+mi}{1}\PYG{p}{)} \PYG{o}{/} \PYG{n}{numThread} \PYG{p}{)}\PYG{p}{;}
 \end{Verbatim}
 
@@ -940,7 +986,7 @@ Matrix Multiplication with Global Memory source file:
 
   \PYG{k+kt}{float} \PYG{n}{Pvalue} \PYG{o}{=} \PYG{l+m+mi}{0}\PYG{p}{;}
   \PYG{c+c1}{// each thread computes one element of the output matrix Pd.      }
-  \PYG{k}{for} \PYG{p}{(}\PYG{k+kt}{int} \PYG{n}{k} \PYG{o}{=} \PYG{l+m+mi}{0}\PYG{p}{;} \PYG{n}{k} \PYG{o}{\textless{}} \PYG{n}{Width}\PYG{p}{;} \PYG{o}{+}\PYG{o}{+}\PYG{n}{k}\PYG{p}{)} \PYG{p}{\PYGZob{}}
+  \PYG{k}{for} \PYG{p}{(}\PYG{k+kt}{int} \PYG{n}{k} \PYG{o}{=} \PYG{l+m+mi}{0}\PYG{p}{;} \PYG{n}{k} \PYG{o}{\PYGZlt{}} \PYG{n}{Width}\PYG{p}{;} \PYG{o}{+}\PYG{o}{+}\PYG{n}{k}\PYG{p}{)} \PYG{p}{\PYGZob{}}
     \PYG{n}{Pvalue} \PYG{o}{+}\PYG{o}{=} \PYG{n}{Md}\PYG{p}{[}\PYG{n}{y}\PYG{o}{*}\PYG{n}{Width} \PYG{o}{+} \PYG{n}{k}\PYG{p}{]} \PYG{o}{*} \PYG{n}{Nd}\PYG{p}{[}\PYG{n}{k}\PYG{o}{*}\PYG{n}{Width} \PYG{o}{+} \PYG{n}{x}\PYG{p}{]}\PYG{p}{;}
   \PYG{p}{\PYGZcb{}}
 
@@ -968,7 +1014,7 @@ Each thread in one specific block is identified by threadIdx.x and threadIdx.y. 
 \begin{Verbatim}[commandchars=\\\{\}]
     \PYG{n}{dim3} \PYG{n}{dimBlock}\PYG{p}{(}\PYG{l+m+mi}{32}\PYG{p}{,} \PYG{l+m+mi}{32}\PYG{p}{)}\PYG{p}{;}
     \PYG{n}{dim3} \PYG{n}{dimGrid}\PYG{p}{(}\PYG{n}{Width}\PYG{o}{/}\PYG{l+m+mi}{32}\PYG{p}{,} \PYG{n}{Width}\PYG{o}{/}\PYG{l+m+mi}{32}\PYG{p}{)}\PYG{p}{;}
-    \PYG{n}{Kernel}\PYG{o}{\textless{}}\PYG{o}{\textless{}}\PYG{o}{\textless{}}\PYG{n}{dimGrid}\PYG{p}{,} \PYG{n}{dimBlock}\PYG{o}{\textgreater{}}\PYG{o}{\textgreater{}}\PYG{o}{\textgreater{}}\PYG{p}{(} \PYG{n}{Md}\PYG{p}{,} \PYG{n}{Nd}\PYG{p}{,} \PYG{n}{Pd}\PYG{p}{,} \PYG{n}{Width}\PYG{p}{)}\PYG{p}{;}
+    \PYG{n}{Kernel}\PYG{o}{\PYGZlt{}}\PYG{o}{\PYGZlt{}}\PYG{o}{\PYGZlt{}}\PYG{n}{dimGrid}\PYG{p}{,} \PYG{n}{dimBlock}\PYG{o}{\PYGZgt{}}\PYG{o}{\PYGZgt{}}\PYG{o}{\PYGZgt{}}\PYG{p}{(} \PYG{n}{Md}\PYG{p}{,} \PYG{n}{Nd}\PYG{p}{,} \PYG{n}{Pd}\PYG{p}{,} \PYG{n}{Width}\PYG{p}{)}\PYG{p}{;}
 \end{Verbatim}
 
 This 3 lines of code above is declaring and initializing dim3 variables which give the grid dimensions and block dimensions. In each of the initializations, we only passed two parameters as components. The CUDA runtime will initialize any component left unspecified to 1. So technically, we are initializing dimBlock as (32, 32, 1) and dimGrid as (Width/32, Width/32, 1).
@@ -991,8 +1037,8 @@ The rest of the host code is similar to examples we have seen before. Here is th
     \PYG{n}{P} \PYG{o}{=} \PYG{p}{(}\PYG{k+kt}{float}\PYG{o}{*}\PYG{p}{)}\PYG{n}{malloc}\PYG{p}{(}\PYG{n}{size}\PYG{p}{)}\PYG{p}{;}
 
     \PYG{c+c1}{// initialize the matrices}
-    \PYG{k}{for} \PYG{p}{(}\PYG{k+kt}{int} \PYG{n}{y}\PYG{o}{=}\PYG{l+m+mi}{0}\PYG{p}{;} \PYG{n}{y}\PYG{o}{\textless{}}\PYG{n}{Width}\PYG{p}{;} \PYG{n}{y}\PYG{o}{+}\PYG{o}{+}\PYG{p}{)} \PYG{p}{\PYGZob{}}
-	\PYG{k}{for} \PYG{p}{(}\PYG{k+kt}{int} \PYG{n}{x}\PYG{o}{=}\PYG{l+m+mi}{0}\PYG{p}{;} \PYG{n}{x}\PYG{o}{\textless{}}\PYG{n}{Width}\PYG{p}{;} \PYG{n}{x}\PYG{o}{+}\PYG{o}{+}\PYG{p}{)}\PYG{p}{\PYGZob{}}
+    \PYG{k}{for} \PYG{p}{(}\PYG{k+kt}{int} \PYG{n}{y}\PYG{o}{=}\PYG{l+m+mi}{0}\PYG{p}{;} \PYG{n}{y}\PYG{o}{\PYGZlt{}}\PYG{n}{Width}\PYG{p}{;} \PYG{n}{y}\PYG{o}{+}\PYG{o}{+}\PYG{p}{)} \PYG{p}{\PYGZob{}}
+	\PYG{k}{for} \PYG{p}{(}\PYG{k+kt}{int} \PYG{n}{x}\PYG{o}{=}\PYG{l+m+mi}{0}\PYG{p}{;} \PYG{n}{x}\PYG{o}{\PYGZlt{}}\PYG{n}{Width}\PYG{p}{;} \PYG{n}{x}\PYG{o}{+}\PYG{o}{+}\PYG{p}{)}\PYG{p}{\PYGZob{}}
 	   \PYG{n}{M}\PYG{p}{[}\PYG{n}{y}\PYG{o}{*}\PYG{n}{Width} \PYG{o}{+} \PYG{n}{x}\PYG{p}{]} \PYG{o}{=} \PYG{n}{x} \PYG{o}{+} \PYG{n}{y}\PYG{o}{*}\PYG{n}{Width}\PYG{p}{;}
            \PYG{n}{N}\PYG{p}{[}\PYG{n}{y}\PYG{o}{*}\PYG{n}{Width} \PYG{o}{+} \PYG{n}{x}\PYG{p}{]} \PYG{o}{=} \PYG{n}{x} \PYG{o}{+} \PYG{n}{y}\PYG{o}{*}\PYG{n}{Width}\PYG{p}{;} 
 	\PYG{p}{\PYGZcb{}}
@@ -1014,14 +1060,14 @@ The rest of the host code is similar to examples we have seen before. Here is th
     
     \PYG{c+c1}{// capture start time}
     \PYG{n}{cudaEvent\PYGZus{}t}     \PYG{n}{start}\PYG{p}{,} \PYG{n}{stop}\PYG{p}{;}
-    \PYG{n}{HANDLE\PYGZus{}ERROR}\PYG{p}{(} \PYG{n}{cudaEventCreate}\PYG{p}{(} \PYG{o}{\&}\PYG{n}{start} \PYG{p}{)} \PYG{p}{)}\PYG{p}{;}
-    \PYG{n}{HANDLE\PYGZus{}ERROR}\PYG{p}{(} \PYG{n}{cudaEventCreate}\PYG{p}{(} \PYG{o}{\&}\PYG{n}{stop} \PYG{p}{)} \PYG{p}{)}\PYG{p}{;}
+    \PYG{n}{HANDLE\PYGZus{}ERROR}\PYG{p}{(} \PYG{n}{cudaEventCreate}\PYG{p}{(} \PYG{o}{\PYGZam{}}\PYG{n}{start} \PYG{p}{)} \PYG{p}{)}\PYG{p}{;}
+    \PYG{n}{HANDLE\PYGZus{}ERROR}\PYG{p}{(} \PYG{n}{cudaEventCreate}\PYG{p}{(} \PYG{o}{\PYGZam{}}\PYG{n}{stop} \PYG{p}{)} \PYG{p}{)}\PYG{p}{;}
     \PYG{n}{HANDLE\PYGZus{}ERROR}\PYG{p}{(} \PYG{n}{cudaEventRecord}\PYG{p}{(} \PYG{n}{start}\PYG{p}{,} \PYG{l+m+mi}{0} \PYG{p}{)} \PYG{p}{)}\PYG{p}{;}
 
     \PYG{c+c1}{// allocate memory on the GPU}
-    \PYG{n}{HANDLE\PYGZus{}ERROR}\PYG{p}{(} \PYG{n}{cudaMalloc}\PYG{p}{(}\PYG{p}{(}\PYG{k+kt}{void}\PYG{o}{*}\PYG{o}{*}\PYG{p}{)}\PYG{o}{\&}\PYG{n}{Md}\PYG{p}{,} \PYG{n}{size}\PYG{p}{)} \PYG{p}{)}\PYG{p}{;}
-    \PYG{n}{HANDLE\PYGZus{}ERROR}\PYG{p}{(} \PYG{n}{cudaMalloc}\PYG{p}{(}\PYG{p}{(}\PYG{k+kt}{void}\PYG{o}{*}\PYG{o}{*}\PYG{p}{)}\PYG{o}{\&}\PYG{n}{Nd}\PYG{p}{,} \PYG{n}{size}\PYG{p}{)} \PYG{p}{)}\PYG{p}{;}
-    \PYG{n}{HANDLE\PYGZus{}ERROR}\PYG{p}{(} \PYG{n}{cudaMalloc}\PYG{p}{(}\PYG{p}{(}\PYG{k+kt}{void}\PYG{o}{*}\PYG{o}{*}\PYG{p}{)}\PYG{o}{\&}\PYG{n}{Pd}\PYG{p}{,} \PYG{n}{size}\PYG{p}{)} \PYG{p}{)}\PYG{p}{;}
+    \PYG{n}{HANDLE\PYGZus{}ERROR}\PYG{p}{(} \PYG{n}{cudaMalloc}\PYG{p}{(}\PYG{p}{(}\PYG{k+kt}{void}\PYG{o}{*}\PYG{o}{*}\PYG{p}{)}\PYG{o}{\PYGZam{}}\PYG{n}{Md}\PYG{p}{,} \PYG{n}{size}\PYG{p}{)} \PYG{p}{)}\PYG{p}{;}
+    \PYG{n}{HANDLE\PYGZus{}ERROR}\PYG{p}{(} \PYG{n}{cudaMalloc}\PYG{p}{(}\PYG{p}{(}\PYG{k+kt}{void}\PYG{o}{*}\PYG{o}{*}\PYG{p}{)}\PYG{o}{\PYGZam{}}\PYG{n}{Nd}\PYG{p}{,} \PYG{n}{size}\PYG{p}{)} \PYG{p}{)}\PYG{p}{;}
+    \PYG{n}{HANDLE\PYGZus{}ERROR}\PYG{p}{(} \PYG{n}{cudaMalloc}\PYG{p}{(}\PYG{p}{(}\PYG{k+kt}{void}\PYG{o}{*}\PYG{o}{*}\PYG{p}{)}\PYG{o}{\PYGZam{}}\PYG{n}{Pd}\PYG{p}{,} \PYG{n}{size}\PYG{p}{)} \PYG{p}{)}\PYG{p}{;}
 
     \PYG{c+c1}{// transfer M and N to device memory}
     \PYG{n}{HANDLE\PYGZus{}ERROR}\PYG{p}{(} \PYG{n}{cudaMemcpy}\PYG{p}{(}\PYG{n}{Md}\PYG{p}{,} \PYG{n}{M}\PYG{p}{,} \PYG{n}{size}\PYG{p}{,} \PYG{n}{cudaMemcpyHostToDevice}\PYG{p}{)} \PYG{p}{)}\PYG{p}{;}
@@ -1030,7 +1076,7 @@ The rest of the host code is similar to examples we have seen before. Here is th
     \PYG{c+c1}{// kernel invocation code}
     \PYG{n}{dim3} \PYG{n}{dimBlock}\PYG{p}{(}\PYG{l+m+mi}{32}\PYG{p}{,} \PYG{l+m+mi}{32}\PYG{p}{)}\PYG{p}{;}
     \PYG{n}{dim3} \PYG{n}{dimGrid}\PYG{p}{(}\PYG{n}{Width}\PYG{o}{/}\PYG{l+m+mi}{32}\PYG{p}{,} \PYG{n}{Width}\PYG{o}{/}\PYG{l+m+mi}{32}\PYG{p}{)}\PYG{p}{;}
-    \PYG{n}{Kernel}\PYG{o}{\textless{}}\PYG{o}{\textless{}}\PYG{o}{\textless{}}\PYG{n}{dimGrid}\PYG{p}{,} \PYG{n}{dimBlock}\PYG{o}{\textgreater{}}\PYG{o}{\textgreater{}}\PYG{o}{\textgreater{}}\PYG{p}{(} \PYG{n}{Md}\PYG{p}{,} \PYG{n}{Nd}\PYG{p}{,} \PYG{n}{Pd}\PYG{p}{,} \PYG{n}{Width}\PYG{p}{)}\PYG{p}{;}
+    \PYG{n}{Kernel}\PYG{o}{\PYGZlt{}}\PYG{o}{\PYGZlt{}}\PYG{o}{\PYGZlt{}}\PYG{n}{dimGrid}\PYG{p}{,} \PYG{n}{dimBlock}\PYG{o}{\PYGZgt{}}\PYG{o}{\PYGZgt{}}\PYG{o}{\PYGZgt{}}\PYG{p}{(} \PYG{n}{Md}\PYG{p}{,} \PYG{n}{Nd}\PYG{p}{,} \PYG{n}{Pd}\PYG{p}{,} \PYG{n}{Width}\PYG{p}{)}\PYG{p}{;}
 
     \PYG{c+c1}{// transfer P from device     }
     \PYG{n}{HANDLE\PYGZus{}ERROR}\PYG{p}{(} \PYG{n}{cudaMemcpy}\PYG{p}{(}\PYG{n}{P}\PYG{p}{,}\PYG{n}{Pd}\PYG{p}{,}\PYG{n}{size}\PYG{p}{,}\PYG{n}{cudaMemcpyDeviceToHost}\PYG{p}{)} \PYG{p}{)}\PYG{p}{;}
@@ -1039,9 +1085,9 @@ The rest of the host code is similar to examples we have seen before. Here is th
     \PYG{n}{HANDLE\PYGZus{}ERROR}\PYG{p}{(} \PYG{n}{cudaEventRecord}\PYG{p}{(} \PYG{n}{stop}\PYG{p}{,} \PYG{l+m+mi}{0} \PYG{p}{)} \PYG{p}{)}\PYG{p}{;}
     \PYG{n}{HANDLE\PYGZus{}ERROR}\PYG{p}{(} \PYG{n}{cudaEventSynchronize}\PYG{p}{(} \PYG{n}{stop} \PYG{p}{)} \PYG{p}{)}\PYG{p}{;}
     \PYG{k+kt}{float}   \PYG{n}{elapsedTime}\PYG{p}{;}
-    \PYG{n}{HANDLE\PYGZus{}ERROR}\PYG{p}{(} \PYG{n}{cudaEventElapsedTime}\PYG{p}{(} \PYG{o}{\&}\PYG{n}{elapsedTime}\PYG{p}{,}
+    \PYG{n}{HANDLE\PYGZus{}ERROR}\PYG{p}{(} \PYG{n}{cudaEventElapsedTime}\PYG{p}{(} \PYG{o}{\PYGZam{}}\PYG{n}{elapsedTime}\PYG{p}{,}
                                         \PYG{n}{start}\PYG{p}{,} \PYG{n}{stop} \PYG{p}{)} \PYG{p}{)}\PYG{p}{;}
-    \PYG{n}{printf}\PYG{p}{(} \PYG{l+s}{"}\PYG{l+s}{Time to generate:  \%3.1f ms}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s}{"}\PYG{p}{,} \PYG{n}{elapsedTime} \PYG{p}{)}\PYG{p}{;}
+    \PYG{n}{printf}\PYG{p}{(} \PYG{l+s}{"}\PYG{l+s}{Time to generate:  \PYGZpc{}3.1f ms}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s}{"}\PYG{p}{,} \PYG{n}{elapsedTime} \PYG{p}{)}\PYG{p}{;}
 
     \PYG{c+c1}{// free the memory allocated on the GPU}
     \PYG{n}{HANDLE\PYGZus{}ERROR}\PYG{p}{(} \PYG{n}{cudaFree}\PYG{p}{(}\PYG{n}{Md}\PYG{p}{)} \PYG{p}{)}\PYG{p}{;}
@@ -1279,7 +1325,7 @@ Back to our problem, we are dealing with input matrices with the size of \emph{1
 
   \PYG{k+kt}{float} \PYG{n}{Pvalue} \PYG{o}{=} \PYG{l+m+mi}{0}\PYG{p}{;}
   \PYG{c+c1}{// Loop over the Md and Nd block dimension required to compute the Pd element}
-  \PYG{k}{for} \PYG{p}{(}\PYG{k+kt}{int} \PYG{n}{m} \PYG{o}{=} \PYG{l+m+mi}{0}\PYG{p}{;} \PYG{n}{m} \PYG{o}{\textless{}} \PYG{n}{Width}\PYG{o}{/}\PYG{n}{blockD}\PYG{p}{;} \PYG{n}{m}\PYG{o}{+}\PYG{o}{+}\PYG{p}{)}\PYG{p}{\PYGZob{}}
+  \PYG{k}{for} \PYG{p}{(}\PYG{k+kt}{int} \PYG{n}{m} \PYG{o}{=} \PYG{l+m+mi}{0}\PYG{p}{;} \PYG{n}{m} \PYG{o}{\PYGZlt{}} \PYG{n}{Width}\PYG{o}{/}\PYG{n}{blockD}\PYG{p}{;} \PYG{n}{m}\PYG{o}{+}\PYG{o}{+}\PYG{p}{)}\PYG{p}{\PYGZob{}}
 	
     \PYG{c+c1}{// collaboratively loading of Md and Nd blocks into shared memory	 }
     \PYG{n}{Mds}\PYG{p}{[}\PYG{n}{threadIdx}\PYG{p}{.}\PYG{n}{y}\PYG{p}{]}\PYG{p}{[}\PYG{n}{threadIdx}\PYG{p}{.}\PYG{n}{x}\PYG{p}{]} \PYG{o}{=} \PYG{n}{Md}\PYG{p}{[}\PYG{n}{y} \PYG{o}{*} \PYG{n}{Width} \PYG{o}{+} \PYG{p}{(}\PYG{n}{m} \PYG{o}{*} \PYG{n}{blockD} \PYG{o}{+} \PYG{n}{threadIdx}\PYG{p}{.}\PYG{n}{x}\PYG{p}{)}\PYG{p}{]}\PYG{p}{;}
@@ -1287,7 +1333,7 @@ Back to our problem, we are dealing with input matrices with the size of \emph{1
     \PYG{n}{\PYGZus{}\PYGZus{}syncthreads}\PYG{p}{(}\PYG{p}{)}\PYG{p}{;}
     
     \PYG{c+c1}{// keep track of the running sum    }
-    \PYG{k}{for} \PYG{p}{(}\PYG{k+kt}{int} \PYG{n}{k} \PYG{o}{=} \PYG{l+m+mi}{0}\PYG{p}{;} \PYG{n}{k} \PYG{o}{\textless{}} \PYG{n}{blockD}\PYG{p}{;} \PYG{n}{k}\PYG{o}{+}\PYG{o}{+}\PYG{p}{)}
+    \PYG{k}{for} \PYG{p}{(}\PYG{k+kt}{int} \PYG{n}{k} \PYG{o}{=} \PYG{l+m+mi}{0}\PYG{p}{;} \PYG{n}{k} \PYG{o}{\PYGZlt{}} \PYG{n}{blockD}\PYG{p}{;} \PYG{n}{k}\PYG{o}{+}\PYG{o}{+}\PYG{p}{)}
       \PYG{n}{Pvalue} \PYG{o}{+}\PYG{o}{=} \PYG{n}{Mds}\PYG{p}{[}\PYG{n}{threadIdx}\PYG{p}{.}\PYG{n}{y}\PYG{p}{]}\PYG{p}{[}\PYG{n}{k}\PYG{p}{]} \PYG{o}{*} \PYG{n}{Nds}\PYG{p}{[}\PYG{n}{k}\PYG{p}{]}\PYG{p}{[}\PYG{n}{threadIdx}\PYG{p}{.}\PYG{n}{x}\PYG{p}{]}\PYG{p}{;}
     \PYG{n}{\PYGZus{}\PYGZus{}syncthreads}\PYG{p}{(}\PYG{p}{)}\PYG{p}{;}
   \PYG{p}{\PYGZcb{}}
@@ -1302,7 +1348,7 @@ With all the explanations before, you should understand this device code easily.
 If you are careful enough, you may see that I used a variable called \textbf{blockD}. This variable was defined at the very beginning of the source code.
 
 \begin{Verbatim}[commandchars=\\\{\}]
-\PYG{c+cp}{\#}\PYG{c+cp}{define blockD 32}
+\PYG{c+cp}{\PYGZsh{}}\PYG{c+cp}{define blockD 32}
 \end{Verbatim}
 
 There are two thing you need to pay attention when defining this variable. First is that you should not assign this variable with a number that is too big. This variable is used to define the dimension of each block. The reason we are using block is to reduce the size of data transfer between global memory and shared memory every time. If you assign too big a number to it, you are risking running out of share memory.
@@ -1317,7 +1363,7 @@ Another thing needs mentioning is that while choosing the value of \emph{blockD}
 Further, recall that in the device code, we have expression like
 
 \begin{Verbatim}[commandchars=\\\{\}]
-  \PYG{k}{for} \PYG{p}{(}\PYG{k+kt}{int} \PYG{n}{m} \PYG{o}{=} \PYG{l+m+mi}{0}\PYG{p}{;} \PYG{n}{m} \PYG{o}{\textless{}} \PYG{n}{Width}\PYG{o}{/}\PYG{n}{blockD}\PYG{p}{;} \PYG{n}{m}\PYG{o}{+}\PYG{o}{+}\PYG{p}{)}\PYG{p}{\PYGZob{}}
+  \PYG{k}{for} \PYG{p}{(}\PYG{k+kt}{int} \PYG{n}{m} \PYG{o}{=} \PYG{l+m+mi}{0}\PYG{p}{;} \PYG{n}{m} \PYG{o}{\PYGZlt{}} \PYG{n}{Width}\PYG{o}{/}\PYG{n}{blockD}\PYG{p}{;} \PYG{n}{m}\PYG{o}{+}\PYG{o}{+}\PYG{p}{)}\PYG{p}{\PYGZob{}}
 \end{Verbatim}
 
 where we have \emph{Width} divided by \emph{blockD}. If you pick \emph{Width} that is not dividable by \emph{blockD}, program will return weird thing because it expects a integer coming out of this line of code, instead of some floats.
@@ -1343,8 +1389,8 @@ As this program is using 1024 as \emph{Width}, we picked 32 as the \emph{blockD}
     \PYG{n}{P} \PYG{o}{=} \PYG{p}{(}\PYG{k+kt}{float}\PYG{o}{*}\PYG{p}{)}\PYG{n}{malloc}\PYG{p}{(}\PYG{n}{size}\PYG{p}{)}\PYG{p}{;}
 
     \PYG{c+c1}{// initialize the matrices}
-    \PYG{k}{for} \PYG{p}{(}\PYG{k+kt}{int} \PYG{n}{y}\PYG{o}{=}\PYG{l+m+mi}{0}\PYG{p}{;} \PYG{n}{y}\PYG{o}{\textless{}}\PYG{n}{Width}\PYG{p}{;} \PYG{n}{y}\PYG{o}{+}\PYG{o}{+}\PYG{p}{)} \PYG{p}{\PYGZob{}}
-	    \PYG{k}{for} \PYG{p}{(}\PYG{k+kt}{int} \PYG{n}{x}\PYG{o}{=}\PYG{l+m+mi}{0}\PYG{p}{;} \PYG{n}{x}\PYG{o}{\textless{}}\PYG{n}{Width}\PYG{p}{;} \PYG{n}{x}\PYG{o}{+}\PYG{o}{+}\PYG{p}{)}\PYG{p}{\PYGZob{}}
+    \PYG{k}{for} \PYG{p}{(}\PYG{k+kt}{int} \PYG{n}{y}\PYG{o}{=}\PYG{l+m+mi}{0}\PYG{p}{;} \PYG{n}{y}\PYG{o}{\PYGZlt{}}\PYG{n}{Width}\PYG{p}{;} \PYG{n}{y}\PYG{o}{+}\PYG{o}{+}\PYG{p}{)} \PYG{p}{\PYGZob{}}
+	    \PYG{k}{for} \PYG{p}{(}\PYG{k+kt}{int} \PYG{n}{x}\PYG{o}{=}\PYG{l+m+mi}{0}\PYG{p}{;} \PYG{n}{x}\PYG{o}{\PYGZlt{}}\PYG{n}{Width}\PYG{p}{;} \PYG{n}{x}\PYG{o}{+}\PYG{o}{+}\PYG{p}{)}\PYG{p}{\PYGZob{}}
 	   		\PYG{n}{M}\PYG{p}{[}\PYG{n}{y}\PYG{o}{*}\PYG{n}{Width} \PYG{o}{+} \PYG{n}{x}\PYG{p}{]} \PYG{o}{=} \PYG{n}{x} \PYG{o}{+} \PYG{n}{y}\PYG{o}{*}\PYG{n}{Width}\PYG{p}{;}
        		\PYG{n}{N}\PYG{p}{[}\PYG{n}{y}\PYG{o}{*}\PYG{n}{Width} \PYG{o}{+} \PYG{n}{x}\PYG{p}{]} \PYG{o}{=} \PYG{n}{x} \PYG{o}{+} \PYG{n}{y}\PYG{o}{*}\PYG{n}{Width}\PYG{p}{;} 
 	   \PYG{p}{\PYGZcb{}}
@@ -1372,7 +1418,7 @@ As this program is using 1024 as \emph{Width}, we picked 32 as the \emph{blockD}
 
   \PYG{k+kt}{float} \PYG{n}{Pvalue} \PYG{o}{=} \PYG{l+m+mi}{0}\PYG{p}{;}
   \PYG{c+c1}{// Loop over the Md and Nd block dimension required to compute the Pd element}
-  \PYG{k}{for} \PYG{p}{(}\PYG{k+kt}{int} \PYG{n}{m} \PYG{o}{=} \PYG{l+m+mi}{0}\PYG{p}{;} \PYG{n}{m} \PYG{o}{\textless{}} \PYG{n}{Width}\PYG{o}{/}\PYG{n}{blockD}\PYG{p}{;} \PYG{n}{m}\PYG{o}{+}\PYG{o}{+}\PYG{p}{)}\PYG{p}{\PYGZob{}}
+  \PYG{k}{for} \PYG{p}{(}\PYG{k+kt}{int} \PYG{n}{m} \PYG{o}{=} \PYG{l+m+mi}{0}\PYG{p}{;} \PYG{n}{m} \PYG{o}{\PYGZlt{}} \PYG{n}{Width}\PYG{o}{/}\PYG{n}{blockD}\PYG{p}{;} \PYG{n}{m}\PYG{o}{+}\PYG{o}{+}\PYG{p}{)}\PYG{p}{\PYGZob{}}
 	
     \PYG{c+c1}{// collaboratively loading of Md and Nd blocks into shared memory	 }
     \PYG{n}{Mds}\PYG{p}{[}\PYG{n}{threadIdx}\PYG{p}{.}\PYG{n}{y}\PYG{p}{]}\PYG{p}{[}\PYG{n}{threadIdx}\PYG{p}{.}\PYG{n}{x}\PYG{p}{]} \PYG{o}{=} \PYG{n}{Md}\PYG{p}{[}\PYG{n}{y} \PYG{o}{*} \PYG{n}{Width} \PYG{o}{+} \PYG{p}{(}\PYG{n}{m} \PYG{o}{*} \PYG{n}{blockD} \PYG{o}{+} \PYG{n}{threadIdx}\PYG{p}{.}\PYG{n}{x}\PYG{p}{)}\PYG{p}{]}\PYG{p}{;}
@@ -1380,7 +1426,7 @@ As this program is using 1024 as \emph{Width}, we picked 32 as the \emph{blockD}
     \PYG{n}{\PYGZus{}\PYGZus{}syncthreads}\PYG{p}{(}\PYG{p}{)}\PYG{p}{;}
     
     \PYG{c+c1}{// keep track of the running sum    }
-    \PYG{k}{for} \PYG{p}{(}\PYG{k+kt}{int} \PYG{n}{k} \PYG{o}{=} \PYG{l+m+mi}{0}\PYG{p}{;} \PYG{n}{k} \PYG{o}{\textless{}} \PYG{n}{blockD}\PYG{p}{;} \PYG{n}{k}\PYG{o}{+}\PYG{o}{+}\PYG{p}{)}
+    \PYG{k}{for} \PYG{p}{(}\PYG{k+kt}{int} \PYG{n}{k} \PYG{o}{=} \PYG{l+m+mi}{0}\PYG{p}{;} \PYG{n}{k} \PYG{o}{\PYGZlt{}} \PYG{n}{blockD}\PYG{p}{;} \PYG{n}{k}\PYG{o}{+}\PYG{o}{+}\PYG{p}{)}
       \PYG{n}{Pvalue} \PYG{o}{+}\PYG{o}{=} \PYG{n}{Mds}\PYG{p}{[}\PYG{n}{threadIdx}\PYG{p}{.}\PYG{n}{y}\PYG{p}{]}\PYG{p}{[}\PYG{n}{k}\PYG{p}{]} \PYG{o}{*} \PYG{n}{Nds}\PYG{p}{[}\PYG{n}{k}\PYG{p}{]}\PYG{p}{[}\PYG{n}{threadIdx}\PYG{p}{.}\PYG{n}{x}\PYG{p}{]}\PYG{p}{;}
     \PYG{n}{\PYGZus{}\PYGZus{}syncthreads}\PYG{p}{(}\PYG{p}{)}\PYG{p}{;}
   \PYG{p}{\PYGZcb{}}
@@ -1396,14 +1442,14 @@ As this program is using 1024 as \emph{Width}, we picked 32 as the \emph{blockD}
 
     \PYG{c+c1}{// capture start time}
     \PYG{n}{cudaEvent\PYGZus{}t}     \PYG{n}{start}\PYG{p}{,} \PYG{n}{stop}\PYG{p}{;}
-    \PYG{n}{HANDLE\PYGZus{}ERROR}\PYG{p}{(} \PYG{n}{cudaEventCreate}\PYG{p}{(} \PYG{o}{\&}\PYG{n}{start} \PYG{p}{)} \PYG{p}{)}\PYG{p}{;}
-    \PYG{n}{HANDLE\PYGZus{}ERROR}\PYG{p}{(} \PYG{n}{cudaEventCreate}\PYG{p}{(} \PYG{o}{\&}\PYG{n}{stop} \PYG{p}{)} \PYG{p}{)}\PYG{p}{;}
+    \PYG{n}{HANDLE\PYGZus{}ERROR}\PYG{p}{(} \PYG{n}{cudaEventCreate}\PYG{p}{(} \PYG{o}{\PYGZam{}}\PYG{n}{start} \PYG{p}{)} \PYG{p}{)}\PYG{p}{;}
+    \PYG{n}{HANDLE\PYGZus{}ERROR}\PYG{p}{(} \PYG{n}{cudaEventCreate}\PYG{p}{(} \PYG{o}{\PYGZam{}}\PYG{n}{stop} \PYG{p}{)} \PYG{p}{)}\PYG{p}{;}
     \PYG{n}{HANDLE\PYGZus{}ERROR}\PYG{p}{(} \PYG{n}{cudaEventRecord}\PYG{p}{(} \PYG{n}{start}\PYG{p}{,} \PYG{l+m+mi}{0} \PYG{p}{)} \PYG{p}{)}\PYG{p}{;}
 
     \PYG{c+c1}{// allocate memory on the GPU}
-    \PYG{n}{HANDLE\PYGZus{}ERROR}\PYG{p}{(} \PYG{n}{cudaMalloc}\PYG{p}{(}\PYG{p}{(}\PYG{k+kt}{void}\PYG{o}{*}\PYG{o}{*}\PYG{p}{)}\PYG{o}{\&}\PYG{n}{Md}\PYG{p}{,} \PYG{n}{size}\PYG{p}{)} \PYG{p}{)}\PYG{p}{;}
-    \PYG{n}{HANDLE\PYGZus{}ERROR}\PYG{p}{(} \PYG{n}{cudaMalloc}\PYG{p}{(}\PYG{p}{(}\PYG{k+kt}{void}\PYG{o}{*}\PYG{o}{*}\PYG{p}{)}\PYG{o}{\&}\PYG{n}{Nd}\PYG{p}{,} \PYG{n}{size}\PYG{p}{)} \PYG{p}{)}\PYG{p}{;}
-    \PYG{n}{HANDLE\PYGZus{}ERROR}\PYG{p}{(} \PYG{n}{cudaMalloc}\PYG{p}{(}\PYG{p}{(}\PYG{k+kt}{void}\PYG{o}{*}\PYG{o}{*}\PYG{p}{)}\PYG{o}{\&}\PYG{n}{Pd}\PYG{p}{,} \PYG{n}{size}\PYG{p}{)} \PYG{p}{)}\PYG{p}{;}
+    \PYG{n}{HANDLE\PYGZus{}ERROR}\PYG{p}{(} \PYG{n}{cudaMalloc}\PYG{p}{(}\PYG{p}{(}\PYG{k+kt}{void}\PYG{o}{*}\PYG{o}{*}\PYG{p}{)}\PYG{o}{\PYGZam{}}\PYG{n}{Md}\PYG{p}{,} \PYG{n}{size}\PYG{p}{)} \PYG{p}{)}\PYG{p}{;}
+    \PYG{n}{HANDLE\PYGZus{}ERROR}\PYG{p}{(} \PYG{n}{cudaMalloc}\PYG{p}{(}\PYG{p}{(}\PYG{k+kt}{void}\PYG{o}{*}\PYG{o}{*}\PYG{p}{)}\PYG{o}{\PYGZam{}}\PYG{n}{Nd}\PYG{p}{,} \PYG{n}{size}\PYG{p}{)} \PYG{p}{)}\PYG{p}{;}
+    \PYG{n}{HANDLE\PYGZus{}ERROR}\PYG{p}{(} \PYG{n}{cudaMalloc}\PYG{p}{(}\PYG{p}{(}\PYG{k+kt}{void}\PYG{o}{*}\PYG{o}{*}\PYG{p}{)}\PYG{o}{\PYGZam{}}\PYG{n}{Pd}\PYG{p}{,} \PYG{n}{size}\PYG{p}{)} \PYG{p}{)}\PYG{p}{;}
 
     \PYG{c+c1}{// transfer M and N to device memory}
     \PYG{n}{HANDLE\PYGZus{}ERROR}\PYG{p}{(} \PYG{n}{cudaMemcpy}\PYG{p}{(}\PYG{n}{Md}\PYG{p}{,} \PYG{n}{M}\PYG{p}{,} \PYG{n}{size}\PYG{p}{,} \PYG{n}{cudaMemcpyHostToDevice}\PYG{p}{)} \PYG{p}{)}\PYG{p}{;}
@@ -1412,7 +1458,7 @@ As this program is using 1024 as \emph{Width}, we picked 32 as the \emph{blockD}
     \PYG{c+c1}{// kernel invocation code}
     \PYG{n}{dim3} \PYG{n}{dimBlock}\PYG{p}{(}\PYG{n}{blockD}\PYG{p}{,} \PYG{n}{blockD}\PYG{p}{)}\PYG{p}{;}
     \PYG{n}{dim3} \PYG{n}{dimGrid}\PYG{p}{(}\PYG{n}{Width}\PYG{o}{/}\PYG{n}{blockD}\PYG{p}{,} \PYG{n}{Width}\PYG{o}{/}\PYG{n}{blockD}\PYG{p}{)}\PYG{p}{;}
-    \PYG{n}{MatrixMulKernel}\PYG{o}{\textless{}}\PYG{o}{\textless{}}\PYG{o}{\textless{}}\PYG{n}{dimGrid}\PYG{p}{,} \PYG{n}{dimBlock}\PYG{o}{\textgreater{}}\PYG{o}{\textgreater{}}\PYG{o}{\textgreater{}}\PYG{p}{(} \PYG{n}{Md}\PYG{p}{,} \PYG{n}{Nd}\PYG{p}{,} \PYG{n}{Pd}\PYG{p}{,} \PYG{n}{Width}\PYG{p}{)}\PYG{p}{;}
+    \PYG{n}{MatrixMulKernel}\PYG{o}{\PYGZlt{}}\PYG{o}{\PYGZlt{}}\PYG{o}{\PYGZlt{}}\PYG{n}{dimGrid}\PYG{p}{,} \PYG{n}{dimBlock}\PYG{o}{\PYGZgt{}}\PYG{o}{\PYGZgt{}}\PYG{o}{\PYGZgt{}}\PYG{p}{(} \PYG{n}{Md}\PYG{p}{,} \PYG{n}{Nd}\PYG{p}{,} \PYG{n}{Pd}\PYG{p}{,} \PYG{n}{Width}\PYG{p}{)}\PYG{p}{;}
 
     \PYG{c+c1}{// transfer P from device    }
     \PYG{n}{HANDLE\PYGZus{}ERROR}\PYG{p}{(} \PYG{n}{cudaMemcpy}\PYG{p}{(}\PYG{n}{P}\PYG{p}{,} \PYG{n}{Pd}\PYG{p}{,} \PYG{n}{size}\PYG{p}{,} \PYG{n}{cudaMemcpyDeviceToHost}\PYG{p}{)} \PYG{p}{)}\PYG{p}{;}
@@ -1421,9 +1467,9 @@ As this program is using 1024 as \emph{Width}, we picked 32 as the \emph{blockD}
     \PYG{n}{HANDLE\PYGZus{}ERROR}\PYG{p}{(} \PYG{n}{cudaEventRecord}\PYG{p}{(} \PYG{n}{stop}\PYG{p}{,} \PYG{l+m+mi}{0} \PYG{p}{)} \PYG{p}{)}\PYG{p}{;}
     \PYG{n}{HANDLE\PYGZus{}ERROR}\PYG{p}{(} \PYG{n}{cudaEventSynchronize}\PYG{p}{(} \PYG{n}{stop} \PYG{p}{)} \PYG{p}{)}\PYG{p}{;}
     \PYG{k+kt}{float}   \PYG{n}{elapsedTime}\PYG{p}{;}
-    \PYG{n}{HANDLE\PYGZus{}ERROR}\PYG{p}{(} \PYG{n}{cudaEventElapsedTime}\PYG{p}{(} \PYG{o}{\&}\PYG{n}{elapsedTime}\PYG{p}{,}
+    \PYG{n}{HANDLE\PYGZus{}ERROR}\PYG{p}{(} \PYG{n}{cudaEventElapsedTime}\PYG{p}{(} \PYG{o}{\PYGZam{}}\PYG{n}{elapsedTime}\PYG{p}{,}
                                         \PYG{n}{start}\PYG{p}{,} \PYG{n}{stop} \PYG{p}{)} \PYG{p}{)}\PYG{p}{;}
-    \PYG{n}{printf}\PYG{p}{(} \PYG{l+s}{"}\PYG{l+s}{Time to generate:  \%3.1f ms}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s}{"}\PYG{p}{,} \PYG{n}{elapsedTime} \PYG{p}{)}\PYG{p}{;}
+    \PYG{n}{printf}\PYG{p}{(} \PYG{l+s}{"}\PYG{l+s}{Time to generate:  \PYGZpc{}3.1f ms}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s}{"}\PYG{p}{,} \PYG{n}{elapsedTime} \PYG{p}{)}\PYG{p}{;}
 
     \PYG{c+c1}{// free the memory allocated on the GPU}
     \PYG{n}{HANDLE\PYGZus{}ERROR}\PYG{p}{(} \PYG{n}{cudaFree}\PYG{p}{(}\PYG{n}{Md}\PYG{p}{)} \PYG{p}{)}\PYG{p}{;}
@@ -1540,8 +1586,8 @@ We first create a data structure Sphere. Just like standard C, you can also crea
     \PYG{n}{\PYGZus{}\PYGZus{}device\PYGZus{}\PYGZus{}} \PYG{k+kt}{float} \PYG{n+nf}{hit}\PYG{p}{(} \PYG{k+kt}{float} \PYG{n}{ox}\PYG{p}{,} \PYG{k+kt}{float} \PYG{n}{oy}\PYG{p}{,} \PYG{k+kt}{float} \PYG{o}{*}\PYG{n}{n} \PYG{p}{)} \PYG{p}{\PYGZob{}}
         \PYG{k+kt}{float} \PYG{n}{dx} \PYG{o}{=} \PYG{n}{ox} \PYG{o}{-} \PYG{n}{x}\PYG{p}{;} \PYG{c+c1}{// distance on x-axis}
         \PYG{k+kt}{float} \PYG{n}{dy} \PYG{o}{=} \PYG{n}{oy} \PYG{o}{-} \PYG{n}{y}\PYG{p}{;} \PYG{c+c1}{// distance on y-axis}
-        \PYG{c+c1}{// if (dx*dx + dy*dy \textgreater{} radius*radius), ray will not hit sphere}
-        \PYG{k}{if} \PYG{p}{(}\PYG{n}{dx}\PYG{o}{*}\PYG{n}{dx} \PYG{o}{+} \PYG{n}{dy}\PYG{o}{*}\PYG{n}{dy} \PYG{o}{\textless{}} \PYG{n}{radius}\PYG{o}{*}\PYG{n}{radius}\PYG{p}{)} \PYG{p}{\PYGZob{}}
+        \PYG{c+c1}{// if (dx*dx + dy*dy \PYGZgt{} radius*radius), ray will not hit sphere}
+        \PYG{k}{if} \PYG{p}{(}\PYG{n}{dx}\PYG{o}{*}\PYG{n}{dx} \PYG{o}{+} \PYG{n}{dy}\PYG{o}{*}\PYG{n}{dy} \PYG{o}{\PYGZlt{}} \PYG{n}{radius}\PYG{o}{*}\PYG{n}{radius}\PYG{p}{)} \PYG{p}{\PYGZob{}}
             \PYG{k+kt}{float} \PYG{n}{dz} \PYG{o}{=} \PYG{n}{sqrtf}\PYG{p}{(} \PYG{n}{radius}\PYG{o}{*}\PYG{n}{radius} \PYG{o}{-} \PYG{n}{dx}\PYG{o}{*}\PYG{n}{dx} \PYG{o}{-} \PYG{n}{dy}\PYG{o}{*}\PYG{n}{dy} \PYG{p}{)}\PYG{p}{;}
             \PYG{c+c1}{// n is used in visual effect}
             \PYG{o}{*}\PYG{n}{n} \PYG{o}{=} \PYG{n}{dz} \PYG{o}{/} \PYG{n}{sqrtf}\PYG{p}{(} \PYG{n}{radius} \PYG{o}{*} \PYG{n}{radius} \PYG{p}{)}\PYG{p}{;}
@@ -1588,10 +1634,10 @@ The value \emph{n} is used to provide a better visual effect. You can see that w
 
     \PYG{k+kt}{float}   \PYG{n}{r}\PYG{o}{=}\PYG{l+m+mi}{0}\PYG{p}{,} \PYG{n}{g}\PYG{o}{=}\PYG{l+m+mi}{0}\PYG{p}{,} \PYG{n}{b}\PYG{o}{=}\PYG{l+m+mi}{0}\PYG{p}{;}\PYG{c+c1}{// set the background to black}
     \PYG{k+kt}{float}   \PYG{n}{maxz} \PYG{o}{=} \PYG{o}{-}\PYG{n}{INF}\PYG{p}{;}
-    \PYG{k}{for}\PYG{p}{(}\PYG{k+kt}{int} \PYG{n}{i}\PYG{o}{=}\PYG{l+m+mi}{0}\PYG{p}{;} \PYG{n}{i}\PYG{o}{\textless{}}\PYG{n}{SPHERES}\PYG{p}{;} \PYG{n}{i}\PYG{o}{+}\PYG{o}{+}\PYG{p}{)} \PYG{p}{\PYGZob{}}
+    \PYG{k}{for}\PYG{p}{(}\PYG{k+kt}{int} \PYG{n}{i}\PYG{o}{=}\PYG{l+m+mi}{0}\PYG{p}{;} \PYG{n}{i}\PYG{o}{\PYGZlt{}}\PYG{n}{SPHERES}\PYG{p}{;} \PYG{n}{i}\PYG{o}{+}\PYG{o}{+}\PYG{p}{)} \PYG{p}{\PYGZob{}}
         \PYG{k+kt}{float}   \PYG{n}{n}\PYG{p}{;}
-        \PYG{k+kt}{float}   \PYG{n}{t} \PYG{o}{=} \PYG{n}{s}\PYG{p}{[}\PYG{n}{i}\PYG{p}{]}\PYG{p}{.}\PYG{n}{hit}\PYG{p}{(} \PYG{n}{ox}\PYG{p}{,} \PYG{n}{oy}\PYG{p}{,} \PYG{o}{\&}\PYG{n}{n} \PYG{p}{)}\PYG{p}{;} \PYG{c+c1}{// return the distance}
-        \PYG{k}{if} \PYG{p}{(}\PYG{n}{t} \PYG{o}{\textgreater{}} \PYG{n}{maxz}\PYG{p}{)} \PYG{p}{\PYGZob{}} 
+        \PYG{k+kt}{float}   \PYG{n}{t} \PYG{o}{=} \PYG{n}{s}\PYG{p}{[}\PYG{n}{i}\PYG{p}{]}\PYG{p}{.}\PYG{n}{hit}\PYG{p}{(} \PYG{n}{ox}\PYG{p}{,} \PYG{n}{oy}\PYG{p}{,} \PYG{o}{\PYGZam{}}\PYG{n}{n} \PYG{p}{)}\PYG{p}{;} \PYG{c+c1}{// return the distance}
+        \PYG{k}{if} \PYG{p}{(}\PYG{n}{t} \PYG{o}{\PYGZgt{}} \PYG{n}{maxz}\PYG{p}{)} \PYG{p}{\PYGZob{}} 
             \PYG{k+kt}{float} \PYG{n}{fscale} \PYG{o}{=} \PYG{n}{n}\PYG{p}{;}\PYG{c+c1}{// improve visual effect}
             \PYG{n}{r} \PYG{o}{=} \PYG{n}{s}\PYG{p}{[}\PYG{n}{i}\PYG{p}{]}\PYG{p}{.}\PYG{n}{r} \PYG{o}{*} \PYG{n}{fscale}\PYG{p}{;}
             \PYG{n}{g} \PYG{o}{=} \PYG{n}{s}\PYG{p}{[}\PYG{n}{i}\PYG{p}{]}\PYG{p}{.}\PYG{n}{g} \PYG{o}{*} \PYG{n}{fscale}\PYG{p}{;}
@@ -1655,7 +1701,7 @@ The last few line would be just color the the bitmap. Nothing needs to be clarif
 
     \PYG{c+c1}{// declare the data block and other needed variables}
     \PYG{n}{DataBlock}   \PYG{n}{data}\PYG{p}{;}
-    \PYG{n}{CPUBitmap} \PYG{n}{bitmap}\PYG{p}{(} \PYG{n}{DIM}\PYG{p}{,} \PYG{n}{DIM}\PYG{p}{,} \PYG{o}{\&}\PYG{n}{data} \PYG{p}{)}\PYG{p}{;}
+    \PYG{n}{CPUBitmap} \PYG{n}{bitmap}\PYG{p}{(} \PYG{n}{DIM}\PYG{p}{,} \PYG{n}{DIM}\PYG{p}{,} \PYG{o}{\PYGZam{}}\PYG{n}{data} \PYG{p}{)}\PYG{p}{;}
     \PYG{k+kt}{unsigned} \PYG{k+kt}{char}   \PYG{o}{*}\PYG{n}{dev\PYGZus{}bitmap}\PYG{p}{;}
     \PYG{n}{Sphere}          \PYG{o}{*}\PYG{n}{s}\PYG{p}{;}
 
@@ -1663,7 +1709,7 @@ The last few line would be just color the the bitmap. Nothing needs to be clarif
     \PYG{n}{Sphere} \PYG{o}{*}\PYG{n}{temp\PYGZus{}s} \PYG{o}{=} \PYG{p}{(}\PYG{n}{Sphere}\PYG{o}{*}\PYG{p}{)}\PYG{n}{malloc}\PYG{p}{(} \PYG{k}{sizeof}\PYG{p}{(}\PYG{n}{Sphere}\PYG{p}{)} \PYG{o}{*} \PYG{n}{SPHERES} \PYG{p}{)}\PYG{p}{;}
 
     \PYG{c+c1}{// initialize the Sphere dataset}
-    \PYG{k}{for} \PYG{p}{(}\PYG{k+kt}{int} \PYG{n}{i}\PYG{o}{=}\PYG{l+m+mi}{0}\PYG{p}{;} \PYG{n}{i}\PYG{o}{\textless{}}\PYG{n}{SPHERES}\PYG{p}{;} \PYG{n}{i}\PYG{o}{+}\PYG{o}{+}\PYG{p}{)} \PYG{p}{\PYGZob{}}
+    \PYG{k}{for} \PYG{p}{(}\PYG{k+kt}{int} \PYG{n}{i}\PYG{o}{=}\PYG{l+m+mi}{0}\PYG{p}{;} \PYG{n}{i}\PYG{o}{\PYGZlt{}}\PYG{n}{SPHERES}\PYG{p}{;} \PYG{n}{i}\PYG{o}{+}\PYG{o}{+}\PYG{p}{)} \PYG{p}{\PYGZob{}}
         \PYG{n}{temp\PYGZus{}s}\PYG{p}{[}\PYG{n}{i}\PYG{p}{]}\PYG{p}{.}\PYG{n}{r} \PYG{o}{=} \PYG{n}{rnd}\PYG{p}{(} \PYG{l+m+mf}{1.0f} \PYG{p}{)}\PYG{p}{;}
         \PYG{n}{temp\PYGZus{}s}\PYG{p}{[}\PYG{n}{i}\PYG{p}{]}\PYG{p}{.}\PYG{n}{g} \PYG{o}{=} \PYG{n}{rnd}\PYG{p}{(} \PYG{l+m+mf}{1.0f} \PYG{p}{)}\PYG{p}{;}
         \PYG{n}{temp\PYGZus{}s}\PYG{p}{[}\PYG{n}{i}\PYG{p}{]}\PYG{p}{.}\PYG{n}{b} \PYG{o}{=} \PYG{n}{rnd}\PYG{p}{(} \PYG{l+m+mf}{1.0f} \PYG{p}{)}\PYG{p}{;}
@@ -1675,15 +1721,15 @@ The last few line would be just color the the bitmap. Nothing needs to be clarif
 
     \PYG{c+c1}{// capture the start time}
     \PYG{n}{cudaEvent\PYGZus{}t}     \PYG{n}{start}\PYG{p}{,} \PYG{n}{stop}\PYG{p}{;}
-    \PYG{n}{HANDLE\PYGZus{}ERROR}\PYG{p}{(} \PYG{n}{cudaEventCreate}\PYG{p}{(} \PYG{o}{\&}\PYG{n}{start} \PYG{p}{)} \PYG{p}{)}\PYG{p}{;}
-    \PYG{n}{HANDLE\PYGZus{}ERROR}\PYG{p}{(} \PYG{n}{cudaEventCreate}\PYG{p}{(} \PYG{o}{\&}\PYG{n}{stop} \PYG{p}{)} \PYG{p}{)}\PYG{p}{;}
+    \PYG{n}{HANDLE\PYGZus{}ERROR}\PYG{p}{(} \PYG{n}{cudaEventCreate}\PYG{p}{(} \PYG{o}{\PYGZam{}}\PYG{n}{start} \PYG{p}{)} \PYG{p}{)}\PYG{p}{;}
+    \PYG{n}{HANDLE\PYGZus{}ERROR}\PYG{p}{(} \PYG{n}{cudaEventCreate}\PYG{p}{(} \PYG{o}{\PYGZam{}}\PYG{n}{stop} \PYG{p}{)} \PYG{p}{)}\PYG{p}{;}
     \PYG{n}{HANDLE\PYGZus{}ERROR}\PYG{p}{(} \PYG{n}{cudaEventRecord}\PYG{p}{(} \PYG{n}{start}\PYG{p}{,} \PYG{l+m+mi}{0} \PYG{p}{)} \PYG{p}{)}\PYG{p}{;}
 
     \PYG{c+c1}{// allocate memory on the GPU for the output bitmap}
-    \PYG{n}{HANDLE\PYGZus{}ERROR}\PYG{p}{(} \PYG{n}{cudaMalloc}\PYG{p}{(} \PYG{p}{(}\PYG{k+kt}{void}\PYG{o}{*}\PYG{o}{*}\PYG{p}{)}\PYG{o}{\&}\PYG{n}{dev\PYGZus{}bitmap}\PYG{p}{,} \PYG{n}{bitmap}\PYG{p}{.}\PYG{n}{image\PYGZus{}size}\PYG{p}{(}\PYG{p}{)} \PYG{p}{)} \PYG{p}{)}\PYG{p}{;}
+    \PYG{n}{HANDLE\PYGZus{}ERROR}\PYG{p}{(} \PYG{n}{cudaMalloc}\PYG{p}{(} \PYG{p}{(}\PYG{k+kt}{void}\PYG{o}{*}\PYG{o}{*}\PYG{p}{)}\PYG{o}{\PYGZam{}}\PYG{n}{dev\PYGZus{}bitmap}\PYG{p}{,} \PYG{n}{bitmap}\PYG{p}{.}\PYG{n}{image\PYGZus{}size}\PYG{p}{(}\PYG{p}{)} \PYG{p}{)} \PYG{p}{)}\PYG{p}{;}
 
     \PYG{c+c1}{// allocate memory for the Sphere dataset on GPU}
-    \PYG{n}{HANDLE\PYGZus{}ERROR}\PYG{p}{(} \PYG{n}{cudaMalloc}\PYG{p}{(} \PYG{p}{(}\PYG{k+kt}{void}\PYG{o}{*}\PYG{o}{*}\PYG{p}{)}\PYG{o}{\&}\PYG{n}{s}\PYG{p}{,} \PYG{k}{sizeof}\PYG{p}{(}\PYG{n}{Sphere}\PYG{p}{)} \PYG{o}{*} \PYG{n}{SPHERES} \PYG{p}{)} \PYG{p}{)}\PYG{p}{;}
+    \PYG{n}{HANDLE\PYGZus{}ERROR}\PYG{p}{(} \PYG{n}{cudaMalloc}\PYG{p}{(} \PYG{p}{(}\PYG{k+kt}{void}\PYG{o}{*}\PYG{o}{*}\PYG{p}{)}\PYG{o}{\PYGZam{}}\PYG{n}{s}\PYG{p}{,} \PYG{k}{sizeof}\PYG{p}{(}\PYG{n}{Sphere}\PYG{p}{)} \PYG{o}{*} \PYG{n}{SPHERES} \PYG{p}{)} \PYG{p}{)}\PYG{p}{;}
 
     \PYG{c+c1}{// transfer the initialized Sphere dataset from CPU memory to GPU memory}
     \PYG{n}{HANDLE\PYGZus{}ERROR}\PYG{p}{(} \PYG{n}{cudaMemcpy}\PYG{p}{(} \PYG{n}{s}\PYG{p}{,} \PYG{n}{temp\PYGZus{}s}\PYG{p}{,} \PYG{k}{sizeof}\PYG{p}{(}\PYG{n}{Sphere}\PYG{p}{)} \PYG{o}{*} \PYG{n}{SPHERES}\PYG{p}{,}
@@ -1692,7 +1738,7 @@ The last few line would be just color the the bitmap. Nothing needs to be clarif
     \PYG{c+c1}{// generate a bitmap from our sphere data}
     \PYG{n}{dim3}    \PYG{n}{grids}\PYG{p}{(}\PYG{n}{DIM}\PYG{o}{/}\PYG{l+m+mi}{32}\PYG{p}{,}\PYG{n}{DIM}\PYG{o}{/}\PYG{l+m+mi}{32}\PYG{p}{)}\PYG{p}{;}
     \PYG{n}{dim3}    \PYG{n}{threads}\PYG{p}{(}\PYG{l+m+mi}{32}\PYG{p}{,}\PYG{l+m+mi}{32}\PYG{p}{)}\PYG{p}{;}
-    \PYG{n}{kernel}\PYG{o}{\textless{}}\PYG{o}{\textless{}}\PYG{o}{\textless{}}\PYG{n}{grids}\PYG{p}{,}\PYG{n}{threads}\PYG{o}{\textgreater{}}\PYG{o}{\textgreater{}}\PYG{o}{\textgreater{}}\PYG{p}{(} \PYG{n}{s}\PYG{p}{,} \PYG{n}{dev\PYGZus{}bitmap} \PYG{p}{)}\PYG{p}{;}
+    \PYG{n}{kernel}\PYG{o}{\PYGZlt{}}\PYG{o}{\PYGZlt{}}\PYG{o}{\PYGZlt{}}\PYG{n}{grids}\PYG{p}{,}\PYG{n}{threads}\PYG{o}{\PYGZgt{}}\PYG{o}{\PYGZgt{}}\PYG{o}{\PYGZgt{}}\PYG{p}{(} \PYG{n}{s}\PYG{p}{,} \PYG{n}{dev\PYGZus{}bitmap} \PYG{p}{)}\PYG{p}{;}
 
     \PYG{c+c1}{// copy our bitmap back from the GPU for display}
     \PYG{n}{HANDLE\PYGZus{}ERROR}\PYG{p}{(} \PYG{n}{cudaMemcpy}\PYG{p}{(} \PYG{n}{bitmap}\PYG{p}{.}\PYG{n}{get\PYGZus{}ptr}\PYG{p}{(}\PYG{p}{)}\PYG{p}{,} \PYG{n}{dev\PYGZus{}bitmap}\PYG{p}{,}
@@ -1703,9 +1749,9 @@ The last few line would be just color the the bitmap. Nothing needs to be clarif
     \PYG{n}{HANDLE\PYGZus{}ERROR}\PYG{p}{(} \PYG{n}{cudaEventRecord}\PYG{p}{(} \PYG{n}{stop}\PYG{p}{,} \PYG{l+m+mi}{0} \PYG{p}{)} \PYG{p}{)}\PYG{p}{;}
     \PYG{n}{HANDLE\PYGZus{}ERROR}\PYG{p}{(} \PYG{n}{cudaEventSynchronize}\PYG{p}{(} \PYG{n}{stop} \PYG{p}{)} \PYG{p}{)}\PYG{p}{;}
     \PYG{k+kt}{float}   \PYG{n}{elapsedTime}\PYG{p}{;}
-    \PYG{n}{HANDLE\PYGZus{}ERROR}\PYG{p}{(} \PYG{n}{cudaEventElapsedTime}\PYG{p}{(} \PYG{o}{\&}\PYG{n}{elapsedTime}\PYG{p}{,}
+    \PYG{n}{HANDLE\PYGZus{}ERROR}\PYG{p}{(} \PYG{n}{cudaEventElapsedTime}\PYG{p}{(} \PYG{o}{\PYGZam{}}\PYG{n}{elapsedTime}\PYG{p}{,}
                                         \PYG{n}{start}\PYG{p}{,} \PYG{n}{stop} \PYG{p}{)} \PYG{p}{)}\PYG{p}{;}
-    \PYG{n}{printf}\PYG{p}{(} \PYG{l+s}{"}\PYG{l+s}{Time to generate:  \%3.1f ms}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s}{"}\PYG{p}{,} \PYG{n}{elapsedTime} \PYG{p}{)}\PYG{p}{;}
+    \PYG{n}{printf}\PYG{p}{(} \PYG{l+s}{"}\PYG{l+s}{Time to generate:  \PYGZpc{}3.1f ms}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s}{"}\PYG{p}{,} \PYG{n}{elapsedTime} \PYG{p}{)}\PYG{p}{;}
 
     \PYG{c+c1}{// free CPU memory}
     \PYG{n}{free}\PYG{p}{(} \PYG{n}{temp\PYGZus{}s} \PYG{p}{)}\PYG{p}{;}

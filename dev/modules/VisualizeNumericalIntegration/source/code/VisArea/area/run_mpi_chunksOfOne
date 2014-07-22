@@ -1,0 +1,45 @@
+#!/bin/bash
+
+usage()
+{
+cat << EOF
+usage: $0 options
+
+This script runs the visualization of computing the area under the curve using MPI.
+Data decomposition technique: chunks of one.
+
+OPTIONS:
+-p	Number of MPI processes
+-t  Throttle time in microseconds
+-n  Number of rectangles
+-f  Function kind (1, 2 or 3, default if not specified)
+-r  Righthand boundary of the curve
+EOF
+}
+
+while getopts p:t:n:f:r: option
+do
+case "${option}"
+in
+p) NUMPROCS=${OPTARG};;
+t) THROTTLE=${OPTARG};;
+n) NUMRECT=${OPTARG};;
+f) FUNCTION=${OPTARG};;
+r) RIGHT=${OPTARG};;
+?)
+usage
+exit
+;;
+esac
+done
+
+: ${NUMPROCS:=3}
+: ${THROTTLE:=250}
+: ${NUMRECT:=40}
+: ${FUNCTION:=4}
+: ${RIGHT:=350}
+
+make clean
+make area.c-mpi MPI_CHUNKS_OF_ONE=1
+
+mpirun -np $NUMPROCS ./area.c-mpi -t $THROTTLE -n $NUMRECT $ -f $FUNCTION -r $RIGHT

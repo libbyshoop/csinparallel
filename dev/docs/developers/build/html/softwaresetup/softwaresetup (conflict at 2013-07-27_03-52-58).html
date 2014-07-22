@@ -1,0 +1,165 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>What You’ll Need to Get Started &mdash; Documentation for Developers</title>
+    
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+    <link rel="top" title="Documentation for Developers" href="../index.html" />
+    <link rel="next" title="Setting Up A New Module" href="../creatingnewmodule/modulesetup.html" />
+    <link rel="prev" title="Module Developers’ Guide" href="../index.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../creatingnewmodule/modulesetup.html" title="Setting Up A New Module"
+             accesskey="N">next</a></li>
+        <li class="right" >
+          <a href="../index.html" title="Module Developers’ Guide"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../index.html">Documentation for Developers</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="what-you-ll-need-to-get-started">
+<h1>What You&#8217;ll Need to Get Started<a class="headerlink" href="#what-you-ll-need-to-get-started" title="Permalink to this headline">¶</a></h1>
+<p>Before you can start writing modules, you&#8217;ll need some software.</p>
+<div class="section" id="the-github-repository">
+<h2>The GitHub Repository<a class="headerlink" href="#the-github-repository" title="Permalink to this headline">¶</a></h2>
+<p>CSinParallel modules are housed in a <a class="reference external" href="https://github.com/libbyshoop/csinparallel">github repository</a>. (If you don&#8217;t have a github client, <a class="reference external" href="https://help.github.com/articles/set-up-git">start with that</a>).  This repository contains all the modules as individual Sphinx projects.
+To work on the modules or create new ones, you will need to be a <em>collaborator</em> on this project.  Once you are set up as a collaborator, you will eventually clone the repository on your own machine, which you can do with the github client (there is one for Windows and for Macs).  If you are working on a linux machine, you will use the
+command line to run git commands.</p>
+<p>For reference, the <a class="reference external" href="http://git-htmldocs.googlecode.com/git/git.html">git manual pages</a> are extensive and <a class="reference external" href="http://www.atlassian.com/git/tutorial">this git tutorial</a>
+provides easy access to most commands.</p>
+</div>
+<div class="section" id="additional-software">
+<h2>Additional Software<a class="headerlink" href="#additional-software" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="a-text-editor">
+<h3>A Text Editor<a class="headerlink" href="#a-text-editor" title="Permalink to this headline">¶</a></h3>
+<p>You&#8217;ll need an editor that can work with restructured text (.rst, a simple markdown language).</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">note:</th><td class="field-body">We advise avoiding notepad++ on Windows; Sublime Text or gedit are good options.</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="python">
+<h3>Python<a class="headerlink" href="#python" title="Permalink to this headline">¶</a></h3>
+<p>You&#8217;ll need a version of Python 2 (not Python 3), preferably 2.7. You can download one from <a class="reference external" href="http://www.python.org">the Python site</a>.</p>
+<p>If you already have Python but aren&#8217;t sure which version, enter <tt class="docutils literal"><span class="pre">python</span> <span class="pre">-v</span></tt> into a terminal or command line to check.</p>
+</div>
+<div class="section" id="easy-install">
+<h3>easy_install<a class="headerlink" href="#easy-install" title="Permalink to this headline">¶</a></h3>
+<p>Finally, you&#8217;ll need the <tt class="docutils literal"><span class="pre">easy_install</span></tt>
+Python program, which you can <a class="reference external" href="http://pypi.python.org/pypi/setuptools">download here</a>.</p>
+<blockquote>
+<div><dl class="docutils">
+<dt>On a Mac:</dt>
+<dd><ul class="first last simple">
+<li><tt class="docutils literal"><span class="pre">sudo</span> <span class="pre">sh</span> <span class="pre">setuptools-0.6c9-py2.7.egg</span> <span class="pre">--prefix=~</span></tt></li>
+</ul>
+</dd>
+<dt>On a PC:</dt>
+<dd><ul class="first simple">
+<li>grab the 32-bit executable for Python 2.7 from <a class="reference external" href="https://pypi.python.org/pypi/setuptools#files">here</a></li>
+<li>You&#8217;ll also need to add your Python Scripts directory to your PATH environment variable (in System Properties, click the Advanced tab, then Environment Variables, then add C:\Python27\Scripts\ to the Variable value for Variable Path). Be sure to close and restart the command prompt in order for these changes to take effect.</li>
+</ul>
+<table class="last docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">note:</th><td class="field-body">If you&#8217;ve got more than one version of Python, make sure you add this to the list <strong>before</strong> any paths including other versions of Python.</td>
+</tr>
+</tbody>
+</table>
+</dd>
+</dl>
+</div></blockquote>
+</div>
+</div>
+<div class="section" id="sphinx">
+<h2>Sphinx<a class="headerlink" href="#sphinx" title="Permalink to this headline">¶</a></h2>
+<p>In command line (Mac) or command prompt (Windows), enter <tt class="docutils literal"><span class="pre">easy_install</span> <span class="pre">-U</span> <span class="pre">Sphinx</span></tt>. (If this doesn&#8217;t work, make sure you&#8217;ve restarted your terminal or command prompt).</p>
+<p>Test by entering <tt class="docutils literal"><span class="pre">sphinx-build</span></tt>, which should return a help message.</p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../index.html">
+              <img class="logo" src="../_static/CSInParallel200wide.png" alt="Logo"/>
+            </a></p>
+<h3><a href="../index.html">Table Of Contents</a></h3>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="">What You&#8217;ll Need to Get Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../creatingnewmodule/modulesetup.html">Setting Up A New Module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../furthersetup/furthersetup.html">Editing Your New Module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../developmentProcess/process.html">The CSinParallel Module Development Process</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../newmoduletemplate/newmoduletemplate.html">New Module Template</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../modulechecklist/modulechecklist.html">Checklist: Reminders for Experienced Module Creators</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../components/components.html">Components of a Module</a></li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="../index.html"
+                        title="previous chapter">Module Developers&#8217; Guide</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="../creatingnewmodule/modulesetup.html"
+                        title="next chapter">Setting Up A New Module</a></p>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../creatingnewmodule/modulesetup.html" title="Setting Up A New Module"
+             >next</a></li>
+        <li class="right" >
+          <a href="../index.html" title="Module Developers’ Guide"
+             >previous</a> |</li>
+        <li><a href="../index.html">Documentation for Developers</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright This work is licensed under a Creative Commons Attribution-ShareAlike 3.0 Unported License.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>

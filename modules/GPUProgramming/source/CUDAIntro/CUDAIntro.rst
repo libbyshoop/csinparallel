@@ -2,16 +2,18 @@
 CUDA Intro
 **********
 
-Before we proceed to our first example, please follow the following instructions to set up your working environment.
+Before we proceed to our first example, please follow the following instructions to set up your working environment.  The directory/folder structure needed for these examples is a folder called GPUProgramming with two folders inside of it, one called *common* (from a tarball) and one called examples (you should make). Here's how to make them:
 
-1. Download the follow file. :download:`download common.tar.gz <common.tar.gz>`
-2. Extract all the files.
-3. Create an empty folder **common** and then put extracted files into it.
-4. Put the common folder **outside** of your source code folder.
+1. Create a top-level working folder for the code you will examine and run, called ``GPUProgramming``.
+2. Download the following file: :download:`download common.tar.gz <common.tar.gz>`
+3. Extract all the files in ``GPUProgramming``, which should create a folder **common**.
+4. Create another folder called ``examples`` inside ``GPUProgramming``. The examples folder will contain the CUDA code examples below.
+5. Be sure to keep the common folder **outside** of your examples source code folder (this is because the example code includes code from ../common).
+
 
 .. note::
 
-   In side the common folder is the source code that contains helper functions. These include some error handling functions and APIs required for the later graphic programs, such as ray-tracing.
+   Inside the common folder is the source code that contains helper functions. These include some error handling functions and APIs required for the later graphic programs, such as ray-tracing.
 
 Acknowledgement
 ###############
@@ -34,10 +36,12 @@ We will start our CUDA journey by learning a very simple example, the vector add
 Vector Addition source file:
 :download:`VA-GPU-11.cu <VA-GPU-11.cu>`
 
+Get this source file and open it in an editor or terminal window so that you can follow along as sections of the code are explained here.
+
 The Device Code
 ***************
 
-As you may have noticed in your background reading about CUDA programming, CUDA programs execute in two separated places. One is called host, another is called device. In our example, the add() function executes on the device (our GPU) and the rest of the C program executes on our CPU.
+As you may have noticed in your background reading about CUDA programming, CUDA programs execute in two separate places. One is called the host (your CPU), another is called device (your GPU). In our example, the add() function executes on the device (our GPU) and the rest of the C program executes on our CPU.
 
 .. literalinclude:: VA-GPU-11.cu	
     :language: c
@@ -58,7 +62,7 @@ The Host Code
 
 .. topic:: Before you proceed
 
-   Unlike the device code, the host code is more complicated and require more explanation. We advice you to download the source file provided at the beginning of this page and have it open in a separate window. We divided the host code into several parts for the purpose of easier explanation. However, looking at the host code as a whole might be helpful, especially for CUDA programming, where host codes are usually highly organized and structured.
+   Unlike the device code, the host code is more complicated and requires more explanation. We advise you to download the source file provided at the beginning of this page and have it open in a separate window. We divided the host code into several parts for the purpose of easier explanation. However, looking at the host code as a whole might be helpful, especially for CUDA programming, where host codes are usually highly organized and structured.
 
 .. literalinclude:: VA-GPU-11.cu	
     :language: c
@@ -71,13 +75,13 @@ The `Event API`_
 
 Before we go any further, we need to first learn ways of measuring performance in CUDA runtime. How do we measure performance? That is, how fast can the program run? To be more specific, we will try to time the program.
 
-The tool we use to measure the time GPU spends on a task is CUDA `Event API`_. 
+The tool we use to measure the time GPU spends on a task is the CUDA `Event API`_. 
 
 .. literalinclude:: VA-GPU-11.cu	
     :language: c
     :lines: 51-57
 
-The first step of using an event is declaring the event. In this example we declared two events, one called start, which will record the start event and another called stop, which will record the stop event. After declaring the events, we can use the command `cudaEventRecord()`_ to record an event. You can think of recording an event as initializing it. You may also notice that we pass this command a second argument (0 in this case). In our example this argument is actually useless. If you are really interested in this, however, you can read more about CUDA stream.
+The first step of using an event is declaring the event. In this example we declared two events, one called start, which will record the start event and another called stop, which will record the stop event. After declaring the events, we can use the command `cudaEventRecord()`_ to record an event. You can think of recording an event as initializing it. You may also notice that we pass this command a second argument (0 in this case). In our example this argument is actually useless. If you are really interested in this, however, you can read more about CUDA streams.
 
 We can see that there is another function HANDLE_ERROR() around each of the commands. For the moment, this function does not do anything but returning errors if CUDA commands run into any.
 
@@ -85,7 +89,7 @@ We can see that there is another function HANDLE_ERROR() around each of the comm
 
   If you are a C programming language veteran you may ask the question: why don't we use the the timing functions in standard C, such as *clock()* or *timeval* structure, to perform this task? This is a really good question.
 
-  The fundamental motivation of using `Event API`_ instead of timing functions in standard C lies on the differences between CPU and GPU computation. To be more specific, GPU is a companion computation device, which means CPU has to call GPU to do computations every time. However, when GPU is doing a computation, CPU does not wait for it to finish its task, instead CPU will continue to execute the next line of code while GPU is still working on the previous call. This *asynchronous* feature of the GPU computation structure leads to possible inaccuracy when measuring time using standard C timing functions. Therefore, `Event API`_ becomes needed.
+  The fundamental motivation of using `Event API`_ instead of timing functions in standard C lies on the differences between CPU and GPU computation. To be more specific, GPU is a companion computation device, which means the CPU has to call GPU to do computations every time. However, when the GPU is doing a computation, the CPU does not wait for it to finish its task, instead the CPU will continue to execute the next line of code while GPU is still working on the previous call. This *asynchronous* feature of the GPU computation structure leads to possible inaccuracy when measuring time using standard C timing functions. Therefore, `Event API`_ becomes needed.
 
 The `cudaMalloc()`_ Function
 ----------------------------
@@ -96,9 +100,9 @@ The `cudaMalloc()`_ Function
 
 Just like the standard C programming language, you need to allocate memory for variables before you start using them. The command `cudaMalloc()`_, similar to *malloc()* command in standard C, tells the CUDA runtime to allocate memory on the device (Memory of GPU), instead of on the host (Memory of CPU). The first argument is a pointer that points to where you want to hold the address of the newly allocated memory. 
 
-For some reason, you are not allowed to modify memory allocated on the device (GPU) from the host directly in CUDA C programming language. Instead, you need to use two other methods to access the device memory. You can do it by either using device pointers in the device code, or you can use the `cudaMemcpy()`_ method.
+Because the memory units on the host are separate from those on the GPU, you are not allowed to modify memory allocated on the device (GPU) from the host directly in CUDA C programming language. Instead, you need to use two other methods to access the device memory. You can do it by either using device pointers in the device code, or you can use the `cudaMemcpy()`_ method.
 
-The way to use pointers in the device code is exactly the same as we did in the host code. In other words, a pointer in CUDA C is exactly the same as in standard C. However, there is one thing you need to pay attention to. Host pointers can only access memory (usually CPU memory) from host code, you cannot access device memory directly. On the other hand, device pointers can only access memory (usually GPU memory) from device code as well.
+The way to use pointers in the device code is exactly the same as we did in the host code. In other words, a pointer in CUDA C is exactly the same as in standard C. However, there is one thing you need to pay attention to. Host pointers can only access memory (usually CPU memory) from host code, you cannot access device memory directly. On the other hand, device pointers can only access GPU memory from device code as well.
 
 The `cudaMemcpy()`_ Function
 ----------------------------
@@ -107,16 +111,18 @@ The `cudaMemcpy()`_ Function
     :language: c
     :lines: 64-68
 
-As mentioned in the last section, we can also use `cudaMemcpy()`_ from host code to access memory on a device. **This command is the typical way of transferring data between host and device.** Again this call is similar to the standard C call *memcpy()*, but requires more parameters. The first argument identifies the destination pointer; the second identifies the source pointer. The last parameter to the call is cudaMemcpyHostToDevice_, telling the runtime that the source pointer is a host pointer and the destination pointer is a device pointer.
+As mentioned in the last section, we can use `cudaMemcpy()`_ from host code to place data in memory on a device. **This command is the typical way of transferring data between host and device.** This call is similar to the standard C call *memcpy()*, but requires more parameters. The first argument identifies the destination pointer; the second identifies the source pointer. The last parameter to the call is cudaMemcpyHostToDevice_, telling the runtime that the source pointer is a host pointer and the destination pointer is a device pointer.
 
 The Kernel Invocation
 ---------------------
+
+The following line in main() is the call for device code to be executed, in this case the function add(), which was shown earlier. You may notice that this call is similar to a normal function call but has additional code in it, notably the <<< , the >>>, and what lies in between them (the triple angle brackets). We will talk about what they represent in later examples. At this point all you need to know is that they are telling the GPU to use only one thread to execute the program.
 
 .. literalinclude:: VA-GPU-11.cu	
     :language: c
     :lines: 70-71
 
-The following line is the call for device code from host code. You may notice that this call is similar to a normal function call but has additional code in it. We will talk about what they represent in later examples. At this point all you need to know is that they are telling the GPU to use only one thread to execute the program.
+
 
 More `cudaMemcpy()`_ Function
 -----------------------------
@@ -134,17 +140,19 @@ Timing using `Event API`_
     :language: c
     :lines: 77-83
 
-We have seen how to declare and record an `Event API`_ in CUDA C, but have not elaborated on how to use such a tool to measure performance. The basic idea is that we first declare event start and event stop. Then at the beginning of the program we record event start and at the end of the program we record event stop. The last step is to calculate the elapsed time between two events. 
+We have seen how to declare and record an `Event API`_ in CUDA C, but have not elaborated on how to use such a tool to measure performance. The basic idea is that we first declare an event start and an event stop. Then at the beginning of the program we record event start and at the end of the program we record event stop. The last step is to calculate the elapsed time between two events. 
 
 As shown in the code block above, we again use the command `cudaEventRecord()`_ to instruct the runtime to record the event stop. Then we proceed to the last step, which is to get the elapsed time using the command `cudaEventElapsedTime()`_.
 
-However, there is still a problem with timing GPU code in this way. The CUDA C programming language though is derived from standard C, has many characteristics that is different from standard C. We have mentioned in previous sections that CUDA C is asynchronous. This is an example to jog your memory. Suppose we are running a program to do matrix multiplication, and the host calls the GPU to do the computation. As GPU begins executing our code, the CPU proceeds to the next line of code instead of waiting for the GPU to finish its work. If we want the stop the event to record the correct time, we need to make sure that our event is recorded after the GPU finishes everything prior to the call to `cudaEventRecord()`_. To address this problem, CUDA C calls the function `cudaEventSynchronize()`_ to synchronize the stop event.
+However, there is still a problem with timing GPU code in this way. Though the CUDA C programming language though is derived from standard C, it has many characteristics that are different from standard C. We have mentioned in previous sections that CUDA C is asynchronous. This is an example to jog your memory. Suppose we are running a program to do matrix multiplication, and the host calls the GPU to do the computation. As GPU begins executing our code, the CPU proceeds to the next line of code instead of waiting for the GPU to finish its work. If we want the stop the event to record the correct time, we need to make sure that our event is recorded after the GPU finishes everything prior to the call to `cudaEventRecord()`_. To address this problem, CUDA C calls the function `cudaEventSynchronize()`_ to synchronize the stop event.
 
-The `cudaEventSynchronize()`_ function is essentially instructing the runtime to create a barrier to block CPU from executing further instructions until the GPU has reached the stop event. 
+The `cudaEventSynchronize()`_ function is essentially instructing the runtime to create a barrier to block the CPU from executing further instructions until the GPU has reached the stop event. 
 
 Another caveat worth mentioning is that CUDA events are implemented directly on the GPU. Therefore they cannot be used for timing device code mixed with host code. In other words, you will get unreliable results if you attempt to use CUDA events to time more than kernel executions and memory copies involving the device.
 
-you should include and only include kernel execution and memory copies involving the device in between start event and stop event. Anything more included could lead to unreliable results.
+.. note::
+
+    You should only include kernel execution and memory copies involving the device in between start event and stop event in CUDA. Anything more included could lead to unreliable results.
 
 The `cudaFree()`_ Function
 --------------------------
@@ -161,7 +169,32 @@ To finish up the code, we need to free memory allocated on the CPU as well.
     :language: c
     :lines: 95-98
 
-You can add the following code to verify whether the GPU has done the task correctly or not. This time we are using CPU to verify GPU's work. We can do this in this problem due to small data size and simple computation. 
+The following code is useful to verify whether the GPU has done the task correctly or not. This time we are using CPU to verify GPU's work. We can do this in this problem due to a small data size and simple computation.
+
+.. literalinclude:: VA-GPU-11.cu	
+    :language: c
+    :lines: 86-93
+
+Compiling the code and executing this example
+**********************************************
+
+From the *examples* folder where your file VA-GPU-11.cu is located, you compile the code using the **nvcc** compiler.  On unix machines we do this on the command line like this:
+
+::
+
+    nvcc -o VA-GPU-11 VA-GPU-11.cu
+
+Run the executable called *VA-GPU-11*.  On unix machines we do this on the command line like this:
+
+::
+
+    ./VA-GPU-11
+
+This example is only using one thread on the GPU card, so it is not yet a parallel programming example.  Furthermore, you would never go to the trouble of moving data just to use one of the many cores available on the GPU card! Continue on to see how we take advantage of those cores.
+
+.. note::
+
+    Before moving on, execute this code a few times and record how much time it takes on your CUDA-enabled GOU.
 
 .. _cudaFree(): http://developer.download.nvidia.com/compute/cuda/4_2/rel/toolkit/docs/online/group__CUDART__MEMORY_gb17fef862d4d1fefb9dba35bd62a187e.html#gb17fef862d4d1fefb9dba35bd62a187e
 
@@ -186,10 +219,10 @@ You can add the following code to verify whether the GPU has done the task corre
 Vector Addition with Blocks
 ###########################
 
-We have learned some basic concepts in CUDA C in our last example. Starting from this example, we will begin to learn how to write CUDA language that will explore the potential of our GPU card.
+We have learned some basic concepts in CUDA C in our last example. Starting from this next example, we will begin to learn how to write CUDA language that will explore the potential of our GPU card.
 
-Vector Addition with Blocks source file:
-:download:`VA-GPU-N1.cu <VA-GPU-N1.cu>`
+Download this Vector Addition with Blocks source file:
+:download:`VA-GPU-N1.cu <VA-GPU-N1.cu>`  into the examples directory where you placed the previous example code file.
 
 Block
 *****
@@ -200,9 +233,9 @@ Recall that in the previous example, we used the code
     :language: c
     :lines: 71
 
-to call for device kernels and we left those two numbers in the triple angle brackets unexplained. Well, the first number tells the kernel how many parallel blocks we would like to use to execute the instruction. For example, if we launch the kernel <<<16,1>>>, we are essentially creating 16 copies of the kernel and running them in parallel. We call each of these parallel invocations a block. 
+to run device 'kernel' code and we left those two numbers in the triple angle brackets unexplained. Well, the first number tells the kernel how many parallel blocks we would like to use to execute the function. For example, if we launch the kernel function with <<<16,1>>>, we are essentially creating 16 copies of the kernel function and running them in parallel.  CUDA developers call each of these parallel invocations a *block*.
 
-Blocks are organized into a one-dimensional, two-dimensional, or three-dimensional grid. Why do we need a two-dimensional or even a three-dimensional grid? Why can't we just stick with the one-dimensional grid? Well, it turned out that for problems with two or more dimensional domains, such as matrix multiplication or image processing (don't forget the reason GPU been exist is to process images faster), it is often convenient and more efficient to use two or more dimensional indexing. Right now, nVidia GPUs that support CUDA structure can assign up to 65536 blocks in each dimension of the grid, that is in total :math:`65536 \times 65536 \times 65536` blocks in a grid. 
+Blocks are organized into a one-dimensional, two-dimensional, or three-dimensional grid. Why do we need a two-dimensional or even a three-dimensional grid? Why can't we just stick with the one-dimensional grid? Well, it turns out that for problems with two or more dimensional domains, such as matrix multiplication or image processing (don't forget the reason GPU been exist is to process images faster), it is often convenient and more efficient to use two or more dimensional indexing. Right now, nVidia GPUs that support CUDA structure can assign up to 65536 blocks in each dimension of the grid, that is in total :math:`65536 \times 65536 \times 65536` blocks in a grid. 
 
 .. note::
 

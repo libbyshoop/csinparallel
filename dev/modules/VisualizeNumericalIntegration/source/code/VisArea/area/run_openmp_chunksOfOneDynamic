@@ -1,0 +1,45 @@
+#!/bin/bash
+
+usage()
+{
+cat << EOF
+usage: $0 options
+
+This script runs the visualization of computing the area under the curve using OpenMP.
+Data decomposition technique: chunks of one with dynamic scheduling.
+
+OPTIONS:
+-T  number of threads
+-t  Throttle time in microseconds
+-n  Number of rectangles
+-f  Function kind (1, 2 or 3, default if not specified)
+-r  Righthand boundary of the curve
+EOF
+}
+
+while getopts T:t:n:f:r: option
+do
+case "${option}"
+in
+T) THREADS=${OPTARG};;
+t) THROTTLE=${OPTARG};;
+n) NUMRECT=${OPTARG};;
+f) FUNCTION=${OPTARG};;
+r) RIGHT=${OPTARG};;
+?)
+usage
+exit
+;;
+esac
+done
+
+: ${THREADS:=4}
+: ${THROTTLE:=250}
+: ${NUMRECT:=40}
+: ${FUNCTION:=4}
+: ${RIGHT:=350}
+
+make clean
+make area.c-openmp OMP_CHUNKS_OF_ONE_DYNAMIC=1
+
+./area.c-openmp -T $THREADS -t $THROTTLE -n $NUMRECT $ -f $FUNCTION -r $RIGHT

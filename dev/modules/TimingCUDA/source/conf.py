@@ -14,9 +14,7 @@
 # serve to show the default.
 
 
-import sys
-
-import os
+import sys, os, platform
 
 
 
@@ -38,6 +36,16 @@ import os
 # ones.
 extensions = ['sphinx.ext.pngmath']
 
+if 'Darwin' in platform.uname()[0]:
+        pngmath_latex = '/usr/local/texlive/2011/bin/x86_64-darwin//latex'
+        pngmath_dvipng = '/usr/local/texlive/2011/bin/x86_64-darwin//dvipng'
+elif 'Linux' in platform.uname()[0]:
+        pngmath_latex = '/usr/bin/latex'
+        pngmath_dvipng = '/usr/bin/dvipng'
+elif 'Windows' in platform.uname()[0]:
+        pngmath_latex = ''
+        pngmath_dvipng = ''
+
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']
@@ -56,7 +64,7 @@ master_doc = 'index'
 
 
 # General information about the project.
-project = 'Cuda Vector Addition'
+project = 'Timing CUDA Operations'
 copyright = u'This work is licensed under a Creative Commons Attribution-ShareAlike 3.0 Unported License'
 
 
@@ -184,6 +192,9 @@ html_static_path = ['_static']
 
 # Custom sidebar templates, maps document names to template names.
 #html_sidebars = {}
+html_sidebars = {
+   '**': ['localtoc.html', 'relations.html'],
+   }
 
 
 # Additional templates that should be rendered to pages, maps page names to
@@ -196,7 +207,7 @@ html_static_path = ['_static']
 
 
 # If false, no index is generated.
-#html_use_index = True
+html_use_index = False
 
 
 # If true, the index is split into individual pages for each letter.
@@ -255,7 +266,7 @@ latex_elements = {
 # (source start file, target name, title,
 #  author, documentclass [howto, manual, or own class]).
 latex_documents = [
-('index', 'CudaVectorAdd.tex', u'CudaVectorAdd',
+('index', 'TimingCUDAOperations.tex', u'Timing Cuda Operations',
 u'CSInParallel Project', 'manual'),
 ]
 

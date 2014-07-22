@@ -25,6 +25,7 @@
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="shortcut icon" href="_static/favicon.ico"/>
     <link rel="top" title="Concurrent Data Structures in Java" href="#" />
     <link rel="next" title="A Single-process Web Crawler, or Spider" href="TheSpiderLabonecrawler/TheSpiderLabonecrawler.html" /> 
   </head>
@@ -33,11 +34,8 @@
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
-          <a href="genindex.html" title="General Index"
-             accesskey="I">index</a></li>
-        <li class="right" >
           <a href="TheSpiderLabonecrawler/TheSpiderLabonecrawler.html" title="A Single-process Web Crawler, or Spider"
-             accesskey="N">next</a> |</li>
+             accesskey="N">next</a></li>
         <li><a href="#">Concurrent Data Structures in Java</a> &raquo;</li> 
       </ul>
     </div>  
@@ -49,6 +47,12 @@
             
   <div class="section" id="concurrent-data-structures-in-java">
 <h1>Concurrent Data Structures in Java<a class="headerlink" href="#concurrent-data-structures-in-java" title="Permalink to this headline">¶</a></h1>
+<p><strong>Prologue</strong></p>
+<p>This lab activity asks you to complete some code provided so that it is able to crawl the web from a given starting URL.  You will start by completing a sequential version of this code.  Then you will work on a version that uses the libraries from java.util.concurrent to create a multi-threaded version.</p>
+<p><strong>Prerequisites</strong></p>
+<p>Some existing knowledge of the Java data structures LinkedList and ArrayList is necessary.</p>
+<p><strong>Code</strong></p>
+<p>Please download <a class="reference download internal" href="_downloads/ConcurrentDataStructures.jar"><tt class="xref download docutils literal"><span class="pre">ConcurrentDataStructures.jar</span></tt></a>. Inside the src directory are two packages: one for the original sequential web crawler called lab/spider, and another for the threaded spider called lab/concurrentSpider. The first chapter linked below starts you out with the sequential spider using conventional Java data structures to hold the URLs it encounters. You will then continue on to create the threaded version, starting with this code provided.</p>
 <div class="toctree-wrapper compound">
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="TheSpiderLabonecrawler/TheSpiderLabonecrawler.html">A Single-process Web Crawler, or Spider</a></li>
@@ -70,19 +74,6 @@
   <h4>Next topic</h4>
   <p class="topless"><a href="TheSpiderLabonecrawler/TheSpiderLabonecrawler.html"
                         title="next chapter">A Single-process Web Crawler, or Spider</a></p>
-<div id="searchbox" style="display: none">
-  <h3>Quick search</h3>
-    <form class="search" action="search.html" method="get">
-      <input type="text" name="q" />
-      <input type="submit" value="Go" />
-      <input type="hidden" name="check_keywords" value="yes" />
-      <input type="hidden" name="area" value="default" />
-    </form>
-    <p class="searchtip" style="font-size: 90%">
-    Enter search terms or a module, class or function name.
-    </p>
-</div>
-<script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
       </div>
       <div class="clearer"></div>
@@ -91,11 +82,8 @@
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
-          <a href="genindex.html" title="General Index"
-             >index</a></li>
-        <li class="right" >
           <a href="TheSpiderLabonecrawler/TheSpiderLabonecrawler.html" title="A Single-process Web Crawler, or Spider"
-             >next</a> |</li>
+             >next</a></li>
         <li><a href="#">Concurrent Data Structures in Java</a> &raquo;</li> 
       </ul>
     </div>
