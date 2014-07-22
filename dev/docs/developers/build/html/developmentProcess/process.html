@@ -1,5 +1,3 @@
-
-
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
@@ -55,7 +53,7 @@
 contact a project leader if you are not yet set up as a collaborator on this repository.
 You can <a class="reference external" href="https://github.com/libbyshoop/csinparallel">visit the project on github</a>.
 You will see there the following directory structure:</p>
-<div class="highlight-python"><pre>csinparallel/modules/_____Module Name Here_______/source
+<div class="highlight-python"><div class="highlight"><pre>csinparallel/modules/_____Module Name Here_______/source
                                                  /build
             /images
             /docs
@@ -63,7 +61,8 @@ You will see there the following directory structure:</p>
                                                      /build
                 /images
                 /docs
-            /README.rst</pre>
+            /README.rst
+</pre></div>
 </div>
 <p>Modules that are ready for production will be in the top directory shown above.
 Modules that are under development will be under the directory named &#8216;dev&#8217;.</p>
@@ -88,7 +87,8 @@ The way of work is the following:</p>
 of the csinparallel repository resides.</p>
 <p>When developing a module, you will checkout off the develop branch
 of the csinparallel repository:</p>
-<div class="highlight-python"><pre>git checkout -b ls-dev develop</pre>
+<div class="highlight-python"><div class="highlight"><pre>git checkout -b ls-dev develop
+</pre></div>
 </div>
 <p>Now you can do your work:</p>
 <ul class="simple">
@@ -101,10 +101,11 @@ of the csinparallel repository:</p>
 <p class="last">These above steps can be done with the github client tool by committing and doing &#8216;sync&#8217; operations, or using the command line.  Below are the command-line equivalents. See also: the <a class="reference external" href="http://git-htmldocs.googlecode.com/git/git.html">git manual pages</a> and <a class="reference external" href="http://www.atlassian.com/git/tutorial">this git tutorial</a>.</p>
 </div>
 <p>From the command line:</p>
-<div class="highlight-python"><pre>git add &lt;file or directory&gt;
+<div class="highlight-python"><div class="highlight"><pre>git add &lt;file or directory&gt;
 git commit
 
-git push origin ls-dev</pre>
+git push origin ls-dev
+</pre></div>
 </div>
 <p>Eventually, you will want to place your work on the develop branch so that
 other people you are working with will be able to see it on a web server. The next few steps describe this.</p>
@@ -121,18 +122,21 @@ other people you are working with will be able to see it on a web server. The ne
 </tbody>
 </table>
 <p>With these next commands, go back to the develop branch:</p>
-<div class="highlight-python"><pre>git checkout develop
-git pull origin develop</pre>
+<div class="highlight-python"><div class="highlight"><pre>git checkout develop
+git pull origin develop
+</pre></div>
 </div>
 <div class="admonition warning">
 <p class="first admonition-title">Warning</p>
 <p class="last">It is really important that you pull down changes that others have made on the develop branch onto your copy of the develop branch before you do the following step of merging your changes back onto the develop branch. <strong>You could experience problems if someone else is working on the same files as you are.  You want to try to avoid this by communicating.</strong> If it does happen, you will need to sort out which version needs to be back onto develop during the next steps below, and make sure your sub-branch copy is correct.  You also want to pull from develop because you need to get changes to files that others have worked on. Otherwise, you will be trying to merge old files from your sub-branch into the develop branch on the server in the next steps that follow.</p>
 </div>
 <p>From the develop branch, merge your sub-branch changes into the develop branch:</p>
-<div class="highlight-python"><pre>git merge --no-ff ls-dev</pre>
+<div class="highlight-python"><div class="highlight"><pre>git merge --no-ff ls-dev
+</pre></div>
 </div>
 <p>Push the changes back up to github on the develop branch:</p>
-<div class="highlight-python"><pre>git push origin develop</pre>
+<div class="highlight-python"><div class="highlight"><pre>git push origin develop
+</pre></div>
 </div>
 <p>On the PC client tool, these two steps above are done by doing the merge (shown pictorially in the tool as merge sub-branch &#8211;&gt; develop), then <em>syncing</em> your develop branch.</p>
 <div class="admonition note">
@@ -221,7 +225,7 @@ development web servers for the project.</p>
     </div>
     <div class="footer">
         &copy; Copyright This work is licensed under a Creative Commons Attribution-ShareAlike 3.0 Unported License.
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
     </div>
   </body>
 </html>

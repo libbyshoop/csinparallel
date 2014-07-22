@@ -1,0 +1,381 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Vector Add with MPI &mdash; Concept: The Data Decomposition Pattern</title>
+    
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+    <link rel="top" title="Concept: The Data Decomposition Pattern" href="../index.html" />
+    <link rel="next" title="Vector Add with OpenMP" href="OpenMP_VecAdd.html" />
+    <link rel="prev" title="Decomposition of Data Manipulation Tasks" href="VecAddDecomposition.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="OpenMP_VecAdd.html" title="Vector Add with OpenMP"
+             accesskey="N">next</a></li>
+        <li class="right" >
+          <a href="VecAddDecomposition.html" title="Decomposition of Data Manipulation Tasks"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../index.html">Concept: The Data Decomposition Pattern</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="vector-add-with-mpi">
+<h1>Vector Add with MPI<a class="headerlink" href="#vector-add-with-mpi" title="Permalink to this headline">¶</a></h1>
+<p>Message passing is one way of distributing work to multiple <em>processes</em> that run indepentdently and concurrently on either a single computer or a cluster of computers. The processes, which are designated to start up in the software and are run by the operating system of the computer, serve as the processing units. This type of parallel programming has been used for quite some time and the software libraries that make it available follow a standard called Message Passing Interface, or MPI.</p>
+<p>One feature of MPI programming is that one single program designates what all the various processes will do&#8211; a single program runs on all the processes. Each process has a number or <em>rank</em>, and the value of the rank is used in the code to determine what each process will do.  In the following code, the process numbered 0 does some additional work that the other processes do not do. This is very common in message passing solutions, and process 0 is often referred to as the master, and the other processes are the workers.  In the code below, look for three places where a block of code starts with this line:</p>
+<div class="highlight-c"><div class="highlight"><pre><span class="k">if</span> <span class="p">(</span><span class="n">rank</span> <span class="o">==</span> <span class="n">MASTER</span><span class="p">)</span>  <span class="p">{</span>
+</pre></div>
+</div>
+<p>This is where the master is doing special work that only needs to be done once by one process. In this case, it is the initialization of the arrays at the beginning of the computation, the check to ensure accuracy after the main computation of vector addition is completed, and freeing the memory for the arrays at the end.</p>
+<p>The MPI syntax in this code takes some getting used to, but you should see the pattern of how the data decomposition is occuring for a process running this code:</p>
+<ol class="arabic simple">
+<li>First initialize your set of processes (the number of processes in designated when you run the code).</li>
+<li>Determine how many processes there are working on the problem.</li>
+<li>Determine which process rank I have.</li>
+<li>If I am the master, initialze the data arrays.</li>
+<li>Create smaller arrays for my portion of the work.</li>
+<li>Scatter the equal-sized chunks of the larger original arrays from the master out to each process to work on.</li>
+<li>Compute the vector addition on my chunk of data.</li>
+<li>Gather the completed chunks of my array C and those of each process back onto the larger array on the master.</li>
+<li>Terminate all the processes.</li>
+</ol>
+<p>The following code contains comments with these numbered steps where they occur.  This is the file
+<strong>VectorAdd/MPI/VA-MPI-simple.c</strong> in the compressed tar file of examples that accompanies this reading.</p>
+<div class="highlight-c"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>  1
+  2
+  3
+  4
+  5
+  6
+  7
+  8
+  9
+ 10
+ 11
+ 12
+ 13
+ 14
+ 15
+ 16
+ 17
+ 18
+ 19
+ 20
+ 21
+ 22
+ 23
+ 24
+ 25
+ 26
+ 27
+ 28
+ 29
+ 30
+ 31
+ 32
+ 33
+ 34
+ 35
+ 36
+ 37
+ 38
+ 39
+ 40
+ 41
+ 42
+ 43
+ 44
+ 45
+ 46
+ 47
+ 48
+ 49
+ 50
+ 51
+ 52
+ 53
+ 54
+ 55
+ 56
+ 57
+ 58
+ 59
+ 60
+ 61
+ 62
+ 63
+ 64
+ 65
+ 66
+ 67
+ 68
+ 69
+ 70
+ 71
+ 72
+ 73
+ 74
+ 75
+ 76
+ 77
+ 78
+ 79
+ 80
+ 81
+ 82
+ 83
+ 84
+ 85
+ 86
+ 87
+ 88
+ 89
+ 90
+ 91
+ 92
+ 93
+ 94
+ 95
+ 96
+ 97
+ 98
+ 99
+100
+101
+102
+103
+104
+105
+106
+107
+108
+109
+110
+111
+112
+113
+114
+115
+116
+117
+118
+119
+120
+121
+122
+123
+124
+125
+126
+127
+128
+129
+130
+131
+132
+133
+134</pre></div></td><td class="code"><div class="highlight"><pre><span class="cm">/*</span>
+<span class="cm"> *  Prerequisties:</span>
+<span class="cm"> *     This code runs using an MPI library, either OpenMPI or MPICH2.</span>
+<span class="cm"> *     These libraries can be installed in either a cluster of computers</span>
+<span class="cm"> *     or a multicore machine.</span>
+<span class="cm"> *     </span>
+<span class="cm"> *  How to compile:</span>
+<span class="cm"> *     mpicc -o vec-add VA-MPI-simple.c</span>
+<span class="cm"> *</span>
+<span class="cm"> *  How to execute:</span>
+<span class="cm"> *     mpirun -np 2 ./vec-add</span>
+<span class="cm"> *</span>
+<span class="cm"> *     Note that this executes the code on 2 processes, using the -np command line flag.</span>
+<span class="cm"> *     See ideas for further exploration of MPI using this code at the end of this file.</span>
+<span class="cm"> */</span>
+
+
+<span class="cp">#include &quot;mpi.h&quot;      </span><span class="c1">// must have a system with an MPI library</span>
+<span class="cp">#include &lt;stdio.h&gt;    </span><span class="c1">//printf</span>
+<span class="cp">#include &lt;stdlib.h&gt;   </span><span class="c1">//malloc</span>
+
+<span class="cm">/*</span>
+<span class="cm"> * Definitions</span>
+<span class="cm"> */</span>
+<span class="cp">#define MASTER 0         </span><span class="c1">//One process will take care of initialization</span>
+<span class="cp">#define ARRAY_SIZE 8     </span><span class="c1">//Size of arrays that will be added together.</span>
+
+<span class="cm">/*</span>
+<span class="cm"> *  In MPI programs, the main function for the program is run on every</span>
+<span class="cm"> *  process that gets initialized when you start up this code using mpirun.</span>
+<span class="cm"> */</span>
+<span class="kt">int</span> <span class="nf">main</span> <span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span> <span class="o">*</span><span class="n">argv</span><span class="p">[])</span> 
+<span class="p">{</span>
+	<span class="c1">// elements of arrays a and b will be added</span>
+	<span class="c1">// and placed in array c</span>
+	<span class="kt">int</span> <span class="o">*</span> <span class="n">a</span><span class="p">;</span>
+	<span class="kt">int</span> <span class="o">*</span> <span class="n">b</span><span class="p">;</span> 
+	<span class="kt">int</span> <span class="o">*</span> <span class="n">c</span><span class="p">;</span>
+	
+	<span class="kt">int</span> <span class="n">total_proc</span><span class="p">;</span>	 <span class="c1">// total nuber of processes	</span>
+	<span class="kt">int</span> <span class="n">rank</span><span class="p">;</span>        <span class="c1">// rank of each process</span>
+	<span class="kt">int</span> <span class="n">n_per_proc</span><span class="p">;</span>	<span class="c1">// elements per process	</span>
+	<span class="kt">int</span> <span class="n">n</span> <span class="o">=</span> <span class="n">ARRAY_SIZE</span><span class="p">;</span>   <span class="c1">// number of array elements</span>
+	<span class="kt">int</span> <span class="n">i</span><span class="p">;</span>       <span class="c1">// loop index</span>
+		
+	<span class="n">MPI_Status</span> <span class="n">status</span><span class="p">;</span>   <span class="c1">// not used in this arguably poor example</span>
+	                     <span class="c1">// that is devoid of error checking.</span>
+
+	<span class="c1">// 1. Initialization of MPI environment</span>
+	<span class="n">MPI_Init</span> <span class="p">(</span><span class="o">&amp;</span><span class="n">argc</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">argv</span><span class="p">);</span>
+	<span class="n">MPI_Comm_size</span> <span class="p">(</span><span class="n">MPI_COMM_WORLD</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">total_proc</span><span class="p">);</span>
+	<span class="c1">// 2. Now you know the total number of processes running in parallel</span>
+	<span class="n">MPI_Comm_rank</span> <span class="p">(</span><span class="n">MPI_COMM_WORLD</span><span class="p">,</span><span class="o">&amp;</span><span class="n">rank</span><span class="p">);</span>
+	<span class="c1">// 3. Now you know the rank of the current process</span>
+	
+	<span class="c1">// Smaller arrays that will be held on each separate process</span>
+    	<span class="kt">int</span> <span class="o">*</span> <span class="n">ap</span><span class="p">;</span>
+	<span class="kt">int</span> <span class="o">*</span> <span class="n">bp</span><span class="p">;</span>
+	<span class="kt">int</span> <span class="o">*</span> <span class="n">cp</span><span class="p">;</span>
+	
+	<span class="c1">// 4. We choose process rank 0 to be the root, or master,</span>
+	<span class="c1">// which will be used to  initialize the full arrays.</span>
+	<span class="k">if</span> <span class="p">(</span><span class="n">rank</span> <span class="o">==</span> <span class="n">MASTER</span><span class="p">)</span>  <span class="p">{</span>
+		<span class="n">a</span> <span class="o">=</span> <span class="p">(</span><span class="kt">int</span> <span class="o">*</span><span class="p">)</span> <span class="n">malloc</span><span class="p">(</span><span class="k">sizeof</span><span class="p">(</span><span class="kt">int</span><span class="p">)</span><span class="o">*</span><span class="n">n</span><span class="p">);</span>
+		<span class="n">b</span> <span class="o">=</span> <span class="p">(</span><span class="kt">int</span> <span class="o">*</span><span class="p">)</span> <span class="n">malloc</span><span class="p">(</span><span class="k">sizeof</span><span class="p">(</span><span class="kt">int</span><span class="p">)</span><span class="o">*</span><span class="n">n</span><span class="p">);</span>
+		<span class="n">c</span> <span class="o">=</span> <span class="p">(</span><span class="kt">int</span> <span class="o">*</span><span class="p">)</span> <span class="n">malloc</span><span class="p">(</span><span class="k">sizeof</span><span class="p">(</span><span class="kt">int</span><span class="p">)</span><span class="o">*</span><span class="n">n</span><span class="p">);</span>
+		
+		<span class="c1">// initialize arrays a and b with consecutive integer values</span>
+		<span class="c1">// as a simple example</span>
+		<span class="k">for</span><span class="p">(</span><span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="n">i</span><span class="o">&lt;</span><span class="n">n</span><span class="p">;</span><span class="n">i</span><span class="o">++</span><span class="p">)</span>
+			<span class="n">a</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">i</span><span class="p">;</span>
+		<span class="k">for</span><span class="p">(</span><span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="n">i</span><span class="o">&lt;</span><span class="n">n</span><span class="p">;</span><span class="n">i</span><span class="o">++</span><span class="p">)</span>
+			<span class="n">b</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">i</span><span class="p">;</span>
+	<span class="p">}</span>
+	
+	<span class="c1">// All processes take part in the calculations concurrently</span>
+		
+	<span class="c1">// determine how many elements each process will work on</span>
+	<span class="n">n_per_proc</span> <span class="o">=</span> <span class="n">n</span><span class="o">/</span><span class="n">total_proc</span><span class="p">;</span>
+	<span class="c1">/////// NOTE:</span>
+	<span class="c1">// In this simple version, the number of processes needs to</span>
+	<span class="c1">// divide evenly into the number of elements in the array</span>
+	<span class="c1">///////////</span>
+	
+	<span class="c1">// 5. Initialize my smaller subsections of the larger array</span>
+	<span class="n">ap</span> <span class="o">=</span> <span class="p">(</span><span class="kt">int</span> <span class="o">*</span><span class="p">)</span> <span class="n">malloc</span><span class="p">(</span><span class="k">sizeof</span><span class="p">(</span><span class="kt">int</span><span class="p">)</span><span class="o">*</span><span class="n">n_per_proc</span><span class="p">);</span>
+	<span class="n">bp</span> <span class="o">=</span> <span class="p">(</span><span class="kt">int</span> <span class="o">*</span><span class="p">)</span> <span class="n">malloc</span><span class="p">(</span><span class="k">sizeof</span><span class="p">(</span><span class="kt">int</span><span class="p">)</span><span class="o">*</span><span class="n">n_per_proc</span><span class="p">);</span>
+	<span class="n">cp</span> <span class="o">=</span> <span class="p">(</span><span class="kt">int</span> <span class="o">*</span><span class="p">)</span> <span class="n">malloc</span><span class="p">(</span><span class="k">sizeof</span><span class="p">(</span><span class="kt">int</span><span class="p">)</span><span class="o">*</span><span class="n">n_per_proc</span><span class="p">);</span>
+	
+	<span class="c1">// 6.</span>
+	<span class="c1">//scattering array a from MASTER node out to the other nodes</span>
+	<span class="n">MPI_Scatter</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">n_per_proc</span><span class="p">,</span> <span class="n">MPI_INT</span><span class="p">,</span> <span class="n">ap</span><span class="p">,</span> <span class="n">n_per_proc</span><span class="p">,</span> <span class="n">MPI_INT</span><span class="p">,</span> <span class="n">MASTER</span><span class="p">,</span> <span class="n">MPI_COMM_WORLD</span><span class="p">);</span> 
+	<span class="c1">//scattering array b from MASTER node out to the other node</span>
+	<span class="n">MPI_Scatter</span><span class="p">(</span><span class="n">b</span><span class="p">,</span> <span class="n">n_per_proc</span><span class="p">,</span> <span class="n">MPI_INT</span><span class="p">,</span> <span class="n">bp</span><span class="p">,</span> <span class="n">n_per_proc</span><span class="p">,</span> <span class="n">MPI_INT</span><span class="p">,</span> <span class="n">MASTER</span><span class="p">,</span> <span class="n">MPI_COMM_WORLD</span><span class="p">);</span> 
+	
+	<span class="c1">// 7. Compute the addition of elements in my subsection of the array</span>
+	<span class="k">for</span><span class="p">(</span><span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="n">i</span><span class="o">&lt;</span><span class="n">n_per_proc</span><span class="p">;</span><span class="n">i</span><span class="o">++</span><span class="p">)</span>
+		<span class="n">cp</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">ap</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">+</span><span class="n">bp</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+	
+	<span class="c1">// 8. MASTER node gathering array c from the workers</span>
+	<span class="n">MPI_Gather</span><span class="p">(</span><span class="n">cp</span><span class="p">,</span> <span class="n">n_per_proc</span><span class="p">,</span> <span class="n">MPI_INT</span><span class="p">,</span> <span class="n">c</span><span class="p">,</span> <span class="n">n_per_proc</span><span class="p">,</span> <span class="n">MPI_INT</span><span class="p">,</span> <span class="n">MASTER</span><span class="p">,</span> <span class="n">MPI_COMM_WORLD</span><span class="p">);</span>
+
+<span class="c1">/////////////////////// all concurrent processes are finished once they all communicate</span>
+<span class="c1">/////////////////////// data back to the master via the gather function.</span>
+
+	<span class="c1">// Master process gets to here only when it has been able to gather from all processes</span>
+	<span class="k">if</span> <span class="p">(</span><span class="n">rank</span> <span class="o">==</span> <span class="n">MASTER</span><span class="p">)</span>  <span class="p">{</span>			
+		<span class="c1">// sanity check the result  (a test we would eventually leave out)</span>
+		<span class="kt">int</span> <span class="n">good</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+		<span class="k">for</span><span class="p">(</span><span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="n">i</span><span class="o">&lt;</span><span class="n">n</span><span class="p">;</span><span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+			<span class="c1">//printf (&quot;%d &quot;, c[i]);</span>
+			<span class="k">if</span> <span class="p">(</span><span class="n">c</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">!=</span> <span class="n">a</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">+</span> <span class="n">b</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="p">{</span>
+				<span class="n">printf</span><span class="p">(</span><span class="s">&quot;problem at index %lld</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">i</span><span class="p">);</span>
+				<span class="n">good</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+				<span class="k">break</span><span class="p">;</span>
+			<span class="p">}</span>
+		<span class="p">}</span>
+		<span class="k">if</span> <span class="p">(</span><span class="n">good</span><span class="p">)</span> <span class="p">{</span>
+			<span class="n">printf</span> <span class="p">(</span><span class="s">&quot;Values correct!</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">);</span>
+		<span class="p">}</span>
+		
+	<span class="p">}</span>
+
+	<span class="c1">// clean up memory</span>
+	<span class="k">if</span> <span class="p">(</span><span class="n">rank</span> <span class="o">==</span> <span class="n">MASTER</span><span class="p">)</span>  <span class="p">{</span>
+		<span class="n">free</span><span class="p">(</span><span class="n">a</span><span class="p">);</span>  <span class="n">free</span><span class="p">(</span><span class="n">b</span><span class="p">);</span> <span class="n">free</span><span class="p">(</span><span class="n">c</span><span class="p">);</span>
+	<span class="p">}</span>
+	<span class="n">free</span><span class="p">(</span><span class="n">ap</span><span class="p">);</span>  <span class="n">free</span><span class="p">(</span><span class="n">bp</span><span class="p">);</span> <span class="n">free</span><span class="p">(</span><span class="n">cp</span><span class="p">);</span>
+	
+	<span class="c1">// 9. Terminate MPI Environment and Processes</span>
+	<span class="n">MPI_Finalize</span><span class="p">();</span>  
+	
+	<span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</td></tr></table></div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../index.html">
+              <img class="logo" src="../_static/CSInParallel200wide.png" alt="Logo"/>
+            </a></p>
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="VecAddDecomposition.html"
+                        title="previous chapter">Decomposition of Data Manipulation Tasks</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="OpenMP_VecAdd.html"
+                        title="next chapter">Vector Add with OpenMP</a></p>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="OpenMP_VecAdd.html" title="Vector Add with OpenMP"
+             >next</a></li>
+        <li class="right" >
+          <a href="VecAddDecomposition.html" title="Decomposition of Data Manipulation Tasks"
+             >previous</a> |</li>
+        <li><a href="../index.html">Concept: The Data Decomposition Pattern</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright This work is licensed under a Creative Commons Attribution-ShareAlike 3.0 Unported License.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>

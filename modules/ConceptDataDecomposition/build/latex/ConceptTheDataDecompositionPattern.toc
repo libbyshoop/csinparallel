@@ -1,0 +1,13 @@
+\select@language {english}
+\contentsline {chapter}{\numberline {1}Vector Addition}{2}{chapter.1}
+\contentsline {chapter}{\numberline {2}Decomposition of Data Manipulation Tasks}{5}{chapter.2}
+\contentsline {chapter}{\numberline {3}Vector Add with MPI}{7}{chapter.3}
+\contentsline {chapter}{\numberline {4}Vector Add with OpenMP}{11}{chapter.4}
+\contentsline {chapter}{\numberline {5}Vector Add with CUDA}{14}{chapter.5}
+\contentsline {section}{\numberline {5.1}Determining the thread number}{14}{section.5.1}
+\contentsline {section}{\numberline {5.2}The Host and the Device}{17}{section.5.2}
+\contentsline {section}{\numberline {5.3}CUDA Code for Vector Add}{17}{section.5.3}
+\contentsline {section}{\numberline {5.4}CUDA development and Special CUDA Syntax}{19}{section.5.4}
+\contentsline {section}{\numberline {5.5}Larger Problems}{20}{section.5.5}
+\contentsline {chapter}{\numberline {6}Other ways to split the work}{21}{chapter.6}
+\contentsline {section}{\numberline {6.1}Questions for reflection}{22}{section.6.1}

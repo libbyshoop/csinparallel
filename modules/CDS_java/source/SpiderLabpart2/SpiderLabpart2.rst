@@ -39,51 +39,36 @@ this, we need to place the data structures they are working on in
 one class and create one instance of that class in
 RunConcurrentSpider.  Then each new ‘Runnable’ ConcurrentSpider
 will receive a reference to that class of shared data structures.
+We provide a class called lab.concurrentSpider.SharedSpiderData for this purpose.
 
-First try:  share our original data structures
-##############################################
+First try:  share our original data structures?
+###############################################
 
-We are gong to try this process in 2 steps, so you will first look
-at the ‘first version’, where we will try to share the original
-data structures designed for the single Spider.  Examine the
-RunConcurrentSpider1 and ConcurrentSpider1 classes.  Create the
-class called SharedSpiderData1 and move the data structures into it
-from your original Spider class from the lab.spider package.  Make
-getters for each data structure (work, finished, urlCounter).
-
-Finish the ConcurrentSpider1 class by filling in the code needed in
-run() and the processPage() method-- this should be much like you
-did it for the ‘sequential’ single Spider case.  You should be able
-experiment with your new ConcurrentSpider1 by running
-RunThreadedSpider1.  Try running it several times without changing
-anything.  Can you tell if you get the same results each time?
-
-.. note::
-
-	The following classes are needed for this first try:
-
-	* AllWordsCounter
-	* ConcurrentSpider1
-	* HTMLHelper
-	* RunThreadedSpider1
-	* TestHTTPHelper
-	* WordsCount
-
-	You will make the SharedSpiderData1 class.
+We could attempt to use the original LinkedList and ArrayList data structures and share those among the threads.  However, these are not 'thread safe', that is they are not guaranteed to behave properly when multiple threads are accessing and updating them at the same time.
 
 Second try: concurrent data structures
 ######################################
 
-Your instructor will discuss an important improvement in class and
-share come more code with you.
 
-Following that discussion, now use the new Java Concurrent Data
+
+To ensure our code will work correctly using multiple threads, we will
+use the new Java Concurrent Data
 Structures from the package java.util.concurrent.  Begin with the
 file SharedSpiderData to see the types of shared, thread-safe data
 structures we will use for this version of the multi-threaded
 crawler.
 
-Finish the classes called ConcurrentSpider and RunThreadedSpider.
+To Do
+**********
+
+Finish the classes called ConcurrentSpider and RunThreadedSpider.  You will need to discover what methods on the concurrent data structures (ArrayBlockingQueue, ConcurrentLinkedQueue) are available for adding and removing elements.
+
+.. topic:: Try This:
+
+	* You can try using different numbers of threads, depending on how much your machine can handle.
+	* Experiment with this variable found in ComcurrentSpider:  `maxurls`     If you double it, how many new urls were encountered?  Now that you have all these spider threads, you can likely scrape more URLs.
+	* Experiment with the BEGNNING\_URL variable found in RunSpider by choosing some other pages of interest to you as starting points.
+ 
 
 
 

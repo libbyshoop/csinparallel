@@ -1,0 +1,12 @@
+\BOOKMARK [0][-]{chapter.1}{Vector Addition}{}% 1
+\BOOKMARK [0][-]{chapter.2}{Decomposition of Data Manipulation Tasks}{}% 2
+\BOOKMARK [0][-]{chapter.3}{Vector Add with MPI}{}% 3
+\BOOKMARK [0][-]{chapter.4}{Vector Add with OpenMP}{}% 4
+\BOOKMARK [0][-]{chapter.5}{Vector Add with CUDA}{}% 5
+\BOOKMARK [1][-]{section.5.1}{Determining the thread number}{chapter.5}% 6
+\BOOKMARK [1][-]{section.5.2}{The Host and the Device}{chapter.5}% 7
+\BOOKMARK [1][-]{section.5.3}{CUDA Code for Vector Add}{chapter.5}% 8
+\BOOKMARK [1][-]{section.5.4}{CUDA development and Special CUDA Syntax}{chapter.5}% 9
+\BOOKMARK [1][-]{section.5.5}{Larger Problems}{chapter.5}% 10
+\BOOKMARK [0][-]{chapter.6}{Other ways to split the work}{}% 11
+\BOOKMARK [1][-]{section.6.1}{Questions for reflection}{chapter.6}% 12

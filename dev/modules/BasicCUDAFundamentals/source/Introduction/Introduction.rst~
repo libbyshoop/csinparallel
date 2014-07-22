@@ -1,0 +1,56 @@
+************
+Introduction
+************
+
+
+What is a GPU?
+**************
+
+A Graphics Processing Unit (GPU) is an electronic circuit that uses rapid memory manipulation and massive parallel data processing to accelerate the building of images intended for output to a display. Right now, GPUs are used in almost all customer end personal computers, game consoles, professional workstations, and cell phones.
+
+Before GPUs were introduced, CPUs did all the graphic processing tasks. In the early 1990s, computer manufacturers began to include GPUs into computer system with the aim of accelerating common graphics routines. After two decades of development, GPUs eventually outpaced CPUs as they actually had more transistors, ran faster, and had capability to do parallel computation more efficiently. GPUs these days have become so complex that they are basically computers in themselves, with their own memory, buses and processors. As GPUs harnessed more and more horsepower, GPU manufactures (such as NVIDIA and ATI/AMD) found a way to use GPUs for more general purposes rather than just graphics or videos. This gave birth to CUDA structure and CUDA C Programming Language, NVIDIA’s response on facilitating the development of General Purpose Graphics Processing Unit (GPGPU).
+
+How do GPUs and CPUs differ?
+****************************
+
+In some ways.
+
+A Smaller Heading?
+##################
+
+I should hope.
+
+
+An even smaller heading?
+------------------------
+
+How **bold** and *italic*. Incorporating ``writeln "a small bit of code"`` into the sentence.
+
+.. code-block:: html
+
+		This should make a code block.
+		Also, I noticed that the code block doesn't support Chapel as a langauge to color.
+  
+
+* This should
+
+* create an
+
+* unordered list
+
+
+#. I need to put a period after the hash.
+
+#. This should
+
+#. create an
+
+#. ordered list
+
+
+:Colored Box:
+
+
+
+
+

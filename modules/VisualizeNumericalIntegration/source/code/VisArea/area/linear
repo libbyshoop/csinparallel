@@ -1,0 +1,241 @@
+area.h:  area->rank 			= 0;
+area.h:  area->num_threads 		= 1;
+area.h:  area->numProcs 		= 1;
+area.h:  area->my_sum 			= 0.0;
+area.h:  area->total_sum 		= 0.0;
+area.h:  area->linear 			= 0;
+area.h:  area->circle 			= 0;
+area.h:  area->sin 			= 0;
+area.h:  area->do_display 		= 1;
+area.h:  area->gap 			= 1; //separate the X windows by default
+area.h:  area->time			= 0.1; //0.1 second
+area.h:  area->group_size = 0;
+area.h:  area->curve.my_xleft 		= 0.0;
+area.h:  area->curve.circle_my_xleft 	= 0.0;
+area.h:  area->curve.sin_my_xleft 	= 0.0;
+area.h:  area->curve.xleft 		= 0.0;
+area.h:  area->curve.xright 		= DEFAULT_WIDTH;
+area.h:  area->curve.width 		= 0.0;
+area.h:  area->curve.circle_width 	= RADIUS;
+area.h:  area->curve.sin_width 	= (1/FREQUENCY)*pi;
+area.h:  area->rect.private_num_rect 	= 40; //default for serial 
+area.h:  area->rect.num_rect 		= 20;
+area.h:  area->rect.width 		= 0.0;
+area.h:  area->rect.circle_width 	= 0.0;
+area.h:  area->rect.sin_width 		= 0.0;
+area.h:  MPI_Comm_rank(MPI_COMM_WORLD, &area->rank);
+area.h:  MPI_Comm_size(MPI_COMM_WORLD, &area->numProcs);
+area.h:    area->num_threads = omp_get_num_threads();
+area.h:  if(area->group_size == 0)
+area.h:  if(area->do_display) 
+area.h:  if(area->do_display)
+area.h:    if(area->num_threads < 11) draw_ranks_mpe(area); //XLib has problems with this function if num_threads > 10
+area.h:    if(!area->gap) draw_process_barrier(area);
+area.h:  if(area->circle) { 
+area.h:    if(area->curve.xright > UNIT) 
+area.h:      area->curve.xright = UNIT; //default right boundary, unless smaller 
+area.h:  if(area->sin) {
+area.h:    if(area->curve.xright > pi) 
+area.h:      area->curve.xright = pi; //default right boundary, unless smaller
+area.h:  struct curve_t * curve= &(area->curve);
+area.h:  struct rec_t * rect 	= &(area->rect);
+area.h:  struct display_t * d	= &(area->d);
+area.h:  rect->private_num_rect = rect->num_rect / area->numProcs; 
+area.h:  curve->my_xleft = curve->xleft + area->rank*rect->private_num_rect*rect->width;
+area.h:  int remainder = rect->num_rect % area->numProcs;
+area.h:    if(remainder > area->rank){
+area.h:      curve->my_xleft = curve->xleft + area->rank*rect->private_num_rect*rect->width;
+area.h:      curve->my_xleft = curve->xleft + remainder*rect->width + area->rank*rect->private_num_rect*rect->width;
+area.h:    curve->my_xleft = curve->xleft + area->rank*rect->private_num_rect*rect->width;
+area.h:  area->recs_t = malloc(rect->num_rect * sizeof (current_rec_t));
+area.h:  struct rec_t * rect = &(area->rect);
+area.h:  struct curve_t * curve = &(area->curve);
+area.h:    start = area->rank;
+area.h:    incrementFactor = area->numProcs;
+area.h:      if(area->do_display)
+area.h:        if(area->circle)
+area.h:        if(area->sin)
+area.h:        area->recs_t[current_rectangle].x = current_left;
+area.h:        area->recs_t[current_rectangle].h = current_height;            
+area.h:        area->recs_t[current_rectangle].color_index = area->rank;
+area.h:      }//END IF(area->do_display)      
+area.h:    start = area->rank;
+area.h:    if(area->rect.num_rect%area->group_size == 0)
+area.h:      end = area->rect.num_rect/area->group_size;
+area.h:      end = area->rect.num_rect/area->group_size +1;
+area.h:    incrementFactor = area->numProcs;
+area.h:    int group_size = area->group_size;
+area.h:      #pragma omp parallel for shared(area, rect, curve, incrementFactor, end, start, current_group, group_size) private(current_rectangle, current_left, current_height, current_rect) reduction(+: my_sum) schedule(static,group_size/area->num_threads)
+area.h:        if(current_rectangle < area->rect.num_rect) //check that we are not going over the boundaries
+area.h:        if(area->do_display)
+area.h:          if(area->circle)
+area.h:          if(area->sin)
+area.h:          area->recs_t[current_rectangle].x = current_left;
+area.h:          area->recs_t[current_rectangle].h = current_height;
+area.h:          area->recs_t[current_rectangle].color_index = area->num_threads * area->rank + omp_get_thread_num();
+area.h:          area->recs_t[current_rectangle].color_index = area->rank;
+area.h:        }//END IF(area->do_display)
+area.h:    #pragma omp parallel for shared(area,rect,curve, incrementFactor, end) private(current_rectangle, current_left, current_height) reduction(+: my_sum) schedule(static,area->rect.private_num_rect/area->num_threads)
+area.h:      if(area->do_display)
+area.h:        if(area->circle)
+area.h:        if(area->sin)
+area.h:          area->recs_t[current_rectangle].x = current_left;
+area.h:          area->recs_t[current_rectangle].h = current_height;
+area.h:          area->recs_t[current_rectangle].color_index = area->num_threads * area->rank + omp_get_thread_num();
+area.h:          area->recs_t[current_rectangle].color_index = area->rank;
+area.h:      }//END IF(area->do_display)   
+area.h:  area->my_sum = my_sum;
+area.h:  struct rec_t * rect = &(area->rect);
+area.h:  MPI_Reduce(&area->my_sum, &area->total_sum, 1, MPI_DOUBLE, MPI_SUM, 0, MPI_COMM_WORLD);
+area.h:  area->total_sum = area->my_sum; //if not MPI then we only have one node, so my_sum becomes total_sum
+area.h:  if (area->rank == 0){
+area.h:    if(area->linear){
+area.h:      printf("%f\n", area->total_sum);
+area.h:      printf("Expected: %f\n",0.5 * area->curve.width*FUNC(area,area->curve.xright));
+area.h:    else if(area->circle){
+area.h:      printf("1/4 * %1.48f * %d\n",area->total_sum*4,UNIT*UNIT);
+area.h:      if(area->curve.xright == UNIT) printf("Expected: \n1/4 * %1.48f * radius^2\n",pi);
+area.h:    else if(area->sin){
+area.h:      printf("%f\n",area->total_sum);
+area.h:      if(area->curve.xright == pi*FREQ) printf("Expected: 2.0\n");
+area.h:    else printf("%f\n", area->total_sum);
+area.h:  if(area->do_display){
+area.h:  if(area->do_display) free(area->d.colors);
+area.h:	     area->rect.num_rect = atoi(optarg);
+area.h:	     if(atof(optarg) >=0) area->curve.xleft = atof(optarg);
+area.h:	     if(atof(optarg) >=0) area->curve.xright = atof(optarg);
+area.h:	     if(num==1) {area->linear = 1;}
+area.h:	       area->circle = 1;
+area.h:	       area->linear = 0; //reset the other functions
+area.h:	       area->sin = 0;
+area.h:	       area->sin = 1;
+area.h:	       area->circle = 0; //reset the other functions
+area.h:	       area->linear = 0;
+area.h:	       area->sin = 0;
+area.h:	       area->circle = 0; //reset the other functions
+area.h:	       area->linear = 0;
+area.h:	       //if(area->rank == 0) printf("Usage: [-f 1 | 2 | 3 ]. Switching to default value(s)...\n");
+area.h:	     if(strcmp("no-display",optarg)==0) area->do_display = 0;
+area.h:	     else if(strcmp("display",optarg)==0)area->do_display = 1;
+area.h:	     if(area->rank == 0) printf("Usage: [-x display | no-display]. Switching to default value(s)...\n");
+area.h:	     if(strcmp("no-gap",optarg)==0) area->gap = 0;
+area.h:	     else if(strcmp("gap",optarg)==0) area->gap = 1;
+area.h:	       if(area->rank == 0) printf("Usage: [-w gap | no-gap]. Switching to default value(s).\n");
+area.h:	     area->time = atof(optarg);
+area.h:        area->num_threads = atoi(optarg);
+area.h:        omp_set_num_threads(area->num_threads);
+area.h:        area->group_size = atoi(optarg);
+area.h:  if(area->numProcs * area->num_threads > NUM_COLORS) printf("Warning: processes*threads is larger than the amount of defined colors. Decrease the number of processing units or define more colors.\n");
+colors.h:  struct display_t * d = &(area->d);
+MPEarea.h:  struct display_t * d = &(area->d);
+MPEarea.h:  struct display_t * d = &(area->d);
+MPEarea.h:  d->w_width = area->curve.width;
+MPEarea.h:  if(area->circle) d->w_width = area->curve.circle_width;
+MPEarea.h:  if(area->sin) d->w_width = area->curve.sin_width;
+MPEarea.h:  //d->colors = malloc(area->rect.num_rect * sizeof(MPE_Color));
+MPEarea.h:  if(area->rank == 0) MPE_Fill_rectangle(d->canvas,0,0,d->w_width,d->height,MPE_BLACK);
+MPEarea.h:  struct display_t * d = &(area->d);
+MPEarea.h:  struct rec_t * rect = &(area->rect);
+MPEarea.h:  double rect_width = area->rect.width;
+MPEarea.h:  if(area->circle) {
+MPEarea.h:    rect_width = area->rect.circle_width;
+MPEarea.h:  else if(area->sin) {
+MPEarea.h:    rect_width = area->rect.sin_width;
+MPEarea.h:  get_color_mpe(area, area->recs_t[i].color_index);
+MPEarea.h:  MPE_Fill_rectangle(d->canvas,area->recs_t[i].x,d->height-area->recs_t[i].h,rect_width,area->recs_t[i].h,d->myColor);
+MPEarea.h:  usleep(area->time * 1000);
+MPEarea.h:  struct display_t * d = &(area->d);
+MPEarea.h:  struct curve_t * curve = &(area->curve);
+MPEarea.h:  if(area->rank == 0){
+MPEarea.h:      if(area->circle) y = scale_circle(x1+curve->circle_my_xleft);
+MPEarea.h:      if(area->sin) y = scale_sin(x1 + curve->sin_my_xleft);
+MPEarea.h:  struct display_t * d = &(area->d);
+MPEarea.h:  if(area->circle) MPE_Draw_line(d->canvas,area->curve.circle_my_xleft,0,area->curve.circle_my_xleft,d->height,MPE_GRAY);
+MPEarea.h:  else if(area->sin) MPE_Draw_line(d->canvas,area->curve.sin_my_xleft,0,area->curve.sin_my_xleft,d->height,MPE_GRAY);
+MPEarea.h:  else MPE_Draw_line(d->canvas,area->curve.my_xleft,0,area->curve.my_xleft,d->height,MPE_GRAY);
+MPEarea.h:  struct display_t * d = &(area->d);
+MPEarea.h:  if(area->rank == 0)
+MPEarea.h:    for(proc=0; proc<area->numProcs; proc++)
+MPEarea.h:      for(id=0;id<area->num_threads;id++)
+MPEarea.h:        color_index = area->num_threads*proc+id;
+MPEarea.h:  struct display_t * d = &(area->d);
+MPEarea.h:  if(area->rank==0) printf("\n\nClick on the window or hit Ctrl+C to exit the demo.\n\n");
+MPEarea.h:  if(area->rank == 0) MPE_Get_mouse_press(d->canvas,&x,&y,&button);
+MPEcolors.h:  struct display_t * d = &(area->d);
+structs.h:  if(area->linear) return x;
+structs.h:  else if(area->circle) return sqrt(UNIT*UNIT-x*x);
+structs.h:  else if(area->sin) return AMP*sin(FREQ*x);
+structs.h:  else return area->curve.xright+x*sin(0.05*x);
+Xarea.h:  struct display_t * d = &(area->d);
+Xarea.h:  struct display_t * d = &(area->d);
+Xarea.h:  struct display_t * d = &(area->d);
+Xarea.h:  int color_index = area->num_threads * area->rank + id;
+Xarea.h:  struct display_t * d = &(area->d);
+Xarea.h:  if(area->gap) gap = 20*area->rank;
+Xarea.h:  double rect_width = area->rect.width;
+Xarea.h:  if(area->circle) rect_width = area->rect.circle_width;
+Xarea.h:  else if(area->sin) rect_width = area->rect.sin_width;
+Xarea.h:  int private_num_rect = area->rect.num_rect/area->numProcs;
+Xarea.h:  int extra_rectangles = area->rect.num_rect%area->numProcs;
+Xarea.h:    if(area->rank == area->numProcs -1) width = d->width - EXTRA_PIXELS;
+Xarea.h:    d->posx = 100 + width*area->rank + gap;
+Xarea.h:    if(area->rank < extra_rectangles)
+Xarea.h:      d->posx = 100 + d->width*area->rank + gap;
+Xarea.h:      d->posx = 100 + (d->width+rect_width)*area->rank + gap;
+Xarea.h:      if(area->rank == area->numProcs -1) 
+Xarea.h:        d->posx = 100 + (d->width - EXTRA_PIXELS +rect_width)*area->rank + gap;
+Xarea.h:  struct display_t * d = &(area->d);
+Xarea.h:  if(area->linear) 
+Xarea.h:    area->d.height = FUNC(area,area->curve.xright);
+Xarea.h:  else if(area->circle) 
+Xarea.h:    area->d.height = scale_circle(area->curve.xleft);
+Xarea.h:  else if(area->sin)
+Xarea.h:    area->d.height = AMPLITUDE; 
+Xarea.h:    for(x = area->curve.xleft; x<= area->curve.xright; x++){
+Xarea.h:    area->d.height = max;
+Xarea.h:  struct display_t * d = &(area->d);
+Xarea.h:  struct rec_t * rect = &(area->rect);
+Xarea.h:  struct curve_t * curve = &(area->curve);
+Xarea.h:  if(area->circle){
+Xarea.h:  if(area->sin){
+Xarea.h:  if(area->rank == area->numProcs-1) {
+Xarea.h:    if(area->circle) d->width = rect->circle_width*rect->private_num_rect+EXTRA_PIXELS;
+Xarea.h:    if(area->sin) d->width = rect->sin_width*rect->private_num_rect+EXTRA_PIXELS;
+Xarea.h:  struct display_t * d = &(area->d);
+Xarea.h:  struct display_t * d = &(area->d);
+Xarea.h:  sprintf(string,"%d", area->rank);
+Xarea.h:  get_color(area, area->rank); //get color specific to rank
+Xarea.h:  for(id =0; id<area->num_threads; id++){
+Xarea.h:    thread_x = 7+(d->width/area->num_threads)*id; // X coordinate for thread display
+Xarea.h:  struct display_t * d = &(area->d);
+Xarea.h:  struct curve_t * curve = &(area->curve);
+Xarea.h:  int rank = area->rank;
+Xarea.h:  double rect_width = area->rect.width;
+Xarea.h:  if(area->circle) {
+Xarea.h:    rect_width = area->rect.circle_width;
+Xarea.h:  else if(area->sin) {
+Xarea.h:    rect_width = area->rect.sin_width;
+Xarea.h:  int x   = area->recs_t[i].x-my_xleft;
+Xarea.h:  int y   = d->height - area->recs_t[i].h;
+Xarea.h:  int height  = area->recs_t[i].h;
+Xarea.h:  get_color(area, area->recs_t[i].color_index);
+Xarea.h:  XFillRectangle(d->dpy,d->w,d->gc,x,y,width+1,area->recs_t[i].h); //add one pixel extra to the width to avoid black lines between the rectangles
+Xarea.h:  usleep(area->time*1000);
+Xarea.h:  struct display_t * d = &(area->d);
+Xarea.h:  struct curve_t * curve = &(area->curve);
+Xarea.h:  int i, rank = area->rank, time = sleep_time(area);
+Xarea.h:  double x1=0, x2, y, height = d->height, rect_width = area->rect.width;
+Xarea.h:  if(area->circle) rect_width = area->rect.circle_width;
+Xarea.h:  if(area->sin) rect_width = area->rect.sin_width;
+Xarea.h:  x2 = area->rect.private_num_rect*rect_width;
+Xarea.h:  if(rank==area->numProcs -1) x2 ++; //last process gets last row of pixels
+Xarea.h:    if(area->circle) y = scale_circle(i+curve->circle_my_xleft);
+Xarea.h:    if(area->sin) y = scale_sin(i + curve->sin_my_xleft);
+Xarea.h:  if(area->num_threads < 11) draw_ranks(area); //if more than 10 threads, XDrawString() causes a buffer overflow error (?)
+Xarea.h:  struct display_t * d = &(area->d);
+Xarea.h:  struct curve_t * curve = &(area->curve);
+Xarea.h:  int x=d->width-2, y1 = 0, y2 = d->height, rank = area->rank;
+Xarea.h: int num_rectangles = area->rect.private_num_rect;
+Xarea.h: if(area->numProcs == 1) time = 5000; //serial or np 1
+Xarea.h:  struct display_t * d = &(area->d);
+Xarea.h:  if(area->rank==0) printf("\nPress 'q' or Ctr+C to exit the demo.\n");

@@ -9,7 +9,7 @@
 \contentsline {chapter}{\numberline {2}CUDA Intro}{5}{chapter.2}
 \contentsline {section}{\numberline {2.1}Acknowledgement}{5}{section.2.1}
 \contentsline {section}{\numberline {2.2}An Example of Vector Addition}{5}{section.2.2}
-\contentsline {subsection}{\numberline {2.2.1}The Device Code}{5}{subsection.2.2.1}
+\contentsline {subsection}{\numberline {2.2.1}The Device Code}{6}{subsection.2.2.1}
 \contentsline {subsection}{\numberline {2.2.2}The Host Code}{6}{subsection.2.2.2}
 \contentsline {subsubsection}{The Event API}{7}{subsubsection*.3}
 \contentsline {subsubsection}{The cudaMalloc() Function}{7}{subsubsection*.4}
@@ -18,48 +18,49 @@
 \contentsline {subsubsection}{More cudaMemcpy() Function}{8}{subsubsection*.7}
 \contentsline {subsubsection}{Timing using Event API}{8}{subsubsection*.8}
 \contentsline {subsubsection}{The cudaFree() Function}{9}{subsubsection*.9}
-\contentsline {section}{\numberline {2.3}Vector Addition with Blocks}{9}{section.2.3}
-\contentsline {subsection}{\numberline {2.3.1}Block}{9}{subsection.2.3.1}
-\contentsline {subsection}{\numberline {2.3.2}The Device Code}{10}{subsection.2.3.2}
+\contentsline {subsection}{\numberline {2.2.3}Compiling the code and executing this example}{10}{subsection.2.2.3}
+\contentsline {section}{\numberline {2.3}Vector Addition with Blocks}{10}{section.2.3}
+\contentsline {subsection}{\numberline {2.3.1}Block}{10}{subsection.2.3.1}
+\contentsline {subsection}{\numberline {2.3.2}The Device Code}{11}{subsection.2.3.2}
 \contentsline {subsection}{\numberline {2.3.3}The Host Code}{11}{subsection.2.3.3}
 \contentsline {section}{\numberline {2.4}Vector Addition with Blocks and Threads}{11}{section.2.4}
-\contentsline {subsection}{\numberline {2.4.1}Threads}{11}{subsection.2.4.1}
-\contentsline {subsection}{\numberline {2.4.2}The Device Code}{11}{subsection.2.4.2}
-\contentsline {subsection}{\numberline {2.4.3}The Host Code}{12}{subsection.2.4.3}
-\contentsline {chapter}{\numberline {3}Thread Advance}{13}{chapter.3}
-\contentsline {section}{\numberline {3.1}Acknowledgement}{13}{section.3.1}
-\contentsline {section}{\numberline {3.2}Vector Dot Product}{13}{section.3.2}
-\contentsline {subsection}{\numberline {3.2.1}The Device Code}{13}{subsection.3.2.1}
-\contentsline {subsection}{\numberline {3.2.2}The Host Code}{14}{subsection.3.2.2}
-\contentsline {section}{\numberline {3.3}Vector Dot Product with Reduction}{15}{section.3.3}
-\contentsline {subsection}{\numberline {3.3.1}The Device Code}{16}{subsection.3.3.1}
-\contentsline {subsection}{\numberline {3.3.2}The Host Code}{18}{subsection.3.3.2}
-\contentsline {chapter}{\numberline {4}CUDA in Two-dimension}{19}{chapter.4}
-\contentsline {section}{\numberline {4.1}Acknowledgement}{19}{section.4.1}
-\contentsline {section}{\numberline {4.2}An Example of Matrix Multiplication}{19}{section.4.2}
-\contentsline {subsection}{\numberline {4.2.1}Performance}{19}{subsection.4.2.1}
-\contentsline {section}{\numberline {4.3}Global Memory Version}{20}{section.4.3}
-\contentsline {subsection}{\numberline {4.3.1}The Device Code}{20}{subsection.4.3.1}
-\contentsline {subsection}{\numberline {4.3.2}The Host Code}{21}{subsection.4.3.2}
-\contentsline {subsection}{\numberline {4.3.3}Performance}{22}{subsection.4.3.3}
-\contentsline {section}{\numberline {4.4}CUDA Memory Types}{22}{section.4.4}
-\contentsline {section}{\numberline {4.5}Shared Memory Version}{24}{section.4.5}
-\contentsline {subsection}{\numberline {4.5.1}The Device Code}{27}{subsection.4.5.1}
-\contentsline {subsection}{\numberline {4.5.2}About blockDim and matrix dimension}{27}{subsection.4.5.2}
-\contentsline {subsection}{\numberline {4.5.3}The Host Code}{28}{subsection.4.5.3}
-\contentsline {subsection}{\numberline {4.5.4}Performance}{30}{subsection.4.5.4}
-\contentsline {chapter}{\numberline {5}Ray Tracing and Constant Memory}{31}{chapter.5}
-\contentsline {section}{\numberline {5.1}Acknowledgement}{31}{section.5.1}
-\contentsline {section}{\numberline {5.2}Basics of Ray Tracing}{31}{section.5.2}
-\contentsline {section}{\numberline {5.3}Notes for Compile}{31}{section.5.3}
-\contentsline {section}{\numberline {5.4}Ray Tracing Without Constant Memory}{32}{section.5.4}
-\contentsline {subsection}{\numberline {5.4.1}Structure Code}{32}{subsection.5.4.1}
-\contentsline {subsection}{\numberline {5.4.2}Device Code}{33}{subsection.5.4.2}
-\contentsline {subsection}{\numberline {5.4.3}Host Code}{34}{subsection.5.4.3}
-\contentsline {subsection}{\numberline {5.4.4}Performance}{35}{subsection.5.4.4}
-\contentsline {section}{\numberline {5.5}Constant Memory}{37}{section.5.5}
-\contentsline {section}{\numberline {5.6}Ray Tracing With Constant Memory}{37}{section.5.6}
-\contentsline {subsection}{\numberline {5.6.1}Constant Memory Declaration}{37}{subsection.5.6.1}
-\contentsline {subsection}{\numberline {5.6.2}Structure \& Device Code}{37}{subsection.5.6.2}
-\contentsline {subsection}{\numberline {5.6.3}Host Code}{37}{subsection.5.6.3}
-\contentsline {subsection}{\numberline {5.6.4}Performance}{38}{subsection.5.6.4}
+\contentsline {subsection}{\numberline {2.4.1}Threads}{12}{subsection.2.4.1}
+\contentsline {subsection}{\numberline {2.4.2}The Device Code}{12}{subsection.2.4.2}
+\contentsline {subsection}{\numberline {2.4.3}The Host Code}{13}{subsection.2.4.3}
+\contentsline {chapter}{\numberline {3}Thread Advance}{14}{chapter.3}
+\contentsline {section}{\numberline {3.1}Acknowledgement}{14}{section.3.1}
+\contentsline {section}{\numberline {3.2}Vector Dot Product}{14}{section.3.2}
+\contentsline {subsection}{\numberline {3.2.1}The Device Code}{14}{subsection.3.2.1}
+\contentsline {subsection}{\numberline {3.2.2}The Host Code}{15}{subsection.3.2.2}
+\contentsline {section}{\numberline {3.3}Vector Dot Product with Reduction}{16}{section.3.3}
+\contentsline {subsection}{\numberline {3.3.1}The Device Code}{17}{subsection.3.3.1}
+\contentsline {subsection}{\numberline {3.3.2}The Host Code}{19}{subsection.3.3.2}
+\contentsline {chapter}{\numberline {4}CUDA in Two-dimension}{20}{chapter.4}
+\contentsline {section}{\numberline {4.1}Acknowledgement}{20}{section.4.1}
+\contentsline {section}{\numberline {4.2}An Example of Matrix Multiplication}{20}{section.4.2}
+\contentsline {subsection}{\numberline {4.2.1}Performance}{20}{subsection.4.2.1}
+\contentsline {section}{\numberline {4.3}Global Memory Version}{21}{section.4.3}
+\contentsline {subsection}{\numberline {4.3.1}The Device Code}{21}{subsection.4.3.1}
+\contentsline {subsection}{\numberline {4.3.2}The Host Code}{22}{subsection.4.3.2}
+\contentsline {subsection}{\numberline {4.3.3}Performance}{23}{subsection.4.3.3}
+\contentsline {section}{\numberline {4.4}CUDA Memory Types}{23}{section.4.4}
+\contentsline {section}{\numberline {4.5}Shared Memory Version}{25}{section.4.5}
+\contentsline {subsection}{\numberline {4.5.1}The Device Code}{28}{subsection.4.5.1}
+\contentsline {subsection}{\numberline {4.5.2}About blockDim and matrix dimension}{28}{subsection.4.5.2}
+\contentsline {subsection}{\numberline {4.5.3}The Host Code}{29}{subsection.4.5.3}
+\contentsline {subsection}{\numberline {4.5.4}Performance}{31}{subsection.4.5.4}
+\contentsline {chapter}{\numberline {5}Ray Tracing and Constant Memory}{32}{chapter.5}
+\contentsline {section}{\numberline {5.1}Acknowledgement}{32}{section.5.1}
+\contentsline {section}{\numberline {5.2}Basics of Ray Tracing}{32}{section.5.2}
+\contentsline {section}{\numberline {5.3}Notes for Compile}{32}{section.5.3}
+\contentsline {section}{\numberline {5.4}Ray Tracing Without Constant Memory}{33}{section.5.4}
+\contentsline {subsection}{\numberline {5.4.1}Structure Code}{33}{subsection.5.4.1}
+\contentsline {subsection}{\numberline {5.4.2}Device Code}{34}{subsection.5.4.2}
+\contentsline {subsection}{\numberline {5.4.3}Host Code}{35}{subsection.5.4.3}
+\contentsline {subsection}{\numberline {5.4.4}Performance}{36}{subsection.5.4.4}
+\contentsline {section}{\numberline {5.5}Constant Memory}{38}{section.5.5}
+\contentsline {section}{\numberline {5.6}Ray Tracing With Constant Memory}{38}{section.5.6}
+\contentsline {subsection}{\numberline {5.6.1}Constant Memory Declaration}{38}{subsection.5.6.1}
+\contentsline {subsection}{\numberline {5.6.2}Structure \& Device Code}{38}{subsection.5.6.2}
+\contentsline {subsection}{\numberline {5.6.3}Host Code}{38}{subsection.5.6.3}
+\contentsline {subsection}{\numberline {5.6.4}Performance}{39}{subsection.5.6.4}

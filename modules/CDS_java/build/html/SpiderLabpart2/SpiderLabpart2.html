@@ -25,6 +25,7 @@
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
     <link rel="top" title="Concurrent Data Structures in Java" href="../index.html" />
     <link rel="prev" title="Using Multiple Processes" href="../URLSpider/URLSpider.html" /> 
   </head>
@@ -33,11 +34,8 @@
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
-          <a href="../genindex.html" title="General Index"
-             accesskey="I">index</a></li>
-        <li class="right" >
           <a href="../URLSpider/URLSpider.html" title="Using Multiple Processes"
-             accesskey="P">previous</a> |</li>
+             accesskey="P">previous</a></li>
         <li><a href="../index.html">Concurrent Data Structures in Java</a> &raquo;</li> 
       </ul>
     </div>  
@@ -80,47 +78,33 @@ share the same data structures in order to work together.&nbsp; To do
 this, we need to place the data structures they are working on in
 one class and create one instance of that class in
 RunConcurrentSpider. &nbsp;Then each new ‘Runnable’ ConcurrentSpider
-will receive a reference to that class of shared data structures.</p>
+will receive a reference to that class of shared data structures.
+We provide a class called lab.concurrentSpider.SharedSpiderData for this purpose.</p>
 </div>
 <div class="section" id="first-try-share-our-original-data-structures">
-<h2>First try: &nbsp;share our original data structures<a class="headerlink" href="#first-try-share-our-original-data-structures" title="Permalink to this headline">¶</a></h2>
-<p>We are gong to try this process in 2 steps, so you will first look
-at the ‘first version’, where we will try to share the original
-data structures designed for the single Spider. &nbsp;Examine the
-RunConcurrentSpider1 and ConcurrentSpider1 classes. &nbsp;Create the
-class called SharedSpiderData1 and move the data structures into it
-from your original Spider class from the lab.spider package. &nbsp;Make
-getters for each data structure (work, finished, urlCounter).</p>
-<p>Finish the ConcurrentSpider1 class by filling in the code needed in
-run() and the processPage() method&#8211; this should be much like you
-did it for the ‘sequential’ single Spider case. &nbsp;You should be able
-experiment with your new ConcurrentSpider1 by running
-RunThreadedSpider1. &nbsp;Try running it several times without changing
-anything. &nbsp;Can you tell if you get the same results each time?</p>
-<div class="admonition note">
-<p class="first admonition-title">Note</p>
-<p>The following classes are needed for this first try:</p>
-<ul class="simple">
-<li>AllWordsCounter</li>
-<li>ConcurrentSpider1</li>
-<li>HTMLHelper</li>
-<li>RunThreadedSpider1</li>
-<li>TestHTTPHelper</li>
-<li>WordsCount</li>
-</ul>
-<p class="last">You will make the SharedSpiderData1 class.</p>
-</div>
+<h2>First try: &nbsp;share our original data structures?<a class="headerlink" href="#first-try-share-our-original-data-structures" title="Permalink to this headline">¶</a></h2>
+<p>We could attempt to use the original LinkedList and ArrayList data structures and share those among the threads.  However, these are not &#8216;thread safe&#8217;, that is they are not guaranteed to behave properly when multiple threads are accessing and updating them at the same time.</p>
 </div>
 <div class="section" id="second-try-concurrent-data-structures">
 <h2>Second try: concurrent data structures<a class="headerlink" href="#second-try-concurrent-data-structures" title="Permalink to this headline">¶</a></h2>
-<p>Your instructor will discuss an important improvement in class and
-share come more code with you.</p>
-<p>Following that discussion, now use the new Java Concurrent Data
+<p>To ensure our code will work correctly using multiple threads, we will
+use the new Java Concurrent Data
 Structures from the package java.util.concurrent. &nbsp;Begin with the
 file SharedSpiderData to see the types of shared, thread-safe data
 structures we will use for this version of the multi-threaded
 crawler.</p>
-<p>Finish the classes called ConcurrentSpider and RunThreadedSpider.</p>
+<div class="section" id="to-do">
+<h3>To Do<a class="headerlink" href="#to-do" title="Permalink to this headline">¶</a></h3>
+<p>Finish the classes called ConcurrentSpider and RunThreadedSpider.  You will need to discover what methods on the concurrent data structures (ArrayBlockingQueue, ConcurrentLinkedQueue) are available for adding and removing elements.</p>
+<div class="topic">
+<p class="topic-title first">Try This:</p>
+<ul class="simple">
+<li>You can try using different numbers of threads, depending on how much your machine can handle.</li>
+<li>Experiment with this variable found in ComcurrentSpider: &nbsp;<cite>maxurls</cite> &nbsp; &nbsp; If you double it, how many new urls were encountered? &nbsp;Now that you have all these spider threads, you can likely scrape more URLs.</li>
+<li>Experiment with the BEGNNING_URL variable found in RunSpider by choosing some other pages of interest to you as starting points.</li>
+</ul>
+</div>
+</div>
 </div>
 </div>
 
@@ -138,8 +122,11 @@ crawler.</p>
 <li><a class="reference internal" href="#">Improving the Spider</a><ul>
 <li><a class="reference internal" href="#first-question-how-much-work-is-there">First Question: How much work is there?</a></li>
 <li><a class="reference internal" href="#multiple-spiders-to-the-rescue">Multiple Spiders to the rescue</a></li>
-<li><a class="reference internal" href="#first-try-share-our-original-data-structures">First try: &nbsp;share our original data structures</a></li>
-<li><a class="reference internal" href="#second-try-concurrent-data-structures">Second try: concurrent data structures</a></li>
+<li><a class="reference internal" href="#first-try-share-our-original-data-structures">First try: &nbsp;share our original data structures?</a></li>
+<li><a class="reference internal" href="#second-try-concurrent-data-structures">Second try: concurrent data structures</a><ul>
+<li><a class="reference internal" href="#to-do">To Do</a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -147,19 +134,6 @@ crawler.</p>
   <h4>Previous topic</h4>
   <p class="topless"><a href="../URLSpider/URLSpider.html"
                         title="previous chapter">Using Multiple Processes</a></p>
-<div id="searchbox" style="display: none">
-  <h3>Quick search</h3>
-    <form class="search" action="../search.html" method="get">
-      <input type="text" name="q" />
-      <input type="submit" value="Go" />
-      <input type="hidden" name="check_keywords" value="yes" />
-      <input type="hidden" name="area" value="default" />
-    </form>
-    <p class="searchtip" style="font-size: 90%">
-    Enter search terms or a module, class or function name.
-    </p>
-</div>
-<script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
       </div>
       <div class="clearer"></div>
@@ -168,11 +142,8 @@ crawler.</p>
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
-          <a href="../genindex.html" title="General Index"
-             >index</a></li>
-        <li class="right" >
           <a href="../URLSpider/URLSpider.html" title="Using Multiple Processes"
-             >previous</a> |</li>
+             >previous</a></li>
         <li><a href="../index.html">Concurrent Data Structures in Java</a> &raquo;</li> 
       </ul>
     </div>

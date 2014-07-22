@@ -1,0 +1,204 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Jetson TK1 Installation &mdash; Jetson TK Installation Guide</title>
+    
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+    <link rel="top" title="Jetson TK Installation Guide" href="../index.html" />
+    <link rel="prev" title="Welcome to Jetson TK Installation Guide’s documentation!" href="../index.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../index.html" title="Welcome to Jetson TK Installation Guide’s documentation!"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../index.html">Jetson TK Installation Guide</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="jetson-tk1-installation">
+<h1>Jetson TK1 Installation<a class="headerlink" href="#jetson-tk1-installation" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="physical-set-up">
+<h2>Physical Set-Up<a class="headerlink" href="#physical-set-up" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li>Unwrap the Jetson and attack the feet to the corners of the device</li>
+<li>Attach periferals, you will need an HDMI chord, an HDMI capable monitor (or an adapter), a USB mouse, a USB keyboard, and a USB hub if your mouse and keyboard aren&#8217;t attached (the Jetson only has one USB port)</li>
+<li>To turn it on press the power button (it&#8217;s the one closest of the center of the board)</li>
+</ul>
+</div>
+<div class="section" id="install-the-os">
+<h2>Install the OS<a class="headerlink" href="#install-the-os" title="Permalink to this headline">¶</a></h2>
+<p>The Jetson comes with a modified version of Ubuntu 14.04 called Linux 4 Tegra or L4T.</p>
+<ul class="simple">
+<li>Log into the device<ul>
+<li>username: ubuntu</li>
+<li>password: ubuntu</li>
+</ul>
+</li>
+<li>Run the installer.sh script and reboot</li>
+</ul>
+<div class="highlight-sh"><div class="highlight"><pre>sudo ~/NVIDIA-INSTALLER/installer.sh
+sudo reboot
+</pre></div>
+</div>
+</div>
+<div class="section" id="cuda-set-up">
+<h2>CUDA Set-up<a class="headerlink" href="#cuda-set-up" title="Permalink to this headline">¶</a></h2>
+<p>Create a NVIDIA developer account and register as a CUDA developer
+<a class="reference external" href="https://developer.nvidia.com/cuda-registered-developer-program">here.</a>
+Go to My Account by clicking the settings button at the top left
+of NVIDIA&#8217;s website and make sure that your registration
+was successful, and that your Basic Registered Developer Profile is completed.</p>
+<p>The approval process may take a day or two. Once you&#8217;re approved
+download the ARMv7 L4T Linux version of the
+<a class="reference external" href="https://developer.nvidia.com/cuda-downloads">CUDA ToolKit.</a></p>
+<p>Now run the following commands to install CUDA:</p>
+<div class="highlight-sh"><div class="highlight"><pre><span class="nb">cd</span> ~/Downloads
+<span class="c"># install the repository meta-data</span>
+sudo dpkg -i cuda-repo-l4t-r19.2_6.0-42_armhf.deb
+sudo apt-get update                     <span class="c"># update apt cache</span>
+sudo apt-get install cuda-toolkit-6-0   <span class="c"># install cuda</span>
+sudo usermod -a -G video ubuntu         <span class="c"># add user to the video group</span>
+</pre></div>
+</div>
+<p>Set up your environment variables by adding these lines to
+~/.bashrc and running <tt class="docutils literal"><span class="pre">source</span> <span class="pre">~/.bashrc</span></tt></p>
+<div class="highlight-sh"><div class="highlight"><pre><span class="nb">export </span><span class="nv">PATH</span><span class="o">=</span>/usr/local/cuda-6.0/bin:<span class="nv">$PATH</span>
+<span class="nb">export </span><span class="nv">LD_LIBRARY_PATH</span><span class="o">=</span>/usr/local/cuda-6.0/lib:<span class="nv">$LD_LIBRARY_PATH</span>
+</pre></div>
+</div>
+<p>Run <tt class="docutils literal"><span class="pre">nvcc</span> <span class="pre">-V</span></tt> if it prints out version information, everything was successfully installed.</p>
+</div>
+<div class="section" id="device-recovery">
+<h2>Device Recovery<a class="headerlink" href="#device-recovery" title="Permalink to this headline">¶</a></h2>
+<p>If you need to completely reset the Jetson, connect it to
+another computer running linux (it might work on macs but it hasn&#8217;t been tested)
+using the micro USB cable that comes with it.</p>
+<ul class="simple">
+<li>Download the latest
+<a class="reference external" href="https://developer.nvidia.com/sites/default/files/akamai/mobile/files/L4T/Tegra124_Linux_R19.2.0_armhf.tbz2">L4T release package</a>
+and the
+<a class="reference external" href="https://developer.nvidia.com/sites/default/files/akamai/mobile/files/L4T/Tegra_Linux_Sample-Root-Filesystem_R19.2.0_armhf.tbz2">sample file system</a></li>
+<li>Extract the files and assemble the Root File System</li>
+</ul>
+<div class="highlight-sh"><div class="highlight"><pre>sudo tar xpf Tegra124_Linux_R19.2.0_armhf.tbz2
+<span class="nb">cd </span>Linux_for_Tegra/rootfs/
+sudo tar xpf ../../Tegra_Linux_Sample-Root-Filesystem_R19.2.0_armhf.tbz2
+<span class="nb">cd</span> ../
+sudo ./apply_binaries.sh
+</pre></div>
+</div>
+<ul>
+<li><p class="first">Flash the rootfs onto the system&#8217;s internal eMMC</p>
+<ol class="loweralpha">
+<li><p class="first">Put your system into &#8220;reset recovery mode&#8221; by holding down
+the &#8220;RECOVERY&#8221; button and press &#8220;RESET&#8221; button once on the
+main board.</p>
+</li>
+<li><p class="first">Ensure your Linux host system is connected to the target
+device through the USB cable for flashing.</p>
+</li>
+<li><dl class="first docutils">
+<dt>Run this command, it will take a while:</dt>
+<dd><p class="first last"><tt class="docutils literal"><span class="pre">sudo</span> <span class="pre">./flash.sh</span> <span class="pre">-S</span> <span class="pre">8GiB</span> <span class="pre">'jetson-tk1'</span> <span class="pre">mmcblk0p1</span></tt></p>
+</dd>
+</dl>
+</li>
+</ol>
+</li>
+<li><p class="first">The board should reboot on it&#8217;s own.</p>
+</li>
+</ul>
+<p>NVIDIA&#8217;s instructions can be found
+<a class="reference external" href="https://developer.nvidia.com/sites/default/files/akamai/mobile/files/L4T/l4t_quick_start_guide.txt">here.</a></p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../index.html">
+              <img class="logo" src="../_static/CSInParallel200wide.png" alt="Logo"/>
+            </a></p>
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Jetson TK1 Installation</a><ul>
+<li><a class="reference internal" href="#physical-set-up">Physical Set-Up</a></li>
+<li><a class="reference internal" href="#install-the-os">Install the OS</a></li>
+<li><a class="reference internal" href="#cuda-set-up">CUDA Set-up</a></li>
+<li><a class="reference internal" href="#device-recovery">Device Recovery</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="../index.html"
+                        title="previous chapter">Welcome to Jetson TK Installation Guide&#8217;s documentation!</a></p>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../index.html" title="Welcome to Jetson TK Installation Guide’s documentation!"
+             >previous</a> |</li>
+        <li><a href="../index.html">Jetson TK Installation Guide</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright This work is licensed under a Creative Commons Attribution-ShareAlike 3.0 Unported License.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
+    </div>
+  </body>
+</html>

@@ -1,0 +1,247 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>CUDA Architecture &mdash; Optimizing for CUDA Architecture</title>
+    
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+    <link rel="top" title="Optimizing for CUDA Architecture" href="../index.html" />
+    <link rel="next" title="Mandelbrot Test Code" href="../1-Mandelbrot/Mandelbrot.html" />
+    <link rel="prev" title="Optimizing for CUDA’s Architecture’s" href="../index.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../1-Mandelbrot/Mandelbrot.html" title="Mandelbrot Test Code"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="../index.html" title="Optimizing for CUDA’s Architecture’s"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../index.html">Optimizing for CUDA Architecture</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="cuda-architecture">
+<h1>CUDA Architecture<a class="headerlink" href="#cuda-architecture" title="Permalink to this headline">¶</a></h1>
+<p>CPUs are designed to process as many sequential instructions as
+quickly as possible. While most CPUs support threading, creating
+a thread is usually an expensive operation and high-end CPUs can
+only handle 8 threads efficently.</p>
+<p>GPUs on the other hand are designed to process a small number of
+parallel instructions on large sets of data as quickly as
+possible. For instance, calculate 1 million polygons and
+determine which to draw on the screen and where. To do this they
+rely on many slower processors and inexpensive threads.</p>
+<div class="section" id="physical-architecture">
+<h2>Physical Architecture<a class="headerlink" href="#physical-architecture" title="Permalink to this headline">¶</a></h2>
+<p>CUDA cards are composed of one or more Streaming Multiprocessors
+(SMs). Each SM has a cache of shared memory that is faster than
+the GPUs global memory but that can only be accessed by that SM.
+Streaming Multiprocessors are composed of several CUDA cores.
+The exact numbers depend on your device, see the Finding your
+Device Specifications sections for details.</p>
+<p>CUDA cores are grouped together to perform instructions on
+a warp of threads. Warp simply means a group of threads and
+all CUDA cards to date use a warp size of 32.
+Depending on the model, the cores may be
+double or quadruple pumped so that the execute one instruction
+on two or four threads in as many clock cycles.
+For instance, Tesla devices use a group of 8 quadpumped cores
+to execute a single warp. If there are less than 32 threads in
+the warp, it will still take as long to execute the instructions.</p>
+</div>
+<div class="section" id="virtual-architecture">
+<h2>Virtual Architecture<a class="headerlink" href="#virtual-architecture" title="Permalink to this headline">¶</a></h2>
+<p>When programming in CUDA C we work with blocks of threads and
+grids of blocks. What is the relationship between this virtual
+architecture and the CUDA card&#8217;s physical architecture?</p>
+<p>When Kernels are launched each block in a grid is assigned to a
+Streaming Multiprocessor. This allows threads in a block to use
+<tt class="docutils literal"><span class="pre">__shared__</span></tt> memory. If a block doesn&#8217;t use the full resources
+of the SM then multiple blocks may be assigned at once. If all of
+the SMs are busy then the extra blocks will have to wait until a
+SM becomes free.</p>
+<p>Once a block is assigned to an SM, it&#8217;s threads are split into
+warps by the warp scheduler and executed on the CUDA cores.
+Since all the same instruction is executed on each thread in the
+warp simultaneously it&#8217;s generally a bad idea to have
+conditionals in kernel code.</p>
+<p>Furthermore warps are always allocated the same way
+if theads 0-31 are execute in a warp for one block, they will be
+executed in the same warp for every block in the grid.</p>
+<p>Because a warp&#8217;s context (it&#8217;s registers, program counter etc.)
+stays on chip for the life of the warp, there is no additional
+cost to switching between warps vs executing the next step of a
+given warp. This allows the GPU to switch to hide some of it&#8217;s
+memory latency by switching to a new warp while it waits for a
+costly read.</p>
+</div>
+<div class="section" id="cuda-memory">
+<h2>CUDA Memory<a class="headerlink" href="#cuda-memory" title="Permalink to this headline">¶</a></h2>
+<p>CUDA on chip memory is divided into several different regions</p>
+<ul>
+<li><dl class="first docutils">
+<dt><strong>Registers</strong> act the same way that registers on CPUs do, each</dt>
+<dd><p class="first last">thread has it&#8217;s own set of registers.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt><strong>Local Memory</strong> local variables used by each thread. They are</dt>
+<dd><p class="first last">not accesible by other threads even though they use the same
+L1 and L2 cache as global memory.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt><strong>Shared Memory</strong> is accessible by all threads in a block. It</dt>
+<dd><p class="first last">must be declared using the <tt class="docutils literal"><span class="pre">__shared__</span></tt> modifier. It has a
+high bandwidth and low latency than global memory however if
+multiple threads request the same address the requests are
+processed serially which slows down the application.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt><strong>Constant Memory</strong> is read-accessible by all theads and must</dt>
+<dd><p class="first last">be declared with the <tt class="docutils literal"><span class="pre">__const__</span></tt> modifier. In newer devices
+there is a seperate read only constant caches.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt><strong>Global Memory</strong> is accessible by all threads. It&#8217;s the</dt>
+<dd><p class="first last">slowest device memory, but on new cards, it is cached. Memory
+is pulled in 32, 64, or 128 byte memory transactions. Warps
+executing global memory accesses attempt to pull all the data
+from global memory simultaneously therefore it&#8217;s advantageous
+to use block sizes that are multiples of 32. If
+multidimensional arrays are used, it&#8217;s also advantageous to
+have the bounds padded so that they are multiples of 32</p>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt><strong>Texture/Surface Memory</strong> is read-accesible by all threads</dt>
+<dd><p class="first last">unlike Constant Memory, it is optimized for 2D spacial
+locality, and cache hits pull in surrounding values in both
+x and y directions.</p>
+</dd>
+</dl>
+</li>
+</ul>
+<div class="align-center figure">
+<a class="reference internal image-reference" href="../_images/memheirarchy.png"><img alt="CUDA Memory Hierarchy" src="../_images/memheirarchy.png" style="width: 578px; height: 640px;" /></a>
+<p class="caption"><em>CUDA Memory Hierarchy</em>
+<em>Image courtesy of NVIDIA</em></p>
+</div>
+</div>
+<div class="section" id="finding-your-device-specifications">
+<h2>Finding your Device Specifications<a class="headerlink" href="#finding-your-device-specifications" title="Permalink to this headline">¶</a></h2>
+<p>CUDA provides a program that prints out the specifications of
+your device. To run it, execute this command:</p>
+<p><tt class="docutils literal"><span class="pre">/usr/local/cuda/samples/1_Utilities/deviceQuery/deviceQuery</span></tt></p>
+<p>If that doesn&#8217;t work you probably need to build the samples</p>
+<div class="highlight-bash"><div class="highlight"><pre><span class="nb">cd</span> /usr/local/cuda/samples/1_Utilities/deviceQuery
+sudo make
+./deviceQuery
+</pre></div>
+</div>
+<p>Look for the number of Multiprocessors on your device,
+the number of CUDA cores per SM, and the warp size.</p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../index.html">
+              <img class="logo" src="../_static/CSInParallel200wide.png" alt="Logo"/>
+            </a></p>
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">CUDA Architecture</a><ul>
+<li><a class="reference internal" href="#physical-architecture">Physical Architecture</a></li>
+<li><a class="reference internal" href="#virtual-architecture">Virtual Architecture</a></li>
+<li><a class="reference internal" href="#cuda-memory">CUDA Memory</a></li>
+<li><a class="reference internal" href="#finding-your-device-specifications">Finding your Device Specifications</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="../index.html"
+                        title="previous chapter">Optimizing for CUDA&#8217;s Architecture&#8217;s</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="../1-Mandelbrot/Mandelbrot.html"
+                        title="next chapter">Mandelbrot Test Code</a></p>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../1-Mandelbrot/Mandelbrot.html" title="Mandelbrot Test Code"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="../index.html" title="Optimizing for CUDA’s Architecture’s"
+             >previous</a> |</li>
+        <li><a href="../index.html">Optimizing for CUDA Architecture</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright This work is licensed under a Creative Commons Attribution-ShareAlike 3.0 Unported License.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
+    </div>
+  </body>
+</html>

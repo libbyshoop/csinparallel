@@ -1,0 +1,109 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Decomposition of Data Manipulation Tasks &mdash; Concept: The Data Decomposition Pattern</title>
+    
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+    <link rel="top" title="Concept: The Data Decomposition Pattern" href="../index.html" />
+    <link rel="next" title="Vector Add with MPI" href="MPI_VecAdd.html" />
+    <link rel="prev" title="Vector Addition" href="../VectorAdd/VectorAddProblem.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="MPI_VecAdd.html" title="Vector Add with MPI"
+             accesskey="N">next</a></li>
+        <li class="right" >
+          <a href="../VectorAdd/VectorAddProblem.html" title="Vector Addition"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../index.html">Concept: The Data Decomposition Pattern</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="decomposition-of-data-manipulation-tasks">
+<h1>Decomposition of Data Manipulation Tasks<a class="headerlink" href="#decomposition-of-data-manipulation-tasks" title="Permalink to this headline">¶</a></h1>
+<p>We have seen how we can complete the task of adding corresponding elements by <em>sequentially</em> performing the additions, one at a time, on each element of arrays A and B, placing the result in array C.  Now suppose we want to put multiple <em>processing units</em> to work on this problem in parallel, concurrently.  There are a few different ways to accomplish this.  Using the example from the previous section, let&#8217;s look at one possible way that we might map the computation to processing units:</p>
+<div class="align-center figure align-center">
+<img alt="Decompose into 4 processing units" src="../_images/Decomposition.png" style="width: 700px;" />
+</div>
+<p>Here we see our original problem with eight elements in each array. Processing unit 0 would work on the first two elements, processing unit 1 would work on the next two, and so on.  Theoretically, using four processing units executing concurrently, the work should get done in one-fourth the time it takes to run it sequentially.  In practice, this never quite happens, because of the overhead to start processing units and possible contention for resources, such as the arrays themselves.</p>
+<p>For many larger problems with more sophisticated computations, however, this type of decomposition of computational tasks on data elements is very common and can speed up your program.  There is no standard terminology for this version of data decomposition; we like to refer to it as <em>decomposing into equal-sized chunks</em>.  There are other possible types of decomposition and mapping of processing units to elements (perhaps others have been running through your mind). We limit ourselves to this particular way of decomposing, because:</p>
+<ul class="simple">
+<li>it occurs quite often,</li>
+<li>it is a good way to do it in many situations because elements are stored contiguously in memory, and</li>
+<li>you can concentrate on and learn one way of using multiple processing units.</li>
+</ul>
+<p>Next we will examine example code for three combinations of parallel software and hardware:</p>
+<ul class="simple">
+<li>Message passing using the MPI library, which can be used on a cluster or a single multicore computer.</li>
+<li>Shared memory and threads using the OpenMP compiler directives in gcc, which can be used on a multicore computer.</li>
+<li>CUDA programming with the nvcc compiler, which can be used on a machine with a Graphics Procesing Unit, or GPU.</li>
+</ul>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../index.html">
+              <img class="logo" src="../_static/CSInParallel200wide.png" alt="Logo"/>
+            </a></p>
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="../VectorAdd/VectorAddProblem.html"
+                        title="previous chapter">Vector Addition</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="MPI_VecAdd.html"
+                        title="next chapter">Vector Add with MPI</a></p>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="MPI_VecAdd.html" title="Vector Add with MPI"
+             >next</a></li>
+        <li class="right" >
+          <a href="../VectorAdd/VectorAddProblem.html" title="Vector Addition"
+             >previous</a> |</li>
+        <li><a href="../index.html">Concept: The Data Decomposition Pattern</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright This work is licensed under a Creative Commons Attribution-ShareAlike 3.0 Unported License.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>

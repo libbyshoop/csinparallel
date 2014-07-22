@@ -1,0 +1,417 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Vector Add with CUDA &mdash; Concept: The Data Decomposition Pattern</title>
+    
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+    <link rel="top" title="Concept: The Data Decomposition Pattern" href="../index.html" />
+    <link rel="next" title="Other ways to split the work" href="Variations.html" />
+    <link rel="prev" title="Vector Add with OpenMP" href="OpenMP_VecAdd.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="Variations.html" title="Other ways to split the work"
+             accesskey="N">next</a></li>
+        <li class="right" >
+          <a href="OpenMP_VecAdd.html" title="Vector Add with OpenMP"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../index.html">Concept: The Data Decomposition Pattern</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="vector-add-with-cuda">
+<h1>Vector Add with CUDA<a class="headerlink" href="#vector-add-with-cuda" title="Permalink to this headline">¶</a></h1>
+<p>Using the CUDA C language for general purpose computing on GPUs is well-suited to the vector addition problem, though there is a small amount of additional information you will need to make the code example clear.  On GPU co-processors, there are many more cores available than on traditional multicore CPUs. Each of these cores can execute a <em>thread</em> of instructions indicated in the code. Unlike the threads and processes of OpenMP and MPI, CUDA adds extra layers of organization of the threads: programmers set up <em>blocks</em> containing a certain number of threads, and organize the blocks into a <em>grid</em>.</p>
+<p>For the problem we originally posed, where we had 8 elements in an array, one possible organization we could define in CUDA would be 4 blocks of 2 threads each, like this:</p>
+<div class="align-center figure align-center">
+<img alt="Decompose using 4 blocks of 2 threads each" src="../_images/CUDABlocksThreads.png" style="width: 700px;" />
+</div>
+<p>CUDA convention has been to depict treads as squiggly lines with arowheads, as shown above. In this case, the 4 blocks of threads that form the 1-dimensional grid become analogous to the processing units that we would assign to the portions of the array that would be run in parallel.  In contrast to OpenMP and MPI, however, the individual threads within the blocks would each work on one data element of the array <a class="footnote-reference" href="#id3" id="id1">[1]</a>.</p>
+<div class="section" id="determining-the-thread-number">
+<h2>Determining the thread number<a class="headerlink" href="#determining-the-thread-number" title="Permalink to this headline">¶</a></h2>
+<p>In all parallel programs that define one program that all threads will run, it is important to know which thread we are so that we can calculate what elements of the original array are assigned to us.  We saw with the MPI program, we could determine what the &#8216;rank&#8217; of the process was that was executing.  In the OpenMP example in the previous section, thread number assignment to sections of the array in the for loop was implicit <a class="footnote-reference" href="#id4" id="id2">[2]</a>.
+In CUDA programs, we always determine which thread is running and use that to determine what portion of data to work on. The mapping of work is up to the programmer.</p>
+<p>In CUDA programs, we set up the number of blocks that form the grid and we define how many threads will be used in each block. Once these are set, we have access to variables supplied by the CUDA library that help us define just what thread is executing. The following diagram shows how three of the available variables, corresponding to the grid, blocks, and threads within the blocks would be assigned for our above example decomposition:</p>
+<div class="align-center figure align-center">
+<img alt="blockDim.x = 1, threadId.x = 0,1 within each block, blockId.x = 0, 1, 2, 3" src="../_images/CUDABThreadNumCalc.png" style="width: 700px;" />
+</div>
+<p>In this case of 1-dimensional arrays whose elements are being added, it is intuative to use a 1-dimensional grid of blocks, each of which has a 1-dimensional set of threads within it. For more complicated data, CUDA does let us define two or three-dimensional groupings of blocks and threads, but we will concentrate one this 1-dimensional example here.  In this case, we will use the &#8216;x&#8217; dimension provided by CUDA variables (the &#8216;y&#8217; and &#8216;z&#8217; dimensions are available for the complex cases when our data would naturally map to them). The three variables that we can access in CUDA code for this example shown above are:</p>
+<ol class="arabic simple">
+<li><tt class="docutils literal"><span class="pre">threadIdx.x</span></tt> represents a thread&#8217;s index along the x dimension within the block.</li>
+<li><tt class="docutils literal"><span class="pre">blockIdx.x</span></tt> represents a thread&#8217;s block&#8217;s index along the x dimension within the grid.</li>
+<li><tt class="docutils literal"><span class="pre">blockDim.x</span></tt> represents the number of threads per block in the x direction.</li>
+</ol>
+<p>In our simple example, there are a total of eight threads executing, each one numbered from 0 through 7. Each thread executing code on the GPU can determine which thread it is by using the above variables like this:</p>
+<div class="highlight-c"><div class="highlight"><pre><span class="kt">int</span> <span class="n">tid</span> <span class="o">=</span> <span class="n">blockDim</span><span class="p">.</span><span class="n">x</span> <span class="o">*</span> <span class="n">blockIdx</span><span class="p">.</span><span class="n">x</span> <span class="o">+</span> <span class="n">threadIdx</span><span class="p">.</span><span class="n">x</span><span class="p">;</span>
+</pre></div>
+</div>
+<table class="docutils footnote" frame="void" id="id3" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id1">[1]</a></td><td>Each GPU, depending on what type it is, can run a certain number of CUDA blocks containing some number of threads concurrently.  Your code can define the number of blocks and the number of threads per block, and the hardware will run as many as possible concurrently.  The maximum number of threads you can declare in a block is 1024, while the number of blocks you can declare is a very large number that depends on your GPU card.  Here we show a simple case of four blocks of 2 threads each, which in CUDA terminology forms a grid of blocks.  This particular grid of blocks would enable each element in an array of size 8 to be computed concurrently in parallel by 8 CUDA threads. To envision how the decomposition of the work might occur, imagine that the block of yellow threads corresponds to processing unit 0; similarly for each additional block of threads.</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="id4" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id2">[2]</a></td><td>This isn&#8217;t always the case in OpenMP programs&#8211; you can know just what you are and execute a section of code accordingly.</td></tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="the-host-and-the-device">
+<h2>The Host and the Device<a class="headerlink" href="#the-host-and-the-device" title="Permalink to this headline">¶</a></h2>
+<p>CUDA programs execute code on a GPU, which is a co-processor, because it is a device on a card that is separate from the motherboard holding the CPU, or central processing unit.  In CUDA programming, the primary motherboard with the CPU is referred to as the <em>host</em> and the GPU co-processor is usually called the <em>device</em>.  The GPU device has separate memory and different circuitry for executing instructions. Code to be executed on the GPU must be compiled for its instrution set.</p>
+</div>
+<div class="section" id="cuda-code-for-vector-add">
+<h2>CUDA Code for Vector Add<a class="headerlink" href="#cuda-code-for-vector-add" title="Permalink to this headline">¶</a></h2>
+<p>The overall structure of a CUDA program that uses the GPU for computation is as follows:</p>
+<ol class="arabic">
+<li><p class="first">Define the the code that will run on the device in a separate function, called the <em>kernel</em> function.</p>
+</li>
+<li><dl class="first docutils">
+<dt>In the main program running on the host&#8217;s CPU:</dt>
+<dd><ol class="first last loweralpha simple">
+<li>allocate memory on the host for the data arrays.</li>
+<li>initialze the data arrays in the host&#8217;s memory.</li>
+<li>allocate separate memory on the GPU device for the data arrays.</li>
+<li>copy data arrays from the host memory to the GPU device memory.</li>
+</ol>
+</dd>
+</dl>
+</li>
+<li><p class="first">On the GPU device, execute the <em>kernel</em> function that computes new data values given the original arrays. Specify how many blocks and threads per block to use for this computation.</p>
+</li>
+<li><p class="first">After the <em>kernel</em> function completes, copy the computed values from the GPU device memory back to the host&#8217;s memory.</p>
+</li>
+</ol>
+<p>Here is the actual code example for 8-element vector addition, with these above steps numbered. This is in the file
+<strong>VectorAdd/CUDA/VA-GPU-simple.cu</strong> in the compressed tar file of examples that accompanies this reading.</p>
+<div class="highlight-c"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>  1
+  2
+  3
+  4
+  5
+  6
+  7
+  8
+  9
+ 10
+ 11
+ 12
+ 13
+ 14
+ 15
+ 16
+ 17
+ 18
+ 19
+ 20
+ 21
+ 22
+ 23
+ 24
+ 25
+ 26
+ 27
+ 28
+ 29
+ 30
+ 31
+ 32
+ 33
+ 34
+ 35
+ 36
+ 37
+ 38
+ 39
+ 40
+ 41
+ 42
+ 43
+ 44
+ 45
+ 46
+ 47
+ 48
+ 49
+ 50
+ 51
+ 52
+ 53
+ 54
+ 55
+ 56
+ 57
+ 58
+ 59
+ 60
+ 61
+ 62
+ 63
+ 64
+ 65
+ 66
+ 67
+ 68
+ 69
+ 70
+ 71
+ 72
+ 73
+ 74
+ 75
+ 76
+ 77
+ 78
+ 79
+ 80
+ 81
+ 82
+ 83
+ 84
+ 85
+ 86
+ 87
+ 88
+ 89
+ 90
+ 91
+ 92
+ 93
+ 94
+ 95
+ 96
+ 97
+ 98
+ 99
+100
+101
+102
+103
+104
+105
+106
+107
+108
+109
+110
+111
+112
+113</pre></div></td><td class="code"><div class="highlight"><pre><span class="cm">/*</span>
+<span class="cm"> * A simplified example of vector addition in CUDA to illustrate the</span>
+<span class="cm"> * data decomposition pattern using blocks of threads.</span>
+<span class="cm"> *</span>
+<span class="cm"> * To compile:</span>
+<span class="cm"> *   nvcc -o va-GPU-simple VA-GPU-simple.cu</span>
+<span class="cm"> */</span>
+
+<span class="cp">#include &lt;stdio.h&gt;</span>
+
+<span class="c1">// In this example we use a very small number of blocks</span>
+<span class="c1">// and threads in those blocks for illustration </span>
+<span class="c1">// on a very small array</span>
+<span class="cp">#define N 8</span>
+<span class="cp">#define numThread 2 </span><span class="c1">// 2 threads in a block</span>
+<span class="cp">#define numBlock 4  </span><span class="c1">// 4 blocks</span>
+
+<span class="cm">/*</span>
+<span class="cm"> * 1.</span>
+<span class="cm"> *  The &#39;kernel&#39; function that will be executed on the GPU device hardware.</span>
+<span class="cm"> */</span>
+<span class="n">__global__</span> <span class="kt">void</span> <span class="nf">add</span><span class="p">(</span> <span class="kt">int</span> <span class="o">*</span><span class="n">a</span><span class="p">,</span> <span class="kt">int</span> <span class="o">*</span><span class="n">b</span><span class="p">,</span> <span class="kt">int</span> <span class="o">*</span><span class="n">c</span> <span class="p">)</span> <span class="p">{</span>
+
+    <span class="c1">// the initial index that this thread will work on</span>
+    <span class="kt">int</span> <span class="n">tid</span> <span class="o">=</span> <span class="n">blockDim</span><span class="p">.</span><span class="n">x</span> <span class="o">*</span> <span class="n">blockIdx</span><span class="p">.</span><span class="n">x</span> <span class="o">+</span> <span class="n">threadIdx</span><span class="p">.</span><span class="n">x</span><span class="p">;</span>
+    
+    <span class="c1">// In this above example code, we assume a linear set of blocks of threads in the &#39;x&#39; dimension,</span>
+    <span class="c1">// which is declared in main below when we run this function.</span>
+
+    <span class="c1">// The actual computation is being done by individual threads</span>
+    <span class="c1">// in each of the blocks.</span>
+    <span class="c1">// e.g. we use 4 blocks and 2 threads per block (8 threads will run in parallel)</span>
+    <span class="c1">//      and our total array size N is 8</span>
+    <span class="c1">//      the thread whose threadIdx.x is 0 within block 0 will compute c[0],</span>
+    <span class="c1">//          because tid = (2 * 0)  + 0</span>
+    <span class="c1">//      the thread whose threadIdx.x is 0 within block 1 will compute c[2],</span>
+    <span class="c1">//          because tid = (2 * 1) + 0</span>
+    <span class="c1">//      the thread whose threadIdx.x is 1 within block 1 will compute c[3],</span>
+    <span class="c1">//          because tid = (2 * 1) + 1</span>
+    <span class="c1">//</span>
+    <span class="c1">//     The following while loop will execute once for this simple example:</span>
+    <span class="c1">//          c[0] through c[7] will be computed concurrently</span>
+    <span class="c1">//</span>
+    <span class="k">while</span> <span class="p">(</span><span class="n">tid</span> <span class="o">&lt;</span> <span class="n">N</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">c</span><span class="p">[</span><span class="n">tid</span><span class="p">]</span> <span class="o">=</span> <span class="n">a</span><span class="p">[</span><span class="n">tid</span><span class="p">]</span> <span class="o">+</span> <span class="n">b</span><span class="p">[</span><span class="n">tid</span><span class="p">];</span>       <span class="c1">// The actual computation done by the thread</span>
+        <span class="n">tid</span> <span class="o">+=</span> <span class="n">blockDim</span><span class="p">.</span><span class="n">x</span><span class="p">;</span>       <span class="c1">// Increment this thread&#39;s index by the number of threads per block:</span>
+                                 <span class="c1">// in this small case, each thread would then have a tid &gt; N</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+
+<span class="cm">/*</span>
+<span class="cm"> * The main program that directs the execution of vector add on the GPU</span>
+<span class="cm"> */</span>
+<span class="kt">int</span> <span class="nf">main</span><span class="p">(</span> <span class="kt">void</span> <span class="p">)</span> <span class="p">{</span>
+    <span class="kt">int</span> <span class="o">*</span><span class="n">a</span><span class="p">,</span> <span class="o">*</span><span class="n">b</span><span class="p">,</span> <span class="o">*</span><span class="n">c</span><span class="p">;</span>               <span class="c1">// The arrays on the host CPU machine</span>
+    <span class="kt">int</span> <span class="o">*</span><span class="n">dev_a</span><span class="p">,</span> <span class="o">*</span><span class="n">dev_b</span><span class="p">,</span> <span class="o">*</span><span class="n">dev_c</span><span class="p">;</span>   <span class="c1">// The arrays for the GPU device</span>
+
+    <span class="c1">// 2.a allocate the memory on the CPU</span>
+    <span class="n">a</span> <span class="o">=</span> <span class="p">(</span><span class="kt">int</span><span class="o">*</span><span class="p">)</span><span class="n">malloc</span><span class="p">(</span> <span class="n">N</span> <span class="o">*</span> <span class="k">sizeof</span><span class="p">(</span><span class="kt">int</span><span class="p">)</span> <span class="p">);</span>
+    <span class="n">b</span> <span class="o">=</span> <span class="p">(</span><span class="kt">int</span><span class="o">*</span><span class="p">)</span><span class="n">malloc</span><span class="p">(</span> <span class="n">N</span> <span class="o">*</span> <span class="k">sizeof</span><span class="p">(</span><span class="kt">int</span><span class="p">)</span> <span class="p">);</span>
+    <span class="n">c</span> <span class="o">=</span> <span class="p">(</span><span class="kt">int</span><span class="o">*</span><span class="p">)</span><span class="n">malloc</span><span class="p">(</span> <span class="n">N</span> <span class="o">*</span> <span class="k">sizeof</span><span class="p">(</span><span class="kt">int</span><span class="p">)</span> <span class="p">);</span>
+
+    <span class="c1">// 2.b. fill the arrays &#39;a&#39; and &#39;b&#39; on the CPU with dummy values</span>
+    <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="n">N</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">a</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">i</span><span class="p">;</span>
+        <span class="n">b</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">i</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="c1">// 2.c. allocate the memory on the GPU</span>
+     <span class="n">cudaMalloc</span><span class="p">(</span> <span class="p">(</span><span class="kt">void</span><span class="o">**</span><span class="p">)</span><span class="o">&amp;</span><span class="n">dev_a</span><span class="p">,</span> <span class="n">N</span> <span class="o">*</span> <span class="k">sizeof</span><span class="p">(</span><span class="kt">int</span><span class="p">)</span> <span class="p">);</span>
+     <span class="n">cudaMalloc</span><span class="p">(</span> <span class="p">(</span><span class="kt">void</span><span class="o">**</span><span class="p">)</span><span class="o">&amp;</span><span class="n">dev_b</span><span class="p">,</span> <span class="n">N</span> <span class="o">*</span> <span class="k">sizeof</span><span class="p">(</span><span class="kt">int</span><span class="p">)</span> <span class="p">);</span>
+     <span class="n">cudaMalloc</span><span class="p">(</span> <span class="p">(</span><span class="kt">void</span><span class="o">**</span><span class="p">)</span><span class="o">&amp;</span><span class="n">dev_c</span><span class="p">,</span> <span class="n">N</span> <span class="o">*</span> <span class="k">sizeof</span><span class="p">(</span><span class="kt">int</span><span class="p">)</span> <span class="p">);</span>
+
+    <span class="c1">// 2.d. copy the arrays &#39;a&#39; and &#39;b&#39; to the GPU</span>
+     <span class="n">cudaMemcpy</span><span class="p">(</span> <span class="n">dev_a</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">N</span> <span class="o">*</span> <span class="k">sizeof</span><span class="p">(</span><span class="kt">int</span><span class="p">),</span>
+                              <span class="n">cudaMemcpyHostToDevice</span> <span class="p">);</span>
+     <span class="n">cudaMemcpy</span><span class="p">(</span> <span class="n">dev_b</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">N</span> <span class="o">*</span> <span class="k">sizeof</span><span class="p">(</span><span class="kt">int</span><span class="p">),</span>
+                              <span class="n">cudaMemcpyHostToDevice</span> <span class="p">);</span>
+
+    <span class="c1">// 3. Execute the vector addition &#39;kernel function&#39; on th GPU device,</span>
+    <span class="c1">// declaring how many blocks and how many threads per block to use.</span>
+    <span class="n">add</span><span class="o">&lt;&lt;&lt;</span><span class="n">numBlock</span><span class="p">,</span><span class="n">numThread</span><span class="o">&gt;&gt;&gt;</span><span class="p">(</span> <span class="n">dev_a</span><span class="p">,</span> <span class="n">dev_b</span><span class="p">,</span> <span class="n">dev_c</span> <span class="p">);</span>
+
+    <span class="c1">// 4. copy the array &#39;c&#39; back from the GPU to the CPU</span>
+    <span class="n">cudaMemcpy</span><span class="p">(</span> <span class="n">c</span><span class="p">,</span> <span class="n">dev_c</span><span class="p">,</span> <span class="n">N</span> <span class="o">*</span> <span class="k">sizeof</span><span class="p">(</span><span class="kt">int</span><span class="p">),</span>
+                              <span class="n">cudaMemcpyDeviceToHost</span> <span class="p">);</span>
+
+    <span class="c1">// verify that the GPU did the work we requested</span>
+    <span class="n">bool</span> <span class="n">success</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+    <span class="kt">int</span> <span class="n">total</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span>
+    <span class="n">printf</span><span class="p">(</span><span class="s">&quot;Checking %d values in the array.</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">N</span><span class="p">);</span>
+    <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="n">N</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">((</span><span class="n">a</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">+</span> <span class="n">b</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="o">!=</span> <span class="n">c</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="p">{</span>
+            <span class="n">printf</span><span class="p">(</span> <span class="s">&quot;Error:  %d + %d != %d</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">a</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">b</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">c</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="p">);</span>
+            <span class="n">success</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="n">total</span> <span class="o">+=</span> <span class="mi">1</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">success</span><span class="p">)</span>  <span class="n">printf</span><span class="p">(</span> <span class="s">&quot;We did it, %d values correct!</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">total</span> <span class="p">);</span>
+
+    <span class="c1">// free the memory we allocated on the CPU</span>
+    <span class="n">free</span><span class="p">(</span> <span class="n">a</span> <span class="p">);</span>
+    <span class="n">free</span><span class="p">(</span> <span class="n">b</span> <span class="p">);</span>
+    <span class="n">free</span><span class="p">(</span> <span class="n">c</span> <span class="p">);</span>
+
+    <span class="c1">// free the memory we allocated on the GPU</span>
+     <span class="n">cudaFree</span><span class="p">(</span> <span class="n">dev_a</span> <span class="p">);</span>
+     <span class="n">cudaFree</span><span class="p">(</span> <span class="n">dev_b</span> <span class="p">);</span>
+     <span class="n">cudaFree</span><span class="p">(</span> <span class="n">dev_c</span> <span class="p">);</span>
+
+    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</td></tr></table></div>
+</div>
+<div class="section" id="cuda-development-and-special-cuda-syntax">
+<h2>CUDA development and Special CUDA Syntax<a class="headerlink" href="#cuda-development-and-special-cuda-syntax" title="Permalink to this headline">¶</a></h2>
+<p>The CUDA compiler is called <strong>nvcc</strong>.  This will exist on your machine if you have installed the CUDA development toolkit.</p>
+<p>The code that is to be compiled by nvcc for execution on the GPU is indicated by using the keyword  <tt class="docutils literal"><span class="pre">__global__</span></tt> in front of the kernel function name in its definition, like this on line 21:</p>
+<div class="highlight-c"><pre> */
+__global__ void add( int *a, int *b, int *c ) {
+</pre>
+</div>
+<p>The invocation of this kernel function on the GPU is done like this in the host code on line 82:</p>
+<div class="highlight-c"><div class="highlight"><pre>    <span class="c1">// declaring how many blocks and how many threads per block to use.</span>
+    <span class="n">add</span><span class="o">&lt;&lt;&lt;</span><span class="n">numBlock</span><span class="p">,</span><span class="n">numThread</span><span class="o">&gt;&gt;&gt;</span><span class="p">(</span> <span class="n">dev_a</span><span class="p">,</span> <span class="n">dev_b</span><span class="p">,</span> <span class="n">dev_c</span> <span class="p">);</span>
+</pre></div>
+</div>
+<p>Note how you set the number of blocks and the number of threads per block to use with the <tt class="docutils literal"><span class="pre">&lt;&lt;&lt;</span> <span class="pre">&gt;&gt;&gt;</span></tt> syntax.</p>
+</div>
+<div class="section" id="larger-problems">
+<h2>Larger Problems<a class="headerlink" href="#larger-problems" title="Permalink to this headline">¶</a></h2>
+<p>There is an additional file in the tar archive supplied for this reading that is called
+<strong>VectorAdd/CUDA/VA-GPU-larger.cu</strong>.  You could experiment with larger arrarys in this version of the code.  Comments within it explain how the thread assignment to array elements works if your array is larger than the number of total threads you use.  CUDA and GPUs are better suited to much larger problems than we have shown for illustration here.</p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../index.html">
+              <img class="logo" src="../_static/CSInParallel200wide.png" alt="Logo"/>
+            </a></p>
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Vector Add with CUDA</a><ul>
+<li><a class="reference internal" href="#determining-the-thread-number">Determining the thread number</a></li>
+<li><a class="reference internal" href="#the-host-and-the-device">The Host and the Device</a></li>
+<li><a class="reference internal" href="#cuda-code-for-vector-add">CUDA Code for Vector Add</a></li>
+<li><a class="reference internal" href="#cuda-development-and-special-cuda-syntax">CUDA development and Special CUDA Syntax</a></li>
+<li><a class="reference internal" href="#larger-problems">Larger Problems</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="OpenMP_VecAdd.html"
+                        title="previous chapter">Vector Add with OpenMP</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="Variations.html"
+                        title="next chapter">Other ways to split the work</a></p>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="Variations.html" title="Other ways to split the work"
+             >next</a></li>
+        <li class="right" >
+          <a href="OpenMP_VecAdd.html" title="Vector Add with OpenMP"
+             >previous</a> |</li>
+        <li><a href="../index.html">Concept: The Data Decomposition Pattern</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright This work is licensed under a Creative Commons Attribution-ShareAlike 3.0 Unported License.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>
