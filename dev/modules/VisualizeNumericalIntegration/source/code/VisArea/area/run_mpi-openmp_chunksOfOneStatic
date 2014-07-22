@@ -1,0 +1,51 @@
+#!/bin/bash
+
+usage()
+{
+cat << EOF
+usage: $0 options
+
+This script runs the visualization of computing the area under the curve using both MPI and OpenMP.
+Data decomposition technique: chunks of one with static scheduling.
+
+OPTIONS:
+-p	Number of MPI processes
+-t  Throttle time in microseconds
+-T  number of threads
+-n  Number of rectangles
+-g  Size of rectangle group assigned to each process per iteration
+-f  Function kind (1, 2 or 3, default if not specified)
+-r  Righthand boundary of the curve
+EOF
+}
+
+while getopts p:T:t:n:g:f:r: option
+do
+case "${option}"
+in
+p) NUMPROCS=${OPTARG};;
+T) THREADS=${OPTARG};;
+t) THROTTLE=${OPTARG};;
+n) NUMRECT=${OPTARG};;
+g) GRPUP=${OPTARG};;
+f) FUNCTION=${OPTARG};;
+r) RIGHT=${OPTARG};;
+?)
+usage
+exit
+;;
+esac
+done
+
+: ${NUMPROCS:=3}
+: ${THREADS:=4}
+: ${THROTTLE:=250}
+: ${NUMRECT:=40}
+: ${GROUP:=10}
+: ${FUNCTION:=4}
+: ${RIGHT:=350}
+
+make clean
+make area.c-mpi-openmp H_CHUNKS_OF_ONE_STATIC=1
+
+mpirun -np $NUMPROCS ./area.c-mpi-openmp -T $THREADS -t $THROTTLE -n $NUMRECT -g $GROUP -f $FUNCTION -r $RIGHT

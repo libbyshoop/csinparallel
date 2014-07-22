@@ -1,0 +1,162 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Parallel Displays of the Area Under the Curve &mdash; Visualize Numerical Integration</title>
+    
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="shortcut icon" href="_static/favicon.ico"/>
+    <link rel="top" title="Visualize Numerical Integration" href="index.html" />
+    <link rel="prev" title="The Code, Platforms, and Executing a Serial Version" href="Code_Serial.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="Code_Serial.html" title="The Code, Platforms, and Executing a Serial Version"
+             accesskey="P">previous</a></li>
+        <li><a href="index.html">Visualize Numerical Integration</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="parallel-displays-of-the-area-under-the-curve">
+<h1>Parallel Displays of the Area Under the Curve<a class="headerlink" href="#parallel-displays-of-the-area-under-the-curve" title="Permalink to this headline">¶</a></h1>
+<p>Here we will run the code for various types of data decomposition patterns using OpenMP, MPI, or a combination of MPI and OpenMP.</p>
+<div class="section" id="openmp-versions-shared-memory-multicore-with-threads">
+<h2>OpenMP Versions: Shared Memory multicore with threads<a class="headerlink" href="#openmp-versions-shared-memory-multicore-with-threads" title="Permalink to this headline">¶</a></h2>
+<p>In code that uses OpenMP, the processing unit executing the computation of the area of each rectangle is a <em>thread</em> executing on a core of a shred-memory multicore computer.  Let&#8217;s try a few examples of how OpenMP can map threads to rectangles to be computed.  We consider these rectangles to be computed from left to right, forming a linear set of data values to be computed.</p>
+<p>In these visualizations, we run the code in real time as it would get run in openMP, keeping information about which thread computed which rectangle.  The program then displays back which thread computed each rectangle by playing back the recorded information and coloring the rectangles with different color for each thread.</p>
+<div class="section" id="equal-chunks-of-rectangles">
+<h3>Equal chunks of rectangles<a class="headerlink" href="#equal-chunks-of-rectangles" title="Permalink to this headline">¶</a></h3>
+<p>Try running this script like this on the command line, in the <strong>area</strong> directory:</p>
+<div class="highlight-sh"><div class="highlight"><pre>./run_openmp_equalChunks
+</pre></div>
+</div>
+<p>You should see that four threads each computed consecutive equal-sized chunks of rectangles (we sometimes also call this division of work the &#8216;blocks&#8217; decomposition).  This is a well-used pattern of how to split the work, or decompose the problem, among the threads.  This same pattern is also used frequently in distributed, message passing situations.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Though the playback in these visualizations may appear to be serial, the threads did run concurrently. We unfortunately have no way of displaying rectangles on the screen in parallel!</p>
+</div>
+</div>
+<div class="section" id="chunks-of-one-statically-assigned">
+<h3>Chunks of one, statically assigned<a class="headerlink" href="#chunks-of-one-statically-assigned" title="Permalink to this headline">¶</a></h3>
+<p>Rather than equal chunks where the size of a chunk that a thread works on is <img class="math" src="_images/math/2ab7f0a5544f40bcbf65297ce862fede3548ddde.png" alt="n/p"/>, where <img class="math" src="_images/math/36f73fc1312ee0349b3f3a0f3bd9eb5504339011.png" alt="p"/> is the number of threads and <img class="math" src="_images/math/174fadd07fd54c9afe288e96558c92e0c1da733a.png" alt="n"/> is the number of rectangles, another possible distribution of work is to have each thread compute one rectangle of the first <img class="math" src="_images/math/36f73fc1312ee0349b3f3a0f3bd9eb5504339011.png" alt="p"/> rectangles, then go on a compute one of the next group of <img class="math" src="_images/math/36f73fc1312ee0349b3f3a0f3bd9eb5504339011.png" alt="p"/> rectangles, and so on. If the thread to rectangle assignment is done statically ahead of time, it would look like the results of running this script:</p>
+<div class="highlight-sh"><div class="highlight"><pre>./run_openmp_chunksOfOneStatic
+</pre></div>
+</div>
+<p>It should look like this when it completes:</p>
+<img alt="_images/run_openmp_equalChunks.png" src="_images/run_openmp_equalChunks.png" />
+<p>Note the legend at the top of the window tells you the color for each thread, which are numbered from 0 through 3 for this case. Study this to be certain you understand the assignment of threads to rectangles.</p>
+<p>OpenMP can decide for itself which threads will work on which computational elements. This is know as dynamic scheduling.  Try this script for that and see what you observe.  This could be different on different machines and could change each time you run it.</p>
+<div class="highlight-sh"><div class="highlight"><pre>./run_openmp_chunksOfOneDynamic
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="mpi-examples-distributed-message-passing">
+<h2>MPI Examples: distributed message passing<a class="headerlink" href="#mpi-examples-distributed-message-passing" title="Permalink to this headline">¶</a></h2>
+<p>In MPI, the processing units that run in parallel are <em>processes</em>, which are either running on the same machine or more likely across a cluster of machines, where each machine starts its own process.</p>
+<div class="section" id="id1">
+<h3>Equal chunks of rectangles<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h3>
+<p>In the case of a cluster of machines, there is one data decomposition pattern that makes the most sense, and that is to partition the work into equal chunks.  Try this script to visualize that case:</p>
+<div class="highlight-sh"><div class="highlight"><pre>./run_mpi_equalChunks
+</pre></div>
+</div>
+<p>You should see multiple windows displayed, one for each process, with rectangles assigned and computed in the order that they appear inside the function. It should look like this:</p>
+<img alt="_images/run_mp_equalChunks.png" src="_images/run_mp_equalChunks.png" />
+</div>
+<div class="section" id="id2">
+<h3>Chunks of one, statically assigned<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h3>
+<p>Another possible assignment, especially for a single machine running MPI processes, is to have the processes compute one rectangle each, similar to the single chunk case for OpenMP. Run this and you will see it looks the same as the mapping for OpenMP:</p>
+<div class="highlight-sh"><div class="highlight"><pre>./run_mpi_chunksOfOne
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="hybrid-mpi-plus-openmp">
+<h2>Hybrid: MPI plus OpenMP<a class="headerlink" href="#hybrid-mpi-plus-openmp" title="Permalink to this headline">¶</a></h2>
+<p>When using MPI across a cluster of machines, if those machines have multicore processors, then each of them can execute code using OpenMP.  The following example script runs this case, where each MPI process gets an equal chunk of the original rectangles, and those chunks are further divided by OpenMP threads.</p>
+<div class="highlight-sh"><div class="highlight"><pre>./run_mpi-openmp_equalChunks
+</pre></div>
+</div>
+<p>The result for this decomposition looks like this:</p>
+<img alt="_images/run_mpi-openmp_equalChunks.png" src="_images/run_mpi-openmp_equalChunks.png" />
+<p>There are other possible hybrid combinations- please experiment with some of the other scripts beginning with <tt class="docutils literal"><span class="pre">run_</span></tt> that we haven&#8217;t mentioned here yet to see if you can determine these more complicated patterns.</p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="index.html">
+              <img class="logo" src="_static/CSInParallel200wide.png" alt="Logo"/>
+            </a></p>
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Parallel Displays of the Area Under the Curve</a><ul>
+<li><a class="reference internal" href="#openmp-versions-shared-memory-multicore-with-threads">OpenMP Versions: Shared Memory multicore with threads</a><ul>
+<li><a class="reference internal" href="#equal-chunks-of-rectangles">Equal chunks of rectangles</a></li>
+<li><a class="reference internal" href="#chunks-of-one-statically-assigned">Chunks of one, statically assigned</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#mpi-examples-distributed-message-passing">MPI Examples: distributed message passing</a><ul>
+<li><a class="reference internal" href="#id1">Equal chunks of rectangles</a></li>
+<li><a class="reference internal" href="#id2">Chunks of one, statically assigned</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#hybrid-mpi-plus-openmp">Hybrid: MPI plus OpenMP</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="Code_Serial.html"
+                        title="previous chapter">The Code, Platforms, and Executing a Serial Version</a></p>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="Code_Serial.html" title="The Code, Platforms, and Executing a Serial Version"
+             >previous</a></li>
+        <li><a href="index.html">Visualize Numerical Integration</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright This work is licensed under a Creative Commons Attribution-ShareAlike 3.0 Unported License.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>

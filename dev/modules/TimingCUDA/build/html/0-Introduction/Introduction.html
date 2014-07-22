@@ -1,3 +1,5 @@
+
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
@@ -33,11 +35,8 @@
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
-          <a href="../genindex.html" title="General Index"
-             accesskey="I">index</a></li>
-        <li class="right" >
           <a href="../1-VectorAdd/VectorAdd.html" title="Vector Addition Lab"
-             accesskey="N">next</a> |</li>
+             accesskey="N">next</a></li>
         <li class="right" >
           <a href="../index.html" title="Timing CUDA Operations"
              accesskey="P">previous</a> |</li>
@@ -55,19 +54,21 @@
 <div class="section" id="introduction">
 <h2>Introduction<a class="headerlink" href="#introduction" title="Permalink to this headline">¶</a></h2>
 <p>Modern GPUs are composed of many cores capable of computing hundreds of threads simultaneously.
-In this module we will use the CUDA platform to give our code access to the massive computing power of these cards.</p>
+In this module we will use the CUDA platform from nVIDIA to give our code access to the
+massive computing power of these cards.</p>
 </div>
 <div class="section" id="what-is-cuda">
 <h2>What is CUDA?<a class="headerlink" href="#what-is-cuda" title="Permalink to this headline">¶</a></h2>
 <p>CUDA is a free proprietary platform designed by NVIDIA specifically for NVIDIA devices.
 It allows us to transfer memory between the GPU and CPU and run code on both processors.
 CUDA code is written in an extended version of C and CUDA files have the prefix <tt class="docutils literal"><span class="pre">.cu</span></tt>
-They are compiled by NVIDIA&#8217;s nvcc compiler.</p>
+They are compiled by NVIDIA&#8217;s <em>nvcc</em> compiler.</p>
 </div>
 <div class="section" id="challenges">
 <h2>Challenges<a class="headerlink" href="#challenges" title="Permalink to this headline">¶</a></h2>
-<p>CUDA programming is fundamentally different from regular programming because the code is run on two seperate processors, the host CPU and the device GPU.
-This makes coding more difficult because</p>
+<p>CUDA programming is fundamentally different from regular programming because the
+code is run on two seperate processors, the host CPU and the device GPU. This
+makes coding more difficult because</p>
 <ul class="simple">
 <li>The GPU and CPU don&#8217;t share memory</li>
 <li>The GPU code can&#8217;t be run on the CPU and visa versa</li>
@@ -83,8 +84,9 @@ This makes coding more difficult because</p>
 <p>This section is for CUDA 6 only.
 The following methods won&#8217;t work on all devices.
 You must use Windows or Linux and have a device with
-compute capability &gt;= 3.0. To find the
-compute capability of your device run</p>
+compute capability &gt;= 3.0.</p>
+<p>Linux: To find the
+compute capability of your device, run</p>
 <p><tt class="docutils literal"><span class="pre">/usr/local/cuda/samples/1_Utilities/deviceQuery/deviceQuery</span></tt></p>
 <p>and look at the CUDA capablity line.
 If that command doesn&#8217;t work you may have to build
@@ -96,23 +98,33 @@ sudo make
 </div>
 </div>
 <p>GPUs have their own dedicated RAM that is seperate from the RAM the CPU can use.
-If we want both the CPU and GPU to be able to access a value we must tell our program to allocate unified memory.</p>
+If we want both the CPU and GPU to be able to access a value we must tell our
+program to allocate unified memory.</p>
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
-<p class="last">There is no physical unified memory, CUDA unified memory is a series of compiler tricks.</p>
+<p class="last">There is no physical unified memory, but instead CUDA unified memory</p>
 </div>
+<p>is simply a convenient abstraction for programmers. Underneath, the system moves data from host to device and back, and the code running on the CPU accesses the CPU memory, while the code running on the GPU accesses the GPU memory.</p>
 <p>We do this with the <tt class="docutils literal"><span class="pre">cudaMallocManaged()</span></tt> function.
-It works nearly identically to malloc but we have to pass in an address to a pointer as well as the size because cudaMallocManaged returns a cudaError_t instead of a pointer.</p>
+It works nearly identically to malloc but we have to pass in an address to a
+pointer as well as the size because cudaMallocManaged returns a cudaError_t
+instead of a pointer.</p>
 <p>Ex: <tt class="docutils literal"><span class="pre">cudaMallocManaged((void**)&amp;ptr,</span> <span class="pre">SIZE</span> <span class="pre">*</span> <span class="pre">sizeof(int))</span></tt></p>
 </div>
 <div class="section" id="using-cudamalloc-and-cudamemcpy">
 <h3>Using cudaMalloc and cudaMemcpy<a class="headerlink" href="#using-cudamalloc-and-cudamemcpy" title="Permalink to this headline">¶</a></h3>
-<p>Some older devices don&#8217;t support unified memory.
-Instead they use <tt class="docutils literal"><span class="pre">cudaMalloc()</span></tt> and <tt class="docutils literal"><span class="pre">cudaMemcpy()</span></tt> to allocate and transfer memory.
-<tt class="docutils literal"><span class="pre">cudaMalloc()</span></tt> is very similar to <tt class="docutils literal"><span class="pre">cudaMallocManaged()</span></tt> and takes the same arguments however the CPU code will not be able to access memory allocated this way.</p>
-<p>To transfer memory between the devices we use <tt class="docutils literal"><span class="pre">cudaMemcpy()</span></tt> which takes a pointer to the destination, a pointer to the source, a size, and a fourth value representing the direction of the data flow.
+<p>Some older devices don&#8217;t support unified memory.  In addition, it can be advantageous to
+manage the memory on the CPU and the GPU in your programs.
+To accomplish this, you use <tt class="docutils literal"><span class="pre">cudaMalloc()</span></tt> and <tt class="docutils literal"><span class="pre">cudaMemcpy()</span></tt> to allocate and transfer memory.
+<tt class="docutils literal"><span class="pre">cudaMalloc()</span></tt> is very similar to <tt class="docutils literal"><span class="pre">cudaMallocManaged()</span></tt> and takes the same
+arguments. However, the CPU code will not be able to access memory allocated this
+way.</p>
+<p>As shown in the following code segment, to transfer memory between the devices we use <tt class="docutils literal"><span class="pre">cudaMemcpy()</span></tt>, which takes a
+pointer to the destination, a pointer to the source, a size, and a fourth value
+representing the direction of the data flow.
 This last value should be <tt class="docutils literal"><span class="pre">cudaMemcpyDeviceToHost</span></tt> or <tt class="docutils literal"><span class="pre">cudaMemcpyHostToDevice</span></tt>
-Once you&#8217;re done with memory allocated using either method you can free it by calling <tt class="docutils literal"><span class="pre">cudaFree()</span></tt> on the pointer.</p>
+Once you&#8217;re done with memory allocated using either method you can free it by
+calling <tt class="docutils literal"><span class="pre">cudaFree()</span></tt> on the pointer.</p>
 <div class="highlight-c"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
  2
  3
@@ -122,8 +134,10 @@ Once you&#8217;re done with memory allocated using either method you can free it
  7
  8
  9
-10</pre></div></td><td class="code"><div class="highlight"><pre><span class="hll"><span class="kt">int</span> <span class="o">*</span><span class="n">ptr</span><span class="p">,</span> <span class="o">*</span><span class="n">dev_ptr</span><span class="p">;</span>
-</span><span class="n">initialize_ptr</span><span class="p">(</span><span class="n">ptr</span><span class="p">);</span>
+10
+11</pre></div></td><td class="code"><div class="highlight"><pre><span class="hll"><span class="kt">int</span> <span class="o">*</span><span class="n">ptr</span><span class="p">,</span> <span class="o">*</span><span class="n">dev_ptr</span><span class="p">;</span>
+</span><span class="n">initialize_ptr</span><span class="p">(</span><span class="n">ptr</span><span class="p">);</span>    <span class="c1">//creating the block of SIZE data values of type int</span>
+                        <span class="c1">// in memory on CPU, pointed to by ptr (not shown)</span>
 <span class="n">cudaMalloc</span><span class="p">((</span><span class="kt">void</span><span class="o">**</span><span class="p">)</span><span class="o">&amp;</span><span class="n">ptr</span><span class="p">,</span> <span class="n">SIZE</span> <span class="o">*</span> <span class="k">sizeof</span><span class="p">(</span><span class="kt">int</span><span class="p">));</span>
 <span class="n">cudaMemcpy</span><span class="p">(</span><span class="n">dev_ptr</span><span class="p">,</span> <span class="n">ptr</span><span class="p">,</span> <span class="n">SIZE</span> <span class="o">*</span> <span class="k">sizeof</span><span class="p">(</span><span class="kt">int</span><span class="p">),</span> <span class="n">cudaMemcpyHostToDevice</span><span class="p">);</span>
 
@@ -134,14 +148,15 @@ Once you&#8217;re done with memory allocated using either method you can free it
 <span class="n">free</span><span class="p">(</span><span class="n">ptr</span><span class="p">);</span>
 </pre></div>
 </td></tr></table></div>
-<p>It&#8217;s usually a good idea to use <tt class="docutils literal"><span class="pre">cudaMalloc()</span></tt> and <tt class="docutils literal"><span class="pre">cudaMemcpy()</span></tt> instead of <tt class="docutils literal"><span class="pre">cudaMallocManaged()</span></tt> unless you need to do deep copies on nested structs like linked lists.
-You will see why later on in the lab.</p>
+<p>It&#8217;s usually a good idea to use <tt class="docutils literal"><span class="pre">cudaMalloc()</span></tt> and <tt class="docutils literal"><span class="pre">cudaMemcpy()</span></tt> instead of
+<tt class="docutils literal"><span class="pre">cudaMallocManaged()</span></tt> unless you need to do deep copies on nested structs like
+linked lists. You will see why later on in the lab.</p>
 </div>
 </div>
 <div class="section" id="host-code-vs-device-code">
 <h2>Host Code vs. Device Code<a class="headerlink" href="#host-code-vs-device-code" title="Permalink to this headline">¶</a></h2>
 <p>Because CPU code and GPU code use different instruction
-sets we must tell the compiler whether our functions
+sets, we must tell the compiler whether our functions
 will run on the CPU or the GPU.
 We do this with three new modifiers.</p>
 <ol class="arabic simple">
@@ -149,20 +164,23 @@ We do this with three new modifiers.</p>
 These functions are called kernels because they contain the information threads used to create threads.</li>
 <li><tt class="docutils literal"><span class="pre">__device__</span></tt> functions run on the GPU and can only be called by <tt class="docutils literal"><span class="pre">__global__</span></tt> and other <tt class="docutils literal"><span class="pre">__device__</span></tt> methods.
 They tend to be helper methods called by threads.</li>
-<li><tt class="docutils literal"><span class="pre">__host__</span></tt> functions are run on the CPU and can only be called by other <tt class="docutils literal"><span class="pre">__host__</span></tt> methods.
-If you don&#8217;t add one of these modifiers to a function definition the compiler assumes it&#8217;s a <tt class="docutils literal"><span class="pre">__host__</span></tt> function. It&#8217;s also possible for a function to be both <tt class="docutils literal"><span class="pre">__host__</span></tt> and <tt class="docutils literal"><span class="pre">__device__</span></tt> this is useful because it allows you to test GPU functions on the CPU.</li>
+<li><tt class="docutils literal"><span class="pre">__host__</span></tt> functions are run on the CPU and can only be called by other <tt class="docutils literal"><span class="pre">__host__</span></tt> methods.</li>
 </ol>
+<p>If you don&#8217;t add one of these modifiers to a function definition the compiler assumes it&#8217;s a <tt class="docutils literal"><span class="pre">__host__</span></tt> function. It&#8217;s also possible for a function to be both <tt class="docutils literal"><span class="pre">__host__</span></tt> and <tt class="docutils literal"><span class="pre">__device__</span></tt> this is useful because it allows you to test GPU functions on the CPU.</p>
 </div>
 <div class="section" id="threads">
 <h2>Threads<a class="headerlink" href="#threads" title="Permalink to this headline">¶</a></h2>
 <p>CUDA splits it&#8217;s treads into three dimensional blocks which are arranged into a two dimensional grid.
-Threads in the same block all have access to a local shared memory which is faster than the GPU&#8217;s global memory.</p>
-<div class="align-center figure">
-<a class="reference internal image-reference" href="../_images/cudathreads.png"><img alt="thread organization in CUDA" src="../_images/cudathreads.png" style="width: 378px; height: 438px;" /></a>
-<p class="caption"><em>Image from North Carolina State University</em></p>
+Threads in the same block all have access to a local shared memory which is
+faster than the GPU&#8217;s global memory.</p>
+<div class="align-center figure align-center">
+<img alt="thread organization in CUDA" src="../_images/cudathreads.png" style="width: 378px; height: 438px;" />
+<p class="caption">Image from <a class="reference external" href="http://wiki.expertiza.ncsu.edu/images/7/7a/Cuda_Fig2.png">North Carolina State University</a></p>
 </div>
-<p>CUDA provides a handy type, <tt class="docutils literal"><span class="pre">dim3</span></tt> to keep track of these dimensions you can declare dimensions like this <tt class="docutils literal"><span class="pre">dim3</span> <span class="pre">myDimensions(1,2,3);</span></tt>
-Both blocks and grids use this type even though grids are 2D.
+<p>CUDA provides a handy type, <tt class="docutils literal"><span class="pre">dim3</span></tt> to keep track of these dimensions. You can
+declare dimensions like this: <tt class="docutils literal"><span class="pre">dim3</span> <span class="pre">myDimensions(1,2,3);</span></tt>, signifying the ranges on each
+dimension.  Both blocks and grids
+use this type even though grids are 2D.
 To use a <tt class="docutils literal"><span class="pre">dim3</span></tt> as a grid dimension, leave out the last argument or set it to one.
 Each device has it&#8217;s own limit on the dimensions of blocks.
 Run</p>
@@ -172,23 +190,28 @@ Run</p>
 <div class="section" id="kernels">
 <h2>Kernels<a class="headerlink" href="#kernels" title="Permalink to this headline">¶</a></h2>
 <p>CUDA threads are created by functions called kernels which must be <tt class="docutils literal"><span class="pre">__global__</span></tt>.
-Kernels are launched with an extra set of parameters enclosed by <tt class="docutils literal"><span class="pre">&lt;&lt;&lt;</span></tt> and <tt class="docutils literal"><span class="pre">&gt;&gt;&gt;</span></tt> the first argument is a <tt class="docutils literal"><span class="pre">dim3</span></tt> representing the grid dimensions and the second is another <tt class="docutils literal"><span class="pre">dim3</span></tt> representing the block dimensions.
+Kernels are launched with an extra set of parameters enclosed by <tt class="docutils literal"><span class="pre">&lt;&lt;&lt;</span></tt> and
+<tt class="docutils literal"><span class="pre">&gt;&gt;&gt;</span></tt> the first argument is a <tt class="docutils literal"><span class="pre">dim3</span></tt> representing the grid dimensions and
+the second is another <tt class="docutils literal"><span class="pre">dim3</span></tt> representing the block dimensions.
 You can also use <tt class="docutils literal"><span class="pre">int</span></tt>s instead of <tt class="docutils literal"><span class="pre">dim3</span></tt>s, this will create a Nx1x1 grid.
 After a kernel is launched, it creates the number of threads specified and runs each of them.
-CUDA automatically waits for the devices to finish before you can access memory using <tt class="docutils literal"><span class="pre">cudaMemcpy()</span></tt> although if you&#8217;re using unified memory with <tt class="docutils literal"><span class="pre">cudaMallocManaged()</span></tt> you will need to call <tt class="docutils literal"><span class="pre">cudaDeviceSynchronize()</span></tt> to force the CPU to wait for the GPU.</p>
+CUDA automatically waits for the devices to finish before you can access memory
+using <tt class="docutils literal"><span class="pre">cudaMemcpy()</span></tt> although if you&#8217;re using unified memory with
+<tt class="docutils literal"><span class="pre">cudaMallocManaged()</span></tt> you will need to call <tt class="docutils literal"><span class="pre">cudaDeviceSynchronize()</span></tt> to
+force the CPU to wait for the GPU.</p>
 <div class="highlight-c"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
 2
 3
-4</pre></div></td><td class="code"><div class="highlight"><pre><span class="hll"><span class="n">dim3</span> <span class="nf">numBlocks</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span><span class="mi">8</span><span class="p">);</span>
-</span><span class="n">dim3</span> <span class="nf">threadsPerBlock</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span><span class="mi">8</span><span class="p">,</span><span class="mi">8</span><span class="p">);</span>
+4</pre></div></td><td class="code"><div class="highlight"><pre><span class="hll"><span class="n">dim3</span> <span class="n">numBlocks</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span><span class="mi">8</span><span class="p">);</span>
+</span><span class="n">dim3</span> <span class="n">threadsPerBlock</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span><span class="mi">8</span><span class="p">,</span><span class="mi">8</span><span class="p">);</span>
 <span class="n">myKernel</span><span class="o">&lt;&lt;&lt;</span><span class="n">numBlocks</span><span class="p">,</span> <span class="n">threadsPerBlock</span><span class="o">&gt;&gt;&gt;</span><span class="p">(</span><span class="n">args</span><span class="p">);</span>
 <span class="n">myKernel</span><span class="o">&lt;&lt;&lt;</span><span class="mi">16</span><span class="p">,</span><span class="mi">64</span><span class="o">&gt;&gt;&gt;</span><span class="p">(</span><span class="n">args</span><span class="p">);</span>
 </pre></div>
 </td></tr></table></div>
 <p>Kernels have access to 4 variables that give information about a thread&#8217;s location in the grid</p>
 <ol class="arabic simple">
-<li><tt class="docutils literal"><span class="pre">treadIdx.[xyz]</span></tt> represents a thread&#8217;s index along the given dimension.</li>
-<li><tt class="docutils literal"><span class="pre">blockIdx.[xy]</span></tt> represents a the thread&#8217;s block&#8217;s index along the given dimension.</li>
+<li><tt class="docutils literal"><span class="pre">threadIdx.[xyz]</span></tt> represents a thread&#8217;s index along the given dimension.</li>
+<li><tt class="docutils literal"><span class="pre">blockIdx.[xy]</span></tt> represents a thread&#8217;s block&#8217;s index along the given dimension.</li>
 <li><tt class="docutils literal"><span class="pre">blockDim.[xyz]</span></tt> represents the number of threads per block in the given direction.</li>
 <li><tt class="docutils literal"><span class="pre">gridDim.[xy]</span></tt> represents the number of blocks in the given direction.</li>
 </ol>
@@ -240,19 +263,6 @@ To make sure your code is taking full advantage of your device&#8217;s capabilit
   <h4>Next topic</h4>
   <p class="topless"><a href="../1-VectorAdd/VectorAdd.html"
                         title="next chapter">Vector Addition Lab</a></p>
-<div id="searchbox" style="display: none">
-  <h3>Quick search</h3>
-    <form class="search" action="../search.html" method="get">
-      <input type="text" name="q" />
-      <input type="submit" value="Go" />
-      <input type="hidden" name="check_keywords" value="yes" />
-      <input type="hidden" name="area" value="default" />
-    </form>
-    <p class="searchtip" style="font-size: 90%">
-    Enter search terms or a module, class or function name.
-    </p>
-</div>
-<script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
       </div>
       <div class="clearer"></div>
@@ -261,11 +271,8 @@ To make sure your code is taking full advantage of your device&#8217;s capabilit
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
-          <a href="../genindex.html" title="General Index"
-             >index</a></li>
-        <li class="right" >
           <a href="../1-VectorAdd/VectorAdd.html" title="Vector Addition Lab"
-             >next</a> |</li>
+             >next</a></li>
         <li class="right" >
           <a href="../index.html" title="Timing CUDA Operations"
              >previous</a> |</li>
@@ -274,7 +281,7 @@ To make sure your code is taking full advantage of your device&#8217;s capabilit
     </div>
     <div class="footer">
         &copy; Copyright This work is licensed under a Creative Commons Attribution-ShareAlike 3.0 Unported License.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
     </div>
   </body>
 </html>

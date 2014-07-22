@@ -1,0 +1,204 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>New Module Template &mdash; Documentation for Developers</title>
+    
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+    <link rel="top" title="Documentation for Developers" href="../index.html" />
+    <link rel="next" title="Checklist: Reminders for Experienced Module Creators" href="../modulechecklist/modulechecklist.html" />
+    <link rel="prev" title="The CSinParallel Module Development Process" href="../developmentProcess/process.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../modulechecklist/modulechecklist.html" title="Checklist: Reminders for Experienced Module Creators"
+             accesskey="N">next</a></li>
+        <li class="right" >
+          <a href="../developmentProcess/process.html" title="The CSinParallel Module Development Process"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../index.html">Documentation for Developers</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="new-module-template">
+<h1>New Module Template<a class="headerlink" href="#new-module-template" title="Permalink to this headline">¶</a></h1>
+<p>The main title of the page goes in between lines of asterisks the same length as the title, and text of an introductory persuasion can go below that before subheadings begin (but is not necessary). You can view the code for this page (or even copy the file to use as a template) at <tt class="docutils literal"><span class="pre">/csinparallel/docs/developers/source/newmoduletemplate/newmoduletemplate.rst</span></tt>.</p>
+<div class="section" id="subheadings">
+<h2>Subheadings<a class="headerlink" href="#subheadings" title="Permalink to this headline">¶</a></h2>
+<p>First-level subheadings get underlined with pound signs; again, make sure that the line is the same length as the line of text above it.</p>
+<p>Further layers of subheadings are distinguished by underlining them with something else. Sphinx is very flexible about which you use, interpreting levels based on the order they&#8217;re introduced, so just be consistent.</p>
+<div class="section" id="the-sub-subheading">
+<h3>The Sub-subheading<a class="headerlink" href="#the-sub-subheading" title="Permalink to this headline">¶</a></h3>
+<p>This one was underlined with asterisks.</p>
+<div class="section" id="the-sub-sub-subheading">
+<h4>The Sub-sub-subheading<a class="headerlink" href="#the-sub-sub-subheading" title="Permalink to this headline">¶</a></h4>
+<p>This one was underlined with dashes, but we could have swapped the last two and created the same results.</p>
+<p>These appear in the table of contents on the left but not on our homepage, because our index.rst file has a toctree maxdepth of 1 (only the first-level headings are shown). <strong>This is a CSinParallel convention.</strong></p>
+<p>Deeper subheadings are possible; should you find yourself in need of them, first question your design and then look up the documentation.</p>
+</div>
+</div>
+</div>
+<div class="section" id="simple-text-formatting">
+<h2>Simple Text Formatting<a class="headerlink" href="#simple-text-formatting" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="inline-formatting">
+<h3>Inline Formatting<a class="headerlink" href="#inline-formatting" title="Permalink to this headline">¶</a></h3>
+<p><em>Italics</em> can be made by surrounding text with single asterisks; <strong>bold</strong>, double. To include just a <tt class="docutils literal"><span class="pre">line</span> <span class="pre">or</span> <span class="pre">two</span> <span class="pre">of</span> <span class="pre">code</span></tt>, enclose it in double backticks (``).</p>
+<p>Asterisks or backticks that could be confused with markup can be escaped with a <em>back</em>slash. These markups can&#8217;t be nested or start or end with a space, and there must be whitespace on either side of them (the workaround for this, such as the word backslash above, is to use a backslash-escaped space: <tt class="docutils literal"><span class="pre">*back*\</span> <span class="pre">slash</span></tt>.)</p>
+</div>
+<div class="section" id="larger-blocks">
+<h3>Larger Blocks<a class="headerlink" href="#larger-blocks" title="Permalink to this headline">¶</a></h3>
+<p>Inline formatting is a start, but you will often want to create larger blocks.</p>
+<div class="section" id="code-blocks">
+<h4>Code Blocks<a class="headerlink" href="#code-blocks" title="Permalink to this headline">¶</a></h4>
+<div class="highlight-html"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4</pre></div></td><td class="code"><div class="highlight"><pre><span class="hll">This is a code block.
+</span>You can specify the language for coloring purposes,
+and there are several other options (such as the highlighted
+line above and the line numbers at left).
+</pre></div>
+</td></tr></table></div>
+<ul class="simple">
+<li>Code blocks are begun with the directive <tt class="docutils literal"><span class="pre">..</span> <span class="pre">code-block::</span></tt> (then specify the language - anything supported by <a class="reference external" href="http://pygments.org/languages/">Pygments</a>).</li>
+<li>Code should be tabbed under the directive; leaving a newline will escape the code block. <a class="reference external" href="http://sphinx-doc.org/markup/code.html">Here</a> is a list of available options.</li>
+</ul>
+</div>
+<div class="section" id="lists">
+<h4>Lists<a class="headerlink" href="#lists" title="Permalink to this headline">¶</a></h4>
+<p>Creating the unordered list above was simple: leaving a newline before and after each element (including the first and last), simply put an asterisk or hyphen before each element. To create an ordered list, add <tt class="docutils literal"><span class="pre">#.</span></tt> before each element, and they will be automatically numbered.</p>
+</div>
+<div class="section" id="two-kinds-of-boxes">
+<h4>Two Kinds of Boxes<a class="headerlink" href="#two-kinds-of-boxes" title="Permalink to this headline">¶</a></h4>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">First:</th><td class="field-body">To add a colored block containing a word of your choice, such as this, put it between two colons (e.g. <tt class="docutils literal"><span class="pre">:Comment:</span></tt> or <tt class="docutils literal"><span class="pre">:Observe:</span></tt>) and then the material to be included. Leave a line of whitespace to escape the colored block.</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">For text encased in the colored box, such as this, there are three options: <tt class="docutils literal"><span class="pre">..</span> <span class="pre">note::</span></tt> (grey box), <tt class="docutils literal"><span class="pre">..</span> <span class="pre">warning::</span></tt> (red box), and <tt class="docutils literal"><span class="pre">..</span> <span class="pre">seealso::</span></tt> (yellow box).</p>
+</div>
+</div>
+</div>
+<div class="section" id="more-advanced-formatting-custom-inlines">
+<h3>More Advanced Formatting: Custom Inlines<a class="headerlink" href="#more-advanced-formatting-custom-inlines" title="Permalink to this headline">¶</a></h3>
+<p>To create your own custom text formatting labels (such as to make <span class="red">colored text</span>), there are three distinct pieces you&#8217;ll need. These are rendered in the HTML as <tt class="docutils literal"><span class="pre">&lt;span&gt;</span></tt>s.</p>
+<ol class="arabic">
+<li><p class="first">At the top of the .rst files you want to use your custom labels in, define them as <strong>roles</strong>. For example, to create the red text above, this file begins with <tt class="docutils literal"><span class="pre">..</span> <span class="pre">role::</span> <span class="pre">red</span></tt>.</p>
+</li>
+<li><p class="first">In your <tt class="docutils literal"><span class="pre">default.css_t</span></tt> file, add CSS class instructions for your format. To create the red text, this project&#8217;s <tt class="docutils literal"><span class="pre">default.css_t</span></tt> contains</p>
+<blockquote>
+<div><div class="highlight-css"><div class="highlight"><pre><span class="nc">.red</span> <span class="p">{</span>
+        <span class="k">color</span><span class="o">:</span><span class="nb">red</span><span class="p">;</span>
+        <span class="k">font-weight</span><span class="o">:</span><span class="k">bold</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div></blockquote>
+</li>
+<li><p class="first">To use your new label, put the class name between colons and then the element to be formatted between backticks. The red text above looks like this: <tt class="docutils literal"><span class="pre">:red:`colored</span> <span class="pre">text`</span></tt>.</p>
+</li>
+</ol>
+</div>
+</div>
+<div class="section" id="another-subheading-adding-visuals">
+<h2>Another Subheading: Adding Visuals<a class="headerlink" href="#another-subheading-adding-visuals" title="Permalink to this headline">¶</a></h2>
+<div class="align-center figure align-center">
+<a class="reference external image-reference" href="http://docutils.sourceforge.net/docs/ref/rst/directives.html#figure"><img alt="Alt-text for sample image" src="../_images/sampleimage.png" style="width: 401px; height: 368px;" /></a>
+<p class="caption">This is a figure, so here is its caption. It is separated from the fields by a line of whitespace but is still tabbed.</p>
+</div>
+<p><strong>Equations</strong> also fall under visuals. You can insert clips from screenshots as images or figures if you like, or you can type standard <tt class="docutils literal"><span class="pre">LaTeX</span></tt> expressions like this:
+<tt class="docutils literal"><span class="pre">:math:`&lt;expression&gt;`</span></tt> (substituting your own expression for &lt;expression&gt; but keeping the backticks).</p>
+</div>
+<div class="section" id="resources-for-further-reading">
+<h2>Resources/For Further Reading<a class="headerlink" href="#resources-for-further-reading" title="Permalink to this headline">¶</a></h2>
+<p>Official <a class="reference external" href="http://sphinx-doc.org/">Sphinx documentation</a>: super long, but does have a search box and a nice table of contents.</p>
+<p>The official <a class="reference external" href="http://docutils.sourceforge.net/docs/user/rst/quickref.html">quick reference guide</a>, from the docutils sourceforce archive.</p>
+<p>A <em>very</em> simple <a class="reference external" href="http://matplotlib.org/sampledoc/cheatsheet.html">cheat sheet</a>, but gives a quick reference to making tables.</p>
+<p>A <a class="reference external" href="http://openalea.gforge.inria.fr/doc/openalea/doc/_build/html/source/sphinx/rest_syntax.html">longer guide</a>, written up in Sphinx (so it looks like this page, but much more comprehensive).</p>
+<p><a class="reference external" href="http://openmdao.org/docs/documenting/sphinx.html">A tutorial from OpenMDAO</a>, another project using Sphinx to generate its documentation.</p>
+<p><a class="reference external" href="http://people.ee.ethz.ch/~creller/web/tricks/reST.html">A ReST tutorial</a> put together by a staff member at the Swiss Federal Institute of Technology; contains lots of useful information about graphing extensions.</p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../index.html">
+              <img class="logo" src="../_static/CSInParallel200wide.png" alt="Logo"/>
+            </a></p>
+<h3><a href="../index.html">Table Of Contents</a></h3>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../softwaresetup/softwaresetup.html">What You&#8217;ll Need to Get Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../creatingnewmodule/modulesetup.html">Setting Up A New Module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../furthersetup/furthersetup.html">Editing Your New Module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../developmentProcess/process.html">The CSinParallel Module Development Process</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="">New Module Template</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../modulechecklist/modulechecklist.html">Checklist: Reminders for Experienced Module Creators</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../components/components.html">Components of a Module</a></li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="../developmentProcess/process.html"
+                        title="previous chapter">The CSinParallel Module Development Process</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="../modulechecklist/modulechecklist.html"
+                        title="next chapter">Checklist: Reminders for Experienced Module Creators</a></p>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../modulechecklist/modulechecklist.html" title="Checklist: Reminders for Experienced Module Creators"
+             >next</a></li>
+        <li class="right" >
+          <a href="../developmentProcess/process.html" title="The CSinParallel Module Development Process"
+             >previous</a> |</li>
+        <li><a href="../index.html">Documentation for Developers</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright This work is licensed under a Creative Commons Attribution-ShareAlike 3.0 Unported License.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>

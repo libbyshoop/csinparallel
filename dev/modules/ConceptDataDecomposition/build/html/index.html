@@ -1,0 +1,131 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Concept: The Data Decomposition Pattern &mdash; Concept: The Data Decomposition Pattern</title>
+    
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="shortcut icon" href="_static/favicon.ico"/>
+    <link rel="top" title="Concept: The Data Decomposition Pattern" href="#" />
+    <link rel="next" title="Vector Addition" href="VectorAdd/VectorAddProblem.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="VectorAdd/VectorAddProblem.html" title="Vector Addition"
+             accesskey="N">next</a></li>
+        <li><a href="#">Concept: The Data Decomposition Pattern</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="concept-the-data-decomposition-pattern">
+<h1>Concept: The Data Decomposition Pattern<a class="headerlink" href="#concept-the-data-decomposition-pattern" title="Permalink to this headline">¶</a></h1>
+<p><strong>Prologue</strong></p>
+<p>This document contains reading material that introduces a classic and ubiquitous
+pattern used in parallel programs: <strong>data decomposition</strong>.
+Programs containing this pattern perform computations over elements of data
+stored in linear data structures (and potentially other types of data structures; but we will stick to linear here).  In non-parallel, or &#8216;serial&#8217;, or &#8216;sequential&#8217; implementations of programs that contain linear data structures, we often iterate over all the data elements using a for loop. In parallel implementations, we need to decide which elements will be computed by multiple processing units at the same time. We dub the choices we make in our parallel implementation for achieving this the <strong>data decomposition pattern</strong>, because we will chose a decomposition, or mapping of elements in the data structure to processing units available to us.  We introduce an
+example analogous to &#8220;Hello World&#8221; for this data decomposition programming pattern:
+addition of vectors, using the simple linear array data structure.  We have code examples for different types of hardware and software that enable parallel computation.</p>
+<p>The first two chapters introduce the problem and describe ways to decompose it onto processing units.  The next three chapters show examples of just how this is done for three different hardware and software combinations. We wrap up with alternative mapping schemes and some questions for reflection.</p>
+<p><strong>Nomenclature</strong></p>
+<p>A <strong>Processing Unit</strong> is an element of software that can execute instructions on hardware.  On a multicore computer, this would be a <em>thread</em> running on a core of the multicore chip.  On a cluster of computers, this would be a <em>process</em> running on one of the computers. On a co-processor such as a Graphics Processing Unit (GPU), this would be a <em>thread</em> running on one of its many cores.</p>
+<p>A program that uses only one procesing unit is referred to as a <em>serial</em> or <em>sequential</em> solution. You are likely most familiar with these types of programs.</p>
+<p><strong>Prerequisites</strong></p>
+<ul>
+<li><p class="first">Knowledge of C programming language is helpful.</p>
+</li>
+<li><dl class="first docutils">
+<dt>Basic understanding of three types of parallel and distributed computing (PDC) hardware:</dt>
+<dd><ul class="first last simple">
+<li>Shared-memory multicore machines</li>
+<li>Clusters of multiple computers connected via high-speed networking</li>
+<li>Co-processor devices, such as graphical processing units (GPU)</li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>Though not strictly necessary, if you want to compile and run the code examples, you will need unix-based computers with:</dt>
+<dd><ul class="first last simple">
+<li>MPI installed on a single computer or cluster (either MPICH2 or OpenMPI)</li>
+<li>gcc with OpenMP (most versions of gcc have this enabled already) and a multicore computer</li>
+<li>CUDA developer libraries installed on a machine with a CUDA-capable GPU</li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+<p>We have compiled and run these on linux machines or clusters with a few different GPU cards.</p>
+<p><strong>Code Examples</strong></p>
+<p>You can download <a class="reference download internal" href="_downloads/VectorAdd.tgz"><tt class="xref download docutils literal"><span class="pre">VectorAdd.tgz</span></tt></a> to obtain all of the code examples shown in the following sections of this reading.</p>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="VectorAdd/VectorAddProblem.html">Vector Addition</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Decomposition/VecAddDecomposition.html">Decomposition of Data Manipulation Tasks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Decomposition/MPI_VecAdd.html">Vector Add with MPI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Decomposition/OpenMP_VecAdd.html">Vector Add with OpenMP</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Decomposition/CUDA_VecAdd.html">Vector Add with CUDA</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Decomposition/Variations.html">Other ways to split the work</a></li>
+</ul>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="#">
+              <img class="logo" src="_static/CSInParallel200wide.png" alt="Logo"/>
+            </a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="VectorAdd/VectorAddProblem.html"
+                        title="next chapter">Vector Addition</a></p>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="VectorAdd/VectorAddProblem.html" title="Vector Addition"
+             >next</a></li>
+        <li><a href="#">Concept: The Data Decomposition Pattern</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright This work is licensed under a Creative Commons Attribution-ShareAlike 3.0 Unported License.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>
