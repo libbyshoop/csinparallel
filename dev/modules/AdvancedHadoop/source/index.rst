@@ -30,8 +30,10 @@ Contents:
 .. toctree::
     :maxdepth: 1
 
-    0-Introduction/Introduction
-    1-Multiples/Multiples
+    0-NetworkIntro/NetworkIntro
+    1-AdvancedNetwork/AdvancedNetwork
+    2-TrafficDataset/Introduction
+    3-MultipleFiles/Multiples
 
 
 .. comment

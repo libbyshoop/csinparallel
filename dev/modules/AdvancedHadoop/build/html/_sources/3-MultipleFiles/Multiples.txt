@@ -1,3 +1,4 @@
+###########################
 Working with Multiple files
 ###########################
 
@@ -10,7 +11,7 @@ Take this question for instance, are taxis more likely to
 get into crashes on the weekend?
 
 Taxi Crashes
-************
+############
 
 To answer this question we will need to access the day of
 week data at accidents[10] and the vehicle type data at
@@ -118,4 +119,22 @@ After submitting the job on WMR we get the following output:
 
 Code 1 is Sunday, code 2 is Monday etc. So it looks like
 Taxis get into the most accidents on Fridays, a fairly high
-number on Saturdays, but very few on Sundays
+number on Saturdays, but very few on Sundays.
+
+Challenges
+##########
+
+Use the techniques you've learned to answer the following 
+questions, or come up with your own:
+
+- Are male drivers more likely to injure other males? You
+  will need the following fields: Sex of the driver - 
+  Vehicles[14], Sex of casualty - Casualties[4] in both
+  cases 1 is male 2 is female 3 is unknown and -1 is 
+  missing data.
+
+- What is the average severity of a crash in which at
+  least one vehicle overturned? If vehicles[7] = 2, 5, or
+  4 the vehicle overturned. The severity of an accident
+  is Accidents[6] and ranges from 1-3, 1 being the most
+  serious.

@@ -135,9 +135,8 @@ this:
       Wmr.emit(key, avgCasualties)
 
 .. note::
+    Does this reducer look familiar?
 
-    we can't use len(values) because values has type map
-    which doesn't implement len()
 
 Run this job on wmr using cluster path 
 ``/shared/traffic/Accidents7904.csv`` You should get the following
