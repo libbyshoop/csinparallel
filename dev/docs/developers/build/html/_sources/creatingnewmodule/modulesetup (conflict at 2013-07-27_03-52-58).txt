@@ -1,0 +1,154 @@
+***********************
+Setting Up A New Module
+***********************
+
+If you've already got Python, a github client, and the Sphinx package installed, then begin here!
+
+First Time: clone the repository
+################################
+
+If you are working on the project for the first time, you will first need to become a github user and collaborator on the CSinParallel github repository.
+You can `visit the project on github <https://github.com/libbyshoop/csinparallel>`_.
+
+Note that the central repo on github.com holds two main branches (git terminology):
+    1. master : origin/master
+    2. develop :    origin/develop
+
+If you are working on the project for the first time or are moving to a new computer,
+you will next want to *clone* a copy of the current state of the project on your own machine. The github clients available from github.com will enable you to clone the project, once you are a collaborator.  You can even do this directly from the
+`project page on github <https://github.com/libbyshoop/csinparallel>`_.
+
+Find your directory containing the cloned copy of the repository (on Windows, it usually puts itself in ``My Documents``). It should be a directory called csinparallel.You will see the following directory structure:
+
+::
+
+    csinparallel/modules/_____Module Name Here_______/source
+                                                     /build
+                /images
+                /docs
+                /dev/modules/_____Module Name Here_______/source
+                                                         /build
+                    /images
+                    /docs
+                /README.rst
+
+Modules that are ready for production will be in the top directory shown above.
+Modules that are under development will be under the directory named 'dev'.
+
+.. note:: If you `visit the project on github <https://github.com/libbyshoop/csinparallel>`_, you can also explore this directory structure. This documentation you are reading is in the docs folder.
+
+Make sure you are using the develop branch
+##########################################
+
+Now for some heavy-duty git terminology:
+
+As you begin your work to create a new module, you will want to **be certain that you
+are doing your work on a new branch that you create from the develop branch**.  Once you have your clone of the project, you can create your own sub-vranch of the devlop branch by:
+
+    1. Navigate to the clone directory named ``csinparallel``
+    2. Execute this on the connamd line: 
+        ``git checkout -b <your-branch-name> develop``
+
+.. warning:: The text inside and including the brackets < > above is a single name for your branch. We suggest a name such as *ls-dev*, where ls should be replaced by your initials, your first or last name, or a combination of those.
+
+As an alternative to this second step, you can use your github client to make a new sub-branch off the develop branch.  Look for a small plus sign on the develop branch in the list of branches.
+
+In a later section of this documentation we describe the workflow with git in greater detail.  Note for now that *your new work will always be done in the dev/modules directory*, where you can create a brand new module.
+
+
+Creating a Module
+#################
+
+
+Find your GitHub directory (on Windows, it usually puts itself in ``My Documents``). If you forked the repository, you'll have a directory called csinparallel.
+Navigate to ``csinparallel/dev/modules``, and enter ``sphinx-quickstart``
+to begin. Next, follow these directions below to go through the setup process.
+
+Setup
+*****
+
+Bolded answers require the user to type something, not just hit enter.
+
+> Root path for the documentation [.]: **YourModuleNameInCamelCase** (e.g. DistributedMemoryProgramming)
+
+> Separate source and build directories (y/N) [n]: **y**
+
+> Name prefix for templates and static dir [_]: [hit enter]
+
+> Project name: **Name of the module in plain English** (e.g. GPU Programming or Distributed Memory Programming)
+
+> Author name(s): **CSInParallel Project**
+
+> Project version: **1**
+
+> Project release [1]: [hit enter]
+
+> Source file suffix [.rst]: [hit enter]
+
+> Name of your master document (without suffix) [index]: [hit enter]
+
+> Do you want to use the epub builder (y/N) [n]: [hit enter]
+
+> autodoc: automatically insert docstrings from modules (y/N) [n]: [hit enter]
+
+> doctest: automatically test code snippets in doctest blocks (y/N) [n]: [hit enter]
+
+> intersphinx: link between Sphinx documentation of different projects (y/N) [n]: [hit enter]
+
+> todo: write "todo" entries that can be shown or hidden on build (y/N) [n]: [hit enter]
+
+> coverage: checks for documentation coverage (y/N) [n]: [hit enter]
+
+> pngmath: include math, rendered as PNG images (y/N) [n]: **y**
+
+> mathjax: include math, rendered in the browser by MathJax (y/N) [n]: [hit enter]
+
+> ifconfig: conditional inclusion of content based on config values (y/N) [n]: [hit enter]
+
+> viewcode: include links to the source code of documented Python objects (y/N) [n]: [hit enter]
+
+> Create Makefile? (Y/n) [y]: [hit enter]
+
+> Create Windows command file? (Y/n) [y]: [hit enter]
+
+Modifying the conf.py File
+##########################
+
+
+In ``/GitHub/csinparallel/dev/modules/YourModuleName/source``, run the configuration script. To do this, copy the file :download:`confscript.py <confscript.py>` into this folder, and double click on it or enter ``python confscript.py`` into a terminal or command line.  Follow the directions to enter your module's name (in plain English) and a short description when prompted.
+
+Optional: Enabling LaTeX
+************************
+
+Most module editors will not need to create LaTeX versions of their modules. If you really want to, though, you'll need to open conf.py and change ``extentions = ['sphinx.ext.pngmath']`` to the following: 
+
+ ::
+
+    extensions = ['sphinx.ext.pngmath']
+
+    if 'Darwin' in platform.uname()[0]:
+	    pngmath_latex = ''
+	    pngmath_dvipng = ''
+    elif 'Linux' in platform.uname()[0]:
+	    pngmath_latex = ''
+	    pngmath_dvipng = ''
+    elif 'Windows' in platform.uname()[0]:
+            pngmath_latex = ''
+            pngmath_dvipng = ''  
+
+and then find your computer's tex paths and add them to the appropriate fields.
+
+Making the Module
+#################
+
+Open the Makefile (not make.bat) and find the latexpdf entry. Add this line:
+
+    ``tar -czf $(BUILDDIR)/latex.tar.gz $(BUILDDIR)/latex`` 
+
+indented with a tab and on a line by itself after this line:
+
+    ``$(MAKE) -C $(BUILDDIR)/latex all-pdf``
+
+You now have enough of a start to see results! From ``csinparallel/dev/modules/YourModuleName``, enter ``make html``. This will render HTML files from your ``source`` folder and place them in your ``build`` folder. Click on one to open it! 
+
+The next section of this tutorial will outline how to begin to make changes to what you see here.

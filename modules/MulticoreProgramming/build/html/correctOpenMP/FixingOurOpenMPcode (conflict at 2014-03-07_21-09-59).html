@@ -1,0 +1,236 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Creating a correct threaded version &mdash; Multicore Programming with OpenMP</title>
+    
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="top" title="Multicore Programming with OpenMP" href="../index.html" />
+    <link rel="next" title="Timing and Performance on Multicore machines" href="../timingAndScalability/TimingOnMTLandscalability.html" />
+    <link rel="prev" title="Getting Started with Multicore Programming using OpenMP" href="../introOpenMP/GettingstartedwithOpenMP.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../timingAndScalability/TimingOnMTLandscalability.html" title="Timing and Performance on Multicore machines"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="../introOpenMP/GettingstartedwithOpenMP.html" title="Getting Started with Multicore Programming using OpenMP"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../index.html">Multicore Programming with OpenMP</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="creating-a-correct-threaded-version">
+<h1>Creating a correct threaded version<a class="headerlink" href="#creating-a-correct-threaded-version" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="race-conditions">
+<h2>Race Conditions<a class="headerlink" href="#race-conditions" title="Permalink to this headline">¶</a></h2>
+<p>A program has a race condition&nbsp;if the correct behavior of that program
+depends on the timing of its execution. With 2 or more threads, the
+program trap-omp.C&nbsp;has a race condition concerning the shared variable
+<tt class="docutils literal"><span class="pre">integral</span></tt>, which is the accumulator for the summation performed by that
+program&#8217;s for&nbsp;loop.</p>
+<p>When threadct == 1, the single thread of execution updates the shared variable
+<tt class="docutils literal"><span class="pre">integral</span></tt> on every iteration, by reading the prior value of the memory location for
+<tt class="docutils literal"><span class="pre">integral</span></tt>, computing and adding the value f(a+i*h), then storing the result into that memory location. (Recall that a variable&nbsp;is a named location in main memory.)</p>
+<p>But when threadct &gt; 1, there are at least two independent threads, executed on separate physical cores, that are reading then writing the memory location for
+<tt class="docutils literal"><span class="pre">integral</span></tt>. The incorrect answer results when the reads and writes of that memory location get out of order. Here is one example of how unfortunate ordering can happen with two threads:</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="32%" />
+<col width="34%" />
+<col width="34%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Threads running:</th>
+<th class="head">Thread 1</th>
+<th class="head">Thread 2</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>source code:</td>
+<td><div class="first last line-block">
+<div class="line">integral += f(a+i*h);</div>
+</div>
+</td>
+<td><div class="first last line-block">
+<div class="line">integral += f(a+i*h);</div>
+</div>
+</td>
+</tr>
+<tr class="row-odd"><td>execution of binary code:</td>
+<td><div class="first line-block">
+<div class="line"><br /></div>
+<div class="line">1. read value of integral</div>
+<div class="line">2. add &nbsp;f(a+i*h)</div>
+</div>
+<div class="last line-block">
+<div class="line">3. write sum to &nbsp;integral</div>
+</div>
+</td>
+<td><div class="first last line-block">
+<div class="line"><br /></div>
+<div class="line"><br /></div>
+<div class="line">1. read value of integral</div>
+<div class="line">2. add &nbsp;f(a+i*h)</div>
+<div class="line"><br /></div>
+<div class="line">3. write sum to &nbsp;integral</div>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+<p>In this example, during one poorly timed iteration for each thread,
+Thread 2 reads the value of the memory location integral&nbsp;before Thread 1
+can write its sum back to integral. The consequence is that Thread 2
+replaces (overwrites) Thread 1&#8217;s value of integral, so the amount added
+by Thread 1 is omitted from the final value of the accumulator integral.</p>
+<div class="topic">
+<p class="topic-title first">To Do</p>
+<p>Can you think of other situations where unfortunate ordering of thread
+operations leads to an incorrect value of integral? Write down at least
+one other bad timing scenario.  Other scenarios will work (you may have seen some of these during testing of your code).  Write down one of these.</p>
+</div>
+</div>
+<div class="section" id="avoiding-race-conditions">
+<h2>Avoiding Race Conditions<a class="headerlink" href="#avoiding-race-conditions" title="Permalink to this headline">¶</a></h2>
+<p>One approach to avoiding this program&#8217;s race condition is to use a separate local variable integral&nbsp;for each thread instead of a global variable that is shared by all the threads. But declaring integral&nbsp;to be private&nbsp;instead of shared&nbsp;in the pragma will only generate threadct&nbsp;partial sums in those local variables named integral&nbsp;&#8211; the partial sums in those temporary local variables will not&nbsp;be added to the program&#8217;s variable integral. In fact, the value in those temporary local variables will be discarded when each thread finishes its work for the parallel for&nbsp;if we simply make integral&nbsp;private&nbsp;instead of shared.</p>
+<div class="topic">
+<p class="topic-title first">To Do</p>
+<p>Can you re-explain this situation in your own words?</p>
+</div>
+<p>Fortunately, OpenMP provides a convenient and effective solution to this problem. The OpenMP clause</p>
+<div class="highlight-python"><pre>reduction(+: integral)</pre>
+</div>
+<p>will</p>
+<ol class="arabic simple">
+<li>cause the variable integral&nbsp;to be private&nbsp;(local) during the
+execution of each thread, and</li>
+<li>add the results of all those private&nbsp;variables, then finally</li>
+<li>store that sum of private&nbsp;variables in the global&nbsp;variable named
+integral.</li>
+</ol>
+</div>
+<div class="section" id="reduction">
+<h2>Reduction<a class="headerlink" href="#reduction" title="Permalink to this headline">¶</a></h2>
+<p>This code example contains a very common <em>pattern</em> found in
+parallel programs: <strong>reducing several values down to one</strong>.  This is so common that the designers of OpenMP chose to make it simple to declare that a variable was involved on a reduction.  The code here represents one way that reduction takes place: during a step-wise calculation of smaller pieces of a larger problem.  The other common type of reduction is to accumulate all of the values stored in an array.</p>
+<div class="admonition-see-also admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last">You can use other arithmetic operators besdides plus in the reduction clause&#8211; see <a class="reference external" href="https://computing.llnl.gov/tutorials/openMP/#REDUCTION">the OpenMP tutorial section on reduction</a></p>
+</div>
+<p>According to the OpenMP Tutorial, here is how the reduction is being done inside the compiled OpenMP code (similar to how we described it above, but generalized to any reduction operator):</p>
+<blockquote>
+<div>&#8220;A private copy for each listed variable is created for each thread.  At the end of the reduction, the reduction operation is applied to all private copies of the shared variable, and the final result is written to the global shared variable.&#8221;</div></blockquote>
+<p>Thus, a variable such as <tt class="docutils literal"><span class="pre">integral</span></tt> that is declared in a reduction clause is both private to each thread and ultimately a shared variable.</p>
+<div class="topic">
+<p class="topic-title first">To Do</p>
+<p>Add the above reduction clause to your OpenMP pragma and remove integral from the list of shared variables, so that the pragma in your code appears as shown below.  Then recompile and test your program many times with different numbers of threads. You should now see the correct answer of 2.0 every time you execute it with multiple threads &#8211; a correct multi-core program!</p>
+</div>
+<div class="highlight-c++"><div class="highlight"><pre><span class="cp">#pragma omp parallel for num_threads(threadct) \</span>
+<span class="cp">     shared (a, n, h) reduction(+: integral) private(i)</span>
+  <span class="k">for</span><span class="p">(</span><span class="n">i</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">n</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">integral</span> <span class="o">+=</span> <span class="n">f</span><span class="p">(</span><span class="n">a</span><span class="o">+</span><span class="n">i</span><span class="o">*</span><span class="n">h</span><span class="p">);</span>
+  <span class="p">}</span>
+</pre></div>
+</div>
+<div class="topic">
+<p class="topic-title first">Tricky Business</p>
+<p>Note that with the incorrect version, you sometimes got lucky (perhaps even many times) as you tried running it over and over. This is one of the most perplexing and difficult aspects of parallel programming: <strong>it can be difficult to find your bugs because many times your program will apear to be correct</strong>.  Remember this: you need to be diligent about thinking through your solutions and questioning whether you have coded it correctly.</p>
+</div>
+</div>
+<div class="section" id="thread-safe-code">
+<h2>Thread-safe Code<a class="headerlink" href="#thread-safe-code" title="Permalink to this headline">¶</a></h2>
+<p>A code segment is said to be <em>thread-safe</em>&nbsp;if it remains correct when
+executed by multiple independent threads. The body of this loop is
+not&nbsp;thread-safe; we were able to make it so by indicating that a <em>reduction</em>
+was taking place on the variable <tt class="docutils literal"><span class="pre">integral</span></tt>.</p>
+<p>Some C/C++ libraries are identified as thread-safe, meaning that each function
+in that library is thread-safe. Of course, calling a thread-safe
+function doesn&#8217;t insure that the code with that function call is
+thread-safe. For example, the function f()&nbsp;in our example, is
+thread-safe, but the body of that loop is not&nbsp;thread-safe.</p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../index.html">
+              <img class="logo" src="../_static/CSInParallel200wide.png" alt="Logo"/>
+            </a></p>
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Creating a correct threaded version</a><ul>
+<li><a class="reference internal" href="#race-conditions">Race Conditions</a></li>
+<li><a class="reference internal" href="#avoiding-race-conditions">Avoiding Race Conditions</a></li>
+<li><a class="reference internal" href="#reduction">Reduction</a></li>
+<li><a class="reference internal" href="#thread-safe-code">Thread-safe Code</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="../introOpenMP/GettingstartedwithOpenMP.html"
+                        title="previous chapter">Getting Started with Multicore Programming using OpenMP</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="../timingAndScalability/TimingOnMTLandscalability.html"
+                        title="next chapter">Timing and Performance on Multicore machines</a></p>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../timingAndScalability/TimingOnMTLandscalability.html" title="Timing and Performance on Multicore machines"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="../introOpenMP/GettingstartedwithOpenMP.html" title="Getting Started with Multicore Programming using OpenMP"
+             >previous</a> |</li>
+        <li><a href="../index.html">Multicore Programming with OpenMP</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright This work is licensed under a Creative Commons Attribution-ShareAlike 3.0 Unported License.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>

@@ -1,0 +1,9 @@
+chmod 555 run_mpi_chunksOfOne
+chmod 555 run_mpi_chunksOfOne_openmp_equalChunks
+chmod 555 run_mpi_equalChunks
+chmod 555 run_mpi-openmp_chunksOfOneDynamic
+chmod 555 run_mpi-openmp_chunksOfOneStatic
+chmod 555 run_openmp_chunksOfOneDynamic
+chmod 555 run_openmp_chunksOfOneStatic
+chmod 555 run_openmp_equalChunks
+chmod 555 run_serial

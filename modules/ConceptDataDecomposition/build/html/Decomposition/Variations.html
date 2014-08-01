@@ -1,0 +1,103 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Other ways to split the work &mdash; Concept: The Data Decomposition Pattern</title>
+    
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+    <link rel="top" title="Concept: The Data Decomposition Pattern" href="../index.html" />
+    <link rel="prev" title="Vector Add with CUDA" href="CUDA_VecAdd.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="CUDA_VecAdd.html" title="Vector Add with CUDA"
+             accesskey="P">previous</a></li>
+        <li><a href="../index.html">Concept: The Data Decomposition Pattern</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="other-ways-to-split-the-work">
+<h1>Other ways to split the work<a class="headerlink" href="#other-ways-to-split-the-work" title="Permalink to this headline">¶</a></h1>
+<p>We have referred to the section of the array that a processing unit works on as a <em>chunk</em> of the array assigned to each processing unit.  The example we have presented here divides the original and result arrays into equal-sized contiguous chunks, where the size of each chunk is the number of elements divided by the number of processing units (n/p).  As you can imagine, there are other ways that the work could be divided.  In fact, in the case of the CUDA example, each GPU thread worked on one element (the thread block was analogous to our processing unit).  Chunks of size one are one possible alternative: every processing unit could work on elements like this:</p>
+<div class="align-center figure align-center">
+<img alt="4 processing units working on one element at a time" src="../_images/ChunksOfOne.png" style="width: 700px;" />
+</div>
+<p>This type of decomposition might work fairly well for shared-memory multicore computers using OpenMP, but it doesn&#8217;t make as much sense for distributed systems using MPI, where the data must be sent from the master process to the other processes in the cluster&#8211; it is much easier to send a consecutive chuank at one time that small lieces over and over again.</p>
+<p>Another alternative is to choose a chunk size smaller than n/p and each processing unit will work on then next available chunk.  You can explore these alternatives in OpenMP by looking at documentation for the <strong>schedule</strong> clause of the pragmaa &#8216;omp parallel for&#8217;. The CUDA code example called <strong>VectorAdd/CUDA/VA-GPU-larger.cu</strong> explores this concept.</p>
+<div class="section" id="questions-for-reflection">
+<h2>Questions for reflection<a class="headerlink" href="#questions-for-reflection" title="Permalink to this headline">¶</a></h2>
+<p>In what situations would MPI on a cluster of computers be advantageous for problems requiring data decomposition?</p>
+<p>In what situations would CUDA on a GPU be advantageous for problems requiring data decomposition?</p>
+<p>In what situations would OpenMP on a multicore computer be advantageous for problems requiring data decomposition?</p>
+<p>In multicore machines, the operating system ultimately schedules threads to run.  Look up what default scheduling of threads to chunks is used in OpenMP if we leave out the <strong>schedule</strong> clause of the pragmaa &#8216;omp parallel for&#8217;. Can you find any information or think of why this decomposition is the default?</p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../index.html">
+              <img class="logo" src="../_static/CSInParallel200wide.png" alt="Logo"/>
+            </a></p>
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Other ways to split the work</a><ul>
+<li><a class="reference internal" href="#questions-for-reflection">Questions for reflection</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="CUDA_VecAdd.html"
+                        title="previous chapter">Vector Add with CUDA</a></p>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="CUDA_VecAdd.html" title="Vector Add with CUDA"
+             >previous</a></li>
+        <li><a href="../index.html">Concept: The Data Decomposition Pattern</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright This work is licensed under a Creative Commons Attribution-ShareAlike 3.0 Unported License.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>

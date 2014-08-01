@@ -1,0 +1,258 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Vector Add with OpenMP &mdash; Concept: The Data Decomposition Pattern</title>
+    
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+    <link rel="top" title="Concept: The Data Decomposition Pattern" href="../index.html" />
+    <link rel="next" title="Vector Add with CUDA" href="CUDA_VecAdd.html" />
+    <link rel="prev" title="Vector Add with MPI" href="MPI_VecAdd.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="CUDA_VecAdd.html" title="Vector Add with CUDA"
+             accesskey="N">next</a></li>
+        <li class="right" >
+          <a href="MPI_VecAdd.html" title="Vector Add with MPI"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../index.html">Concept: The Data Decomposition Pattern</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="vector-add-with-openmp">
+<h1>Vector Add with OpenMP<a class="headerlink" href="#vector-add-with-openmp" title="Permalink to this headline">¶</a></h1>
+<p>Computers with multicore processors and a single shared memory space are the norm, including not only laptops and desktops, but also most phones and tablets. Using multiple cores concurrently on these machines, can be done in several programming languages; we will demonstrate the use of C with a set of compiler directives and library functions known as OpenMP.  The OpenMP standard is built into many C compilers, including gcc on unix machines.</p>
+<p>OpenMP on shared memory multicore machines creates <em>threads</em> that execute concurrently.  The creation of these threads is implicit and built by the compiler when you insert special directives in the C code called <em>pragmas</em>.
+The code that begins executing main() is considered thread 0. At certain points in the code, you can designate that more threads should be used in parallel and exucute concurrently. This is called <em>forking</em> threads.</p>
+<p>In the code below, you will see this pragma, which is implicitly forking the threads to complete the computation on equal chunks of the orginal array:</p>
+<div class="highlight-c"><div class="highlight"><pre><span class="cp">#pragma omp parallel for shared(a, b, c) private(i) schedule(static, 2)</span>
+</pre></div>
+</div>
+<p>The <tt class="docutils literal"><span class="pre">shared</span></tt> keyword indicates that the arrays are shared in the same memory space for all threads, and the <tt class="docutils literal"><span class="pre">private</span></tt> keyword indicates that each thread will have its own copy of the index counter i that it will increment.</p>
+<p>The <tt class="docutils literal"><span class="pre">schedule</span></tt> keyword is used in this pragma to indicate how many consecutive iterations of the loop, and thus computations on consecutive elements of the arrays, that each thread will execute.  In data decomposition, we like to call this the <strong>chunk size</strong> assigned to each thread (not necessarily a universal term, but  hopefully it conveys the idea). To mimic our simple 8-element example, this code (shown below) sets the number of threads to 4 and the chunk size to 2.</p>
+<p>The syntax of this OpenMP code example below is very similar to the original sequential version. In fact, it was derived from the sequential version by adding this pragma, including the OpenMP library, called omp.h, setting how many threads to use and the chuck size just before the forking, and adding some print statements to illustrate the decomposition and verify the results.</p>
+<p>This pragma around for loops is built into openMP because this &#8216;repeat N times&#8221; pattern occurs so frequently in a great deal of code. This simplicity can be deceiving, however&#8211; this particular example lends itself well to having the threads share data, but other types of problems are not this simple.  This type of data decomposition example is sometimes called <em>embarassingly parallel</em>, because each thread can read and update data that no other thread should ever touch.</p>
+<p>This code is the file
+<strong>VectorAdd/OpenMP/VA-OMP-simple.c</strong> in the compressed tar file of examples that accompanies this reading.</p>
+<div class="highlight-c"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73
+74
+75
+76</pre></div></td><td class="code"><div class="highlight"><pre><span class="cp">#include &lt;stdlib.h&gt;   </span><span class="c1">//malloc and free</span>
+<span class="cp">#include &lt;stdio.h&gt;    </span><span class="c1">//printf</span>
+<span class="cp">#include &lt;omp.h&gt;      </span><span class="c1">//OpenMP</span>
+
+<span class="c1">// Very small values for this simple illustrative example</span>
+<span class="cp">#define ARRAY_SIZE 8     </span><span class="c1">//Size of arrays whose elements will be added together.</span>
+<span class="cp">#define NUM_THREADS 4    </span><span class="c1">//Number of threads to use for vector addition.</span>
+
+<span class="cm">/*</span>
+<span class="cm"> *  Classic vector addition using openMP default data decomposition.</span>
+<span class="cm"> *</span>
+<span class="cm"> *  Compile using gcc like this:</span>
+<span class="cm"> *  	gcc -o va-omp-simple VA-OMP-simple.c -fopenmp</span>
+<span class="cm"> *</span>
+<span class="cm"> *  Execute:</span>
+<span class="cm"> *  	./va-omp-simple</span>
+<span class="cm"> */</span>
+<span class="kt">int</span> <span class="nf">main</span> <span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span> <span class="o">*</span><span class="n">argv</span><span class="p">[])</span> 
+<span class="p">{</span>
+	<span class="c1">// elements of arrays a and b will be added</span>
+	<span class="c1">// and placed in array c</span>
+	<span class="kt">int</span> <span class="o">*</span> <span class="n">a</span><span class="p">;</span>
+	<span class="kt">int</span> <span class="o">*</span> <span class="n">b</span><span class="p">;</span> 
+	<span class="kt">int</span> <span class="o">*</span> <span class="n">c</span><span class="p">;</span>
+        
+        <span class="kt">int</span> <span class="n">n</span> <span class="o">=</span> <span class="n">ARRAY_SIZE</span><span class="p">;</span>                 <span class="c1">// number of array elements</span>
+	<span class="kt">int</span> <span class="n">n_per_thread</span><span class="p">;</span>                   <span class="c1">// elements per thread</span>
+	<span class="kt">int</span> <span class="n">total_threads</span> <span class="o">=</span> <span class="n">NUM_THREADS</span><span class="p">;</span>    <span class="c1">// number of threads to use  </span>
+	<span class="kt">int</span> <span class="n">i</span><span class="p">;</span>       <span class="c1">// loop index</span>
+        
+        <span class="c1">// allocate spce for the arrays</span>
+        <span class="n">a</span> <span class="o">=</span> <span class="p">(</span><span class="kt">int</span> <span class="o">*</span><span class="p">)</span> <span class="n">malloc</span><span class="p">(</span><span class="k">sizeof</span><span class="p">(</span><span class="kt">int</span><span class="p">)</span><span class="o">*</span><span class="n">n</span><span class="p">);</span>
+	<span class="n">b</span> <span class="o">=</span> <span class="p">(</span><span class="kt">int</span> <span class="o">*</span><span class="p">)</span> <span class="n">malloc</span><span class="p">(</span><span class="k">sizeof</span><span class="p">(</span><span class="kt">int</span><span class="p">)</span><span class="o">*</span><span class="n">n</span><span class="p">);</span>
+	<span class="n">c</span> <span class="o">=</span> <span class="p">(</span><span class="kt">int</span> <span class="o">*</span><span class="p">)</span> <span class="n">malloc</span><span class="p">(</span><span class="k">sizeof</span><span class="p">(</span><span class="kt">int</span><span class="p">)</span><span class="o">*</span><span class="n">n</span><span class="p">);</span>
+
+        <span class="c1">// initialize arrays a and b with consecutive integer values</span>
+	<span class="c1">// as a simple example</span>
+        <span class="k">for</span><span class="p">(</span><span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="n">n</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+            <span class="n">a</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">i</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="k">for</span><span class="p">(</span><span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="n">n</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+            <span class="n">b</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">i</span><span class="p">;</span>
+        <span class="p">}</span>   
+        
+	<span class="c1">// Additional work to set the number of threads.</span>
+	<span class="c1">// We hard-code to 4 for illustration purposes only.</span>
+	<span class="n">omp_set_num_threads</span><span class="p">(</span><span class="n">total_threads</span><span class="p">);</span>
+	
+	<span class="c1">// determine how many elements each process will work on</span>
+	<span class="n">n_per_thread</span> <span class="o">=</span> <span class="n">n</span><span class="o">/</span><span class="n">total_threads</span><span class="p">;</span>
+	
+        <span class="c1">// Compute the vector addition</span>
+	<span class="c1">// Here is where the 4 threads are specifically &#39;forked&#39; to</span>
+	<span class="c1">// execute in parallel. This is directed by the pragma and</span>
+	<span class="c1">// thread forking is compiled into the resulting exacutable.</span>
+	<span class="c1">// Here we use a &#39;static schedule&#39; so each thread works on  </span>
+	<span class="c1">// a 2-element chunk of the original 8-element arrays.</span>
+	<span class="cp">#pragma omp parallel for shared(a, b, c) private(i) schedule(static, n_per_thread)</span>
+        <span class="k">for</span><span class="p">(</span><span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="n">n</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+		<span class="n">c</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">a</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">+</span><span class="n">b</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+		<span class="c1">// Which thread am I? Show who works on what for this samll example</span>
+		<span class="n">printf</span><span class="p">(</span><span class="s">&quot;Thread %d works on element%d</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">omp_get_thread_num</span><span class="p">(),</span> <span class="n">i</span><span class="p">);</span>
+        <span class="p">}</span>
+	
+	<span class="c1">// Check for correctness (only plausible for small vector size)</span>
+	<span class="c1">// A test we would eventually leave out</span>
+	<span class="n">printf</span><span class="p">(</span><span class="s">&quot;i</span><span class="se">\t</span><span class="s">a[i]</span><span class="se">\t</span><span class="s">+</span><span class="se">\t</span><span class="s">b[i]</span><span class="se">\t</span><span class="s">=</span><span class="se">\t</span><span class="s">c[i]</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">);</span>
+        <span class="k">for</span><span class="p">(</span><span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="n">n</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+		<span class="n">printf</span><span class="p">(</span><span class="s">&quot;%d</span><span class="se">\t</span><span class="s">%d</span><span class="se">\t\t</span><span class="s">%d</span><span class="se">\t\t</span><span class="s">%d</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="n">a</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">b</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">c</span><span class="p">[</span><span class="n">i</span><span class="p">]);</span>
+        <span class="p">}</span>
+	
+        <span class="c1">// clean up memory</span>
+        <span class="n">free</span><span class="p">(</span><span class="n">a</span><span class="p">);</span>  <span class="n">free</span><span class="p">(</span><span class="n">b</span><span class="p">);</span> <span class="n">free</span><span class="p">(</span><span class="n">c</span><span class="p">);</span>
+	
+	<span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</td></tr></table></div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../index.html">
+              <img class="logo" src="../_static/CSInParallel200wide.png" alt="Logo"/>
+            </a></p>
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="MPI_VecAdd.html"
+                        title="previous chapter">Vector Add with MPI</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="CUDA_VecAdd.html"
+                        title="next chapter">Vector Add with CUDA</a></p>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="CUDA_VecAdd.html" title="Vector Add with CUDA"
+             >next</a></li>
+        <li class="right" >
+          <a href="MPI_VecAdd.html" title="Vector Add with MPI"
+             >previous</a> |</li>
+        <li><a href="../index.html">Concept: The Data Decomposition Pattern</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright This work is licensed under a Creative Commons Attribution-ShareAlike 3.0 Unported License.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>

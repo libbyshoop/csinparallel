@@ -25,6 +25,7 @@
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
     <link rel="top" title="GPU Programming" href="../index.html" />
     <link rel="next" title="CUDA in Two-dimension" href="../CUDA2D/CUDA2D.html" />
     <link rel="prev" title="CUDA Intro" href="../CUDAIntro/CUDAIntro.html" /> 
@@ -34,11 +35,8 @@
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
-          <a href="../genindex.html" title="General Index"
-             accesskey="I">index</a></li>
-        <li class="right" >
           <a href="../CUDA2D/CUDA2D.html" title="CUDA in Two-dimension"
-             accesskey="N">next</a> |</li>
+             accesskey="N">next</a></li>
         <li class="right" >
           <a href="../CUDAIntro/CUDAIntro.html" title="CUDA Intro"
              accesskey="P">previous</a> |</li>
@@ -132,7 +130,7 @@
         <span class="n">sum</span> <span class="o">+=</span> <span class="n">c</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
     <span class="p">}</span>
 
-<span class="cp">    #define sum_squares(x)  (x*(x+1)*(2*x+1)/6)</span>
+    <span class="cp">#define sum_squares(x)  (x*(x+1)*(2*x+1)/6)</span>
     <span class="n">printf</span><span class="p">(</span> <span class="s">&quot;Does GPU value %.6g = %.6g?</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">sum</span><span class="p">,</span>
              <span class="mi">2</span> <span class="o">*</span> <span class="n">sum_squares</span><span class="p">(</span> <span class="p">(</span><span class="kt">float</span><span class="p">)(</span><span class="n">N</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="p">)</span> <span class="p">);</span>
 
@@ -164,7 +162,7 @@
 </div>
 <p>Another difference is that we need to add up all the elements in the returned vector. This can simply be done by adding a for loop in the host code. Notice that we put this loop outside of the Event API so that it will not interfere our timing result.</p>
 <p>You can verify the result by adding the following code into the host code.</p>
-<div class="highlight-c"><div class="highlight"><pre><span class="cp">    #define sum_squares(x)  (x*(x+1)*(2*x+1)/6)</span>
+<div class="highlight-c"><div class="highlight"><pre>    <span class="cp">#define sum_squares(x)  (x*(x+1)*(2*x+1)/6)</span>
     <span class="n">printf</span><span class="p">(</span> <span class="s">&quot;Does GPU value %.6g = %.6g?</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">sum</span><span class="p">,</span>
              <span class="mi">2</span> <span class="o">*</span> <span class="n">sum_squares</span><span class="p">(</span> <span class="p">(</span><span class="kt">float</span><span class="p">)(</span><span class="n">N</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="p">)</span> <span class="p">);</span>
 </pre></div>
@@ -321,19 +319,6 @@ When we are using shared memory to facilitate communication and collaboration be
   <h4>Next topic</h4>
   <p class="topless"><a href="../CUDA2D/CUDA2D.html"
                         title="next chapter">CUDA in Two-dimension</a></p>
-<div id="searchbox" style="display: none">
-  <h3>Quick search</h3>
-    <form class="search" action="../search.html" method="get">
-      <input type="text" name="q" />
-      <input type="submit" value="Go" />
-      <input type="hidden" name="check_keywords" value="yes" />
-      <input type="hidden" name="area" value="default" />
-    </form>
-    <p class="searchtip" style="font-size: 90%">
-    Enter search terms or a module, class or function name.
-    </p>
-</div>
-<script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
       </div>
       <div class="clearer"></div>
@@ -342,11 +327,8 @@ When we are using shared memory to facilitate communication and collaboration be
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
-          <a href="../genindex.html" title="General Index"
-             >index</a></li>
-        <li class="right" >
           <a href="../CUDA2D/CUDA2D.html" title="CUDA in Two-dimension"
-             >next</a> |</li>
+             >next</a></li>
         <li class="right" >
           <a href="../CUDAIntro/CUDAIntro.html" title="CUDA Intro"
              >previous</a> |</li>

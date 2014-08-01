@@ -1,0 +1,50 @@
+How to compile and run:
+
+make takes the following options [OPTION]:
+(no option)				- ideal for running the serial or the chunks version
+OMP_CHUNKS_OF_ONE=1 	- enables chunks of one domain decomposition in the OpenMP environment. If
+						  ran with MPI, the processes will do chunks only
+MPI_CHUNKS_OF_ONE=1		- enables chunks of one domain decomposition in the MPI environment *only*
+H_CHUNKS_OF_ONE=1		- enables chunks of one domain decomposition for both MPI and OpenMP
+						  environment
+NO_X11=1				- disables X windows. It is recommended that the do-display option be also disabled
+						  when running the program
+
+COMPILE:
+for serial: 
+  make area.c-serial [OPTION]
+for openmp: 
+  make area.c-openmp [OPTION]
+for mpi: 
+  make area.c-mpi [OPTION]
+for openmp and mpi: 
+  make area.c-mpi-openmp [OPTION]
+for all: 
+  make all [OPTION]
+
+
+RUN:
+for serial:	./area.c-serial
+for openmp: 	./area.c-openmp
+for mpi: 	mpirun -np [n] ./area.c-mpi
+for mpi-openmp: mpirun -np [n] ./area.c-mpi-openmp
+
+all runs take the following options:
+-n = number of rectangles
+-l = left x boundary of the domain
+-r = right x boundary of the domain
+-x = 'display' or 'no-display' (without the quotation marks, default is display)
+-w = 'gap' or 'no-gap' (without the quotation marks, default is gap)
+-t = throttle time in microseconds
+-T = set number of threads when using OpenMP
+
+SAMPLE COMPILE/RUNS
+
+1.
+
+make all
+mpirun -np 3 ./area.c-mpi -n 30
+
+2.
+make area.c-mpi-openmp H_CHUNKS_OF_ONE=1
+mpirun -np 3 ./area.c-mpi-openmp -n 30 -T 4 -t 100

@@ -1,0 +1,167 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Editing Your New Module &mdash; Documentation for Developers</title>
+    
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+    <link rel="top" title="Documentation for Developers" href="../index.html" />
+    <link rel="next" title="The CSinParallel Module Development Process" href="../developmentProcess/process.html" />
+    <link rel="prev" title="Setting Up A New Module" href="../creatingnewmodule/modulesetup.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../developmentProcess/process.html" title="The CSinParallel Module Development Process"
+             accesskey="N">next</a></li>
+        <li class="right" >
+          <a href="../creatingnewmodule/modulesetup.html" title="Setting Up A New Module"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../index.html">Documentation for Developers</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="editing-your-new-module">
+<h1>Editing Your New Module<a class="headerlink" href="#editing-your-new-module" title="Permalink to this headline">¶</a></h1>
+<p>Most of these sections describe CSinParallel conventions that differ from Sphinx defaults; please follow them.</p>
+<div class="section" id="index-rst">
+<h2>index.rst<a class="headerlink" href="#index-rst" title="Permalink to this headline">¶</a></h2>
+<p>This file becomes the index of your site; it is how to order and link together the chapters of your module. But first, follow these instructions:</p>
+<ul class="simple">
+<li>Replace &#8220;Welcome to YourModuleName&#8217;s documentation&#8221; with &#8220;Your Module Name&#8221;.</li>
+<li>Delete &#8220;Contents&#8221;</li>
+<li>Change <tt class="docutils literal"><span class="pre">:maxdepth:</span> <span class="pre">2</span></tt> to <tt class="docutils literal"><span class="pre">:maxdepth:</span> <span class="pre">1</span></tt></li>
+<li>Delete <tt class="docutils literal"><span class="pre">Indices</span> <span class="pre">and</span> <span class="pre">tables</span></tt> and the line of equal signs below it.</li>
+<li>Comment out all of the refs by adding a line that says  <tt class="docutils literal"><span class="pre">..</span> <span class="pre">comment</span></tt> and tabbing them all below it so it looks like this:</li>
+</ul>
+<div class="highlight-rst"><div class="highlight"><pre><span class="cp">.. comment</span>
+<span class="cp">        * :ref:`genindex`</span>
+<span class="cp">        * :ref:`modindex`</span>
+<span class="cp">        * :ref:`search`</span>
+</pre></div>
+</div>
+<p>Be sure to put a newline after this block.</p>
+<p>Once you&#8217;ve generated some other pages, you&#8217;ll add them on lines tabbed underneath the <tt class="docutils literal"><span class="pre">:toctree:</span></tt> directive. These should be relative to the folder containing index.rst and added as <strong>document names</strong>, meaning no <em>trailing or leading slashes</em> and no <em>file extensions</em> (e.g. documents/index, not /documents/index.rst )</p>
+</div>
+<div class="section" id="changing-css-files">
+<h2>Changing CSS Files<a class="headerlink" href="#changing-css-files" title="Permalink to this headline">¶</a></h2>
+<p>The default template is defined in the default.css file, located in <tt class="docutils literal"><span class="pre">~/github/csinparallel/modules/YourModuleName/build/html/_static/</span></tt>.</p>
+<p>In order to use your own template (to make any changes to your module&#8217;s CSS), you have to create a default.css_t file and put it into the following directory: <tt class="docutils literal"><span class="pre">~/github/csinparallel/modules/YourModuleName/source/_static/</span></tt></p>
+<p>All existing modules have had the changes described at the end of the section made to them. You can make these changes manually or just copy a default.css_t from any existing module&#8217;s <tt class="docutils literal"><span class="pre">/source/_static/</span></tt> directory into the directory given above.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Warning:</th><td class="field-body">Note that the extention is css_t, not css - you have to make sure you have css_t in the extension, not the filename.</td>
+</tr>
+</tbody>
+</table>
+<p>In all existing modules, this</p>
+<div class="highlight-css"><div class="highlight"><pre><span class="nt">tt</span> <span class="p">{</span>
+        <span class="k">background-color</span><span class="o">:</span> <span class="m">#ecf0f3</span><span class="p">;</span>
+        <span class="k">padding</span><span class="o">:</span> <span class="m">0</span> <span class="m">1px</span> <span class="m">0</span> <span class="m">1px</span><span class="p">;</span>
+        <span class="k">font-size</span><span class="o">:</span> <span class="m">0.95em</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>has been changed to this:</p>
+<div class="highlight-css"><div class="highlight"><pre><span class="nt">tt</span> <span class="p">{</span>
+        <span class="k">background-color</span><span class="o">:</span> <span class="m">#ecf0f3</span><span class="p">;</span>
+        <span class="k">padding</span><span class="o">:</span> <span class="m">0</span> <span class="m">1px</span> <span class="m">0</span> <span class="m">1px</span><span class="p">;</span>
+        <span class="c">/*font-size: 0.95em;*/</span>
+        <span class="k">font-family</span><span class="o">:</span><span class="s2">&quot;Lucida Console&quot;</span><span class="o">,</span> <span class="n">Monaco</span><span class="o">,</span> <span class="k">monospace</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="creating-content">
+<h2>Creating Content<a class="headerlink" href="#creating-content" title="Permalink to this headline">¶</a></h2>
+<p>Each module is a separate distinct head of a Sphinx documentation tree. This way each one can stand alone and be used independently. It may be useful to look at the other modules as examples of the document structure: they&#8217;re like books, with each chapter in a different folder.</p>
+<p>&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD
+&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD
+The next section describes the process of using git as you develop.  The section following that can be used as a template for making pages of your module.
+=======
+The next section can be used as a template for making pages of your module.
+&gt;&gt;&gt;&gt;&gt;&gt;&gt; origin/dani-dev
+=======
+The next section describes the process of using git as you develop.  The section following that can be used as a template for making pages of your module.
+&gt;&gt;&gt;&gt;&gt;&gt;&gt; 8766cf121e46c568468d697515e36d67e1be51f7</p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../index.html">
+              <img class="logo" src="../_static/CSInParallel200wide.png" alt="Logo"/>
+            </a></p>
+<h3><a href="../index.html">Table Of Contents</a></h3>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../softwaresetup/softwaresetup.html">What You&#8217;ll Need to Get Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../creatingnewmodule/modulesetup.html">Setting Up A New Module</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="">Editing Your New Module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../developmentProcess/process.html">The CSinParallel Module Development Process</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../newmoduletemplate/newmoduletemplate.html">New Module Template</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../modulechecklist/modulechecklist.html">Checklist: Reminders for Experienced Module Creators</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../components/components.html">Components of a Module</a></li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="../creatingnewmodule/modulesetup.html"
+                        title="previous chapter">Setting Up A New Module</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="../developmentProcess/process.html"
+                        title="next chapter">The CSinParallel Module Development Process</a></p>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../developmentProcess/process.html" title="The CSinParallel Module Development Process"
+             >next</a></li>
+        <li class="right" >
+          <a href="../creatingnewmodule/modulesetup.html" title="Setting Up A New Module"
+             >previous</a> |</li>
+        <li><a href="../index.html">Documentation for Developers</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright This work is licensed under a Creative Commons Attribution-ShareAlike 3.0 Unported License.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>

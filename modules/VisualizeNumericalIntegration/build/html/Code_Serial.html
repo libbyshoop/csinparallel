@@ -1,0 +1,206 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>The Code, Platforms, and Executing a Serial Version &mdash; Visualize Numerical Integration</title>
+    
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="shortcut icon" href="_static/favicon.ico"/>
+    <link rel="top" title="Visualize Numerical Integration" href="index.html" />
+    <link rel="next" title="Parallel Displays of the Area Under the Curve" href="ParallelVis.html" />
+    <link rel="prev" title="The Numerical Integration Problem" href="NumericalIntegration.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="ParallelVis.html" title="Parallel Displays of the Area Under the Curve"
+             accesskey="N">next</a></li>
+        <li class="right" >
+          <a href="NumericalIntegration.html" title="The Numerical Integration Problem"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">Visualize Numerical Integration</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="the-code-platforms-and-executing-a-serial-version">
+<h1>The Code, Platforms, and Executing a Serial Version<a class="headerlink" href="#the-code-platforms-and-executing-a-serial-version" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="parallel-computing-platforms">
+<h2>Parallel Computing Platforms<a class="headerlink" href="#parallel-computing-platforms" title="Permalink to this headline">¶</a></h2>
+<p>The code we provide will compile and run with the following combinations of platforms. Any computer you use will need linux or unix with X11 (this is how we coded the visualizations).  We have examples that use OpenMP alone, MPI alone, and a combination of MPI and OpenMP (sometimes called hybrid solutions).</p>
+<p>The OpenMP examples will run on:</p>
+<ul class="simple">
+<li>A single multicore machine with an OpenMP-compatible C compiler</li>
+</ul>
+<p>The MPI examples will run on:</p>
+<ul class="simple">
+<li>A single multicore computer <em>or</em> a cluster with MPICH installed and MPE installed (MPE is a visualization library for MPI based on X11 that comes with MPICH).</li>
+<li>A single multicore computer <em>or</em> a cluster with OpenMPI installed and MPE installed (with OpenMPI, you need to install MPE separately).</li>
+</ul>
+<p>The MPI + OpenMP examples will require a single computer or a cluster with MPI, MPE, and an OpenMP compiler all installed.</p>
+</div>
+<div class="section" id="the-code-and-scripts">
+<h2>The Code and Scripts<a class="headerlink" href="#the-code-and-scripts" title="Permalink to this headline">¶</a></h2>
+<p>You will need to set up the code. First get and uncompress the <a class="reference download internal" href="_downloads/VisArea.tgz"><tt class="xref download docutils literal"><span class="pre">VisArea.tgz</span></tt></a> file like so (these are linux commands):</p>
+<div class="highlight-sh"><div class="highlight"><pre>tar -zxvf VisArea.tgz
+ls -R -1
+</pre></div>
+</div>
+<p>You should get some output like this:</p>
+<div class="highlight-sh"><div class="highlight"><pre>.:
+area
+Makefile
+
+./area:
+area.c
+area.c-mpi
+area.h
+colors.h
+makeExecutable
+Makefile
+MPEarea.h
+MPEcolors.h
+Readme
+run_mpi_chunksOfOne
+run_mpi_chunksOfOne_openmp_equalChunks
+run_mpi_equalChunks
+run_mpi-openmp_chunksOfOneDynamic
+run_mpi-openmp_chunksOfOneStatic
+run_mpi-openmp_equalChunks
+run_openmp_chunksOfOneDynamic
+run_openmp_chunksOfOneStatic
+run_openmp_equalChunks
+run_serial
+structs.h
+Xarea.h
+</pre></div>
+</div>
+<p>Note that there is a directory called <strong>area</strong> with its own Makefile and a global Makefile.  You will work inside the directory called <strong>area</strong>.  From there, we have set up shell scripts to compile and run various types of data decomposition with different hardware and software compinations. Each of these scripts begins with the prefix <em>run_</em>.</p>
+</div>
+<div class="section" id="notes-about-building-on-your-installation">
+<h2>Notes about building on your installation<a class="headerlink" href="#notes-about-building-on-your-installation" title="Permalink to this headline">¶</a></h2>
+<p>You might need to change the path to your X libraries. The place to do that is to edit the LDFLAGS in the the global Makefile (the one outside of the source code folder called <em>area</em>).  You can try the first script shown below to test whether this will be a problem for you.</p>
+</div>
+<div class="section" id="building-and-executing-the-serial-version">
+<h2>Building and Executing the Serial Version<a class="headerlink" href="#building-and-executing-the-serial-version" title="Permalink to this headline">¶</a></h2>
+<p>You will need to be logged directly into the computer with the code, MPI, OpenMP, and X11 installed in order to see the X11 visualization that the code produces.  You can also have an X11 client installed on a remote machine in which you use <a href="#id1"><span class="problematic" id="id2">``</span></a>ssh -X  `` to remotely log in to the server with the parallel software and this code installed.</p>
+<p>Let&#8217;s start by trying an example that runs serially, or sequentially, without any parallelization. The script for this is called <tt class="docutils literal"><span class="pre">run_serial</span></tt>. You can compile the code and run it like this.</p>
+<div class="highlight-sh"><div class="highlight"><pre><span class="nb">cd </span>area
+./run_serial
+</pre></div>
+</div>
+<p>We will run all the rest of the example scripts from the <strong>area</strong> directory.</p>
+<p>An X window displaying how the code executes the computation of the area of each rectangle should appear.  When it completes, it should look like this:</p>
+<img alt="_images/run_serial.png" src="_images/run_serial.png" />
+<p>The default curve we use is shown (see below for some more options). Each rectangle is drawn with a single color because one processing unit computed each rectangle, one after another.  In other examples, colors will be used to show which processing unit computed which rectangle.</p>
+<p>To close the window, you can type the &#8216;q&#8217; key if the focus is still in the window. Otherwise, place focus back in the terminal window where you ran the script and type control-c.</p>
+<p>We chose some default settings, which you can change to see what happens. For all scripts, you can use the <tt class="docutils literal"><span class="pre">-?</span></tt> option as follows to see what your options are:</p>
+<div class="highlight-sh"><div class="highlight"><pre>./run_serial -?
+</pre></div>
+</div>
+<p>You should get some output like this:</p>
+<div class="highlight-sh"><div class="highlight"><pre>./run_serial: illegal option -- ?
+usage: ./run_serial options
+
+This script runs the visualization of computing the area under the curve serially.
+
+OPTIONS:
+-t  Throttle <span class="nb">time </span>in microseconds
+-n  Number of rectangles
+-f  Function kind <span class="o">(</span>1, 2 or 3, default <span class="k">if </span>not specified<span class="o">)</span>
+-r  Righthand boundary of the curve
+</pre></div>
+</div>
+<p>The throttle time will change how quickly the rectangles will be displayed.  These visualizations are designed to be &#8216;played&#8217; so that you can see what assignments were made.  You can change this time to help you see what is happening.</p>
+<p>You can change the number of rectangles under the curve.  Making this smaller or larger might help you envision what is happening in each of the situations we describe in the next few sections. For eaxmple, if you try this:</p>
+<div class="highlight-sh"><div class="highlight"><pre>./run_serial -n 12
+</pre></div>
+</div>
+<p>You can see how this small amount of rectangles does not approximate this curve very well.</p>
+<p>However, if you use too many rectangles, it is very hard to see each one. Really high numbers of rectangles will mean that it takes less than one pixel to draw them; this is a situation you want to avoid. About 60 or so is likely the most you should opt for with <tt class="docutils literal"><span class="pre">-n</span></tt>.</p>
+<p>The <tt class="docutils literal"><span class="pre">-f</span></tt> option will let you pick other curves to display.</p>
+<ul class="simple">
+<li>Option <cite>1</cite>  is the straight-line function <img class="math" src="_images/math/427c0ee5f10895f708b681a16c4f5799b31f41a7.png" alt="f(x) = x"/>.</li>
+<li>Option <cite>2</cite> is the positive quarter circle, <img class="math" src="_images/math/42ae8e60d6a7226e6c04302e2ee193d51ba6c0d4.png" alt="f(x) = +\sqrt{r^{2}-x^2}, 0 \le x \le r"/></li>
+<li>Option <cite>3</cite> is half the period of the sine function, <img class="math" src="_images/math/18305063f49da5e41e10c5dbae067ed173dd27c6.png" alt="f(x) = \sin(x), 0 \le x \le \pi"/></li>
+<li>Option <cite>4</cite>, the default in these example scripts, is the curve <img class="math" src="_images/math/b3c5be81149dc705ec6b840586d0b50b3d30eeaf.png" alt="f(x) = x\sin(0.05x)"/></li>
+</ul>
+<p>The <tt class="docutils literal"><span class="pre">-r</span></tt> option can only be changed with the <tt class="docutils literal"><span class="pre">-f</span></tt> option <cite>1</cite> or <cite>4</cite>. With <tt class="docutils literal"><span class="pre">-f</span> <span class="pre">1</span></tt>, values between 400 and 1000 make the most sense to use for <tt class="docutils literal"><span class="pre">-r</span></tt> (any larger and the window gets too large; any smaller and the window is too small and hard to see.) With <tt class="docutils literal"><span class="pre">-f</span> <span class="pre">4</span></tt>, the default shown in these scripts is 350 for the right-hand value of x in the function. We recommend going now higher than 600 or so, unless you have a really large monitor.</p>
+<p>Now that you know the options, let&#8217;s you on and try parallel versions of this code.</p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="index.html">
+              <img class="logo" src="_static/CSInParallel200wide.png" alt="Logo"/>
+            </a></p>
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">The Code, Platforms, and Executing a Serial Version</a><ul>
+<li><a class="reference internal" href="#parallel-computing-platforms">Parallel Computing Platforms</a></li>
+<li><a class="reference internal" href="#the-code-and-scripts">The Code and Scripts</a></li>
+<li><a class="reference internal" href="#notes-about-building-on-your-installation">Notes about building on your installation</a></li>
+<li><a class="reference internal" href="#building-and-executing-the-serial-version">Building and Executing the Serial Version</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="NumericalIntegration.html"
+                        title="previous chapter">The Numerical Integration Problem</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="ParallelVis.html"
+                        title="next chapter">Parallel Displays of the Area Under the Curve</a></p>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="ParallelVis.html" title="Parallel Displays of the Area Under the Curve"
+             >next</a></li>
+        <li class="right" >
+          <a href="NumericalIntegration.html" title="The Numerical Integration Problem"
+             >previous</a> |</li>
+        <li><a href="index.html">Visualize Numerical Integration</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright This work is licensed under a Creative Commons Attribution-ShareAlike 3.0 Unported License.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>
