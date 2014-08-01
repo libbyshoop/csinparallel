@@ -1,0 +1,271 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>The Million Song Dataset &mdash; Hadoop LastFM analysis</title>
+    
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+    <link rel="top" title="Hadoop LastFM analysis" href="../index.html" />
+    <link rel="next" title="Fun with key signatures" href="../1-Keys/Keys.html" />
+    <link rel="prev" title="Hadoop LastFM Analysis’s" href="../index.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../1-Keys/Keys.html" title="Fun with key signatures"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="../index.html" title="Hadoop LastFM Analysis’s"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../index.html">Hadoop LastFM analysis</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="the-million-song-dataset">
+<h1>The Million Song Dataset<a class="headerlink" href="#the-million-song-dataset" title="Permalink to this headline">¶</a></h1>
+<p>Last.fm is a popular music recommendation website that tracks
+what it&#8217;s users listen to and then suggests similar songs.
+It provides an API which can be used to retrieve metadata about
+specific songs.</p>
+<p>Researchers at Columbia&#8217;s LabRosa used this api to generate a
+dataset containing 1,000,000 songs from 44,745 artists. For our
+purposes this data has been split into 3 different tab seperated
+files.</p>
+<p>Each file has a different prefix which hadoop passes to the
+mapper as a key. The rest of the data is passed to the mapper as
+the value. Each file contains several fields so it is necessary
+to call value.split(&#8216;t&#8217;) to access them.</p>
+<ul>
+<li><p class="first"><strong>/shared/lastfm/similars.tsv</strong> is prefixed with &#8220;similar&#8221;. The
+first value of the data is the id of an artist and the rest
+of the values are the ids of similar artists. The list of
+similar artists varies in size. If artist A&#8217;s list contains B
+and C there is no guarantee that B&#8217;s list contains C or A.
+The list of similar artists varies in length and may be empty.</p>
+</li>
+<li><p class="first"><strong>/shared/lastfm/terms.tsv</strong> is prefixed with &#8220;term&#8221;. The first
+value of the data is an artist id and the rest of the values
+are comma seperated triplets representing terms associated
+with the artist. They can be seperated by calling
+term.split(&#8216;,&#8217;)</p>
+<blockquote>
+<div><ul class="simple">
+<li>The first value is the term itself. It may be a genres like
+&#8220;rock&#8221; or &#8220;pop&#8221; or a descriptor like &#8220;london&#8221;</li>
+<li>The second value is the frequency with which that term is
+used in reference to the artist, it is a float from 0-1</li>
+<li>The last value is the weight of the term which provides a
+a measure of how well a given term is to describes the
+an artist. For example &#8216;rock&#8217; is frequently used to
+describe the Beatles, but &#8220;british invasion&#8221; is more
+descriptive so it has a higher weight. The weight is a
+float from 0-1</li>
+</ul>
+</div></blockquote>
+<p>there are a variable number of terms associated with each
+artist and there may be none.</p>
+</li>
+<li><p class="first"><strong>/shared/lastfm/metadata.tsv</strong> is prefixed with &#8220;metadata&#8221;.
+The data contains 25 different fields of metadata about a given
+song explained in the following chart. These feilds may be null</p>
+</li>
+</ul>
+<table border="1" class="docutils">
+<colgroup>
+<col width="9%" />
+<col width="35%" />
+<col width="56%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">index</th>
+<th class="head">value</th>
+<th class="head">Description</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>0</td>
+<td>track id</td>
+<td>String</td>
+</tr>
+<tr class="row-odd"><td>1</td>
+<td>title</td>
+<td>String</td>
+</tr>
+<tr class="row-even"><td>2</td>
+<td>release name (album)</td>
+<td>String</td>
+</tr>
+<tr class="row-odd"><td>3</td>
+<td>year</td>
+<td>Int</td>
+</tr>
+<tr class="row-even"><td>4</td>
+<td>artist name</td>
+<td>String</td>
+</tr>
+<tr class="row-odd"><td>5</td>
+<td>artist id</td>
+<td>String</td>
+</tr>
+<tr class="row-even"><td>6</td>
+<td>artist familiarity</td>
+<td>Float 0-1 How well known an aritst is</td>
+</tr>
+<tr class="row-odd"><td>7</td>
+<td>artist hotttnesss</td>
+<td>Float 0-1 Current popularity of an artist</td>
+</tr>
+<tr class="row-even"><td>8</td>
+<td>artist latitude</td>
+<td>Float</td>
+</tr>
+<tr class="row-odd"><td>9</td>
+<td>artist longitude</td>
+<td>Float</td>
+</tr>
+<tr class="row-even"><td>10</td>
+<td>artist location</td>
+<td>String</td>
+</tr>
+<tr class="row-odd"><td>11</td>
+<td>hotttnesss</td>
+<td>Float 0-1 current popularity of a song</td>
+</tr>
+<tr class="row-even"><td>12</td>
+<td>danceablity</td>
+<td>Float 0-1</td>
+</tr>
+<tr class="row-odd"><td>13</td>
+<td>duration</td>
+<td>Float number of seconds in a song</td>
+</tr>
+<tr class="row-even"><td>14</td>
+<td>energy</td>
+<td>Float 0-1</td>
+</tr>
+<tr class="row-odd"><td>15</td>
+<td>loudness</td>
+<td>Float 0-1</td>
+</tr>
+<tr class="row-even"><td>16</td>
+<td>end of fade in</td>
+<td>Float</td>
+</tr>
+<tr class="row-odd"><td>17</td>
+<td>start of fade out</td>
+<td>Float</td>
+</tr>
+<tr class="row-even"><td>18</td>
+<td>tempo</td>
+<td>Float tempo in beats per minute</td>
+</tr>
+<tr class="row-odd"><td>19</td>
+<td>time signature</td>
+<td>Int number of beats per measure</td>
+</tr>
+<tr class="row-even"><td>20</td>
+<td>time signature confidence</td>
+<td>Float 0-1 confidence in the above number</td>
+</tr>
+<tr class="row-odd"><td>21</td>
+<td>mode</td>
+<td>1 for major 0 for minor</td>
+</tr>
+<tr class="row-even"><td>22</td>
+<td>mode confidence</td>
+<td>Float 0-1 confidence in the above number</td>
+</tr>
+<tr class="row-odd"><td>23</td>
+<td>key</td>
+<td>Int C=0, C#=1, D=2...</td>
+</tr>
+<tr class="row-even"><td>24</td>
+<td>key confidence</td>
+<td>Float 0-1 confidence in the above number</td>
+</tr>
+</tbody>
+</table>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../index.html">
+              <img class="logo" src="../_static/CSInParallel200wide.png" alt="Logo"/>
+            </a></p>
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="../index.html"
+                        title="previous chapter">Hadoop LastFM Analysis&#8217;s</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="../1-Keys/Keys.html"
+                        title="next chapter">Fun with key signatures</a></p>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../1-Keys/Keys.html" title="Fun with key signatures"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="../index.html" title="Hadoop LastFM Analysis’s"
+             >previous</a> |</li>
+        <li><a href="../index.html">Hadoop LastFM analysis</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright This work is licensed under a Creative Commons Attribution-ShareAlike 3.0 Unported License.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
+    </div>
+  </body>
+</html>
