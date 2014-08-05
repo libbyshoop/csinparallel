@@ -10,15 +10,15 @@ This module was created for CSInParallel by Jeffrey Lyman in 2014
 (JLyman@macalester.edu) 
 
 The purpose of this module is to teach students how to analyze
-networks and datasets distributed over multiple files using the 
+datasets distributed over multiple files using the 
 Hadoop framework. It is assumed that students are already 
 familiar with the basics of hadoop and CSInParallel's Web Map 
 Reduce hadoop interface.
 
-The excersises in this module uses a network of friendships on 
-the social movie recommendation site Flixster. Students will use
-it to learn how to analyze networks
-and chain jobs.
+The excersises in this module use a dataset from the UK 
+department of Transportaion that contains detailed records of 
+traffic accidents split into three separate files.
+files.
 
 Contents:
 =========
@@ -26,8 +26,8 @@ Contents:
 .. toctree::
     :maxdepth: 1
 
-    0-NetworkIntro/NetworkIntro
-    1-AdvancedNetwork/AdvancedNetwork
+    0-TrafficDataset/Introduction
+    1-MultipleFiles/Multiples
 
 
 .. comment

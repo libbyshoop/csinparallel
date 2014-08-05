@@ -15,10 +15,14 @@ Hadoop framework. It is assumed that students are already
 familiar with the basics of hadoop and CSInParallel's Web Map 
 Reduce hadoop interface.
 
-The excersises in this module uses a network of friendships on 
-the social movie recommendation site Flixster. Students will use
-it to learn how to analyze networks
-and chain jobs.
+The excersises in this module use two datasets. The first is a
+network of friendships on the social movie recommendation site
+Flixster. Students will use it to learn how to analyze networks
+and chain jobs. The second dataset comes from the UK department
+of Transportaion and contains detailed records of traffic
+accidents split into three separate files. Students will use 
+this dataset to learn how to analyze data split across multiple
+files.
 
 Contents:
 =========
@@ -28,6 +32,8 @@ Contents:
 
     0-NetworkIntro/NetworkIntro
     1-AdvancedNetwork/AdvancedNetwork
+    2-TrafficDataset/Introduction
+    3-MultipleFiles/Multiples
 
 
 .. comment
