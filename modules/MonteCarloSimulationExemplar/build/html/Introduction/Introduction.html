@@ -1,0 +1,148 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>What are Monte Carlo Methods? &mdash; Monte Carlo Simulation Exemplar</title>
+    
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="top" title="Monte Carlo Simulation Exemplar" href="../index.html" />
+    <link rel="prev" title="Monte Carlo Simulation Examplar" href="../index.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../index.html" title="Monte Carlo Simulation Examplar"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../index.html">../../../images/CSInParallel200wide.png</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="what-are-monte-carlo-methods">
+<h1>What are Monte Carlo Methods?<a class="headerlink" href="#what-are-monte-carlo-methods" title="Permalink to this headline">¶</a></h1>
+<p><strong>By Devin Bjelland, Macalester College</strong></p>
+<p><strong>Overview</strong>
+&#8216;Monte Carlo Methods&#8217;_ are a class of numerical methods which use repeated
+simulations to obtain a random sampling from an underlying unkown probablity
+distribution. Becuase Monte Carlo methods rely on repeated independant
+simulations, they are very well suited to distributed methods. Monte Carlo
+methods are often employed when there is no closed form solution or
+deterministic solution algorithm to the underlying problem. As this sort of
+problem is quite common, Monte Carlo methods are used in a wide variety of
+fields&#8211;from computational chemistry to finance.</p>
+<p><strong>The Simplest Example</strong>
+To make this concrete, imagine you have a circular target inside a larger
+target. You want to find the probabibilty that if you throw a dart it will
+hit the inner target. To run a &#8216;Monte Carlo Simulation&#8217; to solve this problem,
+you would simply throw a bunch of darts at the target and record the percentage
+that land in the inner target.</p>
+<p>We can extend this idea to approximate Pi quite easily. Suppose the inner target
+is a circle that is inscribed inside a sqare outer target. Since the sides of the
+square are twice the radius of the circle, we have that the ratio, :math:&#8217;Chi&#8217;
+of the area of the circle to the area of the sqaure is
+:math:&#8217;frac{pi {r}^2}{{left( 2r right)^2}&#8217;.</p>
+<p><strong>Implementation</strong>
+Although we certainly could use a physical dart board, to save time we will write
+a computer program to simulate the situation:</p>
+<p>The original motivating example that Monte Carlo methods draw their name
+from is gambling and game playing. In this module, we develop parallel
+algorithms that approximate the probabilities of various outcomes in card
+games.</p>
+</div>
+<div class="section" id="about-randomness">
+<h1>About Randomness<a class="headerlink" href="#about-randomness" title="Permalink to this headline">¶</a></h1>
+<p><strong>How Computers Generate Random Numbers</strong>
+Algorithms that implement Monte Carlo methods require a source of of
+randomness. If we are writing a serial algorithm, we can simply use the
+standard random number generator, for example, rand() in C. Computers (unless
+specifically fitted with a chip which gathers randomness from some other source)
+cannot produce true random numbers. Rather, the standard library random number
+generator takes some relatively random input&#8211;in the case of unix systems
+the number of seconds since January 1, 1970&#8211;and transforms it sequentially
+to produce a stream of psuedo-random numbers.</p>
+<p><strong>What this means for distributed programming</strong>
+If your algorithm creates multiple threads to perform a Monte Carlo simulation
+and you invoke the standard random number generator with the same seed, all the
+threads will get the same random numbers. If this happens, all the extra threads
+aren&#8217;t doing any good since they are just running the same simulation over again.
+We get around this by seeding the random number generate with more information&#8211;
+some combination of the time and the thread ID.</p>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">What are Monte Carlo Methods?</a></li>
+<li><a class="reference internal" href="#about-randomness">About Randomness</a></li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="../index.html"
+                        title="previous chapter">Monte Carlo Simulation Examplar</a></p>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../index.html" title="Monte Carlo Simulation Examplar"
+             >previous</a> |</li>
+        <li><a href="../index.html">../../../images/CSInParallel200wide.png</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright This work is licensed under a Creative Commons Attribution-ShareAlike 3.0 Unported License.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
+    </div>
+  </body>
+</html>

@@ -10,7 +10,8 @@ Monte Carlo Simulation Examplar
 .. toctree::
    :maxdepth: 1
 
-
+   Introduction/Introduction
+   DrawFourSuits/DrawFourSuits
 
 .. comment
   * :ref:`genindex`
