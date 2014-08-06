@@ -70,7 +70,7 @@ neighbors per node from a list of edges. In our case this
 means getting a list of friends from a list of friendships.
 The algorithm is quite simple, for each friend f in a friendship
 we must add f&#8217;s friend to the list of f&#8217;s friends.</p>
-<p>Here&#8217;s our mapper:</p>
+<p>Here&#8217;s our <a class="reference download internal" href="../_downloads/friendListMapper.py"><tt class="xref download docutils literal"><span class="pre">mapper</span></tt></a>:</p>
 <div class="highlight-python"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
 2
 3
@@ -82,7 +82,8 @@ we must add f&#8217;s friend to the list of f&#8217;s friends.</p>
     <span class="n">Wmr</span><span class="o">.</span><span class="n">emit</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">key</span><span class="p">)</span>
 </pre></div>
 </td></tr></table></div>
-<p>We want our reducer to output a comma seperated list:</p>
+<p>We want our <a class="reference download internal" href="../_downloads/friendListReducer.py"><tt class="xref download docutils literal"><span class="pre">reducer</span></tt></a> to output a comma
+seperated list:</p>
 <div class="highlight-python"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
 2
 3
@@ -106,8 +107,9 @@ would be extremely difficult to answer in a single job. Luckily
 we can use the output of the last job as input for a new job.
 All you need to do is click the Use Output button at the top or
 bottom of the WMR results page.</p>
-<p>To get the average, we&#8217;ll have to output the number of friends
-each account has to one reducer that then calculates the average.</p>
+<p>To get the average, our <a class="reference download internal" href="../_downloads/friendCountMapper.py"><tt class="xref download docutils literal"><span class="pre">mapper</span></tt></a> will
+output the number of friends each account has to one <a class="reference download internal" href="../_downloads/averageReducer.py"><tt class="xref download docutils literal"><span class="pre">reducer</span></tt></a>
+that then calculates the average.</p>
 <div class="highlight-python"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
  2
  3

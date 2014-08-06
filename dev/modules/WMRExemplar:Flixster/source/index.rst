@@ -3,7 +3,7 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-Hadoop Traffic Analysis 
+Hadoop Network Analysis 
 =======================
 
 This module was created for CSInParallel by Jeffrey Lyman in 2014
@@ -19,6 +19,8 @@ The excersises in this module uses a network of friendships on
 the social movie recommendation site Flixster. Students will use
 it to learn how to analyze networks
 and chain jobs.
+
+The dataset can be downloaded from `Academic Torrents <http://academictorrents.com/details/4960373ea6dec89153639b0975ea92f9e3d3c914>`_
 
 Contents:
 =========

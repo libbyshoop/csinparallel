@@ -25,7 +25,6 @@
     <script type="text/javascript" src="../_static/doctools.js"></script>
     <link rel="shortcut icon" href="../_static/favicon.ico"/>
     <link rel="top" title="Hadoop Traffic Analysis" href="../index.html" />
-    <link rel="next" title="Introduction to the Dataset" href="../2-TrafficDataset/Introduction.html" />
     <link rel="prev" title="Network Analysis with Hadoop" href="../0-NetworkIntro/NetworkIntro.html" /> 
   </head>
   <body>
@@ -35,9 +34,6 @@
         <li class="right" style="margin-right: 10px">
           <a href="../genindex.html" title="General Index"
              accesskey="I">index</a></li>
-        <li class="right" >
-          <a href="../2-TrafficDataset/Introduction.html" title="Introduction to the Dataset"
-             accesskey="N">next</a> |</li>
         <li class="right" >
           <a href="../0-NetworkIntro/NetworkIntro.html" title="Network Analysis with Hadoop"
              accesskey="P">previous</a> |</li>
@@ -102,7 +98,7 @@ appear in the two hop list.</p>
 friends for every account. We can do this by sending each
 account&#8217;s list of friends to each of it&#8217;s friends. We also
 need to pass the account itself to the reducer so that it
-will be able to build a list of it&#8217;s friends.</p>
+will be able to build a list of it&#8217;s friends. Here&#8217;s the <a class="reference download internal" href="../_downloads/twoHopMapper.py"><tt class="xref download docutils literal"><span class="pre">code</span></tt></a></p>
 <div class="highlight-python"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
 2
 3
@@ -121,8 +117,9 @@ Of friends. It&#8217;s also not a good idea to have a single mapper
 emiting a thousand valuse. We can get around these
 limitations by breaking the friend lists into chunks before
 we run the clustering coefficient job.</p>
-<p>Our new friend list job uses the same mapper as the one in the
-last chapter, but a modified reducer that outputs 50 friends
+<p>Our new friend list job uses the same <a class="reference download internal" href="../_downloads/friendListMapper1.py"><tt class="xref download docutils literal"><span class="pre">mapper</span></tt></a>
+as the one in the
+last chapter, but a modified <a class="reference download internal" href="../_downloads/modFriendListReducer.py"><tt class="xref download docutils literal"><span class="pre">reducer</span></tt></a> that outputs 50 friends
 at a time.</p>
 <div class="highlight-python"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
 2
@@ -146,7 +143,7 @@ at a time.</p>
 </div>
 <div class="section" id="the-reducer">
 <h3>The Reducer<a class="headerlink" href="#the-reducer" title="Permalink to this headline">¶</a></h3>
-<p>Our reducer takes the lists of friends of friends and makes a
+<p>Our <a class="reference download internal" href="../_downloads/ccReducer.py"><tt class="xref download docutils literal"><span class="pre">reducer</span></tt></a> takes the lists of friends of friends and makes a
 collection of it&#8217;s one and two hop neighbors. We use a set for
 the collection of one hop neighbors because we will receive
 the same friend multiple times if it has a large friend list.</p>
@@ -191,7 +188,7 @@ a list which would be expensive.</p>
   <span class="k">if</span> <span class="n">n</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="p">:</span>                   <span class="c">#if a point has less than 2</span>
     <span class="n">Wmr</span><span class="o">.</span><span class="n">emit</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>          <span class="c">#neighbors it&#39;s cc is 0</span>
   <span class="k">else</span><span class="p">:</span>
-    <span class="n">total</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">total</span> <span class="o">=</span> <span class="mf">0.0</span>
     <span class="k">for</span> <span class="n">hop</span> <span class="ow">in</span> <span class="n">oneHops</span><span class="p">:</span>
       <span class="k">if</span> <span class="n">hop</span> <span class="ow">in</span> <span class="n">twoHops</span><span class="p">:</span>
         <span class="n">total</span> <span class="o">+=</span> <span class="n">twoHops</span><span class="p">[</span><span class="n">hop</span><span class="p">]</span>
@@ -243,9 +240,6 @@ with the average you calcuated in the first challenge</li>
   <h4>Previous topic</h4>
   <p class="topless"><a href="../0-NetworkIntro/NetworkIntro.html"
                         title="previous chapter">Network Analysis with Hadoop</a></p>
-  <h4>Next topic</h4>
-  <p class="topless"><a href="../2-TrafficDataset/Introduction.html"
-                        title="next chapter">Introduction to the Dataset</a></p>
 <div id="searchbox" style="display: none">
   <h3>Quick search</h3>
     <form class="search" action="../search.html" method="get">
@@ -269,9 +263,6 @@ with the average you calcuated in the first challenge</li>
         <li class="right" style="margin-right: 10px">
           <a href="../genindex.html" title="General Index"
              >index</a></li>
-        <li class="right" >
-          <a href="../2-TrafficDataset/Introduction.html" title="Introduction to the Dataset"
-             >next</a> |</li>
         <li class="right" >
           <a href="../0-NetworkIntro/NetworkIntro.html" title="Network Analysis with Hadoop"
              >previous</a> |</li>

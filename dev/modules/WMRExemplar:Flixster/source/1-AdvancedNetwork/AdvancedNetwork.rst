@@ -62,7 +62,7 @@ First we will need to have a list of the friends and friends of
 friends for every account. We can do this by sending each
 account's list of friends to each of it's friends. We also
 need to pass the account itself to the reducer so that it
-will be able to build a list of it's friends.
+will be able to build a list of it's friends. Here's the :download:`code<twoHopMapper.py>`
 
 .. code-block:: python
     :linenos:
@@ -82,8 +82,9 @@ emiting a thousand valuse. We can get around these
 limitations by breaking the friend lists into chunks before
 we run the clustering coefficient job.
 
-Our new friend list job uses the same mapper as the one in the
-last chapter, but a modified reducer that outputs 50 friends 
+Our new friend list job uses the same :download:`mapper<friendListMapper.py>`
+as the one in the
+last chapter, but a modified :download:`reducer<modFriendListReducer.py>` that outputs 50 friends 
 at a time.
 
 .. code-block:: python
@@ -103,7 +104,7 @@ at a time.
 The Reducer
 ***********
 
-Our reducer takes the lists of friends of friends and makes a
+Our :download:`reducer<ccReducer.py>` takes the lists of friends of friends and makes a
 collection of it's one and two hop neighbors. We use a set for
 the collection of one hop neighbors because we will receive
 the same friend multiple times if it has a large friend list.
@@ -132,7 +133,7 @@ a list which would be expensive.
       if n < 2:                   #if a point has less than 2 
         Wmr.emit(key, 0)          #neighbors it's cc is 0
       else:
-        total = 0    
+        total = 0.0    
         for hop in oneHops:
           if hop in twoHops:
             total += twoHops[hop]

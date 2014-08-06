@@ -20,6 +20,8 @@ department of Transportaion that contains detailed records of
 traffic accidents split into three separate files.
 files.
 
+The dataset can be obtained from `Academic Torrents <http://academictorrents.com/details/c7d2d7a91ae3fd0256dd2ba2d7344960cb3c4dbb>`_
+
 Contents:
 =========
 
@@ -27,7 +29,7 @@ Contents:
     :maxdepth: 1
 
     0-TrafficDataset/Introduction
-    1-MultipleFiles/Multiples
+    1-MulitipleFiles/Multiples
 
 
 .. comment

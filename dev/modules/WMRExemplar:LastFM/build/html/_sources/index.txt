@@ -10,10 +10,14 @@ This module demonstrates how hadoop and WMR can be used to
 analize the lastFM million song dataset. It encorporates several
 advanced hadoop techniques such as job chaining and multiple
 input. Students should know how to use the WMR hadoop interface
-before beginning this module. It is also highly recommended that
-they work through the Advanced Hadoop module first, though it is
-not strictly necessary as this module explains all the techniques
-it uses, albeit in less depth than the advanced hadoop module.
+before beginning this module. 
+
+The dataset was obtained from Columbia University's 
+`LabRosa <http://labrosa.ee.columbia.edu/millionsong/lastfm>`_
+However it has been converted into a format that is easier to work
+with on WMR. The edited dataset is also much smaller since it doesn't
+include the audio analysis information. If you would like the smaller
+dataset for your own WMR cluster please contact JLyman@macalester.edu
 
 .. toctree::
     :maxdepth: 1

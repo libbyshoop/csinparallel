@@ -76,7 +76,7 @@ We&#8217;ll also perform a basic sanity check on our data by testing to
 see if all 25 feilds are present. It&#8217;s good practice to sanity
 check data in the mapper because you can never be certain that
 your data is pure.</p>
-<p>Our mapper looks like this:</p>
+<p>Our <a class="reference download internal" href="../_downloads/avgKeyMapper.py"><tt class="xref download docutils literal"><span class="pre">mapper</span></tt></a> looks like this:</p>
 <div class="highlight-python"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
 2
 3
@@ -99,7 +99,7 @@ WMR, we just have to remember to recast them in the
 reducer. Python&#8217;s eval() method is useful for getting tuples
 from strings</p>
 </div>
-<p>Our reducer will sum up all of the confidences. This way songs
+<p>Our <a class="reference download internal" href="../_downloads/avgKeyReducer.py"><tt class="xref download docutils literal"><span class="pre">reducer</span></tt></a> will sum up all of the confidences. This way songs
 that have higher confidences will have more influence on the
 total than songs with uncertain keys. It also turns the key
 signatures from numbers into something more human readable. Doing
@@ -157,7 +157,7 @@ metadata file and the artist ID is at index 0 in the terms file.
 We can let the reducer know what information is being passed to
 it by emiting tuples where the first value is a flag stating what
 the second value is.</p>
-<p>With this information we can write a mapper. Remember to perform
+<p>With this information we can write a <a class="reference download internal" href="../_downloads/genreMapper.py"><tt class="xref download docutils literal"><span class="pre">mapper.</span></tt></a> Remember to perform
 the sanity check on the metadata. Unfortuneately we can&#8217;t run
 the same check on the other files because they have variable
 line lengths.</p>
@@ -175,13 +175,13 @@ line lengths.</p>
 12
 13
 14</pre></div></td><td class="code"><div class="highlight"><pre><span class="k">def</span> <span class="nf">mapper</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
-  <span class="n">genre</span> <span class="o">=</span> <span class="s">&quot;Rock&quot;</span>
+  <span class="n">genre</span> <span class="o">=</span> <span class="s">&quot;rock&quot;</span>
   <span class="n">data</span> <span class="o">=</span> <span class="n">value</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s">&#39;</span><span class="se">\t</span><span class="s">&#39;</span><span class="p">)</span>
   <span class="k">if</span> <span class="n">key</span> <span class="o">==</span> <span class="s">&quot;metadata&quot;</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">)</span> <span class="o">==</span> <span class="mi">25</span><span class="p">:</span>
     <span class="n">artist</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="mi">5</span><span class="p">]</span>
     <span class="n">keySig</span> <span class="o">=</span> <span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="mi">23</span><span class="p">],</span> <span class="n">data</span><span class="p">[</span><span class="mi">21</span><span class="p">])</span>
     <span class="n">confidence</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="mi">24</span><span class="p">])</span> <span class="o">*</span> <span class="nb">float</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="mi">22</span><span class="p">])</span>
-    <span class="n">Wmr</span><span class="o">.</span><span class="n">emit</span><span class="p">(</span><span class="n">artist</span><span class="p">,</span> <span class="p">(</span><span class="s">&quot;song&quot;</span><span class="p">,</span> <span class="p">(</span><span class="n">keySig</span><span class="p">,</span> <span class="n">Confidence</span><span class="p">)))</span>
+    <span class="n">Wmr</span><span class="o">.</span><span class="n">emit</span><span class="p">(</span><span class="n">artist</span><span class="p">,</span> <span class="p">(</span><span class="s">&quot;song&quot;</span><span class="p">,</span> <span class="p">(</span><span class="n">keySig</span><span class="p">,</span> <span class="n">confidence</span><span class="p">)))</span>
   <span class="k">elif</span> <span class="n">key</span> <span class="o">==</span> <span class="s">&quot;term&quot;</span><span class="p">:</span>
     <span class="n">artist</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
     <span class="k">for</span> <span class="n">triplet</span> <span class="ow">in</span> <span class="n">data</span><span class="p">[</span><span class="mi">1</span><span class="p">:]:</span>
@@ -190,7 +190,7 @@ line lengths.</p>
         <span class="n">Wmr</span><span class="o">.</span><span class="n">emit</span><span class="p">(</span><span class="n">artist</span><span class="p">,</span> <span class="p">(</span><span class="s">&quot;term&quot;</span><span class="p">,</span> <span class="bp">True</span><span class="p">))</span>
 </pre></div>
 </td></tr></table></div>
-<p>Our reducer will need to take all of this data and only emit
+<p>Our <a class="reference download internal" href="../_downloads/genreReducer.py"><tt class="xref download docutils literal"><span class="pre">reducer</span></tt></a> will need to take all of this data and only emit
 the songs by artists who are tagged with the the genre.j</p>
 <div class="highlight-python"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
  2
@@ -220,11 +220,11 @@ the songs by artists who are tagged with the the genre.j</p>
 <p>After running this job we are left with a list of key signatures
 and confidences. We still need to add up the confidences for each
 of the key signatures. We can do this by passing our list to the
-reducer from the first part of this module. To use the output of
+<a class="reference download internal" href="../_downloads/avgKeyReducer.py"><tt class="xref download docutils literal"><span class="pre">reducer</span></tt></a> from the first part of this module. To use the output of
 a Wmr job as input for another, just click the &#8216;Use Output&#8217; on
 either the top or the bottom of the page.</p>
 <p>To pass our data straight to the reducer we&#8217;ll use what&#8217;s known
-as the identity mapper:</p>
+as the <a class="reference download internal" href="../_downloads/idMapper.py"><tt class="xref download docutils literal"><span class="pre">identity</span> <span class="pre">mapper</span></tt></a>:</p>
 <div class="highlight-python"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
 2</pre></div></td><td class="code"><div class="highlight"><pre><span class="k">def</span> <span class="nf">mapper</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
   <span class="n">Wmr</span><span class="o">.</span><span class="n">emit</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
@@ -237,7 +237,7 @@ genre. It should look something like this:</p>
 <img alt="../_images/keyChart.png" class="align-center" src="../_images/keyChart.png" />
 </div>
 <div class="section" id="interpretting-the-results">
-<h2>Interpretting the results:<a class="headerlink" href="#interpretting-the-results" title="Permalink to this headline">¶</a></h2>
+<h2>Interpretting the results<a class="headerlink" href="#interpretting-the-results" title="Permalink to this headline">¶</a></h2>
 <p>It looks like G is the most popular key for every genre but
 classical where it barely looses out to C. In country music G
 is a heavy favorite along with C and D which are also relatively
@@ -247,6 +247,11 @@ only acoustic instrument.</p>
 <p>Overall it seems like the guitar does have some effect on an
 artist&#8217;s choice of key, but it can&#8217;t be explained by guitar
 tuning alone.</p>
+</div>
+<div class="section" id="challenge">
+<h2>Challenge<a class="headerlink" href="#challenge" title="Permalink to this headline">¶</a></h2>
+<p>Can you find a way to find the counts for 6 different genres using only
+one chain of jobs?</p>
 </div>
 </div>
 
@@ -264,7 +269,8 @@ tuning alone.</p>
 <li><a class="reference internal" href="#">Fun with key signatures</a><ul>
 <li><a class="reference internal" href="#coding-the-hadoop-job">Coding the Hadoop Job</a></li>
 <li><a class="reference internal" href="#going-further">Going Further</a></li>
-<li><a class="reference internal" href="#interpretting-the-results">Interpretting the results:</a></li>
+<li><a class="reference internal" href="#interpretting-the-results">Interpretting the results</a></li>
+<li><a class="reference internal" href="#challenge">Challenge</a></li>
 </ul>
 </li>
 </ul>

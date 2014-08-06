@@ -24,7 +24,7 @@ means getting a list of friends from a list of friendships.
 The algorithm is quite simple, for each friend f in a friendship
 we must add f's friend to the list of f's friends.
 
-Here's our mapper:
+Here's our :download:`mapper <friendListMapper.py>`:
 
 .. code-block:: python
     :linenos:
@@ -35,7 +35,8 @@ Here's our mapper:
         Wmr.emit(key, value)
         Wmr.emit(value, key)
  
-We want our reducer to output a comma seperated list:
+We want our :download:`reducer <friendListReducer.py>` to output a comma
+seperated list:
 
 .. code-block:: python
     :linenos:
@@ -58,8 +59,9 @@ we can use the output of the last job as input for a new job.
 All you need to do is click the Use Output button at the top or
 bottom of the WMR results page.
 
-To get the average, we'll have to output the number of friends
-each account has to one reducer that then calculates the average.
+To get the average, our :download:`mapper <friendCountMapper.py>` will
+output the number of friends each account has to one :download:`reducer <averageReducer.py>` 
+that then calculates the average.
 
 .. code-block:: python
     :linenos:

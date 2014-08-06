@@ -32,7 +32,7 @@ see if all 25 feilds are present. It's good practice to sanity
 check data in the mapper because you can never be certain that
 your data is pure.
 
-Our mapper looks like this:
+Our :download:`mapper<avgKeyMapper.py>` looks like this:
 
 .. code-block:: python 
     :linenos:
@@ -53,7 +53,7 @@ Our mapper looks like this:
     reducer. Python's eval() method is useful for getting tuples
     from strings
 
-Our reducer will sum up all of the confidences. This way songs
+Our :download:`reducer<avgKeyReducer.py>` will sum up all of the confidences. This way songs
 that have higher confidences will have more influence on the 
 total than songs with uncertain keys. It also turns the key 
 signatures from numbers into something more human readable. Doing
@@ -109,7 +109,7 @@ We can let the reducer know what information is being passed to
 it by emiting tuples where the first value is a flag stating what
 the second value is.
 
-With this information we can write a mapper. Remember to perform
+With this information we can write a :download:`mapper.<genreMapper.py>` Remember to perform
 the sanity check on the metadata. Unfortuneately we can't run
 the same check on the other files because they have variable
 line lengths.
@@ -118,13 +118,13 @@ line lengths.
     :linenos:
 
     def mapper(key, value):
-      genre = "Rock"
+      genre = "rock"
       data = value.split('\t')
       if key == "metadata" and len(data) == 25:
         artist = data[5]
         keySig = (data[23], data[21])
         confidence = float(data[24]) * float(data[22])
-        Wmr.emit(artist, ("song", (keySig, Confidence)))
+        Wmr.emit(artist, ("song", (keySig, confidence)))
       elif key == "term":
         artist = data[0] 
         for triplet in data[1:]:
@@ -132,7 +132,7 @@ line lengths.
           if term == genre and float(weight) > 0.5:
             Wmr.emit(artist, ("term", True))
 
-Our reducer will need to take all of this data and only emit
+Our :download:`reducer<genreReducer.py>` will need to take all of this data and only emit
 the songs by artists who are tagged with the the genre.j
 
 .. code-block:: python
@@ -154,12 +154,12 @@ the songs by artists who are tagged with the the genre.j
 After running this job we are left with a list of key signatures
 and confidences. We still need to add up the confidences for each
 of the key signatures. We can do this by passing our list to the
-reducer from the first part of this module. To use the output of 
+:download:`reducer<avgKeyReducer.py>` from the first part of this module. To use the output of 
 a Wmr job as input for another, just click the 'Use Output' on 
 either the top or the bottom of the page. 
 
 To pass our data straight to the reducer we'll use what's known
-as the identity mapper:
+as the :download:`identity mapper<idMapper.py>`:
 
 .. code-block:: python
     :linenos:
@@ -176,7 +176,7 @@ genre. It should look something like this:
     :align: center
 
 
-Interpretting the results:
+Interpretting the results
 ##########################
 
 It looks like G is the most popular key for every genre but
@@ -189,3 +189,9 @@ only acoustic instrument.
 Overall it seems like the guitar does have some effect on an
 artist's choice of key, but it can't be explained by guitar
 tuning alone.
+
+Challenge
+#########
+
+Can you find a way to find the counts for 6 different genres using only
+one chain of jobs?
