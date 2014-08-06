@@ -18,3 +18,7 @@ necessary for running Cuda code.
 However, you do not need to run this script directly. Rather, you can user the 
 scripts create_instructor and create_course to create an instructor user and 
 an arbitrary number of student users. See the README for more detailed instructions.
+
+You can download the scripts here:
+:download:`new_accounts.tar <new_accounts.tar>`
+
