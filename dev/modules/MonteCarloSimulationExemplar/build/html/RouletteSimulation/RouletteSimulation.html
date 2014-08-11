@@ -1,0 +1,208 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Roulette Simulation &mdash; Monte Carlo Simulation Exemplar</title>
+    
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="top" title="Monte Carlo Simulation Exemplar" href="../index.html" />
+    <link rel="prev" title="Drawing Four Cards of the Same Suit" href="../DrawFourSuitsExample/DrawFourSuitsExample.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../DrawFourSuitsExample/DrawFourSuitsExample.html" title="Drawing Four Cards of the Same Suit"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../index.html">../../../images/CSInParallel200wide.png</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="roulette-simulation">
+<h1>Roulette Simulation<a class="headerlink" href="#roulette-simulation" title="Permalink to this headline">¶</a></h1>
+<p>Our next is example is a Roulette simulation. We have a main simulation
+loop that is similar to the previous example. Notice that we use a OpenMp
+directive to seed the random number generator separately in each thread (see
+the discussion about randomness in the Introduction.)</p>
+<div class="highlight-c++"><div class="highlight"><pre><span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+	<span class="c1">//Variable Dictionary</span>
+	<span class="kt">int</span> <span class="n">numSpins</span><span class="p">;</span>		<span class="c1">//#spins per trial</span>
+	<span class="kt">int</span>	<span class="n">numWins</span><span class="p">;</span>		<span class="c1">//#wins per trial</span>
+	<span class="kt">clock_t</span> <span class="n">startT</span><span class="p">,</span> <span class="n">stopT</span><span class="p">;</span> <span class="c1">//wall clock elapsed time</span>
+
+<span class="cm">/**************************** Initialization ****/</span>
+<span class="cp">#pragma omp parallel</span>
+	<span class="p">{</span>
+		<span class="kt">unsigned</span> <span class="kt">int</span> <span class="n">seed</span> <span class="o">=</span> <span class="p">(</span><span class="kt">unsigned</span><span class="p">)</span> <span class="n">time</span><span class="p">(</span><span class="nb">NULL</span><span class="p">);</span>
+		<span class="n">seed</span> <span class="o">=</span> <span class="p">(</span><span class="n">seed</span> <span class="o">&amp;</span> <span class="mh">0xFFFFFFF0</span><span class="p">)</span> <span class="o">|</span> <span class="p">(</span><span class="n">omp_get_thread_num</span><span class="p">()</span> <span class="o">+</span> <span class="mi">1</span><span class="p">);</span>
+		<span class="n">srand</span><span class="p">(</span><span class="n">seed</span><span class="p">);</span>
+<span class="cp">#pragma omp critical</span>
+		<span class="p">{</span>
+			<span class="n">cout</span><span class="o">&lt;&lt;</span><span class="s">&quot;</span><span class="se">\n\n\n</span><span class="s">Seed &quot;</span><span class="o">&lt;&lt;</span><span class="n">seed</span><span class="o">&lt;&lt;</span><span class="s">&quot; for thread &quot;</span><span class="o">&lt;&lt;</span><span class="n">omp_get_thread_num</span><span class="p">()</span>
+				<span class="o">&lt;&lt;</span><span class="s">&quot; of &quot;</span><span class="o">&lt;&lt;</span><span class="n">omp_get_num_threads</span><span class="p">()</span>
+				<span class="o">&lt;&lt;</span><span class="s">&quot;  -first rand() is &quot;</span> <span class="o">&lt;&lt;</span> <span class="n">rand</span><span class="p">()</span><span class="o">&lt;&lt;</span><span class="n">endl</span><span class="p">;</span>
+		<span class="p">}</span>
+	<span class="p">}</span><span class="c1">//parallel</span>
+	<span class="n">startT</span> <span class="o">=</span> <span class="n">clock</span><span class="p">();</span>				<span class="c1">//start our timer</span>
+	<span class="c1">//srand((unsigned int)time(0));	//seed rand()</span>
+	<span class="n">cout</span><span class="o">&lt;&lt;</span><span class="s">&quot;Simulation of an American Roulette Wheel</span><span class="se">\n</span><span class="s">&quot;</span> <span class="o">&lt;&lt;</span>
+		<span class="n">string</span><span class="p">(</span><span class="mi">35</span><span class="p">,</span><span class="sc">&#39;*&#39;</span><span class="p">)</span><span class="o">&lt;&lt;</span><span class="n">endl</span><span class="p">;</span>
+	<span class="n">cout</span><span class="o">&lt;&lt;</span><span class="n">setw</span><span class="p">(</span><span class="mi">12</span><span class="p">)</span><span class="o">&lt;&lt;</span><span class="s">&quot;Num Spins&quot;</span> <span class="o">&lt;&lt;</span> <span class="n">setw</span><span class="p">(</span><span class="mi">12</span><span class="p">)</span> <span class="o">&lt;&lt;</span><span class="s">&quot;Num Wins&quot;</span> <span class="o">&lt;&lt;</span> <span class="n">setw</span><span class="p">(</span><span class="mi">12</span><span class="p">)</span> <span class="o">&lt;&lt;</span><span class="s">&quot;% wins&quot;</span><span class="o">&lt;&lt;</span><span class="n">endl</span><span class="p">;</span>
+	<span class="n">numSpins</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>					<span class="c1">//we start with 1 spin (all or nothing)</span>
+
+<span class="cm">/**************************** Do Simulations ***/</span>
+	<span class="k">while</span> <span class="p">(</span><span class="n">numSpins</span> <span class="o">&lt;</span> <span class="n">MAX</span><span class="p">)</span> <span class="p">{</span>
+		<span class="n">numWins</span> <span class="o">=</span> <span class="n">getNumWins</span><span class="p">(</span><span class="n">numSpins</span><span class="p">);</span>	<span class="c1">//go spin wheel</span>
+		<span class="n">showResults</span><span class="p">(</span><span class="n">numSpins</span><span class="p">,</span> <span class="n">numWins</span><span class="p">);</span>				<span class="c1">//show results</span>
+
+		<span class="n">numSpins</span> <span class="o">+=</span> <span class="n">numSpins</span><span class="p">;</span>	<span class="c1">//double spins for next simulation</span>
+	<span class="p">}</span><span class="c1">//while</span>
+
+<span class="cm">/**************************** Finish Up ********/</span>
+	<span class="n">stopT</span><span class="o">=</span> <span class="n">clock</span><span class="p">();</span>		<span class="c1">//stop our timer &amp; show elapsed time</span>
+	<span class="n">cout</span><span class="o">&lt;&lt;</span><span class="s">&quot;</span><span class="se">\n</span><span class="s">Elapsed wall clock time: &quot;</span><span class="o">&lt;&lt;</span> <span class="p">(</span><span class="kt">double</span><span class="p">)(</span><span class="n">stopT</span><span class="o">-</span><span class="n">startT</span><span class="p">)</span><span class="o">/</span><span class="n">CLOCKS_PER_SEC</span><span class="o">&lt;&lt;</span><span class="n">endl</span><span class="o">&lt;&lt;</span><span class="n">endl</span><span class="p">;</span>
+
+	<span class="n">cout</span><span class="o">&lt;&lt;</span><span class="s">&quot;</span><span class="se">\n\n\n\t\t</span><span class="s">*** Normal Termination ***</span><span class="se">\n\n</span><span class="s">&quot;</span><span class="p">;</span>
+	<span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span><span class="c1">//main</span>
+</pre></div>
+</div>
+<p>The actual simulation function is getNumWins and is quite simple. As before,
+it runs the simulations in parrallel in a loop. numSpins and myBet are shared
+between theads while spin is the loop index and unique to each thread. Again,
+analogously to the previous example, we combine the partial results from each
+threads with &#8216;reduction(+:wins)&#8217;.</p>
+<div class="highlight-c++"><div class="highlight"><pre><span class="kt">int</span> <span class="nf">getNumWins</span><span class="p">(</span><span class="kt">int</span> <span class="n">numSpins</span><span class="p">){</span>
+<span class="c1">//always bet &#39;red&#39; &amp; count wins</span>
+	<span class="k">static</span> <span class="kt">int</span> <span class="n">wins</span><span class="p">;</span><span class="c1">//our counter</span>
+	<span class="kt">int</span> <span class="n">spin</span><span class="p">;</span>		<span class="c1">//loop cntrl var</span>
+	<span class="kt">int</span> <span class="n">myBet</span> <span class="o">=</span> <span class="mi">10</span><span class="p">;</span> <span class="c1">//amnt we bet per spin</span>
+
+	<span class="n">wins</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>	<span class="c1">//clear our counter</span>
+
+<span class="cp">#pragma omp parallel for default(none) \</span>
+<span class="cp">	shared(numSpins, myBet) \</span>
+<span class="cp">	private(spin) \</span>
+<span class="cp">	reduction(+:wins)</span>
+
+	<span class="k">for</span> <span class="p">(</span><span class="n">spin</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">spin</span><span class="o">&lt;</span><span class="n">numSpins</span><span class="p">;</span> <span class="n">spin</span><span class="o">++</span><span class="p">){</span>
+		<span class="c1">//spinRed returns +/- number (win/lose)</span>
+		<span class="k">if</span> <span class="p">(</span><span class="n">spinRed</span><span class="p">(</span><span class="n">myBet</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="c1">//a winner!</span>
+			<span class="n">wins</span><span class="o">++</span><span class="p">;</span>
+	<span class="p">}</span>
+
+	<span class="k">return</span> <span class="n">wins</span><span class="p">;</span>
+<span class="p">}</span><span class="c1">//getNumWins</span>
+</pre></div>
+</div>
+<p>The function that actually runs a single simulation of the Roulette wheel is quite
+simple. It simply generates a random number to represent the slot that the ball
+ends up in and gives a payout according to the rules of Roulette.</p>
+<div class="highlight-c++"><div class="highlight"><pre><span class="c1">//spin the wheel, betting on RED</span>
+<span class="c1">//Payout Rules:</span>
+<span class="c1">//  0..17 you win (it was red)</span>
+<span class="c1">// 18..35 you lose (it was black)</span>
+<span class="c1">// 36..37 house wins (green) - you lose half</span>
+<span class="kt">int</span> <span class="nf">spinRed</span><span class="p">(</span><span class="kt">int</span> <span class="n">bet</span><span class="p">)</span> <span class="p">{</span>
+	<span class="kt">int</span> <span class="n">payout</span><span class="p">;</span>
+	<span class="kt">int</span> <span class="n">slot</span> <span class="o">=</span> <span class="n">randIntBetween</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">38</span><span class="p">);</span>
+	<span class="k">if</span> <span class="p">(</span><span class="n">slot</span> <span class="o">&lt;=</span> <span class="mi">18</span><span class="p">)</span> <span class="c1">//simplify odds: [0..17]==RED</span>
+		<span class="n">payout</span> <span class="o">=</span> <span class="n">bet</span><span class="p">;</span>	<span class="c1">//won</span>
+	<span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="n">slot</span> <span class="o">&lt;=</span> <span class="mi">36</span><span class="p">)</span> <span class="c1">//spin was &#39;black&#39;-lose all</span>
+		<span class="n">payout</span> <span class="o">=</span> <span class="o">-</span><span class="n">bet</span><span class="p">;</span>	<span class="c1">//lost</span>
+	<span class="k">else</span> <span class="c1">//spin was green - lose half</span>
+		<span class="n">payout</span> <span class="o">=</span> <span class="o">-</span><span class="p">(</span><span class="n">bet</span><span class="o">/</span><span class="mi">2</span><span class="p">);</span> <span class="c1">//half-back</span>
+	<span class="k">return</span> <span class="n">payout</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<div class="section" id="todo">
+<h2>Todo<a class="headerlink" href="#todo" title="Permalink to this headline">¶</a></h2>
+<p>Now see if you can modify the provided code to use MPICH and/or CUDA instead of
+of OpenMP. If you are feeling really ambitious, you can even make the program use
+hybrid parallelism (ie use MPICH to divide the problem between a cluster and OpenMP
+to divide each node&#8217;s problem into threads).</p>
+<p>Here is the full source code for the OpenMp version:
+<a class="reference download internal" href="../_downloads/rouletteSimulation.cpp"><tt class="xref download docutils literal"><span class="pre">rouletteSimulation.cpp</span></tt></a></p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Roulette Simulation</a><ul>
+<li><a class="reference internal" href="#todo">Todo</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="../DrawFourSuitsExample/DrawFourSuitsExample.html"
+                        title="previous chapter">Drawing Four Cards of the Same Suit</a></p>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../DrawFourSuitsExample/DrawFourSuitsExample.html" title="Drawing Four Cards of the Same Suit"
+             >previous</a> |</li>
+        <li><a href="../index.html">../../../images/CSInParallel200wide.png</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright This work is licensed under a Creative Commons Attribution-ShareAlike 3.0 Unported License.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
+    </div>
+  </body>
+</html>
