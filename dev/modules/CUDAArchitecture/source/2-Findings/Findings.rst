@@ -1,23 +1,39 @@
 Choosing the right Dimensions
 =============================
 
+.. sidebar:: Compute Capability
+
+    The compute capability of a CUDA card designates what features are available.
+    The `Wikipedia CUDA page <http://en.wikipedia.org/wiki/CUDA>`_ provides an overview
+    of various cards and their compute capability, along with the features available with that compute capability.
+    
 One of the most important elements of CUDA programming is
 choosing the right grid and block dimensions for the 
-problem size. However it's not always clear which dimensions
-to choose so we created an expiriment to answer the following
-question: What effect do the grid and block dimensions have 
-on execution times?
+problem size.  Early CUDA cards, up through compute capability
+1.3, had a maximum of 512 threads per block and 65535 blocks in
+a single 1-dimensional grid (recall we set up a 1-D grid in this code).  In later
+cards, these values increased to 1024 threads per block and 2\ :sup:`31` - 1 blocks in a grid.
 
-To answer this questions, we wrote a 
+
+
+It's not always clear which dimensions
+to choose so we created an expiriment to answer the following
+question:
+
+*What effect do the grid and block dimensions have 
+on execution times?*
+
+To answer this question, we wrote a 
 :download:`script <testMandelbrot.sh>` to run our mandelbrot code
 for every 
-block size between 1 and 512 and every number of threads 
+grid size between 1 and 512  blocks and every number of threads 
 per block between 1 and 512 which produced 262,144 data
-points. We chose these ranges because our picture is
-512x512 so each thread will calculate the value of at least
-one pixel.
+points. We chose these ranges because our madelbrot set picture is
+512x512, so each thread will calculate the value of at least
+one pixel at the largest value of each.
 
-The device we ran the tests on was a Jetson TK1 which has
+The device we ran the tests on was a Jetson TK1 which is
+a Kepler class card that has
 one Streaming Multiprocessor with 192 CUDA cores. To ensure
 that our code was the only thing running on the GPU, we
 first disabled the X server.
@@ -57,8 +73,9 @@ architecture or the specifics of the code.
 Many threads in 1 block is always faster than many blocks of
 one thread because of the way threads are put into warps.
 The Jetson can execute 4 warps simultaneously. This means that
-when the block size is one only 4 threads can run concurently
-but when the block size is one the threads can be evenly divided
+when the number of threads/block is one only 4 threads can run concurently
+but when the number of blocks is one and there are many threads per block,
+the threads can be evenly divided
 into warps so that up to 128 are being run simultaneously.
 
 Warp size also explains the horizontal lines every
@@ -70,11 +87,11 @@ thread which wastes 31 cycles cycles per block.
 
 512x512 is the fastest execution time even though the GPU
 can't run that many threads at a time. This is because 
-it is inexpensive to create threads on a CUDA card.
-cards and having one pixel per thread allows the GPU to
+it is inexpensive to create threads on a CUDA card and having
+one pixel per thread allows the GPU to
 most efficently schedule warps as the CUDA cores become free.
 Additionally, since accessing the color data takes time, the
-GPU can help us our by calculating other warps while waiting
+GPU can help us out by calculating other warps while waiting
 for the read to finish.
 
 The convex lines appear for a few different reasons. The
@@ -107,7 +124,7 @@ differences.
 First, one block of many threads and many blocks with one
 thread each take about the same amount of time to execute.
 Because this card uses the Fermi architecture, each SM can run
-two warps concurently, this means that 30 threads can be running
+two warps concurently, this means that 64 threads can be running
 at any given time. While still not as fast as using one block,
 many blocks is significantly faster with multiple SMs.
 
@@ -127,9 +144,9 @@ CUDA best practices
 
 From these results we can draw up a list of best practices:
 
-#. Try to make the number of threads per block a multiple of 32
+#. Try to make the number of threads per block a multiple of 32.
 
-#. Keep the number of threads per block and the number of blocks as close to equal as you can without violating the first tip
+#. Keep the number of threads per block and the number of blocks as close to equal as you can without violating the first tip.
 
 #. Keep the amount of work each thread does constant, it's inefficent to have one thread perform calculations for two pixels while the rest only calculate one.
 
@@ -138,3 +155,5 @@ From these results we can draw up a list of best practices:
 #. In general avoid having threads that do extra work or have conditionals.
 
 #. Try to have a block size that is a multiple of the numberof SMs on your device, this is less important than the other tips.
+
+

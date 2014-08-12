@@ -108,28 +108,29 @@ void checkErr(cudaError_t err, char* msg){
 __device__ uint32_t mandel_double(double cr, double ci, int max_iter) {
     double zr = 0;
     double zi = 0;
-	double zrsqr = 0;
-	double zisqr = 0;
-	
-	uint32_t i;
-	
-	for (i = 0; i < max_iter; i++){
-        zi = zr * zi;
-        zi += zi;
-        zi += ci;
-        zr = zrsqr - zisqr + cr;
-        zrsqr = zr * zr;
-        zisqr = zi * zi;
+    double zrsqr = 0;
+    double zisqr = 0;
+
+    uint32_t i;
+
+    for (i = 0; i < max_iter; i++){
+		zi = zr * zi;
+		zi += zi;
+		zi += ci;
+		zr = zrsqr - zisqr + cr;
+		zrsqr = zr * zr;
+		zisqr = zi * zi;
 		
-        //the fewer iterations it takes to diverge, the farther from the set
+    //the fewer iterations it takes to diverge, the farther from the set
 		if (zrsqr + zisqr > 4.0) break;
-	}
-	return i;
+    }
+	
+    return i;
 }
 
 /* turn each x y coordinate into a complex number and run the mandelbrot formula on it */
 __global__ void mandel_kernel(uint32_t *counts, double xmin, double ymin,
-            double step, int max_iter, int dim, uint32_t *colors){
+            double step, int max_iter, int dim, uint32_t *colors) {
     int pix_per_thread = dim * dim / (gridDim.x * blockDim.x);
     int tId = blockDim.x * blockIdx.x + threadIdx.x;
     int offset = pix_per_thread * tId;

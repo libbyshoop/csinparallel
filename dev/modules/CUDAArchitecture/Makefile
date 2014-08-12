@@ -115,6 +115,7 @@ latexpdf:
 	tar -czf $(BUILDDIR)/latex.tar.gz $(BUILDDIR)/latex
 	@echo "Running LaTeX files through pdflatex..."
 	$(MAKE) -C $(BUILDDIR)/latex all-pdf
+	tar -czf $(BUILDDIR)/latex.tar.gz $(BUILDDIR)/latex
 	@echo "pdflatex finished; the PDF files are in $(BUILDDIR)/latex."
 
 latexpdfja:

@@ -1,0 +1,12 @@
+\select@language {english}
+\contentsline {chapter}{\numberline {1}Contents:}{2}{chapter.1}
+\contentsline {section}{\numberline {1.1}Network Analysis with Hadoop}{2}{section.1.1}
+\contentsline {subsection}{\numberline {1.1.1}The Dataset}{2}{subsection.1.1.1}
+\contentsline {subsection}{\numberline {1.1.2}Getting a List of Friends}{2}{subsection.1.1.2}
+\contentsline {subsection}{\numberline {1.1.3}Average Friend Count}{3}{subsection.1.1.3}
+\contentsline {section}{\numberline {1.2}Advanced Network Analysis}{3}{section.1.2}
+\contentsline {subsection}{\numberline {1.2.1}A Mathematical interlude}{3}{subsection.1.2.1}
+\contentsline {subsection}{\numberline {1.2.2}Writing the Algorithm}{5}{subsection.1.2.2}
+\contentsline {subsubsection}{The Mapper}{5}{subsubsection*.3}
+\contentsline {subsubsection}{The Reducer}{6}{subsubsection*.4}
+\contentsline {subsection}{\numberline {1.2.3}Challenge exercises for you to try}{6}{subsection.1.2.3}
