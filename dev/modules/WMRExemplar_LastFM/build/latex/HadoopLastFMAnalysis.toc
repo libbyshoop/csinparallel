@@ -1,0 +1,8 @@
+\select@language {english}
+\contentsline {chapter}{\numberline {1}The Million Song Dataset}{2}{chapter.1}
+\contentsline {chapter}{\numberline {2}Fun with key signatures}{4}{chapter.2}
+\contentsline {section}{\numberline {2.1}Coding the Hadoop Job}{4}{section.2.1}
+\contentsline {section}{\numberline {2.2}Going Further}{5}{section.2.2}
+\contentsline {section}{\numberline {2.3}Interpretting the results}{7}{section.2.3}
+\contentsline {section}{\numberline {2.4}Challenge}{8}{section.2.4}
+\contentsline {chapter}{\numberline {3}Challenge Problems}{9}{chapter.3}

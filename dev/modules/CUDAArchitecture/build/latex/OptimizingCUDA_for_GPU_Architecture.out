@@ -1,0 +1,12 @@
+\BOOKMARK [0][-]{chapter.1}{CUDA Architecture}{}% 1
+\BOOKMARK [1][-]{section.1.1}{Physical Architecture}{chapter.1}% 2
+\BOOKMARK [1][-]{section.1.2}{Virtual Architecture}{chapter.1}% 3
+\BOOKMARK [1][-]{section.1.3}{CUDA Memory}{chapter.1}% 4
+\BOOKMARK [1][-]{section.1.4}{Finding your Device Specifications}{chapter.1}% 5
+\BOOKMARK [0][-]{chapter.2}{Mandelbrot Test Code}{}% 6
+\BOOKMARK [1][-]{section.2.1}{What is the Mandelbrot set?}{chapter.2}% 7
+\BOOKMARK [1][-]{section.2.2}{Coding the Mandelbrot set}{chapter.2}% 8
+\BOOKMARK [0][-]{chapter.3}{Choosing the right Dimensions}{}% 9
+\BOOKMARK [1][-]{section.3.1}{Results}{chapter.3}% 10
+\BOOKMARK [1][-]{section.3.2}{Adding More Streaming Multiprocessors}{chapter.3}% 11
+\BOOKMARK [1][-]{section.3.3}{CUDA best practices}{chapter.3}% 12

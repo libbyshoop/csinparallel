@@ -3,11 +3,11 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-Optimizing for CUDA's Architecture's
+Optimizing CUDA for GPU Architecture
 ====================================
 
-CUDA cards use an advanced arcitecture to efficiently execute
-massively parallel programs. This module explains how to take
+nVIDIA GPU cards use an advanced arcitecture to efficiently execute
+massively parallel programs written in CUDA C. This module explains how to take
 advantage of this architecture to provide maximum speedup for
 your CUDA applications using a mandelbrot set generator as an 
 example. It is intended to be a resource for instructors wishing
