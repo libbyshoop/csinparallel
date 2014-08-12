@@ -1,0 +1,254 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Mandelbrot Test Code &mdash; Optimizing CUDA for GPU Architecture</title>
+    
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+    <link rel="top" title="Optimizing CUDA for GPU Architecture" href="../index.html" />
+    <link rel="next" title="Choosing the right Dimensions" href="../2-Findings/Findings.html" />
+    <link rel="prev" title="CUDA Architecture" href="../0-Architecture/Architecture.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../2-Findings/Findings.html" title="Choosing the right Dimensions"
+             accesskey="N">next</a></li>
+        <li class="right" >
+          <a href="../0-Architecture/Architecture.html" title="CUDA Architecture"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../index.html">Optimizing CUDA for GPU Architecture</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="mandelbrot-test-code">
+<h1>Mandelbrot Test Code<a class="headerlink" href="#mandelbrot-test-code" title="Permalink to this headline">¶</a></h1>
+<p>Choosing a good number of blocks and threads per block is
+an important part of CUDA Programming. To illustrate this, we
+will take a look at a program that generates images of the
+Mandelbrot set. To run the programs you will need a CUDA capable
+machine as well as the appropriate XOrg
+developer package (X11 is likely installed on your linux machine
+and needs to be installed on a Mac). Download <a class="reference download internal" href="../_downloads/mandelbrot.cu"><tt class="xref download docutils literal"><span class="pre">mandelbrot.cu</span></tt></a> and the
+<a class="reference download internal" href="../_downloads/Makefile"><tt class="xref download docutils literal"><span class="pre">Makefile</span></tt></a> and run <tt class="docutils literal"><span class="pre">make</span> <span class="pre">all</span></tt> This will generate 3
+programs:</p>
+<p><strong>Mandelbrot</strong> is a mandelbrot set viewer designed for demonstrations
+. It allows you to zoom in and out and move around the
+Mandelbrot set. The controls are w for up, s for down, a for
+left, d for right, e to zoom in, q to zoom out and x to exit.</p>
+<p>The executable named <strong>benchmark</strong> runs the computation without displaying anything and
+prints out the time it took before exiting.</p>
+<p><strong>XBenchmark</strong> is a hybrid that prints out the computation time and
+allows you to move around. This is useful because the computation
+time is dependent on your position within the Mandelbrot set.</p>
+<p>Each of the programs takes betwen 0 and 4 commandline arguments</p>
+<ol class="arabic simple">
+<li>the number of blocks used by the kernel</li>
+<li>the number of threads per block</li>
+<li>the image size in pixels, the image is always square</li>
+<li>the image depth (explained later)</li>
+</ol>
+<div class="section" id="what-is-the-mandelbrot-set">
+<h2>What is the Mandelbrot set?<a class="headerlink" href="#what-is-the-mandelbrot-set" title="Permalink to this headline">¶</a></h2>
+<p>The mandelbrot set is defined as the set of all complex numbers C
+such that the formula Z<sub>n+1</sub> = Z<sub>n</sub><sup>2</sup> + C
+tends towards infinity. If we plot the real values of C on the X
+axis and the imaginary values of C on the Y axis we get a two
+dimensional fractal shape, such as this one created from running this code.</p>
+<div class="align-center figure align-center">
+<img alt="The Mandelbrot Set" src="../_images/set.jpg" style="width: 1000px;" />
+</div>
+</div>
+<div class="section" id="coding-the-mandelbrot-set">
+<h2>Coding the Mandelbrot set<a class="headerlink" href="#coding-the-mandelbrot-set" title="Permalink to this headline">¶</a></h2>
+<p>The to determine whether a value is in or out of the mandelbrot
+set we loop through the formula  Z<sub>n+1</sub> = Z<sub>n</sub><sup>2</sup> + C a certain number of times (this is the image depth
+from earlier) and during each iteration, check if the magnitude
+of Z is greater than 2; if so, we return false. However we want our
+Mandelbrot image to look pretty, so instead we&#8217;ll return the
+iteration in which it went out of bounds and and then interpret
+that number as a color. If it completes the loop without going
+out of bounds we&#8217;ll assign it the color black</p>
+<p>After some algebraic manipulation to reduce the number of
+floating point multiplications, our code looks like this:</p>
+<div class="highlight-c"><div class="highlight"><pre><span class="n">__device__</span> <span class="kt">uint32_t</span> <span class="nf">mandel_double</span><span class="p">(</span><span class="kt">double</span> <span class="n">cr</span><span class="p">,</span> <span class="kt">double</span> <span class="n">ci</span><span class="p">,</span> <span class="kt">int</span> <span class="n">max_iter</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kt">double</span> <span class="n">zr</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="kt">double</span> <span class="n">zi</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="kt">double</span> <span class="n">zrsqr</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="kt">double</span> <span class="n">zisqr</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+
+    <span class="kt">uint32_t</span> <span class="n">i</span><span class="p">;</span>
+
+    <span class="k">for</span> <span class="p">(</span><span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">max_iter</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">){</span>
+		<span class="n">zi</span> <span class="o">=</span> <span class="n">zr</span> <span class="o">*</span> <span class="n">zi</span><span class="p">;</span>
+		<span class="n">zi</span> <span class="o">+=</span> <span class="n">zi</span><span class="p">;</span>
+		<span class="n">zi</span> <span class="o">+=</span> <span class="n">ci</span><span class="p">;</span>
+		<span class="n">zr</span> <span class="o">=</span> <span class="n">zrsqr</span> <span class="o">-</span> <span class="n">zisqr</span> <span class="o">+</span> <span class="n">cr</span><span class="p">;</span>
+		<span class="n">zrsqr</span> <span class="o">=</span> <span class="n">zr</span> <span class="o">*</span> <span class="n">zr</span><span class="p">;</span>
+		<span class="n">zisqr</span> <span class="o">=</span> <span class="n">zi</span> <span class="o">*</span> <span class="n">zi</span><span class="p">;</span>
+		
+    <span class="c1">//the fewer iterations it takes to diverge, the farther from the set</span>
+		<span class="k">if</span> <span class="p">(</span><span class="n">zrsqr</span> <span class="o">+</span> <span class="n">zisqr</span> <span class="o">&gt;</span> <span class="mf">4.0</span><span class="p">)</span> <span class="k">break</span><span class="p">;</span>
+    <span class="p">}</span>
+	
+    <span class="k">return</span> <span class="n">i</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<div class="topic">
+<p class="topic-title first">Some notes about this CUDA code</p>
+<ul class="simple">
+<li>A function that is designed to be run on th GPU is designated with the special keyword <cite>__device__</cite>.</li>
+<li>The type uint32_t is an unsigned 32-bit integer declared in stdint.h.</li>
+<li>The variable max_iter is defaulted to be 100, and can be changed with the image depth command line argument.</li>
+</ul>
+</div>
+<p>But wait didn&#8217;t we say in the last chapter that conditionals
+should be avoided? Yes, when a thread returns early, it&#8217;s
+just dead weight in the warp, howerver due to the nature of
+the mandelbrot set it is very likely
+that some warps have threads that all terminate before
+reaching <tt class="docutils literal"><span class="pre">max_iter</span></tt> so in some cases it will give us a
+slight speed up. If the warp contains a point within the
+Mandelbrot set, we won&#8217;t get any speed up from breaking.</p>
+<p>We also need a kernel that will divide the pixels between
+the threads and run <tt class="docutils literal"><span class="pre">mandel_double</span></tt> on each of them
+Our code is as follows where <tt class="docutils literal"><span class="pre">dim</span></tt> is the image dimension,
+<tt class="docutils literal"><span class="pre">counts</span></tt> is the list representing our image, and <tt class="docutils literal"><span class="pre">step</span></tt>
+represents the distance between the points represented by
+the pixels:</p>
+<div class="highlight-c"><div class="highlight"><pre><span class="n">__global__</span> <span class="kt">void</span> <span class="nf">mandel_kernel</span><span class="p">(</span><span class="kt">uint32_t</span> <span class="o">*</span><span class="n">counts</span><span class="p">,</span> <span class="kt">double</span> <span class="n">xmin</span><span class="p">,</span> <span class="kt">double</span> <span class="n">ymin</span><span class="p">,</span>
+            <span class="kt">double</span> <span class="n">step</span><span class="p">,</span> <span class="kt">int</span> <span class="n">max_iter</span><span class="p">,</span> <span class="kt">int</span> <span class="n">dim</span><span class="p">,</span> <span class="kt">uint32_t</span> <span class="o">*</span><span class="n">colors</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kt">int</span> <span class="n">pix_per_thread</span> <span class="o">=</span> <span class="n">dim</span> <span class="o">*</span> <span class="n">dim</span> <span class="o">/</span> <span class="p">(</span><span class="n">gridDim</span><span class="p">.</span><span class="n">x</span> <span class="o">*</span> <span class="n">blockDim</span><span class="p">.</span><span class="n">x</span><span class="p">);</span>
+    <span class="kt">int</span> <span class="n">tId</span> <span class="o">=</span> <span class="n">blockDim</span><span class="p">.</span><span class="n">x</span> <span class="o">*</span> <span class="n">blockIdx</span><span class="p">.</span><span class="n">x</span> <span class="o">+</span> <span class="n">threadIdx</span><span class="p">.</span><span class="n">x</span><span class="p">;</span>
+    <span class="kt">int</span> <span class="n">offset</span> <span class="o">=</span> <span class="n">pix_per_thread</span> <span class="o">*</span> <span class="n">tId</span><span class="p">;</span>
+    <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="n">offset</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">offset</span> <span class="o">+</span> <span class="n">pix_per_thread</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">){</span>
+        <span class="kt">int</span> <span class="n">x</span> <span class="o">=</span> <span class="n">i</span> <span class="o">%</span> <span class="n">dim</span><span class="p">;</span>
+        <span class="kt">int</span> <span class="n">y</span> <span class="o">=</span> <span class="n">i</span> <span class="o">/</span> <span class="n">dim</span><span class="p">;</span>
+        <span class="kt">double</span> <span class="n">cr</span> <span class="o">=</span> <span class="n">xmin</span> <span class="o">+</span> <span class="n">x</span> <span class="o">*</span> <span class="n">step</span><span class="p">;</span>
+        <span class="kt">double</span> <span class="n">ci</span> <span class="o">=</span> <span class="n">ymin</span> <span class="o">+</span> <span class="n">y</span> <span class="o">*</span> <span class="n">step</span><span class="p">;</span>
+        <span class="n">counts</span><span class="p">[</span><span class="n">y</span> <span class="o">*</span> <span class="n">dim</span> <span class="o">+</span> <span class="n">x</span><span class="p">]</span>  <span class="o">=</span> <span class="n">colors</span><span class="p">[</span><span class="n">mandel_double</span><span class="p">(</span><span class="n">cr</span><span class="p">,</span> <span class="n">ci</span><span class="p">,</span> <span class="n">max_iter</span><span class="p">)];</span>
+    <span class="p">}</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">gridDim</span><span class="p">.</span><span class="n">x</span> <span class="o">*</span> <span class="n">blockDim</span><span class="p">.</span><span class="n">x</span> <span class="o">*</span> <span class="n">pix_per_thread</span> <span class="o">&lt;</span> <span class="n">dim</span> <span class="o">*</span> <span class="n">dim</span>
+            <span class="o">&amp;&amp;</span> <span class="n">tId</span> <span class="o">&lt;</span> <span class="p">(</span><span class="n">dim</span> <span class="o">*</span> <span class="n">dim</span><span class="p">)</span> <span class="o">-</span> <span class="p">(</span><span class="n">blockDim</span><span class="p">.</span><span class="n">x</span> <span class="o">*</span> <span class="n">gridDim</span><span class="p">.</span><span class="n">x</span><span class="p">)){</span>
+        <span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="n">blockDim</span><span class="p">.</span><span class="n">x</span> <span class="o">*</span> <span class="n">gridDim</span><span class="p">.</span><span class="n">x</span> <span class="o">*</span> <span class="n">pix_per_thread</span> <span class="o">+</span> <span class="n">tId</span><span class="p">;</span>
+        <span class="kt">int</span> <span class="n">x</span> <span class="o">=</span> <span class="n">i</span> <span class="o">%</span> <span class="n">dim</span><span class="p">;</span>
+        <span class="kt">int</span> <span class="n">y</span> <span class="o">=</span> <span class="n">i</span> <span class="o">/</span> <span class="n">dim</span><span class="p">;</span>
+        <span class="kt">double</span> <span class="n">cr</span> <span class="o">=</span> <span class="n">xmin</span> <span class="o">+</span> <span class="n">x</span> <span class="o">*</span> <span class="n">step</span><span class="p">;</span>
+        <span class="kt">double</span> <span class="n">ci</span> <span class="o">=</span> <span class="n">ymin</span> <span class="o">+</span> <span class="n">y</span> <span class="o">*</span> <span class="n">step</span><span class="p">;</span>
+        <span class="n">counts</span><span class="p">[</span><span class="n">y</span> <span class="o">*</span> <span class="n">dim</span> <span class="o">+</span> <span class="n">x</span><span class="p">]</span>  <span class="o">=</span> <span class="n">colors</span><span class="p">[</span><span class="n">mandel_double</span><span class="p">(</span><span class="n">cr</span><span class="p">,</span> <span class="n">ci</span><span class="p">,</span> <span class="n">max_iter</span><span class="p">)];</span>
+    <span class="p">}</span>
+    
+<span class="p">}</span>
+</pre></div>
+</div>
+<div class="topic">
+<p class="topic-title first">Some notes about this CUDA code</p>
+<ul class="simple">
+<li>The keyword <cite>__global__</cite> designates the kernel function.</li>
+<li>We execute the kernel function on the GPU device from main() like this, where <cite>n</cite> is the number of blocks of threads and &#8216;m&#8217; is the number of threads per block:</li>
+</ul>
+<div class="highlight-c"><div class="highlight"><pre>    <span class="n">mandel_kernel</span><span class="o">&lt;&lt;&lt;</span><span class="n">n</span><span class="p">,</span> <span class="n">m</span><span class="o">&gt;&gt;&gt;</span><span class="p">(</span><span class="n">dev_counts</span><span class="p">,</span> <span class="n">xmin</span> <span class="p">,</span> <span class="n">ymin</span><span class="p">,</span> <span class="n">step</span><span class="p">,</span> <span class="n">max_iter</span><span class="p">,</span> <span class="n">dim</span><span class="p">,</span> <span class="n">colors</span><span class="p">);</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li>In this case, the &#8216;tiling&#8217; of the blocks of threads into a grid is a one-dimensional array of n blocks.</li>
+<li>Each thread calculates a particular value in the set based on its thread id (tId in the above code), which can be calculated using a data structure called <em>blockDim</em>, along with ones called <em>blockIdx</em> and <em>threadIdx</em>. The value blockDim.x gives us the total number of threads per block. The blockIdx.x value gives us the index of the block in which a particular thread running this code is located.  Lastly, the threadIdx.x value is the index of this thread in its block. Thus, a thread running this code can uniquely identify itself with the computation <cite>blockDim.x * blockIdx.x + threadIdx.x</cite>.</li>
+<li>We use blockDim.x when calculating the thread id above so that we could change the number of blocks, n, and the number of threads per block, m, programatically with command-line arguments and not have to change the lernel function.</li>
+</ul>
+</div>
+<p>In order to compensate for block and grid dimensions that
+do not easily divide the picture we make the first threads
+pick up the &#8216;slack.&#8217; This is also the reason why we are not
+using 2 dimensional grids and blocks.</p>
+<div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<p class="last">Always try to make your threads do the same amount of work.
+Scheduling extra work for some threads is inefficient since
+the other threads in the warp will have to wait for them to
+finish anyway. This code is purposefully messy so that it
+runs for any problem size.</p>
+</div>
+<p>That&#8217;s the meat of the program, feel free to explore the
+it on your own, most of the rest of the program is dedicated to
+displaying the data generated by these 2 functions.</p>
+<p>In the next section, we will discuss how to choose the number of
+blocks and the number of threads per block in order to take maximum advantage of
+the GPU hardware.</p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../index.html">
+              <img class="logo" src="../_static/CSInParallel200wide.png" alt="Logo"/>
+            </a></p>
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Mandelbrot Test Code</a><ul>
+<li><a class="reference internal" href="#what-is-the-mandelbrot-set">What is the Mandelbrot set?</a></li>
+<li><a class="reference internal" href="#coding-the-mandelbrot-set">Coding the Mandelbrot set</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="../0-Architecture/Architecture.html"
+                        title="previous chapter">CUDA Architecture</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="../2-Findings/Findings.html"
+                        title="next chapter">Choosing the right Dimensions</a></p>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../2-Findings/Findings.html" title="Choosing the right Dimensions"
+             >next</a></li>
+        <li class="right" >
+          <a href="../0-Architecture/Architecture.html" title="CUDA Architecture"
+             >previous</a> |</li>
+        <li><a href="../index.html">Optimizing CUDA for GPU Architecture</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright This work is licensed under a Creative Commons Attribution-ShareAlike 3.0 Unported License.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>

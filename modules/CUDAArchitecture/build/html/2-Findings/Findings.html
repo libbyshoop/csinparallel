@@ -1,0 +1,214 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Choosing the right Dimensions &mdash; Optimizing CUDA for GPU Architecture</title>
+    
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+    <link rel="top" title="Optimizing CUDA for GPU Architecture" href="../index.html" />
+    <link rel="prev" title="Mandelbrot Test Code" href="../1-Mandelbrot/Mandelbrot.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../1-Mandelbrot/Mandelbrot.html" title="Mandelbrot Test Code"
+             accesskey="P">previous</a></li>
+        <li><a href="../index.html">Optimizing CUDA for GPU Architecture</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="choosing-the-right-dimensions">
+<h1>Choosing the right Dimensions<a class="headerlink" href="#choosing-the-right-dimensions" title="Permalink to this headline">¶</a></h1>
+<div class="sidebar">
+<p class="first sidebar-title">Compute Capability</p>
+<p class="last">The compute capability of a CUDA card designates what features are available.
+The <a class="reference external" href="http://en.wikipedia.org/wiki/CUDA">Wikipedia CUDA page</a> provides an overview
+of various cards and their compute capability, along with the features available with that compute capability.</p>
+</div>
+<p>One of the most important elements of CUDA programming is
+choosing the right grid and block dimensions for the
+problem size.  Early CUDA cards, up through compute capability
+1.3, had a maximum of 512 threads per block and 65535 blocks in
+a single 1-dimensional grid (recall we set up a 1-D grid in this code).  In later
+cards, these values increased to 1024 threads per block and 2<sup>31</sup> - 1 blocks in a grid.</p>
+<p>It&#8217;s not always clear which dimensions
+to choose so we created an expiriment to answer the following
+question:</p>
+<p><em>What effect do the grid and block dimensions have
+on execution times?</em></p>
+<p>To answer this question, we wrote a
+<a class="reference download internal" href="../_downloads/testMandelbrot.sh"><tt class="xref download docutils literal"><span class="pre">script</span></tt></a> to run our mandelbrot code
+for every
+grid size between 1 and 512  blocks and every number of threads
+per block between 1 and 512 which produced 262,144 data
+points. We chose these ranges because our madelbrot set picture is
+512x512, so each thread will calculate the value of at least
+one pixel at the largest value of each.</p>
+<p>The device we ran the tests on was a Jetson TK1 which is
+a Kepler class card that has
+one Streaming Multiprocessor with 192 CUDA cores. To ensure
+that our code was the only thing running on the GPU, we
+first disabled the X server.</p>
+<div class="section" id="results">
+<h2>Results<a class="headerlink" href="#results" title="Permalink to this headline">¶</a></h2>
+<p>This is a 3D graph of our <a class="reference download internal" href="../_downloads/results.txt"><tt class="xref download docutils literal"><span class="pre">results</span></tt></a>
+where the z axis is the
+log<sub>2</sub>(time) we took the log so that all results
+fit neatly on the graph.</p>
+<div class="align-center figure align-center">
+<img alt="Execution time" src="../_images/MediumPlot.png" style="width: 768px; height: 510px;" />
+</div>
+<p>There are a number of interesting things to note about this
+graph:</p>
+<ul class="simple">
+<li>Trials with one block and many threads are faster than
+trials with many blocks of one thread each.</li>
+<li>There are horizontal lines indicating a spike in execution
+time after every 32 threads per block</li>
+<li>512 threads per 512 blocks was the fastest execution time</li>
+<li>There are convex lines running through the middle of the
+graph</li>
+</ul>
+<p>Each of these observations relates directly to CUDA&#8217;s
+architecture or the specifics of the code.</p>
+<p>Many threads in 1 block is always faster than many blocks of
+one thread because of the way threads are put into warps.
+The Jetson can execute 4 warps simultaneously. This means that
+when the number of threads/block is one only 4 threads can run concurently
+but when the number of blocks is one and there are many threads per block,
+the threads can be evenly divided
+into warps so that up to 128 are being run simultaneously.</p>
+<p>Warp size also explains the horizontal lines every
+32 threads per block. When block are are evenly divisible
+into warps of 32, each block uses the full resources of the
+CUDA cores on which it is run, but when there are (32 * x) +
+1 threads, a whole new warp must be scheduled for a single
+thread which wastes 31 cycles cycles per block.</p>
+<p>512x512 is the fastest execution time even though the GPU
+can&#8217;t run that many threads at a time. This is because
+it is inexpensive to create threads on a CUDA card and having
+one pixel per thread allows the GPU to
+most efficently schedule warps as the CUDA cores become free.
+Additionally, since accessing the color data takes time, the
+GPU can help us out by calculating other warps while waiting
+for the read to finish.</p>
+<p>The convex lines appear for a few different reasons. The
+first has to do with our code. When the picture is evenly
+divisible by the total number of threads and blocks, each
+thread performs the same amount of work so the warps aren&#8217;t
+bogged down by the threads that calculate the extra pixels.
+Second, when block and grid dimensions are about roughly
+equal, the block and warp schedulers share the work of
+dividing the threads.</p>
+</div>
+<div class="section" id="adding-more-streaming-multiprocessors">
+<h2>Adding More Streaming Multiprocessors<a class="headerlink" href="#adding-more-streaming-multiprocessors" title="Permalink to this headline">¶</a></h2>
+<p>We executed our code again on a GeForce GTX 480 card that
+has 15 SMs with 32 CUDA cores each.</p>
+<div class="align-center figure align-center">
+<img alt="Execution time" src="../_images/Dev0Medium.png" style="width: 768px; height: 510px;" />
+</div>
+<p>This graph also features horizontal lines at multiples of
+32 coresponding to the warp size, concave lines, and a top
+execution speed at 512x512. However there are 2 important
+differences.</p>
+<p>First, one block of many threads and many blocks with one
+thread each take about the same amount of time to execute.
+Because this card uses the Fermi architecture, each SM can run
+two warps concurently, this means that 64 threads can be running
+at any given time. While still not as fast as using one block,
+many blocks is significantly faster with multiple SMs.</p>
+<p>The second difference is a series of valleys running
+perpendicular to the warp lines about every 15 blocks.
+These valleys come from the way blocks are distributed
+between the SMs. When the block size is a multiple of the
+number of SMs, each processor will do the about same
+amount of work. However, as the number of blocks increases
+this difference becomes less and less important because
+the blocks don&#8217;t all take the same amount of time to execute
+and so it&#8217;s possible for three blocks to execute on one SM
+in the time it takes for another to execute 2.</p>
+</div>
+<div class="section" id="cuda-best-practices">
+<h2>CUDA best practices<a class="headerlink" href="#cuda-best-practices" title="Permalink to this headline">¶</a></h2>
+<p>From these results we can draw up a list of best practices:</p>
+<ol class="arabic simple">
+<li>Try to make the number of threads per block a multiple of 32.</li>
+<li>Keep the number of threads per block and the number of blocks as close to equal as you can without violating the first tip.</li>
+<li>Keep the amount of work each thread does constant, it&#8217;s inefficent to have one thread perform calculations for two pixels while the rest only calculate one.</li>
+<li>When in doubt use more threads not less, creating threads is inexpensive.</li>
+<li>In general avoid having threads that do extra work or have conditionals.</li>
+<li>Try to have a block size that is a multiple of the numberof SMs on your device, this is less important than the other tips.</li>
+</ol>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../index.html">
+              <img class="logo" src="../_static/CSInParallel200wide.png" alt="Logo"/>
+            </a></p>
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Choosing the right Dimensions</a><ul>
+<li><a class="reference internal" href="#results">Results</a></li>
+<li><a class="reference internal" href="#adding-more-streaming-multiprocessors">Adding More Streaming Multiprocessors</a></li>
+<li><a class="reference internal" href="#cuda-best-practices">CUDA best practices</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="../1-Mandelbrot/Mandelbrot.html"
+                        title="previous chapter">Mandelbrot Test Code</a></p>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../1-Mandelbrot/Mandelbrot.html" title="Mandelbrot Test Code"
+             >previous</a></li>
+        <li><a href="../index.html">Optimizing CUDA for GPU Architecture</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright This work is licensed under a Creative Commons Attribution-ShareAlike 3.0 Unported License.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>
