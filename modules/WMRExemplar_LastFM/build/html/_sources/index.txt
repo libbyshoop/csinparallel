@@ -7,7 +7,7 @@ Hadoop LastFM Analysis
 ========================
 
 This module demonstrates how hadoop and WMR can be used to
-analize the lastFM million song dataset. It encorporates several
+analyze the lastFM million song dataset. It incorporates several
 advanced hadoop techniques such as job chaining and multiple
 input. Students should know how to use the WMR hadoop interface
 before beginning this module. 

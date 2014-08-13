@@ -25,8 +25,8 @@ Vehicles7409.csv`` respectively.
 Working with the Data
 #####################
 
-Each line in the files contains several fields seperated by
-commas, to accesss these values, it is necessary to call
+Each line in the files contains several fields separated by
+commas, to access these values, it is necessary to call
 ``key.split(',')`` (or the equivalent in whatever language
 you're using) to get an array of values. If you want, you
 can turn these values into an object, however it's faster

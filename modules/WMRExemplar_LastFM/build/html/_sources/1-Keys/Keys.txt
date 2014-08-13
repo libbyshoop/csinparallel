@@ -28,7 +28,7 @@ respectively.
 Armed with this information we can write a mapper that emits a
 key signature as a key and the confidence as a value.
 We'll also perform a basic sanity check on our data by testing to
-see if all 25 feilds are present. It's good practice to sanity 
+see if all 25 fields are present. It's good practice to sanity 
 check data in the mapper because you can never be certain that
 your data is pure.
 
@@ -96,7 +96,7 @@ This means that our hadoop job will have to read input from
 both the terms file and the metadata file. We can do this by 
 using /shared/lastfm/ as the input path. Since it is a folder, 
 all of the files in the folder are used as input. We want to pull
-different peices of information from each of these files
+different pieces of information from each of these files
 
 - **From metadata:** the key signature and confidence of a song
 - **From terms:** whether the genre is in the terms list and has
@@ -106,12 +106,12 @@ We want to send all of this information to the reducers
 sorted by artist. The artist ID of a song is at index 5 of the
 metadata file and the artist ID is at index 0 in the terms file.
 We can let the reducer know what information is being passed to
-it by emiting tuples where the first value is a flag stating what
+it by emitting tuples where the first value is a flag stating what
 the second value is.
 
 With this information we can write a :download:`mapper (genreMapper.py).<genreMapper.py>`.
 Remember to perform
-the sanity check on the metadata. Unfortuneately we can't run
+the sanity check on the metadata. Unfortunately we can't run
 the same check on the other files because they have variable
 line lengths.
 
@@ -178,7 +178,7 @@ genre. It should look something like this:
     :align: center
 
 
-Interpretting the results
+Interpreting the results
 ##########################
 
 It looks like G is the most popular key for every genre but

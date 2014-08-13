@@ -72,7 +72,7 @@ respectively.</p>
 <p>Armed with this information we can write a mapper that emits a
 key signature as a key and the confidence as a value.
 We&#8217;ll also perform a basic sanity check on our data by testing to
-see if all 25 feilds are present. It&#8217;s good practice to sanity
+see if all 25 fields are present. It&#8217;s good practice to sanity
 check data in the mapper because you can never be certain that
 your data is pure.</p>
 <p>Our <a class="reference download internal" href="../_downloads/avgKeyMapper.py"><tt class="xref download docutils literal"><span class="pre">mapper</span></tt></a> looks like this:</p>
@@ -144,7 +144,7 @@ who have been tagged with a specific genre.</p>
 both the terms file and the metadata file. We can do this by
 using /shared/lastfm/ as the input path. Since it is a folder,
 all of the files in the folder are used as input. We want to pull
-different peices of information from each of these files</p>
+different pieces of information from each of these files</p>
 <ul class="simple">
 <li><strong>From metadata:</strong> the key signature and confidence of a song</li>
 <li><strong>From terms:</strong> whether the genre is in the terms list and has
@@ -154,11 +154,11 @@ a weight greater than 0.5</li>
 sorted by artist. The artist ID of a song is at index 5 of the
 metadata file and the artist ID is at index 0 in the terms file.
 We can let the reducer know what information is being passed to
-it by emiting tuples where the first value is a flag stating what
+it by emitting tuples where the first value is a flag stating what
 the second value is.</p>
 <p>With this information we can write a <a class="reference download internal" href="../_downloads/genreMapper.py"><tt class="xref download docutils literal"><span class="pre">mapper</span> <span class="pre">(genreMapper.py).</span></tt></a>.
 Remember to perform
-the sanity check on the metadata. Unfortuneately we can&#8217;t run
+the sanity check on the metadata. Unfortunately we can&#8217;t run
 the same check on the other files because they have variable
 line lengths.</p>
 <div class="highlight-python"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
@@ -237,8 +237,8 @@ make a graph of the percentage of songs that are in each key per
 genre. It should look something like this:</p>
 <img alt="../_images/keyChart.png" class="align-center" src="../_images/keyChart.png" />
 </div>
-<div class="section" id="interpretting-the-results">
-<h2>Interpretting the results<a class="headerlink" href="#interpretting-the-results" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="interpreting-the-results">
+<h2>Interpreting the results<a class="headerlink" href="#interpreting-the-results" title="Permalink to this headline">¶</a></h2>
 <p>It looks like G is the most popular key for every genre but
 classical where it barely looses out to C. In country music G
 is a heavy favorite along with C and D which are also relatively
@@ -270,7 +270,7 @@ one chain of jobs?</p>
 <li><a class="reference internal" href="#">Fun with key signatures</a><ul>
 <li><a class="reference internal" href="#coding-the-hadoop-job">Coding the Hadoop Job</a></li>
 <li><a class="reference internal" href="#going-further">Going Further</a></li>
-<li><a class="reference internal" href="#interpretting-the-results">Interpretting the results</a></li>
+<li><a class="reference internal" href="#interpreting-the-results">Interpreting the results</a></li>
 <li><a class="reference internal" href="#challenge">Challenge</a></li>
 </ul>
 </li>

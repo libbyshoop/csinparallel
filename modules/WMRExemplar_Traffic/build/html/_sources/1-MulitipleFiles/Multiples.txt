@@ -16,7 +16,7 @@ Taxi Crashes
 To answer this question we will need to access the day of
 week data at accidents[10] and the vehicle type data at
 vehicles[2] (codes 8 and 108 represent taxis). However those 
-two bits of data are in two seperate files so we'll need some
+two bits of data are in two separate files so we'll need some
 way to cross reference them. We'll do that with the accident
 index stored at accidents[0] and vehicles[0]
 
@@ -28,7 +28,7 @@ that folder has input.
 However we still need to be able to tell if a mapper key came
 from the accidents file or the vehicles file. We can do this 
 by looking at the length of the data list. The Vehicles file
-has 21 peices of information while the Accidents file has 32.
+has 21 pieces of information while the Accidents file has 32.
 Armed with this information we can write a mapper and a reducer
 that will filter out accidents based on whether they involved
 a taxi. Run :download:`this code<taxiMapper.py>` using Cluster Path ``/shared/traffic``
@@ -46,12 +46,12 @@ a taxi. Run :download:`this code<taxiMapper.py>` using Cluster Path ``/shared/tr
 
 This mapper checks to see whether input came from accident data
 or vehicle data. Then, if it was accident data, it emits the
-day of the week that the accident occured on. If it came from 
+day of the week that the accident occurred on. If it came from 
 the vehicles data then it emits a message if a vehicle involved 
 was a taxi. 
 
 Our :download:`reducer<taxiReducer.py>` takes that output and emits a list of accident
-indices and the day of the week that they occured on.
+indices and the day of the week that they occurred on.
 
 .. code-block:: python
     :linenos:
@@ -71,14 +71,14 @@ accident index and while there can be more than one taxi
 involved in a given crash.
 
 But we're not done yet. We simply have list of crashes and
-a list of the days on which they occured. We still need to 
+a list of the days on which they occurred. We still need to 
 count them.
 
 We can this by using the output of the last job to run a new
 job. Just hit the use output button at the top
 or bottom of the page.
 
-Our mapper will recieve days of the week as keys and ones as the values. 
+Our mapper will receive days of the week as keys and ones as the values. 
 We just need to feed these straight into a 
 :download:`counting reducer<countingReducer.py>`
 by using what's known as the :download:`identity mapper<idMapper.py>`
@@ -144,6 +144,6 @@ questions, or come up with your own:
 
 - Create a graph showing the number of traffic accidents
   at each hour of the day. If you're feeling adventurous
-  seperate it out by day and hour.
+  separate it out by day and hour.
   
 - Devise some of your own questions to ask of this data.

@@ -58,7 +58,7 @@ get into crashes on the weekend?</p>
 <p>To answer this question we will need to access the day of
 week data at accidents[10] and the vehicle type data at
 vehicles[2] (codes 8 and 108 represent taxis). However those
-two bits of data are in two seperate files so we&#8217;ll need some
+two bits of data are in two separate files so we&#8217;ll need some
 way to cross reference them. We&#8217;ll do that with the accident
 index stored at accidents[0] and vehicles[0]</p>
 <p>This also means that we&#8217;ll need to access multiple files during
@@ -68,7 +68,7 @@ that folder has input.</p>
 <p>However we still need to be able to tell if a mapper key came
 from the accidents file or the vehicles file. We can do this
 by looking at the length of the data list. The Vehicles file
-has 21 peices of information while the Accidents file has 32.
+has 21 pieces of information while the Accidents file has 32.
 Armed with this information we can write a mapper and a reducer
 that will filter out accidents based on whether they involved
 a taxi. Run <a class="reference download internal" href="../_downloads/taxiMapper.py"><tt class="xref download docutils literal"><span class="pre">this</span> <span class="pre">code</span></tt></a> using Cluster Path <tt class="docutils literal"><span class="pre">/shared/traffic</span></tt></p>
@@ -89,11 +89,11 @@ a taxi. Run <a class="reference download internal" href="../_downloads/taxiMappe
 </td></tr></table></div>
 <p>This mapper checks to see whether input came from accident data
 or vehicle data. Then, if it was accident data, it emits the
-day of the week that the accident occured on. If it came from
+day of the week that the accident occurred on. If it came from
 the vehicles data then it emits a message if a vehicle involved
 was a taxi.</p>
 <p>Our <a class="reference download internal" href="../_downloads/taxiReducer.py"><tt class="xref download docutils literal"><span class="pre">reducer</span></tt></a> takes that output and emits a list of accident
-indices and the day of the week that they occured on.</p>
+indices and the day of the week that they occurred on.</p>
 <div class="highlight-python"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
 2
 3
@@ -117,12 +117,12 @@ indices and the day of the week that they occured on.</p>
 accident index and while there can be more than one taxi
 involved in a given crash.</p>
 <p>But we&#8217;re not done yet. We simply have list of crashes and
-a list of the days on which they occured. We still need to
+a list of the days on which they occurred. We still need to
 count them.</p>
 <p>We can this by using the output of the last job to run a new
 job. Just hit the use output button at the top
 or bottom of the page.</p>
-<p>Our mapper will recieve days of the week as keys and ones as the values.
+<p>Our mapper will receive days of the week as keys and ones as the values.
 We just need to feed these straight into a
 <a class="reference download internal" href="../_downloads/countingReducer.py"><tt class="xref download docutils literal"><span class="pre">counting</span> <span class="pre">reducer</span></tt></a>
 by using what&#8217;s known as the <a class="reference download internal" href="../_downloads/idMapper.py"><tt class="xref download docutils literal"><span class="pre">identity</span> <span class="pre">mapper</span></tt></a>
@@ -195,7 +195,7 @@ serious.</li>
 <li>Are trucks more deadly than vans?</li>
 <li>Create a graph showing the number of traffic accidents
 at each hour of the day. If you&#8217;re feeling adventurous
-seperate it out by day and hour.</li>
+separate it out by day and hour.</li>
 <li>Devise some of your own questions to ask of this data.</li>
 </ul>
 </div>
