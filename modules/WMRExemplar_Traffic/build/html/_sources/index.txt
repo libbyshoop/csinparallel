@@ -15,8 +15,8 @@ Hadoop framework. It is assumed that students are already
 familiar with the basics of hadoop and CSInParallel's Web Map 
 Reduce hadoop interface.
 
-The excersises in this module use a dataset from the UK 
-department of Transportaion that contains detailed records of 
+The exercises in this module use a dataset from the UK 
+department of Transportation that contains detailed records of 
 traffic accidents split into three separate files.
 
 

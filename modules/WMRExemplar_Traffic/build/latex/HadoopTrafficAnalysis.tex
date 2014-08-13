@@ -13,7 +13,7 @@
 
 
 \title{Hadoop Traffic Analysis}
-\date{August 11, 2014}
+\date{August 13, 2014}
 \release{}
 \author{CSInParallel Project}
 \newcommand{\sphinxlogo}{}
@@ -126,8 +126,8 @@ Hadoop framework. It is assumed that students are already
 familiar with the basics of hadoop and CSInParallel's Web Map
 Reduce hadoop interface.
 
-The excersises in this module use a dataset from the UK
-department of Transportaion that contains detailed records of
+The exercises in this module use a dataset from the UK
+department of Transportation that contains detailed records of
 traffic accidents split into three separate files.
 
 The dataset can be obtained from
@@ -170,8 +170,8 @@ Vehicles7409.csv} respectively.
 
 \subsection{Working with the Data}
 \label{0-TrafficDataset/Introduction:working-with-the-data}
-Each line in the files contains several fields seperated by
-commas, to accesss these values, it is necessary to call
+Each line in the files contains several fields separated by
+commas, to access these values, it is necessary to call
 \code{key.split(',')} (or the equivalent in whatever language
 you're using) to get an array of values. If you want, you
 can turn these values into an object, however it's faster
@@ -538,7 +538,7 @@ get into crashes on the weekend?
 To answer this question we will need to access the day of
 week data at accidents{[}10{]} and the vehicle type data at
 vehicles{[}2{]} (codes 8 and 108 represent taxis). However those
-two bits of data are in two seperate files so we'll need some
+two bits of data are in two separate files so we'll need some
 way to cross reference them. We'll do that with the accident
 index stored at accidents{[}0{]} and vehicles{[}0{]}
 
@@ -550,7 +550,7 @@ that folder has input.
 However we still need to be able to tell if a mapper key came
 from the accidents file or the vehicles file. We can do this
 by looking at the length of the data list. The Vehicles file
-has 21 peices of information while the Accidents file has 32.
+has 21 pieces of information while the Accidents file has 32.
 Armed with this information we can write a mapper and a reducer
 that will filter out accidents based on whether they involved
 a taxi. Run \code{this code} using Cluster Path \code{/shared/traffic}
@@ -567,12 +567,12 @@ a taxi. Run \code{this code} using Cluster Path \code{/shared/traffic}
 
 This mapper checks to see whether input came from accident data
 or vehicle data. Then, if it was accident data, it emits the
-day of the week that the accident occured on. If it came from
+day of the week that the accident occurred on. If it came from
 the vehicles data then it emits a message if a vehicle involved
 was a taxi.
 
 Our \code{reducer} takes that output and emits a list of accident
-indices and the day of the week that they occured on.
+indices and the day of the week that they occurred on.
 
 \begin{Verbatim}[commandchars=\\\{\},numbers=left,firstnumber=1,stepnumber=1]
 \PYG{k}{def} \PYG{n+nf}{reducer}\PYG{p}{(}\PYG{n}{key}\PYG{p}{,} \PYG{n}{values}\PYG{p}{)}\PYG{p}{:}
@@ -591,14 +591,14 @@ accident index and while there can be more than one taxi
 involved in a given crash.
 
 But we're not done yet. We simply have list of crashes and
-a list of the days on which they occured. We still need to
+a list of the days on which they occurred. We still need to
 count them.
 
 We can this by using the output of the last job to run a new
 job. Just hit the use output button at the top
 or bottom of the page.
 
-Our mapper will recieve days of the week as keys and ones as the values.
+Our mapper will receive days of the week as keys and ones as the values.
 We just need to feed these straight into a
 \code{counting reducer}
 by using what's known as the \code{identity mapper}
@@ -689,7 +689,7 @@ Are trucks more deadly than vans?
 \item {} 
 Create a graph showing the number of traffic accidents
 at each hour of the day. If you're feeling adventurous
-seperate it out by day and hour.
+separate it out by day and hour.
 
 \item {} 
 Devise some of your own questions to ask of this data.
