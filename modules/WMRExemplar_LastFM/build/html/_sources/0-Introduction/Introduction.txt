@@ -7,7 +7,7 @@ what it's users listen to and then suggests similar songs.
 It provides an API which can be used to retrieve metadata about
 specific songs. 
 
-Researchers at Columbia's LabROSA used this api to generate a
+Researchers at Columbia's LabROSA used this API to generate a
 dataset containing 1,000,000 songs from 44,745 artists. For our
 purposes this data has been split into 3 different tab separated
 files.

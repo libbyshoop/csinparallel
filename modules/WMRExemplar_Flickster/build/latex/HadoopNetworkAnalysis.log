@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-2.3-1.40.12 (TeX Live 2011) (format=pdflatex 2011.7.3)  8 AUG 2014 15:45
+This is pdfTeX, Version 3.1415926-2.3-1.40.12 (TeX Live 2011) (format=pdflatex 2011.7.3)  13 AUG 2014 13:32
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -995,7 +995,7 @@ s/type1/urw/helvetic/uhvb8a.pfb></usr/local/texlive/2011/texmf-dist/fonts/type1
 /urw/times/utmb8a.pfb></usr/local/texlive/2011/texmf-dist/fonts/type1/urw/times
 /utmr8a.pfb></usr/local/texlive/2011/texmf-dist/fonts/type1/urw/times/utmri8a.p
 fb>
-Output written on HadoopNetworkAnalysis.pdf (8 pages, 162877 bytes).
+Output written on HadoopNetworkAnalysis.pdf (8 pages, 162874 bytes).
 PDF statistics:
  127 PDF objects out of 1000 (max. 8388607)
  101 compressed objects within 2 object streams

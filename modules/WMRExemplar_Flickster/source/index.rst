@@ -15,7 +15,7 @@ Hadoop framework. It is assumed that students are already
 familiar with the basics of hadoop and CSInParallel's Web Map 
 Reduce (WMR) hadoop interface.
 
-The excersises in this module use a network of friendships on 
+The exercises in this module use a network of friendships on 
 the social movie recommendation site Flixster. Students will use
 it to learn how to analyze networks
 and chain jobs.

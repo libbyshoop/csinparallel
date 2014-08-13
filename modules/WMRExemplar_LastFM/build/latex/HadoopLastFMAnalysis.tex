@@ -13,7 +13,7 @@
 
 
 \title{Hadoop LastFM Analysis}
-\date{August 11, 2014}
+\date{August 13, 2014}
 \release{}
 \author{CSinParallel Project}
 \newcommand{\sphinxlogo}{}
@@ -118,7 +118,7 @@
 
 
 This module demonstrates how hadoop and WMR can be used to
-analize the lastFM million song dataset. It encorporates several
+analyze the lastFM million song dataset. It incorporates several
 advanced hadoop techniques such as job chaining and multiple
 input. Students should know how to use the WMR hadoop interface
 before beginning this module.
@@ -138,7 +138,7 @@ what it's users listen to and then suggests similar songs.
 It provides an API which can be used to retrieve metadata about
 specific songs.
 
-Researchers at Columbia's LabROSA used this api to generate a
+Researchers at Columbia's LabROSA used this API to generate a
 dataset containing 1,000,000 songs from 44,745 artists. For our
 purposes this data has been split into 3 different tab separated
 files.
@@ -450,7 +450,7 @@ respectively.
 Armed with this information we can write a mapper that emits a
 key signature as a key and the confidence as a value.
 We'll also perform a basic sanity check on our data by testing to
-see if all 25 feilds are present. It's good practice to sanity
+see if all 25 fields are present. It's good practice to sanity
 check data in the mapper because you can never be certain that
 your data is pure.
 
@@ -516,7 +516,7 @@ This means that our hadoop job will have to read input from
 both the terms file and the metadata file. We can do this by
 using /shared/lastfm/ as the input path. Since it is a folder,
 all of the files in the folder are used as input. We want to pull
-different peices of information from each of these files
+different pieces of information from each of these files
 \begin{itemize}
 \item {} 
 \textbf{From metadata:} the key signature and confidence of a song
@@ -531,12 +531,12 @@ We want to send all of this information to the reducers
 sorted by artist. The artist ID of a song is at index 5 of the
 metadata file and the artist ID is at index 0 in the terms file.
 We can let the reducer know what information is being passed to
-it by emiting tuples where the first value is a flag stating what
+it by emitting tuples where the first value is a flag stating what
 the second value is.
 
 With this information we can write a \code{mapper (genreMapper.py).}.
 Remember to perform
-the sanity check on the metadata. Unfortuneately we can't run
+the sanity check on the metadata. Unfortunately we can't run
 the same check on the other files because they have variable
 line lengths.
 
@@ -599,8 +599,8 @@ genre. It should look something like this:
 {\hfill\includegraphics{keyChart.png}\hfill}
 
 
-\section{Interpretting the results}
-\label{1-Keys/Keys:interpretting-the-results}
+\section{Interpreting the results}
+\label{1-Keys/Keys:interpreting-the-results}
 It looks like G is the most popular key for every genre but
 classical where it barely looses out to C. In country music G
 is a heavy favorite along with C and D which are also relatively

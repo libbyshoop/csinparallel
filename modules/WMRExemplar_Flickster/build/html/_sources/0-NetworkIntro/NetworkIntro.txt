@@ -47,7 +47,7 @@ Here's our :download:`mapper <friendListMapper.py>`:
         Wmr.emit(value, key)
  
 We want our :download:`reducer <friendListReducer.py>` to output a comma
-seperated list:
+separated list:
 
 .. code-block:: python
     :linenos:
