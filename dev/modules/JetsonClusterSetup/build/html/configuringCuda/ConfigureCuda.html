@@ -1,0 +1,137 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Installing and Configuring Cuda &mdash; Jetson Tegra Cluster Setup</title>
+    
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="top" title="Jetson Tegra Cluster Setup" href="../index.html" />
+    <link rel="next" title="Configure MPICH" href="../configuringMPICH/ConfigureMPICH.html" />
+    <link rel="prev" title="Configuring the Networking on a Jetson Cluster" href="../configuringNetworking/ConfigureNetworking.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../configuringMPICH/ConfigureMPICH.html" title="Configure MPICH"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="../configuringNetworking/ConfigureNetworking.html" title="Configuring the Networking on a Jetson Cluster"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../index.html">Jetson Tegra Cluster Setup</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="installing-and-configuring-cuda">
+<h1>Installing and Configuring Cuda<a class="headerlink" href="#installing-and-configuring-cuda" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="register-a-nvidia-developer-account">
+<h2>1. Register a Nvidia Developer Account<a class="headerlink" href="#register-a-nvidia-developer-account" title="Permalink to this headline">¶</a></h2>
+<p>Create a nvidia developer account and register as a cuda developer. The approval process takes a while.
+You can go to <a class="reference external" href="https://developer.nvidia.com/jetson-tk1-support">https://developer.nvidia.com/jetson-tk1-support</a> and double check on your ‘my account’ page
+to see that the registration was succesful,</p>
+</div>
+<div class="section" id="download-and-install-cuda">
+<h2>2. Download and Install Cuda<a class="headerlink" href="#download-and-install-cuda" title="Permalink to this headline">¶</a></h2>
+<p>Download the cuda toolkit from this site: <a class="reference external" href="https://developer.nvidia.com/jetson-tk1-support">https://developer.nvidia.com/jetson-tk1-support</a>. You can just download it on the head node and then use ‘python -m SimpleHTTPServer’ to serve contents of the current directory on a HTTP server. Then download it onto each of the nodes with</p>
+<div class="highlight-python"><div class="highlight"><pre>wget 192.168.0.101:8000/cuda-repo-l4t-r19.2_6.0-42_armhf.deb
+</pre></div>
+</div>
+<p>Install on each machine with</p>
+<div class="highlight-python"><div class="highlight"><pre>sudo dpkg -i cuda-repo-l4t-r19.2_6.0-42_armhf.deb   #install the repository meta data
+sudo apt-get install cuda-toolkit-6-0               #install cuda
+#add user to the video group
+sudo usermod -a -G video ubuntu                     #(change ubuntu to your username if you changed it)
+</pre></div>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../index.html">
+              <img class="logo" src="../_static/CSInParallel200wide.png" alt="Logo"/>
+            </a></p>
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Installing and Configuring Cuda</a><ul>
+<li><a class="reference internal" href="#register-a-nvidia-developer-account">1. Register a Nvidia Developer Account</a></li>
+<li><a class="reference internal" href="#download-and-install-cuda">2. Download and Install Cuda</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="../configuringNetworking/ConfigureNetworking.html"
+                        title="previous chapter">Configuring the Networking on a Jetson Cluster</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="../configuringMPICH/ConfigureMPICH.html"
+                        title="next chapter">Configure MPICH</a></p>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../configuringMPICH/ConfigureMPICH.html" title="Configure MPICH"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="../configuringNetworking/ConfigureNetworking.html" title="Configuring the Networking on a Jetson Cluster"
+             >previous</a> |</li>
+        <li><a href="../index.html">Jetson Tegra Cluster Setup</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright This work is licensed under a Creative Commons Attribution-ShareAlike 3.0 Unported License.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
+    </div>
+  </body>
+</html>
