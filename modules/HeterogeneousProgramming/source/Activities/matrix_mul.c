@@ -51,7 +51,7 @@ int main (int argc, char *argv[]) {
 
     if (numtasks < 2 ) {
         printf("Need at least two MPI tasks. Quitting...\n");
-        MPI_Abort(MPI_COMM_WORLD, rc);
+        MPI_Abort(MPI_COMM_WORLD, 0);
         exit(1);
     }
 

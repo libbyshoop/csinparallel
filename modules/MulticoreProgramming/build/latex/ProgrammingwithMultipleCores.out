@@ -9,7 +9,7 @@
 \BOOKMARK [1][-]{section.2.2}{Avoiding Race Conditions}{chapter.2}% 9
 \BOOKMARK [1][-]{section.2.3}{Reduction}{chapter.2}% 10
 \BOOKMARK [1][-]{section.2.4}{Thread-safe Code}{chapter.2}% 11
-\BOOKMARK [0][-]{chapter.3}{Timing and Performance on Intel Manycore Testing Lab}{}% 12
+\BOOKMARK [0][-]{chapter.3}{Timing and Performance on Multicore machines}{}% 12
 \BOOKMARK [1][-]{section.3.1}{Timing performance}{chapter.3}% 13
 \BOOKMARK [1][-]{section.3.2}{Using the MTL}{chapter.3}% 14
 \BOOKMARK [1][-]{section.3.3}{Investigating \217scalability\220}{chapter.3}% 15

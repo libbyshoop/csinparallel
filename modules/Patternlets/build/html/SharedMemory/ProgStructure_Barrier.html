@@ -261,7 +261,7 @@ how each thread executing in parallel has its own set of variables.  Conceptuall
 it looks like this, where each thread has its own memory for the variables id and numThreads:</p>
 <img alt="../_images/ForkJoin_SPMD.png" src="../_images/ForkJoin_SPMD.png" style="width: 800px;" />
 <p>When the pragma is uncommented in the code below, note what the default number of threads
-is.  Here the threads are forked and execute the block of code insode the
+is.  Here the threads are forked and execute the block of code inside the
 curly braces on lines 22 through 26.  This is how we can have a block of code executed
 concurrently on each thread.</p>
 <p>When you execute the parallel version containing the pragma (uncommenting line 20),
@@ -431,7 +431,7 @@ threads are generating computed data (in an array, for example) that needs to be
 completed for use in another computation.</p>
 <p>Conceptually, the running code is excuting like this:</p>
 <img alt="../_images/ForkJoin_Barrier.png" src="../_images/ForkJoin_Barrier.png" style="width: 850px;" />
-<p>Note what happens with and without the commented pragma on line 35.</p>
+<p>Note what happens with and without the commented pragma on line 31.</p>
 <div class="highlight-c"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
  2
  3

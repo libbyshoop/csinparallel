@@ -7,7 +7,7 @@ void hello();
 
 int main(int argc, char *argv[]) {
 
-   int rank, nprocs, len;
+   int rank, nprocs, len, size;
    char name[MAX];      /* char array for storing the name of each node */
 
    /* Initializing the MPI execution environment */

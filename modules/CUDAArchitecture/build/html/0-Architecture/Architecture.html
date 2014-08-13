@@ -129,7 +129,7 @@ costly read.</p>
 </li>
 <li><dl class="first docutils">
 <dt><strong>Local Memory</strong> local variables used by each thread. They are</dt>
-<dd><p class="first last">not accesible by other threads even though they use the same
+<dd><p class="first last">not accessible by other threads even though they use the same
 L1 and L2 cache as global memory.</p>
 </dd>
 </dl>
@@ -144,9 +144,9 @@ processed serially, which slows down the application.</p>
 </dl>
 </li>
 <li><dl class="first docutils">
-<dt><strong>Constant Memory</strong> is read-accessible by all theads and must</dt>
+<dt><strong>Constant Memory</strong> is read-accessible by all threads and must</dt>
 <dd><p class="first last">be declared with the <tt class="docutils literal"><span class="pre">__const__</span></tt> modifier. In newer devices
-there is a seperate read only constant cache.</p>
+there is a separate read only constant cache.</p>
 </dd>
 </dl>
 </li>
@@ -183,7 +183,7 @@ x and y directions.</p>
 that prints out the specifications of
 your device. To run it on a unix machine, execute this command:</p>
 <p><tt class="docutils literal"><span class="pre">/usr/local/cuda/samples/1_Utilities/deviceQuery/deviceQuery</span></tt></p>
-<p>If that doesn&#8217;t work you probably need to build the samples</p>
+<p>If that doesn&#8217;t work you probably need to build the samples:</p>
 <div class="highlight-bash"><div class="highlight"><pre><span class="nb">cd</span> /usr/local/cuda/samples/1_Utilities/deviceQuery
 sudo make
 ./deviceQuery

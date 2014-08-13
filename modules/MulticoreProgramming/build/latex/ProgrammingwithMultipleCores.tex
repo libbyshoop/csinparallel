@@ -13,7 +13,7 @@
 
 
 \title{Multicore Programming with OpenMP}
-\date{July 26, 2013}
+\date{March 07, 2014}
 \release{}
 \author{CSInParallel Project}
 \newcommand{\sphinxlogo}{}
@@ -116,6 +116,8 @@
 \tableofcontents
 \phantomsection\label{index::doc}
 
+
+This module depicts how to use OpenMP to solve a fairly simple mathematical calculation: estimating the area under a curve as a summation of trapezoids.  Some issues that arise when using multiple threads to complete this task are introduced.  Once you have working code, we discuss how you can estimate the \emph{speedup} you obtain using varying numbers of threads and have you think about how scaleable this problem is as you increase the number of trapezoids (the problem size) and use more threads.
 
 
 \chapter{Getting Started with Multicore Programming using OpenMP}
@@ -566,7 +568,7 @@ According to the OpenMP Tutorial, here is how the reduction is being done inside
 ``A private copy for each listed variable is created for each thread.  At the end of the reduction, the reduction operation is applied to all private copies of the shared variable, and the final result is written to the global shared variable.''
 \end{quote}
 
-Thus, a variable such as \code{integral} that is decalred in a reduction clause is both private to each thread and ultimately a shared variable.
+Thus, a variable such as \code{integral} that is declared in a reduction clause is both private to each thread and ultimately a shared variable.
 \setbox0\vbox{
 \begin{minipage}{0.95\linewidth}
 \textbf{To Do}
@@ -611,8 +613,8 @@ thread-safe. For example, the function f() in our example, is
 thread-safe, but the body of that loop is not thread-safe.
 
 
-\chapter{Timing and Performance on Intel Manycore Testing Lab}
-\label{timingAndScalability/TimingOnMTLandscalability:timing-and-performance-on-intel-manycore-testing-lab}\label{timingAndScalability/TimingOnMTLandscalability::doc}
+\chapter{Timing and Performance on Multicore machines}
+\label{timingAndScalability/TimingOnMTLandscalability::doc}\label{timingAndScalability/TimingOnMTLandscalability:timing-and-performance-on-multicore-machines}
 
 \section{Timing performance}
 \label{timingAndScalability/TimingOnMTLandscalability:timing-performance}
@@ -648,8 +650,7 @@ sys 0.00
 \end{Verbatim}
 
 Here, we use the full path /usr/bin/time to insure that we are accessing
-the time program instead of a shell built-in command. The -p flag
-produces output in a format comparable to what we will see in the MTL.
+the time program instead of a shell built-in command.
 
 The real time measures actual time elapsed during the running of your
 command trap-omp. user measures the amount of time executing user code,
@@ -710,7 +711,7 @@ double end = omp\_get\_wtime();
 double time1 = end - start;
 
 //print out the resulting elapsed time
-cout \textless{}\textless{} "Time for paralel computation section: "\textless{}\textless{} time1 \textless{}\textless{} "  milliseconds." \textless{}\textless{} endl;
+cout \textless{}\textless{} "Time for paralel computation section: "\textless{}\textless{} time1 \textless{}\textless{} "  seconds." \textless{}\textless{} endl;
 ...
 \end{Verbatim}
 \setbox0\vbox{
@@ -736,19 +737,21 @@ code, even if you are not using OpenMP library functions or pragmas. This will c
 
 \section{Using the MTL}
 \label{timingAndScalability/TimingOnMTLandscalability:using-the-mtl}
+If you have access to Intel's Manycore Testing Lab (MTL), you can try some experimenting.  You may also use another machine that your instructor will give you access to.
+
 Let’s try using many more threads and really experiment with multicore
 programming! You will need to use a ‘terminal’ on Macs or ‘Putty’ on
 PCs.  If you are off campus, you will need to ssh into a machine on your campus before
 then logging into the MTL machine at Intel’s headquarters in Oregon.
 
 \begin{notice}{note}{Note:}
-Macalester's local machine that you can use is selkie.
+Macalester's machine that you can use is nuggle.macalester.edu.
 \end{notice}
 
 You can login to the MTL computer, as follows
 
 \begin{Verbatim}[commandchars=\\\{\}]
-ssh accountname@192.55.51.81
+ssh accountname@207.108.8.131
 \end{Verbatim}
 
 Use one of the special MTL student account usernames provided to you, together with
@@ -759,7 +762,7 @@ One way to do this is to use another window (to
 keep for copying your code), then enter the following command \emph{from the directory where your code is located}:
 
 \begin{Verbatim}[commandchars=\\\{\}]
-scp trap-omp.C accountname@192.55.51.81:
+scp trap-omp.C accountname@207.108.8.131:
 \end{Verbatim}
 
 After making this copy, login into the MTL machine 192.55.51.81 in another window.
@@ -874,7 +877,7 @@ qsub -l select=1:ncpus=32 -v 'p=32, n=10485760'
 
 \section{Investigating ‘scalability’}
 \label{timingAndScalability/TimingOnMTLandscalability:investigating-scalability}
-Scalability is the ability of a parallel program to run ingreasingly larger problems.  In our simple program, the \emph{problem size} is the number of trapazoids whose area are computed.  You will now conduct some investigations of two types of scalability of parallel programs:
+Scalability is the ability of a parallel program to run increasingly larger problems.  In our simple program, the \emph{problem size} is the number of trapazoids whose area are computed.  You will now conduct some investigations of two types of scalability of parallel programs:
 \begin{itemize}
 \item {} 
 \textbf{stong scalability}

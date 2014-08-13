@@ -48,7 +48,7 @@ What happens when the number of iterations (16 in this code) is not evenly divis
 This type of decomposition is commonly used when accessing data that is stored in
 consecutive memory locations (such as an array) that might be cached by each thread.
 
-7. Shared Data Decomposition Algorithm Strategy:  one iteration per thread in a a parallel for loop implementation strategy
+7. Shared Data Decomposition Algorithm Strategy:  one iteration per thread in a parallel for loop implementation strategy
 *******************************************************************************************************************************
 
 *file: openMP/07.parallelLoop-chunksOf1/parallelLoopChunksOf1.c*

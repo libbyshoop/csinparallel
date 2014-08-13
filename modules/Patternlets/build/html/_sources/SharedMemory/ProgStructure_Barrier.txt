@@ -95,7 +95,7 @@ it looks like this, where each thread has its own memory for the variables id an
 	:width: 800
 
 When the pragma is uncommented in the code below, note what the default number of threads
-is.  Here the threads are forked and execute the block of code insode the
+is.  Here the threads are forked and execute the block of code inside the
 curly braces on lines 22 through 26.  This is how we can have a block of code executed
 concurrently on each thread.
 
@@ -158,7 +158,7 @@ Conceptually, the running code is excuting like this:
 .. image:: ForkJoin_Barrier.png
 	:width: 850
 
-Note what happens with and without the commented pragma on line 35.
+Note what happens with and without the commented pragma on line 31.
 
 .. literalinclude::
 	../patternlets/openMP/04.barrier/barrier.c

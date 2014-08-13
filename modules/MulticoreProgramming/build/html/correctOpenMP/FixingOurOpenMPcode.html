@@ -26,7 +26,7 @@
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
     <link rel="top" title="Multicore Programming with OpenMP" href="../index.html" />
-    <link rel="next" title="Timing and Performance on Intel Manycore Testing Lab" href="../timingAndScalability/TimingOnMTLandscalability.html" />
+    <link rel="next" title="Timing and Performance on Multicore machines" href="../timingAndScalability/TimingOnMTLandscalability.html" />
     <link rel="prev" title="Getting Started with Multicore Programming using OpenMP" href="../introOpenMP/GettingstartedwithOpenMP.html" /> 
   </head>
   <body>
@@ -37,7 +37,7 @@
           <a href="../genindex.html" title="General Index"
              accesskey="I">index</a></li>
         <li class="right" >
-          <a href="../timingAndScalability/TimingOnMTLandscalability.html" title="Timing and Performance on Intel Manycore Testing Lab"
+          <a href="../timingAndScalability/TimingOnMTLandscalability.html" title="Timing and Performance on Multicore machines"
              accesskey="N">next</a> |</li>
         <li class="right" >
           <a href="../introOpenMP/GettingstartedwithOpenMP.html" title="Getting Started with Multicore Programming using OpenMP"
@@ -152,7 +152,7 @@ parallel programs: <strong>reducing several values down to one</strong>.  This i
 <p>According to the OpenMP Tutorial, here is how the reduction is being done inside the compiled OpenMP code (similar to how we described it above, but generalized to any reduction operator):</p>
 <blockquote>
 <div>&#8220;A private copy for each listed variable is created for each thread.  At the end of the reduction, the reduction operation is applied to all private copies of the shared variable, and the final result is written to the global shared variable.&#8221;</div></blockquote>
-<p>Thus, a variable such as <tt class="docutils literal"><span class="pre">integral</span></tt> that is decalred in a reduction clause is both private to each thread and ultimately a shared variable.</p>
+<p>Thus, a variable such as <tt class="docutils literal"><span class="pre">integral</span></tt> that is declared in a reduction clause is both private to each thread and ultimately a shared variable.</p>
 <div class="topic">
 <p class="topic-title first">To Do</p>
 <p>Add the above reduction clause to your OpenMP pragma and remove integral from the list of shared variables, so that the pragma in your code appears as shown below.  Then recompile and test your program many times with different numbers of threads. You should now see the correct answer of 2.0 every time you execute it with multiple threads &#8211; a correct multi-core program!</p>
@@ -208,20 +208,7 @@ thread-safe, but the body of that loop is not&nbsp;thread-safe.</p>
                         title="previous chapter">Getting Started with Multicore Programming using OpenMP</a></p>
   <h4>Next topic</h4>
   <p class="topless"><a href="../timingAndScalability/TimingOnMTLandscalability.html"
-                        title="next chapter">Timing and Performance on Intel Manycore Testing Lab</a></p>
-<div id="searchbox" style="display: none">
-  <h3>Quick search</h3>
-    <form class="search" action="../search.html" method="get">
-      <input type="text" name="q" />
-      <input type="submit" value="Go" />
-      <input type="hidden" name="check_keywords" value="yes" />
-      <input type="hidden" name="area" value="default" />
-    </form>
-    <p class="searchtip" style="font-size: 90%">
-    Enter search terms or a module, class or function name.
-    </p>
-</div>
-<script type="text/javascript">$('#searchbox').show(0);</script>
+                        title="next chapter">Timing and Performance on Multicore machines</a></p>
         </div>
       </div>
       <div class="clearer"></div>
@@ -233,7 +220,7 @@ thread-safe, but the body of that loop is not&nbsp;thread-safe.</p>
           <a href="../genindex.html" title="General Index"
              >index</a></li>
         <li class="right" >
-          <a href="../timingAndScalability/TimingOnMTLandscalability.html" title="Timing and Performance on Intel Manycore Testing Lab"
+          <a href="../timingAndScalability/TimingOnMTLandscalability.html" title="Timing and Performance on Multicore machines"
              >next</a> |</li>
         <li class="right" >
           <a href="../introOpenMP/GettingstartedwithOpenMP.html" title="Getting Started with Multicore Programming using OpenMP"

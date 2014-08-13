@@ -28,9 +28,9 @@ along with the above two and what can go wrong when mutual exclusion
 is not properly ensured.
 
 Note: by default OpenMP uses the **Thread Pool** pattern of concurrent execution control.
-OpenMP programs initialze a group of threads to be used by a given program 
+OpenMP programs initialize a group of threads to be used by a given program 
 (often called a pool of threads).  These threads will execute concurrently
-during portions of the code specified by the programmer.  In addition, the **multiple instructtion, multiple data** pattern is used in OpenMP programs because multiple threads can be exituting different instructions on different data in memory at the same point in time.
+during portions of the code specified by the programmer.  In addition, the **multiple instruction, multiple data** pattern is used in OpenMP programs because multiple threads can be executing different instructions on different data in memory at the same point in time.
 
 Source Code
 ************
@@ -38,12 +38,12 @@ Source Code
 Please download all examples from this tarball: 
 :download:`openMP.tgz <../patternlets/openMP.tgz>`
 
-A C code file and a Makefile or each example below can be found in 
+A C code file and a Makefile for each example below can be found in 
 subdirectories of the openMP directory created by extracting the above tarball.  
 The number for each example below corresponds to one used in subdirectory 
 names containing each one.
 
-To compile and run these examples, you will need a C compiler with OpenMP.  The gnu C compiler is OpenMP compliant.  We assume you are building and executing these on a unix command line.
+To compile and run these examples, you will need a C compiler with OpenMP.  The GNU C compiler is OpenMP compliant.  We assume you are building and executing these on a Unix command line.
 
 
 Patternlets Grouped By Type

@@ -2,7 +2,7 @@
 Parallel Programming Patterns
 *****************************
 
-Like all programs, parallel programs contain many **patterns**: useful ways of writing code that are used repeatedly by most developers because they work well in parctice.  These patterns have been documented by developers over time so that useful ways of organizing and writing good parallel code can be learned by new programmers (and even seasoned veterans).
+Like all programs, parallel programs contain many **patterns**: useful ways of writing code that are used repeatedly by most developers because they work well in practice.  These patterns have been documented by developers over time so that useful ways of organizing and writing good parallel code can be learned by new programmers (and even seasoned veterans).
 
 
 
@@ -17,7 +17,7 @@ When writing parallel programs, developers use patterns that can be grouped into
 Strategies
 ==========
 
-When you set out to write a program, whether it is parallel or not, you should be considering two prinary stratigic considerations:
+When you set out to write a program, whether it is parallel or not, you should be considering two primary strategic considerations:
 
 1. What *algorithmic strategies* to use
 2. Given the algorithmic strategies, what *implementation strategies* to use
@@ -50,7 +50,7 @@ OpenMP is built on a lower-level POSIX library called Pthreads, which can also b
 A third emerging type of parallel implementation involves a *hybrid computation* that uses both of the above patterns together, using a cluster of computers, each of which executes multiple threads.  This type of hybrid program often uses MPI and OpenMP together in one program, which runs on multiple computers in a cluster.
 
 This document is split into chapters of examples.  There are examples for message passing using MPI and shared memory using OpenMP.
-(In the future we will include shared memory examples using Pthreads, and hybrid computations using a compbination of MPI and OPneMP.)
+(In the future we will include shared memory examples using Pthreads, and hybrid computations using a combination of MPI and OpenMP.)
 
 Most of the examples are illustrated
 with the C programming language, using standard popular available libraries. In a few cases, C++
@@ -58,7 +58,7 @@ is used to illustrate a particular difference in code execution between the two 
 
 There are many small examples that serve to illustrate a common pattern.  They are designed for you to try compiling and running on your own to see how they work.  For each example, there are comments within the code to guide you as you try them out.  In some cases, there may be code snippets that you can comment and/or uncomment to see how the execution of the code changes after you do so and re-compile it.
 
-Depending on you interest, you can now explore MPI Patternlets or OpneMP Patternlets.
+Depending on you interest, you can now explore MPI Patternlets or OpenMP Patternlets.
 
 
 :doc:`MessagePassing/MPI_Patternlets`

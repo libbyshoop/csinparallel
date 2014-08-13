@@ -64,7 +64,7 @@
 <p><em>Execute on the command line inside 09.private directory:</em></p>
 <div class="highlight-python"><pre>./private</pre>
 </div>
-<p>In this example, you will try a parallel for loop where an additional variables (i, j in the code) cannot be shared by all of the threads, but must instead be <em>private</em> to each thread, which means that each thread has its own copy of that variable.  In this case, the outer loop is being split into chunks and given to each thread, but the inner loop is being executed by each thread for each of the elements in its chunk.  The loop counting variables must be maintained separately by each thread.  Because they were initially declared outside the loops at the begininning of the program, by default these variables are shared by all the threads.</p>
+<p>In this example, you will try a parallel for loop where additional variables (i, j in the code) cannot be shared by all of the threads, but must instead be <em>private</em> to each thread, which means that each thread has its own copy of that variable.  In this case, the outer loop is being split into chunks and given to each thread, but the inner loop is being executed by each thread for each of the elements in its chunk.  The loop counting variables must be maintained separately by each thread.  Because they were initially declared outside the loops at the begininning of the program, by default these variables are shared by all the threads.</p>
 <div class="highlight-c"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
  2
  3
@@ -174,7 +174,7 @@
 <p><em>Execute on the command line inside 10.mutualExclusion-atomic directory:</em></p>
 <div class="highlight-python"><pre>./atomic</pre>
 </div>
-<p>When a variable must be shared by all the threads, as in this example below, an issue called a <em>race condition</em> can occur when the threads are updating that variable concurrently.  This happens because there are multiple underlying machine instructions needed to complete the update of the memory location and each thread must execute all of them atomically before another thread does so, thus ensuring <strong>mutual exclusion</strong> between the threads when updating a shared variable.  This is done using the OpneMP pragma shown in this code.</p>
+<p>When a variable must be shared by all the threads, as in this example below, an issue called a <em>race condition</em> can occur when the threads are updating that variable concurrently.  This happens because there are multiple underlying machine instructions needed to complete the update of the memory location and each thread must execute all of them atomically before another thread does so, thus ensuring <strong>mutual exclusion</strong> between the threads when updating a shared variable.  This is done using the OpenMP pragma shown in this code.</p>
 <div class="highlight-c"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
  2
  3
@@ -350,7 +350,7 @@
 <p><em>Execute on the command line inside 12.mutualExclusion-critical2 directory:</em></p>
 <div class="highlight-python"><pre>./critical2</pre>
 </div>
-<p>Here is an example of how to compare the performance of using the atomic pragme directive and the critical pragma directive.  Note that there is a function in OpenMP that lets you obtain the current time, which enables us to determine how long it took to run a particular section of our program.</p>
+<p>Here is an example of how to compare the performance of using the atomic pragma directive and the critical pragma directive.  Note that there is a function in OpenMP that lets you obtain the current time, which enables us to determine how long it took to run a particular section of our program.</p>
 <div class="highlight-c"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
  2
  3
@@ -590,7 +590,7 @@ Hello from thread #1 of 4</pre>
 <p>2 of 43 of 4</p>
 <p>1 of 4</p>
 </div></blockquote>
-<p>The other facet that this particular patternlet shows is that OpenMP&#8217;s atomic directive will not fix this &#8211; it is too complex for atomic, so the compiler flags that as an error.  To make this statement execute indivisiblly, you need to use the critical directive, providing a pretty simple case where critical works and atomic does not.</p>
+<p>The other facet that this particular patternlet shows is that OpenMP&#8217;s atomic directive will not fix this &#8211; it is too complex for atomic, so the compiler flags that as an error.  To make this statement execute indivisibly, you need to use the critical directive, providing a pretty simple case where critical works and atomic does not.</p>
 </div>
 </div>
 </div>

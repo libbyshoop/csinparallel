@@ -6,6 +6,8 @@
 Multicore Programming with OpenMP
 ==================================
 
+This module depicts how to use OpenMP to solve a fairly simple mathematical calculation: estimating the area under a curve as a summation of trapezoids.  Some issues that arise when using multiple threads to complete this task are introduced.  Once you have working code, we discuss how you can estimate the *speedup* you obtain using varying numbers of threads and have you think about how scaleable this problem is as you increase the number of trapezoids (the problem size) and use more threads.
+
 .. toctree::
    :maxdepth: 1
 

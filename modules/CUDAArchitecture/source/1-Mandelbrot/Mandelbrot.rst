@@ -11,7 +11,7 @@ and needs to be installed on a Mac). Download :download:`mandelbrot.cu` and the
 :download:`Makefile` and run ``make all`` This will generate 3
 programs:
 
-**Mandelbrot** is a mandelbrot set viewer designed for demonstrations
+**Mandelbrot** is a Mandelbrot set viewer designed for demonstrations
 . It allows you to zoom in and out and move around the 
 Mandelbrot set. The controls are w for up, s for down, a for
 left, d for right, e to zoom in, q to zoom out and x to exit.
@@ -23,7 +23,7 @@ prints out the time it took before exiting.
 allows you to move around. This is useful because the computation
 time is dependent on your position within the Mandelbrot set.
 
-Each of the programs takes betwen 0 and 4 commandline arguments
+Each of the programs takes between 0 and 4 commandline arguments
 
 #. the number of blocks used by the kernel
 #. the number of threads per block
@@ -33,7 +33,7 @@ Each of the programs takes betwen 0 and 4 commandline arguments
 What is the Mandelbrot set?
 ###########################
 
-The mandelbrot set is defined as the set of all complex numbers C
+The Mandelbrot set is defined as the set of all complex numbers C
 such that the formula Z\ :sub:`n+1` = Z\ :sub:`n`\ :sup:`2` + C 
 tends towards infinity. If we plot the real values of C on the X
 axis and the imaginary values of C on the Y axis we get a two 
@@ -48,7 +48,7 @@ dimensional fractal shape, such as this one created from running this code.
 Coding the Mandelbrot set
 #########################
 
-The to determine whether a value is in or out of the mandelbrot
+The to determine whether a value is in or out of the Mandelbrot
 set we loop through the formula  Z\ :sub:`n+1` = Z\ :sub:`n`\
 :sup:`2` + C a certain number of times (this is the image depth
 from earlier) and during each iteration, check if the magnitude 
@@ -68,7 +68,7 @@ floating point multiplications, our code looks like this:
 
 .. topic:: Some notes about this CUDA code
 
-    - A function that is designed to be run on th GPU is designated with the special keyword `__device__`.
+    - A function that is designed to be run on the GPU is designated with the special keyword `__device__`.
     
     - The type uint32_t is an unsigned 32-bit integer declared in stdint.h.
     
@@ -76,8 +76,8 @@ floating point multiplications, our code looks like this:
 
 But wait didn't we say in the last chapter that conditionals 
 should be avoided? Yes, when a thread returns early, it's
-just dead weight in the warp, howerver due to the nature of
-the mandelbrot set it is very likely
+just dead weight in the warp, however due to the nature of
+the Mandelbrot set it is very likely
 that some warps have threads that all terminate before 
 reaching ``max_iter`` so in some cases it will give us a
 slight speed up. If the warp contains a point within the 
@@ -110,7 +110,7 @@ the pixels:
     
     - Each thread calculates a particular value in the set based on its thread id (tId in the above code), which can be calculated using a data structure called *blockDim*, along with ones called *blockIdx* and *threadIdx*. The value blockDim.x gives us the total number of threads per block. The blockIdx.x value gives us the index of the block in which a particular thread running this code is located.  Lastly, the threadIdx.x value is the index of this thread in its block. Thus, a thread running this code can uniquely identify itself with the computation `blockDim.x * blockIdx.x + threadIdx.x`.
 
-    - We use blockDim.x when calculating the thread id above so that we could change the number of blocks, n, and the number of threads per block, m, programatically with command-line arguments and not have to change the lernel function.
+    - We use blockDim.x when calculating the thread id above so that we could change the number of blocks, n, and the number of threads per block, m, programatically with command-line arguments and not have to change the kernel function.
 
    
 In order to compensate for block and grid dimensions that

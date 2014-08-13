@@ -16,7 +16,7 @@ Patterns used when threads share data values
 ::
 	./private
 
-In this example, you will try a parallel for loop where an additional variables (i, j in the code) cannot be shared by all of the threads, but must instead be *private* to each thread, which means that each thread has its own copy of that variable.  In this case, the outer loop is being split into chunks and given to each thread, but the inner loop is being executed by each thread for each of the elements in its chunk.  The loop counting variables must be maintained separately by each thread.  Because they were initially declared outside the loops at the begininning of the program, by default these variables are shared by all the threads.
+In this example, you will try a parallel for loop where additional variables (i, j in the code) cannot be shared by all of the threads, but must instead be *private* to each thread, which means that each thread has its own copy of that variable.  In this case, the outer loop is being split into chunks and given to each thread, but the inner loop is being executed by each thread for each of the elements in its chunk.  The loop counting variables must be maintained separately by each thread.  Because they were initially declared outside the loops at the begininning of the program, by default these variables are shared by all the threads.
 
 .. literalinclude::
 	../patternlets/openMP/09.private/private.c
@@ -38,7 +38,7 @@ In this example, you will try a parallel for loop where an additional variables 
 ::
 	./atomic
 
-When a variable must be shared by all the threads, as in this example below, an issue called a *race condition* can occur when the threads are updating that variable concurrently.  This happens because there are multiple underlying machine instructions needed to complete the update of the memory location and each thread must execute all of them atomically before another thread does so, thus ensuring **mutual exclusion** between the threads when updating a shared variable.  This is done using the OpneMP pragma shown in this code.
+When a variable must be shared by all the threads, as in this example below, an issue called a *race condition* can occur when the threads are updating that variable concurrently.  This happens because there are multiple underlying machine instructions needed to complete the update of the memory location and each thread must execute all of them atomically before another thread does so, thus ensuring **mutual exclusion** between the threads when updating a shared variable.  This is done using the OpenMP pragma shown in this code.
 
 .. literalinclude::
 	../patternlets/openMP/10.mutualExclusion-atomic/atomic.c
@@ -80,7 +80,7 @@ Here is another way to ensure **mutual exclusion** in OpenMP.
 ::
 	./critical2
 
-Here is an example of how to compare the performance of using the atomic pragme directive and the critical pragma directive.  Note that there is a function in OpenMP that lets you obtain the current time, which enables us to determine how long it took to run a particular section of our program.
+Here is an example of how to compare the performance of using the atomic pragma directive and the critical pragma directive.  Note that there is a function in OpenMP that lets you obtain the current time, which enables us to determine how long it took to run a particular section of our program.
 
 .. literalinclude::
 	../patternlets/openMP/12.mutualExclusion-critical2/critical2.c
@@ -138,5 +138,5 @@ has 5 different function calls, so the outputs from these functions get interlea
 
   1 of 4
 
-The other facet that this particular patternlet shows is that OpenMP's atomic directive will not fix this -- it is too complex for atomic, so the compiler flags that as an error.  To make this statement execute indivisiblly, you need to use the critical directive, providing a pretty simple case where critical works and atomic does not.
+The other facet that this particular patternlet shows is that OpenMP's atomic directive will not fix this -- it is too complex for atomic, so the compiler flags that as an error.  To make this statement execute indivisibly, you need to use the critical directive, providing a pretty simple case where critical works and atomic does not.
 
