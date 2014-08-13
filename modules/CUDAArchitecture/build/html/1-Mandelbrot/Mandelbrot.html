@@ -60,7 +60,7 @@ developer package (X11 is likely installed on your linux machine
 and needs to be installed on a Mac). Download <a class="reference download internal" href="../_downloads/mandelbrot.cu"><tt class="xref download docutils literal"><span class="pre">mandelbrot.cu</span></tt></a> and the
 <a class="reference download internal" href="../_downloads/Makefile"><tt class="xref download docutils literal"><span class="pre">Makefile</span></tt></a> and run <tt class="docutils literal"><span class="pre">make</span> <span class="pre">all</span></tt> This will generate 3
 programs:</p>
-<p><strong>Mandelbrot</strong> is a mandelbrot set viewer designed for demonstrations
+<p><strong>Mandelbrot</strong> is a Mandelbrot set viewer designed for demonstrations
 . It allows you to zoom in and out and move around the
 Mandelbrot set. The controls are w for up, s for down, a for
 left, d for right, e to zoom in, q to zoom out and x to exit.</p>
@@ -69,7 +69,7 @@ prints out the time it took before exiting.</p>
 <p><strong>XBenchmark</strong> is a hybrid that prints out the computation time and
 allows you to move around. This is useful because the computation
 time is dependent on your position within the Mandelbrot set.</p>
-<p>Each of the programs takes betwen 0 and 4 commandline arguments</p>
+<p>Each of the programs takes between 0 and 4 commandline arguments</p>
 <ol class="arabic simple">
 <li>the number of blocks used by the kernel</li>
 <li>the number of threads per block</li>
@@ -78,7 +78,7 @@ time is dependent on your position within the Mandelbrot set.</p>
 </ol>
 <div class="section" id="what-is-the-mandelbrot-set">
 <h2>What is the Mandelbrot set?<a class="headerlink" href="#what-is-the-mandelbrot-set" title="Permalink to this headline">¶</a></h2>
-<p>The mandelbrot set is defined as the set of all complex numbers C
+<p>The Mandelbrot set is defined as the set of all complex numbers C
 such that the formula Z<sub>n+1</sub> = Z<sub>n</sub><sup>2</sup> + C
 tends towards infinity. If we plot the real values of C on the X
 axis and the imaginary values of C on the Y axis we get a two
@@ -89,7 +89,7 @@ dimensional fractal shape, such as this one created from running this code.</p>
 </div>
 <div class="section" id="coding-the-mandelbrot-set">
 <h2>Coding the Mandelbrot set<a class="headerlink" href="#coding-the-mandelbrot-set" title="Permalink to this headline">¶</a></h2>
-<p>The to determine whether a value is in or out of the mandelbrot
+<p>The to determine whether a value is in or out of the Mandelbrot
 set we loop through the formula  Z<sub>n+1</sub> = Z<sub>n</sub><sup>2</sup> + C a certain number of times (this is the image depth
 from earlier) and during each iteration, check if the magnitude
 of Z is greater than 2; if so, we return false. However we want our
@@ -126,15 +126,15 @@ floating point multiplications, our code looks like this:</p>
 <div class="topic">
 <p class="topic-title first">Some notes about this CUDA code</p>
 <ul class="simple">
-<li>A function that is designed to be run on th GPU is designated with the special keyword <cite>__device__</cite>.</li>
+<li>A function that is designed to be run on the GPU is designated with the special keyword <cite>__device__</cite>.</li>
 <li>The type uint32_t is an unsigned 32-bit integer declared in stdint.h.</li>
 <li>The variable max_iter is defaulted to be 100, and can be changed with the image depth command line argument.</li>
 </ul>
 </div>
 <p>But wait didn&#8217;t we say in the last chapter that conditionals
 should be avoided? Yes, when a thread returns early, it&#8217;s
-just dead weight in the warp, howerver due to the nature of
-the mandelbrot set it is very likely
+just dead weight in the warp, however due to the nature of
+the Mandelbrot set it is very likely
 that some warps have threads that all terminate before
 reaching <tt class="docutils literal"><span class="pre">max_iter</span></tt> so in some cases it will give us a
 slight speed up. If the warp contains a point within the
@@ -182,7 +182,7 @@ the pixels:</p>
 <ul class="simple">
 <li>In this case, the &#8216;tiling&#8217; of the blocks of threads into a grid is a one-dimensional array of n blocks.</li>
 <li>Each thread calculates a particular value in the set based on its thread id (tId in the above code), which can be calculated using a data structure called <em>blockDim</em>, along with ones called <em>blockIdx</em> and <em>threadIdx</em>. The value blockDim.x gives us the total number of threads per block. The blockIdx.x value gives us the index of the block in which a particular thread running this code is located.  Lastly, the threadIdx.x value is the index of this thread in its block. Thus, a thread running this code can uniquely identify itself with the computation <cite>blockDim.x * blockIdx.x + threadIdx.x</cite>.</li>
-<li>We use blockDim.x when calculating the thread id above so that we could change the number of blocks, n, and the number of threads per block, m, programatically with command-line arguments and not have to change the lernel function.</li>
+<li>We use blockDim.x when calculating the thread id above so that we could change the number of blocks, n, and the number of threads per block, m, programatically with command-line arguments and not have to change the kernel function.</li>
 </ul>
 </div>
 <p>In order to compensate for block and grid dimensions that

@@ -17,18 +17,18 @@ cards, these values increased to 1024 threads per block and 2\ :sup:`31` - 1 blo
 
 
 It's not always clear which dimensions
-to choose so we created an expiriment to answer the following
+to choose so we created an experiment to answer the following
 question:
 
 *What effect do the grid and block dimensions have 
 on execution times?*
 
 To answer this question, we wrote a 
-:download:`script <testMandelbrot.sh>` to run our mandelbrot code
+:download:`script <testMandelbrot.sh>` to run our Mandelbrot code
 for every 
 grid size between 1 and 512  blocks and every number of threads 
 per block between 1 and 512 which produced 262,144 data
-points. We chose these ranges because our madelbrot set picture is
+points. We chose these ranges because our Mandelbrot set picture is
 512x512, so each thread will calculate the value of at least
 one pixel at the largest value of each.
 
@@ -73,7 +73,7 @@ architecture or the specifics of the code.
 Many threads in 1 block is always faster than many blocks of
 one thread because of the way threads are put into warps.
 The Jetson can execute 4 warps simultaneously. This means that
-when the number of threads/block is one only 4 threads can run concurently
+when the number of threads/block is one only 4 threads can run concurrently
 but when the number of blocks is one and there are many threads per block,
 the threads can be evenly divided
 into warps so that up to 128 are being run simultaneously.
@@ -89,7 +89,7 @@ thread which wastes 31 cycles cycles per block.
 can't run that many threads at a time. This is because 
 it is inexpensive to create threads on a CUDA card and having
 one pixel per thread allows the GPU to
-most efficently schedule warps as the CUDA cores become free.
+most efficiently schedule warps as the CUDA cores become free.
 Additionally, since accessing the color data takes time, the
 GPU can help us out by calculating other warps while waiting
 for the read to finish.
@@ -117,14 +117,14 @@ has 15 SMs with 32 CUDA cores each.
     :alt: Execution time
 
 This graph also features horizontal lines at multiples of 
-32 coresponding to the warp size, concave lines, and a top
+32 corresponding to the warp size, concave lines, and a top
 execution speed at 512x512. However there are 2 important
 differences.
 
 First, one block of many threads and many blocks with one
 thread each take about the same amount of time to execute.
 Because this card uses the Fermi architecture, each SM can run
-two warps concurently, this means that 64 threads can be running
+two warps concurrently, this means that 64 threads can be running
 at any given time. While still not as fast as using one block,
 many blocks is significantly faster with multiple SMs.
 
@@ -148,12 +148,12 @@ From these results we can draw up a list of best practices:
 
 #. Keep the number of threads per block and the number of blocks as close to equal as you can without violating the first tip.
 
-#. Keep the amount of work each thread does constant, it's inefficent to have one thread perform calculations for two pixels while the rest only calculate one.
+#. Keep the amount of work each thread does constant, it's inefficient to have one thread perform calculations for two pixels while the rest only calculate one.
 
 #. When in doubt use more threads not less, creating threads is inexpensive.
 
 #. In general avoid having threads that do extra work or have conditionals.
 
-#. Try to have a block size that is a multiple of the numberof SMs on your device, this is less important than the other tips.
+#. Try to have a block size that is a multiple of the number of SMs on your device, this is less important than the other tips.
 
 

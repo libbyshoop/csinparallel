@@ -72,7 +72,7 @@ when some threads in a warp are unable to execute the same instruction
 as other threads in a warp, those threads are diverged and do no work.
 
 .. Furthermore warps are always allocated the same way
-    if theads 0-31 are execute in a warp for one block, they will be
+    if threads 0-31 are execute in a warp for one block, they will be
     executed in the same warp for every block in the grid.
 
 Because a warp's context (it's registers, program counter etc.)
@@ -91,7 +91,7 @@ CUDA on chip memory is divided into several different regions
     thread has it's own set of registers.
 
 - **Local Memory** local variables used by each thread. They are
-    not accesible by other threads even though they use the same
+    not accessible by other threads even though they use the same
     L1 and L2 cache as global memory.
 
 - **Shared Memory** is accessible by all threads in a block. It 
@@ -100,9 +100,9 @@ CUDA on chip memory is divided into several different regions
     multiple threads request the same address, the requests are
     processed serially, which slows down the application.
 
-- **Constant Memory** is read-accessible by all theads and must
+- **Constant Memory** is read-accessible by all threads and must
     be declared with the ``__const__`` modifier. In newer devices
-    there is a seperate read only constant cache.
+    there is a separate read only constant cache.
 
 - **Global Memory** is accessible by all threads. It's the
     slowest device memory, but on new cards, it is cached. Memory
@@ -137,7 +137,7 @@ your device. To run it on a unix machine, execute this command:
 
 ``/usr/local/cuda/samples/1_Utilities/deviceQuery/deviceQuery``
 
-If that doesn't work you probably need to build the samples
+If that doesn't work you probably need to build the samples:
 
 .. code-block:: bash
     

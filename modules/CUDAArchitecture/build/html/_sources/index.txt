@@ -6,10 +6,10 @@
 Optimizing CUDA for GPU Architecture
 ====================================
 
-nVIDIA GPU cards use an advanced arcitecture to efficiently execute
+nVIDIA GPU cards use an advanced architecture to efficiently execute
 massively parallel programs written in CUDA C. This module explains how to take
 advantage of this architecture to provide maximum speedup for
-your CUDA applications using a mandelbrot set generator as an 
+your CUDA applications using a Mandelbrot set generator as an 
 example. It is intended to be a resource for instructors wishing
 to create lectures, though it can also be presented to students 
 as is.
