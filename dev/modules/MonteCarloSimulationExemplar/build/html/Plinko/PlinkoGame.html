@@ -1,0 +1,167 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Plinko from the Price is Right &mdash; Monte Carlo Simulation Exemplar</title>
+    
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+    <link rel="top" title="Monte Carlo Simulation Exemplar" href="../index.html" />
+    <link rel="next" title="Exercises" href="../NextSteps/Exercises.html" />
+    <link rel="prev" title="Drawing Four Cards of the Same Suit" href="../DrawFourSuitsExample/DrawFourSuitsExample.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../NextSteps/Exercises.html" title="Exercises"
+             accesskey="N">next</a></li>
+        <li class="right" >
+          <a href="../DrawFourSuitsExample/DrawFourSuitsExample.html" title="Drawing Four Cards of the Same Suit"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../index.html">Monte Carlo Simulation Exemplar</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="plinko-from-the-price-is-right">
+<h1>Plinko  from the Price is Right<a class="headerlink" href="#plinko-from-the-price-is-right" title="Permalink to this headline">¶</a></h1>
+<p>Another interesting game of chance is called Plinko, which has been used  on
+the television game show &#8220;The Price is Right&#8221; for many years.  This game is quite similar to
+a game called Quincunx, invented by the mathematician Sir Frances Galton (also called the Galton board).</p>
+<p>Please see the following references for details about the game and Galton&#8217;s pioneering work:</p>
+<p><a class="reference external" href="http://www.mathdemos.org/mathdemos/plinko/">Plinko game described</a></p>
+<p><a class="reference external" href="http://www.mathdemos.org/mathdemos/plinko/bigboardplinko.html">Detailed Description of the original board</a></p>
+<p><a class="reference external" href="http://www.mathsisfun.com/data/quincunx-explained.html">Explanation of Quincunx</a></p>
+<p><a class="reference external" href="http://www.mathsisfun.com/data/quincunx.html">Animated Galton Board</a></p>
+<div class="section" id="an-exercise-for-you-to-try">
+<h2>An Exercise for You to Try<a class="headerlink" href="#an-exercise-for-you-to-try" title="Permalink to this headline">¶</a></h2>
+<p>After reading these references and any others that you can find, please attempt to
+build your own simulation of the Plinko game.</p>
+<p>A sketch of the board from <em>The Price is Right</em> looks like this:</p>
+<img alt="../_images/board.gif" src="../_images/board.gif" style="height: 400px;" />
+<p>Similar to previous examples, you  should have a series of trial simulations,
+adding more and more disks to drop for each trial (on the Price is Right, contestants
+drop from one to five disks).  You could start with five disks and double it
+for each trial.  You will want to test what happens for each of the possible
+slots that they can initially drop the disk, labeled as A through I in the above diagram.
+The basic loop for simulating the trials would look like this:</p>
+<div class="highlight-c++"><div class="highlight"><pre><span class="k">while</span> <span class="p">(</span><span class="n">numDisks</span> <span class="o">&lt;</span> <span class="n">MAX</span><span class="p">)</span> <span class="p">{</span>
+        <span class="c1">//drop numDisks thru each starting pos [A..I]</span>
+        <span class="n">cout</span><span class="o">&lt;&lt;</span><span class="s">&quot;</span><span class="se">\n\n</span><span class="s">Dropping &quot;</span> <span class="o">&lt;&lt;</span> <span class="n">numDisks</span> <span class="o">&lt;&lt;</span> <span class="s">&quot; disks---</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">;</span>
+        <span class="k">for</span><span class="p">(</span><span class="n">pos</span><span class="o">=</span><span class="sc">&#39;A&#39;</span><span class="p">;</span> <span class="n">pos</span><span class="o">&lt;=</span><span class="sc">&#39;I&#39;</span><span class="p">;</span> <span class="n">pos</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+                <span class="n">dropDisks</span><span class="p">(</span><span class="n">pos</span><span class="p">,</span> <span class="n">numDisks</span><span class="p">,</span> <span class="n">numBigMoney</span><span class="p">);</span>
+        <span class="p">}</span><span class="c1">//for-pos</span>
+
+        <span class="c1">//show totals for this run...</span>
+        <span class="n">showResults</span><span class="p">(</span><span class="n">numDisks</span><span class="p">,</span> <span class="n">numBigMoney</span><span class="p">);</span>
+
+        <span class="c1">//increase #disks for next run</span>
+        <span class="n">numDisks</span><span class="o">+=</span><span class="n">numDisks</span><span class="p">;</span>
+<span class="p">}</span><span class="c1">//while</span>
+</pre></div>
+</div>
+<p>The function called <cite>dropDisks</cite> would do the large task of trying each disk
+to see where it lands.  The loop might look something like this:</p>
+<div class="highlight-c++"><div class="highlight"><pre><span class="c1">//The workhorse loop</span>
+<span class="k">for</span> <span class="p">(</span><span class="n">disk</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">disk</span><span class="o">&lt;</span><span class="n">numDisks</span><span class="p">;</span> <span class="n">disk</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+        <span class="kt">double</span> <span class="n">valu</span> <span class="o">=</span> <span class="n">dropOneDisk</span><span class="p">(</span><span class="n">pos</span><span class="p">);</span> <span class="c1">//how much did we win?</span>
+        <span class="n">totalWon</span><span class="o">+=</span><span class="n">valu</span><span class="p">;</span>                 <span class="c1">//keep running total for pos</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">valu</span><span class="o">==</span><span class="n">BIG_MONEY</span><span class="p">)</span>    <span class="c1">//was it the BIG MONEY?</span>
+                <span class="n">numBigMoneyHits</span><span class="o">++</span><span class="p">;</span>
+<span class="p">}</span><span class="c1">//for-disk</span>
+
+<span class="n">numBigMoney</span><span class="p">[</span><span class="n">index</span><span class="p">]</span><span class="o">=</span><span class="n">numBigMoneyHits</span><span class="p">;</span>     <span class="c1">//tally bigMoney hits for pos</span>
+</pre></div>
+</div>
+<p>As with the other examples presented earlier, using OpenMP to parallelize this loop
+should be a fairly strightforward task.  The complex task for you is to code the logic
+of the possible movement of the disks along each row and compute how often the
+disk landed in each slot.</p>
+</div>
+<div class="section" id="questions-you-could-answer">
+<h2>Questions you could answer<a class="headerlink" href="#questions-you-could-answer" title="Permalink to this headline">¶</a></h2>
+<ol class="arabic">
+<li><p class="first">Where should I put my disks at the top to maximize the return at the bottom?</p>
+</li>
+<li><dl class="first docutils">
+<dt>For each starting slot, what is the probability that you will hit the big money slot?</dt>
+<dd><p class="first last">Match your experimental results with the theoretical probabilities.</p>
+</dd>
+</dl>
+</li>
+</ol>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../index.html">
+              <img class="logo" src="../_static/CSInParallel200wide.png" alt="Logo"/>
+            </a></p>
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Plinko  from the Price is Right</a><ul>
+<li><a class="reference internal" href="#an-exercise-for-you-to-try">An Exercise for You to Try</a></li>
+<li><a class="reference internal" href="#questions-you-could-answer">Questions you could answer</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="../DrawFourSuitsExample/DrawFourSuitsExample.html"
+                        title="previous chapter">Drawing Four Cards of the Same Suit</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="../NextSteps/Exercises.html"
+                        title="next chapter">Exercises</a></p>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../NextSteps/Exercises.html" title="Exercises"
+             >next</a></li>
+        <li class="right" >
+          <a href="../DrawFourSuitsExample/DrawFourSuitsExample.html" title="Drawing Four Cards of the Same Suit"
+             >previous</a> |</li>
+        <li><a href="../index.html">Monte Carlo Simulation Exemplar</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright This work is licensed under a Creative Commons Attribution-ShareAlike 3.0 Unported License.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>

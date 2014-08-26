@@ -1,41 +1,56 @@
+.. figure:: 640px-Sahara_Hotel_and_Casino_2.jpg
+    :alt: Roulette Wheel Picture
+    
+    "Sahara Hotel and Casino 2" by Antoine Taveneaux - Own work. Licensed under Creative Commons
+    Attribution-Share Alike 3.0 via
+    `Wikimedia Commons <http://commons.wikimedia.org/wiki/File:Sahara_Hotel_and_Casino_2.jpg#mediaviewer/File:Sahara_Hotel_and_Casino_2.jpg>`_
+
 Roulette Simulation
 ===================
 
-Our next is example is a Roulette simulation. We have a main simulation
-loop that is similar to the previous example. Notice that we use a OpenMp
-directive to seed the random number generator separately in each thread (see
-the discussion about randomness in the Introduction.) 
+An American Roulette wheel has 38 slots: 18 are red, 18 are black, and 2 are
+green, which the house always wins. When a person bets on either red or black,
+the ods of winning are 18/38, or 47.37% of the time.
 
-.. literalinclude:: rouletteSimulation.cpp
-   :language: c++
-   :lines: 32-72
+Our next is example is a simulation of spinning the Roulette wheel. We have a
+main simulation loop that is similar to the coin-flipping example. The code
+for determining a win on each spin is more involved than flipping a coin, and
+the sequential version,
+:download:`rouletteSimulation_seq.cpp <../code/montecarlo_openmp_cpp/roulette/rouletteSimulation_seq.cpp>`
+is decomposed into several methods. Look at this original code file to see how
+we run the simulations using increasing numbers of random spins of the wheel.
 
-The actual simulation function is getNumWins and is quite simple. As before,
-it runs the simulations in parrallel in a loop. numSpins and myBet are shared
-between theads while spin is the loop index and unique to each thread. Again,
-analogously to the previous example, we combine the partial results from each 
-threads with 'reduction(+:wins)'.
-
-.. literalinclude:: rouletteSimulation.cpp
-   :language: c++
-   :lines: 76-96
-
-The function that actually runs a single simulation of the Roulette wheel is quite
-simple. It simply generates a random number to represent the slot that the ball
+The function that actually runs a single simulation of the Roulette wheel, called spinRed(),  is quite
+simple. It generates a random number to represent the slot that the ball
 ends up in and gives a payout according to the rules of Roulette.
 
-.. literalinclude:: rouletteSimulation.cpp
+.. literalinclude:: ../code/montecarlo_openmp_cpp/roulette/rouletteSimulation_seq.cpp
    :language: c++
-   :lines: 130-145
+   :lines: 100-118
 
-Todo
-----
+.. note:: The sequential version of the simulation takes a fair amount of time. Note how long.
+    Also note how many simulated random spins it takes before the distribution of spins
+    accurately reflects the house odds.
 
-Now see if you can modify the provided code to use MPICH and/or CUDA instead of 
-of OpenMP. If you are feeling really ambitious, you can even make the program use
-hybrid parallelism (ie use MPICH to divide the problem between a cluster and OpenMP
-to divide each node's problem into threads). 
+Parallelism to the Rescue
+--------------------------
 
-Here is the full source code for the OpenMp version:
-:download:`rouletteSimulation.cpp <rouletteSimulation.cpp>`
+We add OpenMP parallelism as in the coinFlip example, by running the loop of random spins
+for each trial on several threads. This code is in this file that you can download:
+:download:`rouletteSimulation_omp.cpp <../code/montecarlo_openmp_cpp/roulette/rouletteSimulation_omp.cpp>`
+The actual simulation function is getNumWins(): 
+
+.. literalinclude:: ../code/montecarlo_openmp_cpp/roulette/rouletteSimulation_omp.cpp
+   :language: c++
+   :lines: 103-124
+
+Notes about this code: numSpins and myBet are shared
+between theads while spin is the loop index and unique to each thread.
+When using rand_r() as the thread-safe random number generator in linux/unix,
+the seed should be private to each thread also.
+Like the previous example, we combine the partial results from each 
+thread with `reduction(+:wins)`.
+
+
+
 

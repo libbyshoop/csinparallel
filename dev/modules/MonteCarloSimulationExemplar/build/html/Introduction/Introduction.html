@@ -1,3 +1,5 @@
+
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
@@ -23,8 +25,9 @@
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
     <link rel="top" title="Monte Carlo Simulation Exemplar" href="../index.html" />
-    <link rel="next" title="Drawing Four Cards of the Same Suit" href="../DrawFourSuitsExample/DrawFourSuitsExample.html" />
+    <link rel="next" title="Testing out random number generators: Flip a coin many times" href="CoinFlip.html" />
     <link rel="prev" title="Monte Carlo Simulation Examplar" href="../index.html" /> 
   </head>
   <body>
@@ -32,15 +35,12 @@
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
-          <a href="../genindex.html" title="General Index"
-             accesskey="I">index</a></li>
-        <li class="right" >
-          <a href="../DrawFourSuitsExample/DrawFourSuitsExample.html" title="Drawing Four Cards of the Same Suit"
-             accesskey="N">next</a> |</li>
+          <a href="CoinFlip.html" title="Testing out random number generators: Flip a coin many times"
+             accesskey="N">next</a></li>
         <li class="right" >
           <a href="../index.html" title="Monte Carlo Simulation Examplar"
              accesskey="P">previous</a> |</li>
-        <li><a href="../index.html">../../../images/CSInParallel200wide.png</a> &raquo;</li> 
+        <li><a href="../index.html">Monte Carlo Simulation Exemplar</a> &raquo;</li> 
       </ul>
     </div>  
 
@@ -51,40 +51,70 @@
             
   <div class="section" id="what-are-monte-carlo-methods">
 <h1>What are Monte Carlo Methods?<a class="headerlink" href="#what-are-monte-carlo-methods" title="Permalink to this headline">¶</a></h1>
-<p><strong>By Devin Bjelland, Macalester College</strong></p>
 <div class="section" id="overview">
 <h2>Overview<a class="headerlink" href="#overview" title="Permalink to this headline">¶</a></h2>
-<p>&#8216;Monte Carlo Methods&#8217;_ are a class of numerical methods which use repeated
+<p><strong>Monte Carlo Methods</strong> are a class of numerical methods which use repeated
 simulations to obtain a random sampling from an underlying unkown probablity
-distribution. Becuase Monte Carlo methods rely on repeated independant
-simulations, they are very well suited to distributed methods. Monte Carlo
+distribution.  Monte Carlo methods rely on repeated independant
+simulations using random numbers. This makes them very well suited to parallel and
+distributed solutions, because you can split the work of completing repeated independent
+calculations among multiple processing units. Monte Carlo
 methods are often employed when there is no closed form solution or
 deterministic solution algorithm to the underlying problem. As this sort of
 problem is quite common, Monte Carlo methods are used in a wide variety of
-fields&#8211;from computational chemistry to finance.</p>
+fields&#8211;from computational chemistry to finance.  Monte Carlo methods were first
+developed for general applications such as these by
+<a class="reference external" href="http://scienceworld.wolfram.com/biography/Metropolis.html">Nicholas Metropolis</a>
+and <a class="reference external" href="http://scienceworld.wolfram.com/biography/Ulam.html">Stanislaw Ulim</a>
+in 1949. In 1987, Metropolis wrote <a class="reference external" href="http://library.lanl.gov/cgi-bin/getfile?00326866.pdf">an interesting recounting of the beginnings of the use
+of these methods</a>.</p>
 </div>
-<div class="section" id="the-simplest-example">
-<h2>The Simplest Example<a class="headerlink" href="#the-simplest-example" title="Permalink to this headline">¶</a></h2>
-<p>To make this concrete, imagine you have a circular target inside a larger
+<div class="section" id="an-interesting-classic-example">
+<h2>An Interesting Classic Example<a class="headerlink" href="#an-interesting-classic-example" title="Permalink to this headline">¶</a></h2>
+<p>To make this concrete, let&#8217;s illustrate a classical mathematical problem that can be
+solved with sampling of random numbers: estimating the value of <img class="math" src="../_images/math/f2ca003a7da0de4994b4733e203b74ff52d42553.png" alt="\pi"/> using
+geometric properties of a circle and a square.</p>
+<p>Imagine you have a circular target inside a larger square
 target. You want to find the probabibilty that if you throw a dart it will
 hit the inner target. To run a &#8216;Monte Carlo Simulation&#8217; to solve this problem,
 you would simply throw a bunch of darts at the target and record the percentage
-that land in the inner target.</p>
-<p>We can extend this idea to approximate Pi quite easily. Suppose the inner target
+that land in the inner target. More concretely, we simulate the throw of the dart
+by generating a pair of random numbers between 0 and the length of the side of the
+square, each one representing the x and y coordinate of the location of the dart.
+Then we determine if that simulated dart location falls within the circle or not.</p>
+<p>We can extend this idea to approximate <img class="math" src="../_images/math/f2ca003a7da0de4994b4733e203b74ff52d42553.png" alt="\pi"/> quite easily. Suppose the inner target
 is a circle that is inscribed inside a sqare outer target. Since the sides of the
-square are twice the radius of the circle, we have that the ratio, :math:&#8217;Chi&#8217;
-of the area of the circle to the area of the sqaure is <span class="math">\frac{\pi {r}^2}{{\left( 2r \right)^2}</span>. We can rearrange this formula to solve for Pi as follows:</p>
-<p>Now, we can empirically calculate a value for the ratio of the area of the circle
+square are twice the radius of the circle, we have that the ratio, <img class="math" src="../_images/math/0027034d8a10372a06deaf4f4084c01956587479.png" alt="\rho"/>
+of the area of the circle to the area of the sqaure is</p>
+<div class="math">
+<p><img src="../_images/math/061be1acc61f0ac755f38c299ce1ea968f0c6508.png" alt="\rho = \frac{\pi {r}^2}{{\left( 2r \right)^2}}"/></p>
+</div><p>We can rearrange this formula to solve for <img class="math" src="../_images/math/f2ca003a7da0de4994b4733e203b74ff52d42553.png" alt="\pi"/> as follows:</p>
+<div class="math">
+<p><img src="../_images/math/c2a43b99b71241e75ee7720d48f99b6f91f11161.png" alt="\pi = \frac{\rho\left( 2r \right)^2}{r^2} = 4\rho"/></p>
+</div><p>If we can determine the ratio of the area of the circle to the total area of the square
+enscribing it, we can approximate <img class="math" src="../_images/math/f2ca003a7da0de4994b4733e203b74ff52d42553.png" alt="\pi"/>.</p>
+<p>As it happens, we can empirically calculate a value for the ratio of the area of the circle
 to the area of the square with a Monte Carlo simulation. We pick lots of random
-points in the squre and the ratio is the number of points inside the circle
-divided by the total number of points.</p>
+points in the square and the ratio is the number of points inside the circle
+divided by the total number of points.  As we sample more and more points, the ratio of the
+number of points that fall inside the circle to the total number of points tried is
+equal to the ratio of the two areas. We multiply this by 4 and we have our estimate of <img class="math" src="../_images/math/f2ca003a7da0de4994b4733e203b74ff52d42553.png" alt="\pi"/>.</p>
+<p>We can simplify this slightly by using a <img class="math" src="../_images/math/8f88d403085fe6600059002646348a5f267266d1.png" alt="1/4"/> circle of radius 1, as shown in the following illustration.</p>
+<div class="figure">
+<img alt="../_images/Pi_30K.gif" src="../_images/Pi_30K.gif" />
+<p class="caption">Estimating <img class="math" src="../_images/math/f2ca003a7da0de4994b4733e203b74ff52d42553.png" alt="\pi"/> via random sampling of points. Attribution: By CaitlinJo [CC-BY-3.0 (<a class="reference external" href="http://creativecommons.org/licenses/by/3.0">http://creativecommons.org/licenses/by/3.0</a>)], via Wikimedia Commons.</p>
+</div>
+<div class="admonition-see-also admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference external" href="http://www.fogcreek.com/fogbugz/evidence-based-scheduling/">How FogBugz uses Monte Carlo Simulations to estimate the time their software projects will take</a></p>
+</div>
 </div>
 <div class="section" id="simulating-card-games-for-fun-and-profit">
 <h2>Simulating Card Games for Fun and Profit<a class="headerlink" href="#simulating-card-games-for-fun-and-profit" title="Permalink to this headline">¶</a></h2>
 <p>The original motivating example that Monte Carlo methods draw their name
 from is gambling and game playing. In this module, we develop parallel
 algorithms that approximate the probabilities of various outcomes in card
-games.</p>
+games and the roulette wheel.</p>
 </div>
 </div>
 <div class="section" id="about-randomness">
@@ -96,18 +126,22 @@ randomness. If we are writing a serial algorithm, we can simply use the
 standard random number generator, for example, rand() in C. Computers (unless
 specifically fitted with a chip which gathers randomness from some other source)
 cannot produce true random numbers. Rather, the standard library random number
-generator takes some relatively random input&#8211;in the case of unix systems
-the number of seconds since January 1, 1970&#8211;and transforms it sequentially
-to produce a stream of psuedo-random numbers.</p>
+generator takes some relatively random 32-bit or 64-bit integer input, called the seed,
+and transforms it sequentially
+to produce a stream of psuedo-random numbers. A random number generator is created
+with the seed as input to a function called <em>srand()</em>, and each time a new random number is requested using the <em>rand()</em> function, the
+integer pattern is changed to produce a new number.  The sequence of numbers produced by such a pseudorandom
+number generation algorithm try to approximate a uniform distribution of numbers, each one
+statistically independent from the others.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">It is important to realize that a pseudorandom number generator function such
+as rand() creates the same sequence of numbers every time for a given input seed, which is typically
+a very large integer.  In C and C++, we often use the function time() create the seed integer,
+because it returns the number of seconds since January 1, 1970.  When running a sequential
+program multiple times, this seed would be different each time the program was run and the pattern
+of random numbers generated would be different.</p>
 </div>
-<div class="section" id="what-this-means-for-distributed-programming">
-<h2>What this means for distributed programming<a class="headerlink" href="#what-this-means-for-distributed-programming" title="Permalink to this headline">¶</a></h2>
-<p>If your algorithm creates multiple threads to perform a Monte Carlo simulation
-and you invoke the standard random number generator with the same seed, all the
-threads will get the same random numbers. If this happens, all the extra threads
-aren&#8217;t doing any good since they are just running the same simulation over again.
-We get around this by seeding the random number generate with more information&#8211;
-some combination of the time and the thread ID.</p>
 </div>
 </div>
 
@@ -117,17 +151,19 @@ some combination of the time and the thread ID.</p>
       </div>
       <div class="sphinxsidebar">
         <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../index.html">
+              <img class="logo" src="../_static/CSInParallel200wide.png" alt="Logo"/>
+            </a></p>
   <h3><a href="../index.html">Table Of Contents</a></h3>
   <ul>
 <li><a class="reference internal" href="#">What are Monte Carlo Methods?</a><ul>
 <li><a class="reference internal" href="#overview">Overview</a></li>
-<li><a class="reference internal" href="#the-simplest-example">The Simplest Example</a></li>
+<li><a class="reference internal" href="#an-interesting-classic-example">An Interesting Classic Example</a></li>
 <li><a class="reference internal" href="#simulating-card-games-for-fun-and-profit">Simulating Card Games for Fun and Profit</a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#about-randomness">About Randomness</a><ul>
 <li><a class="reference internal" href="#how-computers-generate-random-numbers">How Computers Generate Random Numbers</a></li>
-<li><a class="reference internal" href="#what-this-means-for-distributed-programming">What this means for distributed programming</a></li>
 </ul>
 </li>
 </ul>
@@ -136,21 +172,8 @@ some combination of the time and the thread ID.</p>
   <p class="topless"><a href="../index.html"
                         title="previous chapter">Monte Carlo Simulation Examplar</a></p>
   <h4>Next topic</h4>
-  <p class="topless"><a href="../DrawFourSuitsExample/DrawFourSuitsExample.html"
-                        title="next chapter">Drawing Four Cards of the Same Suit</a></p>
-<div id="searchbox" style="display: none">
-  <h3>Quick search</h3>
-    <form class="search" action="../search.html" method="get">
-      <input type="text" name="q" />
-      <input type="submit" value="Go" />
-      <input type="hidden" name="check_keywords" value="yes" />
-      <input type="hidden" name="area" value="default" />
-    </form>
-    <p class="searchtip" style="font-size: 90%">
-    Enter search terms or a module, class or function name.
-    </p>
-</div>
-<script type="text/javascript">$('#searchbox').show(0);</script>
+  <p class="topless"><a href="CoinFlip.html"
+                        title="next chapter">Testing out random number generators: Flip a coin many times</a></p>
         </div>
       </div>
       <div class="clearer"></div>
@@ -159,20 +182,17 @@ some combination of the time and the thread ID.</p>
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
-          <a href="../genindex.html" title="General Index"
-             >index</a></li>
-        <li class="right" >
-          <a href="../DrawFourSuitsExample/DrawFourSuitsExample.html" title="Drawing Four Cards of the Same Suit"
-             >next</a> |</li>
+          <a href="CoinFlip.html" title="Testing out random number generators: Flip a coin many times"
+             >next</a></li>
         <li class="right" >
           <a href="../index.html" title="Monte Carlo Simulation Examplar"
              >previous</a> |</li>
-        <li><a href="../index.html">../../../images/CSInParallel200wide.png</a> &raquo;</li> 
+        <li><a href="../index.html">Monte Carlo Simulation Exemplar</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">
         &copy; Copyright This work is licensed under a Creative Commons Attribution-ShareAlike 3.0 Unported License.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
     </div>
   </body>
 </html>

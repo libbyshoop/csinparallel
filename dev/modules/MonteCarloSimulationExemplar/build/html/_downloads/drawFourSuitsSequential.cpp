@@ -220,7 +220,7 @@ int findBiggest(int ary[], int n) {
                         big = ary[i];
         
         return big;
-}
+} //findBiggest
 
 /************************************************
 ***************************** isFourSuits ********/
@@ -238,5 +238,5 @@ bool isFourSuits(int hand[]){
         
         //if largest #suits == 1 then all 4 suits counted in 4 cards
         return (findBiggest(temp, 4)==1);
-}//isTwoPair
+}//isFourSuits
 

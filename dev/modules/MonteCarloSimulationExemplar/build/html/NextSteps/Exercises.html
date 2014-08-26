@@ -1,0 +1,122 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Exercises &mdash; Monte Carlo Simulation Exemplar</title>
+    
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+    <link rel="top" title="Monte Carlo Simulation Exemplar" href="../index.html" />
+    <link rel="next" title="Advanced Topic: Seeds For Different Threads" href="../SeedingThreads/SeedEachThread.html" />
+    <link rel="prev" title="Plinko from the Price is Right" href="../Plinko/PlinkoGame.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../SeedingThreads/SeedEachThread.html" title="Advanced Topic: Seeds For Different Threads"
+             accesskey="N">next</a></li>
+        <li class="right" >
+          <a href="../Plinko/PlinkoGame.html" title="Plinko from the Price is Right"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../index.html">Monte Carlo Simulation Exemplar</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="exercises">
+<h1>Exercises<a class="headerlink" href="#exercises" title="Permalink to this headline">¶</a></h1>
+<p>Here are example projects for you to try, now that you have run the previous examples.</p>
+<ol class="arabic">
+<li><p class="first">Code the Monte Carlo method for approximating <img class="math" src="../_images/math/f2ca003a7da0de4994b4733e203b74ff52d42553.png" alt="\pi"/> mentioned in the Introduction.  How many simulated dart throws do you need to run to approximate <img class="math" src="../_images/math/f2ca003a7da0de4994b4733e203b74ff52d42553.png" alt="\pi"/> to 3 digits of accuracy?</p>
+</li>
+<li><p class="first">Let&#8217;s examine a twist on the example of drawing all four suits out of 5 drawn cards.  Write a program to shuffle a deck of cards and determine on average, how many cards you will need to draw:</p>
+<blockquote>
+<div><ol class="loweralpha simple">
+<li>before you have all four suits represented</li>
+<li>before you get all four aces</li>
+<li>before you get a <em>marriage</em> (a King and Queen of the same suit)</li>
+<li>before you get all 13 clubs</li>
+<li>bwfore your get a <em>pinochle</em> (Quen of Spades and Jack of Diamonds)</li>
+</ol>
+</div></blockquote>
+</li>
+<li><p class="first">Given a system made of discrete components with known reliability, what is the reliability of the overall system? For example, suppose we have a system that can be described with the following high-level diagram:</p>
+</li>
+</ol>
+<img alt="../_images/StateDiagram.png" src="../_images/StateDiagram.png" />
+<p>When given an input to the system, that input flows through component A or through components B and C, each of which has a certain reliability of correctness.  Probability theory tells us the following:</p>
+<div class="math">
+<p><img src="../_images/math/d24300ca9d49db8c47b0088c5d2b4be43312fe94.png" alt="reliability_{BC} = 0.95 * 0.90 = 0.855"/></p>
+</div><div class="math">
+<p><img src="../_images/math/5282a5d05d02a846805b8d2677b06146e7b95c61.png" alt="reliability_A = 0.85"/></p>
+</div><p>And the overall reliability of the system is:</p>
+<div class="math">
+<p><img src="../_images/math/a76dca8ed4b5e47afd45668e6d4ea77efff4dd03.png" alt="reliability_{sys} =  1.0 - [(1.0 - 0.85) * (1.0 - 0.855)]
+
+= 0.97825"/></p>
+</div><p>Create a simulation of this system where half the time the input travels through component A.  To simulate its reliability, generate a number between 0 and 1. If the number is 0.85 or below, component A succeeded, and the system works.  The other half of the time, the input would travel on the lower half of the diagram.  To simulate this, you will generate two numbers betwee 0 and 1.  If the number for component B is less than 0.95 and the number for component C is less than 0.90, then the system also succeeds.  Run many trials to see if you converge on the same reliability as predicted by probability theory.</p>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../index.html">
+              <img class="logo" src="../_static/CSInParallel200wide.png" alt="Logo"/>
+            </a></p>
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="../Plinko/PlinkoGame.html"
+                        title="previous chapter">Plinko  from the Price is Right</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="../SeedingThreads/SeedEachThread.html"
+                        title="next chapter">Advanced Topic:  Seeds For Different Threads</a></p>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../SeedingThreads/SeedEachThread.html" title="Advanced Topic: Seeds For Different Threads"
+             >next</a></li>
+        <li class="right" >
+          <a href="../Plinko/PlinkoGame.html" title="Plinko from the Price is Right"
+             >previous</a> |</li>
+        <li><a href="../index.html">Monte Carlo Simulation Exemplar</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright This work is licensed under a Creative Commons Attribution-ShareAlike 3.0 Unported License.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>
