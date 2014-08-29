@@ -231,9 +231,9 @@ The places in this code where you see this comment:</p>
 
 <span class="c1">// Try several trials of different numbers of flips doubling how many each round.</span>
 <span class="c1">// </span>
-<span class="c1">// Use a long because we will try a great deal of flips for some trials.</span>
-    <span class="kt">long</span> <span class="n">trialFlips</span> <span class="o">=</span> <span class="mi">256</span><span class="p">;</span>          <span class="c1">// start with a smal number of flips</span>
-    <span class="kt">long</span> <span class="n">maxFlips</span> <span class="o">=</span> <span class="mi">1073741824</span><span class="p">;</span>     <span class="c1">// end with a very large number of flips</span>
+<span class="c1">// Use a unsigned int because we will try a great deal of flips for some trials.</span>
+    <span class="kt">unsigned</span> <span class="kt">int</span> <span class="n">trialFlips</span> <span class="o">=</span> <span class="mi">256</span><span class="p">;</span>          <span class="c1">// start with a smal number of flips</span>
+    <span class="kt">unsigned</span> <span class="kt">int</span> <span class="n">maxFlips</span> <span class="o">=</span> <span class="mi">1073741824</span><span class="p">;</span>     <span class="c1">// end with a very large number of flips</span>
     
     <span class="c1">// below we will double the number of trial flips and come back here</span>
     <span class="c1">// and run another trial, until we have reached &gt; maxFlips.</span>
@@ -271,7 +271,7 @@ The places in this code where you see this comment:</p>
         
         <span class="c1">// Finish this trial by printing out results</span>
 
-        <span class="n">printf</span><span class="p">(</span><span class="s">&quot;%15ld%15d%15d%15d%15.6f%15.6f</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">trialFlips</span><span class="p">,</span> <span class="n">numHeads</span><span class="p">,</span> <span class="n">numTails</span><span class="p">,</span>
+        <span class="n">printf</span><span class="p">(</span><span class="s">&quot;%15d%15d%15d%15d%15.6f%15.6f</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">trialFlips</span><span class="p">,</span> <span class="n">numHeads</span><span class="p">,</span> <span class="n">numTails</span><span class="p">,</span>
                <span class="p">(</span><span class="n">numHeads</span><span class="o">+</span><span class="n">numTails</span><span class="p">),</span> <span class="n">chiSq</span><span class="p">(</span><span class="n">numHeads</span><span class="p">,</span> <span class="n">numTails</span><span class="p">),</span>
                <span class="p">(</span><span class="kt">double</span><span class="p">)(</span><span class="n">ompStopTime</span><span class="o">-</span><span class="n">ompStartTime</span><span class="p">));</span>    <span class="cm">/***  OMP ***/</span>
 

@@ -59,9 +59,9 @@ int main() {
 
 // Try several trials of different numbers of flips doubling how many each round.
 // 
-// Use a long because we will try a great deal of flips for some trials.
-    long trialFlips = 256;          // start with a smal number of flips
-    long maxFlips = 1073741824;     // end with a very large number of flips
+// Use a unsigned int because we will try a great deal of flips for some trials.
+    unsigned int trialFlips = 256;          // start with a smal number of flips
+    unsigned int maxFlips = 1073741824;     // end with a very large number of flips
     
     // below we will double the number of trial flips and come back here
     // and run another trial, until we have reached > maxFlips.
@@ -99,7 +99,7 @@ int main() {
         
         // Finish this trial by printing out results
 
-        printf("%15ld%15d%15d%15d%15.6f%15.6f\n", trialFlips, numHeads, numTails,
+        printf("%15d%15d%15d%15d%15.6f%15.6f\n", trialFlips, numHeads, numTails,
                (numHeads+numTails), chiSq(numHeads, numTails),
                (double)(ompStopTime-ompStartTime));    /***  OMP ***/
 

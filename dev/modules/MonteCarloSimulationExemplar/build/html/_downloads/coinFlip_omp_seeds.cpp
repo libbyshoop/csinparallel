@@ -86,9 +86,9 @@ int main() {
 
 // Try several trials of different numbers of flips doubling how many each round.
 // 
-// Use a long because we will try a great deal of flips for some trials.
-    long trialFlips = 256;          // start with a smal number of flips
-    long maxFlips = 1073741824;     // this will be a total of 23 trials
+// Use a unsigned int because we will try a great deal of flips for some trials.
+    unsigned int trialFlips = 256;          // start with a smal number of flips
+    unsigned int maxFlips = 1073741824;     // this will be a total of 23 trials
     while (trialFlips <= maxFlips) {  // below we will double the number of trial flips
                                       // and come back here and run another trial,
                                       // until we have reached > maxFlips.
@@ -118,7 +118,7 @@ int main() {
         seed = seeds[tid];            // it is much faster to keep a private copy of our seed
 		srand(seed);	              //seed rand_r or rand
         
-        #pragma omp for schedule(static) 
+        #pragma omp for
         for (numFlips=0; numFlips<trialFlips; numFlips++) {
 //          in Windows, can use rand()
 //            if (rand()%2 == 0) // if random number is even, call it heads
@@ -135,7 +135,7 @@ int main() {
         
         // Finish this trial by printing out results
 
-        printf("%15ld%15d%15d%15d%15.6f%15.6f\n", trialFlips, numHeads, numTails,
+        printf("%15d%15d%15d%15d%15.6f%15.6f\n", trialFlips, numHeads, numTails,
                (numHeads+numTails), chiSq(numHeads, numTails),
                (double)(ompStopTime-ompStartTime));    /***  OMP ***/
 
