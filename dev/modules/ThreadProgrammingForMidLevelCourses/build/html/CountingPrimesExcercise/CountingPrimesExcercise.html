@@ -1,0 +1,123 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Counting Primes Exercise &mdash; Thread Programming for Mid-level Courses</title>
+    
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+    <link rel="top" title="Thread Programming for Mid-level Courses" href="../index.html" />
+    <link rel="next" title="Fixing ThreadedPrimes.java" href="../FixingThreadedPrimes/FixingThreadedPrimes.html" />
+    <link rel="prev" title="Java Threads" href="../JavaThreads/JavaThreads.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../FixingThreadedPrimes/FixingThreadedPrimes.html" title="Fixing ThreadedPrimes.java"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="../JavaThreads/JavaThreads.html" title="Java Threads"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../index.html">Thread Programming for Mid-level Courses</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="counting-primes-exercise">
+<h1>Counting Primes Exercise<a class="headerlink" href="#counting-primes-exercise" title="Permalink to this headline">¶</a></h1>
+<p>In this module, you will gain some exposure to the Java Thread class and also see some of the issues in parallel programming. Begin with the code <a class="reference download internal" href="../_downloads/SerialPrimes.java"><tt class="xref download docutils literal"><span class="pre">SerialPrimes.java</span></tt></a>. This program counts the number of prime numbers (those only divisible by 1 and themselves) between 1 and 2,000,000. Look through this program, compile it, and then time a run of it with the command line</p>
+<div class="highlight-bash"><div class="highlight"><pre><span class="nb">time </span>java SerialPrimes
+</pre></div>
+</div>
+<p>After a short wait (depending on your computer’s processing power) you should be told that there are 148,933 primes in the range 1–2,000,000.</p>
+<p>In addition to the output from the program itself, the time program will print out some information on your program’s running time. The first two numbers are the amount of CPU time the program took while in user mode (i.e. not during system calls) and the amount of system time (i.e. during system calls). The third number is the total amount of time between when the program started and when it ended; this is called the wall clock time.</p>
+<p>Now that you are familiar with the serial (i.e. non-parallel) implementation, it is time to take a look at a naive multi-threaded implementation. Download a copy of <a class="reference download internal" href="../_downloads/ThreadedPrimes.java"><tt class="xref download docutils literal"><span class="pre">ThreadedPrimes.java</span></tt></a> from the module files and look through its code. Instead of a prime-finding loop in main, the work is done by <tt class="docutils literal"><span class="pre">PrimeFinder</span></tt> objects, each of which is responsible for finding primes within a range specified during object construction. The main method creates two of these objects with complementary ranges and assigns one of them to each of two threads. To allow this, <tt class="docutils literal"><span class="pre">PrimeFinder</span></tt> implements the <tt class="docutils literal"><span class="pre">Runnable</span></tt> interface, which simply requires the <tt class="docutils literal"><span class="pre">run</span></tt> method. Once the work is assigned to each thread, the threads are started by calling their <tt class="docutils literal"><span class="pre">start</span></tt> methods.</p>
+<p>Compile and run this program. The results are unimpressive; the program dramatically undercounts the number of primes. The problem is that main is printing the number of primes before the <tt class="docutils literal"><span class="pre">PrimeFinder</span></tt> objects have completed their counts. To fix this, add the lines</p>
+<div class="highlight-java"><div class="highlight"><pre><span class="n">t1</span><span class="o">.</span><span class="na">join</span><span class="o">();</span>
+<span class="n">t2</span><span class="o">.</span><span class="na">join</span><span class="o">();</span>
+</pre></div>
+</div>
+<p>after the threads are started. The <tt class="docutils literal"><span class="pre">join</span></tt> method does not return until the thread has died. Thus, these calls delay the printing of results until both of the counting threads have completed.</p>
+<p>After adding these lines, recompile the program and run it again. The counted number of primes still does not agree with the value given by the serial program. Can you identify the cause of this difference? See if you can figure it out before moving on.</p>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../index.html">
+              <img class="logo" src="../_static/CSInParallel200wide.png" alt="Logo"/>
+            </a></p>
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="../JavaThreads/JavaThreads.html"
+                        title="previous chapter">Java Threads</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="../FixingThreadedPrimes/FixingThreadedPrimes.html"
+                        title="next chapter">Fixing ThreadedPrimes.java</a></p>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../FixingThreadedPrimes/FixingThreadedPrimes.html" title="Fixing ThreadedPrimes.java"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="../JavaThreads/JavaThreads.html" title="Java Threads"
+             >previous</a> |</li>
+        <li><a href="../index.html">Thread Programming for Mid-level Courses</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright This work is licensed under a Creative Commons Attribution-ShareAlike 3.0 Unported License.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
+    </div>
+  </body>
+</html>

@@ -1,0 +1,141 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Mandelbrot pthreads Lab &mdash; Thread Programming for Mid-level Courses</title>
+    
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+    <link rel="top" title="Thread Programming for Mid-level Courses" href="../index.html" />
+    <link rel="prev" title="Mandelbrot OpenMP Homework" href="../MandelbrotOpenMPHomework/MandelbrotOpenMPHomework.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../MandelbrotOpenMPHomework/MandelbrotOpenMPHomework.html" title="Mandelbrot OpenMP Homework"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../index.html">Thread Programming for Mid-level Courses</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="mandelbrot-pthreads-lab">
+<h1>Mandelbrot pthreads Lab<a class="headerlink" href="#mandelbrot-pthreads-lab" title="Permalink to this headline">¶</a></h1>
+<p>In this excercise, you’ll look at using pthreads to create multiple threads to speed up a computationally-intensive task.</p>
+<p>The files that you should download (<a class="reference download internal" href="../_downloads/mandelbrot1.c"><tt class="xref download docutils literal"><span class="pre">mandelbrot.c</span></tt></a> and <a class="reference download internal" href="../_downloads/bmp1.h"><tt class="xref download docutils literal"><span class="pre">bmp.h</span></tt></a>) are a program to draw an image.</p>
+<p>Compile them with</p>
+<div class="highlight-bash"><div class="highlight"><pre>gcc -Wall -std<span class="o">=</span>c99 -o mandelbrot mandelbrot.c
+</pre></div>
+</div>
+<p>and run the resulting executable; it takes a single command line argument, which should be a filename ending in <tt class="docutils literal"><span class="pre">.bmp</span></tt>. This extension stands for “bitmap”, which is a graphics format. The program will create the file whose name you give.</p>
+<p>The image that appears is a bitmap created by the program. It is a complicated black and white figure representing the Mandelbrot set. You can read more about this set on Wikipedia (or other online sources), but a short explanation is that this figure is based on repeating a simple mathematical operation and seeing if the result becomes unboundedly large. The specific operation depends on the pair of coordinates being considered. A point that is in the set (appearing black in the diagram) is one whose operation yields a bounded value (ideally forever, though we only look for 1,000 iterations of the operation). Points appearing white in the diagram are not in the set, meaning that the operation applied to their coordinates grew past a threshold within the first 1,000 iterations.</p>
+<p>Now open the code to examine the program. It begins by writing the header of a bitmap file. Then it fills in a two-dimensional array called <tt class="docutils literal"><span class="pre">pixels</span></tt> that stores the desired color of each pixel. It concludes by writing the contents of this array into the file. For a single pixel, the mandelbrot function determines whether that pixel should be drawn as in the set or not. The bulk of the program’s running time is a series of calls to this function from main, right after the comment &#8220;<tt class="docutils literal"><span class="pre">set</span> <span class="pre">pixels</span></tt>&#8221;. Find this comment and examine that paragraph of code. You’re welcome to examine the <tt class="docutils literal"><span class="pre">mandelbrot</span></tt> function, a detailed understanding of which is not necessary for the lab. Its most important feature is that it returns either 0 or 255 depending on whether the pixel at the given coordinates should be drawn as black or white. The pixels themselves are represented with three bytes each; each of these bytes should be a number 0–255 that gives the desired intensity of one color at a specific location; the colors represented are red, green, and blue. Other colors are displayed by showing combinations of these colors. To facilitate saving these triples of bytes to a file, the color values of each pixel are stored in a <tt class="docutils literal"><span class="pre">struct</span></tt> called <tt class="docutils literal"><span class="pre">RGBTRIPLE</span></tt> that is defined in <tt class="docutils literal"><span class="pre">bmp.h</span></tt>. The lines</p>
+<div class="highlight-c"><div class="highlight"><pre><span class="n">pixels</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">].</span><span class="n">rgbtBlue</span> <span class="o">=</span> <span class="n">color</span><span class="p">;</span>
+<span class="n">pixels</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">].</span><span class="n">rgbtGreen</span> <span class="o">=</span> <span class="n">color</span><span class="p">;</span>
+<span class="n">pixels</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">].</span><span class="n">rgbtRed</span> <span class="o">=</span> <span class="n">color</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>are accessing one of these structures out of the 2D array and setting its fields.</p>
+<p>As you may have noticed, this program takes a fair amount of time to run. Use the time program to measure how long it takes:</p>
+<div class="highlight-bash"><div class="highlight"><pre><span class="nb">time </span>mandelbrot blah.bmp
+</pre></div>
+</div>
+<p>where <tt class="docutils literal"><span class="pre">blah.bmp</span></tt> is replaced with the name of the file you’d like to create. (Note that when doing timing experiments like this, it matters what else is running on the system. You want the system to have a consistent amount of free processing power each time you time a run. )</p>
+<p>The focus of this lab will be in trying to reduce this delay. To do so, you’ll be using the Pthreads library to create multiple threads. A sample program which uses pthreads is in <a class="reference download internal" href="../_downloads/helloThread.c"><tt class="xref download docutils literal"><span class="pre">helloThread.c</span></tt></a>. Take a look at this program. In <tt class="docutils literal"><span class="pre">main</span></tt>, two threads are created with <tt class="docutils literal"><span class="pre">pthread_create</span></tt>. This function takes a pointer to the data structure representing a thread (<tt class="docutils literal"><span class="pre">pthread_t</span></tt>) and the name of the function that the thread should run (<tt class="docutils literal"><span class="pre">hello</span></tt> in our case). <tt class="docutils literal"><span class="pre">pthread_create</span></tt> creates the thread and starts it on the given function. We use the <tt class="docutils literal"><span class="pre">failUnless0</span></tt> function to report any errors that occur.</p>
+<p>Compile this sample program with</p>
+<div class="highlight-bash"><div class="highlight"><pre>gcc -Wall -std<span class="o">=</span>c99 -o helloThread helloThread.c -lpthread
+</pre></div>
+</div>
+<p>(The <tt class="docutils literal"><span class="pre">-lpthread</span></tt> part tells the compiler (actually the linker) that you’re going to use the pthread library.)</p>
+<p>When you run this program, it almost certainly doesn’t print what you expect; most of the time, the program finishes before both created threads have completed the <tt class="docutils literal"><span class="pre">hello</span></tt> function. This is because the main thread (the one running when the program starts which creates the others) doesn’t explicitly wait for the threads it creates. To do this, you need to add the lines</p>
+<div class="highlight-c"><div class="highlight"><pre><span class="n">pthreadjoin</span><span class="p">(</span><span class="n">t1</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">);</span>
+<span class="n">pthreadjoin</span><span class="p">(</span><span class="n">t2</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>between the calls to <tt class="docutils literal"><span class="pre">pthread_create</span></tt> and <tt class="docutils literal"><span class="pre">printf</span></tt>. Each of these calls causes the main thread to wait until the appropriate created thread finishes (which happens at the end of the <tt class="docutils literal"><span class="pre">hello</span></tt> function).
+Before we can use pthreads for the Mandelbrot problem, we also need to learn how to pass arguments to the function each thread is running. Looking at the top of <tt class="docutils literal"><span class="pre">hello</span></tt>, we see that its argument has type void*. This means that the argument is a pointer, but without information about the type of data being pointed to. (That’s done so that <tt class="docutils literal"><span class="pre">pthread_create</span></tt> can be used to call functions that want different types of data without changing its signature.) We simply pass a pointer to the desired argument as the last argument to <tt class="docutils literal"><span class="pre">pthread_create</span></tt>. For example, to pass 1 as the argument to the first thread, we call it with the following:</p>
+<div class="highlight-c"><div class="highlight"><pre><span class="kt">int</span> <span class="n">arg1</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+<span class="n">failUnless0</span><span class="p">(</span><span class="n">pthreadcreate</span><span class="p">(</span><span class="o">&amp;</span><span class="n">t1</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">,</span> <span class="n">hello</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">arg1</span><span class="p">));</span>
+</pre></div>
+</div>
+<p>Then, to use this value, we modify the body of <tt class="docutils literal"><span class="pre">hello</span></tt> to cast the argument to an integer pointer and use this value:</p>
+<p>Make this change (and the corresponding change to the second thread creation) and verify that the threads now identify themselves when printing their greetings.</p>
+<p>Now you’re ready to apply what you’ve learned to the Mandelbrot problem. What you want to do is move the doubly nested loop after the <tt class="docutils literal"><span class="pre">set</span> <span class="pre">pixels</span></tt> comment into a function that will be called as a thread body. Set the code up to create two threads. The first thread will tackle the first half of the columns (values of <tt class="docutils literal"><span class="pre">i</span></tt> from <tt class="docutils literal"><span class="pre">0</span></tt> to <tt class="docutils literal"><span class="pre">numCols/2</span></tt>) and the second thread will handle the rest. Create a struct for the argument so you can pass the beginning and ending values of <tt class="docutils literal"><span class="pre">i</span></tt> to this function. (Note that <tt class="docutils literal"><span class="pre">numCols</span></tt>, <tt class="docutils literal"><span class="pre">numRows</span></tt>, and <tt class="docutils literal"><span class="pre">pixels</span></tt> are all global variables so you don’t need to pass them.) Be sure to use pthread_join to wait for your threads to complete. (Create both and then wait for both; if you create and then immediately wait for one before creating the second, you’re not letting the threads run in parallel.)</p>
+<p>Once you’ve written the code, verify that you produce the same image. Then use <tt class="docutils literal"><span class="pre">time</span></tt> to compare the running time of the threaded program to the original serial implementation. The first two numbers from <tt class="docutils literal"><span class="pre">time</span></tt> should be nearly identical because the programs do almost exactly the same things and therefore need the same amount of CPU time. The wall clock times (next number) should differ, though. The <cite>speedup</cite> of our parallel implementation is the serial wall clock time divided by the parallel wall clock time. Since we are creating two threads and the computers have enough cores to run each on a separate thread, an ideal speedup would be 2. Yours is likely less than this, but should be greater than 1.</p>
+<p>Next, try a different approach to parallelizing this program. Swap the order of the two loops (moving the <tt class="docutils literal"><span class="pre">j</span></tt> for loop to the outside) and then parallelize that version so that each thread runs a range of values of <tt class="docutils literal"><span class="pre">j</span></tt>. Again, verify that the resulting image is the same and compute the speedup. If you have time, see what happens when you parallelize the inner loop instead of the outer one (for each loop ordering) and see if you can make sense of the results.</p>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../index.html">
+              <img class="logo" src="../_static/CSInParallel200wide.png" alt="Logo"/>
+            </a></p>
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="../MandelbrotOpenMPHomework/MandelbrotOpenMPHomework.html"
+                        title="previous chapter">Mandelbrot OpenMP Homework</a></p>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../MandelbrotOpenMPHomework/MandelbrotOpenMPHomework.html" title="Mandelbrot OpenMP Homework"
+             >previous</a> |</li>
+        <li><a href="../index.html">Thread Programming for Mid-level Courses</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright This work is licensed under a Creative Commons Attribution-ShareAlike 3.0 Unported License.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
+    </div>
+  </body>
+</html>

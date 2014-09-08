@@ -1,0 +1,15 @@
+************************
+Counting Primes Homework
+************************
+
+Take a look at :download:`FastSerialPrimes.java <FastSerialPrimes.java>`. The primality testing in this program improves upon the version used in SerialPrimes.java by only dividing by smaller prime numbers. If you time it, it actually runs faster than the fixed version of the threaded prime finder. 
+
+.. seealso:: do we want to link to ThreadedPrimesFixed.java ?
+
+Write a partially multi-threaded version of ``FastSerialPrimes``. Your version should compute small primes serially and then use two threads to count larger ones. In this context, “small” means at most sqrt[2,000,000]. The small primes can be stored in a shared ``ArrayList`` while the larger ones should be counted using a private variable in each thread. (You do not need to store the actual values of the larger primes, but you could.) Ideally you could achieve a speedup near 2.
+
+A fully multi-threaded version of ``FastSerialPrimes`` would run significantly slower than the partially multi-threaded version, and actually even slower than the serial version. In addition, it would have a race condition. Explain what type of overhead might be slowing this program down and also what race condition would appear when writing a fully multi-threaded version of ``FastSerialPrimes``.
+ 
+.. seealso:: Do we need to explain race conditions or can we assume they already know about them by this module?
+
+

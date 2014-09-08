@@ -1,0 +1,13 @@
+*****************************
+Mandelbrot pthreads Excercise
+*****************************
+
+In this excercise, you’ll look at using pthreads to create multiple threads to speed up a computationally-intensive task. 
+
+The files that you should download (mandelbrot.c and bmp.h) are a program to draw an image. 
+
+Compile them with
+
+  gcc -Wall -std=c99 -o mandelbrot mandelbrot.c
+
+and run the resulting executable; it takes a single command line argument, which should be a filename ending in .bmp. This extension stands for “bitmap”, which is a graphics format. The program will create the file whose name you give. 

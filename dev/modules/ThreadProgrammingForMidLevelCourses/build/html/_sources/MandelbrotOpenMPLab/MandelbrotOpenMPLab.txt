@@ -1,0 +1,69 @@
+*********************
+Mandelbrot OpenMP Lab
+*********************
+
+In this lab, you’ll look at using OpenMP to use multiple threads to speed up a computationally-intensive task.
+
+The files that you should download (:download:`mandelbrot.c <mandelbrot.c>` and :download:`bmp.h <bmp.h>`) are a program to draw an image. Compile them with
+
+.. code-block:: bash
+
+		gcc -Wall -std=c99 -o mandelbrot mandelbrot.c
+
+and run the resulting executable; it takes a single command line argument, which should be a filename ending in ``.bmp``. This extension stands for “bitmap”, which is a graphics format. The program will create the file whose name you give. 
+
+The image that appears is a bitmap created by the program. It is a complicated black and white figure representing the Mandelbrot set. You can read more about this set on Wikipedia (or other online sources), but a short explanation is that this figure is based on repeating a simple mathematical operation and seeing if the result becomes unboundedly large. The specific operation depends on the pair of coordinates being considered. A point that is in the set (appearing black in the diagram) is one whose operation yields a bounded value (ideally forever, though we only look for 1,000 iterations of the operation). Points appearing white in the diagram are not in the set, meaning that the operation applied to their coordinates grew past a threshold within the first 1,000 iterations.
+
+Now open the code to examine the program. It begins by writing the header of a bitmap file. Then it fills in a two-dimensional array called ``pixels`` that stores the desired color of each pixel. It concludes by writing the contents of this array into the file. For a single pixel, the ``mandelbrot`` function determines whether that pixel should be drawn as in the set or not. The bulk of the program’s running time is a series of calls to this function from ``main``, right after the comment ``“set pixels”``. Find this comment and examine that paragraph of code. You’re welcome to examine the mandelbrot function, a detailed understanding of which is not necessary for the lab. Its most important feature is that it returns either ``0`` or ``255`` depending on whether the pixel at the given coordinates should be drawn as black or white. The pixels themselves are represented with three bytes each; each of these bytes should be a number 0–255 that gives the desired intensity of one color at a specific location; the colors represented are red, green, and blue. Other colors are displayed by showing combinations of these colors. To facilitate saving these triples of bytes to a file, the color values of each pixel are stored in a struct called ``RGBTRIPLE`` that is defined in ``bmp.h``. The lines
+
+.. code-block:: c
+
+		pixels[i][j].rgbtBlue = color;
+		pixels[i][j].rgbtGreen = color;
+		pixels[i][j].rgbtRed = color;
+
+are accessing one of these structures out of the 2D array and setting its fields.
+
+As you may have noticed, this program takes a fair amount of time to run. Use the time program to measure how long it takes:
+
+.. code-block:: bash
+
+		time mandelbrot blah.bmp
+
+where ``blah.bmp`` is replaced with the name of the file you’d like to create. (Note that when doing timing experiments like this, it matters what else is running on the system. You want the system to have a consistent amount of free processing power each time you time a run.)
+
+The focus of this lab will be in trying to reduce this delay. To do so, you’ll be using the OpenMP, which is a standard for thread-based parallel programming. Before getting started, run the following on the command line:
+
+.. code-block:: bash
+
+		setenv OMP_NUM_THREADS 2
+
+This tells OpenMP that you want to use 2 threads by setting an environment variable (configuration information that the shell keeps track of for you). If you don’t use it, then OpenMP will use a number of threads equal to the number of cores available, which will obscure the effects we’re trying to observe.
+
+Next add the line
+
+.. code-block:: c
+
+		#pragma omp parallel for
+
+immediately after the comment ``"set pixels"`` (and before the outer for loop). A pragma is a hint to the compiler. In this case, you’re telling it that you want it to use ``omp`` (OpenMP) to parallelize the immediately following for loop. Multiple threads will be created, each responsible for completing some of the loop iterations. All of these threads will join at the end of the loop.
+
+To compile with this pragma, add ``-fopenmp`` to your compile line or you’ll get a warning about the pragma being ignored (and the code will be compiled without it).
+
+When you run this version of the program, you’ll see that the output isn’t quite right; the resulting image will look slightly grainy, with some white pixels in the interior and some black ones outside. This is because the variables ``x``, ``y``, and ``color`` in the loop are shared. Both threads are using these variables, causing them to sometimes use values written by the other thread. This is a classic race condition. To resolve it, add ``private(x,y,color)`` to the end of the pragma. This tells the compiler to create private copies of these three variables for each thread.
+
+After this change, the parallel version should produce identical output to the original serial version (confirm this). Use time to compare the running time of the two versions. The first two numbers from time should be nearly identical because the programs do almost exactly the same things and therefore need the same amount of CPU time. The wall clock times (next number) should differ, though. The speedup of our parallel implementation is the serial wall clock time divided by the parallel wall clock time. Since we are using two threads and the computers have enough cores to run each on a separate thread, an ideal speedup would be 2. Yours is likely less than this, but should be greater than 1.
+
+Now that you’ve successfully parallelized the program one way, try the following variations:
+
+#. Swap the order of the two loops, moving the ``j`` for loop to the outside, so that the pragma is attached to it.
+    
+#. Try the loops in the original order, but with the pragma moved inside the outer loop so that it’s attached to the inner loop on ``j``.
+
+#. Do the same, but with the order swapped. (``j`` loop on the outside, but the pragma inside it to parallelize the inner ``i`` loop.)
+    
+#. Run with the loops in the original order and the pragma on the outer loop, but with ``schedule(dynamic)`` added to the end of the pragma. Without this directive, the program splits the loop iterations between the two threads before any of them run. With it, the iterations are split into small groups and each thread gets a new group when it completes the group it is working on.
+    
+#. Use variations of the ``setenv`` command above to change the number of threads being used. (Try other powers of 2: 4, 8, 16, 32.) You don’t need to recompile for this change to take effect; just enter a new ``setenv`` line and rerun your executable.
+
+For each of these variations, compute the speedup and see if you can make sense of the results.

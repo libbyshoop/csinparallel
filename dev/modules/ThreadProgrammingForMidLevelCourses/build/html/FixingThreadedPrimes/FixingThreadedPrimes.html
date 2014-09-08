@@ -1,0 +1,120 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Fixing ThreadedPrimes.java &mdash; Thread Programming for Mid-level Courses</title>
+    
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+    <link rel="top" title="Thread Programming for Mid-level Courses" href="../index.html" />
+    <link rel="next" title="Counting Primes Homework" href="../CountingPrimesHomework/CountingPrimesHomework.html" />
+    <link rel="prev" title="Counting Primes Exercise" href="../CountingPrimesExcercise/CountingPrimesExcercise.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../CountingPrimesHomework/CountingPrimesHomework.html" title="Counting Primes Homework"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="../CountingPrimesExcercise/CountingPrimesExcercise.html" title="Counting Primes Exercise"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../index.html">Thread Programming for Mid-level Courses</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="fixing-threadedprimes-java">
+<h1>Fixing ThreadedPrimes.java<a class="headerlink" href="#fixing-threadedprimes-java" title="Permalink to this headline">¶</a></h1>
+<p>The problem is that our program suffers from a race condition when it updates <tt class="docutils literal"><span class="pre">pCount</span></tt>. Although <tt class="docutils literal"><span class="pre">pCount++</span></tt> is a single Java statement, the thread can be interrupted in the middle of it, leading to some primes not being included in the count. To fix this, we will add a lock around the increment line. Create a static object called <tt class="docutils literal"><span class="pre">lock</span></tt> in the <tt class="docutils literal"><span class="pre">ThreadedPrimes</span></tt> class. (The type does not matter; you could simply make it an <tt class="docutils literal"><span class="pre">Object</span></tt>.) Then, embed the line incrementing <tt class="docutils literal"><span class="pre">pCount</span></tt> inside a block</p>
+<div class="highlight-java"><div class="highlight"><pre><span class="kd">synchronized</span><span class="o">(</span><span class="n">lock</span><span class="o">)</span> <span class="o">{</span>
+   <span class="o">...</span>
+<span class="o">}</span>
+</pre></div>
+</div>
+<p>With this, the increment can only occur after the lock associated with the lock object has been acquired. In Java, every object has a lock associated with it; we just made a static object so it could be shared by the two occurrences of <tt class="docutils literal"><span class="pre">PrimeFinder</span></tt>. The <tt class="docutils literal"><span class="pre">synchronized</span></tt> statement automatically acquires the lock before entering the protected block of code and automatically releases it at the block’s end.</p>
+<p>After this change, the number of primes should be properly calculated. One potential criticism of this solution, however, is that the two threads constantly need the lock. This does not cause the program much overhead since the critical section is so short, but a better solution is possible. Our prime algorithm is what is called embarrassingly parallel because it is so easy to break into subproblems that can run independently; testing the primality of each number is completely independent of all the other numbers. With a problem like this, it seems wasteful to use the lock so heavily. Instead, modify the solution so that each <tt class="docutils literal"><span class="pre">PrimeFinder</span></tt> object keeps its own count of the number of primes it has found. Then, after it has counted all the primes within its range, it should update <tt class="docutils literal"><span class="pre">pCount</span></tt> (using a lock of course). With this modification, each thread only claims the lock once.</p>
+<p>So how fast is the resulting program? Run it using time and compare the result to the serial version. The first two numbers should be nearly identical between the two implementations because they do almost exactly the same things and therefore need the same amount of CPU time. The wall clock times should differ, though. The speedup of our parallel implementation is the serial wall clock time divided by the parallel wall clock time. Since your machine should have at least two processors and we are creating two threads to run on them, an ideal speedup would be 2. In practice, parallel programs cannot normally achieve linear speedup, as this would be called, since some parts of the program run serially and communication (the lock in our case) incurs some overhead. However, we should be able to get a speedup extremely close to 2 for this program because it splits into parallel subproblems so well.</p>
+<p>Unfortunately, I get a speedup of only about 1.6. Can you explain this? (Hint: What happens when you set the two parts to find primes within the ranges 1-1,100,000 and 1,100,001–2,000,000 instead splitting the test region evenly?) Once you understand the problem, see if you can fix it. (There are at least two fairly straightforward ways to do so.)</p>
+<p>If you have extra time, continue to experiment with threaded programs to find prime numbers. What happens if you create more than two threads? Another way to speed up the computation is to only divide a candidate number by the primes smaller than its square root rather than all values smaller than its square root; can you use this to further improve your performance? (You will probably want to use the Vector class, which is a synchronized version of ArrayList.) You may also want to look into the Sieve of Eratosthenes, an ancient Greek algorithm for finding prime numbers up to a given limit.</p>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../index.html">
+              <img class="logo" src="../_static/CSInParallel200wide.png" alt="Logo"/>
+            </a></p>
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="../CountingPrimesExcercise/CountingPrimesExcercise.html"
+                        title="previous chapter">Counting Primes Exercise</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="../CountingPrimesHomework/CountingPrimesHomework.html"
+                        title="next chapter">Counting Primes Homework</a></p>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../CountingPrimesHomework/CountingPrimesHomework.html" title="Counting Primes Homework"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="../CountingPrimesExcercise/CountingPrimesExcercise.html" title="Counting Primes Exercise"
+             >previous</a> |</li>
+        <li><a href="../index.html">Thread Programming for Mid-level Courses</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright This work is licensed under a Creative Commons Attribution-ShareAlike 3.0 Unported License.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
+    </div>
+  </body>
+</html>

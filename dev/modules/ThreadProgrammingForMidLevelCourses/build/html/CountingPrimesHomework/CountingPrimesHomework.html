@@ -1,0 +1,110 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Counting Primes Homework &mdash; Thread Programming for Mid-level Courses</title>
+    
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+    <link rel="top" title="Thread Programming for Mid-level Courses" href="../index.html" />
+    <link rel="prev" title="Fixing ThreadedPrimes.java" href="../FixingThreadedPrimes/FixingThreadedPrimes.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../FixingThreadedPrimes/FixingThreadedPrimes.html" title="Fixing ThreadedPrimes.java"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../index.html">Thread Programming for Mid-level Courses</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="counting-primes-homework">
+<h1>Counting Primes Homework<a class="headerlink" href="#counting-primes-homework" title="Permalink to this headline">¶</a></h1>
+<p>Take a look at <a class="reference download internal" href="../_downloads/FastSerialPrimes.java"><tt class="xref download docutils literal"><span class="pre">FastSerialPrimes.java</span></tt></a>. The primality testing in this program improves upon the version used in SerialPrimes.java by only dividing by smaller prime numbers. If you time it, it actually runs faster than the fixed version of the threaded prime finder.</p>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last">do we want to link to ThreadedPrimesFixed.java ?</p>
+</div>
+<p>Write a partially multi-threaded version of <tt class="docutils literal"><span class="pre">FastSerialPrimes</span></tt>. Your version should compute small primes serially and then use two threads to count larger ones. In this context, “small” means at most sqrt[2,000,000]. The small primes can be stored in a shared <tt class="docutils literal"><span class="pre">ArrayList</span></tt> while the larger ones should be counted using a private variable in each thread. (You do not need to store the actual values of the larger primes, but you could.) Ideally you could achieve a speedup near 2.</p>
+<p>A fully multi-threaded version of <tt class="docutils literal"><span class="pre">FastSerialPrimes</span></tt> would run significantly slower than the partially multi-threaded version, and actually even slower than the serial version. In addition, it would have a race condition. Explain what type of overhead might be slowing this program down and also what race condition would appear when writing a fully multi-threaded version of <tt class="docutils literal"><span class="pre">FastSerialPrimes</span></tt>.</p>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last">Do we need to explain race conditions or can we assume they already know about them by this module?</p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../index.html">
+              <img class="logo" src="../_static/CSInParallel200wide.png" alt="Logo"/>
+            </a></p>
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="../FixingThreadedPrimes/FixingThreadedPrimes.html"
+                        title="previous chapter">Fixing ThreadedPrimes.java</a></p>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../FixingThreadedPrimes/FixingThreadedPrimes.html" title="Fixing ThreadedPrimes.java"
+             >previous</a> |</li>
+        <li><a href="../index.html">Thread Programming for Mid-level Courses</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright This work is licensed under a Creative Commons Attribution-ShareAlike 3.0 Unported License.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
+    </div>
+  </body>
+</html>

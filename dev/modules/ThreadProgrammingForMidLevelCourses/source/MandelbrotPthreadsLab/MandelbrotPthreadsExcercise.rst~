@@ -1,0 +1,5 @@
+*****************************
+Mandelbrot pthreads Excercise
+*****************************
+
+In this excercise, you’ll look at using pthreads to create multiple threads to speed up a computationally-intensive task. 

@@ -1,0 +1,27 @@
+.. Thread Programming for Mid-level Courses documentation master file, created by
+   sphinx-quickstart on Wed Sep  3 09:02:22 2014.
+   You can adapt this file completely to your liking, but it should at least
+   contain the root `toctree` directive.
+
+Thread Programming for Mid-level Courses
+====================================================================
+
+.. toctree::
+   :maxdepth: 1
+
+   Introduction/introduction
+   JavaThreads/JavaThreads
+   CountingPrimesExcercise/CountingPrimesExcercise
+   FixingThreadedPrimes/FixingThreadedPrimes
+   CountingPrimesHomework/CountingPrimesHomework
+   MandelbrotOpenMPLab/MandelbrotOpenMPLab
+   MandelbrotOpenMPHomework/MandelbrotOpenMPHomework
+   MandelbrotPthreadsLab/MandelbrotPthreadsLab
+   MandelbrotPthreadsHomework/MandelbrotPthreadsHomework
+
+.. comment
+   * :ref:`genindex`
+   * :ref:`modindex`
+   * :ref:`search`
+
+

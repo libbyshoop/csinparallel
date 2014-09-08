@@ -1,0 +1,114 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Mandelbrot OpenMP Homework &mdash; Thread Programming for Mid-level Courses</title>
+    
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+    <link rel="top" title="Thread Programming for Mid-level Courses" href="../index.html" />
+    <link rel="prev" title="Mandelbrot OpenMP Lab" href="../MandelbrotOpenMPLab/MandelbrotOpenMPLab.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../MandelbrotOpenMPLab/MandelbrotOpenMPLab.html" title="Mandelbrot OpenMP Lab"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../index.html">Thread Programming for Mid-level Courses</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="mandelbrot-openmp-homework">
+<h1>Mandelbrot OpenMP Homework<a class="headerlink" href="#mandelbrot-openmp-homework" title="Permalink to this headline">¶</a></h1>
+<ol class="arabic simple">
+<li>Complete four parallel versions of the mandelbrot program. These versions should do the following (all descriptions focusing on the nested pair of loops that set the pixels):<ol class="loweralpha">
+<li>Parallelize the outer loop with the loops in the order they appear in the given code. (So the pragma is associated with the <tt class="docutils literal"><span class="pre">i</span></tt> loop.)</li>
+<li>Parallelize the outer loop after swapping the loop order. (Moving the <tt class="docutils literal"><span class="pre">j</span></tt> loop to the outside and associating the pragma with it).</li>
+<li>Parallelize the inner loop with the loops in the order they appear in the given code. (Associating the pragma with the <tt class="docutils literal"><span class="pre">j</span></tt> loop, but without swapping the loop order.)</li>
+<li>Parallelize the inner loop after swapping the loop order.</li>
+</ol>
+</li>
+</ol>
+<p>Calculate running times for the serial code and each of the parallel versions. For calculating these running times, be sure to run the <tt class="docutils literal"><span class="pre">setenv</span></tt> command from the lab so that you run with 2 threads. Also calculate the speedup achieved by each version.</p>
+<ol class="arabic simple">
+<li>Is the overhead of parallelizing this program increased or decreased by putting the pragma on the inner loop (c and d above) as opposed to the outer loop (a and b)? Be sure to explain your answer.</li>
+<li>Does adding <tt class="docutils literal"><span class="pre">schedule(dynamic)</span></tt> to the end of the pragma increase or decrease the overhead of parallelizing this program? Is the load balance improved or worsened by doing so? Be sure to explain both answers.</li>
+<li>Consider 3 parameters in the code: <tt class="docutils literal"><span class="pre">numRows</span></tt>, <tt class="docutils literal"><span class="pre">numCols</span></tt>, and <tt class="docutils literal"><span class="pre">maxIteration</span></tt>. The first two determine the image size and the third is the number of iterations at which the mandelbrot function stops. How would changing each of these affect (i.e. increase or decrease) the percentage of the program that runs serially? How would doing so change the speedup achieved by your parallel versions? Be sure to explain both answers.</li>
+</ol>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../index.html">
+              <img class="logo" src="../_static/CSInParallel200wide.png" alt="Logo"/>
+            </a></p>
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="../MandelbrotOpenMPLab/MandelbrotOpenMPLab.html"
+                        title="previous chapter">Mandelbrot OpenMP Lab</a></p>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../MandelbrotOpenMPLab/MandelbrotOpenMPLab.html" title="Mandelbrot OpenMP Lab"
+             >previous</a> |</li>
+        <li><a href="../index.html">Thread Programming for Mid-level Courses</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright This work is licensed under a Creative Commons Attribution-ShareAlike 3.0 Unported License.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
+    </div>
+  </body>
+</html>

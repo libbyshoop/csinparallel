@@ -1,0 +1,95 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Mandelbrot pthreads Homework &mdash; Thread Programming for Mid-level Courses</title>
+    
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+    <link rel="top" title="Thread Programming for Mid-level Courses" href="../index.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li><a href="../index.html">Thread Programming for Mid-level Courses</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="mandelbrot-pthreads-homework">
+<h1>Mandelbrot pthreads Homework<a class="headerlink" href="#mandelbrot-pthreads-homework" title="Permalink to this headline">¶</a></h1>
+<ol class="arabic simple">
+<li>Complete two parallel versions of the mandelbrot program. The first should parallelize the main nested loop in the order it appears in the given code (splitting iterations of <tt class="docutils literal"><span class="pre">i</span></tt> between 2 threads). The second should do so after swapping the loop order (moving the <tt class="docutils literal"><span class="pre">j</span></tt> loop to the outside and splitting its iterations between 2 threads). Calculate running times for the serial code and both of the parallel versions. Also calculate the speedup achieved by each version.</li>
+<li>Does the <tt class="docutils literal"><span class="pre">mandelbrot</span></tt> function take longer for a pixel that it determines to be in the Mandelbrot set or out of it? (Recall that a point in the set appears black in the diagram and is one for which the <tt class="docutils literal"><span class="pre">mandelbrot</span></tt> function returns 0.) Explain why.</li>
+<li>Based on your answer to the previous question and looking at the diagram of the Mandelbrot set, does parallelizing the loops as written or swapping them first give a better load balance? Explain why.</li>
+<li>Consider 3 parameters in the code: <tt class="docutils literal"><span class="pre">numRows</span></tt>, <tt class="docutils literal"><span class="pre">numCols</span></tt>, and <tt class="docutils literal"><span class="pre">maxIteration</span></tt>. The first two determine the image size and the third is the number of iterations at which the <tt class="docutils literal"><span class="pre">mandelbrot</span></tt> function stops. How would changing each of these affect (i.e. increase or decrease) the percentage of the program that runs serially? How would doing so change the speedup achieved by your parallel versions? Be sure to explain both answers.</li>
+</ol>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../index.html">
+              <img class="logo" src="../_static/CSInParallel200wide.png" alt="Logo"/>
+            </a></p>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li><a href="../index.html">Thread Programming for Mid-level Courses</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright This work is licensed under a Creative Commons Attribution-ShareAlike 3.0 Unported License.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
+    </div>
+  </body>
+</html>

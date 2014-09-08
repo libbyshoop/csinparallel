@@ -1,0 +1,105 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Java Threads &mdash; Thread Programming for Mid-level Courses</title>
+    
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="shortcut icon" href="_static/favicon.ico"/>
+    <link rel="top" title="Thread Programming for Mid-level Courses" href="index.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li><a href="index.html">Thread Programming for Mid-level Courses</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="java-threads">
+<h1>Java Threads<a class="headerlink" href="#java-threads" title="Permalink to this headline">¶</a></h1>
+<p>We can use the Java API to parallelize programs. We will focus on a class for writing multi-threaded programs called <tt class="docutils literal"><span class="pre">java.lang.Thread</span></tt>, which deals with individual threads of execution running concurrently.</p>
+<p>After we create a <tt class="docutils literal"><span class="pre">Thread</span></tt> object, it will start execution when we call its <tt class="docutils literal"><span class="pre">start()</span></tt> method. Calling this method marks the <tt class="docutils literal"><span class="pre">Thread</span></tt> object ready, and it returns so that the caller can continue execution. This <tt class="docutils literal"><span class="pre">Thread</span></tt> that we just started will execute its <tt class="docutils literal"><span class="pre">run()</span></tt> method so that it runs concurrently to the caller. The caller (or possibly some other piece of code) could wait for the <tt class="docutils literal"><span class="pre">Thread</span></tt> to finish by calling the <tt class="docutils literal"><span class="pre">Thread</span></tt>&#8216;s <tt class="docutils literal"><span class="pre">join()</span></tt> method, which will block the caller until the <tt class="docutils literal"><span class="pre">Thread</span></tt>&#8216;s <tt class="docutils literal"><span class="pre">run()</span></tt> method returns.</p>
+<p>A <tt class="docutils literal"><span class="pre">Thread</span></tt> object&#8217;s default <tt class="docutils literal"><span class="pre">run()</span></tt> method will do nothing and return immediately, so we need to specify what a <tt class="docutils literal"><span class="pre">Thread</span></tt> will do. We could do this by creating a class extending <tt class="docutils literal"><span class="pre">Thread</span></tt> and then override <tt class="docutils literal"><span class="pre">run()</span></tt>. Alternatively, we could create a class implementing the <tt class="docutils literal"><span class="pre">Runnable</span></tt> interface, which contains a single method <tt class="docutils literal"><span class="pre">run()</span></tt>. Then we can pass a <tt class="docutils literal"><span class="pre">Runnable</span></tt> object to the constructor of <tt class="docutils literal"><span class="pre">Thread</span></tt>, which will cause that <tt class="docutils literal"><span class="pre">Thread</span></tt>&#8216;s <tt class="docutils literal"><span class="pre">run()</span></tt> method to invoke the <tt class="docutils literal"><span class="pre">run()</span></tt> method of the <tt class="docutils literal"><span class="pre">Runnable</span></tt> object. This lab will use the second approach.</p>
+<p>We can use <tt class="docutils literal"><span class="pre">Thread</span></tt> objects to easily create a program with multiple threads, but this comes with some complications. The different <tt class="docutils literal"><span class="pre">Threads</span></tt> will usually need to communicate or share data in order to accomplish a shared goal, which may seem simple because they share and address space and they can share variables. However, we need to make sure to avoid race conditions where one thread accesses data in the middle of the process of another thread changing that data. Java provides a simple way to avoid this situation. The keyword <tt class="docutils literal"><span class="pre">synchronized</span></tt> creates a code block that locks at the beginning of a block, runs the code in the block, and then releases the lock. For example:</p>
+<div class="highlight-java"><div class="highlight"><pre><span class="kd">synchronized</span><span class="o">(</span><span class="n">obj</span><span class="o">)</span> <span class="o">{</span>
+   <span class="o">...</span>
+<span class="o">}</span>
+</pre></div>
+</div>
+<p>acquires the lock attached to <tt class="docutils literal"><span class="pre">obj</span></tt>, runs the block, and then releases the lock. We can use an object from any class. If our thread tries to acquire a lock that a different thread already holds, our thread will block until the other thread releases the lock. We can also use <tt class="docutils literal"><span class="pre">synchronized</span></tt> to modify a method signature, as in:</p>
+<div class="highlight-java"><div class="highlight"><pre><span class="kd">public</span> <span class="kd">synchronized</span> <span class="kt">void</span> <span class="nf">method</span><span class="o">()</span> <span class="o">{</span>
+   <span class="o">...</span>
+<span class="o">}</span>
+</pre></div>
+</div>
+<p>which would work the same as putting the method body inside of a <tt class="docutils literal"><span class="pre">synchronized</span></tt> block which locks on this. The class <tt class="docutils literal"><span class="pre">java.util.concurrent</span></tt> has some more general synchronization primitives, such as semaphores, but this module will not use these.</p>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="index.html">
+              <img class="logo" src="_static/CSInParallel200wide.png" alt="Logo"/>
+            </a></p>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li><a href="index.html">Thread Programming for Mid-level Courses</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright This work is licensed under a Creative Commons Attribution-ShareAlike 3.0 Unported License.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
+    </div>
+  </body>
+</html>
