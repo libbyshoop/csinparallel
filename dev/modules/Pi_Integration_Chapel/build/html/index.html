@@ -1,0 +1,325 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Pi Using Numerical Integration: Chapel &mdash; Pi Using Numerical Integration: Chapel</title>
+    
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="shortcut icon" href="_static/favicon.ico"/>
+    <link rel="top" title="Pi Using Numerical Integration: Chapel" href="#" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li><a href="#">Pi Using Numerical Integration: Chapel</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="pi-using-numerical-integration-chapel">
+<h1>Pi Using Numerical Integration: Chapel<a class="headerlink" href="#pi-using-numerical-integration-chapel" title="Permalink to this headline">¶</a></h1>
+<div class="toctree-wrapper compound">
+<ul class="simple">
+</ul>
+</div>
+<p>Chapel is an open source parallel programming language designed and developed by Cray Inc in colloboration with academia, computing centers, and industry. Chapel supports parallelism in many different ways, so we will show a sequential solution and compare it to various parallel solutions, some of which will work better than others.</p>
+<p>You can download the entire <a class="reference download internal" href="_downloads/pi_integration.chpl"><tt class="xref download docutils literal"><span class="pre">program</span></tt></a> so that you can test the differences between different solutions. You can download and install the Chapel compiler from their <a class="reference external" href="http://chapel.cray.com/index.html">website</a>. Once you have set up the Chapel compiler, you can compile the code by typing the following into the command line:</p>
+<blockquote>
+<div><div class="highlight-bash"><div class="highlight"><pre>chpl -o pi pi_integration.chpl
+</pre></div>
+</div>
+</div></blockquote>
+<div class="section" id="sequential-solution">
+<h2>Sequential Solution<a class="headerlink" href="#sequential-solution" title="Permalink to this headline">¶</a></h2>
+<p>First we need to set a few global variables that most of the proceedures (equivalent of functions/methods) will use. When we run the code in command line, we can add flags to change the value of the <tt class="docutils literal"><span class="pre">config</span></tt> variables. The last section of the program has a series of if statements which run a different proceedure depending on which algorithm name you put in for the <tt class="docutils literal"><span class="pre">method</span></tt> variable.</p>
+<blockquote>
+<div><div class="highlight-java"><div class="highlight"><pre><span class="n">config</span> <span class="n">var</span> <span class="nl">numRect:</span> <span class="kt">int</span> <span class="o">=</span> <span class="mi">10000000</span><span class="o">;</span>    <span class="c1">// Specifies the number of rectangles to calculate</span>
+<span class="n">config</span> <span class="n">var</span> <span class="nl">numThreads:</span> <span class="kt">int</span> <span class="o">=</span> <span class="mi">8</span><span class="o">;</span>        <span class="c1">// Specifies the number of threads to run</span>
+<span class="n">config</span> <span class="n">var</span> <span class="nl">feedback:</span> <span class="n">bool</span> <span class="o">=</span> <span class="kc">false</span><span class="o">;</span>     <span class="c1">// Toggles text displaying partial sums or global sum for certain proceedures.</span>
+<span class="n">config</span> <span class="n">var</span> <span class="nl">method:</span> <span class="n">string</span> <span class="o">=</span> <span class="s">&quot;reduceThread&quot;</span><span class="o">;</span>  <span class="c1">// Chooses the algorithm to calculate pi. Options include:</span>
+                                       <span class="c1">// linear, forall, forallSync, beginRace, begin, reduceRect, reduceThread</span>
+
+<span class="n">var</span> <span class="nl">globalSum:</span> <span class="n">real</span> <span class="o">=</span> <span class="mf">0.0</span><span class="o">;</span>
+<span class="n">var</span> <span class="nl">lock:</span> <span class="n">sync</span> <span class="n">bool</span><span class="o">;</span>
+</pre></div>
+</div>
+</div></blockquote>
+<p>Then we make a proceedure that uses globalSum to keep track of the area of all the rectangles in the unit circle.</p>
+<blockquote>
+<div><div class="highlight-java"><div class="highlight"><pre><span class="n">proc</span> <span class="nf">areaLinear</span><span class="o">()</span> <span class="o">{</span>
+
+  <span class="c1">// Calculates the area under half a curve without any parallel processing.</span>
+
+    <span class="n">var</span> <span class="nl">width:</span> <span class="n">real</span> <span class="o">=</span> <span class="mf">2.0</span> <span class="o">/</span> <span class="n">numRect</span><span class="o">;</span>
+    <span class="n">var</span> <span class="nl">x:</span> <span class="n">real</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span> <span class="o">+</span> <span class="n">width</span><span class="o">/</span><span class="mi">2</span><span class="o">;</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="n">in</span> <span class="mi">1</span><span class="o">..</span><span class="na">numRect</span><span class="o">-</span><span class="mi">1</span> <span class="o">{</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span> <span class="o">+</span> <span class="o">(</span> <span class="n">i</span> <span class="o">+</span> <span class="mf">0.5</span><span class="o">)</span> <span class="o">*</span> <span class="n">width</span><span class="o">;</span>
+        <span class="n">globalSum</span> <span class="o">+=</span> <span class="n">sqrt</span><span class="o">(</span><span class="mf">1.0</span> <span class="o">-</span> <span class="n">x</span><span class="o">*</span><span class="n">x</span><span class="o">)</span> <span class="o">*</span> <span class="n">width</span><span class="o">;</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+
+<span class="k">if</span> <span class="o">(</span><span class="n">method</span> <span class="o">==</span> <span class="s">&quot;linear&quot;</span><span class="o">)</span> <span class="o">{</span>
+    <span class="n">areaLinear</span><span class="o">();</span>
+<span class="o">}</span>
+</pre></div>
+</div>
+</div></blockquote>
+<p>The program ends by doubling <tt class="docutils literal"><span class="pre">globalSum</span></tt> and printing the result along with the result of a timer that keeps track of the number of seconds it takes during the time that any of the algorithms run.</p>
+<blockquote>
+<div><div class="highlight-java"><div class="highlight"><pre><span class="n">var</span> <span class="nl">pi:</span> <span class="n">real</span> <span class="o">=</span> <span class="n">globalSum</span><span class="o">*</span><span class="mf">2.0</span><span class="o">;</span>
+<span class="n">writeln</span><span class="o">(</span><span class="s">&quot;This program estimates pi as &quot;</span><span class="o">,</span> <span class="n">pi</span><span class="o">);</span>
+<span class="n">writeln</span><span class="o">(</span><span class="s">&quot;The operation took &quot;</span><span class="o">,</span> <span class="n">timer</span><span class="o">.</span><span class="na">elapsed</span><span class="o">(),</span> <span class="s">&quot; seconds.&quot;</span><span class="o">);</span>
+</pre></div>
+</div>
+</div></blockquote>
+<p>To see the sequential proceedure, run the executable using the following:</p>
+<blockquote>
+<div><div class="highlight-bash"><div class="highlight"><pre>./pi --method<span class="o">=</span>linear
+</pre></div>
+</div>
+</div></blockquote>
+<p>It should accurately estimate the first six digits of pi.</p>
+</div>
+<div class="section" id="forall-loop">
+<h2><tt class="docutils literal"><span class="pre">forall</span></tt> Loop<a class="headerlink" href="#forall-loop" title="Permalink to this headline">¶</a></h2>
+<p>Now we will look at an example of an algorithm that attempts to calculate pi with one of Chapel&#8217;s features for parallel processing.</p>
+<blockquote>
+<div><div class="highlight-java"><div class="highlight"><pre><span class="n">proc</span> <span class="nf">areaForall</span><span class="o">()</span> <span class="o">{</span>
+
+  <span class="cm">/* Calculates the area under half a curve using a forall loop.</span>
+<span class="cm">     Notice that it has a race condition, and has different levels</span>
+<span class="cm">     of accuracy and precision depending on the size of numRect.</span>
+<span class="cm">  */</span>
+
+     <span class="n">var</span> <span class="nl">width:</span> <span class="n">real</span> <span class="o">=</span> <span class="mf">2.0</span> <span class="o">/</span> <span class="n">numRect</span><span class="o">;</span>
+     <span class="n">var</span> <span class="nl">x:</span> <span class="n">real</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span> <span class="o">+</span> <span class="n">width</span><span class="o">/</span><span class="mi">2</span><span class="o">;</span>
+     <span class="n">forall</span> <span class="n">i</span> <span class="n">in</span> <span class="mi">1</span><span class="o">..</span><span class="na">numRect</span><span class="o">-</span><span class="mi">1</span> <span class="o">{</span>
+            <span class="n">x</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span> <span class="o">+</span> <span class="o">(</span> <span class="n">i</span> <span class="o">+</span> <span class="mf">0.5</span><span class="o">)</span> <span class="o">*</span> <span class="n">width</span><span class="o">;</span>
+            <span class="n">globalSum</span> <span class="o">+=</span> <span class="n">sqrt</span><span class="o">(</span><span class="mf">1.0</span> <span class="o">-</span> <span class="n">x</span><span class="o">*</span><span class="n">x</span><span class="o">)</span> <span class="o">*</span> <span class="n">width</span><span class="o">;</span>
+     <span class="o">}</span>
+<span class="o">}</span>
+
+<span class="k">if</span> <span class="o">(</span><span class="n">method</span> <span class="o">==</span> <span class="s">&quot;forall&quot;</span><span class="o">)</span> <span class="o">{</span>
+    <span class="n">areaForall</span><span class="o">();</span>
+<span class="o">}</span>
+</pre></div>
+</div>
+</div></blockquote>
+<p>Chapel&#8217;s <tt class="docutils literal"><span class="pre">forall</span></tt> loop will use a new thread for each core of the processor to run the iterations of the loop in parallel. However, this creates a race condition as multiple threads may try to update <tt class="docutils literal"><span class="pre">globalSum</span></tt> at the same time, so it will not accurately estimate pi. The algorithm gives varying levels of accuracy depending on how many rectangles it tries to calculate for. You can experiment with different values for <tt class="docutils literal"><span class="pre">numRect</span></tt> to see what values give the closest accuracy, and think about why some values would get closer to pi than others. To change <tt class="docutils literal"><span class="pre">numRect</span></tt>, run the executable using the following flags and change the number that <tt class="docutils literal"><span class="pre">numRect</span></tt> is assigned to.</p>
+<blockquote>
+<div><div class="highlight-bash"><div class="highlight"><pre>./pi --method<span class="o">=</span>forall --numRect<span class="o">=</span>100000
+</pre></div>
+</div>
+</div></blockquote>
+<p>We can stop this race condition from happening by using thread safe variable instead of <tt class="docutils literal"><span class="pre">globalSum</span></tt>. We can use a <tt class="docutils literal"><span class="pre">sync</span></tt> variable, which stores a normal value and a second boolean value that we can set to <tt class="docutils literal"><span class="pre">empty</span></tt> or <tt class="docutils literal"><span class="pre">full</span></tt>. Threads cannot access a full <tt class="docutils literal"><span class="pre">sync</span></tt> variable. Assigning a <tt class="docutils literal"><span class="pre">sync</span></tt> variable a value sets it to <tt class="docutils literal"><span class="pre">full</span></tt>, while assigning its value to another <tt class="docutils literal"><span class="pre">sync</span></tt> variable sets it to <tt class="docutils literal"><span class="pre">empty</span></tt>. So in this next example, threads can safely change the value of <tt class="docutils literal"><span class="pre">sum</span></tt>, and then we can set <tt class="docutils literal"><span class="pre">globalSum</span></tt> to the value of <tt class="docutils literal"><span class="pre">sum</span></tt> after the <tt class="docutils literal"><span class="pre">forall</span></tt> loop.</p>
+<blockquote>
+<div><div class="highlight-java"><div class="highlight"><pre><span class="n">proc</span> <span class="nf">areaForallSync</span><span class="o">()</span> <span class="o">{</span>
+
+  <span class="cm">/* Calculates the area under half a curve using a forall loop.</span>
+<span class="cm">     Notice that it has a race condition, and has different levels</span>
+<span class="cm">     of accuracy and precision depending on the size of numRect.</span>
+<span class="cm">  */</span>
+
+     <span class="n">var</span> <span class="nl">sum:</span> <span class="n">sync</span> <span class="n">real</span> <span class="o">=</span> <span class="mf">0.0</span><span class="o">;</span>
+     <span class="n">var</span> <span class="nl">width:</span> <span class="n">real</span> <span class="o">=</span> <span class="mf">2.0</span> <span class="o">/</span> <span class="n">numRect</span><span class="o">;</span>
+     <span class="n">var</span> <span class="nl">x:</span> <span class="n">real</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span> <span class="o">+</span> <span class="n">width</span><span class="o">/</span><span class="mi">2</span><span class="o">;</span>
+     <span class="n">forall</span> <span class="n">i</span> <span class="n">in</span> <span class="mi">1</span><span class="o">..</span><span class="na">numRect</span><span class="o">-</span><span class="mi">1</span> <span class="o">{</span>
+            <span class="n">x</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span> <span class="o">+</span> <span class="o">(</span> <span class="n">i</span> <span class="o">+</span> <span class="mf">0.5</span><span class="o">)</span> <span class="o">*</span> <span class="n">width</span><span class="o">;</span>
+            <span class="n">sum</span> <span class="o">+=</span> <span class="n">sqrt</span><span class="o">(</span><span class="mf">1.0</span> <span class="o">-</span> <span class="n">x</span><span class="o">*</span><span class="n">x</span><span class="o">)</span> <span class="o">*</span> <span class="n">width</span><span class="o">;</span>
+     <span class="o">}</span>
+     <span class="n">globalSum</span> <span class="o">=</span> <span class="n">sum</span><span class="o">;</span>
+<span class="o">}</span>
+
+<span class="k">if</span> <span class="o">(</span><span class="n">method</span> <span class="o">==</span> <span class="s">&quot;forallSync&quot;</span><span class="o">)</span> <span class="o">{</span>
+    <span class="n">areaForallSync</span><span class="o">();</span>
+<span class="o">}</span>
+</pre></div>
+</div>
+</div></blockquote>
+<p>When you run this proceedure, it should correctly estimate pi, but you will notice that it runs <cite>much</cite> more slowly than the sequential solution (you may want to try running it with a lower value of numRect). When each thread has to wait for the other threads to finish accessing <tt class="docutils literal"><span class="pre">sum</span></tt>, the program doesn&#8217;t really process any information in parallel and we lose even more efficiency because of overhead costs. So how can we add up each thread&#8217;s calculations without them interfering with each other? We will show different ways to do this with the following algorithms.</p>
+</div>
+<div class="section" id="begin-statements">
+<h2><tt class="docutils literal"><span class="pre">begin</span></tt> Statements<a class="headerlink" href="#begin-statements" title="Permalink to this headline">¶</a></h2>
+<p>The next algorithm uses <tt class="docutils literal"><span class="pre">begin</span></tt> statements to start new threads which add to their local variable <tt class="docutils literal"><span class="pre">partialSum</span></tt> and later add their partial summations to <tt class="docutils literal"><span class="pre">globalSum</span></tt>. Different threads adding to <tt class="docutils literal"><span class="pre">globalSum</span></tt> does create a potential to cause a race condition, but each thread will only modify it once so they have an extremely low chance of modifiying it at the same time. We can easily make this algorithm thread-safe, so we should do so just in case. If this program only used this algorithm, we could just make <tt class="docutils literal"><span class="pre">globalSum</span></tt> a <tt class="docutils literal"><span class="pre">sync</span></tt> variable, but since other algorithms use <tt class="docutils literal"><span class="pre">globalSum</span></tt> we don&#8217;t want to change it. Instead, we can declare a new <tt class="docutils literal"><span class="pre">sync</span></tt> boolean variable outside of the algorithm, so that we can set it to <tt class="docutils literal"><span class="pre">full</span></tt> before we add to <tt class="docutils literal"><span class="pre">globalSum</span></tt> and then empty it afterwards.</p>
+<blockquote>
+<div><div class="highlight-java"><div class="highlight"><pre><span class="n">var</span> <span class="nl">lock:</span> <span class="n">sync</span> <span class="n">bool</span><span class="o">;</span>
+
+<span class="n">proc</span> <span class="nf">areaBegin</span><span class="o">(</span><span class="n">init</span><span class="o">)</span> <span class="o">{</span>
+
+    <span class="c1">// Calculates the area under the curve for 1/numThreads worth</span>
+    <span class="c1">// of rectangles and adds the result to globalSum.</span>
+
+    <span class="n">var</span> <span class="nl">width:</span> <span class="n">real</span> <span class="o">=</span> <span class="mf">2.0</span> <span class="o">/</span> <span class="n">numRect</span><span class="o">;</span>
+    <span class="n">var</span> <span class="nl">partialSum:</span> <span class="n">real</span> <span class="o">=</span> <span class="mf">0.0</span><span class="o">;</span>
+    <span class="n">var</span> <span class="nl">x:</span> <span class="n">real</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span> <span class="o">+</span> <span class="n">width</span><span class="o">/</span><span class="mi">2</span><span class="o">;</span>
+    <span class="n">var</span> <span class="nl">i:</span> <span class="kt">int</span> <span class="o">=</span> <span class="n">init</span><span class="o">;</span>
+    <span class="k">do</span> <span class="o">{</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span> <span class="o">+</span> <span class="o">(</span> <span class="n">i</span> <span class="o">+</span> <span class="mf">0.5</span><span class="o">)</span> <span class="o">*</span> <span class="n">width</span><span class="o">;</span>
+        <span class="n">partialSum</span> <span class="o">+=</span> <span class="n">sqrt</span><span class="o">(</span><span class="mf">1.0</span> <span class="o">-</span> <span class="n">x</span><span class="o">*</span><span class="n">x</span><span class="o">)</span> <span class="o">*</span> <span class="n">width</span><span class="o">;</span>
+        <span class="n">i</span> <span class="o">+=</span> <span class="n">numThreads</span><span class="o">;</span>
+    <span class="o">}</span>   <span class="k">while</span> <span class="o">(</span><span class="n">i</span> <span class="o">&lt;</span> <span class="n">numRect</span><span class="o">-</span><span class="mi">1</span><span class="o">);</span>
+    <span class="n">lock</span> <span class="o">=</span> <span class="kc">true</span><span class="o">;</span> <span class="c1">// set sync variable to full</span>
+    <span class="n">globalSum</span> <span class="o">+=</span> <span class="n">partialSum</span><span class="o">;</span>
+    <span class="n">var</span> <span class="n">unlock</span> <span class="o">=</span> <span class="n">lock</span><span class="o">;</span> <span class="c1">// empty the sync variable to allow the program to move on</span>
+    <span class="k">if</span> <span class="o">(</span><span class="n">feedback</span><span class="o">)</span> <span class="o">{</span><span class="n">writeln</span><span class="o">(</span><span class="s">&quot;Thread: &quot;</span><span class="o">,</span> <span class="n">init</span><span class="o">,</span> <span class="s">&quot;   globalSum: &quot;</span><span class="o">,</span> <span class="n">globalSum</span><span class="o">);}</span>
+<span class="o">}</span>
+
+<span class="k">if</span> <span class="o">(</span><span class="n">method</span> <span class="o">==</span> <span class="s">&quot;beginRace&quot;</span><span class="o">)</span> <span class="o">{</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="n">in</span> <span class="mi">1</span><span class="o">..</span><span class="na">numThreads</span> <span class="o">{</span>
+        <span class="n">begin</span> <span class="nf">areaBegin</span><span class="o">(</span><span class="n">i</span><span class="o">);</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</pre></div>
+</div>
+</div></blockquote>
+<p>Now we don&#8217;t need to worry about our threads interfering with each other when they try to add to <tt class="docutils literal"><span class="pre">globalSum</span></tt>, but we have a new problem. The program does not wait for the <tt class="docutils literal"><span class="pre">begin</span></tt> statements to finish running, so it will print <tt class="docutils literal"><span class="pre">globalSum</span></tt> before the algorithm has had enough time for each thread to add to it.</p>
+<p>This displays another instance of a race condition, only instead of threads repeatedly trying to update the same global variable as the <tt class="docutils literal"><span class="pre">forall</span></tt> algorithm did, this algorithm has each thread only access the global variable once but doesn&#8217;t wait for each thread to finish before it moves on. You can see this happen if you run the proceedure with the <tt class="docutils literal"><span class="pre">feedback</span></tt> flag set to true, and change the value of <tt class="docutils literal"><span class="pre">numRect</span></tt> to see how it affects the results.</p>
+<blockquote>
+<div><div class="highlight-java"><div class="highlight"><pre><span class="o">./</span><span class="n">pi</span> <span class="o">--</span><span class="n">method</span><span class="o">=</span><span class="n">beginRace</span> <span class="o">--</span><span class="n">feedback</span><span class="o">=</span><span class="kc">true</span> <span class="o">--</span><span class="n">numRect</span><span class="o">=</span><span class="mi">1000</span>
+</pre></div>
+</div>
+</div></blockquote>
+<p>We can easily solve this race condition by using a <tt class="docutils literal"><span class="pre">sync</span></tt> statement, which will block the program from moving forward until a particular chunk of code has finished all of the <tt class="docutils literal"><span class="pre">begin</span></tt> statements it has started. In this case, we do not need to change anything within the <tt class="docutils literal"><span class="pre">areaBegin(init)</span></tt> proceedure itself, we just need to add a <tt class="docutils literal"><span class="pre">sync</span></tt> statement to the for loop that calls the proceedure with <tt class="docutils literal"><span class="pre">begin</span></tt> statements:</p>
+<blockquote>
+<div><div class="highlight-java"><div class="highlight"><pre><span class="k">if</span> <span class="o">(</span><span class="n">method</span> <span class="o">==</span> <span class="s">&quot;begin&quot;</span><span class="o">)</span> <span class="o">{</span>
+    <span class="n">sync</span> <span class="k">for</span> <span class="n">i</span> <span class="n">in</span> <span class="mi">1</span><span class="o">..</span><span class="na">numThreads</span> <span class="o">{</span>
+      <span class="c1">// The sync statements ensures that tasks created in the for loop</span>
+      <span class="c1">// must complete before continuing past the sync statement.</span>
+        <span class="n">begin</span> <span class="nf">areaBegin</span><span class="o">(</span><span class="n">i</span><span class="o">);</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</pre></div>
+</div>
+</div></blockquote>
+<p>Run the code with the method flag set to <tt class="docutils literal"><span class="pre">begin</span></tt> and see how long it usually takes. Compare this with the time that <tt class="docutils literal"><span class="pre">linear</span></tt> usually takes. Change the value of <tt class="docutils literal"><span class="pre">numRects</span></tt> for both of these and see how the two algorithms compare with larger and smaller values of <tt class="docutils literal"><span class="pre">numRects</span></tt>. Why would the algorithms differ in relative effeciency for different workloads?</p>
+</div>
+<div class="section" id="reduce-operator">
+<h2><tt class="docutils literal"><span class="pre">reduce</span></tt> Operator<a class="headerlink" href="#reduce-operator" title="Permalink to this headline">¶</a></h2>
+<p>The <tt class="docutils literal"><span class="pre">reduce</span></tt> operator can combine or compare values of operations that it can assign to run on different threads. In this first example of using <tt class="docutils literal"><span class="pre">reduce</span></tt> to solve the problem, we create the variable <tt class="docutils literal"><span class="pre">partials</span></tt>, which we assign as a <tt class="docutils literal"><span class="pre">domain</span></tt>, a dynamically resizable range of indicies. The <tt class="docutils literal"><span class="pre">reduce</span></tt> operator called on <tt class="docutils literal"><span class="pre">globalSum</span></tt> runs the proceedure <tt class="docutils literal"><span class="pre">rectArea</span></tt> for each index in <tt class="docutils literal"><span class="pre">partials</span></tt> (which we set to size <tt class="docutils literal"><span class="pre">numRect</span></tt>) and adds all the results together.</p>
+<blockquote>
+<div><div class="highlight-java"><div class="highlight"><pre><span class="n">proc</span> <span class="nf">rectArea</span><span class="o">(</span><span class="n">i</span> <span class="o">:</span> <span class="kt">int</span><span class="o">)</span> <span class="o">{</span>
+
+   <span class="c1">// Calculates the area for one rectangle, so that a reduce operator</span>
+   <span class="c1">// can calculate areas for all the rectangles in a domain.</span>
+
+     <span class="n">var</span> <span class="nl">width:</span> <span class="n">real</span> <span class="o">=</span> <span class="mf">2.0</span> <span class="o">/</span> <span class="n">numRect</span><span class="o">;</span>
+     <span class="n">var</span> <span class="nl">x:</span> <span class="n">real</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span> <span class="o">-</span> <span class="n">width</span><span class="o">/</span><span class="mi">2</span> <span class="o">+</span> <span class="n">i</span><span class="o">*</span><span class="n">width</span><span class="o">;</span>
+     <span class="k">return</span> <span class="n">width</span> <span class="o">*</span> <span class="n">sqrt</span><span class="o">(</span><span class="mf">1.0</span><span class="o">-</span><span class="n">x</span><span class="o">*</span><span class="n">x</span><span class="o">);</span>
+<span class="o">}</span>
+
+<span class="k">if</span> <span class="o">(</span><span class="n">method</span> <span class="o">==</span> <span class="s">&quot;reduceRect&quot;</span><span class="o">)</span> <span class="o">{</span>
+     <span class="n">var</span> <span class="nl">partials:</span> <span class="n">domain</span><span class="o">(</span><span class="mi">1</span><span class="o">)</span> <span class="o">=</span> <span class="o">(</span><span class="mi">1</span><span class="o">..</span><span class="na">numRect</span><span class="o">);</span>
+     <span class="n">globalSum</span> <span class="o">=</span> <span class="o">+</span> <span class="n">reduce</span> <span class="o">(</span><span class="n">rectArea</span><span class="o">(</span><span class="n">partials</span><span class="o">));</span>
+<span class="o">}</span>
+</pre></div>
+</div>
+</div></blockquote>
+<p>We can also use the <tt class="docutils literal"><span class="pre">reduce</span></tt> statement to split the workload up by threads rather than by rectangles in the circle. Notice that this algorithm looks very similar to the <tt class="docutils literal"><span class="pre">begin</span></tt> algorithm, because they both calulculate area for 1/<tt class="docutils literal"><span class="pre">numThreads</span></tt>&#8216;s worth of the rectangles, only they add them together through different means.</p>
+<blockquote>
+<div><div class="highlight-java"><div class="highlight"><pre><span class="n">proc</span> <span class="nf">areaReduceThread</span><span class="o">(</span><span class="n">init</span> <span class="o">:</span> <span class="kt">int</span><span class="o">)</span> <span class="o">{</span>
+
+  <span class="c1">// Calculates the area under the curve for 1/numThreads worth</span>
+  <span class="c1">// of rectangles and returns a partial sum</span>
+
+     <span class="n">var</span> <span class="nl">width:</span> <span class="n">real</span> <span class="o">=</span> <span class="mf">2.0</span> <span class="o">/</span> <span class="n">numRect</span><span class="o">;</span>
+     <span class="n">var</span> <span class="nl">partialSum:</span> <span class="n">real</span> <span class="o">=</span> <span class="mf">0.0</span><span class="o">;</span>
+     <span class="n">var</span> <span class="nl">x:</span> <span class="n">real</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span> <span class="o">+</span> <span class="n">width</span><span class="o">/</span><span class="mi">2</span><span class="o">;</span>
+     <span class="n">var</span> <span class="nl">i:</span> <span class="kt">int</span> <span class="o">=</span> <span class="n">init</span><span class="o">;</span>
+     <span class="k">do</span> <span class="o">{</span>
+         <span class="n">x</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span> <span class="o">+</span> <span class="o">(</span> <span class="n">i</span> <span class="o">+</span> <span class="mf">0.5</span><span class="o">)</span> <span class="o">*</span> <span class="n">width</span><span class="o">;</span>
+         <span class="n">partialSum</span> <span class="o">+=</span> <span class="n">sqrt</span><span class="o">(</span><span class="mf">1.0</span> <span class="o">-</span> <span class="n">x</span><span class="o">*</span><span class="n">x</span><span class="o">)</span> <span class="o">*</span> <span class="n">width</span><span class="o">;</span>
+         <span class="n">i</span> <span class="o">+=</span> <span class="n">numThreads</span><span class="o">;</span>
+     <span class="o">}</span>  <span class="k">while</span> <span class="o">(</span><span class="n">i</span> <span class="o">&lt;</span> <span class="n">numRect</span><span class="o">-</span><span class="mi">1</span><span class="o">);</span>
+     <span class="k">if</span> <span class="o">(</span><span class="n">feedback</span><span class="o">)</span> <span class="o">{</span> <span class="n">writeln</span><span class="o">(</span><span class="n">partialSum</span><span class="o">);}</span>
+     <span class="k">return</span> <span class="n">partialSum</span><span class="o">;</span>
+<span class="o">}</span>
+
+<span class="k">if</span> <span class="o">(</span><span class="n">method</span> <span class="o">==</span> <span class="s">&quot;reduceThread&quot;</span><span class="o">)</span> <span class="o">{</span>
+  <span class="n">var</span> <span class="nl">threads:</span> <span class="n">domain</span><span class="o">(</span><span class="mi">1</span><span class="o">)</span> <span class="o">=</span> <span class="o">(</span><span class="mi">1</span><span class="o">..</span><span class="na">numThreads</span><span class="o">);</span>
+  <span class="n">globalSum</span> <span class="o">=</span> <span class="o">+</span> <span class="n">reduce</span> <span class="o">(</span><span class="n">areaReduceThread</span><span class="o">(</span><span class="n">threads</span><span class="o">));</span>
+<span class="o">}</span>
+</pre></div>
+</div>
+</div></blockquote>
+<p>Does one of the algorithms for reducing the problem work more efficiently, and why do you think it would work that way?</p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="#">
+              <img class="logo" src="_static/CSInParallel200wide.png" alt="Logo"/>
+            </a></p>
+  <h3><a href="#">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Pi Using Numerical Integration: Chapel</a><ul>
+<li><a class="reference internal" href="#sequential-solution">Sequential Solution</a></li>
+<li><a class="reference internal" href="#forall-loop"><tt class="docutils literal"><span class="pre">forall</span></tt> Loop</a></li>
+<li><a class="reference internal" href="#begin-statements"><tt class="docutils literal"><span class="pre">begin</span></tt> Statements</a></li>
+<li><a class="reference internal" href="#reduce-operator"><tt class="docutils literal"><span class="pre">reduce</span></tt> Operator</a></li>
+</ul>
+</li>
+</ul>
+
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li><a href="#">Pi Using Numerical Integration: Chapel</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright This work is licensed under a Creative Commons Attribution-ShareAlike 3.0 Unported License.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
+    </div>
+  </body>
+</html>
