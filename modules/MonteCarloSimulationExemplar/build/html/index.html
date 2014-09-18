@@ -1,0 +1,114 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Monte Carlo Simulation Exemplar &mdash; Monte Carlo Simulation Exemplar</title>
+    
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="shortcut icon" href="_static/favicon.ico"/>
+    <link rel="top" title="Monte Carlo Simulation Exemplar" href="#" />
+    <link rel="next" title="What are Monte Carlo Methods?" href="Introduction/Introduction.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="Introduction/Introduction.html" title="What are Monte Carlo Methods?"
+             accesskey="N">next</a></li>
+        <li><a href="#">Monte Carlo Simulation Exemplar</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="monte-carlo-simulation-exemplar">
+<h1>Monte Carlo Simulation Exemplar<a class="headerlink" href="#monte-carlo-simulation-exemplar" title="Permalink to this headline">¶</a></h1>
+<p>Text by Devin Bjelland and Libby Shoop, Macalester College</p>
+<p>Accompanying instructor videos by Dave Valentine, Slippery Rock University</p>
+<p>Monte Carlo simulations are a class of algorithms that are quite easy
+to convert from their original sequential solutions to corresponding parallel
+or distributed solutions that run much faster.  This module introduces these
+type of algorithms, providing some examples with C++ code for both the original
+sequential version and the parallelized OpenMP version.</p>
+<p><strong>Hardware and Software Needed</strong></p>
+<blockquote>
+<div><ul class="simple">
+<li>You will need access to a multicore computer with a C/C++ compiler that enables compilation with OpenMP.</li>
+<li>If you want to try some of the other examples for Message Passing using MPI you will need access to a cluster of computers with an MPI library installed.</li>
+<li>If you want to try some of the other examples for CUDA on GPUs, you will need acces to a computer with a CUDA-capable nVIDIA GPU and you will need the nVIDIA CUDA Toolkit installed.</li>
+</ul>
+</div></blockquote>
+<p>This document contains several sections with example C++ code to explain Monte Carlo methods
+and how to parallelize them using the OpenMP library.  The last three sections contain
+exercises that you can try and explain a more advanced topic for ensuring greater accuracy.</p>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="Introduction/Introduction.html">What are Monte Carlo Methods?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Introduction/Introduction.html#about-randomness">About Randomness</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Introduction/CoinFlip.html">Testing out random number generators: Flip a coin many times</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Threads/Threads_OMP.html">Parallel Code with Threads</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Threads/OpenMP_CoinFlip.html">Coin-flipping in Parallel</a></li>
+<li class="toctree-l1"><a class="reference internal" href="RouletteSimulation/RouletteSimulation.html">Roulette Simulation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="DrawFourSuitsExample/DrawFourSuitsExample.html">Drawing Four Cards of the Same Suit</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Plinko/PlinkoGame.html">Plinko  from the Price is Right</a></li>
+<li class="toctree-l1"><a class="reference internal" href="NextSteps/Exercises.html">Exercises</a></li>
+<li class="toctree-l1"><a class="reference internal" href="SeedingThreads/SeedEachThread.html">Advanced Topic:  Seeds For Different Threads</a></li>
+</ul>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="#">
+              <img class="logo" src="_static/CSInParallel200wide.png" alt="Logo"/>
+            </a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="Introduction/Introduction.html"
+                        title="next chapter">What are Monte Carlo Methods?</a></p>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="Introduction/Introduction.html" title="What are Monte Carlo Methods?"
+             >next</a></li>
+        <li><a href="#">Monte Carlo Simulation Exemplar</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright This work is licensed under a Creative Commons Attribution-ShareAlike 3.0 Unported License.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>
