@@ -1,0 +1,219 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Configuring the Networking on a Jetson Cluster &mdash; Jetson Tegra Cluster Setup</title>
+    
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="top" title="Jetson Tegra Cluster Setup" href="../index.html" />
+    <link rel="next" title="Installing and Configuring Cuda" href="../configuringCuda/ConfigureCuda.html" />
+    <link rel="prev" title="Setting up a Jetson Tegra Cluster" href="../introduction/Introduction.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../configuringCuda/ConfigureCuda.html" title="Installing and Configuring Cuda"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="../introduction/Introduction.html" title="Setting up a Jetson Tegra Cluster"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../index.html">Jetson Tegra Cluster Setup</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="configuring-the-networking-on-a-jetson-cluster">
+<h1>Configuring the Networking on a Jetson Cluster<a class="headerlink" href="#configuring-the-networking-on-a-jetson-cluster" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="optional-but-recomended-install-cluster-ssh">
+<h2>1. (Optional but recomended) Install Cluster SSH<a class="headerlink" href="#optional-but-recomended-install-cluster-ssh" title="Permalink to this headline">¶</a></h2>
+<p>This step isn&#8217;t necessary but will save you alot of time configuring and
+maintaining the cluster. Clusterssh allows you to control multiple ssh
+terminals at once. Since ARM binaries aren&#8217;t available in the repositories, we need
+to download the sources and compile them. Obtain the sources for the
+dependencies from the following web pages: <a class="reference external" href="http://packages.ubuntu.com/trusty/perl-tk">http://packages.ubuntu.com/trusty/perl-tk</a>
+<a class="reference external" href="http://packages.ubuntu.com/trusty/libx11-protocol-perl">http://packages.ubuntu.com/trusty/libx11-protocol-perl</a> .
+Untar and cd to each directory and type:</p>
+<div class="highlight-python"><div class="highlight"><pre>$ perl Makefile.PL
+$ make
+$ sudo make install
+</pre></div>
+</div>
+<p>Obtain the source code for cluserssh from: <a class="reference external" href="http://sourceforge.net/projects/clusterssh/">http://sourceforge.net/projects/clusterssh/</a>
+Untar and cd to the directory and type:</p>
+<div class="highlight-python"><div class="highlight"><pre>./configure
+make
+sudo make install
+</pre></div>
+</div>
+<p>Now you can run:</p>
+<div class="highlight-python"><div class="highlight"><pre>cssh hostname1 hostname2 … #controls multiple ssh terminal at once
+</pre></div>
+</div>
+</div>
+<div class="section" id="configure-the-internal-network-on-the-cluster">
+<h2>2. Configure the Internal Network on the Cluster<a class="headerlink" href="#configure-the-internal-network-on-the-cluster" title="Permalink to this headline">¶</a></h2>
+<p>We assume that eth0 is the interface of the internal network of the cluster and
+that the head node has an additional interface, eth1, with internet access.</p>
+<p>First we configure static ip for the cluster&#8217;s internal network. On the head node run:</p>
+<div class="highlight-python"><div class="highlight"><pre>$sudo vim /etc/network/interfaces
+</pre></div>
+</div>
+<p>And then add the following:</p>
+<div class="highlight-python"><div class="highlight"><pre>auto eth0
+iface eth0 inet static
+address 192.168.0.101
+netmask 255.255.255.0
+gateway 192.168.0.101
+</pre></div>
+</div>
+<p>Do the same on the worker except for incrementing the address field for each
+worker (ie the line for the first worker should be &#8220;address 192.168.0.102&#8221;).
+Restart the worker nodes. The internal network should now be working so you
+can use Cluster SSH to configure the workers all at once from now on.</p>
+</div>
+<div class="section" id="configure-head-node-to-act-as-a-gateway">
+<h2>3. Configure head node to act as a gateway<a class="headerlink" href="#configure-head-node-to-act-as-a-gateway" title="Permalink to this headline">¶</a></h2>
+<p>In order we the worker nodes to have internet, we need to configure the head
+node to act as a gateway. For more details, see the ubuntu internet gateway
+section of the following guide:
+<a class="reference external" href="https://help.ubuntu.com/community/Internet/ConnectionSharing">https://help.ubuntu.com/community/Internet/ConnectionSharing</a></p>
+<p>First we enable nat on the head node:</p>
+<div class="highlight-python"><div class="highlight"><pre>sudo iptables -A FORWARD -o eth1 -i eth0 -s 192.168.0.0/24 -m conntrack --ctstate NEW -j ACCEPT
+sudo iptables -A FORWARD -m conntrack --ctstate ESTABLISHED,RELATED -j ACCEPT
+sudo iptables -t nat -F POSTROUTING
+sudo iptables -t nat -A POSTROUTING -o eth1 -j MASQUERADE
+</pre></div>
+</div>
+<p>The first rule allows forwarded packets (initial ones). The second rule allows forwarding of established connection packets (and those related to ones that started). The third rule does the NAT.
+We save these settings with:</p>
+<div class="highlight-python"><div class="highlight"><pre>sudo iptables-save | sudo tee /etc/iptables.sav
+</pre></div>
+</div>
+<p>And then add this line to /etc/rc.local:</p>
+<div class="highlight-python"><div class="highlight"><pre>iptables-restore &lt; /etc/iptables.sav
+</pre></div>
+</div>
+<p>To enabled packet forwarding, uncomment the following line in /etc/sysctl.conf:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="c">#net.ipv4.ip_forward=1</span>
+</pre></div>
+</div>
+<p>Then reboot the head node to the settings take effect:</p>
+<div class="highlight-python"><div class="highlight"><pre>sudo reboot
+</pre></div>
+</div>
+<p>We need to configure DNS servers for the workers to use.
+Add the following lines to /etc/resolv.conf on each node:</p>
+<div class="highlight-python"><div class="highlight"><pre>nameserver 8.8.8.8
+nameserver 8.8.4.4
+</pre></div>
+</div>
+</div>
+<div class="section" id="edit-the-hosts-file">
+<h2>4. Edit the Hosts File<a class="headerlink" href="#edit-the-hosts-file" title="Permalink to this headline">¶</a></h2>
+<p>Add names for your cluster nodes into the host file (use cluster ssh to do it across the network)</p>
+<div class="highlight-python"><div class="highlight"><pre>$ sudo vim /etc/hosts
+</pre></div>
+</div>
+<p>Yours should look something like this:</p>
+<div class="highlight-python"><div class="highlight"><pre>127.0.0.1 localhost
+127.0.0.1 tegra-ubuntu
+192.168.0.101 tegra1
+192.168.0.102 tegra2
+...
+</pre></div>
+</div>
+<p>The worker nodes should now have internet.</p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../index.html">
+              <img class="logo" src="../_static/CSInParallel200wide.png" alt="Logo"/>
+            </a></p>
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Configuring the Networking on a Jetson Cluster</a><ul>
+<li><a class="reference internal" href="#optional-but-recomended-install-cluster-ssh">1. (Optional but recomended) Install Cluster SSH</a></li>
+<li><a class="reference internal" href="#configure-the-internal-network-on-the-cluster">2. Configure the Internal Network on the Cluster</a></li>
+<li><a class="reference internal" href="#configure-head-node-to-act-as-a-gateway">3. Configure head node to act as a gateway</a></li>
+<li><a class="reference internal" href="#edit-the-hosts-file">4. Edit the Hosts File</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="../introduction/Introduction.html"
+                        title="previous chapter">Setting up a Jetson Tegra Cluster</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="../configuringCuda/ConfigureCuda.html"
+                        title="next chapter">Installing and Configuring Cuda</a></p>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../configuringCuda/ConfigureCuda.html" title="Installing and Configuring Cuda"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="../introduction/Introduction.html" title="Setting up a Jetson Tegra Cluster"
+             >previous</a> |</li>
+        <li><a href="../index.html">Jetson Tegra Cluster Setup</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright This work is licensed under a Creative Commons Attribution-ShareAlike 3.0 Unported License.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
+    </div>
+  </body>
+</html>

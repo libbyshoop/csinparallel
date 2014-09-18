@@ -1,0 +1,212 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Drawing Four Cards of the Same Suit &mdash; Monte Carlo Simulation Exemplar</title>
+    
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+    <link rel="top" title="Monte Carlo Simulation Exemplar" href="../index.html" />
+    <link rel="next" title="Plinko from the Price is Right" href="../Plinko/PlinkoGame.html" />
+    <link rel="prev" title="Roulette Simulation" href="../RouletteSimulation/RouletteSimulation.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../Plinko/PlinkoGame.html" title="Plinko from the Price is Right"
+             accesskey="N">next</a></li>
+        <li class="right" >
+          <a href="../RouletteSimulation/RouletteSimulation.html" title="Roulette Simulation"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../index.html">Monte Carlo Simulation Exemplar</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="drawing-four-cards-of-the-same-suit">
+<h1>Drawing Four Cards of the Same Suit<a class="headerlink" href="#drawing-four-cards-of-the-same-suit" title="Permalink to this headline">¶</a></h1>
+<img alt="../_images/RoyalFlush.jpg" src="../_images/RoyalFlush.jpg" style="width: 200px;" />
+<p>Now let&#8217;s turn our attention to the card game of Poker.
+There are methods to calculate the probability of drawing the various types of hands (see the <a class="reference external" href="http://en.wikipedia.org/wiki/Poker_probability">Wikipedia Poker Probability Page</a> for explanation).
+For our next example, we will examine one such type of hand with the following question:</p>
+<p><em>If you are dealt a random hand of 5 cards, what is the probability that four of the cards each have a different
+suit?</em></p>
+<p>To answer this question, we simulate shuffling a deck of cards and drawing a hand of cards.</p>
+<div class="section" id="code-files">
+<h2>Code Files<a class="headerlink" href="#code-files" title="Permalink to this headline">¶</a></h2>
+<p>For this code, we have separate versions for Windows, which uses rand(), and linux, which uses rand_r() as the random number generators.</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="21%" />
+<col width="79%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Linux</th>
+<th class="head">&nbsp;</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>sequential version:</td>
+<td><a class="reference download internal" href="../_downloads/drawFourSuits_seq.cpp"><tt class="xref download docutils literal"><span class="pre">drawFourSuits_seq.cpp</span></tt></a></td>
+</tr>
+<tr class="row-odd"><td>OpenMP version:</td>
+<td><a class="reference download internal" href="../_downloads/drawFourSuits_omp.cpp"><tt class="xref download docutils literal"><span class="pre">drawFourSuits_omp.cpp</span></tt></a></td>
+</tr>
+</tbody>
+</table>
+<table border="1" class="docutils">
+<colgroup>
+<col width="20%" />
+<col width="80%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Windows</th>
+<th class="head">&nbsp;</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>sequential version:</td>
+<td><a class="reference download internal" href="../_downloads/drawFourSuits_seq1.cpp"><tt class="xref download docutils literal"><span class="pre">drawFourSuits_seq.cpp</span></tt></a></td>
+</tr>
+<tr class="row-odd"><td>OpenMP version:</td>
+<td><a class="reference download internal" href="../_downloads/drawFourSuits_omp1.cpp"><tt class="xref download docutils literal"><span class="pre">drawFourSuits_omp.cpp</span></tt></a></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="sequential-code">
+<h2>Sequential code<a class="headerlink" href="#sequential-code" title="Permalink to this headline">¶</a></h2>
+<p>We represent the deck of cards as an array of integers. Our function for simulating
+deck shuffling is not the most efficient, but it tries to capture how a traditional
+&#8220;fan&#8221; shuffle actually works. We also have helper functions for initializing a deck,
+drawing a hand, and checking if the hand has four cards of the same suit. Download the
+appropriate sequential code file for your environment and study it.  Note all the places
+where random numbers are generated for two aspects of the problem: shuffling the deck and
+picking cards from the deck to form a hand.</p>
+<p>Using these helper functions, it was straightforward to write testOneHand,
+which initializes a deck, shuffles it, draws a hand, and then checks if
+all four suits are represented.</p>
+<div class="highlight-c++"><div class="highlight"><pre><span class="cm">/************************************************</span>
+<span class="cm">***************************** testOneHand *********/</span>
+<span class="kt">bool</span> <span class="n">testOneHand</span><span class="p">(</span><span class="kt">unsigned</span> <span class="kt">int</span> <span class="o">*</span><span class="n">seed_ptr</span><span class="p">){</span>
+<span class="c1">//Create a deck...sort it...pick 4 cards...test 4 suits</span>
+	<span class="kt">int</span> <span class="n">deck</span><span class="p">[</span><span class="n">MAX_CARDS</span><span class="p">];</span>	<span class="c1">//std deck</span>
+	<span class="kt">int</span> <span class="n">hand</span><span class="p">[</span><span class="n">CARDS_IN_HAND</span><span class="p">];</span>	<span class="c1">//card hand</span>
+	
+	<span class="n">initDeck</span><span class="p">(</span><span class="n">deck</span><span class="p">,</span> <span class="n">seed_ptr</span><span class="p">);</span>	<span class="c1">//create &amp; shuffle a new deck</span>
+	
+	<span class="n">drawHand</span><span class="p">(</span><span class="n">deck</span><span class="p">,</span> <span class="n">hand</span><span class="p">,</span> <span class="n">seed_ptr</span><span class="p">);</span>	<span class="c1">//go pick cards from deck</span>
+	
+	<span class="k">return</span> <span class="n">isFourSuits</span><span class="p">(</span><span class="n">hand</span><span class="p">);</span> <span class="c1">//test if 4 suits</span>
+<span class="p">}</span><span class="c1">//testOneHand</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="open-mp-version">
+<h2>Open MP Version<a class="headerlink" href="#open-mp-version" title="Permalink to this headline">¶</a></h2>
+<p>Converting our sequential code to use OpenMP is quite simple. We add a pragma
+compiler directive to the main simulation loop to run the loop simultaneously
+on multiple CPUs. The directive tells OpenMP to give each thread a different
+copy of i since each thread needs to keep track of its own loop iterations.
+numTests is shared because the total number of tests to run is doubled only
+once per iteration of the out while loop. (If each thread doubled it, we would
+go up by more than a factor of two.) Finally, the directive <cite>reduction (+:total)</cite>
+tells OpenMP to combine each of the threads&#8217; partial results by summing to find
+the total number of hands that contained all four suits.</p>
+<div class="highlight-c++"><div class="highlight"><pre><span class="cm">/************************* 2.0 Simulation Loop **/</span>
+	<span class="k">while</span> <span class="p">(</span><span class="n">numTests</span> <span class="o">&lt;</span> <span class="n">MAX</span><span class="p">)</span> <span class="p">{</span>
+		<span class="n">total</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>	<span class="c1">//reset counter</span>
+		
+<span class="cp">#pragma omp parallel for num_threads(nThreads) default(none) \</span>
+<span class="cp">		private (i, seed) \</span>
+<span class="cp">		shared (numTests) \</span>
+<span class="cp">		reduction (+:total)	\</span>
+<span class="cp">		schedule(dynamic)</span>
+		<span class="k">for</span> <span class="p">(</span><span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="n">numTests</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span> <span class="c1">//make new deck - pick hand - test for 4 suits</span>
+			<span class="k">if</span> <span class="p">(</span><span class="n">testOneHand</span><span class="p">(</span><span class="o">&amp;</span><span class="n">seed</span><span class="p">))</span>		<span class="c1">//returns TRUE iff 4-suits hand</span>
+				<span class="n">total</span> <span class="o">++</span><span class="p">;</span>		<span class="c1">//tally hands with 4-suits</span>
+		<span class="p">}</span>
+		<span class="c1">//calc % of 4-suit hands &amp; report results...</span>
+		<span class="n">percentage</span> <span class="o">=</span> <span class="mf">100.0</span><span class="o">*</span><span class="p">(</span> <span class="p">(</span><span class="kt">double</span><span class="p">)</span><span class="n">total</span><span class="p">)</span><span class="o">/</span><span class="n">numTests</span><span class="p">;</span>
+		<span class="n">cout</span><span class="o">&lt;&lt;</span><span class="n">setw</span><span class="p">(</span><span class="mi">12</span><span class="p">)</span><span class="o">&lt;&lt;</span><span class="n">numTests</span><span class="o">&lt;&lt;</span><span class="n">setw</span><span class="p">(</span><span class="mi">14</span><span class="p">)</span><span class="o">&lt;&lt;</span><span class="n">setprecision</span><span class="p">(</span><span class="mi">3</span> <span class="p">)</span><span class="o">&lt;&lt;</span><span class="n">fixed</span><span class="o">&lt;&lt;</span><span class="n">percentage</span><span class="o">&lt;&lt;</span><span class="n">endl</span><span class="p">;</span>
+		<span class="n">numTests</span> <span class="o">+=</span> <span class="n">numTests</span><span class="p">;</span>	<span class="c1">//double #tests for next round</span>
+	<span class="p">}</span> <span class="c1">//while</span>
+</pre></div>
+</div>
+<p>Note that the above example is for the linux version of the code, which uses the thread-safe rand_r() function.</p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../index.html">
+              <img class="logo" src="../_static/CSInParallel200wide.png" alt="Logo"/>
+            </a></p>
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Drawing Four Cards of the Same Suit</a><ul>
+<li><a class="reference internal" href="#code-files">Code Files</a></li>
+<li><a class="reference internal" href="#sequential-code">Sequential code</a></li>
+<li><a class="reference internal" href="#open-mp-version">Open MP Version</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="../RouletteSimulation/RouletteSimulation.html"
+                        title="previous chapter">Roulette Simulation</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="../Plinko/PlinkoGame.html"
+                        title="next chapter">Plinko  from the Price is Right</a></p>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../Plinko/PlinkoGame.html" title="Plinko from the Price is Right"
+             >next</a></li>
+        <li class="right" >
+          <a href="../RouletteSimulation/RouletteSimulation.html" title="Roulette Simulation"
+             >previous</a> |</li>
+        <li><a href="../index.html">Monte Carlo Simulation Exemplar</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright This work is licensed under a Creative Commons Attribution-ShareAlike 3.0 Unported License.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>

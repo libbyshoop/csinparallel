@@ -1,0 +1,177 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Advanced Topic: Seeds For Different Threads &mdash; Monte Carlo Simulation Exemplar</title>
+    
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+    <link rel="top" title="Monte Carlo Simulation Exemplar" href="../index.html" />
+    <link rel="prev" title="Exercises" href="../NextSteps/Exercises.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../NextSteps/Exercises.html" title="Exercises"
+             accesskey="P">previous</a></li>
+        <li><a href="../index.html">Monte Carlo Simulation Exemplar</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="advanced-topic-seeds-for-different-threads">
+<h1>Advanced Topic:  Seeds For Different Threads<a class="headerlink" href="#advanced-topic-seeds-for-different-threads" title="Permalink to this headline">¶</a></h1>
+<p>Adding OpenMP pragmas on the &#8216;workhorse&#8217; for loops where most of the computation is being done is often a helpful way to make your code run faster.  In the case of Monte Carlo simulations, there is one issue that should be addressed to ensure the best random distribution of numbers from the random number generator functions.  We must start each thread with a different seed.</p>
+<p>Recall that random number generators start from a &#8216;seed&#8217; large integer and create a sequence of integers by permuting the seed and each successive integer in a manner that ensures they are distributed across the range of all integers.  The key point is this: <em>the sequence of numbers from a random generator is always the same when it starts with the same seed</em>.  In code where we fork threads to do the work of generating random numbers, we lose the desired random distribution if each thread begins generating random numbers from the same seed.</p>
+<p>The solution to this issue for threaded code, which you can <a class="reference download internal" href="../_downloads/coinFlip_omp_seeds.cpp"><tt class="xref download docutils literal"><span class="pre">download</span> <span class="pre">as</span> <span class="pre">coinFlip_omp_seeds.cpp</span></tt></a>, is to ensure that each thread has its own seed from which it begins generating its sequence of integers.  Let&#8217;s revisit the coin flipping example.  Instead of generating one seed in main using time(), we can save a seed for each thread in an array and devise a function to create all of the seeds, based on the number of threads to run.  We can add this code at the beginning of our original file:</p>
+<div class="highlight-c++"><div class="highlight"><pre><span class="cm">/***  OMP ***/</span>
+<span class="k">const</span> <span class="kt">int</span> <span class="n">nThreads</span> <span class="o">=</span> <span class="mi">4</span><span class="p">;</span>  <span class="c1">// number of threads to use</span>
+<span class="kt">unsigned</span> <span class="kt">int</span> <span class="n">seeds</span><span class="p">[</span><span class="n">nThreads</span><span class="p">];</span>
+
+<span class="kt">void</span> <span class="n">seedThreads</span><span class="p">()</span> <span class="p">{</span>
+    <span class="kt">int</span> <span class="n">my_thread_id</span><span class="p">;</span>
+    <span class="kt">unsigned</span> <span class="kt">int</span> <span class="n">seed</span><span class="p">;</span>
+    <span class="cp">#pragma omp parallel private (seed, my_thread_id)</span>
+    <span class="p">{</span>
+        <span class="n">my_thread_id</span> <span class="o">=</span> <span class="n">omp_get_thread_num</span><span class="p">();</span>
+        
+        <span class="c1">//create seed on thread using current time</span>
+        <span class="kt">unsigned</span> <span class="kt">int</span> <span class="n">seed</span> <span class="o">=</span> <span class="p">(</span><span class="kt">unsigned</span><span class="p">)</span> <span class="n">time</span><span class="p">(</span><span class="nb">NULL</span><span class="p">);</span>
+        
+        <span class="c1">//munge the seed using our thread number so that each thread has its</span>
+        <span class="c1">//own unique seed, therefore ensuring it will generate a different set of numbers</span>
+        <span class="n">seeds</span><span class="p">[</span><span class="n">my_thread_id</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">seed</span> <span class="o">&amp;</span> <span class="mh">0xFFFFFFF0</span><span class="p">)</span> <span class="o">|</span> <span class="p">(</span><span class="n">my_thread_id</span> <span class="o">+</span> <span class="mi">1</span><span class="p">);</span>
+        
+        <span class="n">printf</span><span class="p">(</span><span class="s">&quot;Thread %d has seed %u</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">my_thread_id</span><span class="p">,</span> <span class="n">seeds</span><span class="p">[</span><span class="n">my_thread_id</span><span class="p">]);</span>
+    <span class="p">}</span>
+    
+<span class="p">}</span>
+<span class="cm">/***  OMP ***/</span>
+</pre></div>
+</div>
+<p>Not how we change the seed value for each thread by using the thread&#8217;s id to manipulate the original integer obtained from time().</p>
+<p>Then later in the main function, we add a call to this function:</p>
+<div class="highlight-c++"><div class="highlight"><pre>    <span class="cm">/***  OMP ***/</span> 
+    <span class="n">omp_set_num_threads</span><span class="p">(</span><span class="n">nThreads</span><span class="p">);</span>  
+    <span class="n">seedThreads</span><span class="p">();</span>
+    <span class="cm">/***  OMP ***/</span> 
+</pre></div>
+</div>
+<p>For each trial, we still parallelize the workhorse for loop, while also ensuring that each thread running concurrently has its own seed as the starting point for later numbers.</p>
+<div class="highlight-c++"><div class="highlight"><pre><span class="cp">#pragma omp parallel num_threads(nThreads) default(none) \</span>
+<span class="cp">        private(numFlips, tid, seed) \</span>
+<span class="cp">        shared(trialFlips, seeds) \</span>
+<span class="cp">        reduction(+:numHeads, numTails)</span>
+    <span class="p">{</span>
+        <span class="n">tid</span> <span class="o">=</span> <span class="n">omp_get_thread_num</span><span class="p">();</span>   <span class="c1">// my thread id</span>
+        <span class="n">seed</span> <span class="o">=</span> <span class="n">seeds</span><span class="p">[</span><span class="n">tid</span><span class="p">];</span>            <span class="c1">// it is much faster to keep a private copy of our seed</span>
+		<span class="n">srand</span><span class="p">(</span><span class="n">seed</span><span class="p">);</span>	              <span class="c1">//seed rand_r or rand</span>
+        
+        <span class="cp">#pragma omp for</span>
+        <span class="k">for</span> <span class="p">(</span><span class="n">numFlips</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">numFlips</span><span class="o">&lt;</span><span class="n">trialFlips</span><span class="p">;</span> <span class="n">numFlips</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+<span class="c1">//          in Windows, can use rand()</span>
+<span class="c1">//            if (rand()%2 == 0) // if random number is even, call it heads</span>
+            <span class="c1">// linux: rand_r() is thread safe, to be run on separate threads concurrently</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">rand_r</span><span class="p">(</span><span class="o">&amp;</span><span class="n">seed</span><span class="p">)</span><span class="o">%</span><span class="mi">2</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="c1">// if random number is even, call it heads</span>
+                <span class="n">numHeads</span><span class="o">++</span><span class="p">;</span>       
+            <span class="k">else</span>
+                <span class="n">numTails</span><span class="o">++</span><span class="p">;</span>
+        <span class="p">}</span>
+        
+    <span class="p">}</span>
+</pre></div>
+</div>
+<p>Study the above code carefully and compare it to our first version below.  The <cite>pragma omp</cite> directive above is forking the new set of threads, which do a bit of work to set up their own seeds.  Then the <cite>pragma omp for</cite> directive is indicating that those same threads should now split up the work of the for loop, just as in our previous example using the OpenMP pragma.  The first OpenMP version we showed you looked like this:</p>
+<div class="highlight-c++"><div class="highlight"><pre><span class="cp">#pragma omp parallel for num_threads(nThreads) default(none) \</span>
+<span class="cp">        private(numFlips, seed) \</span>
+<span class="cp">        shared(trialFlips) \</span>
+<span class="cp">        reduction(+:numHeads, numTails)</span>
+        <span class="k">for</span> <span class="p">(</span><span class="n">numFlips</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">numFlips</span><span class="o">&lt;</span><span class="n">trialFlips</span><span class="p">;</span> <span class="n">numFlips</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+            <span class="c1">// rand() is not thread safe in linux</span>
+            <span class="c1">// rand_r() is available in linux and thread safe,</span>
+            <span class="c1">// to be run on separate threads concurrently.</span>
+            <span class="c1">// On windows in visual studio, use rand(), which is thread safe.</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">rand_r</span><span class="p">(</span><span class="o">&amp;</span><span class="n">seed</span><span class="p">)</span><span class="o">%</span><span class="mi">2</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="c1">// if random number is even, call it heads</span>
+                <span class="n">numHeads</span><span class="o">++</span><span class="p">;</span>       
+            <span class="k">else</span>
+                <span class="n">numTails</span><span class="o">++</span><span class="p">;</span>
+        <span class="p">}</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">A common &#8216;gotcha&#8217; that can cause trouble is if you accidentally use the original
+<cite>pragma omp parallel for</cite> directive near the for loop in the new version.  This causes     incorrect unintended behavior. Remember to remove the <strong>parallel</strong> keyword in the inner block when nesting bloaks as shown in the new version where we set up seeds first before splitting the loop work.</p>
+</div>
+<p>Note that as before, in linux we need to use the rand_r() function for thread-safe generation of the numbers.  However, in Windows, the rand() function is thread-safe.</p>
+<div class="section" id="try-this-yourself">
+<h2>Try this yourself<a class="headerlink" href="#try-this-yourself" title="Permalink to this headline">¶</a></h2>
+<p>Try creating versions of the Roulette wheel simulation or drawing four suits that ensure that each thread is generating numbers from its own seed.</p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../index.html">
+              <img class="logo" src="../_static/CSInParallel200wide.png" alt="Logo"/>
+            </a></p>
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Advanced Topic:  Seeds For Different Threads</a><ul>
+<li><a class="reference internal" href="#try-this-yourself">Try this yourself</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="../NextSteps/Exercises.html"
+                        title="previous chapter">Exercises</a></p>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../NextSteps/Exercises.html" title="Exercises"
+             >previous</a></li>
+        <li><a href="../index.html">Monte Carlo Simulation Exemplar</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright This work is licensed under a Creative Commons Attribution-ShareAlike 3.0 Unported License.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>
