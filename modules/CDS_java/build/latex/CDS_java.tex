@@ -13,7 +13,7 @@
 
 
 \title{Concurrent Data Structures in Java}
-\date{July 21, 2014}
+\date{November 08, 2014}
 \release{}
 \author{CSInParallel Project}
 \newcommand{\sphinxlogo}{}
@@ -135,14 +135,19 @@ Please download \code{ConcurrentDataStructures.jar}. Inside the src directory ar
 The World Wide web is aptly named when you consider the URL links
 found in pages.  One page can have many links in it that take a
 viewer to another page, which has more links, and so on, forming a
-very large cyclic graph of interconnected pages.  In this lab you
+very large cyclic graph of interconnected pages.
+
+In this lab you
 will be finishing some code for a web crawler, or spider, that will
 start with a ‘seed’ URL to a web page and read it to find links to
 other pages.  Those links will be placed on a queue for further
-processing (we’ll call this the work queue).  When the initial page
+processing (we’ll call this the \textbf{work} queue).  When the initial page
 is processed, it is placed on another data structure to indicate
-that it has been visited.  This process is repeated for the next
-page whose link is on the work queue.  The code you will be given
+that it has been visited already-- this is the \textbf{finished} queue.
+This process is repeated for the next
+page whose link is on the work queue.
+
+The code you will be given
 uses a Java library for parsing html files and looking for links
 (java.net.URL).
 
@@ -150,7 +155,8 @@ uses a Java library for parsing html files and looking for links
 \section{To Start With}
 \label{TheSpiderLabonecrawler/TheSpiderLabonecrawler:to-start-with}
 Here are the files in the package lab.spider, which you will use as
-your starting point:
+your starting point. Place these files into your Java IDE as indicated
+by your instructor.
 
 \begin{Verbatim}[commandchars=\\\{\}]
 AllWordsCounter.java    // contains a ‘dictionary’ to hold counts of how often a URL is encounterd
@@ -168,15 +174,42 @@ TestSpider.java         // JUnit test class
 WordCount.java          // small helper class that holds a word and a count
 \end{Verbatim}
 
-Start by creating lab.spider in your own repository and copying
-these files.
-
 The Spider.java class is the one that you should work on for this
 assignment.  The RunSpider class contains main() and uses it.  As
 the code stands now it doesn’t really do anything if you run it.
 
 Examine the code in the files.  Begin by creating a class diagram
 that shows which classes ‘use’ or ‘have’ one of the other classes.
+
+
+\subsection{Java Collection Data Structures Used}
+\label{TheSpiderLabonecrawler/TheSpiderLabonecrawler:java-collection-data-structures-used}
+Become familiar with the data structures that are used in this program.
+The diagram below illustrates them.
+
+The class called \emph{AllWordsCounter}
+is able to return an array of \emph{WordCount} objects, each of which contains two data elements:
+a URL for a page, and a count of the number of times that URL was encountered by the crawler.
+In the \textbf{Spider} class, the method \emph{getUrlCounts} will return this array, shown on the left in
+the picture below.  This array can be used to examine what the spider encountered when it is
+finished running.
+
+The \textbf{Spider} class also contains a Queue called \textbf{work} and a List called \textbf{finished}.
+The Spider will start at a given, predetermined page and read all the links to URLs on it (this
+is called scraping the page, which you will implement in the \emph{processPage} method).
+The links it finds, illustrated on the far upper right in the following diagram,
+should be added to the \textbf{work} queue, and a counter for that link should be updated.
+
+The \textbf{Spider} class will repeat this process in the \emph{crawl} method
+by continuing to pull each URL to a page off the \textbf{work} queue, process it, and place
+it in the \textbf{finished} queue.  This is done for a certain number of times as designated by the
+integer called \emph{maxUrls}.
+\begin{figure}[htbp]
+\centering
+\capstart
+
+\includegraphics{Spider1.png}
+\caption{Single Spider accesses the data and does all the work}\end{figure}
 
 
 \subsection{To Do}
@@ -195,7 +228,8 @@ Complete the crawl() method.  When it works, both TestSpider unit tests should 
 There are comments in these methods to help assist you.
 \end{notice}
 
-Once your unit tests pass, you should be able to run the code,
+Once your unit tests pass, you should be able to run the code by executing
+the main method of the RunSpider class,
 which is currently ‘hard-coded’ to start at macalester.edu, and see
 it produce the URLs found when crawling, along with how many times
 it saw them.
@@ -217,13 +251,109 @@ Experiment with the BEGNNING\_URL variable found in RunSpider by choosing some o
 \begin{center}\setlength{\fboxsep}{5pt}\shadowbox{\box0}\end{center}
 
 
+\chapter{Improving the Spider}
+\label{SpiderLabpart2/SpiderLabpart2:improving-the-spider}\label{SpiderLabpart2/SpiderLabpart2::doc}
+
+\section{First Question: How much work is there?}
+\label{SpiderLabpart2/SpiderLabpart2:first-question-how-much-work-is-there}
+Once you have a completed working Spider, let’s examine how much
+work it has to do.  Try some experiments in which you continue
+using increasing values of maxUrls in the Spider.  Please note that
+you can provide this value in its constructor.
+
+\textbf{TO DO:}  Add a method to the
+Spider that enables you to ask how many pages are still left to
+work on in the ‘work’ queue.  You may also want to add a method to
+know how many pages have been finished.
+
+\textbf{TO DO:}  Change the RunSpider class to run some experiments with different
+values of maxUrls by executing several Spiders, one right after the other,
+with increasing numbers of URLs.  For each value of
+maxUrls, report on how much work is left to do.  How quickly is our
+single Spider overloaded with work?
+
+
+\section{Multiple Spiders to the rescue}
+\label{SpiderLabpart2/SpiderLabpart2:multiple-spiders-to-the-rescue}
+Now let’s examine how we can use multiple spiders working at the
+same time on this problem.  Your instructor will take a moment to
+explain how we will use a technique called threads to run many
+spiders at the same time, each of who will access the work,
+finished, and urlCounter queue.  Then you will try this out.
+
+\textbf{Note:} more details about the implementation can be found on the
+next page, which you can get to by following `next' in the upper and lower
+right of this page or going to the `Next Topic' in the menu on the left.
+
+There is a new lab.concurrentSpider package included in the code.
+Examine the \textbf{RunThreadedSpider} class.  Note that we now use
+a Java class called a Thread to begin running multiple instances of
+the \textbf{ConcurrentSpider}, one each per Thread that is started.
+The Spider is now in this class called
+ConcurrentSpider, and implements an interface called Runnable.
+
+A \emph{key feature} of concurrently running Spiders is that they must
+share the same data structures in order to work together.  To do
+this, we need to place the data structures they are working on in
+one class and create one instance of that class in
+RunConcurrentSpider.  Then each new ‘Runnable’ ConcurrentSpider
+will receive a reference to that class of shared data structures.
+We provide a class called \textbf{SharedSpiderData} for this purpose.
+
+
+\section{Can we share our original data structures?}
+\label{SpiderLabpart2/SpiderLabpart2:can-we-share-our-original-data-structures}
+We could attempt to use the original LinkedList and ArrayList data structures
+and share those among the threads.  However, these are not `thread safe',
+that is they are not guaranteed to behave properly when multiple threads are
+accessing and updating them at the same time.
+
+
+\section{Guaranteed implementation: Use concurrent data structures}
+\label{SpiderLabpart2/SpiderLabpart2:guaranteed-implementation-use-concurrent-data-structures}
+To ensure our code will work correctly using multiple threads, we will
+use the new Java Concurrent Data
+Structures from the package java.util.concurrent.  Begin with the
+file SharedSpiderData to see the types of shared, thread-safe data
+structures we will use for this version of the multi-threaded
+crawler.
+
+
+\subsection{To Do}
+\label{SpiderLabpart2/SpiderLabpart2:to-do}
+Finish the class called ConcurrentSpider so that it uses the new concurrent data structures when scraping
+the pages and keeping track of what has finished.  You will need to discover what methods on the concurrent data structures (ArrayBlockingQueue, ConcurrentLinkedQueue) are available for adding and removing elements.
+
+You will also find it useful to include the ability to have the RunThreadedSpider class be able to determine how much
+overall work was completed.
+\setbox0\vbox{
+\begin{minipage}{0.95\linewidth}
+\textbf{Try This:}
+
+\medskip
+
+\begin{itemize}
+\item {} 
+You can try using different numbers of threads, depending on how much your machine can handle, by changing the NUM\_THREADS variable in the RunThreadedSpider class.
+
+\item {} 
+Experiment with the parameter found in ComcurrentSpider constructor:  \emph{maxUrls}     If you double it, how many new urls were encountered?  Now that you have all these spider threads, you can likely scrape more URLs.
+
+\item {} 
+Experiment with the BEGNNING\_URL variable found in RunSpider by choosing some other pages of interest to you as starting points.
+
+\end{itemize}
+\end{minipage}}
+\begin{center}\setlength{\fboxsep}{5pt}\shadowbox{\box0}\end{center}
+
+
 \chapter{Using Multiple Processes}
 \label{URLSpider/URLSpider:using-multiple-processes}\label{URLSpider/URLSpider::doc}
 
 \section{Environment}
 \label{URLSpider/URLSpider:environment}\begin{enumerate}
 \item {} 
-On Machines with multiple cores
+On Machines with multiple cores,
 
 \end{enumerate}
 \begin{itemize}
@@ -241,8 +371,14 @@ Threads can share data in memory
 
 \item {} \begin{description}
 \item[{Ideally, needed work can get done faster}] \leavevmode\begin{itemize}
+\item {} \begin{description}
+\item[{There is a \textbf{speedup} in the computation when using multiple threads as opposed to using 1 thread}] \leavevmode\begin{itemize}
 \item {} 
-There is a speedup in the computation when using multiple threads as opposed to using 1 thread
+We measure speedup by taking the time to run the original non-threaded version and dividing it by the time to run the threaded version.
+
+\end{itemize}
+
+\end{description}
 
 \end{itemize}
 
@@ -252,17 +388,17 @@ There is a speedup in the computation when using multiple threads as opposed to 
 \begin{enumerate}
 \setcounter{enumi}{1}
 \item {} 
-Threads are not a concept associated with clusters of machines
+Threads are not a concept associated with clusters of machines, only multicore machines
 
 \end{enumerate}
 
 
-\section{Executing sequentially}
-\label{URLSpider/URLSpider:executing-sequentially}\begin{figure}[htbp]
+\section{Executing sequentially (original non-threaded version)}
+\label{URLSpider/URLSpider:executing-sequentially-original-non-threaded-version}\begin{figure}[htbp]
 \centering
 \capstart
 
-\includegraphics{Spider1.png}
+\includegraphics{Spider11.png}
 \caption{Single Spider accesses the data and does all the work}\end{figure}
 
 
@@ -376,9 +512,11 @@ public interface Runnable \PYGZob{}
         abstract public void run();
 \PYGZcb{}
 \end{Verbatim}
+
+In our case, this is called ConcurrentSpider
 \begin{itemize}
 \item {} 
-In a class containing ‘main’, create each thread and pass it a new instance of the Runnable class
+In a class containing ‘main’, create each new thread and pass it a new instance of the `Runnable' ConcurrentSpider class
 
 \end{itemize}
 
@@ -392,7 +530,7 @@ Create your shared data structures in a separate class
 Create one instance of the shared data class in the ‘main’ class
 
 \item {} 
-Pass that instance of the shared data to each instance of the Runnable class via the constructor
+Pass that instance of the shared data to each instance of the `Runnable' ConcurrentSpider class via the constructor
 
 \end{itemize}
 
@@ -421,6 +559,16 @@ ConcurrentLinkedQueue
 \end{description}
 
 \end{itemize}
+
+
+\section{Speedup}
+\label{URLSpider/URLSpider:java-util-concurrent}\label{URLSpider/URLSpider:speedup}
+Speedup is a number we can compute by running experiments.  It gives us an indication of how much faster
+our threaded version is than our original `sequential' version with one Spider.
+
+We measure speedup by taking the time to run the original non-threaded version and dividing it by the time to run the threaded version.  If when using 2 threads on the same number of URLS the code takes half the amount of time, we would have
+perfect speedup of 2.  This rarely happens, and we expect our speedup to be less than perfect due to some amount of overhead
+incurred when running threads that are updating shared data structures.
 \setbox0\vbox{
 \begin{minipage}{0.95\linewidth}
 \textbf{Dig Deeper:}
@@ -436,7 +584,7 @@ Roughly determine the speedup of your threaded version
 \end{enumerate}
 \begin{itemize}
 \item {} 
-For varying numbers of threads
+For varying numbers of threads, keeping the number of URLs processed constant
 
 \item {} 
 What will you need to measure?
@@ -448,87 +596,6 @@ What will you need to measure?
 Write a short report analyzing the speedup of your threaded solution
 
 \end{enumerate}
-\end{minipage}}
-\begin{center}\setlength{\fboxsep}{5pt}\shadowbox{\box0}\end{center}
-
-
-\chapter{Improving the Spider}
-\label{SpiderLabpart2/SpiderLabpart2:improving-the-spider}\label{SpiderLabpart2/SpiderLabpart2::doc}
-
-\section{First Question: How much work is there?}
-\label{SpiderLabpart2/SpiderLabpart2:first-question-how-much-work-is-there}
-Once you have a completed working spider, let’s examine how much
-work it has to do.  Try some experiments in which you continue
-using increasing values of maxUrls in the Spider.  Please note that
-you can provide this value in its constructor.  Add a method to the
-Spider that enables you to ask how many pages are still left to
-work on in the ‘work’ queue.  You may also want to add a method to
-know how many pages have been finished.
-
-Change the RunSpider class to run some experiments with different
-values of maxUrls by executing several Spiders.  For each value of
-maxUrls, report on how much work is left to do.  How quickly is our
-Spider overloaded with work?
-
-
-\section{Multiple Spiders to the rescue}
-\label{SpiderLabpart2/SpiderLabpart2:multiple-spiders-to-the-rescue}
-Now let’s examine how we can use multiple spiders working at the
-same time on this problem.  Your instructor will take a moment to
-explain how we will use a technique called threads to run many
-spiders at the same time, each of who will access the work,
-finished, and urlCounter queue.  Then you will try this out below.
-
-There is now a new lab.concurrentSpider package in our shared
-space.  Examine the RunThreadedSpider class.  Note that we now use
-a Java class called a Thread to begin running multiple instances of
-the Spider in many Threads.  The Spider is now in a class called
-ConcurrentSpider, and implements an interface called Runnable.
-
-A key feature of concurrently running Spiders is that they must
-share the same data structures in order to work together.  To do
-this, we need to place the data structures they are working on in
-one class and create one instance of that class in
-RunConcurrentSpider.  Then each new ‘Runnable’ ConcurrentSpider
-will receive a reference to that class of shared data structures.
-We provide a class called lab.concurrentSpider.SharedSpiderData for this purpose.
-
-
-\section{First try:  share our original data structures?}
-\label{SpiderLabpart2/SpiderLabpart2:first-try-share-our-original-data-structures}
-We could attempt to use the original LinkedList and ArrayList data structures and share those among the threads.  However, these are not `thread safe', that is they are not guaranteed to behave properly when multiple threads are accessing and updating them at the same time.
-
-
-\section{Second try: concurrent data structures}
-\label{SpiderLabpart2/SpiderLabpart2:second-try-concurrent-data-structures}
-To ensure our code will work correctly using multiple threads, we will
-use the new Java Concurrent Data
-Structures from the package java.util.concurrent.  Begin with the
-file SharedSpiderData to see the types of shared, thread-safe data
-structures we will use for this version of the multi-threaded
-crawler.
-
-
-\subsection{To Do}
-\label{SpiderLabpart2/SpiderLabpart2:to-do}
-Finish the classes called ConcurrentSpider and RunThreadedSpider.  You will need to discover what methods on the concurrent data structures (ArrayBlockingQueue, ConcurrentLinkedQueue) are available for adding and removing elements.
-\setbox0\vbox{
-\begin{minipage}{0.95\linewidth}
-\textbf{Try This:}
-
-\medskip
-
-\begin{itemize}
-\item {} 
-You can try using different numbers of threads, depending on how much your machine can handle.
-
-\item {} 
-Experiment with this variable found in ComcurrentSpider:  \emph{maxurls}     If you double it, how many new urls were encountered?  Now that you have all these spider threads, you can likely scrape more URLs.
-
-\item {} 
-Experiment with the BEGNNING\_URL variable found in RunSpider by choosing some other pages of interest to you as starting points.
-
-\end{itemize}
 \end{minipage}}
 \begin{center}\setlength{\fboxsep}{5pt}\shadowbox{\box0}\end{center}
 

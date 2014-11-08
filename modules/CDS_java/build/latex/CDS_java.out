@@ -1,15 +1,16 @@
 \BOOKMARK [0][-]{chapter.1}{A Single-process Web Crawler, or Spider}{}% 1
 \BOOKMARK [1][-]{section.1.1}{To Start With}{chapter.1}% 2
-\BOOKMARK [0][-]{chapter.2}{Using Multiple Processes}{}% 3
-\BOOKMARK [1][-]{section.2.1}{Environment}{chapter.2}% 4
-\BOOKMARK [1][-]{section.2.2}{Executing sequentially}{chapter.2}% 5
-\BOOKMARK [1][-]{section.2.3}{One spider}{chapter.2}% 6
-\BOOKMARK [1][-]{section.2.4}{Executing concurrently}{chapter.2}% 7
-\BOOKMARK [1][-]{section.2.5}{Multiple Spider `threads'}{chapter.2}% 8
-\BOOKMARK [1][-]{section.2.6}{Key point: locking}{chapter.2}% 9
-\BOOKMARK [1][-]{section.2.7}{How to do this in Java}{chapter.2}% 10
-\BOOKMARK [0][-]{chapter.3}{Improving the Spider}{}% 11
-\BOOKMARK [1][-]{section.3.1}{First Question: How much work is there?}{chapter.3}% 12
-\BOOKMARK [1][-]{section.3.2}{Multiple Spiders to the rescue}{chapter.3}% 13
-\BOOKMARK [1][-]{section.3.3}{First try: \040share our original data structures?}{chapter.3}% 14
-\BOOKMARK [1][-]{section.3.4}{Second try: concurrent data structures}{chapter.3}% 15
+\BOOKMARK [0][-]{chapter.2}{Improving the Spider}{}% 3
+\BOOKMARK [1][-]{section.2.1}{First Question: How much work is there?}{chapter.2}% 4
+\BOOKMARK [1][-]{section.2.2}{Multiple Spiders to the rescue}{chapter.2}% 5
+\BOOKMARK [1][-]{section.2.3}{Can we share our original data structures?}{chapter.2}% 6
+\BOOKMARK [1][-]{section.2.4}{Guaranteed implementation: Use concurrent data structures}{chapter.2}% 7
+\BOOKMARK [0][-]{chapter.3}{Using Multiple Processes}{}% 8
+\BOOKMARK [1][-]{section.3.1}{Environment}{chapter.3}% 9
+\BOOKMARK [1][-]{section.3.2}{Executing sequentially \(original non-threaded version\)}{chapter.3}% 10
+\BOOKMARK [1][-]{section.3.3}{One spider}{chapter.3}% 11
+\BOOKMARK [1][-]{section.3.4}{Executing concurrently}{chapter.3}% 12
+\BOOKMARK [1][-]{section.3.5}{Multiple Spider `threads'}{chapter.3}% 13
+\BOOKMARK [1][-]{section.3.6}{Key point: locking}{chapter.3}% 14
+\BOOKMARK [1][-]{section.3.7}{How to do this in Java}{chapter.3}% 15
+\BOOKMARK [1][-]{section.3.8}{Speedup}{chapter.3}% 16

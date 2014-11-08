@@ -27,7 +27,7 @@
     <script type="text/javascript" src="../_static/doctools.js"></script>
     <link rel="shortcut icon" href="../_static/favicon.ico"/>
     <link rel="top" title="Concurrent Data Structures in Java" href="../index.html" />
-    <link rel="next" title="Using Multiple Processes" href="../URLSpider/URLSpider.html" />
+    <link rel="next" title="Improving the Spider" href="../SpiderLabpart2/SpiderLabpart2.html" />
     <link rel="prev" title="Concurrent Data Structures in Java" href="../index.html" /> 
   </head>
   <body>
@@ -35,7 +35,7 @@
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
-          <a href="../URLSpider/URLSpider.html" title="Using Multiple Processes"
+          <a href="../SpiderLabpart2/SpiderLabpart2.html" title="Improving the Spider"
              accesskey="N">next</a></li>
         <li class="right" >
           <a href="../index.html" title="Concurrent Data Structures in Java"
@@ -54,20 +54,24 @@
 <p>The World Wide web is aptly named when you consider the URL links
 found in pages. &nbsp;One page can have many links in it that take a
 viewer to another page, which has more links, and so on, forming a
-very large cyclic graph of interconnected pages. &nbsp;In this lab you
+very large cyclic graph of interconnected pages.</p>
+<p>In this lab you
 will be finishing some code for a web crawler, or spider, that will
 start with a ‘seed’ URL to a web page and read it to find links to
 other pages. &nbsp;Those links will be placed on a queue&nbsp;for further
-processing (we’ll call this the work queue). &nbsp;When the initial page
+processing (we’ll call this the <strong>work</strong> queue). &nbsp;When the initial page
 is processed, it is placed on another data structure to indicate
-that it has been visited. &nbsp;This process is repeated for the next
-page whose link is on the work queue. &nbsp;The code you will be given
+that it has been visited already&#8211; this is the <strong>finished</strong> queue.
+This process is repeated for the next
+page whose link is on the work queue.</p>
+<p>The code you will be given
 uses a Java library for parsing html files and looking for links
 (java.net.URL).</p>
 <div class="section" id="to-start-with">
 <h2>To Start With<a class="headerlink" href="#to-start-with" title="Permalink to this headline">¶</a></h2>
 <p>Here are the files in the package lab.spider, which you will use as
-your starting point:</p>
+your starting point. Place these files into your Java IDE as indicated
+by your instructor.</p>
 <div class="highlight-python"><pre>AllWordsCounter.java    // contains a ‘dictionary’ to hold counts of how often a URL is encounterd
 
 HttpHelper.java         // contains methods to read html pages and extract links; also can detect whether a URL is an image
@@ -82,13 +86,35 @@ TestSpider.java         // JUnit test class
 
 WordCount.java          // small helper class that holds a word and a count</pre>
 </div>
-<p>Start by creating lab.spider in your own repository and copying
-these files.</p>
 <p>The Spider.java class is the one that you should work on for this
 assignment. &nbsp;The RunSpider class contains main() and uses it. &nbsp;As
 the code stands now it doesn’t really do anything if you run it.</p>
 <p>Examine the code in the files. &nbsp;Begin by creating a class diagram
 that shows which classes ‘use’ or ‘have’ one of the other classes.</p>
+<div class="section" id="java-collection-data-structures-used">
+<h3>Java Collection Data Structures Used<a class="headerlink" href="#java-collection-data-structures-used" title="Permalink to this headline">¶</a></h3>
+<p>Become familiar with the data structures that are used in this program.
+The diagram below illustrates them.</p>
+<p>The class called <em>AllWordsCounter</em>
+is able to return an array of <em>WordCount</em> objects, each of which contains two data elements:
+a URL for a page, and a count of the number of times that URL was encountered by the crawler.
+In the <strong>Spider</strong> class, the method <em>getUrlCounts</em> will return this array, shown on the left in
+the picture below.  This array can be used to examine what the spider encountered when it is
+finished running.</p>
+<p>The <strong>Spider</strong> class also contains a Queue called <strong>work</strong> and a List called <strong>finished</strong>.
+The Spider will start at a given, predetermined page and read all the links to URLs on it (this
+is called scraping the page, which you will implement in the <em>processPage</em> method).
+The links it finds, illustrated on the far upper right in the following diagram,
+should be added to the <strong>work</strong> queue, and a counter for that link should be updated.</p>
+<p>The <strong>Spider</strong> class will repeat this process in the <em>crawl</em> method
+by continuing to pull each URL to a page off the <strong>work</strong> queue, process it, and place
+it in the <strong>finished</strong> queue.  This is done for a certain number of times as designated by the
+integer called <em>maxUrls</em>.</p>
+<div class="align-center figure align-center">
+<img alt="alternate text" src="../_images/Spider1.png" style="width: 750px; height: 372px;" />
+<p class="caption">Single Spider accesses the data and does all the work</p>
+</div>
+</div>
 <div class="section" id="to-do">
 <h3>To Do<a class="headerlink" href="#to-do" title="Permalink to this headline">¶</a></h3>
 <p>Your task is to finish the Spider class by doing the following:</p>
@@ -102,7 +128,8 @@ that shows which classes ‘use’ or ‘have’ one of the other classes.</p>
 <p class="first admonition-title">Note</p>
 <p class="last">There are comments in these methods to help assist you.</p>
 </div>
-<p>Once your unit tests pass, you should be able to run the code,
+<p>Once your unit tests pass, you should be able to run the code by executing
+the main method of the RunSpider class,
 which is currently ‘hard-coded’ to start at macalester.edu, and see
 it produce the URLs found when crawling, along with how many times
 it saw them.</p>
@@ -130,6 +157,7 @@ it saw them.</p>
   <ul>
 <li><a class="reference internal" href="#">A Single-process Web Crawler, or Spider</a><ul>
 <li><a class="reference internal" href="#to-start-with">To Start With</a><ul>
+<li><a class="reference internal" href="#java-collection-data-structures-used">Java Collection Data Structures Used</a></li>
 <li><a class="reference internal" href="#to-do">To Do</a></li>
 </ul>
 </li>
@@ -141,8 +169,8 @@ it saw them.</p>
   <p class="topless"><a href="../index.html"
                         title="previous chapter">Concurrent Data Structures in Java</a></p>
   <h4>Next topic</h4>
-  <p class="topless"><a href="../URLSpider/URLSpider.html"
-                        title="next chapter">Using Multiple Processes</a></p>
+  <p class="topless"><a href="../SpiderLabpart2/SpiderLabpart2.html"
+                        title="next chapter">Improving the Spider</a></p>
         </div>
       </div>
       <div class="clearer"></div>
@@ -151,7 +179,7 @@ it saw them.</p>
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
-          <a href="../URLSpider/URLSpider.html" title="Using Multiple Processes"
+          <a href="../SpiderLabpart2/SpiderLabpart2.html" title="Improving the Spider"
              >next</a></li>
         <li class="right" >
           <a href="../index.html" title="Concurrent Data Structures in Java"

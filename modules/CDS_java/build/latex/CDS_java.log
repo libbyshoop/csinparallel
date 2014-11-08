@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-2.3-1.40.12 (TeX Live 2011) (format=pdflatex 2011.7.3)  21 JUL 2014 09:01
+This is pdfTeX, Version 3.1415926-2.3-1.40.12 (TeX Live 2011) (format=pdflatex 2011.7.3)  8 NOV 2014 17:00
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -924,99 +924,119 @@ Chapter 1.
 LaTeX Font Info:    Font shape `T1/phv/bx/n' in size <14.4> not available
 (Font)              Font shape `T1/phv/b/n' tried instead on input line 133.
 LaTeX Font Info:    Font shape `T1/phv/bx/n' in size <12> not available
-(Font)              Font shape `T1/phv/b/n' tried instead on input line 182.
-LaTeX Font Info:    Try loading font information for TS1+ptm on input line 186.
-
-(/usr/local/texlive/2011/texmf-dist/tex/latex/psnfss/ts1ptm.fd
-File: ts1ptm.fd 2001/06/04 font definitions for TS1/ptm.
-)
+(Font)              Font shape `T1/phv/b/n' tried instead on input line 185.
 
 Package Fancyhdr Warning: \fancyfoot's `E' option without twoside option is use
-less on input line 189.
+less on input line 190.
 
 [2
 
-]
-Overfull \hbox (14.79999pt too wide) in paragraph at lines 217--217
- [] 
- []
-
-[3]
-Chapter 2.
-<Spider1.png, id=106, 1002.74625pt x 497.86pt>
+] <Spider1.png, id=106, 1002.74625pt x 497.86pt>
 File: Spider1.png Graphic file (type png)
  <use Spider1.png>
-Package pdftex.def Info: Spider1.png used on input line 265.
+Package pdftex.def Info: Spider1.png used on input line 211.
 (pdftex.def)             Requested size: 1002.7438pt x 497.85878pt.
 File: Spider1.png Graphic file (type png)
 
 <use Spider1.png>
-Package pdftex.def Info: Spider1.png used on input line 265.
+Package pdftex.def Info: Spider1.png used on input line 211.
 (pdftex.def)             Requested size: 469.755pt x 233.23456pt.
+LaTeX Font Info:    Try loading font information for TS1+ptm on input line 219.
 
+
+(/usr/local/texlive/2011/texmf-dist/tex/latex/psnfss/ts1ptm.fd
+File: ts1ptm.fd 2001/06/04 font definitions for TS1/ptm.
+)
+Overfull \hbox (14.79999pt too wide) in paragraph at lines 251--251
+ [] 
+ []
+
+[3 <./Spider1.png>] [4]
+Chapter 2.
 
 Package Fancyhdr Warning: \fancyfoot's `E' option without twoside option is use
-less on input line 274.
+less on input line 320.
 
-[4
+[5
 
- <./Spider1.png>] <Spider2.png, id=114, 1043.9pt x 520.94624pt>
-File: Spider2.png Graphic file (type png)
-
-<use Spider2.png>
-Package pdftex.def Info: Spider2.png used on input line 311.
-(pdftex.def)             Requested size: 1043.89745pt x 520.94498pt.
-File: Spider2.png Graphic file (type png)
- <use Spider2.png>
-Package pdftex.def Info: Spider2.png used on input line 311.
-(pdftex.def)             Requested size: 469.755pt x 234.42365pt.
- [5 <./Spider2.png>]
-Overfull \hbox (14.79999pt too wide) in paragraph at lines 452--452
+]
+Overfull \hbox (14.79999pt too wide) in paragraph at lines 347--347
  [] 
  []
 
 [6]
 Chapter 3.
 
+Overfull \hbox (9.89067pt too wide) in paragraph at lines 375--375
+[]
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 375--375
+
+ []
+
+<Spider11.png, id=129, 1002.74625pt x 497.86pt>
+File: Spider11.png Graphic file (type png)
+ <use Spider11.png>
+Package pdftex.def Info: Spider11.png used on input line 401.
+(pdftex.def)             Requested size: 1002.7438pt x 497.85878pt.
+File: Spider11.png Graphic file (type png)
+
+<use Spider11.png>
+Package pdftex.def Info: Spider11.png used on input line 401.
+(pdftex.def)             Requested size: 469.755pt x 233.23456pt.
+ <Spider2.png, id=130, 1043.9pt x 520.94624pt>
+File: Spider2.png Graphic file (type png)
+
+<use Spider2.png>
+Package pdftex.def Info: Spider2.png used on input line 447.
+(pdftex.def)             Requested size: 1043.89745pt x 520.94498pt.
+File: Spider2.png Graphic file (type png)
+ <use Spider2.png>
+Package pdftex.def Info: Spider2.png used on input line 447.
+(pdftex.def)             Requested size: 469.755pt x 234.42365pt.
+
+
 Package Fancyhdr Warning: \fancyfoot's `E' option without twoside option is use
-less on input line 533.
+less on input line 455.
 
 [7
 
-]
-Overfull \hbox (14.79999pt too wide) in paragraph at lines 533--533
+] [8 <./Spider11.png> <./Spider2.png>] [9]
+Overfull \hbox (14.79999pt too wide) in paragraph at lines 600--600
  [] 
  []
 
 (./CDS_java.ind)
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 539.
- [8]
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 539.
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 606.
+ [10]
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 606.
  (./CDS_java.aux)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 539.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 539.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 606.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 606.
 Package rerunfilecheck Info: File `CDS_java.out' has not changed.
-(rerunfilecheck)             Checksum: 45A1EB71B0DB81B2EC4F35388A59CA0F;1046.
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 539.
+(rerunfilecheck)             Checksum: 7EA7A2826C81C2A542B9819180968DDD;1145.
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 606.
  ) 
 Here is how much of TeX's memory you used:
- 8771 strings out of 493633
- 122749 string characters out of 3143378
- 218247 words of memory out of 3000000
- 11851 multiletter control sequences out of 15000+200000
+ 8785 strings out of 493633
+ 123092 string characters out of 3143378
+ 218440 words of memory out of 3000000
+ 11859 multiletter control sequences out of 15000+200000
  53896 words of font info for 60 fonts, out of 3000000 for 9000
  832 hyphenation exceptions out of 8191
- 36i,11n,45p,549b,471s stack positions out of 5000i,500n,10000p,200000b,50000s
+ 36i,12n,45p,549b,479s stack positions out of 5000i,500n,10000p,200000b,50000s
 {/usr/local/texlive/2011/texmf-dist/fonts/enc/dvips/base/8r.enc}</usr/local/t
 exlive/2011/texmf-dist/fonts/type1/urw/courier/ucrr8a.pfb></usr/local/texlive/2
 011/texmf-dist/fonts/type1/urw/helvetic/uhvb8a.pfb></usr/local/texlive/2011/tex
 mf-dist/fonts/type1/urw/times/utmb8a.pfb></usr/local/texlive/2011/texmf-dist/fo
 nts/type1/urw/times/utmr8a.pfb></usr/local/texlive/2011/texmf-dist/fonts/type1/
 urw/times/utmri8a.pfb>
-Output written on CDS_java.pdf (10 pages, 135950 bytes).
+Output written on CDS_java.pdf (12 pages, 169221 bytes).
 PDF statistics:
- 175 PDF objects out of 1000 (max. 8388607)
- 154 compressed objects within 2 object streams
- 40 named destinations out of 1000 (max. 500000)
- 131 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 192 PDF objects out of 1000 (max. 8388607)
+ 168 compressed objects within 2 object streams
+ 45 named destinations out of 1000 (max. 500000)
+ 144 words of extra memory for PDF output out of 10000 (max. 10000000)
 
