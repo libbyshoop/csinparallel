@@ -22,8 +22,9 @@ Please download :download:`ConcurrentDataStructures.jar <code/ConcurrentDataStru
    :maxdepth: 1
 
    TheSpiderLabonecrawler/TheSpiderLabonecrawler
-   URLSpider/URLSpider
    SpiderLabpart2/SpiderLabpart2
+   URLSpider/URLSpider
+   
 
 
 .. comment

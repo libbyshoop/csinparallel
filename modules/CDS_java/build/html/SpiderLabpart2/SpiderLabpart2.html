@@ -27,7 +27,8 @@
     <script type="text/javascript" src="../_static/doctools.js"></script>
     <link rel="shortcut icon" href="../_static/favicon.ico"/>
     <link rel="top" title="Concurrent Data Structures in Java" href="../index.html" />
-    <link rel="prev" title="Using Multiple Processes" href="../URLSpider/URLSpider.html" /> 
+    <link rel="next" title="Using Multiple Processes" href="../URLSpider/URLSpider.html" />
+    <link rel="prev" title="A Single-process Web Crawler, or Spider" href="../TheSpiderLabonecrawler/TheSpiderLabonecrawler.html" /> 
   </head>
   <body>
     <div class="related">
@@ -35,7 +36,10 @@
       <ul>
         <li class="right" style="margin-right: 10px">
           <a href="../URLSpider/URLSpider.html" title="Using Multiple Processes"
-             accesskey="P">previous</a></li>
+             accesskey="N">next</a></li>
+        <li class="right" >
+          <a href="../TheSpiderLabonecrawler/TheSpiderLabonecrawler.html" title="A Single-process Web Crawler, or Spider"
+             accesskey="P">previous</a> |</li>
         <li><a href="../index.html">Concurrent Data Structures in Java</a> &raquo;</li> 
       </ul>
     </div>  
@@ -49,17 +53,19 @@
 <h1>Improving the Spider<a class="headerlink" href="#improving-the-spider" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="first-question-how-much-work-is-there">
 <h2>First Question: How much work is there?<a class="headerlink" href="#first-question-how-much-work-is-there" title="Permalink to this headline">¶</a></h2>
-<p>Once you have a completed working spider, let’s examine how much
+<p>Once you have a completed working Spider, let’s examine how much
 work it has to do. &nbsp;Try some experiments in which you continue
 using increasing values of maxUrls in the Spider. &nbsp;Please note that
-you can provide this value in its constructor. &nbsp;Add a method to the
+you can provide this value in its constructor.</p>
+<p><strong>TO DO:</strong>  Add a method to the
 Spider that enables you to ask how many pages are still left to
 work on in the ‘work’ queue. &nbsp;You may also want to add a method to
 know how many pages have been finished.</p>
-<p>Change the RunSpider class to run some experiments with different
-values of maxUrls by executing several Spiders. &nbsp;For each value of
+<p><strong>TO DO:</strong>  Change the RunSpider class to run some experiments with different
+values of maxUrls by executing several Spiders, one right after the other,
+with increasing numbers of URLs. &nbsp;For each value of
 maxUrls, report on how much work is left to do. &nbsp;How quickly is our
-Spider overloaded with work?</p>
+single Spider overloaded with work?</p>
 </div>
 <div class="section" id="multiple-spiders-to-the-rescue">
 <h2>Multiple Spiders to the rescue<a class="headerlink" href="#multiple-spiders-to-the-rescue" title="Permalink to this headline">¶</a></h2>
@@ -67,26 +73,33 @@ Spider overloaded with work?</p>
 same time on this problem. &nbsp;Your instructor will take a moment to
 explain how we will use a technique called threads to run many
 spiders at the same time, each of who will access the work,
-finished, and urlCounter queue. &nbsp;Then you will try this out below.</p>
-<p>There is now a new lab.concurrentSpider package in our shared
-space. &nbsp;Examine the RunThreadedSpider class. &nbsp;Note that we now use
+finished, and urlCounter queue. &nbsp;Then you will try this out.</p>
+<p><strong>Note:</strong> more details about the implementation can be found on the
+next page, which you can get to by following &#8216;next&#8217; in the upper and lower
+right of this page or going to the &#8216;Next Topic&#8217; in the menu on the left.</p>
+<p>There is a new lab.concurrentSpider package included in the code.
+Examine the <strong>RunThreadedSpider</strong> class. &nbsp;Note that we now use
 a Java class called a Thread to begin running multiple instances of
-the Spider in many Threads. &nbsp;The Spider is now in a class called
+the <strong>ConcurrentSpider</strong>, one each per Thread that is started.
+The Spider is now in this class called
 ConcurrentSpider, and implements an interface called Runnable.</p>
-<p>A key feature of concurrently running Spiders is that they must
+<p>A <em>key feature</em> of concurrently running Spiders is that they must
 share the same data structures in order to work together.&nbsp; To do
 this, we need to place the data structures they are working on in
 one class and create one instance of that class in
 RunConcurrentSpider. &nbsp;Then each new ‘Runnable’ ConcurrentSpider
 will receive a reference to that class of shared data structures.
-We provide a class called lab.concurrentSpider.SharedSpiderData for this purpose.</p>
+We provide a class called <strong>SharedSpiderData</strong> for this purpose.</p>
 </div>
-<div class="section" id="first-try-share-our-original-data-structures">
-<h2>First try: &nbsp;share our original data structures?<a class="headerlink" href="#first-try-share-our-original-data-structures" title="Permalink to this headline">¶</a></h2>
-<p>We could attempt to use the original LinkedList and ArrayList data structures and share those among the threads.  However, these are not &#8216;thread safe&#8217;, that is they are not guaranteed to behave properly when multiple threads are accessing and updating them at the same time.</p>
+<div class="section" id="can-we-share-our-original-data-structures">
+<h2>Can we share our original data structures?<a class="headerlink" href="#can-we-share-our-original-data-structures" title="Permalink to this headline">¶</a></h2>
+<p>We could attempt to use the original LinkedList and ArrayList data structures
+and share those among the threads.  However, these are not &#8216;thread safe&#8217;,
+that is they are not guaranteed to behave properly when multiple threads are
+accessing and updating them at the same time.</p>
 </div>
-<div class="section" id="second-try-concurrent-data-structures">
-<h2>Second try: concurrent data structures<a class="headerlink" href="#second-try-concurrent-data-structures" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="guaranteed-implementation-use-concurrent-data-structures">
+<h2>Guaranteed implementation: Use concurrent data structures<a class="headerlink" href="#guaranteed-implementation-use-concurrent-data-structures" title="Permalink to this headline">¶</a></h2>
 <p>To ensure our code will work correctly using multiple threads, we will
 use the new Java Concurrent Data
 Structures from the package java.util.concurrent. &nbsp;Begin with the
@@ -95,12 +108,15 @@ structures we will use for this version of the multi-threaded
 crawler.</p>
 <div class="section" id="to-do">
 <h3>To Do<a class="headerlink" href="#to-do" title="Permalink to this headline">¶</a></h3>
-<p>Finish the classes called ConcurrentSpider and RunThreadedSpider.  You will need to discover what methods on the concurrent data structures (ArrayBlockingQueue, ConcurrentLinkedQueue) are available for adding and removing elements.</p>
+<p>Finish the class called ConcurrentSpider so that it uses the new concurrent data structures when scraping
+the pages and keeping track of what has finished.  You will need to discover what methods on the concurrent data structures (ArrayBlockingQueue, ConcurrentLinkedQueue) are available for adding and removing elements.</p>
+<p>You will also find it useful to include the ability to have the RunThreadedSpider class be able to determine how much
+overall work was completed.</p>
 <div class="topic">
 <p class="topic-title first">Try This:</p>
 <ul class="simple">
-<li>You can try using different numbers of threads, depending on how much your machine can handle.</li>
-<li>Experiment with this variable found in ComcurrentSpider: &nbsp;<cite>maxurls</cite> &nbsp; &nbsp; If you double it, how many new urls were encountered? &nbsp;Now that you have all these spider threads, you can likely scrape more URLs.</li>
+<li>You can try using different numbers of threads, depending on how much your machine can handle, by changing the NUM_THREADS variable in the RunThreadedSpider class.</li>
+<li>Experiment with the parameter found in ComcurrentSpider constructor: &nbsp;<cite>maxUrls</cite> &nbsp; &nbsp; If you double it, how many new urls were encountered? &nbsp;Now that you have all these spider threads, you can likely scrape more URLs.</li>
 <li>Experiment with the BEGNNING_URL variable found in RunSpider by choosing some other pages of interest to you as starting points.</li>
 </ul>
 </div>
@@ -122,8 +138,8 @@ crawler.</p>
 <li><a class="reference internal" href="#">Improving the Spider</a><ul>
 <li><a class="reference internal" href="#first-question-how-much-work-is-there">First Question: How much work is there?</a></li>
 <li><a class="reference internal" href="#multiple-spiders-to-the-rescue">Multiple Spiders to the rescue</a></li>
-<li><a class="reference internal" href="#first-try-share-our-original-data-structures">First try: &nbsp;share our original data structures?</a></li>
-<li><a class="reference internal" href="#second-try-concurrent-data-structures">Second try: concurrent data structures</a><ul>
+<li><a class="reference internal" href="#can-we-share-our-original-data-structures">Can we share our original data structures?</a></li>
+<li><a class="reference internal" href="#guaranteed-implementation-use-concurrent-data-structures">Guaranteed implementation: Use concurrent data structures</a><ul>
 <li><a class="reference internal" href="#to-do">To Do</a></li>
 </ul>
 </li>
@@ -132,8 +148,11 @@ crawler.</p>
 </ul>
 
   <h4>Previous topic</h4>
+  <p class="topless"><a href="../TheSpiderLabonecrawler/TheSpiderLabonecrawler.html"
+                        title="previous chapter">A Single-process Web Crawler, or Spider</a></p>
+  <h4>Next topic</h4>
   <p class="topless"><a href="../URLSpider/URLSpider.html"
-                        title="previous chapter">Using Multiple Processes</a></p>
+                        title="next chapter">Using Multiple Processes</a></p>
         </div>
       </div>
       <div class="clearer"></div>
@@ -143,7 +162,10 @@ crawler.</p>
       <ul>
         <li class="right" style="margin-right: 10px">
           <a href="../URLSpider/URLSpider.html" title="Using Multiple Processes"
-             >previous</a></li>
+             >next</a></li>
+        <li class="right" >
+          <a href="../TheSpiderLabonecrawler/TheSpiderLabonecrawler.html" title="A Single-process Web Crawler, or Spider"
+             >previous</a> |</li>
         <li><a href="../index.html">Concurrent Data Structures in Java</a> &raquo;</li> 
       </ul>
     </div>

@@ -5,18 +5,19 @@ Using Multiple Processes
 Environment
 ###########
 
-1. On Machines with multiple cores
+1. On Machines with multiple cores,
 
 * **Threads** within a program can enable concurrency
 	* Run in parallel on multiple cores
 * Threads can share data in memory
 * Ideally, needed work can get done faster
-	* There is a speedup in the computation when using multiple threads as opposed to using 1 thread
+	* There is a **speedup** in the computation when using multiple threads as opposed to using 1 thread
+		* We measure speedup by taking the time to run the original non-threaded version and dividing it by the time to run the threaded version.
 
-2. Threads are not a concept associated with clusters of machines
+2. Threads are not a concept associated with clusters of machines, only multicore machines
 
-Executing sequentially
-######################
+Executing sequentially (original non-threaded version)
+######################################################
 
 .. figure:: Spider1.png
     :width: 750px
@@ -84,14 +85,16 @@ Creating Threads in Java
 			abstract public void run();
 		} 
 
-* In a class containing ‘main’, create each thread and pass it a new instance of the Runnable class
+In our case, this is called ConcurrentSpider
+
+* In a class containing ‘main’, create each new thread and pass it a new instance of the 'Runnable' ConcurrentSpider class
 
 Sharing the Data
 ****************
 
 * Create your shared data structures in a separate class
 * Create one instance of the shared data class in the ‘main’ class
-* Pass that instance of the shared data to each instance of the Runnable class via the constructor
+* Pass that instance of the shared data to each instance of the 'Runnable' ConcurrentSpider class via the constructor
 
 The Shared Data
 ***************
@@ -106,13 +109,23 @@ The Shared Data
 .. _`java.util.concurrent`: http://java.sun.com/j2se/1.5.0/docs/api/java/util/concurrent/package-summary.html
 
 
+Speedup
+#########
+
+Speedup is a number we can compute by running experiments.  It gives us an indication of how much faster
+our threaded version is than our original 'sequential' version with one Spider. 
+
+We measure speedup by taking the time to run the original non-threaded version and dividing it by the time to run the threaded version.  If when using 2 threads on the same number of URLS the code takes half the amount of time, we would have
+perfect speedup of 2.  This rarely happens, and we expect our speedup to be less than perfect due to some amount of overhead
+incurred when running threads that are updating shared data structures.
+
 .. topic:: Dig Deeper:
 
 	Once you’ve implemented your solution,
 
 	1. Roughly determine the speedup of your threaded version
 
-	* For varying numbers of threads
+	* For varying numbers of threads, keeping the number of URLs processed constant
 	* What will you need to measure?
 
 	2. Write a short report analyzing the speedup of your threaded solution
