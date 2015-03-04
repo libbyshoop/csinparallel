@@ -20,8 +20,6 @@ int main(int argc, char *argv[]) {
     int result[WIDTH];                  /* for storing result in each process */
     int global_result[WIDTH];           /* vector result after all calculations */
 
-    MPI_Status status;                  /* status for receiving */
-
     /* Initialize MPI execution environment */
     // TO DO:
     MPI_Init( &argc,&argv);

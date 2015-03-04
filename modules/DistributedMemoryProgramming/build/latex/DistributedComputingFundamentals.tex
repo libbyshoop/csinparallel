@@ -13,7 +13,7 @@
 
 
 \title{Distributed Computing Fundamentals}
-\date{July 26, 2013}
+\date{March 04, 2015}
 \release{}
 \author{CSInParallel Project}
 \newcommand{\sphinxlogo}{}
@@ -117,6 +117,11 @@
 \phantomsection\label{index::doc}
 
 
+This module will guide you through the basics of programming using distributed processes
+by providing some background and code examples using the Message Passing Interface (MPI)
+library and the C programming language. Below is a table of contents. The links labeled `next'
+on the upper right of this page take you through each section.
+
 
 \chapter{Instructor/Student Notes}
 \label{Prerequisites/Prerequisites:distributed-computing-fundamentals}\label{Prerequisites/Prerequisites:instructor-student-notes}\label{Prerequisites/Prerequisites::doc}
@@ -134,10 +139,10 @@ of machines.  The examples and activities follow from simple introductory exampl
 \label{Prerequisites/Prerequisites:files-to-try-on-your-cluster}
 The following examples are used in the next few pages of this module.  You can download each one (right-click and save) and eventually use a client such as scp to copy them up to a cluster machine.  \emph{However, they may already be available on your cluster. Check with your instructor.}
 
-The first one is a complete zip file of all of them. The rest are each individual file.
+The first one is a complete tar and gzipped archive file of all of them. The rest are each individual files.
 
 Zip File:
-\code{download dist\_example\_code.zip}
+\code{download dist\_example\_code.tgz}
 
 Simplest Hello World Example:
 \code{download hellompi.c}
@@ -387,8 +392,8 @@ A variety of implementations are available.
 \end{itemize}
 
 
-\section{How do I write MPI program ?}
-\label{introMPI/introMPI:how-do-i-write-mpi-program}
+\section{How do I write an MPI program ?}
+\label{introMPI/introMPI:how-do-i-write-an-mpi-program}
 In order to get the MPI library working, you need to include the header file \textbf{\#include \textless{}mpi.h\textgreater{}} or \textbf{\#include “mpi.h”} in your C code.
 
 
@@ -754,7 +759,7 @@ file called machines that describes your system:
 \PYG{n}{mpirun} \PYG{o}{-}\PYG{n}{machinefile} \PYG{n}{machines} \PYG{o}{-}\PYG{n}{np} \PYG{l+m+mi}{3} \PYG{p}{.}\PYG{o}{/}\PYG{n}{hellompi}
 \end{Verbatim}
 
-Sepending on how many other people are using your cluster and how big it is, you can try
+Depending on how many other people are using your cluster and how big it is, you can try
 different numbers of processes by changing the 3 above.
 
 Once that seems to be working for you, try the exammple 2, which uses sends and receives.
@@ -916,7 +921,7 @@ In this example, \textbf{ROW} is the number of rows of the matrix, so each proce
 \subsection{Activity 3: Vector Matrix Multiplication Improved Version}
 \label{DecompositionAndActivity/DecompositionAndActivity:activity-3-vector-matrix-multiplication-improved-version}
 To download the source code to do this activity:
-\code{download vector\_matrix\_todo.c}
+\code{download vector\_matrix\_mpi\_todo.c}
 
 Have it open in an editor so that you can work on it.  Or at a minimum use your browser and right-click on the link above and choose to open it in a new browser window.
 
@@ -930,7 +935,7 @@ back to the master. Finally the master will receive results from workers, and co
 \begin{quote}\begin{description}
 \item[{Comments}] \leavevmode\begin{itemize}
 \item {} 
-I will walk you through the code step by step. First, we will need to initialize the MPI environment, define the size of the communicator, and give a rank to each process. This should be straight forward to you because you have seen this many times already.
+Let's walk through the code step by step. First, we will need to initialize the MPI environment, define the size of the communicator, and give a rank to each process. This should be straight forward to you because you have seen this many times already.
 
 \begin{Verbatim}[commandchars=\\\{\}]
 \PYG{c+cm}{/* Initialize MPI execution environment */}

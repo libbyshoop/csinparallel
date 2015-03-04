@@ -15,10 +15,10 @@ Files to try on your cluster
 
 The following examples are used in the next few pages of this module.  You can download each one (right-click and save) and eventually use a client such as scp to copy them up to a cluster machine.  *However, they may already be available on your cluster. Check with your instructor.*
 
-The first one is a complete zip file of all of them. The rest are each individual file.
+The first one is a complete tar and gzipped archive file of all of them. The rest are each individual files.
 
 Zip File: 
-:download:`download dist_example_code.zip <dist_example_code.zip>`
+:download:`download dist_example_code.tgz <dist_example_code.tgz>`
 
 Simplest Hello World Example:
 :download:`download hellompi.c <dist_example_code/hellompi.c>`

@@ -35,4 +35,5 @@ int main(int argc, char * argv[]) {
     
     /* Terminate MPI execution environment */
     MPI_Finalize();
+    return 0;
 }

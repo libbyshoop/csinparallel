@@ -21,9 +21,9 @@ There are many reasons for using MPI as our parallel programming model:
 	- There are many useful functions available in the MPI Library.
 	- A variety of implementations are available.
 
-****************************
-How do I write MPI program ?
-****************************
+********************************
+How do I write an MPI program ?
+********************************
 
 In order to get the MPI library working, you need to include the header file **#include <mpi.h>** or **#include “mpi.h”** in your C code.
 

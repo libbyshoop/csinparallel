@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-2.3-1.40.12 (TeX Live 2011) (format=pdflatex 2011.7.3)  26 JUL 2013 23:21
+This is pdfTeX, Version 3.1415926-2.3-1.40.12 (TeX Live 2011) (format=pdflatex 2011.7.3)  4 MAR 2015 12:29
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -916,209 +916,211 @@ less on input line 116.
 Package Fancyhdr Warning: \fancyhead's `E' option without twoside option is use
 less on input line 116.
 
+[1
+
+]
 Chapter 1.
 LaTeX Font Info:    Font shape `T1/phv/bx/n' in size <14.4> not available
-(Font)              Font shape `T1/phv/b/n' tried instead on input line 121.
-LaTeX Font Info:    Try loading font information for T1+pcr on input line 140.
+(Font)              Font shape `T1/phv/b/n' tried instead on input line 126.
+LaTeX Font Info:    Try loading font information for T1+pcr on input line 145.
 (/usr/local/texlive/2011/texmf-dist/tex/latex/psnfss/t1pcr.fd
 File: t1pcr.fd 2001/06/04 font definitions for T1/pcr.
 )
 
 Package Fancyhdr Warning: \fancyfoot's `E' option without twoside option is use
-less on input line 170.
+less on input line 175.
 
-[1
+[2
 
-
-] [2]
+] [3]
 Chapter 2.
-LaTeX Font Info:    Try loading font information for TS1+ptm on input line 183.
+LaTeX Font Info:    Try loading font information for TS1+ptm on input line 188.
 
 (/usr/local/texlive/2011/texmf-dist/tex/latex/psnfss/ts1ptm.fd
 File: ts1ptm.fd 2001/06/04 font definitions for TS1/ptm.
 )
-<SharedMemoryUMA.png, id=143, 450.68375pt x 302.12875pt>
+<SharedMemoryUMA.png, id=147, 450.68375pt x 302.12875pt>
 File: SharedMemoryUMA.png Graphic file (type png)
 
 <use SharedMemoryUMA.png>
-Package pdftex.def Info: SharedMemoryUMA.png used on input line 207.
+Package pdftex.def Info: SharedMemoryUMA.png used on input line 212.
 (pdftex.def)             Requested size: 450.68263pt x 302.128pt.
 File: SharedMemoryUMA.png Graphic file (type png)
  <use SharedMemoryUMA.png>
-Package pdftex.def Info: SharedMemoryUMA.png used on input line 207.
+Package pdftex.def Info: SharedMemoryUMA.png used on input line 212.
 (pdftex.def)             Requested size: 450.68263pt x 302.128pt.
 
 
 Package Fancyhdr Warning: \fancyfoot's `E' option without twoside option is use
-less on input line 209.
+less on input line 214.
 
-[3
+[4
 
-] <DistributedMemory.png, id=148, 525.965pt x 213.79875pt>
+] <DistributedMemory.png, id=152, 525.965pt x 213.79875pt>
 File: DistributedMemory.png Graphic file (type png)
 
 <use DistributedMemory.png>
-Package pdftex.def Info: DistributedMemory.png used on input line 234.
+Package pdftex.def Info: DistributedMemory.png used on input line 239.
 (pdftex.def)             Requested size: 525.9637pt x 213.79822pt.
 File: DistributedMemory.png Graphic file (type png)
  <use DistributedMemory.png>
-Package pdftex.def Info: DistributedMemory.png used on input line 234.
+Package pdftex.def Info: DistributedMemory.png used on input line 239.
 (pdftex.def)             Requested size: 469.755pt x 190.95883pt.
- [4 <./SharedMemoryUMA.png>]
-Overfull \hbox (14.79999pt too wide) in paragraph at lines 313--313
+ [5 <./SharedMemoryUMA.png>]
+Overfull \hbox (14.79999pt too wide) in paragraph at lines 318--318
  [] 
  []
 
-[5 <./DistributedMemory.png>]
+[6 <./DistributedMemory.png>]
 LaTeX Font Info:    Font shape `T1/phv/bx/n' in size <9> not available
-(Font)              Font shape `T1/phv/b/n' tried instead on input line 316.
- [6]
+(Font)              Font shape `T1/phv/b/n' tried instead on input line 321.
+ [7]
 Chapter 3.
-<LittleFe.jpg, id=166, 2601.72pt x 1734.48pt>
+<LittleFe.jpg, id=170, 2601.72pt x 1734.48pt>
 File: LittleFe.jpg Graphic file (type jpg)
  <use LittleFe.jpg>
-Package pdftex.def Info: LittleFe.jpg used on input line 330.
+Package pdftex.def Info: LittleFe.jpg used on input line 335.
 (pdftex.def)             Requested size: 2601.71368pt x 1734.47578pt.
 File: LittleFe.jpg Graphic file (type jpg)
 
 <use LittleFe.jpg>
-Package pdftex.def Info: LittleFe.jpg used on input line 330.
+Package pdftex.def Info: LittleFe.jpg used on input line 335.
 (pdftex.def)             Requested size: 469.755pt x 313.17216pt.
 
 
 Package Fancyhdr Warning: \fancyfoot's `E' option without twoside option is use
-less on input line 332.
+less on input line 337.
 
-[7
+[8
 
 ]
-Overfull \hbox (14.79999pt too wide) in paragraph at lines 350--350
+Overfull \hbox (14.79999pt too wide) in paragraph at lines 355--355
  [] 
  []
 
 LaTeX Font Info:    Font shape `T1/phv/bx/n' in size <12> not available
-(Font)              Font shape `T1/phv/b/n' tried instead on input line 353.
-[8 <./LittleFe.jpg>]
+(Font)              Font shape `T1/phv/b/n' tried instead on input line 358.
+[9 <./LittleFe.jpg>]
 Chapter 4.
-<MPIstructure.png, id=177, 462.72874pt x 523.9575pt>
+<MPIstructure.png, id=181, 462.72874pt x 523.9575pt>
 File: MPIstructure.png Graphic file (type png)
  <use MPIstructure.png>
-Package pdftex.def Info: MPIstructure.png used on input line 399.
+Package pdftex.def Info: MPIstructure.png used on input line 404.
 (pdftex.def)             Requested size: 462.72762pt x 523.95622pt.
 File: MPIstructure.png Graphic file (type png)
 
 <use MPIstructure.png>
-Package pdftex.def Info: MPIstructure.png used on input line 399.
+Package pdftex.def Info: MPIstructure.png used on input line 404.
 (pdftex.def)             Requested size: 462.72762pt x 523.95622pt.
 
 
 Package Fancyhdr Warning: \fancyfoot's `E' option without twoside option is use
-less on input line 401.
+less on input line 406.
 
-[9
+[10
 
-] <MPI_COMM_WORLD.png, id=183, 506.89375pt x 307.1475pt>
+] <MPI_COMM_WORLD.png, id=187, 506.89375pt x 307.1475pt>
 File: MPI_COMM_WORLD.png Graphic file (type png)
 
 <use MPI_COMM_WORLD.png>
-Package pdftex.def Info: MPI_COMM_WORLD.png used on input line 407.
+Package pdftex.def Info: MPI_COMM_WORLD.png used on input line 412.
 (pdftex.def)             Requested size: 506.89252pt x 307.14674pt.
 File: MPI_COMM_WORLD.png Graphic file (type png)
  <use MPI_COMM_WORLD.png>
-Package pdftex.def Info: MPI_COMM_WORLD.png used on input line 407.
+Package pdftex.def Info: MPI_COMM_WORLD.png used on input line 412.
 (pdftex.def)             Requested size: 469.755pt x 284.65063pt.
- [10 <./MPIstructure.png>]
-[11 <./MPI_COMM_WORLD.png>]
+ [11 <./MPIstructure.png>]
+[12 <./MPI_COMM_WORLD.png>]
 LaTeX Font Info:    Font shape `T1/pcr/m/it' in size <9> not available
-(Font)              Font shape `T1/pcr/m/sl' tried instead on input line 458.
+(Font)              Font shape `T1/pcr/m/sl' tried instead on input line 463.
 LaTeX Font Info:    Font shape `T1/pcr/bx/n' in size <9> not available
-(Font)              Font shape `T1/pcr/b/n' tried instead on input line 461.
- [12]
+(Font)              Font shape `T1/pcr/b/n' tried instead on input line 466.
+ [13]
 Chapter 5.
 
 Package Fancyhdr Warning: \fancyfoot's `E' option without twoside option is use
-less on input line 582.
+less on input line 587.
 
-[13
+[14
 
-] <collective.png, id=208, 432.61626pt x 345.29pt>
+] <collective.png, id=212, 432.61626pt x 345.29pt>
 File: collective.png Graphic file (type png)
  <use collective.png>
-Package pdftex.def Info: collective.png used on input line 633.
+Package pdftex.def Info: collective.png used on input line 638.
 (pdftex.def)             Requested size: 432.6152pt x 345.28914pt.
 File: collective.png Graphic file (type png)
 
 <use collective.png>
-Package pdftex.def Info: collective.png used on input line 633.
+Package pdftex.def Info: collective.png used on input line 638.
 (pdftex.def)             Requested size: 432.6152pt x 345.28914pt.
- [14] [15 <./collective.png>] [16]
+ [15] [16 <./collective.png>] [17]
 Chapter 6.
 
 Package Fancyhdr Warning: \fancyfoot's `E' option without twoside option is use
-less on input line 741.
+less on input line 746.
 
-[17
+[18
 
 ]
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `math shift' on input line 767.
+(hyperref)                removing `math shift' on input line 772.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `\pi' on input line 767.
+(hyperref)                removing `\pi' on input line 772.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `math shift' on input line 767.
+(hyperref)                removing `math shift' on input line 772.
 
-<graph.png, id=229, 323.2075pt x 204.765pt>
+<graph.png, id=233, 323.2075pt x 204.765pt>
 File: graph.png Graphic file (type png)
  <use graph.png>
-Package pdftex.def Info: graph.png used on input line 780.
+Package pdftex.def Info: graph.png used on input line 785.
 (pdftex.def)             Requested size: 323.20671pt x 204.76448pt.
 File: graph.png Graphic file (type png)
  <use graph.png>
-Package pdftex.def Info: graph.png used on input line 780.
+Package pdftex.def Info: graph.png used on input line 785.
 (pdftex.def)             Requested size: 323.20671pt x 204.76448pt.
 
-[18 <./graph.png>] [19]
-<vector_matrix_multi.png, id=245, 536.49847pt x 272.07529pt>
+[19 <./graph.png>] [20]
+<vector_matrix_multi.png, id=249, 536.49847pt x 272.07529pt>
 File: vector_matrix_multi.png Graphic file (type png)
 
 <use vector_matrix_multi.png>
-Package pdftex.def Info: vector_matrix_multi.png used on input line 834.
+Package pdftex.def Info: vector_matrix_multi.png used on input line 839.
 (pdftex.def)             Requested size: 536.49715pt x 272.07462pt.
 File: vector_matrix_multi.png Graphic file (type png)
  <use vector_matrix_multi.png>
-Package pdftex.def Info: vector_matrix_multi.png used on input line 834.
+Package pdftex.def Info: vector_matrix_multi.png used on input line 839.
 (pdftex.def)             Requested size: 469.755pt x 238.23964pt.
- [20 <./vector_matrix_multi.png (PNG copy)>] [21]
+ [21 <./vector_matrix_multi.png (PNG copy)>] [22]
 Chapter 7.
 
 Package Fancyhdr Warning: \fancyfoot's `E' option without twoside option is use
-less on input line 930.
+less on input line 935.
 
-[22
+[23
 
-] [23] [24] [25] (./DistributedComputingFundamentals.ind)
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 1127.
- [26]
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 1127.
+] [24] [25] [26] (./DistributedComputingFundamentals.ind)
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 1132.
+ [27]
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 1132.
 
 (./DistributedComputingFundamentals.aux)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 1127.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 1127.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 1132.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 1132.
 
 Package rerunfilecheck Info: File `DistributedComputingFundamentals.out' has no
 t changed.
-(rerunfilecheck)             Checksum: 19978AC901DA72C824A7F17FF8E61D0D;1558.
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 1127.
+(rerunfilecheck)             Checksum: 640725E7233CED8C98198F8FA77FB2AC;1561.
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 1132.
  ) 
 Here is how much of TeX's memory you used:
- 8886 strings out of 493633
- 125574 string characters out of 3143378
- 222141 words of memory out of 3000000
+ 8887 strings out of 493633
+ 125584 string characters out of 3143378
+ 222151 words of memory out of 3000000
  11927 multiletter control sequences out of 15000+200000
  63579 words of font info for 73 fonts, out of 3000000 for 9000
  832 hyphenation exceptions out of 8191
@@ -1138,11 +1140,11 @@ ype1/urw/courier/ucrro8a.pfb></usr/local/texlive/2011/texmf-dist/fonts/type1/ur
 w/helvetic/uhvb8a.pfb></usr/local/texlive/2011/texmf-dist/fonts/type1/urw/times
 /utmb8a.pfb></usr/local/texlive/2011/texmf-dist/fonts/type1/urw/times/utmr8a.pf
 b></usr/local/texlive/2011/texmf-dist/fonts/type1/urw/times/utmri8a.pfb>
-Output written on DistributedComputingFundamentals.pdf (28 pages, 1311498 bytes
+Output written on DistributedComputingFundamentals.pdf (29 pages, 1312291 bytes
 ).
 PDF statistics:
- 347 PDF objects out of 1000 (max. 8388607)
- 291 compressed objects within 3 object streams
- 66 named destinations out of 1000 (max. 500000)
+ 352 PDF objects out of 1000 (max. 8388607)
+ 295 compressed objects within 3 object streams
+ 67 named destinations out of 1000 (max. 500000)
  225 words of extra memory for PDF output out of 10000 (max. 10000000)
 

@@ -53,7 +53,7 @@ file called machines that describes your system: ::
 
     mpirun -machinefile machines -np 3 ./hellompi
 
-Sepending on how many other people are using your cluster and how big it is, you can try
+Depending on how many other people are using your cluster and how big it is, you can try
 different numbers of processes by changing the 3 above.
 
 Once that seems to be working for you, try the exammple 2, which uses sends and receives.
