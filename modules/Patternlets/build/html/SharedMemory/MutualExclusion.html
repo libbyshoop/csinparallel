@@ -25,6 +25,7 @@
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
     <link rel="top" title="Parallel Patternlets" href="../index.html" />
     <link rel="up" title="Shared Memory Parallel Patternlets in OpenMP" href="OpenMP_Patternlets.html" />
     <link rel="next" title="Task Decomposition Algorithm Strategies" href="TaskDecomp.html" />
@@ -35,11 +36,8 @@
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
-          <a href="../genindex.html" title="General Index"
-             accesskey="I">index</a></li>
-        <li class="right" >
           <a href="TaskDecomp.html" title="Task Decomposition Algorithm Strategies"
-             accesskey="N">next</a> |</li>
+             accesskey="N">next</a></li>
         <li class="right" >
           <a href="DataDecomp_Reduction.html" title="Data Decomposition Algorithm Strategies and Related Coordination Strategies"
              accesskey="P">previous</a> |</li>
@@ -532,41 +530,47 @@
 33
 34
 35
-36</pre></div></td><td class="code"><div class="highlight"><pre><span class="cm">/* critical3.cpp</span>
-<span class="cm"> * ... compares the use of OpenMP&#39;s critical and atomic directives,</span>
-<span class="cm"> *  providing an example of when critical works but atomic does not.</span>
+36
+37
+38
+39</pre></div></td><td class="code"><div class="highlight"><pre><span class="cm">/* critical3.c</span>
+<span class="cm"> * ... a simple case where OpenMP&#39;s critical works but atomic does not.</span>
 <span class="cm"> *</span>
-<span class="cm"> * Joel Adams, Calvin College, February 2014.</span>
+<span class="cm"> * Joel Adams, Calvin College, November 2009.</span>
 <span class="cm"> *</span>
 <span class="cm"> * Usage: ./critical3</span>
 <span class="cm"> *</span>
 <span class="cm"> * Exercise:</span>
-<span class="cm"> *  - Compile, run, note behavior.</span>
-<span class="cm"> *  - Uncomment #pragma on line A, note behavior as threads &#39;race&#39;</span>
-<span class="cm"> *     to insert values into cout (a shared output stream).</span>
-<span class="cm"> *  - Uncomment #pragma on line B, try to compile, note error message.</span>
-<span class="cm"> *  - Recomment #pragma on line B; uncomment #pragma on line C,</span>
-<span class="cm"> *     recompile, rerun, note results.</span>
+<span class="cm"> *  - Compile, run, note resulting output is correct.</span>
+<span class="cm"> *  - Uncomment line A, recompile, rerun, note results.</span>
+<span class="cm"> *  - Uncomment line B, recompile, note results.</span>
+<span class="cm"> *  - Recomment line B, uncomment line C, recompile, </span>
+<span class="cm"> *     rerun, note change in results. </span>
 <span class="cm"> */</span>
 
-<span class="cp">#include &lt;iostream&gt;      </span><span class="c1">// cout, &lt;&lt;, etc.</span>
-<span class="cp">#include&lt;omp.h&gt;          </span><span class="c1">// openMP </span>
+<span class="cp">#include&lt;iostream&gt;   </span><span class="c1">// cout</span>
+<span class="cp">#include&lt;omp.h&gt;      </span><span class="c1">// openmp</span>
 <span class="k">using</span> <span class="k">namespace</span> <span class="n">std</span><span class="p">;</span>
 
-<span class="kt">int</span> <span class="n">main</span><span class="p">()</span> <span class="p">{</span>
-    <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;</span><span class="se">\n</span><span class="s">Before ...</span><span class="se">\n</span><span class="s">&quot;</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+<span class="kt">int</span> <span class="n">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span><span class="o">**</span> <span class="n">argv</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">;</span>
 
-<span class="c1">//    #pragma omp parallel                        // A</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">argc</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">omp_set_num_threads</span><span class="p">(</span> <span class="n">atoi</span><span class="p">(</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="p">);</span>
+    <span class="p">}</span>
+
+<span class="c1">//    #pragma omp parallel                          // A</span>
     <span class="p">{</span>
         <span class="kt">int</span> <span class="n">id</span> <span class="o">=</span> <span class="n">omp_get_thread_num</span><span class="p">();</span>
         <span class="kt">int</span> <span class="n">numThreads</span> <span class="o">=</span> <span class="n">omp_get_num_threads</span><span class="p">();</span>
-<span class="c1">//        #pragma omp atomic                      // B</span>
-<span class="c1">//        #pragma omp critical                    // C</span>
-        <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;Hello from thread #&quot;</span> <span class="o">&lt;&lt;</span> <span class="n">id</span> 
-             <span class="o">&lt;&lt;</span> <span class="s">&quot; out of &quot;</span> <span class="o">&lt;&lt;</span> <span class="n">numThreads</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+<span class="c1">//        #pragma omp atomic                        // B</span>
+<span class="c1">//        #pragma omp critical                      // C</span>
+        <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;Hello from thread #&quot;</span> <span class="o">&lt;&lt;</span> <span class="n">id</span>
+             <span class="o">&lt;&lt;</span> <span class="s">&quot; out of &quot;</span> <span class="o">&lt;&lt;</span> <span class="n">numThreads</span>
+             <span class="o">&lt;&lt;</span> <span class="s">&quot; threads.</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">;</span>
     <span class="p">}</span>
 
-    <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;</span><span class="se">\n</span><span class="s">After ...</span><span class="se">\n</span><span class="s">&quot;</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+    <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">;</span>
 <span class="p">}</span>
 </pre></div>
 </td></tr></table></div>
@@ -633,11 +637,8 @@ Hello from thread #1 of 4</pre>
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
-          <a href="../genindex.html" title="General Index"
-             >index</a></li>
-        <li class="right" >
           <a href="TaskDecomp.html" title="Task Decomposition Algorithm Strategies"
-             >next</a> |</li>
+             >next</a></li>
         <li class="right" >
           <a href="DataDecomp_Reduction.html" title="Data Decomposition Algorithm Strategies and Related Coordination Strategies"
              >previous</a> |</li>

@@ -25,6 +25,7 @@
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
     <link rel="top" title="Parallel Patternlets" href="../index.html" />
     <link rel="up" title="Shared Memory Parallel Patternlets in OpenMP" href="OpenMP_Patternlets.html" />
     <link rel="next" title="Patterns used when threads share data values" href="MutualExclusion.html" />
@@ -35,11 +36,8 @@
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
-          <a href="../genindex.html" title="General Index"
-             accesskey="I">index</a></li>
-        <li class="right" >
           <a href="MutualExclusion.html" title="Patterns used when threads share data values"
-             accesskey="N">next</a> |</li>
+             accesskey="N">next</a></li>
         <li class="right" >
           <a href="ProgStructure_Barrier.html" title="Shared Memory Program Structure and Coordination Patterns"
              accesskey="P">previous</a> |</li>
@@ -416,7 +414,7 @@ which is computed in line 66.</p>
    <span class="kt">int</span> <span class="n">array</span><span class="p">[</span><span class="n">SIZE</span><span class="p">];</span>
 
    <span class="k">if</span> <span class="p">(</span><span class="n">argc</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">)</span> <span class="p">{</span>
-        <span class="n">mp_set_num_threads</span><span class="p">(</span> <span class="n">atoi</span><span class="p">(</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="p">);</span>
+        <span class="n">omp_set_num_threads</span><span class="p">(</span> <span class="n">atoi</span><span class="p">(</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="p">);</span>
    <span class="p">}</span>
 
    <span class="n">initialize</span><span class="p">(</span><span class="n">array</span><span class="p">,</span> <span class="n">SIZE</span><span class="p">);</span>
@@ -501,11 +499,8 @@ produce the correct result?  The next few examples will hopefully shed some ligh
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
-          <a href="../genindex.html" title="General Index"
-             >index</a></li>
-        <li class="right" >
           <a href="MutualExclusion.html" title="Patterns used when threads share data values"
-             >next</a> |</li>
+             >next</a></li>
         <li class="right" >
           <a href="ProgStructure_Barrier.html" title="Shared Memory Program Structure and Coordination Patterns"
              >previous</a> |</li>
