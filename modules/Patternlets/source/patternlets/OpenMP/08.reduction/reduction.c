@@ -28,7 +28,7 @@ int main(int argc, char** argv) {
    int array[SIZE];
 
    if (argc > 1) {
-        mp_set_num_threads( atoi(argv[1]) );
+        omp_set_num_threads( atoi(argv[1]) );
    }
 
    initialize(array, SIZE);

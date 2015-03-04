@@ -25,6 +25,7 @@
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
     <link rel="top" title="Parallel Patternlets" href="../index.html" />
     <link rel="next" title="Shared Memory Parallel Patternlets in OpenMP" href="../SharedMemory/OpenMP_Patternlets.html" />
     <link rel="prev" title="Parallel Programming Patterns" href="../PatternsIntro.html" /> 
@@ -34,11 +35,8 @@
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
-          <a href="../genindex.html" title="General Index"
-             accesskey="I">index</a></li>
-        <li class="right" >
           <a href="../SharedMemory/OpenMP_Patternlets.html" title="Shared Memory Parallel Patternlets in OpenMP"
-             accesskey="N">next</a> |</li>
+             accesskey="N">next</a></li>
         <li class="right" >
           <a href="../PatternsIntro.html" title="Parallel Programming Patterns"
              accesskey="P">previous</a> |</li>
@@ -58,17 +56,17 @@ in solutions to many problems.  The following examples show very simple
 examples of small portions of
 these patterns that can be combined to solve a problem.  These C code examples use the
 Message Passing Interface (MPI) library, which is suitable for use on either a
-single pultiprocessor machine or a cluster
+single multiprocessor machine or a cluster
 of machines.</p>
 <div class="section" id="source-code">
 <h2>Source Code<a class="headerlink" href="#source-code" title="Permalink to this headline">¶</a></h2>
 <p>Please download all examples from this tarball:
-<a class="reference download internal" href="../_downloads/MPI.tgz"><tt class="xref download docutils literal"><span class="pre">MPI.tgz</span></tt></a></p>
+<tt class="xref download docutils literal"><span class="pre">MPI.tgz</span></tt></p>
 <p>A C code file for each example below can be found in subdirectories of the MPI directory,
 along with a makefile and an example of how to execute the program.</p>
 </div>
 <div class="section" id="single-program-multiple-data">
-<h2>0. Single Program, Multiple Data<a class="headerlink" href="#single-program-multiple-data" title="Permalink to this headline">¶</a></h2>
+<h2>00. Single Program, Multiple Data<a class="headerlink" href="#single-program-multiple-data" title="Permalink to this headline">¶</a></h2>
 <p>First let us illustrate the basic components of an MPI program,
 which by its nature uses a single program that runs on each process.
 Note what gets printed is different for each process, thus the
@@ -81,36 +79,93 @@ for its variables.  This is why we call it single program, multiple data.</p>
 <span class="cm"> * Joel Adams, Calvin College, November 2009.</span>
 <span class="cm"> *</span>
 <span class="cm"> * Usage: mpirun -np 4 ./spmd</span>
+<span class="cm"> *</span>
+<span class="cm"> * Exercise:</span>
+<span class="cm"> * - Compile and run.</span>
+<span class="cm"> * - Compare source code to output.</span>
+<span class="cm"> * - Rerun, using varying numbers of processes</span>
+<span class="cm"> *    (i.e., vary the argument to &#39;mpirun -np&#39;).</span>
+<span class="cm"> * - Explain what &quot;multiple data&quot; values this</span>
+<span class="cm"> *    &quot;single program&quot; is generating.</span>
 <span class="cm"> */</span>
 
-<span class="cp">#include &lt;stdio.h&gt;</span>
-<span class="cp">#include &lt;mpi.h&gt;</span>
+<span class="cp">#include &lt;stdio.h&gt;   </span><span class="c1">// printf()</span>
+<span class="cp">#include &lt;mpi.h&gt;     </span><span class="c1">// MPI functions</span>
 
 <span class="kt">int</span> <span class="nf">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span><span class="o">**</span> <span class="n">argv</span><span class="p">)</span> <span class="p">{</span>
-	<span class="kt">int</span> <span class="n">id</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">numProcesses</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">length</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span>
-	<span class="kt">char</span> <span class="n">myHostName</span><span class="p">[</span><span class="n">MPI_MAX_PROCESSOR_NAME</span><span class="p">];</span>
+    <span class="kt">int</span> <span class="n">id</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">numProcesses</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">length</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span>
+    <span class="kt">char</span> <span class="n">myHostName</span><span class="p">[</span><span class="n">MPI_MAX_PROCESSOR_NAME</span><span class="p">];</span>
 
-	<span class="n">MPI_Init</span><span class="p">(</span><span class="o">&amp;</span><span class="n">argc</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">argv</span><span class="p">);</span>
-	<span class="n">MPI_Comm_rank</span><span class="p">(</span><span class="n">MPI_COMM_WORLD</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">id</span><span class="p">);</span>
-	<span class="n">MPI_Comm_size</span><span class="p">(</span><span class="n">MPI_COMM_WORLD</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">numProcesses</span><span class="p">);</span>
-	<span class="n">MPI_Get_processor_name</span> <span class="p">(</span><span class="n">myHostName</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">length</span><span class="p">);</span>
+    <span class="n">MPI_Init</span><span class="p">(</span><span class="o">&amp;</span><span class="n">argc</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">argv</span><span class="p">);</span>
+    <span class="n">MPI_Comm_rank</span><span class="p">(</span><span class="n">MPI_COMM_WORLD</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">id</span><span class="p">);</span>
+    <span class="n">MPI_Comm_size</span><span class="p">(</span><span class="n">MPI_COMM_WORLD</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">numProcesses</span><span class="p">);</span>
+    <span class="n">MPI_Get_processor_name</span> <span class="p">(</span><span class="n">myHostName</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">length</span><span class="p">);</span>
 
+    <span class="n">printf</span><span class="p">(</span><span class="s">&quot;Greetings from process #%d of %d on %s</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span>
+             <span class="n">id</span><span class="p">,</span> <span class="n">numProcesses</span><span class="p">,</span> <span class="n">myHostName</span><span class="p">);</span>
 
-	<span class="n">printf</span><span class="p">(</span><span class="s">&quot;Greetings from process %d of %d on %s</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span>
-		<span class="n">id</span><span class="p">,</span> <span class="n">numProcesses</span><span class="p">,</span> <span class="n">myHostName</span><span class="p">);</span>
-
-	<span class="n">MPI_Finalize</span><span class="p">();</span>
-	<span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="n">MPI_Finalize</span><span class="p">();</span>
+    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
 <span class="p">}</span>
 </pre></div>
 </div>
 <p><em>file: patternlets/MPI/00.spmd/spmd.c</em></p>
 </div>
+<div class="section" id="the-barrier-coordination-pattern">
+<h2>1. The Barrier Coordination Pattern<a class="headerlink" href="#the-barrier-coordination-pattern" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-c"><div class="highlight"><pre><span class="cm">/* barrier.c</span>
+<span class="cm"> * ... illustrates the behavior of MPI_Barrier() ...</span>
+<span class="cm"> * Joel Adams, Calvin College, May 2013.</span>
+<span class="cm"> *</span>
+<span class="cm"> * Usage: mpirun -np 8 ./barrier</span>
+<span class="cm"> *</span>
+<span class="cm"> * Exercise: </span>
+<span class="cm"> *  - Compile; then run the program several times, </span>
+<span class="cm"> *     noting the intermixed outputs</span>
+<span class="cm"> *  - Uncomment the MPI_Barrier() call; then recompile and rerun,</span>
+<span class="cm"> *     noting how the output changes.</span>
+<span class="cm"> *  - Explain what effect MPI_Barrier() has on process behavior.</span>
+<span class="cm"> */</span>
+
+<span class="cp">#include &lt;stdio.h&gt;   </span><span class="c1">// printf()</span>
+<span class="cp">#include &lt;mpi.h&gt;     </span><span class="c1">// MPI</span>
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span><span class="o">**</span> <span class="n">argv</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kt">int</span> <span class="n">id</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">numProcesses</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">length</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span>
+    <span class="kt">char</span> <span class="n">myHostName</span><span class="p">[</span><span class="n">MPI_MAX_PROCESSOR_NAME</span><span class="p">];</span>
+
+    <span class="n">MPI_Init</span><span class="p">(</span><span class="o">&amp;</span><span class="n">argc</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">argv</span><span class="p">);</span>
+    <span class="n">MPI_Comm_rank</span><span class="p">(</span><span class="n">MPI_COMM_WORLD</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">id</span><span class="p">);</span>
+    <span class="n">MPI_Comm_size</span><span class="p">(</span><span class="n">MPI_COMM_WORLD</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">numProcesses</span><span class="p">);</span>
+    <span class="n">MPI_Get_processor_name</span> <span class="p">(</span><span class="n">myHostName</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">length</span><span class="p">);</span>
+
+    <span class="n">printf</span><span class="p">(</span><span class="s">&quot;Process #%d of %d on %s is BEFORE the barrier.</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span>
+             <span class="n">id</span><span class="p">,</span> <span class="n">numProcesses</span><span class="p">,</span> <span class="n">myHostName</span><span class="p">);</span>
+
+<span class="c1">//     MPI_Barrier(MPI_COMM_WORLD); </span>
+
+    <span class="n">printf</span><span class="p">(</span><span class="s">&quot;Process #%d of %d on %s is AFTER the barrier.</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span>
+             <span class="n">id</span><span class="p">,</span> <span class="n">numProcesses</span><span class="p">,</span> <span class="n">myHostName</span><span class="p">);</span>
+
+    <span class="n">MPI_Finalize</span><span class="p">();</span>
+    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p><em>file: patternlets/MPI/01.barrier/masterWorker.c</em></p>
+</div>
 <div class="section" id="the-master-worker-implementation-strategy-pattern">
-<h2>1. The Master-Worker Implementation Strategy Pattern<a class="headerlink" href="#the-master-worker-implementation-strategy-pattern" title="Permalink to this headline">¶</a></h2>
-<div class="highlight-c"><div class="highlight"><pre><span class="cm">/* masterServer.c</span>
+<h2>2. The Master-Worker Implementation Strategy Pattern<a class="headerlink" href="#the-master-worker-implementation-strategy-pattern" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-c"><div class="highlight"><pre><span class="cm">/* masterWorker.c</span>
 <span class="cm"> * ... illustrates the basic master-worker pattern in MPI ...</span>
 <span class="cm"> * Joel Adams, Calvin College, November 2009.</span>
+<span class="cm"> *</span>
+<span class="cm"> * Usage: mpirun -np N ./masterWorker</span>
+<span class="cm"> *</span>
+<span class="cm"> * Exercise:</span>
+<span class="cm"> * - Compile and run the program, varying N from 1 through 8.</span>
+<span class="cm"> * - Explain what stays the same and what changes as the</span>
+<span class="cm"> *    number of processes changes.</span>
 <span class="cm"> */</span>
 
 <span class="cp">#include &lt;stdio.h&gt;</span>
@@ -126,11 +181,11 @@ for its variables.  This is why we call it single program, multiple data.</p>
   <span class="n">MPI_Get_processor_name</span> <span class="p">(</span><span class="n">hostName</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">length</span><span class="p">);</span>
 
   <span class="k">if</span> <span class="p">(</span> <span class="n">id</span> <span class="o">==</span> <span class="mi">0</span> <span class="p">)</span> <span class="p">{</span>  <span class="c1">// process 0 is the master </span>
-    <span class="n">printf</span><span class="p">(</span><span class="s">&quot;Greetings from the master, # %d (%s) of %d processes</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span>
-            <span class="n">id</span><span class="p">,</span> <span class="n">hostName</span><span class="p">,</span> <span class="n">numWorkers</span><span class="p">);</span>
+    <span class="n">printf</span><span class="p">(</span><span class="s">&quot;Greetings from the master, #%d (%s) of %d processes</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span>
+             <span class="n">id</span><span class="p">,</span> <span class="n">hostName</span><span class="p">,</span> <span class="n">numWorkers</span><span class="p">);</span>
   <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>          <span class="c1">// processes with ids &gt; 0 are workers </span>
-    <span class="n">printf</span><span class="p">(</span><span class="s">&quot;Greetings from a worker, # %d (%s) of %d processes</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span>
-            <span class="n">id</span><span class="p">,</span> <span class="n">hostName</span><span class="p">,</span> <span class="n">numWorkers</span><span class="p">);</span>
+    <span class="n">printf</span><span class="p">(</span><span class="s">&quot;Greetings from a worker, #%d (%s) of %d processes</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span>
+             <span class="n">id</span><span class="p">,</span> <span class="n">hostName</span><span class="p">,</span> <span class="n">numWorkers</span><span class="p">);</span>
   <span class="p">}</span>
 
   <span class="n">MPI_Finalize</span><span class="p">();</span>
@@ -138,13 +193,24 @@ for its variables.  This is why we call it single program, multiple data.</p>
 <span class="p">}</span>
 </pre></div>
 </div>
-<p><em>file: patternlets/MPI/01.masterWorker/masterWorker.c</em></p>
+<p><em>file: patternlets/MPI/02.masterWorker/masterWorker.c</em></p>
 </div>
 <div class="section" id="message-passing-1-using-send-receive-of-a-single-value">
-<h2>2. Message passing 1, using Send-Receive of a single value<a class="headerlink" href="#message-passing-1-using-send-receive-of-a-single-value" title="Permalink to this headline">¶</a></h2>
+<h2>3. Message passing 1, using Send-Receive of a single value<a class="headerlink" href="#message-passing-1-using-send-receive-of-a-single-value" title="Permalink to this headline">¶</a></h2>
 <div class="highlight-c"><div class="highlight"><pre><span class="cm">/* messagePassing.c</span>
 <span class="cm"> * ... illustrates the use of the MPI_Send() and MPI_Recv() commands...</span>
 <span class="cm"> * Joel Adams, Calvin College, November 2009.</span>
+<span class="cm"> *</span>
+<span class="cm"> * Usage: mpirun -np N ./messagePassing</span>
+<span class="cm"> *</span>
+<span class="cm"> * Exercise:</span>
+<span class="cm"> * - Compile and run, using N = 4, 6, 8, and 10 processes.</span>
+<span class="cm"> * - Use source code to trace execution.</span>
+<span class="cm"> * - Explain what each process:</span>
+<span class="cm"> * -- computes</span>
+<span class="cm"> * -- sends</span>
+<span class="cm"> * -- receives</span>
+<span class="cm"> * -- outputs.</span>
 <span class="cm"> */</span>
 
 <span class="cp">#include &lt;stdio.h&gt;</span>
@@ -185,18 +251,89 @@ for its variables.  This is why we call it single program, multiple data.</p>
 <span class="p">}</span>
 </pre></div>
 </div>
-<p><em>file: patternlets/MPI/02.messagePassing/messagePassing.c</em></p>
+<p><em>file: patternlets/MPI/03.messagePassing/messagePassing.c</em></p>
 </div>
 <div class="section" id="message-passing-2-using-send-receive-of-an-array-of-values">
-<h2>3. Message passing 2,  using Send-Receive of an array of values<a class="headerlink" href="#message-passing-2-using-send-receive-of-an-array-of-values" title="Permalink to this headline">¶</a></h2>
+<h2>4. Message passing 2,  using Send-Receive of an array of values<a class="headerlink" href="#message-passing-2-using-send-receive-of-an-array-of-values" title="Permalink to this headline">¶</a></h2>
 <div class="highlight-c"><div class="highlight"><pre><span class="cm">/* messagePassing2.c</span>
-<span class="cm"> * ... illustrates the use of the MPI_Send() and MPI_Recv() commands...</span>
-<span class="cm"> *</span>
-<span class="cm"> * Joel Adams, Calvin College, November 2009.</span>
+<span class="cm"> * ... illustrates using MPI_Send() and MPI_Recv() commands on arrays...</span>
+<span class="cm"> * While this example sends and receives char arrays (strings),</span>
+<span class="cm"> *  the same approach works on arrays of numbers or other types.</span>
+<span class="cm"> * Joel Adams, Calvin College, September 2013.</span>
 <span class="cm"> *</span>
 <span class="cm"> * Usage: mpirun -np N ./messagePassing2</span>
 <span class="cm"> *</span>
-<span class="cm"> * Exercise: Run the program, varying the value of N from 1-8.</span>
+<span class="cm"> * Exercise:</span>
+<span class="cm"> * - Compile and run, varying N: 1, 2, 4, 8.</span>
+<span class="cm"> * - Trace execution using source code.</span>
+<span class="cm"> * - Compare to messagePassing1.c; note send/receive differences.</span>
+<span class="cm"> */</span>
+
+<span class="cp">#include &lt;stdio.h&gt;   </span><span class="c1">// printf()</span>
+<span class="cp">#include &lt;mpi.h&gt;     </span><span class="c1">// MPI</span>
+<span class="cp">#include &lt;stdlib.h&gt;  </span><span class="c1">// malloc()</span>
+<span class="cp">#include &lt;string.h&gt;  </span><span class="c1">// strlen()</span>
+
+<span class="kt">int</span> <span class="nf">odd</span><span class="p">(</span><span class="kt">int</span> <span class="n">number</span><span class="p">)</span> <span class="p">{</span> <span class="k">return</span> <span class="n">number</span> <span class="o">%</span> <span class="mi">2</span><span class="p">;</span> <span class="p">}</span>
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span><span class="o">**</span> <span class="n">argv</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kt">int</span> <span class="n">id</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">numProcesses</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">length</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span> 
+    <span class="kt">char</span> <span class="o">*</span> <span class="n">sendString</span> <span class="o">=</span> <span class="nb">NULL</span><span class="p">;</span>
+    <span class="kt">char</span> <span class="o">*</span> <span class="n">receivedString</span> <span class="o">=</span> <span class="nb">NULL</span><span class="p">;</span>
+    <span class="kt">char</span> <span class="n">hostName</span><span class="p">[</span><span class="n">MPI_MAX_PROCESSOR_NAME</span><span class="p">];</span>
+    <span class="n">MPI_Status</span> <span class="n">status</span><span class="p">;</span>
+    <span class="k">const</span> <span class="kt">int</span> <span class="n">SIZE</span> <span class="o">=</span> <span class="p">(</span><span class="mi">32</span><span class="o">+</span><span class="n">MPI_MAX_PROCESSOR_NAME</span><span class="p">)</span> <span class="o">*</span> <span class="k">sizeof</span><span class="p">(</span><span class="kt">char</span><span class="p">);</span>
+
+    <span class="n">MPI_Init</span><span class="p">(</span><span class="o">&amp;</span><span class="n">argc</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">argv</span><span class="p">);</span>
+    <span class="n">MPI_Comm_rank</span><span class="p">(</span><span class="n">MPI_COMM_WORLD</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">id</span><span class="p">);</span>
+    <span class="n">MPI_Comm_size</span><span class="p">(</span><span class="n">MPI_COMM_WORLD</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">numProcesses</span><span class="p">);</span>
+    <span class="n">MPI_Get_processor_name</span> <span class="p">(</span><span class="n">hostName</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">length</span><span class="p">);</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="n">numProcesses</span> <span class="o">&gt;</span> <span class="mi">1</span> <span class="o">&amp;&amp;</span> <span class="o">!</span><span class="n">odd</span><span class="p">(</span><span class="n">numProcesses</span><span class="p">)</span> <span class="p">)</span> <span class="p">{</span>
+        <span class="n">sendString</span> <span class="o">=</span> <span class="p">(</span><span class="kt">char</span><span class="o">*</span><span class="p">)</span> <span class="n">malloc</span><span class="p">(</span> <span class="n">SIZE</span> <span class="p">);</span>
+        <span class="n">receivedString</span> <span class="o">=</span> <span class="p">(</span><span class="kt">char</span><span class="o">*</span><span class="p">)</span> <span class="n">malloc</span><span class="p">(</span> <span class="n">SIZE</span> <span class="p">);</span>
+        <span class="n">sprintf</span><span class="p">(</span><span class="n">sendString</span><span class="p">,</span> <span class="s">&quot;Process %d is on host </span><span class="se">\&quot;</span><span class="s">%s</span><span class="se">\&quot;</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">id</span><span class="p">,</span> <span class="n">hostName</span><span class="p">);</span>
+
+        <span class="k">if</span> <span class="p">(</span> <span class="n">odd</span><span class="p">(</span><span class="n">id</span><span class="p">)</span> <span class="p">)</span> <span class="p">{</span>  <span class="c1">// odd processes send, then receive </span>
+            <span class="n">MPI_Send</span><span class="p">(</span><span class="n">sendString</span><span class="p">,</span> <span class="n">strlen</span><span class="p">(</span><span class="n">sendString</span><span class="p">)</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> 
+                      <span class="n">MPI_CHAR</span><span class="p">,</span> <span class="n">id</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">MPI_COMM_WORLD</span><span class="p">);</span>
+            <span class="n">MPI_Recv</span><span class="p">(</span><span class="n">receivedString</span><span class="p">,</span> <span class="n">SIZE</span><span class="p">,</span> <span class="n">MPI_CHAR</span><span class="p">,</span> <span class="n">id</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> 
+                       <span class="n">MPI_COMM_WORLD</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">status</span><span class="p">);</span>
+        <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>          <span class="c1">// even processes receive, then send </span>
+            <span class="n">MPI_Recv</span><span class="p">(</span><span class="n">receivedString</span><span class="p">,</span> <span class="n">SIZE</span><span class="p">,</span> <span class="n">MPI_CHAR</span><span class="p">,</span> <span class="n">id</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> 
+                       <span class="n">MPI_COMM_WORLD</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">status</span><span class="p">);</span>
+            <span class="n">MPI_Send</span><span class="p">(</span><span class="n">sendString</span><span class="p">,</span> <span class="n">strlen</span><span class="p">(</span><span class="n">sendString</span><span class="p">)</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> 
+                       <span class="n">MPI_CHAR</span><span class="p">,</span> <span class="n">id</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">MPI_COMM_WORLD</span><span class="p">);</span>
+        <span class="p">}</span>
+
+        <span class="n">printf</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\n</span><span class="s">Process %d of %d received the message:</span><span class="se">\n\t</span><span class="s">&#39;%s&#39;</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span>
+                <span class="n">id</span><span class="p">,</span> <span class="n">numProcesses</span><span class="p">,</span> <span class="n">receivedString</span><span class="p">);</span>
+
+    <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span> <span class="o">!</span><span class="n">id</span><span class="p">)</span> <span class="p">{</span>  <span class="c1">// only process 0 does this part </span>
+        <span class="n">printf</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\n</span><span class="s">Please run this program using -np N where N is positive and even.</span><span class="se">\n\n</span><span class="s">&quot;</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="n">free</span><span class="p">(</span><span class="n">sendString</span><span class="p">);</span> <span class="n">free</span><span class="p">(</span><span class="n">receivedString</span><span class="p">);</span>
+    <span class="n">MPI_Finalize</span><span class="p">();</span>
+    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p><em>file: patternlets/MPI/04.messagePassing2/messagePassing2.c</em></p>
+</div>
+<div class="section" id="message-passing-3-using-send-receive-with-master-worker-pattern">
+<h2>5. Message passing 3,  using Send-Receive with master-worker pattern<a class="headerlink" href="#message-passing-3-using-send-receive-with-master-worker-pattern" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-c"><div class="highlight"><pre><span class="cm">/* messagePassing3.c</span>
+<span class="cm"> * ... illustrates the use of MPI_Send() and MPI_Recv(),</span>
+<span class="cm"> *      in combination with the master-worker pattern. </span>
+<span class="cm"> *</span>
+<span class="cm"> * Joel Adams, Calvin College, November 2009.</span>
+<span class="cm"> *</span>
+<span class="cm"> * Usage: mpirun -np N ./messagePassing3</span>
+<span class="cm"> *</span>
+<span class="cm"> * Exercise: </span>
+<span class="cm"> * - Run the program, varying the value of N from 1-8.</span>
+<span class="cm"> * - Explain the behavior you observe.</span>
 <span class="cm"> */</span>
 
 <span class="cp">#include &lt;stdio.h&gt;    </span><span class="c1">// printf()</span>
@@ -216,45 +353,45 @@ for its variables.  This is why we call it single program, multiple data.</p>
     <span class="n">MPI_Comm_size</span><span class="p">(</span><span class="n">MPI_COMM_WORLD</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">numProcesses</span><span class="p">);</span>
 
     <span class="k">if</span> <span class="p">(</span><span class="n">numProcesses</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">)</span> <span class="p">{</span>
-        <span class="k">if</span> <span class="p">(</span> <span class="n">id</span> <span class="o">==</span> <span class="mi">0</span> <span class="p">)</span> <span class="p">{</span>
-            <span class="n">sprintf</span><span class="p">(</span><span class="n">sendBuffer</span><span class="p">,</span> <span class="s">&quot;%d&quot;</span><span class="p">,</span> <span class="n">id</span><span class="p">);</span>    <span class="c1">// create msg</span>
+        <span class="k">if</span> <span class="p">(</span> <span class="n">id</span> <span class="o">==</span> <span class="mi">0</span> <span class="p">)</span> <span class="p">{</span>                              <span class="c1">// master:</span>
+            <span class="n">sprintf</span><span class="p">(</span><span class="n">sendBuffer</span><span class="p">,</span> <span class="s">&quot;%d&quot;</span><span class="p">,</span> <span class="n">id</span><span class="p">);</span>            <span class="c1">//  create msg</span>
 
-            <span class="n">MPI_Send</span><span class="p">(</span><span class="n">sendBuffer</span><span class="p">,</span>              <span class="c1">// msg sent</span>
-                      <span class="n">strlen</span><span class="p">(</span><span class="n">sendBuffer</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="c1">// num chars + NULL</span>
-                      <span class="n">MPI_CHAR</span><span class="p">,</span>               <span class="c1">// type</span>
-                      <span class="n">id</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span>                   <span class="c1">// destination</span>
-                      <span class="mi">1</span><span class="p">,</span>                      <span class="c1">// tag</span>
-                      <span class="n">MPI_COMM_WORLD</span><span class="p">);</span>        <span class="c1">// communicator</span>
+            <span class="n">MPI_Send</span><span class="p">(</span><span class="n">sendBuffer</span><span class="p">,</span>                      <span class="c1">//  msg sent</span>
+                      <span class="n">strlen</span><span class="p">(</span><span class="n">sendBuffer</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span>         <span class="c1">//  num chars + NULL</span>
+                      <span class="n">MPI_CHAR</span><span class="p">,</span>                       <span class="c1">//  type</span>
+                      <span class="n">id</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span>                           <span class="c1">//  destination</span>
+                      <span class="mi">1</span><span class="p">,</span>                              <span class="c1">//  tag</span>
+                      <span class="n">MPI_COMM_WORLD</span><span class="p">);</span>                <span class="c1">//  communicator</span>
 
-            <span class="n">MPI_Recv</span><span class="p">(</span><span class="n">recvBuffer</span><span class="p">,</span>              <span class="c1">// msg received</span>
-                      <span class="n">MAX</span><span class="p">,</span>                    <span class="c1">// buffer size</span>
-                      <span class="n">MPI_CHAR</span><span class="p">,</span>               <span class="c1">// type</span>
-                      <span class="n">numProcesses</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span>         <span class="c1">// sender</span>
-                      <span class="mi">1</span><span class="p">,</span>                      <span class="c1">// tag</span>
-                      <span class="n">MPI_COMM_WORLD</span><span class="p">,</span>         <span class="c1">// communicator</span>
-                      <span class="o">&amp;</span><span class="n">status</span><span class="p">);</span>               <span class="c1">// recv status</span>
-        <span class="p">}</span> <span class="k">else</span> <span class="p">{</span> 
-            <span class="n">MPI_Recv</span><span class="p">(</span><span class="n">recvBuffer</span><span class="p">,</span>              <span class="c1">// msg received</span>
-                      <span class="n">MAX</span><span class="p">,</span>                    <span class="c1">// buffer size</span>
-                      <span class="n">MPI_CHAR</span><span class="p">,</span>               <span class="c1">// type</span>
-                      <span class="n">MPI_ANY_SOURCE</span><span class="p">,</span>         <span class="c1">// sender (anyone)</span>
-                      <span class="mi">1</span><span class="p">,</span>                      <span class="c1">// tag</span>
-                      <span class="n">MPI_COMM_WORLD</span><span class="p">,</span>         <span class="c1">// communicator</span>
-                      <span class="o">&amp;</span><span class="n">status</span><span class="p">);</span>               <span class="c1">// recv status</span>
+            <span class="n">MPI_Recv</span><span class="p">(</span><span class="n">recvBuffer</span><span class="p">,</span>                      <span class="c1">//  msg received</span>
+                      <span class="n">MAX</span><span class="p">,</span>                            <span class="c1">//  buffer size</span>
+                      <span class="n">MPI_CHAR</span><span class="p">,</span>                       <span class="c1">//  type</span>
+                      <span class="n">numProcesses</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span>                 <span class="c1">//  sender</span>
+                      <span class="mi">1</span><span class="p">,</span>                              <span class="c1">//  tag</span>
+                      <span class="n">MPI_COMM_WORLD</span><span class="p">,</span>                 <span class="c1">//  communicator</span>
+                      <span class="o">&amp;</span><span class="n">status</span><span class="p">);</span>                       <span class="c1">//  recv status</span>
+        <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>                                      <span class="c1">// workers:</span>
+            <span class="n">MPI_Recv</span><span class="p">(</span><span class="n">recvBuffer</span><span class="p">,</span>                      <span class="c1">//  msg received</span>
+                      <span class="n">MAX</span><span class="p">,</span>                            <span class="c1">//  buffer size</span>
+                      <span class="n">MPI_CHAR</span><span class="p">,</span>                       <span class="c1">//  type</span>
+                      <span class="n">MPI_ANY_SOURCE</span><span class="p">,</span>                 <span class="c1">//  sender (anyone)</span>
+                      <span class="mi">1</span><span class="p">,</span>                              <span class="c1">//  tag</span>
+                      <span class="n">MPI_COMM_WORLD</span><span class="p">,</span>                 <span class="c1">//  communicator</span>
+                      <span class="o">&amp;</span><span class="n">status</span><span class="p">);</span>                       <span class="c1">//  recv status</span>
+
+            <span class="n">printf</span><span class="p">(</span><span class="s">&quot;Process #%d of %d received %s</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="c1">// show msg</span>
+                    <span class="n">id</span><span class="p">,</span> <span class="n">numProcesses</span><span class="p">,</span> <span class="n">recvBuffer</span><span class="p">);</span>
 
             <span class="c1">// build msg to send by appending id to msg received</span>
             <span class="n">sprintf</span><span class="p">(</span><span class="n">sendBuffer</span><span class="p">,</span> <span class="s">&quot;%s %d&quot;</span><span class="p">,</span> <span class="n">recvBuffer</span><span class="p">,</span> <span class="n">id</span><span class="p">);</span>
 
-            <span class="n">MPI_Send</span><span class="p">(</span><span class="n">sendBuffer</span><span class="p">,</span>              <span class="c1">// msg to send</span>
-                      <span class="n">strlen</span><span class="p">(</span><span class="n">sendBuffer</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="c1">// num chars + NULL</span>
-                      <span class="n">MPI_CHAR</span><span class="p">,</span>               <span class="c1">// type</span>
-                      <span class="p">(</span><span class="n">id</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span> <span class="o">%</span> <span class="n">numProcesses</span><span class="p">,</span>  <span class="c1">// destination</span>
-                      <span class="mi">1</span><span class="p">,</span>                      <span class="c1">// tag</span>
-                      <span class="n">MPI_COMM_WORLD</span><span class="p">);</span>        <span class="c1">// communicator</span>
+            <span class="n">MPI_Send</span><span class="p">(</span><span class="n">sendBuffer</span><span class="p">,</span>                      <span class="c1">//  msg to send</span>
+                      <span class="n">strlen</span><span class="p">(</span><span class="n">sendBuffer</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span>         <span class="c1">//  num chars + NULL</span>
+                      <span class="n">MPI_CHAR</span><span class="p">,</span>                       <span class="c1">//  type</span>
+                      <span class="p">(</span><span class="n">id</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span> <span class="o">%</span> <span class="n">numProcesses</span><span class="p">,</span>          <span class="c1">//  destination</span>
+                      <span class="mi">1</span><span class="p">,</span>                              <span class="c1">//  tag</span>
+                      <span class="n">MPI_COMM_WORLD</span><span class="p">);</span>                <span class="c1">//  communicator</span>
         <span class="p">}</span>
-
-        <span class="n">printf</span><span class="p">(</span><span class="s">&quot;Process %d of %d received %s</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span>
-                <span class="n">id</span><span class="p">,</span> <span class="n">numProcesses</span><span class="p">,</span> <span class="n">recvBuffer</span><span class="p">);</span>
     <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
         <span class="n">printf</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\n</span><span class="s">Please run this program with at least 2 processes</span><span class="se">\n\n</span><span class="s">&quot;</span><span class="p">);</span>
     <span class="p">}</span>
@@ -264,192 +401,64 @@ for its variables.  This is why we call it single program, multiple data.</p>
 <span class="p">}</span>
 </pre></div>
 </div>
-<p><em>file: patternlets/MPI/03.messagePassing2/messagePassing2.c</em></p>
+<p><em>file: patternlets/MPI/05.messagePassing3/messagePassing3.c</em></p>
 </div>
-<div class="section" id="a-data-decomposition-on-slices-using-parallel-for-textual-version">
-<h2>4. A. Data Decomposition: on <em>slices</em> using parallel-for (textual version)<a class="headerlink" href="#a-data-decomposition-on-slices-using-parallel-for-textual-version" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="text-data-decomposition-on-equal-sized-chunks-using-parallel-for">
+<h2>6 (text). Data Decomposition: on <em>equal-sized chunks</em> using parallel-for<a class="headerlink" href="#text-data-decomposition-on-equal-sized-chunks-using-parallel-for" title="Permalink to this headline">¶</a></h2>
 <p>In this example, the data being decomposed is simply the set of integers
 from zero to REPS * numProcesses, which are used in the for loop.</p>
-<div class="highlight-c"><div class="highlight"><pre><span class="cm">/* parallelForSlices.c</span>
+<div class="highlight-c"><div class="highlight"><pre><span class="cm">/* parallelLoopEqualChunks.c</span>
 <span class="cm"> * ... illustrates the parallel for loop pattern in MPI </span>
-<span class="cm"> *	in which processes perform the loop&#39;s iterations in &#39;slices&#39; </span>
-<span class="cm"> *	(simple, and useful when loop iterations do not access</span>
-<span class="cm"> *	 memory/cache locations) ...</span>
+<span class="cm"> *	in which processes perform the loop&#39;s iterations in equal-sized &#39;chunks&#39; </span>
+<span class="cm"> *	(preferable when loop iterations access memory/cache locations) ...</span>
 <span class="cm"> * Joel Adams, Calvin College, November 2009.</span>
+<span class="cm"> *</span>
+<span class="cm"> * Usage: mpirun -np N ./parallelForEqualChunks</span>
+<span class="cm"> *</span>
+<span class="cm"> * Exercise:</span>
+<span class="cm"> * - Compile and run, varying N: 1, 2, 3, 4, 5, 6, 7, 8</span>
+<span class="cm"> * - Change REPS to 16, save, recompile, rerun, varying N again.</span>
+<span class="cm"> * - Explain how this pattern divides the iterations of the loop</span>
+<span class="cm"> *    among the processes.</span>
 <span class="cm"> */</span>
 
-<span class="cp">#include &lt;stdio.h&gt;</span>
-<span class="cp">#include &lt;mpi.h&gt;</span>
+<span class="cp">#include &lt;stdio.h&gt; </span><span class="c1">// printf()</span>
+<span class="cp">#include &lt;mpi.h&gt;   </span><span class="c1">// MPI</span>
+<span class="cp">#include &lt;math.h&gt;  </span><span class="c1">// ceil()</span>
 
 <span class="kt">int</span> <span class="nf">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span><span class="o">**</span> <span class="n">argv</span><span class="p">)</span> <span class="p">{</span>
-	<span class="k">const</span> <span class="kt">int</span> <span class="n">REPS</span> <span class="o">=</span> <span class="mi">8</span><span class="p">;</span>
-	<span class="kt">int</span> <span class="n">id</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">numProcesses</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">i</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span>
+    <span class="k">const</span> <span class="kt">int</span> <span class="n">REPS</span> <span class="o">=</span> <span class="mi">8</span><span class="p">;</span>
+    <span class="kt">int</span> <span class="n">id</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">numProcesses</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">i</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span>
+        <span class="n">start</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">stop</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">chunkSize</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span>
 
-	<span class="n">MPI_Init</span><span class="p">(</span><span class="o">&amp;</span><span class="n">argc</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">argv</span><span class="p">);</span>
-	<span class="n">MPI_Comm_rank</span><span class="p">(</span><span class="n">MPI_COMM_WORLD</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">id</span><span class="p">);</span>
-	<span class="n">MPI_Comm_size</span><span class="p">(</span><span class="n">MPI_COMM_WORLD</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">numProcesses</span><span class="p">);</span>
-
-	<span class="k">for</span> <span class="p">(</span><span class="n">i</span> <span class="o">=</span> <span class="n">id</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">REPS</span><span class="p">;</span> <span class="n">i</span> <span class="o">+=</span> <span class="n">numProcesses</span><span class="p">)</span> <span class="p">{</span>
-		<span class="n">printf</span><span class="p">(</span><span class="s">&quot;Process %d is performing iteration %d</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span>
-			<span class="n">id</span><span class="p">,</span> <span class="n">i</span><span class="p">);</span>
-	<span class="p">}</span>
-
-	<span class="n">MPI_Finalize</span><span class="p">();</span>
-	<span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
-<span class="p">}</span>
-</pre></div>
-</div>
-<p><em>file: patternlets/MPI/04.parallelForLoop-slices/textual/parallelForSlices.c</em></p>
-</div>
-<div class="section" id="b-data-decomposition-on-slices-using-parallel-for-visual-version">
-<h2>4. B. Data Decomposition: on <em>slices</em> using parallel-for (visual version)<a class="headerlink" href="#b-data-decomposition-on-slices-using-parallel-for-visual-version" title="Permalink to this headline">¶</a></h2>
-<p>In this example, we can visually see how the slicing of data used in iterations
-of a nested for loop is working.  Run it to see the effect!</p>
-<div class="highlight-c"><div class="highlight"><pre><span class="cm">/* parallelForStripes.c is a graphical illustration of</span>
-<span class="cm"> *  the &#39;slicing&#39; version of the parallel for loop design pattern,</span>
-<span class="cm"> *  using Argonne Labs&#39; MPE graphics library for X11 systems.</span>
-<span class="cm"> *</span>
-<span class="cm"> * Summer 2013, Joel Adams, Calvin College.</span>
-<span class="cm"> *</span>
-<span class="cm"> * Usage: mpirun -np N ./parallelForStripes</span>
-<span class="cm"> *        Click the mouse in the window to terminate the program.</span>
-<span class="cm"> *        You must have an X11 server running.</span>
-<span class="cm"> *</span>
-<span class="cm"> * Exercise: Run the program, varying N from 1 - 32,  like this: 1, 2, 4, 8, 16, 24, 32</span>
-<span class="cm"> *            and compare to the &#39;Blocks&#39; version...</span>
-<span class="cm"> */</span>
-
-<span class="cp">#include &lt;mpi.h&gt;     </span><span class="c1">// MPI</span>
-<span class="cp">#include &lt;mpe.h&gt;     </span><span class="c1">// MPE</span>
-<span class="cp">#include &lt;stdlib.h&gt;  </span><span class="c1">// getenv()</span>
-<span class="cp">#include &lt;string.h&gt;  </span><span class="c1">// strcmp()</span>
-<span class="cp">#include &lt;stdio.h&gt;   </span><span class="c1">// printf(), etc.</span>
-<span class="cp">#include &lt;unistd.h&gt;  </span><span class="c1">// usleep</span>
-
-<span class="cm">/* </span>
-<span class="cm"> * getDisplay() retrieves the DISPLAY environment info</span>
-<span class="cm"> */</span>
-
-<span class="kt">char</span><span class="o">*</span> <span class="nf">getDisplay</span><span class="p">()</span> <span class="p">{</span>
-	<span class="kt">char</span> <span class="o">*</span> <span class="n">display</span> <span class="o">=</span> <span class="n">getenv</span><span class="p">(</span><span class="s">&quot;DISPLAY&quot;</span><span class="p">);</span>
-	<span class="k">if</span> <span class="p">(</span> <span class="n">strncmp</span><span class="p">(</span><span class="n">display</span><span class="p">,</span> <span class="s">&quot;(null)&quot;</span><span class="p">,</span> <span class="mi">7</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span> <span class="p">)</span> <span class="p">{</span>
-		<span class="n">fprintf</span><span class="p">(</span><span class="n">stderr</span><span class="p">,</span> <span class="s">&quot;</span><span class="se">\n</span><span class="s">*** Fatal: DISPLAY variable not set.</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">);</span>
-		<span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
-	<span class="p">}</span>
-	<span class="k">return</span> <span class="n">display</span><span class="p">;</span>
-<span class="p">}</span>
-
-
-<span class="kt">int</span> <span class="nf">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span><span class="o">*</span> <span class="n">argv</span><span class="p">[])</span> <span class="p">{</span>
-    <span class="k">const</span> <span class="kt">int</span>  <span class="n">WINDOW_WIDTH</span> <span class="o">=</span> <span class="mi">800</span><span class="p">;</span>
-    <span class="k">const</span> <span class="kt">int</span>  <span class="n">WINDOW_HEIGHT</span> <span class="o">=</span> <span class="mi">512</span><span class="p">;</span>
-    <span class="kt">int</span>        <span class="n">x</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
-    <span class="kt">int</span>        <span class="n">id</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">numProcesses</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span>
-    <span class="kt">int</span>        <span class="n">button</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span>
-    <span class="kt">int</span>        <span class="n">square_width</span> <span class="o">=</span> <span class="mi">4</span><span class="p">;</span>
-    <span class="n">MPE_XGraph</span> <span class="n">canvas</span><span class="p">;</span>
-    <span class="n">MPE_Color</span> <span class="o">*</span><span class="n">colors</span> <span class="o">=</span> <span class="nb">NULL</span><span class="p">;</span>
-    <span class="n">MPE_Color</span>  <span class="n">myColor</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
-
-    <span class="c1">// initialize environment, variables, etc.</span>
-    <span class="n">MPI_Init</span><span class="p">(</span><span class="o">&amp;</span><span class="n">argc</span><span class="p">,</span><span class="o">&amp;</span><span class="n">argv</span><span class="p">);</span>
+    <span class="n">MPI_Init</span><span class="p">(</span><span class="o">&amp;</span><span class="n">argc</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">argv</span><span class="p">);</span>
     <span class="n">MPI_Comm_rank</span><span class="p">(</span><span class="n">MPI_COMM_WORLD</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">id</span><span class="p">);</span>
     <span class="n">MPI_Comm_size</span><span class="p">(</span><span class="n">MPI_COMM_WORLD</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">numProcesses</span><span class="p">);</span>
-    <span class="n">MPE_Open_graphics</span><span class="p">(</span> <span class="o">&amp;</span><span class="n">canvas</span><span class="p">,</span> <span class="n">MPI_COMM_WORLD</span><span class="p">,</span> 
-                         <span class="n">getDisplay</span><span class="p">(),</span>
-                         <span class="mi">5</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span>
-                         <span class="n">WINDOW_WIDTH</span><span class="p">,</span> <span class="n">WINDOW_HEIGHT</span><span class="p">,</span> <span class="mi">0</span> <span class="p">);</span>
-    <span class="n">colors</span> <span class="o">=</span> <span class="n">malloc</span><span class="p">(</span> <span class="n">numProcesses</span> <span class="o">*</span> <span class="k">sizeof</span><span class="p">(</span><span class="n">MPE_Color</span><span class="p">)</span> <span class="p">);</span>
-    <span class="n">MPE_Make_color_array</span><span class="p">(</span><span class="n">canvas</span><span class="p">,</span> <span class="n">numProcesses</span><span class="p">,</span> <span class="n">colors</span><span class="p">);</span>
-    <span class="n">myColor</span> <span class="o">=</span> <span class="n">colors</span><span class="p">[</span><span class="n">id</span><span class="p">];</span>
 
-    <span class="c1">// each process does a block of the window&#39;s pixels</span>
-    <span class="c1">////////////////////////////////////////////////////////////////////////</span>
-    <span class="c1">// You could try it using the folowing commented code and more processes</span>
-    <span class="c1">// This version draws single points for each execution in the nested loop</span>
-    <span class="c1">//for (y = id; y &lt; WINDOW_HEIGHT; y += numProcesses) {</span>
-    <span class="c1">//  for (x = 0; x &lt; WINDOW_WIDTH; x++) {</span>
-    <span class="c1">//      MPE_Draw_point(canvas, x, y, myColor);    </span>
-    <span class="c1">//       usleep(4000);  // for illustrative purposes, we wait so our </span>
-    <span class="c1">//                      // eyes can see it happening </span>
-    <span class="c1">//      MPE_Update(canvas);  // update here to slow things down    </span>
-    <span class="c1">////////////////////////////////////////////////////////////////////////</span>
-    <span class="c1">// This version draws bars 4 pixels wide and waits so we can see it</span>
-    <span class="k">for</span> <span class="p">(</span><span class="n">y</span> <span class="o">=</span> <span class="n">id</span><span class="o">*</span><span class="n">square_width</span><span class="p">;</span> <span class="n">y</span> <span class="o">&lt;</span> <span class="n">WINDOW_HEIGHT</span><span class="p">;</span> <span class="n">y</span> <span class="o">+=</span> <span class="n">numProcesses</span><span class="o">*</span><span class="n">square_width</span><span class="p">)</span> <span class="p">{</span>
-       <span class="k">for</span> <span class="p">(</span><span class="n">x</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">x</span> <span class="o">&lt;</span> <span class="n">WINDOW_WIDTH</span><span class="p">;</span> <span class="n">x</span><span class="o">+=</span><span class="n">square_width</span><span class="p">)</span> <span class="p">{</span>
-          <span class="n">MPE_Fill_rectangle</span><span class="p">(</span> <span class="n">canvas</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">square_width</span><span class="p">,</span> <span class="n">square_width</span><span class="p">,</span> <span class="n">myColor</span> <span class="p">);</span>
-          <span class="n">usleep</span><span class="p">(</span><span class="mi">4000</span><span class="p">);</span>  <span class="c1">// for illustrative purposes, </span>
-                          <span class="c1">// we wait so our eyes can see it happening</span>
-          <span class="n">MPE_Update</span><span class="p">(</span><span class="n">canvas</span><span class="p">);</span>  <span class="c1">// update here to slow things down</span>
-       <span class="p">}</span>
+    <span class="n">chunkSize</span> <span class="o">=</span> <span class="p">(</span><span class="kt">int</span><span class="p">)</span><span class="n">ceil</span><span class="p">(((</span><span class="kt">double</span><span class="p">)</span><span class="n">REPS</span><span class="p">)</span> <span class="o">/</span> <span class="n">numProcesses</span><span class="p">);</span> <span class="c1">// find chunk size</span>
+    <span class="n">start</span> <span class="o">=</span> <span class="n">id</span> <span class="o">*</span> <span class="n">chunkSize</span><span class="p">;</span>                               <span class="c1">// find starting index</span>
+                                                          <span class="c1">// find stopping index:</span>
+    <span class="k">if</span> <span class="p">(</span> <span class="n">id</span> <span class="o">&lt;</span> <span class="n">numProcesses</span> <span class="o">-</span> <span class="mi">1</span> <span class="p">)</span> <span class="p">{</span>                        <span class="c1">//  if not the last process</span>
+        <span class="n">stop</span> <span class="o">=</span> <span class="p">(</span><span class="n">id</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="n">chunkSize</span><span class="p">;</span>                      <span class="c1">//   stop where next process starts</span>
+    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>                                              <span class="c1">//  else </span>
+        <span class="n">stop</span> <span class="o">=</span> <span class="n">REPS</span><span class="p">;</span>                                      <span class="c1">//   last process does leftovers </span>
     <span class="p">}</span>
 
-    <span class="c1">// pause until mouse-click so the program doesn&#39;t terminate</span>
-    <span class="k">if</span> <span class="p">(</span><span class="n">id</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
-       <span class="n">printf</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\n</span><span class="s">Click in the window to continue...</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">);</span>
-       <span class="n">MPE_Get_mouse_press</span><span class="p">(</span> <span class="n">canvas</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">x</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">y</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">button</span> <span class="p">);</span>
+    <span class="k">for</span> <span class="p">(</span><span class="n">i</span> <span class="o">=</span> <span class="n">start</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">stop</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>                      <span class="c1">// iterate through our range </span>
+        <span class="n">printf</span><span class="p">(</span><span class="s">&quot;Process %d is performing iteration %d</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">id</span><span class="p">,</span> <span class="n">i</span><span class="p">);</span>
     <span class="p">}</span>
 
-    <span class="c1">// clean up </span>
-    <span class="n">MPE_Close_graphics</span><span class="p">(</span> <span class="o">&amp;</span><span class="n">canvas</span><span class="p">);</span>
     <span class="n">MPI_Finalize</span><span class="p">();</span>
-    <span class="n">free</span><span class="p">(</span><span class="n">colors</span><span class="p">);</span>
-    <span class="k">if</span> <span class="p">(</span><span class="n">id</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="n">printf</span><span class="p">(</span><span class="s">&quot;Program complete.</span><span class="se">\n\n</span><span class="s">&quot;</span><span class="p">);</span> 
     <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
 <span class="p">}</span>
 </pre></div>
 </div>
-<p><em>file: patternlets/MPI/04.parallelForLoop-slices/visual/parallelForSlices.c</em></p>
+<p><em>file: patternlets/MPI/06.parallelLoop-equalChunks/textual/parallelLoopEqualChunks.c</em></p>
 </div>
-<div class="section" id="a-data-decomposition-on-blocks-using-parallel-for-textual-version">
-<h2>5. A. Data Decomposition: on <em>blocks</em> using parallel-for (textual version)<a class="headerlink" href="#a-data-decomposition-on-blocks-using-parallel-for-textual-version" title="Permalink to this headline">¶</a></h2>
-<p>This is a basic example that does not yet include a data array, though
-it would typically be used when each process would be working on a portion
-of an array that could have been looped over in a sequential solution.</p>
-<div class="highlight-c"><div class="highlight"><pre><span class="cm">/* parallelForBlocks.c</span>
-<span class="cm"> * ... illustrates the parallel for loop pattern in MPI </span>
-<span class="cm"> *	in which processes perform the loop&#39;s iterations in &#39;blocks&#39; </span>
-<span class="cm"> *	(preferable when loop iterations do access memory/cache locations) ...</span>
-<span class="cm"> * Joel Adams, Calvin College, November 2009.</span>
-<span class="cm"> */</span>
-
-<span class="cp">#include &lt;stdio.h&gt;</span>
-<span class="cp">#include &lt;mpi.h&gt;</span>
-
-<span class="kt">int</span> <span class="nf">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span><span class="o">**</span> <span class="n">argv</span><span class="p">)</span> <span class="p">{</span>
-	<span class="k">const</span> <span class="kt">int</span> <span class="n">REPS</span> <span class="o">=</span> <span class="mi">8</span><span class="p">;</span>
-	<span class="kt">int</span> <span class="n">id</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">numProcesses</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">i</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span>
-		<span class="n">start</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">stop</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">blockSize</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span>
-
-	<span class="n">MPI_Init</span><span class="p">(</span><span class="o">&amp;</span><span class="n">argc</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">argv</span><span class="p">);</span>
-	<span class="n">MPI_Comm_rank</span><span class="p">(</span><span class="n">MPI_COMM_WORLD</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">id</span><span class="p">);</span>
-	<span class="n">MPI_Comm_size</span><span class="p">(</span><span class="n">MPI_COMM_WORLD</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">numProcesses</span><span class="p">);</span>
-
-	<span class="n">blockSize</span> <span class="o">=</span> <span class="n">REPS</span> <span class="o">/</span> <span class="n">numProcesses</span><span class="p">;</span>      <span class="c1">// integer division </span>
-	<span class="n">start</span> <span class="o">=</span> <span class="n">id</span> <span class="o">*</span> <span class="n">blockSize</span><span class="p">;</span>               <span class="c1">// find starting index</span>
-                                              <span class="c1">// find stopping index</span>
-	<span class="k">if</span> <span class="p">(</span> <span class="n">id</span> <span class="o">&lt;</span> <span class="n">numProcesses</span> <span class="o">-</span> <span class="mi">1</span> <span class="p">)</span> <span class="p">{</span>        <span class="c1">// if not the last process</span>
-		<span class="n">stop</span> <span class="o">=</span> <span class="p">(</span><span class="n">id</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="n">blockSize</span><span class="p">;</span>  <span class="c1">//  stop where next process starts</span>
-	<span class="p">}</span> <span class="k">else</span> <span class="p">{</span>                              <span class="c1">// else </span>
-		<span class="n">stop</span> <span class="o">=</span> <span class="n">REPS</span><span class="p">;</span>                  <span class="c1">//  last process does leftovers </span>
-	<span class="p">}</span>
-
-	<span class="k">for</span> <span class="p">(</span><span class="n">i</span> <span class="o">=</span> <span class="n">start</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">stop</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>      <span class="c1">// iterate through your range </span>
-		<span class="n">printf</span><span class="p">(</span><span class="s">&quot;Process %d is performing iteration %d</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span>
-			<span class="n">id</span><span class="p">,</span> <span class="n">i</span><span class="p">);</span>
-	<span class="p">}</span>
-
-	<span class="n">MPI_Finalize</span><span class="p">();</span>
-	<span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
-<span class="p">}</span>
-</pre></div>
-</div>
-<p><em>file: patternlets/MPI/05.parallelForLoop-blocks/textual/parallelForBlocks.c</em></p>
-</div>
-<div class="section" id="b-data-decomposition-on-blocks-using-parallel-for-visual-version">
-<h2>5. B. Data Decomposition: on <em>blocks</em> using parallel-for (visual version)<a class="headerlink" href="#b-data-decomposition-on-blocks-using-parallel-for-visual-version" title="Permalink to this headline">¶</a></h2>
-<p>In this example you can see how blocks of values within a matrix might be
-assigned to each process.  Run it to see the effect!</p>
+<div class="section" id="visual-data-decomposition-on-equal-sized-chunks-using-parallel-for">
+<h2>6 (visual). Data Decomposition: on <em>equal-sized chunks</em> using parallel-for<a class="headerlink" href="#visual-data-decomposition-on-equal-sized-chunks-using-parallel-for" title="Permalink to this headline">¶</a></h2>
+<p>In this example, we can visually see how the slicing of data used in iterations
+of a nested for loop is working.  Run it to see the effect!</p>
 <div class="highlight-c"><div class="highlight"><pre><span class="cm">/* parallelForBlocks.c is a graphical illustration of</span>
 <span class="cm"> *  the &#39;blocks&#39; version of the parallel for loop design pattern,</span>
 <span class="cm"> *  using Argonne Labs&#39; MPE graphics library for X11 systems.</span>
@@ -460,7 +469,7 @@ assigned to each process.  Run it to see the effect!</p>
 <span class="cm"> *        Click the mouse in the window to terminate the program.</span>
 <span class="cm"> *        You must have an X11 server running.</span>
 <span class="cm"> *</span>
-<span class="cm"> * Exercise: Run the program, varying N from 1 - 32, like this: 1, 2, 4, 8, 16, 24, 32</span>
+<span class="cm"> * Exercise: Run the program, varying N from 1 - 32,</span>
 <span class="cm"> *            and compare to the &#39;Stripes&#39; version...</span>
 <span class="cm"> */</span>
 
@@ -469,7 +478,6 @@ assigned to each process.  Run it to see the effect!</p>
 <span class="cp">#include &lt;stdlib.h&gt;  </span><span class="c1">// getenv() </span>
 <span class="cp">#include &lt;string.h&gt;  </span><span class="c1">// strcmp() </span>
 <span class="cp">#include &lt;stdio.h&gt;   </span><span class="c1">// printf(), etc.</span>
-<span class="cp">#include &lt;unistd.h&gt;  </span><span class="c1">// usleep</span>
 
 <span class="cm">/* </span>
 <span class="cm"> * getDisplay() retrieves the DISPLAY environment info</span>
@@ -487,7 +495,7 @@ assigned to each process.  Run it to see the effect!</p>
 
 <span class="kt">int</span> <span class="nf">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span><span class="o">*</span> <span class="n">argv</span><span class="p">[])</span> <span class="p">{</span>
     <span class="k">const</span> <span class="kt">int</span>  <span class="n">WINDOW_WIDTH</span> <span class="o">=</span> <span class="mi">800</span><span class="p">;</span>
-    <span class="k">const</span> <span class="kt">int</span>  <span class="n">WINDOW_HEIGHT</span> <span class="o">=</span> <span class="mi">512</span><span class="p">;</span>
+    <span class="k">const</span> <span class="kt">int</span>  <span class="n">WINDOW_HEIGHT</span> <span class="o">=</span> <span class="mi">400</span><span class="p">;</span>
     <span class="kt">int</span>        <span class="n">x</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
     <span class="kt">int</span>        <span class="n">id</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">numProcesses</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span>
     <span class="kt">int</span>        <span class="n">button</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span>
@@ -513,24 +521,9 @@ assigned to each process.  Run it to see the effect!</p>
     <span class="n">yEnd</span> <span class="o">=</span> <span class="n">yStart</span> <span class="o">+</span> <span class="n">blockSize</span><span class="p">;</span>
 
     <span class="c1">// processes draw the window&#39;s pixels in stripes</span>
-    <span class="c1">////////////////////////////////////////////////////////////////////////</span>
-    <span class="c1">// You could try it using the folowing commented code and more processes</span>
-    <span class="c1">// This version draws single points for each execution in the nested loop</span>
-    <span class="c1">// for (y = yStart; y &lt; yEnd; y++) {</span>
-    <span class="c1">//    for (x = 0; x &lt; WINDOW_WIDTH; x++) {</span>
-    <span class="c1">//       MPE_Draw_point(canvas, x, y, myColor);</span>
-    <span class="c1">//       usleep(4000);  // for illustrative purposes, we wait so our </span>
-    <span class="c1">//                      // eyes can see it happening </span>
-    <span class="c1">//      MPE_Update(canvas);  // update here to slow things down</span>
-    <span class="c1">//   }</span>
-    <span class="c1">//}</span>
-    <span class="c1">////////////////////////////////////////////////////////////////////////</span>
-    <span class="c1">// This version draws bars 4 pixels wide and waits so we can see it</span>
-    <span class="k">for</span> <span class="p">(</span><span class="n">y</span> <span class="o">=</span> <span class="n">yStart</span><span class="p">;</span> <span class="n">y</span> <span class="o">&lt;</span> <span class="n">yEnd</span><span class="p">;</span> <span class="n">y</span><span class="o">+=</span><span class="mi">4</span><span class="p">)</span> <span class="p">{</span>
-       <span class="k">for</span> <span class="p">(</span><span class="n">x</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">x</span> <span class="o">&lt;</span> <span class="n">WINDOW_WIDTH</span><span class="p">;</span> <span class="n">x</span><span class="o">+=</span><span class="mi">4</span><span class="p">)</span> <span class="p">{</span>
-          <span class="n">MPE_Fill_rectangle</span><span class="p">(</span> <span class="n">canvas</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="n">myColor</span> <span class="p">);</span>
-          <span class="n">usleep</span><span class="p">(</span><span class="mi">4000</span><span class="p">);</span>  <span class="c1">// for illustrative purposes, we wait so our </span>
-                          <span class="c1">// eyes can see it happening        </span>
+    <span class="k">for</span> <span class="p">(</span><span class="n">y</span> <span class="o">=</span> <span class="n">yStart</span><span class="p">;</span> <span class="n">y</span> <span class="o">&lt;</span> <span class="n">yEnd</span><span class="p">;</span> <span class="n">y</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+       <span class="k">for</span> <span class="p">(</span><span class="n">x</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">x</span> <span class="o">&lt;</span> <span class="n">WINDOW_WIDTH</span><span class="p">;</span> <span class="n">x</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+          <span class="n">MPE_Draw_point</span><span class="p">(</span><span class="n">canvas</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">myColor</span><span class="p">);</span>
           <span class="n">MPE_Update</span><span class="p">(</span><span class="n">canvas</span><span class="p">);</span>  <span class="c1">// update here to slow things down</span>
        <span class="p">}</span>
     <span class="p">}</span>
@@ -550,15 +543,151 @@ assigned to each process.  Run it to see the effect!</p>
 <span class="p">}</span>
 </pre></div>
 </div>
-<p><em>file: atternlets/MPI/05.parallelForLoop-blocks/visual/parallelForBlocks.c</em></p>
+<p><em>file: patternlets/MPI/06.parallelLoop-equalChunks/visual/parallelForBlocks.c</em></p>
+</div>
+<div class="section" id="text-data-decomposition-on-chunks-of-size-1-using-parallel-for">
+<h2>7 (text). Data Decomposition: on <em>chunks of size 1</em> using parallel-for<a class="headerlink" href="#text-data-decomposition-on-chunks-of-size-1-using-parallel-for" title="Permalink to this headline">¶</a></h2>
+<p>This is a basic example that does not yet include a data array, though
+it would typically be used when each process would be working on a portion
+of an array that could have been looped over in a sequential solution.</p>
+<div class="highlight-c"><div class="highlight"><pre><span class="cm">/* parallelLoopChunksOf1.c</span>
+<span class="cm"> * ... illustrates the parallel for loop pattern in MPI </span>
+<span class="cm"> *	in which processes perform the loop&#39;s iterations in &#39;chunks&#39; </span>
+<span class="cm"> *      of size 1 (simple, and useful when loop iterations </span>
+<span class="cm"> *      do not access memory/cache locations) ...</span>
+<span class="cm"> * Note this is much simpler than the &#39;equal chunks&#39; loop.</span>
+<span class="cm"> * Joel Adams, Calvin College, November 2009.</span>
+<span class="cm"> *</span>
+<span class="cm"> * Usage: mpirun -np N ./parallelForSlices</span>
+<span class="cm"> *</span>
+<span class="cm"> * Exercise:</span>
+<span class="cm"> * - Compile and run, varying N: 1, 2, 3, 4, 5, 6, 7, 8</span>
+<span class="cm"> * - Change REPS to 16, save, recompile, rerun, varying N again.</span>
+<span class="cm"> * - Explain how this pattern divides the iterations of the loop</span>
+<span class="cm"> *    among the processes.</span>
+<span class="cm"> */</span>
+
+<span class="cp">#include &lt;stdio.h&gt;  </span><span class="c1">// printf()</span>
+<span class="cp">#include &lt;mpi.h&gt;    </span><span class="c1">// MPI</span>
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span><span class="o">**</span> <span class="n">argv</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">const</span> <span class="kt">int</span> <span class="n">REPS</span> <span class="o">=</span> <span class="mi">8</span><span class="p">;</span>
+    <span class="kt">int</span> <span class="n">id</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">numProcesses</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">i</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span>
+
+    <span class="n">MPI_Init</span><span class="p">(</span><span class="o">&amp;</span><span class="n">argc</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">argv</span><span class="p">);</span>
+    <span class="n">MPI_Comm_rank</span><span class="p">(</span><span class="n">MPI_COMM_WORLD</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">id</span><span class="p">);</span>
+    <span class="n">MPI_Comm_size</span><span class="p">(</span><span class="n">MPI_COMM_WORLD</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">numProcesses</span><span class="p">);</span>
+
+    <span class="k">for</span> <span class="p">(</span><span class="n">i</span> <span class="o">=</span> <span class="n">id</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">REPS</span><span class="p">;</span> <span class="n">i</span> <span class="o">+=</span> <span class="n">numProcesses</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">printf</span><span class="p">(</span><span class="s">&quot;Process %d is performing iteration %d</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">id</span><span class="p">,</span> <span class="n">i</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="n">MPI_Finalize</span><span class="p">();</span>
+    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p><em>file: patternlets/MPI/07.parallelLoop-chunksOf1/textual/parallelLoopChunksOf1.c</em></p>
+</div>
+<div class="section" id="visual-data-decomposition-on-chunks-of-size-1-using-parallel-for">
+<h2>7 (visual). Data Decomposition: on <em>chunks of size 1</em> using parallel-for<a class="headerlink" href="#visual-data-decomposition-on-chunks-of-size-1-using-parallel-for" title="Permalink to this headline">¶</a></h2>
+<p>In this example you can see how blocks of values within a matrix might be
+assigned to each process.  Run it to see the effect!</p>
+<div class="highlight-c"><div class="highlight"><pre><span class="cm">/* parallelForStripes.c is a graphical illustration of</span>
+<span class="cm"> *  the &#39;slicing&#39; version of the parallel for loop design pattern,</span>
+<span class="cm"> *  using Argonne Labs&#39; MPE graphics library for X11 systems.</span>
+<span class="cm"> *</span>
+<span class="cm"> * Summer 2013, Joel Adams, Calvin College.</span>
+<span class="cm"> *</span>
+<span class="cm"> * Usage: mpirun -np N ./parallelForStripes</span>
+<span class="cm"> *        Click the mouse in the window to terminate the program.</span>
+<span class="cm"> *        You must have an X11 server running.</span>
+<span class="cm"> *</span>
+<span class="cm"> * Exercise: Run the program, varying N from 1 - 32,</span>
+<span class="cm"> *            and compare to the &#39;Blocks&#39; version...</span>
+<span class="cm"> */</span>
+
+<span class="cp">#include &lt;mpi.h&gt;     </span><span class="c1">// MPI</span>
+<span class="cp">#include &lt;mpe.h&gt;     </span><span class="c1">// MPE</span>
+<span class="cp">#include &lt;stdlib.h&gt;  </span><span class="c1">// getenv()</span>
+<span class="cp">#include &lt;string.h&gt;  </span><span class="c1">// strcmp()</span>
+<span class="cp">#include &lt;stdio.h&gt;   </span><span class="c1">// printf(), etc.</span>
+
+<span class="cm">/* </span>
+<span class="cm"> * getDisplay() retrieves the DISPLAY environment info</span>
+<span class="cm"> */</span>
+
+<span class="kt">char</span><span class="o">*</span> <span class="nf">getDisplay</span><span class="p">()</span> <span class="p">{</span>
+	<span class="kt">char</span> <span class="o">*</span> <span class="n">display</span> <span class="o">=</span> <span class="n">getenv</span><span class="p">(</span><span class="s">&quot;DISPLAY&quot;</span><span class="p">);</span>
+	<span class="k">if</span> <span class="p">(</span> <span class="n">strncmp</span><span class="p">(</span><span class="n">display</span><span class="p">,</span> <span class="s">&quot;(null)&quot;</span><span class="p">,</span> <span class="mi">7</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span> <span class="p">)</span> <span class="p">{</span>
+		<span class="n">fprintf</span><span class="p">(</span><span class="n">stderr</span><span class="p">,</span> <span class="s">&quot;</span><span class="se">\n</span><span class="s">*** Fatal: DISPLAY variable not set.</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">);</span>
+		<span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+	<span class="p">}</span>
+	<span class="k">return</span> <span class="n">display</span><span class="p">;</span>
+<span class="p">}</span>
+
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span><span class="o">*</span> <span class="n">argv</span><span class="p">[])</span> <span class="p">{</span>
+    <span class="k">const</span> <span class="kt">int</span>  <span class="n">WINDOW_WIDTH</span> <span class="o">=</span> <span class="mi">800</span><span class="p">;</span>
+    <span class="k">const</span> <span class="kt">int</span>  <span class="n">WINDOW_HEIGHT</span> <span class="o">=</span> <span class="mi">400</span><span class="p">;</span>
+    <span class="kt">int</span>        <span class="n">x</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="kt">int</span>        <span class="n">id</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">numProcesses</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span>
+    <span class="kt">int</span>        <span class="n">button</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span>
+    <span class="n">MPE_XGraph</span> <span class="n">canvas</span><span class="p">;</span>
+    <span class="n">MPE_Color</span> <span class="o">*</span><span class="n">colors</span> <span class="o">=</span> <span class="nb">NULL</span><span class="p">;</span>
+    <span class="n">MPE_Color</span>  <span class="n">myColor</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+
+    <span class="c1">// initialize environment, variables, etc.</span>
+    <span class="n">MPI_Init</span><span class="p">(</span><span class="o">&amp;</span><span class="n">argc</span><span class="p">,</span><span class="o">&amp;</span><span class="n">argv</span><span class="p">);</span>
+    <span class="n">MPI_Comm_rank</span><span class="p">(</span><span class="n">MPI_COMM_WORLD</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">id</span><span class="p">);</span>
+    <span class="n">MPI_Comm_size</span><span class="p">(</span><span class="n">MPI_COMM_WORLD</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">numProcesses</span><span class="p">);</span>
+    <span class="n">MPE_Open_graphics</span><span class="p">(</span> <span class="o">&amp;</span><span class="n">canvas</span><span class="p">,</span> <span class="n">MPI_COMM_WORLD</span><span class="p">,</span> 
+                         <span class="n">getDisplay</span><span class="p">(),</span>
+                         <span class="mi">5</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span>
+                         <span class="n">WINDOW_WIDTH</span><span class="p">,</span> <span class="n">WINDOW_HEIGHT</span><span class="p">,</span> <span class="mi">0</span> <span class="p">);</span>
+    <span class="n">colors</span> <span class="o">=</span> <span class="n">malloc</span><span class="p">(</span> <span class="n">numProcesses</span> <span class="o">*</span> <span class="k">sizeof</span><span class="p">(</span><span class="n">MPE_Color</span><span class="p">)</span> <span class="p">);</span>
+    <span class="n">MPE_Make_color_array</span><span class="p">(</span><span class="n">canvas</span><span class="p">,</span> <span class="n">numProcesses</span><span class="p">,</span> <span class="n">colors</span><span class="p">);</span>
+    <span class="n">myColor</span> <span class="o">=</span> <span class="n">colors</span><span class="p">[</span><span class="n">id</span><span class="p">];</span>
+
+    <span class="c1">// each process does a block of the window&#39;s pixels</span>
+    <span class="k">for</span> <span class="p">(</span><span class="n">y</span> <span class="o">=</span> <span class="n">id</span><span class="p">;</span> <span class="n">y</span> <span class="o">&lt;</span> <span class="n">WINDOW_HEIGHT</span><span class="p">;</span> <span class="n">y</span> <span class="o">+=</span> <span class="n">numProcesses</span><span class="p">)</span> <span class="p">{</span>
+       <span class="k">for</span> <span class="p">(</span><span class="n">x</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">x</span> <span class="o">&lt;</span> <span class="n">WINDOW_WIDTH</span><span class="p">;</span> <span class="n">x</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+          <span class="n">MPE_Draw_point</span><span class="p">(</span><span class="n">canvas</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">myColor</span><span class="p">);</span>
+          <span class="n">MPE_Update</span><span class="p">(</span><span class="n">canvas</span><span class="p">);</span>  <span class="c1">// update here to slow things down</span>
+       <span class="p">}</span>
+    <span class="p">}</span>
+
+    <span class="c1">// pause until mouse-click so the program doesn&#39;t terminate</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">id</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+       <span class="n">printf</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\n</span><span class="s">Click in the window to continue...</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">);</span>
+       <span class="n">MPE_Get_mouse_press</span><span class="p">(</span> <span class="n">canvas</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">x</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">y</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">button</span> <span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="c1">// clean up </span>
+    <span class="n">MPE_Close_graphics</span><span class="p">(</span> <span class="o">&amp;</span><span class="n">canvas</span><span class="p">);</span>
+    <span class="n">MPI_Finalize</span><span class="p">();</span>
+    <span class="n">free</span><span class="p">(</span><span class="n">colors</span><span class="p">);</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">id</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="n">printf</span><span class="p">(</span><span class="s">&quot;Program complete.</span><span class="se">\n\n</span><span class="s">&quot;</span><span class="p">);</span> 
+    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p><em>file: atternlets/MPI/07.parallelLoop-chunksOf1/visual/parallelForSlices.c</em></p>
 </div>
 <div class="section" id="broadcast-a-special-form-of-message-passing">
-<h2>6. Broadcast: a special form of message passing<a class="headerlink" href="#broadcast-a-special-form-of-message-passing" title="Permalink to this headline">¶</a></h2>
+<h2>8. Broadcast: a special form of message passing<a class="headerlink" href="#broadcast-a-special-form-of-message-passing" title="Permalink to this headline">¶</a></h2>
 <p>This example shows how to ensure that all processes have a copy of an array
 created by a single <em>master</em> node.</p>
-<div class="highlight-c"><div class="highlight"><pre><span class="cm">/* bcast.c</span>
+<div class="highlight-c"><div class="highlight"><pre><span class="cm">/* broadcast.c</span>
 <span class="cm"> * ... illustrates the use of MPI_Bcast()...</span>
 <span class="cm"> * Joel Adams, Calvin College, November 2009.</span>
+<span class="cm"> *</span>
+<span class="cm"> * Usage: mpirun -np N ./broadcast</span>
+<span class="cm"> *</span>
+<span class="cm"> * Exercise:</span>
+<span class="cm"> * - Compile and run, using 2, 4, and 8 processes</span>
+<span class="cm"> * - Use source code to trace execution and output</span>
+<span class="cm"> * - Explain behavior/effect of MPI_Bcast().</span>
 <span class="cm"> */</span>
 
 <span class="cp">#include &lt;mpi.h&gt;</span>
@@ -594,7 +723,9 @@ created by a single <em>master</em> node.</p>
 	<span class="k">if</span> <span class="p">(</span><span class="n">myRank</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="n">fill</span><span class="p">(</span><span class="n">array</span><span class="p">,</span> <span class="n">MAX</span><span class="p">);</span>
      
 	<span class="n">print</span><span class="p">(</span><span class="s">&quot;array before&quot;</span><span class="p">,</span> <span class="n">myRank</span><span class="p">,</span> <span class="n">array</span><span class="p">);</span>
+
         <span class="n">MPI_Bcast</span><span class="p">(</span><span class="n">array</span><span class="p">,</span> <span class="n">MAX</span><span class="p">,</span> <span class="n">MPI_INT</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">MPI_COMM_WORLD</span><span class="p">);</span>
+
 	<span class="n">print</span><span class="p">(</span><span class="s">&quot;array after&quot;</span><span class="p">,</span> <span class="n">myRank</span><span class="p">,</span> <span class="n">array</span><span class="p">);</span>
 
  	<span class="n">MPI_Finalize</span><span class="p">();</span>
@@ -603,19 +734,25 @@ created by a single <em>master</em> node.</p>
 <span class="p">}</span>
 </pre></div>
 </div>
-<p><em>file: patternlets/MPI/06.broadcast/broadcast.c</em></p>
+<p><em>file: patternlets/MPI/08.broadcast/broadcast.c</em></p>
 </div>
 <div class="section" id="collective-communication-reduction">
-<h2>7. Collective Communication: Reduction<a class="headerlink" href="#collective-communication-reduction" title="Permalink to this headline">¶</a></h2>
+<h2>9. Collective Communication: Reduction<a class="headerlink" href="#collective-communication-reduction" title="Permalink to this headline">¶</a></h2>
 <p>Once processes have performed independent concurrent computations, possibly
-on some portion of decomposed data, it is quite commen to then <em>reduce</em>
+on some portion of decomposed data, it is quite common to then <em>reduce</em>
 those individual computations into one value.  This example shows a simple
 calculation done by each process being reduced to a sum and a maximum.
 In this example, MPI, has built-in computations, indicated by MPI_SUM and
 MPI_MAX in the following code.</p>
-<div class="highlight-c"><div class="highlight"><pre><span class="cm">/* reduce.c</span>
+<div class="highlight-c"><div class="highlight"><pre><span class="cm">/* reduction.c</span>
 <span class="cm"> * ... illustrates the use of MPI_Reduce()...</span>
 <span class="cm"> * Joel Adams, Calvin College, November 2009.</span>
+<span class="cm"> *</span>
+<span class="cm"> * Usage: mpirun -np N ./reduction</span>
+<span class="cm"> *</span>
+<span class="cm"> * Exercise: </span>
+<span class="cm"> * - Compile and run, varying N: 4, 6, 8, 10.</span>
+<span class="cm"> * - Explain behavior of MPI_Reduce().</span>
 <span class="cm"> */</span>
 
 <span class="cp">#include &lt;mpi.h&gt;</span>
@@ -648,143 +785,223 @@ MPI_MAX in the following code.</p>
 <span class="p">}</span>
 </pre></div>
 </div>
-<p><em>file: patternlets/MPI/07.reduction/reduction.c</em></p>
+<p><em>file: patternlets/MPI/09.reduction/reduction.c</em></p>
+</div>
+<div class="section" id="id1">
+<h2>10. Collective Communication: Reduction<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
+<p>Here is a second reduction example using arrays of data.</p>
+<div class="highlight-c"><div class="highlight"><pre><span class="cm">/* reduction2.c</span>
+<span class="cm"> * ... illustrates the use of MPI_Reduce() using arrays...</span>
+<span class="cm"> * Joel Adams, Calvin College, January 2015.</span>
+<span class="cm"> *</span>
+<span class="cm"> * Usage: mpirun -np 4 ./reduction2</span>
+<span class="cm"> *</span>
+<span class="cm"> * Exercise:</span>
+<span class="cm"> * - Compile and run, comparing output to source code.</span>
+<span class="cm"> * - Uncomment the &#39;commented out&#39; call to printArray.</span>
+<span class="cm"> * - Save, recompile, rerun, comparing output to source code.</span>
+<span class="cm"> * - Explain behavior of MPI_Reduce() in terms of </span>
+<span class="cm"> *     srcArr and destArr.</span>
+<span class="cm"> */</span>
+
+<span class="cp">#include &lt;mpi.h&gt;</span>
+<span class="cp">#include &lt;stdio.h&gt;</span>
+
+<span class="cp">#define ARRAY_SIZE 5</span>
+
+<span class="kt">void</span> <span class="n">printArray</span><span class="p">(</span><span class="kt">int</span> <span class="n">id</span><span class="p">,</span> <span class="kt">char</span><span class="o">*</span> <span class="n">arrayName</span><span class="p">,</span> <span class="kt">int</span><span class="o">*</span> <span class="n">array</span><span class="p">,</span> <span class="kt">int</span> <span class="n">SIZE</span><span class="p">);</span>
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span><span class="o">**</span> <span class="n">argv</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kt">int</span> <span class="n">myRank</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span>
+    <span class="kt">int</span> <span class="n">srcArr</span><span class="p">[</span><span class="n">ARRAY_SIZE</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="mi">0</span><span class="p">};</span>
+    <span class="kt">int</span> <span class="n">destArr</span><span class="p">[</span><span class="n">ARRAY_SIZE</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="mi">0</span><span class="p">};</span>
+
+    <span class="n">MPI_Init</span><span class="p">(</span><span class="o">&amp;</span><span class="n">argc</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">argv</span><span class="p">);</span>
+    <span class="n">MPI_Comm_rank</span><span class="p">(</span><span class="n">MPI_COMM_WORLD</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">myRank</span><span class="p">);</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="n">myRank</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">printf</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\n</span><span class="s">Before reduction: &quot;</span><span class="p">);</span>
+        <span class="n">printArray</span><span class="p">(</span><span class="n">myRank</span><span class="p">,</span> <span class="s">&quot;destArr&quot;</span><span class="p">,</span> <span class="n">destArr</span><span class="p">,</span> <span class="n">ARRAY_SIZE</span><span class="p">);</span>
+    <span class="p">}</span> 
+
+    <span class="k">for</span> <span class="p">(</span><span class="kt">unsigned</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">ARRAY_SIZE</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">srcArr</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">myRank</span> <span class="o">*</span> <span class="n">i</span><span class="p">;</span>
+    <span class="p">}</span>
+
+<span class="c1">//    printArray(myRank, &quot;srcArr&quot;, srcArr, ARRAY_SIZE);</span>
+
+    <span class="n">MPI_Reduce</span><span class="p">(</span><span class="n">srcArr</span><span class="p">,</span> <span class="n">destArr</span><span class="p">,</span> <span class="n">ARRAY_SIZE</span><span class="p">,</span> <span class="n">MPI_INT</span><span class="p">,</span> <span class="n">MPI_SUM</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">MPI_COMM_WORLD</span><span class="p">);</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="n">myRank</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">printf</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\n</span><span class="s">After reduction:  &quot;</span><span class="p">);</span>
+        <span class="n">printArray</span><span class="p">(</span><span class="n">myRank</span><span class="p">,</span> <span class="s">&quot;destArr&quot;</span><span class="p">,</span> <span class="n">destArr</span><span class="p">,</span> <span class="n">ARRAY_SIZE</span><span class="p">);</span>
+        <span class="n">printf</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">);</span>
+    <span class="p">}</span> 
+
+    <span class="n">MPI_Finalize</span><span class="p">();</span>
+
+    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="cm">/* utility to display an array</span>
+<span class="cm"> * params: id, the rank of the current process</span>
+<span class="cm"> *         arrayName, the name of the array being displayed</span>
+<span class="cm"> *         array, the array being displayed</span>
+<span class="cm"> *         SIZE, the number of items in array.</span>
+<span class="cm"> * postcondition:</span>
+<span class="cm"> *         the id, name, and items in array have been printed to stdout.</span>
+<span class="cm"> */</span>
+<span class="kt">void</span> <span class="nf">printArray</span><span class="p">(</span><span class="kt">int</span> <span class="n">id</span><span class="p">,</span> <span class="kt">char</span><span class="o">*</span> <span class="n">arrayName</span><span class="p">,</span> <span class="kt">int</span> <span class="o">*</span> <span class="n">array</span><span class="p">,</span> <span class="kt">int</span> <span class="n">SIZE</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">printf</span><span class="p">(</span><span class="s">&quot;Process %d, %s: [&quot;</span><span class="p">,</span> <span class="n">id</span><span class="p">,</span> <span class="n">arrayName</span><span class="p">);</span>
+    <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">SIZE</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">printf</span><span class="p">(</span><span class="s">&quot;%3d&quot;</span><span class="p">,</span> <span class="n">array</span><span class="p">[</span><span class="n">i</span><span class="p">]);</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">i</span> <span class="o">&lt;</span> <span class="n">SIZE</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="n">printf</span><span class="p">(</span><span class="s">&quot;,&quot;</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="n">printf</span><span class="p">(</span><span class="s">&quot;]</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p><em>file: patternlets/MPI/10.reduction2/reduction2.c</em></p>
 </div>
 <div class="section" id="collective-communication-scatter-for-message-passing-data-decomposition">
-<h2>8. Collective communication: Scatter for message-passing data decomposition<a class="headerlink" href="#collective-communication-scatter-for-message-passing-data-decomposition" title="Permalink to this headline">¶</a></h2>
+<h2>11. Collective communication: Scatter for message-passing data decomposition<a class="headerlink" href="#collective-communication-scatter-for-message-passing-data-decomposition" title="Permalink to this headline">¶</a></h2>
 <p>If processes can independently work on portions of a larger data array
 using the geometric data decomposition pattern,
-the scatter patternlet can be used to ensure that each process receives
+the scatter pattern can be used to ensure that each process receives
 a copy of its portion of the array.</p>
 <div class="highlight-c"><div class="highlight"><pre><span class="cm">/* scatter.c</span>
 <span class="cm"> * ... illustrates the use of MPI_Scatter()...</span>
 <span class="cm"> * Joel Adams, Calvin College, November 2009.</span>
+<span class="cm"> *</span>
+<span class="cm"> * Usage: mpirun -np N ./scatter</span>
+<span class="cm"> *</span>
+<span class="cm"> * Exercise:</span>
+<span class="cm"> * - Compile and run, varying N: 1, 2, 4, 8</span>
+<span class="cm"> * - Trace execution through source code.</span>
+<span class="cm"> * - Explain behavior/effect of MPI_Scatter().</span>
 <span class="cm"> */</span>
 
-<span class="cp">#include &lt;mpi.h&gt;</span>
-<span class="cp">#include &lt;stdio.h&gt;</span>
-<span class="cp">#include &lt;stdlib.h&gt;</span>
+<span class="cp">#include &lt;mpi.h&gt;      </span><span class="c1">// MPI</span>
+<span class="cp">#include &lt;stdio.h&gt;    </span><span class="c1">// printf(), etc.</span>
+<span class="cp">#include &lt;stdlib.h&gt;   </span><span class="c1">// malloc()</span>
+
+<span class="kt">void</span> <span class="n">print</span><span class="p">(</span><span class="kt">int</span> <span class="n">id</span><span class="p">,</span> <span class="kt">char</span><span class="o">*</span> <span class="n">arrName</span><span class="p">,</span> <span class="kt">int</span><span class="o">*</span> <span class="n">arr</span><span class="p">,</span> <span class="kt">int</span> <span class="n">arrSize</span><span class="p">);</span>
 
 <span class="kt">int</span> <span class="nf">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span><span class="o">**</span> <span class="n">argv</span><span class="p">)</span> <span class="p">{</span>
-        <span class="k">const</span> <span class="kt">int</span> <span class="n">MAX</span> <span class="o">=</span> <span class="mi">8</span><span class="p">;</span>
-	<span class="kt">int</span> <span class="n">aSend</span><span class="p">[]</span> <span class="o">=</span> <span class="p">{</span><span class="mi">11</span><span class="p">,</span> <span class="mi">22</span><span class="p">,</span> <span class="mi">33</span><span class="p">,</span> <span class="mi">44</span><span class="p">,</span> <span class="mi">55</span><span class="p">,</span> <span class="mi">66</span><span class="p">,</span> <span class="mi">77</span><span class="p">,</span> <span class="mi">88</span><span class="p">};</span>
-	<span class="kt">int</span><span class="o">*</span> <span class="n">aRcv</span><span class="p">;</span>
-        <span class="kt">int</span> <span class="n">i</span><span class="p">,</span> <span class="n">numProcs</span><span class="p">,</span> <span class="n">myRank</span><span class="p">,</span> <span class="n">numSent</span><span class="p">;</span>
+    <span class="k">const</span> <span class="kt">int</span> <span class="n">MAX</span> <span class="o">=</span> <span class="mi">8</span><span class="p">;</span>
+    <span class="kt">int</span><span class="o">*</span> <span class="n">arrSend</span> <span class="o">=</span> <span class="nb">NULL</span><span class="p">;</span>
+    <span class="kt">int</span><span class="o">*</span> <span class="n">arrRcv</span> <span class="o">=</span> <span class="nb">NULL</span><span class="p">;</span>
+    <span class="kt">int</span> <span class="n">numProcs</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">myRank</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">numSent</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span>
 
-	<span class="n">MPI_Init</span><span class="p">(</span><span class="o">&amp;</span><span class="n">argc</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">argv</span><span class="p">);</span>
-        <span class="n">MPI_Comm_size</span><span class="p">(</span><span class="n">MPI_COMM_WORLD</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">numProcs</span><span class="p">);</span>
-        <span class="n">MPI_Comm_rank</span><span class="p">(</span><span class="n">MPI_COMM_WORLD</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">myRank</span><span class="p">);</span>
+    <span class="n">MPI_Init</span><span class="p">(</span><span class="o">&amp;</span><span class="n">argc</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">argv</span><span class="p">);</span>                            <span class="c1">// initialize</span>
+    <span class="n">MPI_Comm_size</span><span class="p">(</span><span class="n">MPI_COMM_WORLD</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">numProcs</span><span class="p">);</span>
+    <span class="n">MPI_Comm_rank</span><span class="p">(</span><span class="n">MPI_COMM_WORLD</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">myRank</span><span class="p">);</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="n">myRank</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>                                 <span class="c1">// master process:</span>
+        <span class="n">arrSend</span> <span class="o">=</span> <span class="p">(</span><span class="kt">int</span><span class="o">*</span><span class="p">)</span> <span class="n">malloc</span><span class="p">(</span> <span class="n">MAX</span> <span class="o">*</span> <span class="k">sizeof</span><span class="p">(</span><span class="kt">int</span><span class="p">)</span> <span class="p">);</span>  <span class="c1">//  allocate array1</span>
+        <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">MAX</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>                <span class="c1">//  load with values</span>
+            <span class="n">arrSend</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="mi">11</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="n">print</span><span class="p">(</span><span class="n">myRank</span><span class="p">,</span> <span class="s">&quot;arrSend&quot;</span><span class="p">,</span> <span class="n">arrSend</span><span class="p">,</span> <span class="n">MAX</span><span class="p">);</span>        <span class="c1">//  display array1</span>
+    <span class="p">}</span>
      
-        <span class="n">numSent</span> <span class="o">=</span> <span class="n">MAX</span> <span class="o">/</span> <span class="n">numProcs</span><span class="p">;</span>
-	<span class="n">aRcv</span> <span class="o">=</span> <span class="p">(</span><span class="kt">int</span><span class="o">*</span><span class="p">)</span> <span class="n">malloc</span><span class="p">(</span> <span class="n">numSent</span> <span class="o">*</span> <span class="k">sizeof</span><span class="p">(</span><span class="kt">int</span><span class="p">)</span> <span class="p">);</span>
-        <span class="n">MPI_Scatter</span><span class="p">(</span><span class="n">aSend</span><span class="p">,</span> <span class="n">numSent</span><span class="p">,</span> <span class="n">MPI_INT</span><span class="p">,</span> <span class="n">aRcv</span><span class="p">,</span> <span class="n">numSent</span><span class="p">,</span> <span class="n">MPI_INT</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">MPI_COMM_WORLD</span><span class="p">);</span>
-	<span class="n">printf</span><span class="p">(</span><span class="s">&quot;Process %d: &quot;</span><span class="p">,</span> <span class="n">myRank</span><span class="p">);</span>
-	<span class="k">for</span> <span class="p">(</span><span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">numSent</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
-		<span class="n">printf</span><span class="p">(</span><span class="s">&quot; %d&quot;</span><span class="p">,</span> <span class="n">aRcv</span><span class="p">[</span><span class="n">i</span><span class="p">]);</span>
-	<span class="p">}</span>
-	<span class="n">printf</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">);</span>
+    <span class="n">numSent</span> <span class="o">=</span> <span class="n">MAX</span> <span class="o">/</span> <span class="n">numProcs</span><span class="p">;</span>                          <span class="c1">// all processes:</span>
+    <span class="n">arrRcv</span> <span class="o">=</span> <span class="p">(</span><span class="kt">int</span><span class="o">*</span><span class="p">)</span> <span class="n">malloc</span><span class="p">(</span> <span class="n">numSent</span> <span class="o">*</span> <span class="k">sizeof</span><span class="p">(</span><span class="kt">int</span><span class="p">)</span> <span class="p">);</span>   <span class="c1">//  allocate array2</span>
 
-	<span class="n">free</span><span class="p">(</span><span class="n">aRcv</span><span class="p">);</span>
- 	<span class="n">MPI_Finalize</span><span class="p">();</span>
+    <span class="n">MPI_Scatter</span><span class="p">(</span><span class="n">arrSend</span><span class="p">,</span> <span class="n">numSent</span><span class="p">,</span> <span class="n">MPI_INT</span><span class="p">,</span> <span class="n">arrRcv</span><span class="p">,</span>     <span class="c1">//  scatter array1 </span>
+                 <span class="n">numSent</span><span class="p">,</span> <span class="n">MPI_INT</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">MPI_COMM_WORLD</span><span class="p">);</span> <span class="c1">//   into array2</span>
 
-	<span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="n">print</span><span class="p">(</span><span class="n">myRank</span><span class="p">,</span> <span class="s">&quot;arrRcv&quot;</span><span class="p">,</span> <span class="n">arrRcv</span><span class="p">,</span> <span class="n">numSent</span><span class="p">);</span>          <span class="c1">// display array2</span>
+
+    <span class="n">free</span><span class="p">(</span><span class="n">arrSend</span><span class="p">);</span>                                     <span class="c1">// clean up</span>
+    <span class="n">free</span><span class="p">(</span><span class="n">arrRcv</span><span class="p">);</span>
+    <span class="n">MPI_Finalize</span><span class="p">();</span>
+    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="nf">print</span><span class="p">(</span><span class="kt">int</span> <span class="n">id</span><span class="p">,</span> <span class="kt">char</span><span class="o">*</span> <span class="n">arrName</span><span class="p">,</span> <span class="kt">int</span><span class="o">*</span> <span class="n">arr</span><span class="p">,</span> <span class="kt">int</span> <span class="n">arrSize</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">printf</span><span class="p">(</span><span class="s">&quot;Process %d, %s: &quot;</span><span class="p">,</span> <span class="n">id</span><span class="p">,</span> <span class="n">arrName</span><span class="p">);</span>
+    <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">arrSize</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">printf</span><span class="p">(</span><span class="s">&quot; %d&quot;</span><span class="p">,</span> <span class="n">arr</span><span class="p">[</span><span class="n">i</span><span class="p">]);</span>
+    <span class="p">}</span>
+    <span class="n">printf</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">);</span>
 <span class="p">}</span>
 </pre></div>
 </div>
-<p><em>file: patternlets/MPI/08.scatter/scatter.c</em></p>
+<p><em>file: patternlets/MPI/11.scatter/scatter.c</em></p>
 </div>
 <div class="section" id="collective-communication-gather-for-message-passing-data-decomposition">
-<h2>9. Collective communication: Gather for message-passing data decomposition<a class="headerlink" href="#collective-communication-gather-for-message-passing-data-decomposition" title="Permalink to this headline">¶</a></h2>
+<h2>12. Collective communication: Gather for message-passing data decomposition<a class="headerlink" href="#collective-communication-gather-for-message-passing-data-decomposition" title="Permalink to this headline">¶</a></h2>
 <p>If processes can independently work on portions of a larger data array
 using the geometric data decomposition pattern,
-the gather patternlet can be used to ensure that each process sends
+the gather pattern can be used to ensure that each process sends
 a copy of its portion of the array back to the root, or master process.</p>
 <div class="highlight-c"><div class="highlight"><pre><span class="cm">/* gather.c</span>
 <span class="cm"> * ... illustrates the use of MPI_Gather()...</span>
 <span class="cm"> * Joel Adams, Calvin College, November 2009.</span>
+<span class="cm"> *</span>
+<span class="cm"> * Usage: mpirun -np N ./gather</span>
+<span class="cm"> *</span>
+<span class="cm"> * Exercise:</span>
+<span class="cm"> * - Compile and run, varying N: 1, 2, 4, 8.</span>
+<span class="cm"> * - Trace execution through source.</span>
+<span class="cm"> * - Explain behavior of MPI_Gather().</span>
 <span class="cm"> */</span>
 
-<span class="cp">#include &lt;mpi.h&gt;</span>
-<span class="cp">#include &lt;stdio.h&gt;</span>
-<span class="cp">#include &lt;stdlib.h&gt;</span>
+<span class="cp">#include &lt;mpi.h&gt;       </span><span class="c1">// MPI</span>
+<span class="cp">#include &lt;stdio.h&gt;     </span><span class="c1">// printf()</span>
+<span class="cp">#include &lt;stdlib.h&gt;    </span><span class="c1">// malloc()</span>
 
-<span class="cp">#define MAX 3</span>
+<span class="kt">void</span> <span class="n">print</span><span class="p">(</span><span class="kt">int</span> <span class="n">id</span><span class="p">,</span> <span class="kt">char</span><span class="o">*</span> <span class="n">arrName</span><span class="p">,</span> <span class="kt">int</span><span class="o">*</span> <span class="n">arr</span><span class="p">,</span> <span class="kt">int</span> <span class="n">arrSize</span><span class="p">);</span>
+
+<span class="cp">#define SIZE 3</span>
 
 <span class="kt">int</span> <span class="nf">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span><span class="o">**</span> <span class="n">argv</span><span class="p">)</span> <span class="p">{</span>
-   <span class="kt">int</span> <span class="n">computeArray</span><span class="p">[</span><span class="n">MAX</span><span class="p">];</span>
-   <span class="kt">int</span><span class="o">*</span> <span class="n">gatherArray</span> <span class="o">=</span> <span class="nb">NULL</span><span class="p">;</span>
-   <span class="kt">int</span> <span class="n">i</span><span class="p">,</span> <span class="n">numProcs</span><span class="p">,</span> <span class="n">myRank</span><span class="p">,</span> <span class="n">totalGatheredVals</span><span class="p">;</span>
+   <span class="kt">int</span>  <span class="n">computeArray</span><span class="p">[</span><span class="n">SIZE</span><span class="p">];</span>                          <span class="c1">// array1</span>
+   <span class="kt">int</span><span class="o">*</span> <span class="n">gatherArray</span> <span class="o">=</span> <span class="nb">NULL</span><span class="p">;</span>                          <span class="c1">// array2</span>
+   <span class="kt">int</span>  <span class="n">numProcs</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">myRank</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> 
+        <span class="n">totalGatheredVals</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span>
 
-   <span class="n">MPI_Init</span><span class="p">(</span><span class="o">&amp;</span><span class="n">argc</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">argv</span><span class="p">);</span>
+   <span class="n">MPI_Init</span><span class="p">(</span><span class="o">&amp;</span><span class="n">argc</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">argv</span><span class="p">);</span>                           <span class="c1">// initialize</span>
    <span class="n">MPI_Comm_size</span><span class="p">(</span><span class="n">MPI_COMM_WORLD</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">numProcs</span><span class="p">);</span>
    <span class="n">MPI_Comm_rank</span><span class="p">(</span><span class="n">MPI_COMM_WORLD</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">myRank</span><span class="p">);</span>
-
-   <span class="k">for</span> <span class="p">(</span><span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">MAX</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
-      <span class="n">computeArray</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">myRank</span> <span class="o">*</span> <span class="mi">10</span> <span class="o">+</span> <span class="n">i</span><span class="p">;</span>
-   <span class="p">}</span>
-     
-   <span class="n">totalGatheredVals</span> <span class="o">=</span> <span class="n">MAX</span> <span class="o">*</span> <span class="n">numProcs</span><span class="p">;</span>
-   <span class="n">gatherArray</span> <span class="o">=</span> <span class="p">(</span><span class="kt">int</span><span class="o">*</span><span class="p">)</span> <span class="n">malloc</span><span class="p">(</span> <span class="n">totalGatheredVals</span> <span class="o">*</span> <span class="k">sizeof</span><span class="p">(</span><span class="kt">int</span><span class="p">)</span> <span class="p">);</span>
-
-   <span class="n">MPI_Gather</span><span class="p">(</span><span class="n">computeArray</span><span class="p">,</span> <span class="n">MAX</span><span class="p">,</span> <span class="n">MPI_INT</span><span class="p">,</span>
-               <span class="n">gatherArray</span><span class="p">,</span> <span class="n">MAX</span><span class="p">,</span> <span class="n">MPI_INT</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">MPI_COMM_WORLD</span><span class="p">);</span>
-
-   <span class="k">if</span> <span class="p">(</span><span class="n">myRank</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
-      <span class="k">for</span> <span class="p">(</span><span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">totalGatheredVals</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
-         <span class="n">printf</span><span class="p">(</span><span class="s">&quot; %d&quot;</span><span class="p">,</span> <span class="n">gatherArray</span><span class="p">[</span><span class="n">i</span><span class="p">]);</span>
-      <span class="p">}</span>
-      <span class="n">printf</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">);</span>
+                                                     <span class="c1">// all processes:</span>
+   <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">SIZE</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>                  <span class="c1">//  load array1 with</span>
+      <span class="n">computeArray</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">myRank</span> <span class="o">*</span> <span class="mi">10</span> <span class="o">+</span> <span class="n">i</span><span class="p">;</span>             <span class="c1">//   3 distinct values</span>
    <span class="p">}</span>
 
-   <span class="n">free</span><span class="p">(</span><span class="n">gatherArray</span><span class="p">);</span>
+   <span class="n">print</span><span class="p">(</span><span class="n">myRank</span><span class="p">,</span> <span class="s">&quot;computeArray&quot;</span><span class="p">,</span> <span class="n">computeArray</span><span class="p">,</span>       <span class="c1">//  show array1</span>
+           <span class="n">SIZE</span><span class="p">);</span>
+
+   <span class="k">if</span> <span class="p">(</span><span class="n">myRank</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>                                <span class="c1">// master:</span>
+      <span class="n">totalGatheredVals</span> <span class="o">=</span> <span class="n">SIZE</span> <span class="o">*</span> <span class="n">numProcs</span><span class="p">;</span>           <span class="c1">//  allocate array2</span>
+      <span class="n">gatherArray</span> <span class="o">=</span> <span class="p">(</span><span class="kt">int</span><span class="o">*</span><span class="p">)</span> <span class="n">malloc</span><span class="p">(</span> <span class="n">totalGatheredVals</span> <span class="o">*</span> <span class="k">sizeof</span><span class="p">(</span><span class="kt">int</span><span class="p">)</span> <span class="p">);</span>
+   <span class="p">}</span>
+
+   <span class="n">MPI_Gather</span><span class="p">(</span><span class="n">computeArray</span><span class="p">,</span> <span class="n">SIZE</span><span class="p">,</span> <span class="n">MPI_INT</span><span class="p">,</span>           <span class="c1">//  gather array1 vals</span>
+               <span class="n">gatherArray</span><span class="p">,</span> <span class="n">SIZE</span><span class="p">,</span> <span class="n">MPI_INT</span><span class="p">,</span>           <span class="c1">//   into array2</span>
+               <span class="mi">0</span><span class="p">,</span> <span class="n">MPI_COMM_WORLD</span><span class="p">);</span>                   <span class="c1">//   at master process               </span>
+
+   <span class="k">if</span> <span class="p">(</span><span class="n">myRank</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>                                <span class="c1">// master process:</span>
+      <span class="n">print</span><span class="p">(</span><span class="n">myRank</span><span class="p">,</span> <span class="s">&quot;gatherArray&quot;</span><span class="p">,</span>                   <span class="c1">//  show array2</span>
+             <span class="n">gatherArray</span><span class="p">,</span> <span class="n">totalGatheredVals</span><span class="p">);</span> 
+   <span class="p">}</span>
+
+   <span class="n">free</span><span class="p">(</span><span class="n">gatherArray</span><span class="p">);</span>                                <span class="c1">// clean up</span>
    <span class="n">MPI_Finalize</span><span class="p">();</span>
-
    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
 <span class="p">}</span>
-</pre></div>
-</div>
-<p><em>file: patternlets/MPI/09.gather/gather.c</em></p>
-</div>
-<div class="section" id="collective-communication-barrier">
-<h2>10. Collective Communication: Barrier<a class="headerlink" href="#collective-communication-barrier" title="Permalink to this headline">¶</a></h2>
-<p>This simple example shows the use of a barrier: a point at which all processes
-must complete the code above it before moving on and running the code below it.</p>
-<div class="highlight-c"><div class="highlight"><pre><span class="cm">/* barrier.c</span>
-<span class="cm"> * ... illustrates the behavior of MPI_Barrier() ...</span>
-<span class="cm"> * Joel Adams, Calvin College, May 2013.</span>
-<span class="cm"> *</span>
-<span class="cm"> * Exercise: </span>
-<span class="cm"> *  - Compile and run the program several times, noting the intermixed outputs</span>
-<span class="cm"> *  - Uncomment the barrier call; then recompile and rerun,</span>
-<span class="cm"> *     noting the change in the outputs.</span>
-<span class="cm"> */</span>
 
-<span class="cp">#include &lt;stdio.h&gt;</span>
-<span class="cp">#include &lt;mpi.h&gt;</span>
-
-<span class="kt">int</span> <span class="nf">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span><span class="o">**</span> <span class="n">argv</span><span class="p">)</span> <span class="p">{</span>
-	<span class="kt">int</span> <span class="n">id</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">numProcesses</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">length</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span>
-	<span class="kt">char</span> <span class="n">myHostName</span><span class="p">[</span><span class="n">MPI_MAX_PROCESSOR_NAME</span><span class="p">];</span>
-
-	<span class="n">MPI_Init</span><span class="p">(</span><span class="o">&amp;</span><span class="n">argc</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">argv</span><span class="p">);</span>
-	<span class="n">MPI_Comm_rank</span><span class="p">(</span><span class="n">MPI_COMM_WORLD</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">id</span><span class="p">);</span>
-	<span class="n">MPI_Comm_size</span><span class="p">(</span><span class="n">MPI_COMM_WORLD</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">numProcesses</span><span class="p">);</span>
-	<span class="n">MPI_Get_processor_name</span> <span class="p">(</span><span class="n">myHostName</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">length</span><span class="p">);</span>
-
-	<span class="n">printf</span><span class="p">(</span><span class="s">&quot;Process %d of %d on %s is BEFORE the barrier.</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span>
-		<span class="n">id</span><span class="p">,</span> <span class="n">numProcesses</span><span class="p">,</span> <span class="n">myHostName</span><span class="p">);</span>
-
-	<span class="n">MPI_Barrier</span><span class="p">(</span><span class="n">MPI_COMM_WORLD</span><span class="p">);</span> 
-
-	<span class="n">printf</span><span class="p">(</span><span class="s">&quot;Process %d of %d on %s is AFTER the barrier.</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span>
-		<span class="n">id</span><span class="p">,</span> <span class="n">numProcesses</span><span class="p">,</span> <span class="n">myHostName</span><span class="p">);</span>
-
-	<span class="n">MPI_Finalize</span><span class="p">();</span>
-	<span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="kt">void</span> <span class="nf">print</span><span class="p">(</span><span class="kt">int</span> <span class="n">id</span><span class="p">,</span> <span class="kt">char</span><span class="o">*</span> <span class="n">arrName</span><span class="p">,</span> <span class="kt">int</span><span class="o">*</span> <span class="n">arr</span><span class="p">,</span> <span class="kt">int</span> <span class="n">arrSize</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">printf</span><span class="p">(</span><span class="s">&quot;Process %d, %s: &quot;</span><span class="p">,</span> <span class="n">id</span><span class="p">,</span> <span class="n">arrName</span><span class="p">);</span>
+    <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">arrSize</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">printf</span><span class="p">(</span><span class="s">&quot; %d&quot;</span><span class="p">,</span> <span class="n">arr</span><span class="p">[</span><span class="n">i</span><span class="p">]);</span>
+    <span class="p">}</span>
+    <span class="n">printf</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">);</span>
 <span class="p">}</span>
 </pre></div>
 </div>
-<p><em>file: patternlets/MPI/10.barrier/barrier.c</em></p>
+<p><em>file: patternlets/MPI/12.gather/gather.c</em></p>
 </div>
 </div>
 
@@ -801,19 +1018,21 @@ must complete the code above it before moving on and running the code below it.<
   <ul>
 <li><a class="reference internal" href="#">Message Passing Parallel Patternlets</a><ul>
 <li><a class="reference internal" href="#source-code">Source Code</a></li>
-<li><a class="reference internal" href="#single-program-multiple-data">0. Single Program, Multiple Data</a></li>
-<li><a class="reference internal" href="#the-master-worker-implementation-strategy-pattern">1. The Master-Worker Implementation Strategy Pattern</a></li>
-<li><a class="reference internal" href="#message-passing-1-using-send-receive-of-a-single-value">2. Message passing 1, using Send-Receive of a single value</a></li>
-<li><a class="reference internal" href="#message-passing-2-using-send-receive-of-an-array-of-values">3. Message passing 2,  using Send-Receive of an array of values</a></li>
-<li><a class="reference internal" href="#a-data-decomposition-on-slices-using-parallel-for-textual-version">4. A. Data Decomposition: on <em>slices</em> using parallel-for (textual version)</a></li>
-<li><a class="reference internal" href="#b-data-decomposition-on-slices-using-parallel-for-visual-version">4. B. Data Decomposition: on <em>slices</em> using parallel-for (visual version)</a></li>
-<li><a class="reference internal" href="#a-data-decomposition-on-blocks-using-parallel-for-textual-version">5. A. Data Decomposition: on <em>blocks</em> using parallel-for (textual version)</a></li>
-<li><a class="reference internal" href="#b-data-decomposition-on-blocks-using-parallel-for-visual-version">5. B. Data Decomposition: on <em>blocks</em> using parallel-for (visual version)</a></li>
-<li><a class="reference internal" href="#broadcast-a-special-form-of-message-passing">6. Broadcast: a special form of message passing</a></li>
-<li><a class="reference internal" href="#collective-communication-reduction">7. Collective Communication: Reduction</a></li>
-<li><a class="reference internal" href="#collective-communication-scatter-for-message-passing-data-decomposition">8. Collective communication: Scatter for message-passing data decomposition</a></li>
-<li><a class="reference internal" href="#collective-communication-gather-for-message-passing-data-decomposition">9. Collective communication: Gather for message-passing data decomposition</a></li>
-<li><a class="reference internal" href="#collective-communication-barrier">10. Collective Communication: Barrier</a></li>
+<li><a class="reference internal" href="#single-program-multiple-data">00. Single Program, Multiple Data</a></li>
+<li><a class="reference internal" href="#the-barrier-coordination-pattern">1. The Barrier Coordination Pattern</a></li>
+<li><a class="reference internal" href="#the-master-worker-implementation-strategy-pattern">2. The Master-Worker Implementation Strategy Pattern</a></li>
+<li><a class="reference internal" href="#message-passing-1-using-send-receive-of-a-single-value">3. Message passing 1, using Send-Receive of a single value</a></li>
+<li><a class="reference internal" href="#message-passing-2-using-send-receive-of-an-array-of-values">4. Message passing 2,  using Send-Receive of an array of values</a></li>
+<li><a class="reference internal" href="#message-passing-3-using-send-receive-with-master-worker-pattern">5. Message passing 3,  using Send-Receive with master-worker pattern</a></li>
+<li><a class="reference internal" href="#text-data-decomposition-on-equal-sized-chunks-using-parallel-for">6 (text). Data Decomposition: on <em>equal-sized chunks</em> using parallel-for</a></li>
+<li><a class="reference internal" href="#visual-data-decomposition-on-equal-sized-chunks-using-parallel-for">6 (visual). Data Decomposition: on <em>equal-sized chunks</em> using parallel-for</a></li>
+<li><a class="reference internal" href="#text-data-decomposition-on-chunks-of-size-1-using-parallel-for">7 (text). Data Decomposition: on <em>chunks of size 1</em> using parallel-for</a></li>
+<li><a class="reference internal" href="#visual-data-decomposition-on-chunks-of-size-1-using-parallel-for">7 (visual). Data Decomposition: on <em>chunks of size 1</em> using parallel-for</a></li>
+<li><a class="reference internal" href="#broadcast-a-special-form-of-message-passing">8. Broadcast: a special form of message passing</a></li>
+<li><a class="reference internal" href="#collective-communication-reduction">9. Collective Communication: Reduction</a></li>
+<li><a class="reference internal" href="#id1">10. Collective Communication: Reduction</a></li>
+<li><a class="reference internal" href="#collective-communication-scatter-for-message-passing-data-decomposition">11. Collective communication: Scatter for message-passing data decomposition</a></li>
+<li><a class="reference internal" href="#collective-communication-gather-for-message-passing-data-decomposition">12. Collective communication: Gather for message-passing data decomposition</a></li>
 </ul>
 </li>
 </ul>
@@ -832,11 +1051,8 @@ must complete the code above it before moving on and running the code below it.<
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
-          <a href="../genindex.html" title="General Index"
-             >index</a></li>
-        <li class="right" >
           <a href="../SharedMemory/OpenMP_Patternlets.html" title="Shared Memory Parallel Patternlets in OpenMP"
-             >next</a> |</li>
+             >next</a></li>
         <li class="right" >
           <a href="../PatternsIntro.html" title="Parallel Programming Patterns"
              >previous</a> |</li>

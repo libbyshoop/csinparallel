@@ -1,5 +1,5 @@
 PROG = spmd
-CC = /usr/bin/mpicc
+CC = mpicc
 CFLAGS = -Wall
 LFLAGS = -o $(PROG)
 
