@@ -6,6 +6,11 @@
 Distributed Computing Fundamentals
 ===================================
 
+This module will guide you through the basics of programming using distributed processes
+by providing some background and code examples using the Message Passing Interface (MPI)
+library and the C programming language. Below is a table of contents. The links labeled 'next'
+on the upper right of this page take you through each section.
+
 .. toctree::
    :maxdepth: 1
 

@@ -13,18 +13,18 @@
 
 int main(int argc, char *argv[]) {
 
-    int rank,                                           /* rank variable to identify the process */
-        nprocs,                                         /* number of processes */
-        i,
-        len;                                            /* variable for storing name of processes */
+    int rank = 0,                                       /* rank variable to identify the process */
+        nprocs = 0,                                     /* number of processes */
+        i = 0,
+        len = 0;                                        /* variable for storing name of processes */
 
     int n = 10000;                                      /* the number of bins */
     double PI25DT = 3.141592653589793238462643;         /* 25-digit-PI*/
-    double mypi,                                        /* value from each process */
-           pi,                                          /* value of PI in total*/
-           step,                                        /* the step */
-           sum,                                         /* sum of area under the curve */
-           x;
+    double mypi = 0.0,                                  /* value from each process */
+           pi = 0.0,                                    /* value of PI in total*/
+           step = 0.0,                                  /* the step */
+           sum = 0.0,                                   /* sum of area under the curve */
+           x = 0.0;
 
     char name[MAX_NAME];        /* char array for storing the name of each process */
 

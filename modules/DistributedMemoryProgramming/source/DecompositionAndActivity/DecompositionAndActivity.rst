@@ -29,7 +29,7 @@ Activity 3: Vector Matrix Multiplication Improved Version
 ---------------------------------------------------------
 
 To download the source code to do this activity: 
-:download:`download vector_matrix_todo.c <vector_matrix_imp_todo.c>`
+:download:`download vector_matrix_mpi_todo.c <vector_matrix_mpi_todo.c>`
 
 Have it open in an editor so that you can work on it.  Or at a minimum use your browser and right-click on the link above and choose to open it in a new browser window.
 
@@ -43,7 +43,7 @@ After the workers having received their tasks, they will compute their own task,
 back to the master. Finally the master will receive results from workers, and combine them into a result vector.
 
 :Comments: 
-    * I will walk you through the code step by step. First, we will need to initialize the MPI environment, define the size of the communicator, and give a rank to each process. This should be straight forward to you because you have seen this many times already. ::
+    * Let's walk through the code step by step. First, we will need to initialize the MPI environment, define the size of the communicator, and give a rank to each process. This should be straight forward to you because you have seen this many times already. ::
 
         /* Initialize MPI execution environment */
         MPI_Init( &argc,&argv);
@@ -123,7 +123,7 @@ back to the master. Finally the master will receive results from workers, and co
 
 
 To download the entire source code (if you get stuck):
-:download:`download vector_matrix_done.c <vector_matrix_imp.c>`
+:download:`download vector_matrix_done.c <vector_matrix_mpi.c>`
 
 Activity 4: Matrix Multiplication
 ---------------------------------

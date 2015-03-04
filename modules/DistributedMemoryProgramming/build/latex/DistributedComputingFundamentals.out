@@ -9,7 +9,7 @@
 \BOOKMARK [0][-]{chapter.4}{Introduction to MPI}{}% 9
 \BOOKMARK [1][-]{section.4.1}{What is MPI ?}{chapter.4}% 10
 \BOOKMARK [1][-]{section.4.2}{Why MPI ?}{chapter.4}% 11
-\BOOKMARK [1][-]{section.4.3}{How do I write MPI program ?}{chapter.4}% 12
+\BOOKMARK [1][-]{section.4.3}{How do I write an MPI program ?}{chapter.4}% 12
 \BOOKMARK [0][-]{chapter.5}{MPI Communications}{}% 13
 \BOOKMARK [1][-]{section.5.1}{Point-to-point Communication}{chapter.5}% 14
 \BOOKMARK [1][-]{section.5.2}{Collective Communication}{chapter.5}% 15

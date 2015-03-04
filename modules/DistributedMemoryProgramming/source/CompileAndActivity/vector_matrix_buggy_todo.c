@@ -9,10 +9,10 @@
 
 int main(int argc, char *argv[]) {
 
-    int nprocs,         /* number of processes */
-        rank,           /* rank of each process */
-        chunk_size,     /* number of rows to be sent to a process */
-        i, j;
+    int nprocs = 0,         /* number of processes */
+        rank = 0,           /* rank of each process */
+        chunk_size = 0,     /* number of rows to be sent to a process */
+        i = 0, j = 0;
 
     int matrix[WIDTH][WIDTH];           /* matrix for multiplication */
     int vector[WIDTH];                  /* vector for multiplication */

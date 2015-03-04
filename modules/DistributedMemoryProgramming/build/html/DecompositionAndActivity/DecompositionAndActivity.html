@@ -25,6 +25,7 @@
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
     <link rel="top" title="Distributed Computing Fundamentals" href="../index.html" />
     <link rel="prev" title="Compiling and First Two Activites" href="../CompileAndActivity/compileandactivity.html" /> 
   </head>
@@ -33,11 +34,8 @@
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
-          <a href="../genindex.html" title="General Index"
-             accesskey="I">index</a></li>
-        <li class="right" >
           <a href="../CompileAndActivity/compileandactivity.html" title="Compiling and First Two Activites"
-             accesskey="P">previous</a> |</li>
+             accesskey="P">previous</a></li>
         <li><a href="../index.html">Distributed Computing Fundamentals</a> &raquo;</li> 
       </ul>
     </div>  
@@ -77,7 +75,7 @@
 <div class="section" id="activity-3-vector-matrix-multiplication-improved-version">
 <h3>Activity 3: Vector Matrix Multiplication Improved Version<a class="headerlink" href="#activity-3-vector-matrix-multiplication-improved-version" title="Permalink to this headline">¶</a></h3>
 <p>To download the source code to do this activity:
-<a class="reference download internal" href="../_downloads/vector_matrix_imp_todo.c"><tt class="xref download docutils literal"><span class="pre">download</span> <span class="pre">vector_matrix_todo.c</span></tt></a></p>
+<a class="reference download internal" href="../_downloads/vector_matrix_mpi_todo1.c"><tt class="xref download docutils literal"><span class="pre">download</span> <span class="pre">vector_matrix_mpi_todo.c</span></tt></a></p>
 <p>Have it open in an editor so that you can work on it.  Or at a minimum use your browser and right-click on the link above and choose to open it in a new browser window.</p>
 <p>In this activity, we will be using decomposition technique, MPI_Send, and MPI_Recv to
 improve the efficiency and accuracy of vector matrix multiplication. We already seen that by using
@@ -91,7 +89,7 @@ back to the master. Finally the master will receive results from workers, and co
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Comments:</th><td class="field-body"><ul class="first last">
-<li><p class="first">I will walk you through the code step by step. First, we will need to initialize the MPI environment, define the size of the communicator, and give a rank to each process. This should be straight forward to you because you have seen this many times already.</p>
+<li><p class="first">Let&#8217;s walk through the code step by step. First, we will need to initialize the MPI environment, define the size of the communicator, and give a rank to each process. This should be straight forward to you because you have seen this many times already.</p>
 <div class="highlight-c"><div class="highlight"><pre><span class="cm">/* Initialize MPI execution environment */</span>
 <span class="n">MPI_Init</span><span class="p">(</span> <span class="o">&amp;</span><span class="n">argc</span><span class="p">,</span><span class="o">&amp;</span><span class="n">argv</span><span class="p">);</span>
 <span class="n">MPI_Comm_rank</span><span class="p">(</span> <span class="n">MPI_COMM_WORLD</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">rank</span><span class="p">);</span>
@@ -180,7 +178,7 @@ back to the master. Finally the master will receive results from workers, and co
 </tbody>
 </table>
 <p>To download the entire source code (if you get stuck):
-<a class="reference download internal" href="../_downloads/vector_matrix_imp.c"><tt class="xref download docutils literal"><span class="pre">download</span> <span class="pre">vector_matrix_done.c</span></tt></a></p>
+<a class="reference download internal" href="../_downloads/vector_matrix_mpi1.c"><tt class="xref download docutils literal"><span class="pre">download</span> <span class="pre">vector_matrix_done.c</span></tt></a></p>
 </div>
 <div class="section" id="activity-4-matrix-multiplication">
 <h3>Activity 4: Matrix Multiplication<a class="headerlink" href="#activity-4-matrix-multiplication" title="Permalink to this headline">¶</a></h3>
@@ -297,19 +295,6 @@ back to the master. Finally the master will receive results from workers, and co
   <h4>Previous topic</h4>
   <p class="topless"><a href="../CompileAndActivity/compileandactivity.html"
                         title="previous chapter">Compiling and First Two Activites</a></p>
-<div id="searchbox" style="display: none">
-  <h3>Quick search</h3>
-    <form class="search" action="../search.html" method="get">
-      <input type="text" name="q" />
-      <input type="submit" value="Go" />
-      <input type="hidden" name="check_keywords" value="yes" />
-      <input type="hidden" name="area" value="default" />
-    </form>
-    <p class="searchtip" style="font-size: 90%">
-    Enter search terms or a module, class or function name.
-    </p>
-</div>
-<script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
       </div>
       <div class="clearer"></div>
@@ -318,11 +303,8 @@ back to the master. Finally the master will receive results from workers, and co
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
-          <a href="../genindex.html" title="General Index"
-             >index</a></li>
-        <li class="right" >
           <a href="../CompileAndActivity/compileandactivity.html" title="Compiling and First Two Activites"
-             >previous</a> |</li>
+             >previous</a></li>
         <li><a href="../index.html">Distributed Computing Fundamentals</a> &raquo;</li> 
       </ul>
     </div>
