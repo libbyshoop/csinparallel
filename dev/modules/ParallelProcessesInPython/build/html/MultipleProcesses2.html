@@ -1,0 +1,156 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Creating multiple child processes, part 2 &mdash; Parallel Processes in Python</title>
+    
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="shortcut icon" href="_static/favicon.ico"/>
+    <link rel="top" title="Parallel Processes in Python" href="index.html" />
+    <link rel="next" title="Execution Order and Resource Contention" href="ExecutionOrderAndResources.html" />
+    <link rel="prev" title="Creating multiple child processes" href="MultipleProcesses.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="ExecutionOrderAndResources.html" title="Execution Order and Resource Contention"
+             accesskey="N">next</a></li>
+        <li class="right" >
+          <a href="MultipleProcesses.html" title="Creating multiple child processes"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">Parallel Processes in Python</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="creating-multiple-child-processes-part-2">
+<h1>Creating multiple child processes, part 2<a class="headerlink" href="#creating-multiple-child-processes-part-2" title="Permalink to this headline">¶</a></h1>
+<p>Here is a possible solution for creating a variable number of child processes:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="k">def</span> <span class="nf">manyGreetings2</span><span class="p">():</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="nb">raw_input</span><span class="p">(</span><span class="s">&quot;Enter your name: &quot;</span><span class="p">)</span>
+    <span class="n">numProc</span> <span class="o">=</span> <span class="nb">input</span><span class="p">(</span><span class="s">&quot;How many processes? &quot;</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">numProc</span><span class="p">):</span>
+        <span class="p">(</span><span class="n">Process</span><span class="p">(</span><span class="n">target</span><span class="o">=</span><span class="n">sayHi2</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">(</span><span class="n">name</span><span class="p">,)))</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+</pre></div>
+</div>
+<div class="section" id="anonymous-processes">
+<h2>Anonymous Processes<a class="headerlink" href="#anonymous-processes" title="Permalink to this headline">¶</a></h2>
+<p>After obtaining the
+user’s name and desired number of processes, we create and start that
+many Process objects with a loop. Note in this case that the single line
+of the loop body could also be written as two lines as follows:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">p</span> <span class="o">=</span> <span class="n">Process</span><span class="p">(</span><span class="n">target</span><span class="o">=</span><span class="n">sayHi2</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">(</span><span class="n">name</span><span class="p">,))</span>
+<span class="n">p</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>We can say that the one-line version includes the use of <em>anonymous</em>
+Process objects. They are anonymous since the individual objects are
+never stored in variables for later use. They are simply created and
+started immediately. The one-line version might look confusing at first,
+but note that (Process(target=sayHi2, args=(name,))) creates a Process
+object. We’re then just calling the start method on that Process object,
+instead of storing it in a variable and calling start on that variable.
+For our purposes, the end result is the same.</p>
+<p>Now, consider the following:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">numProc</span><span class="p">):</span>
+    <span class="n">pi</span> <span class="o">=</span> <span class="n">Process</span><span class="p">(</span><span class="n">target</span><span class="o">=</span><span class="n">sayHi2</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">(</span><span class="n">name</span><span class="p">,))</span>
+    <span class="n">pi</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>This would work as well, as it merely substitutes variable p in
+the previous example for pi. However, it is important to point
+out that this code does <strong>not</strong> actually create several variables, p0,
+p1, p2, etc. Sometimes this kind of mistake happens because we’re
+working in a different context now – parallel programming – but it’s
+important to remember that the same programming principles you’ve
+already learned continue to apply here. For example, consider the
+following example:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">):</span>
+    <span class="n">grade</span> <span class="o">=</span> <span class="mi">97</span>
+</pre></div>
+</div>
+<p>Clearly this code does not create the variables gr0de, gr1de, gr2de,
+etc. Similarly, then, pi does not become p0, p1, p2, etc.</p>
+<p>Another important question can be considered in reviewing
+the <tt class="docutils literal"><span class="pre">manyGreetings2</span></tt> code above again. Which approach is better, the
+explicit use of p, or the anonymous version given in the original? It depends. In this
+example, we don’t need access to the <tt class="docutils literal"><span class="pre">Process</span></tt> objects later, so there’s
+no need to store them. So the anonymous version is acceptable in that
+regard. But we might also think about which version we find to be more
+readable. To an extent this may be a matter of personal opinion, but it
+is something that should be considered in programming.</p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="index.html">
+              <img class="logo" src="_static/CSInParallel200wide.png" alt="Logo"/>
+            </a></p>
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Creating multiple child processes, part 2</a><ul>
+<li><a class="reference internal" href="#anonymous-processes">Anonymous Processes</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="MultipleProcesses.html"
+                        title="previous chapter">Creating multiple child processes</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="ExecutionOrderAndResources.html"
+                        title="next chapter">Execution Order and Resource Contention</a></p>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="ExecutionOrderAndResources.html" title="Execution Order and Resource Contention"
+             >next</a></li>
+        <li class="right" >
+          <a href="MultipleProcesses.html" title="Creating multiple child processes"
+             >previous</a> |</li>
+        <li><a href="index.html">Parallel Processes in Python</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright This work is licensed under a Creative Commons Attribution-ShareAlike 3.0 Unported License.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>

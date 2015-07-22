@@ -1,0 +1,141 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Queue Exercise Solution &mdash; Parallel Processes in Python</title>
+    
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="shortcut icon" href="_static/favicon.ico"/>
+    <link rel="top" title="Parallel Processes in Python" href="index.html" />
+    <link rel="next" title="Coordination of Processes" href="Coordination.html" />
+    <link rel="prev" title="Queue Exercise Hint" href="QueueExerciseHint.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="Coordination.html" title="Coordination of Processes"
+             accesskey="N">next</a></li>
+        <li class="right" >
+          <a href="QueueExerciseHint.html" title="Queue Exercise Hint"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">Parallel Processes in Python</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="queue-exercise-solution">
+<h1>Queue Exercise Solution<a class="headerlink" href="#queue-exercise-solution" title="Permalink to this headline">¶</a></h1>
+<p>Recall the English pseudocode for our original simple examle problem
+of sending 5 pieces of data from a parent to a child process:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">def greet2():</span>
+<span class="sd">    for 5 times</span>
+<span class="sd">        get name from queue</span>
+<span class="sd">        say hello</span>
+
+<span class="sd">def sendName2():</span>
+<span class="sd">    queue</span>
+<span class="sd">    make a child process, give it the queue</span>
+<span class="sd">    start it</span>
+
+<span class="sd">    for 5 times</span>
+<span class="sd">        sleep for a bit</span>
+<span class="sd">        put another name in the queue</span>
+<span class="sd">&#39;&#39;&#39;</span>
+</pre></div>
+</div>
+<p>Here is a Python solution that follows the structure of
+the pseudocode very closely. It’s just a matter of filling in the syntax
+we’re learning for queues, along with a review of working with
+processes and how we can sleep for a randomly defined amount of time.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">random</span> <span class="kn">import</span> <span class="n">randint</span>
+
+<span class="k">def</span> <span class="nf">greet2</span><span class="p">(</span><span class="n">q</span><span class="p">):</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">5</span><span class="p">):</span>
+        <span class="k">print</span>
+        <span class="k">print</span> <span class="s">&quot;(child process) Waiting for name&quot;</span><span class="p">,</span> <span class="n">i</span>
+        <span class="n">name</span> <span class="o">=</span> <span class="n">q</span><span class="o">.</span><span class="n">get</span><span class="p">()</span>
+        <span class="k">print</span> <span class="s">&quot;(child process) Well, hi&quot;</span><span class="p">,</span> <span class="n">name</span>
+
+<span class="k">def</span> <span class="nf">sendName2</span><span class="p">():</span>
+    <span class="n">q</span> <span class="o">=</span> <span class="n">Queue</span><span class="p">()</span>
+
+    <span class="n">p1</span> <span class="o">=</span> <span class="n">Process</span><span class="p">(</span><span class="n">target</span><span class="o">=</span><span class="n">greet2</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">(</span><span class="n">q</span><span class="p">,))</span>
+    <span class="n">p1</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">5</span><span class="p">):</span>
+        <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="n">randint</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">4</span><span class="p">))</span>
+        <span class="k">print</span> <span class="s">&quot;(main process) Ok, I&#39;ll send the name&quot;</span>
+        <span class="n">q</span><span class="o">.</span><span class="n">put</span><span class="p">(</span><span class="s">&quot;George&quot;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">))</span>
+</pre></div>
+</div>
+<div class="topic">
+<p class="topic-title first">Try the code</p>
+<p><a class="reference download internal" href="_downloads/sendName2.py"><tt class="xref download docutils literal"><span class="pre">Download</span> <span class="pre">sendName2.py</span></tt></a> and try the above example on your system.</p>
+</div>
+<p>Once you are comfortable with this example of using queues to communicate data and coordinate the handling of that data using <tt class="docutils literal"><span class="pre">put</span></tt> and <tt class="docutils literal"><span class="pre">get</span></tt>, you will be ready to look at some other coordination mechanisms in the next section.</p>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="index.html">
+              <img class="logo" src="_static/CSInParallel200wide.png" alt="Logo"/>
+            </a></p>
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="QueueExerciseHint.html"
+                        title="previous chapter">Queue Exercise Hint</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="Coordination.html"
+                        title="next chapter">Coordination of Processes</a></p>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="Coordination.html" title="Coordination of Processes"
+             >next</a></li>
+        <li class="right" >
+          <a href="QueueExerciseHint.html" title="Queue Exercise Hint"
+             >previous</a> |</li>
+        <li><a href="index.html">Parallel Processes in Python</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright This work is licensed under a Creative Commons Attribution-ShareAlike 3.0 Unported License.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>
