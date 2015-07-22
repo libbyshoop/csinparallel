@@ -1,0 +1,183 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Process Coordination, Part 2 &mdash; Parallel Processes in Python</title>
+    
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="shortcut icon" href="_static/favicon.ico"/>
+    <link rel="top" title="Parallel Processes in Python" href="index.html" />
+    <link rel="prev" title="Coordination of Processes" href="Coordination.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="Coordination.html" title="Coordination of Processes"
+             accesskey="P">previous</a></li>
+        <li><a href="index.html">Parallel Processes in Python</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="process-coordination-part-2">
+<h1>Process Coordination, Part 2<a class="headerlink" href="#process-coordination-part-2" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="solution-to-exercise">
+<h2>Solution to Exercise<a class="headerlink" href="#solution-to-exercise" title="Permalink to this headline">¶</a></h2>
+<p>The completed exercise is as follows:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="k">def</span> <span class="nf">addTwoNumbers</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">q</span><span class="p">):</span>
+    <span class="c"># sleep(5) # In case you want to slow things down to see what is happening.</span>
+    <span class="n">q</span><span class="o">.</span><span class="n">put</span><span class="p">(</span><span class="n">a</span><span class="o">+</span><span class="n">b</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">addTwoPar</span><span class="p">():</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="nb">input</span><span class="p">(</span><span class="s">&quot;Enter first number: &quot;</span><span class="p">)</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="nb">input</span><span class="p">(</span><span class="s">&quot;Enter second number: &quot;</span><span class="p">)</span>
+
+    <span class="n">q</span> <span class="o">=</span> <span class="n">Queue</span><span class="p">()</span>
+    <span class="n">p1</span> <span class="o">=</span> <span class="n">Process</span><span class="p">(</span><span class="n">target</span><span class="o">=</span><span class="n">addTwoNumbers</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">q</span><span class="p">))</span>
+    <span class="n">p1</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+
+    <span class="c"># p1.join()</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">q</span><span class="o">.</span><span class="n">get</span><span class="p">()</span>
+    <span class="k">print</span> <span class="s">&quot;The sum is:&quot;</span><span class="p">,</span> <span class="n">result</span>
+</pre></div>
+</div>
+<p>As you
+can see, it requires only a small addition. The parent must call the get
+method on the queue. Once the child has put something on the queue, the
+parent’s get will succeed, and the variable result will get a value and
+be printed.</p>
+<p>Did you attempt to use join in your solution, as in the commented-out
+line in the above solution? In this example the join is
+not harmful, but is not required. This is because the get will already
+cause the parent process to block until data is on the queue. So there’s
+no need for the parent process to wait for the child to be finished with
+a join as well. The get already causes the required wait.</p>
+</div>
+<div class="section" id="using-a-queue-to-merge-multiple-child-process-results">
+<h2>Using a Queue to Merge Multiple Child Process Results<a class="headerlink" href="#using-a-queue-to-merge-multiple-child-process-results" title="Permalink to this headline">¶</a></h2>
+<p>The following example is a nice extension of the one
+above.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">multiprocessing</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">random</span> <span class="kn">import</span> <span class="n">randint</span>
+<span class="kn">import</span> <span class="nn">time</span>
+<span class="k">def</span> <span class="nf">addManyNumbers</span><span class="p">(</span><span class="n">numNumbers</span><span class="p">,</span> <span class="n">q</span><span class="p">):</span>
+    <span class="n">s</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">numNumbers</span><span class="p">):</span>
+        <span class="n">s</span> <span class="o">=</span> <span class="n">s</span> <span class="o">+</span> <span class="n">randint</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span>
+    <span class="n">q</span><span class="o">.</span><span class="n">put</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">addManyPar</span><span class="p">():</span>
+    <span class="n">totalNumNumbers</span> <span class="o">=</span> <span class="mi">1000000</span>
+
+    <span class="n">q</span> <span class="o">=</span> <span class="n">Queue</span><span class="p">()</span>
+    <span class="n">p1</span> <span class="o">=</span> <span class="n">Process</span><span class="p">(</span><span class="n">target</span><span class="o">=</span><span class="n">addManyNumbers</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">(</span><span class="n">totalNumNumbers</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span> <span class="n">q</span><span class="p">))</span>
+    <span class="n">p2</span> <span class="o">=</span> <span class="n">Process</span><span class="p">(</span><span class="n">target</span><span class="o">=</span><span class="n">addManyNumbers</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">(</span><span class="n">totalNumNumbers</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span> <span class="n">q</span><span class="p">))</span>
+    <span class="n">p1</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+    <span class="n">p2</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+
+    <span class="n">answerA</span> <span class="o">=</span> <span class="n">q</span><span class="o">.</span><span class="n">get</span><span class="p">()</span>
+    <span class="n">answerB</span> <span class="o">=</span> <span class="n">q</span><span class="o">.</span><span class="n">get</span><span class="p">()</span>
+    <span class="k">print</span> <span class="s">&quot;Sum:&quot;</span><span class="p">,</span> <span class="n">answerA</span> <span class="o">+</span> <span class="n">answerB</span>
+</pre></div>
+</div>
+<p>Here, the task is to add up a
+large number of random numbers. This is accomplished by creating two
+child processes, each of which is responsible for half of the work. Note
+that a shared queue, plus half the total number of numbers, is passed to
+each child. Each child creates many random numbers and adds them up,
+putting the final sum on the queue. The parent makes two get calls, to
+obtain the result from each child. Note that the parent will likely
+block on at least the first get call, since it will need to wait until
+one of the children finishes and places its result on the queue.</p>
+<p>Here’s an interesting question to consider: which child’s result will be
+in answerA and which in answerB? The answer is that this is
+indeterminate. Whichever child process finishes first will have its
+answer in answerA, and the other will be in answerB. This is not a
+problem for commutative merging operations, like the addition of this
+example, but of course could be a complication for non-commutative
+merging.</p>
+<div class="topic">
+<p class="topic-title first">Try the code</p>
+<p><a class="reference download internal" href="_downloads/addManyPar.py"><tt class="xref download docutils literal"><span class="pre">Download</span> <span class="pre">addManyPar.py</span></tt></a> and try the above example on your system.</p>
+</div>
+</div>
+<div class="section" id="conclusion">
+<h2>Conclusion<a class="headerlink" href="#conclusion" title="Permalink to this headline">¶</a></h2>
+<p>Of course there are many places you could go next, but here we have seen
+an introduction to parallel programming in Python using the
+multiprocessing module. We’ve explored the parent-child model of
+parallel programming, in which the parent creates many child processes
+to perform some task. We’ve seen how shared resources lead to a need for
+locks to ensure uninterrupted access. Finally, we’ve seen how to pass
+data between processes, both via the Process constructor’s <tt class="docutils literal"><span class="pre">args</span></tt>
+argument, and also through the use of a shared queue.</p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="index.html">
+              <img class="logo" src="_static/CSInParallel200wide.png" alt="Logo"/>
+            </a></p>
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Process Coordination, Part 2</a><ul>
+<li><a class="reference internal" href="#solution-to-exercise">Solution to Exercise</a></li>
+<li><a class="reference internal" href="#using-a-queue-to-merge-multiple-child-process-results">Using a Queue to Merge Multiple Child Process Results</a></li>
+<li><a class="reference internal" href="#conclusion">Conclusion</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="Coordination.html"
+                        title="previous chapter">Coordination of Processes</a></p>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="Coordination.html" title="Coordination of Processes"
+             >previous</a></li>
+        <li><a href="index.html">Parallel Processes in Python</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright This work is licensed under a Creative Commons Attribution-ShareAlike 3.0 Unported License.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>
