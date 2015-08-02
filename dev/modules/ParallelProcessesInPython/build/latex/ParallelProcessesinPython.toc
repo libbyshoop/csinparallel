@@ -1,0 +1,30 @@
+\select@language {english}
+\contentsline {chapter}{\numberline {1}For Instructors}{2}{chapter.1}
+\contentsline {chapter}{\numberline {2}For Students}{3}{chapter.2}
+\contentsline {chapter}{\numberline {3}Learning Goals}{4}{chapter.3}
+\contentsline {section}{\numberline {3.1}Base Knowledge}{4}{section.3.1}
+\contentsline {section}{\numberline {3.2}Conceptual/Applied Knowledge}{4}{section.3.2}
+\contentsline {chapter}{\numberline {4}Prerequisites and Assumed Level}{5}{chapter.4}
+\contentsline {chapter}{\numberline {5}Contents}{6}{chapter.5}
+\contentsline {section}{\numberline {5.1}Basics of Processes with Python}{6}{section.5.1}
+\contentsline {subsection}{\numberline {5.1.1}Making a Process}{6}{subsection.5.1.1}
+\contentsline {subsection}{\numberline {5.1.2}Making Multiple Processes}{7}{subsection.5.1.2}
+\contentsline {section}{\numberline {5.2}Creating multiple child processes}{7}{section.5.2}
+\contentsline {subsection}{\numberline {5.2.1}Variable Number of Processes}{8}{subsection.5.2.1}
+\contentsline {section}{\numberline {5.3}Creating multiple child processes, part 2}{8}{section.5.3}
+\contentsline {subsection}{\numberline {5.3.1}Anonymous Processes}{9}{subsection.5.3.1}
+\contentsline {section}{\numberline {5.4}Execution Order and Resource Contention}{9}{section.5.4}
+\contentsline {subsection}{\numberline {5.4.1}Using a Lock to Control Printing}{11}{subsection.5.4.1}
+\contentsline {subsection}{\numberline {5.4.2}You try it: Digging Holes}{12}{subsection.5.4.2}
+\contentsline {section}{\numberline {5.5}Solution to Exercise}{12}{section.5.5}
+\contentsline {section}{\numberline {5.6}Communication}{13}{section.5.6}
+\contentsline {subsection}{\numberline {5.6.1}Extended Communication Via a Queue}{14}{subsection.5.6.1}
+\contentsline {section}{\numberline {5.7}Queue Exercise Hint}{14}{section.5.7}
+\contentsline {section}{\numberline {5.8}Queue Exercise Solution}{15}{section.5.8}
+\contentsline {section}{\numberline {5.9}Coordination of Processes}{16}{section.5.9}
+\contentsline {subsection}{\numberline {5.9.1}The Join Method}{16}{subsection.5.9.1}
+\contentsline {subsection}{\numberline {5.9.2}Obtaining a Result from a Single Child}{16}{subsection.5.9.2}
+\contentsline {section}{\numberline {5.10}Process Coordination, Part 2}{17}{section.5.10}
+\contentsline {subsection}{\numberline {5.10.1}Solution to Exercise}{17}{subsection.5.10.1}
+\contentsline {subsection}{\numberline {5.10.2}Using a Queue to Merge Multiple Child Process Results}{17}{subsection.5.10.2}
+\contentsline {subsection}{\numberline {5.10.3}Conclusion}{18}{subsection.5.10.3}
