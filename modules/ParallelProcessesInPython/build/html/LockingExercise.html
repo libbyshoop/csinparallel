@@ -1,0 +1,129 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Solution to Exercise &mdash; Parallel Processes in Python</title>
+    
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="shortcut icon" href="_static/favicon.ico"/>
+    <link rel="top" title="Parallel Processes in Python" href="index.html" />
+    <link rel="next" title="Communication" href="Communication.html" />
+    <link rel="prev" title="Execution Order and Resource Contention" href="ExecutionOrderAndResources.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="Communication.html" title="Communication"
+             accesskey="N">next</a></li>
+        <li class="right" >
+          <a href="ExecutionOrderAndResources.html" title="Execution Order and Resource Contention"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">Parallel Processes in Python</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="solution-to-exercise">
+<h1>Solution to Exercise<a class="headerlink" href="#solution-to-exercise" title="Permalink to this headline">¶</a></h1>
+<p>A solution is to the hole-digging exercise is as follows:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="k">def</span> <span class="nf">dig</span><span class="p">(</span><span class="n">workerName</span><span class="p">,</span> <span class="n">holeID</span><span class="p">,</span> <span class="n">lock</span><span class="p">):</span>
+    <span class="n">lock</span><span class="o">.</span><span class="n">acquire</span><span class="p">()</span>
+    <span class="k">print</span> <span class="s">&quot;Hiddy-ho!  I&#39;m worker&quot;</span><span class="p">,</span> <span class="n">workerName</span><span class="p">,</span> <span class="s">&quot;and today I have to dig hole&quot;</span><span class="p">,</span> <span class="n">holeID</span>
+    <span class="n">lock</span><span class="o">.</span><span class="n">release</span><span class="p">()</span>
+
+<span class="k">def</span> <span class="nf">assignDiggers</span><span class="p">():</span>
+    <span class="n">lock</span> <span class="o">=</span> <span class="n">Lock</span><span class="p">()</span>
+    <span class="n">workerNames</span> <span class="o">=</span> <span class="p">[</span><span class="s">&quot;A&quot;</span><span class="p">,</span> <span class="s">&quot;B&quot;</span><span class="p">,</span> <span class="s">&quot;C&quot;</span><span class="p">,</span> <span class="s">&quot;D&quot;</span><span class="p">,</span> <span class="s">&quot;E&quot;</span><span class="p">,</span> <span class="s">&quot;F&quot;</span><span class="p">,</span> <span class="s">&quot;G&quot;</span><span class="p">,</span> <span class="s">&quot;H&quot;</span><span class="p">,</span> <span class="s">&quot;I&quot;</span><span class="p">,</span> <span class="s">&quot;J&quot;</span><span class="p">]</span>
+
+    <span class="k">for</span> <span class="n">holeID</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">workerNames</span><span class="p">)):</span>
+        <span class="n">Process</span><span class="p">(</span><span class="n">target</span><span class="o">=</span><span class="n">dig</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">(</span><span class="n">workerNames</span><span class="p">[</span><span class="n">holeID</span><span class="p">],</span> <span class="n">holeID</span><span class="p">,</span> <span class="n">lock</span><span class="p">))</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>The <tt class="docutils literal"><span class="pre">assignDiggers</span></tt> function
+creates a single Lock object and a list of the worker names. A process
+is started for each worker, passing the appropriate name, assigned hole,
+and the lock. Each worker attempts to acquire the lock, and is only
+allowed to print once that acquisition succeeds. After printing, the
+worker releases the lock so that another worker may print.</p>
+<p>This exercise is also a good demonstration of the strengths and
+limitations of different approaches to looping. The solution shown above uses what can be referred to as a
+“loop-by-index” approach, in which the holeID index is the loop
+variable. An alternative would be a “loop-by-element” (for-each loop)
+approach, like this:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="o">...</span> <span class="c"># Other code as before</span>
+<span class="k">for</span> <span class="n">workerName</span> <span class="ow">in</span> <span class="n">workerNames</span><span class="p">:</span>
+    <span class="n">Process</span><span class="p">(</span><span class="n">target</span><span class="o">=</span><span class="n">dig</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">(</span><span class="n">workerName</span><span class="p">,</span> <span class="n">workerNames</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">workerName</span><span class="p">),</span> <span class="n">lock</span><span class="p">))</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>The loop-by-element
+approach, however, is not as effective, because the
+worker-Names.index(workerName) requires a fair amount of extra work to
+execute. While the actual execution time will be nearly instantaneous in
+both approaches for a small list, it is nevertheless a good idea to reiterate the general
+principle of using the right programming constructs for maximum
+efficiency.  You don&#8217;t want to fall into the trap of using a less efficient choice on a larger list of data in some other circumstance, or in a circumstance where you might execute such a loop over and over many times, where the time used will add up.</p>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="index.html">
+              <img class="logo" src="_static/CSInParallel200wide.png" alt="Logo"/>
+            </a></p>
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="ExecutionOrderAndResources.html"
+                        title="previous chapter">Execution Order and Resource Contention</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="Communication.html"
+                        title="next chapter">Communication</a></p>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="Communication.html" title="Communication"
+             >next</a></li>
+        <li class="right" >
+          <a href="ExecutionOrderAndResources.html" title="Execution Order and Resource Contention"
+             >previous</a> |</li>
+        <li><a href="index.html">Parallel Processes in Python</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright This work is licensed under a Creative Commons Attribution-ShareAlike 3.0 Unported License.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>

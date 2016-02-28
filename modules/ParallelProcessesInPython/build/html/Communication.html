@@ -1,0 +1,166 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Communication &mdash; Parallel Processes in Python</title>
+    
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="shortcut icon" href="_static/favicon.ico"/>
+    <link rel="top" title="Parallel Processes in Python" href="index.html" />
+    <link rel="next" title="Queue Exercise Hint" href="QueueExerciseHint.html" />
+    <link rel="prev" title="Solution to Exercise" href="LockingExercise.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="QueueExerciseHint.html" title="Queue Exercise Hint"
+             accesskey="N">next</a></li>
+        <li class="right" >
+          <a href="LockingExercise.html" title="Solution to Exercise"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">Parallel Processes in Python</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="communication">
+<h1>Communication<a class="headerlink" href="#communication" title="Permalink to this headline">¶</a></h1>
+<p>In most real-world applications of parallelism, some amount of
+communication between processes is required. We have already seen one
+way in which processes can communicate: a parent process can send data
+to children through the args parameter of the Process constructor. Now
+we are ready to look at a more flexible means of communication.</p>
+<p>The Queue class (pronounced like the letter “Q”) defines a Queue object
+that a parent can pass to children so that multiple processes have
+access to it. A queue can be thought of as a collection of data. Any
+process can put data onto the queue using the put method, and take data
+off the queue using the get method. Thus one process could do a put, and
+another a get, in order to transmit data. If a process attempts a get
+when there is nothing on the queue, then the process will wait (<em>block</em>)
+on the line of code where the get occurred until some other process does
+a put on the queue.</p>
+<p>Let’s look at this in the following example:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">time</span>
+
+<span class="k">def</span> <span class="nf">greet</span><span class="p">(</span><span class="n">q</span><span class="p">):</span>
+    <span class="k">print</span> <span class="s">&quot;(child process) Waiting for name...&quot;</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="n">q</span><span class="o">.</span><span class="n">get</span><span class="p">()</span>
+    <span class="k">print</span> <span class="s">&quot;(child process) Well, hi&quot;</span><span class="p">,</span> <span class="n">name</span>
+
+<span class="k">def</span> <span class="nf">sendName</span><span class="p">():</span>
+    <span class="n">q</span> <span class="o">=</span> <span class="n">Queue</span><span class="p">()</span>
+
+    <span class="n">p1</span> <span class="o">=</span> <span class="n">Process</span><span class="p">(</span><span class="n">target</span><span class="o">=</span><span class="n">greet</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">(</span><span class="n">q</span><span class="p">,))</span>
+    <span class="n">p1</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+
+    <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span> <span class="c"># wait for 5 seconds</span>
+    <span class="k">print</span> <span class="s">&quot;(parent process) Ok, I&#39;ll send the name&quot;</span>
+    <span class="n">q</span><span class="o">.</span><span class="n">put</span><span class="p">(</span><span class="s">&quot;Jimmy&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Note the
+use of a queue for communication between processes, which in this case is the variable <tt class="docutils literal"><span class="pre">q</span></tt>, which is a Python multiprocessing  <tt class="docutils literal"><span class="pre">Queue</span></tt> object. When <tt class="docutils literal"><span class="pre">sendName</span></tt> is
+run, the following output results:</p>
+<div class="highlight-python"><pre>(child process) Waiting for name...
+(parent process) Ok, I'll send the name
+(child process) Well, hi Jimmy</pre>
+</div>
+<p>At the start of the sendName function, the Queue constructor is called,
+with the resulting Queue object stored in the variable q. This object is
+passed to the child process. So the child process is in fact using the
+same queue as the parent. The child is started, and then the parent does
+nothing for 5 seconds, via the time.sleep(5) command. In the meantime,
+since the child has started, the first print in greet is executed,
+followed by the call to get. The child’s get is a <em>blocking</em> command.
+This means that the child process will go to sleep until it has a reason
+to wake up – in this case, that there is something to get off the queue.
+Since the parent sleeps for 5 seconds, the child ends up blocking for
+approximately 5 seconds as well. Finally the parent process sends the
+string “Jimmy”, the child process unblocks and stores “Jimmy” in the
+variable name, and prints its final message.</p>
+<div class="topic">
+<p class="topic-title first">Try the code</p>
+<p><a class="reference download internal" href="_downloads/sendName.py"><tt class="xref download docutils literal"><span class="pre">Download</span> <span class="pre">sendName.py</span></tt></a> and try the above example on your system.</p>
+</div>
+<div class="section" id="extended-communication-via-a-queue">
+<h2>Extended Communication Via a Queue<a class="headerlink" href="#extended-communication-via-a-queue" title="Permalink to this headline">¶</a></h2>
+<p>Let’s try some quick practice now that you’ve worked through the
+previous example. Copy the code above as a basis for <tt class="docutils literal"><span class="pre">greet2</span></tt> and
+<tt class="docutils literal"><span class="pre">sendName2</span></tt>. Modify the code so that <tt class="docutils literal"><span class="pre">greet2</span></tt> expects to receive 5 names,
+which are sent by <tt class="docutils literal"><span class="pre">sendName2</span></tt>. Each function should accomplish this by
+sending/receiving one name at a time, in a loop. Spend some time on this
+before moving on.</p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="index.html">
+              <img class="logo" src="_static/CSInParallel200wide.png" alt="Logo"/>
+            </a></p>
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Communication</a><ul>
+<li><a class="reference internal" href="#extended-communication-via-a-queue">Extended Communication Via a Queue</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="LockingExercise.html"
+                        title="previous chapter">Solution to Exercise</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="QueueExerciseHint.html"
+                        title="next chapter">Queue Exercise Hint</a></p>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="QueueExerciseHint.html" title="Queue Exercise Hint"
+             >next</a></li>
+        <li class="right" >
+          <a href="LockingExercise.html" title="Solution to Exercise"
+             >previous</a> |</li>
+        <li><a href="index.html">Parallel Processes in Python</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright This work is licensed under a Creative Commons Attribution-ShareAlike 3.0 Unported License.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>

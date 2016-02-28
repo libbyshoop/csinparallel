@@ -1,0 +1,298 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Execution Order and Resource Contention &mdash; Parallel Processes in Python</title>
+    
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="shortcut icon" href="_static/favicon.ico"/>
+    <link rel="top" title="Parallel Processes in Python" href="index.html" />
+    <link rel="next" title="Solution to Exercise" href="LockingExercise.html" />
+    <link rel="prev" title="Creating multiple child processes, part 2" href="MultipleProcesses2.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="LockingExercise.html" title="Solution to Exercise"
+             accesskey="N">next</a></li>
+        <li class="right" >
+          <a href="MultipleProcesses2.html" title="Creating multiple child processes, part 2"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">Parallel Processes in Python</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="execution-order-and-resource-contention">
+<h1>Execution Order and Resource Contention<a class="headerlink" href="#execution-order-and-resource-contention" title="Permalink to this headline">¶</a></h1>
+<p>In addition to a pid, we also have the option of naming each child
+process. Any provided name is stored in the public name field defined in
+the <tt class="docutils literal"><span class="pre">Process</span></tt> class. For example, consider the following code:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="k">def</span> <span class="nf">sayHi3</span><span class="p">(</span><span class="n">personName</span><span class="p">):</span>
+    <span class="k">print</span> <span class="s">&quot;Hi&quot;</span><span class="p">,</span> <span class="n">personName</span><span class="p">,</span> <span class="s">&quot;from process&quot;</span><span class="p">,</span> <span class="n">current_process</span><span class="p">()</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="s">&quot;- pid&quot;</span><span class="p">,</span> <span class="n">current_process</span><span class="p">()</span><span class="o">.</span><span class="n">pid</span>
+
+<span class="k">def</span> <span class="nf">manyGreetings3</span><span class="p">():</span>
+    <span class="k">print</span> <span class="s">&quot;Hi from process&quot;</span><span class="p">,</span> <span class="n">current_process</span><span class="p">()</span><span class="o">.</span><span class="n">pid</span><span class="p">,</span> <span class="s">&quot;(parent process)&quot;</span>
+
+    <span class="n">personName</span> <span class="o">=</span> <span class="s">&quot;Jimmy&quot;</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">):</span>
+        <span class="n">Process</span><span class="p">(</span><span class="n">target</span><span class="o">=</span><span class="n">sayHi3</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">(</span><span class="n">personName</span><span class="p">,),</span> <span class="n">name</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">))</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>If we run <tt class="docutils literal"><span class="pre">manyGreetings3</span></tt>, the parent process
+says “Hi”, and then creates and starts ten child processes. Each child
+process runs <tt class="docutils literal"><span class="pre">sayHi3</span></tt>, which requires a personName argument, specified in
+the args parameter of the Process constructor call. We also include one
+new argument in the Process constructor call: <tt class="docutils literal"><span class="pre">name</span></tt>. This <tt class="docutils literal"><span class="pre">name</span></tt> argument should be a
+string, and in this example we just use the string representation of the
+loop index variable i. Thus when a child process executes <tt class="docutils literal"><span class="pre">sayHi3</span></tt>, it has
+access to the <tt class="docutils literal"><span class="pre">personName</span></tt> given as an argument, and also has access to
+the <tt class="docutils literal"><span class="pre">name</span></tt> field provided in the call to the <tt class="docutils literal"><span class="pre">Process</span></tt> constructor.</p>
+<p>Try to predict what will happen when you run the <tt class="docutils literal"><span class="pre">manyGreetings3</span></tt> function. Your first guess might be the following
+(with arbitrary pids, of course):</p>
+<div class="highlight-python"><pre>Hi from process 3988 (main process)
+Hi Jimmy from process 0 pid 5164
+Hi Jimmy from process 1 pid 5236
+Hi Jimmy from process 2 pid 6884
+Hi Jimmy from process 3 pid 3652
+Hi Jimmy from process 4 pid 1060
+Hi Jimmy from process 5 pid 1767
+Hi Jimmy from process 6 pid 5812
+Hi Jimmy from process 7 pid 4732
+Hi Jimmy from process 8 pid 3564
+Hi Jimmy from process 9 pid 4332</pre>
+</div>
+<p>It’s possible that the processes will print out very nicely and in order
+like the above, but it’s extremely unlikely. First note that each core
+of the CPU is a <em>scarce resource</em>, meaning there aren’t typically enough
+cores for every process to use one whenever it wants. On a quad-core
+system, for example, up to four processes can execute at once. If there
+are more than four processes wanting to execute, some will need to wait.</p>
+<p>So the operating system maintains a list of waiting processes. When a
+core becomes available, the operating system chooses another process to
+execute on that core. But the process created first is not necessarily
+the next one chosen. That is, just because we <em>create and start</em> the
+processes in the order 0 through 9 in our program, it doesn’t mean that
+the operating system will choose them to <em>execute</em> in the order 0
+through 9. So, for example, we might expect output like this:</p>
+<div class="highlight-python"><pre>Hi from process 3988 (parent process)
+Hi Jimmy from process 8 pid 3564
+Hi Jimmy from process 2 pid 6884
+Hi Jimmy from process 6 pid 5812
+Hi Jimmy from process 0 pid 5164
+Hi Jimmy from process 3 pid 3652
+Hi Jimmy from process 9 pid 4332
+Hi Jimmy from process 4 pid 1060
+Hi Jimmy from process 7 pid 4732
+Hi Jimmy from process 1 pid 5236
+Hi Jimmy from process 5 pid 1767</pre>
+</div>
+<p>In fact, any ordering of the child processes’ messages is possible. The
+only thing we know for certain is that the message from the parent
+process will show up first, since our code specifies that that should
+happen before we create any child processes. There are ways to ensure
+that certain tasks are completed before other tasks, as we’ll see later
+in this module. But by default,
+<em>child processes execute in arbitrary order</em>, and parallel programs must be designed with this in mind.</p>
+<p>Unfortunately, we still haven’t captured what will likely happen when we
+run the code given above. Go ahead and run it now and
+see. Results will vary, but you may see something very garbled up like
+the following:</p>
+<div class="highlight-python"><pre>Hi from process 3988 (main process)
+Hi HJHimmyiHii   Jimmy  from process 0 -JfJ pid 5164
+immyrom process 4 - pid 4332
+immy from process  from process 7 - pid8  5236- pid
+ 3564
+Hi Jimmy from process 1 - pidH 6884
+i Jimmy from process 5 - pid 3652
+Hi Jimmy from process 5 - pid 1060
+Hi Jimmy from process 2 - pid 176
+Hi Jimmy from process 3 - pid 5812
+Hi Jimmy from process 9 - pid 4732</pre>
+</div>
+<p>What’s going on? The first thing to realize is that the CPU cores are
+not the only scarce resource here. Standard output – where printing
+occurs – is also scarce. More specifically, standard output is a single
+<em>shared</em> resource that multiple processes are trying to access at the
+same time. So the processes have to take turns. As it is, our program is
+not forcing the processes to take turns in any reasonable way. How can
+we fix this? We’ll use a <em>lock</em>.</p>
+<div class="section" id="using-a-lock-to-control-printing">
+<h2>Using a Lock to Control Printing<a class="headerlink" href="#using-a-lock-to-control-printing" title="Permalink to this headline">¶</a></h2>
+<p>One excellent way to begin our study of locks is by analogy to a concept
+from the novel by William Golding (or the 1963 and 1990 film
+adaptations). The novel tells the story of a group of boys shipwrecked
+on a deserted island with no adult survivors. Before an eventual
+breakdown into savagery, the boys conduct regular meetings to decide on
+issues facing the group. The boys quickly realize that, left unchecked,
+such meetings will be unproductive as multiple boys wish to speak at the
+same time. Thus a rule is developed: Only the boy that is holding a
+specially-designated conch shell is allowed to speak. When that boy is
+finished speaking, he relinquishes the conch so that another boy may
+speak. Thus order is maintained at the meetings as long as the boys
+abide by these rules. We can also imagine what would happen if this
+conch were not used: chaos in meetings as the boys try to shout above
+each other. (And in fact this does happen in the story.)</p>
+<p>It requires only a slight stretch of the events in this novel to make an
+analogy to the coordination of multiple processes accessing a shared
+resource, like standard output. In programming terms, each boy is a
+separate process, having his own things he wishes to say at the meeting.
+But the air around the meeting is a shared resource - all boys speak
+into the same space. So there is contention for the shared resource that
+is this space. Control of this shared resource is handled via the
+single, special conch shell. The conch shell is a <em>lock</em> – only one boy
+may hold it at a time. When he releases it, indicating that he is done
+speaking, some other boy may pick it up. Boys that are waiting to pick
+up the conch are not allowed to say anything – they just have to wait
+until whoever has the conch releases it. Of course, several boys may be
+waiting for the conch at the same time, and only one of them will
+actually get it next. So some boys might have to continue to wait
+through multiple speakers.</p>
+<p>The following code shows the analogous idea in Python.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="k">def</span> <span class="nf">sayHi4</span><span class="p">(</span><span class="n">lock</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+    <span class="n">lock</span><span class="o">.</span><span class="n">acquire</span><span class="p">()</span>
+    <span class="k">print</span> <span class="s">&quot;Hi&quot;</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="s">&quot;from process&quot;</span><span class="p">,</span> <span class="n">current_process</span><span class="p">()</span><span class="o">.</span><span class="n">pid</span>
+    <span class="n">lock</span><span class="o">.</span><span class="n">release</span><span class="p">()</span>
+
+<span class="k">def</span> <span class="nf">manyGreetings4</span><span class="p">():</span>
+    <span class="n">lock1</span> <span class="o">=</span> <span class="n">Lock</span><span class="p">()</span>
+
+    <span class="k">print</span> <span class="s">&quot;Hi from process&quot;</span><span class="p">,</span> <span class="n">current_process</span><span class="p">()</span><span class="o">.</span><span class="n">pid</span><span class="p">,</span> <span class="s">&quot;(main process)&quot;</span>
+
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">):</span>
+        <span class="n">Process</span><span class="p">(</span><span class="n">target</span><span class="o">=</span><span class="n">sayHi4</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">(</span><span class="n">lock1</span><span class="p">,</span> <span class="s">&quot;p&quot;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">)))</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>At
+the start of <tt class="docutils literal"><span class="pre">manyGreetings4</span></tt>, the constructor of the <tt class="docutils literal"><span class="pre">Lock</span></tt> class is
+called, with the resulting object stored in the variable <tt class="docutils literal"><span class="pre">lock1</span></tt>. This
+single <tt class="docutils literal"><span class="pre">Lock</span></tt> object, along with a distinct name, is passed to each of the child
+processes. Each child process wants to print something when it executes <tt class="docutils literal"><span class="pre">sayHi4</span></tt>. But
+print writes to <tt class="docutils literal"><span class="pre">stdout</span></tt> (standard output), a single resource that is
+shared among all the processes. So when multiple processes all want to
+print at the same time, their output would be jumbled together were it
+not for the lock, which ensures that only one process is able to execute
+its print at a time.</p>
+<p>How does the lock accomplish this? Through the use of the acquire and
+release methods, both defined in the Lock class. Suppose process
+<img class="math" src="_images/math/019e9892786e493964e145e7c5cf7b700314e53b.png" alt="A"/> acquires the lock and begins printing. If processes <img class="math" src="_images/math/ff5fb3d775862e2123b007eb4373ff6cc1a34d4e.png" alt="B"/>,
+<img class="math" src="_images/math/c3355896da590fc491a10150a50416687626d7cc.png" alt="C"/>, and <img class="math" src="_images/math/9ffb448918db29f2a72f8f87f421b3b3cad18f95.png" alt="D"/> then execute their acquire calls while
+<img class="math" src="_images/math/019e9892786e493964e145e7c5cf7b700314e53b.png" alt="A"/> has the lock, then <img class="math" src="_images/math/ff5fb3d775862e2123b007eb4373ff6cc1a34d4e.png" alt="B"/>, <img class="math" src="_images/math/c3355896da590fc491a10150a50416687626d7cc.png" alt="C"/>, and <img class="math" src="_images/math/9ffb448918db29f2a72f8f87f421b3b3cad18f95.png" alt="D"/> each
+must wait. That is, each will <em>block</em> on its acquire call. Once
+<img class="math" src="_images/math/019e9892786e493964e145e7c5cf7b700314e53b.png" alt="A"/> releases the lock, one of the processes blocked on that lock
+acquisition will arbitrarily be chosen to acquire the lock and print.
+That process will then release the lock so that another blocked process
+can proceed, and so on.</p>
+<p>Note that the lock must be created in the parent process and then passed
+to each child – this way each child process is referring to the same
+lock. The alternative, in which each child constructs its own lock,
+would be analogous to each boy bringing his own conch to a meeting.
+Clearly this wouldn’t work.</p>
+<p>As in the previous example, the order of execution of the processes is
+still arbitrary. That is, the acquisition of the lock is arbitrary, and
+so subsequent runs of the code are likely to
+produce different orderings. It is not necessarily the process that was
+created first, or that has been waiting the longest, that gets to
+acquire the lock next.</p>
+<div class="topic">
+<p class="topic-title first">Try the code</p>
+<p><a class="reference download internal" href="_downloads/manyGreetings4.py"><tt class="xref download docutils literal"><span class="pre">Download</span> <span class="pre">manyGreetings4.py</span></tt></a> and try the above example on your system.</p>
+</div>
+</div>
+<div class="section" id="you-try-it-digging-holes">
+<h2>You try it: Digging Holes<a class="headerlink" href="#you-try-it-digging-holes" title="Permalink to this headline">¶</a></h2>
+<p>Let us now try an exercise extending the concept of locks above. Imagine
+that you have 10 hole diggers, named <img class="math" src="_images/math/019e9892786e493964e145e7c5cf7b700314e53b.png" alt="A"/>, <img class="math" src="_images/math/ff5fb3d775862e2123b007eb4373ff6cc1a34d4e.png" alt="B"/>, <img class="math" src="_images/math/c3355896da590fc491a10150a50416687626d7cc.png" alt="C"/>,
+<img class="math" src="_images/math/9ffb448918db29f2a72f8f87f421b3b3cad18f95.png" alt="D"/>, <img class="math" src="_images/math/fa2fa899f0afb05d6837885523503a2d4df434f9.png" alt="E"/>, <img class="math" src="_images/math/a055f405829e64a3b70253ab67cb45ed6ed5bb29.png" alt="F"/>, <img class="math" src="_images/math/6e28ce12d49d39f160d5a0ef54077fc98e4b9d2b.png" alt="G"/>, <img class="math" src="_images/math/b1902d279ba37d60bdce4e0e987b7cd19d48974e.png" alt="H"/>, <img class="math" src="_images/math/027f4a11d6090f9eac0ce2488df6384dad1263ea.png" alt="I"/>, and
+<img class="math" src="_images/math/abb5588023cfa1ac14643e9778699f03eecc57a3.png" alt="J"/>. Think of each of these as a process, and write a function
+assignDiggers() that creates 10 processes with these worker names
+working on hole 0, 1, 2, ..., 9, respectively. Each one should print a
+message about what it’s doing. When you’re done, you should get output
+like the following (except that the order will be arbitrary):</p>
+<div class="highlight-python"><pre>Hiddy-ho!  I'm worker G and today I have to dig hole 6
+Hiddy-ho!  I'm worker A and today I have to dig hole 0
+Hiddy-ho!  I'm worker C and today I have to dig hole 2
+Hiddy-ho!  I'm worker D and today I have to dig hole 3
+Hiddy-ho!  I'm worker F and today I have to dig hole 5
+Hiddy-ho!  I'm worker I and today I have to dig hole 8
+Hiddy-ho!  I'm worker H and today I have to dig hole 7
+Hiddy-ho!  I'm worker J and today I have to dig hole 9
+Hiddy-ho!  I'm worker B and today I have to dig hole 1
+Hiddy-ho!  I'm worker E and today I have to dig hole 4</pre>
+</div>
+<p>Try to complete this exercise before moving on.</p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="index.html">
+              <img class="logo" src="_static/CSInParallel200wide.png" alt="Logo"/>
+            </a></p>
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Execution Order and Resource Contention</a><ul>
+<li><a class="reference internal" href="#using-a-lock-to-control-printing">Using a Lock to Control Printing</a></li>
+<li><a class="reference internal" href="#you-try-it-digging-holes">You try it: Digging Holes</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="MultipleProcesses2.html"
+                        title="previous chapter">Creating multiple child processes, part 2</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="LockingExercise.html"
+                        title="next chapter">Solution to Exercise</a></p>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="LockingExercise.html" title="Solution to Exercise"
+             >next</a></li>
+        <li class="right" >
+          <a href="MultipleProcesses2.html" title="Creating multiple child processes, part 2"
+             >previous</a> |</li>
+        <li><a href="index.html">Parallel Processes in Python</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright This work is licensed under a Creative Commons Attribution-ShareAlike 3.0 Unported License.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>
