@@ -54,9 +54,9 @@ This document is split into chapters of examples.  There are examples for messag
 
 Most of the examples are illustrated
 with the C programming language, using standard popular available libraries. In a few cases, C++
-is used to illustrate a particular difference in code execution between the two languages.
+is used to illustrate a particular difference in code execution between the two languages or to make use of a C++ BigInt class.
 
-There are many small examples that serve to illustrate a common pattern.  They are designed for you to try compiling and running on your own to see how they work.  For each example, there are comments within the code to guide you as you try them out.  In some cases, there may be code snippets that you can comment and/or uncomment to see how the execution of the code changes after you do so and re-compile it.
+There are many small examples that serve to illustrate a common pattern.  They are designed for you to try compiling and running on your own to see how they work.  For each example, there are comments within the code to guide you as you try them out.  In many cases, there may be code snippets that you can comment and/or uncomment to see how the execution of the code changes after you do so and re-compile it.
 
 Depending on you interest, you can now explore MPI Patternlets or OpenMP Patternlets.
 

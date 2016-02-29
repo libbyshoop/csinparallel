@@ -61,7 +61,7 @@ of machines.</p>
 <div class="section" id="source-code">
 <h2>Source Code<a class="headerlink" href="#source-code" title="Permalink to this headline">¶</a></h2>
 <p>Please download all examples from this tarball:
-<tt class="xref download docutils literal"><span class="pre">MPI.tgz</span></tt></p>
+<a class="reference download internal" href="../_downloads/MPI.tgz"><tt class="xref download docutils literal"><span class="pre">MPI.tgz</span></tt></a></p>
 <p>A C code file for each example below can be found in subdirectories of the MPI directory,
 along with a makefile and an example of how to execute the program.</p>
 </div>
@@ -142,7 +142,7 @@ for its variables.  This is why we call it single program, multiple data.</p>
     <span class="n">printf</span><span class="p">(</span><span class="s">&quot;Process #%d of %d on %s is BEFORE the barrier.</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span>
              <span class="n">id</span><span class="p">,</span> <span class="n">numProcesses</span><span class="p">,</span> <span class="n">myHostName</span><span class="p">);</span>
 
-<span class="c1">//     MPI_Barrier(MPI_COMM_WORLD); </span>
+<span class="c1">//    MPI_Barrier(MPI_COMM_WORLD); </span>
 
     <span class="n">printf</span><span class="p">(</span><span class="s">&quot;Process #%d of %d on %s is AFTER the barrier.</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span>
              <span class="n">id</span><span class="p">,</span> <span class="n">numProcesses</span><span class="p">,</span> <span class="n">myHostName</span><span class="p">);</span>
@@ -296,7 +296,7 @@ for its variables.  This is why we call it single program, multiple data.</p>
 
         <span class="k">if</span> <span class="p">(</span> <span class="n">odd</span><span class="p">(</span><span class="n">id</span><span class="p">)</span> <span class="p">)</span> <span class="p">{</span>  <span class="c1">// odd processes send, then receive </span>
             <span class="n">MPI_Send</span><span class="p">(</span><span class="n">sendString</span><span class="p">,</span> <span class="n">strlen</span><span class="p">(</span><span class="n">sendString</span><span class="p">)</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> 
-                      <span class="n">MPI_CHAR</span><span class="p">,</span> <span class="n">id</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">MPI_COMM_WORLD</span><span class="p">);</span>
+                       <span class="n">MPI_CHAR</span><span class="p">,</span> <span class="n">id</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">MPI_COMM_WORLD</span><span class="p">);</span>
             <span class="n">MPI_Recv</span><span class="p">(</span><span class="n">receivedString</span><span class="p">,</span> <span class="n">SIZE</span><span class="p">,</span> <span class="n">MPI_CHAR</span><span class="p">,</span> <span class="n">id</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> 
                        <span class="n">MPI_COMM_WORLD</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">status</span><span class="p">);</span>
         <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>          <span class="c1">// even processes receive, then send </span>
@@ -309,11 +309,12 @@ for its variables.  This is why we call it single program, multiple data.</p>
         <span class="n">printf</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\n</span><span class="s">Process %d of %d received the message:</span><span class="se">\n\t</span><span class="s">&#39;%s&#39;</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span>
                 <span class="n">id</span><span class="p">,</span> <span class="n">numProcesses</span><span class="p">,</span> <span class="n">receivedString</span><span class="p">);</span>
 
+        <span class="n">free</span><span class="p">(</span><span class="n">sendString</span><span class="p">);</span>
+        <span class="n">free</span><span class="p">(</span><span class="n">receivedString</span><span class="p">);</span>
     <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span> <span class="o">!</span><span class="n">id</span><span class="p">)</span> <span class="p">{</span>  <span class="c1">// only process 0 does this part </span>
         <span class="n">printf</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\n</span><span class="s">Please run this program using -np N where N is positive and even.</span><span class="se">\n\n</span><span class="s">&quot;</span><span class="p">);</span>
     <span class="p">}</span>
 
-    <span class="n">free</span><span class="p">(</span><span class="n">sendString</span><span class="p">);</span> <span class="n">free</span><span class="p">(</span><span class="n">receivedString</span><span class="p">);</span>
     <span class="n">MPI_Finalize</span><span class="p">();</span>
     <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
 <span class="p">}</span>

@@ -127,4 +127,49 @@ Something to think about
 ========================
 
 Do you have an ideas about why the parallel for pragma without the reduction clause did not
-produce the correct result?  The next few examples will hopefully shed some light on this.
+produce the correct result?  Later examples will hopefully shed some light on this.
+
+9. Coordination Using Collective Communication: Reduction revisited
+********************************************************************
+
+*Build inside 09.reduction-userDefined directory:*
+::
+	make reduction2
+ 
+*Execute on the command line inside 09.reduction-userDefined directory:*
+::
+	./reduction  4 4096
+	Replace 4 with other values for the number of threads
+	Replace 4096 with other values for n (computing up to n factorial)
+
+The next example uses many threads to generate computations of factorials of n. Though there are likely other better ways to compute factorials, this
+example uses a very simple approach to illustrate how reduction can be used with the
+multiplication operation instead of addition in the previous example. The pragma for 
+this is on line 34 in the code below, which also makes use of an additional C++ file, BigInt.h:
+
+.. literalinclude::
+	../patternlets/openMP/09.reduction-userDefined/reduction2.cpp
+    :language: c++
+    :linenos:
+
+With this code you can begin to explore the time it takes to execute the program when using increasing numbers of threads for various values of n. Follow the instructions at the top of the file.
+
+10. Dynamic Data Decomposition 
+********************************************************************
+
+*Build inside 10.parallelLoop-dynamicSchedule directory:*
+::
+	make dynamicScheduling
+ 
+*Execute on the command line inside 10.parallelLoop-dynamicSchedule directory:*
+::
+	./dynamicScheduling 4
+	Replace 4 with other values for the number of threads
+
+The following example computes factorials for the numbers 2 through 512, placing the result in an array. This array of results is the data in this data decomposition pattern. Since each number will take a different amount of time to compute, this is
+a case where using dynamic scheduling of the work improves the performance. Try the tasks lsited in the header of the code shown below to see this.
+
+.. literalinclude::
+	../patternlets/openMP/10.parallelLoop-dynamicSchedule/dynamicScheduling.cpp
+    :language: c++
+    :linenos:

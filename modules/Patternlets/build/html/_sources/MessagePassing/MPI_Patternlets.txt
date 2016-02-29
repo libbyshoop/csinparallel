@@ -151,7 +151,7 @@ MPI_MAX in the following code.
 *file: patternlets/MPI/09.reduction/reduction.c*
 
 10. Collective Communication: Reduction
-**************************************
+****************************************
 
 Here is a second reduction example using arrays of data.
 

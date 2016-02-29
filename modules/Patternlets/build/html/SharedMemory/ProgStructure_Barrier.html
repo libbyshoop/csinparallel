@@ -374,7 +374,10 @@ make your code versatile so that you can use as many threads as you would like.<
 33
 34
 35
-36</pre></div></td><td class="code"><div class="highlight"><pre><span class="cm">/* spmd2.c</span>
+36
+37
+38
+39</pre></div></td><td class="code"><div class="highlight"><pre><span class="cm">/* spmd2.c</span>
 <span class="cm"> * ... illustrates the SPMD pattern in OpenMP,</span>
 <span class="cm"> * 	using the commandline arguments </span>
 <span class="cm"> *      to control the number of threads.</span>
@@ -385,7 +388,10 @@ make your code versatile so that you can use as many threads as you would like.<
 <span class="cm"> *</span>
 <span class="cm"> * Exercise:</span>
 <span class="cm"> * - Compile &amp; run with no commandline args </span>
-<span class="cm"> * - Rerun with different commandline args</span>
+<span class="cm"> * - Rerun with different commandline args,</span>
+<span class="cm"> *    until you see a problem with thread ids</span>
+<span class="cm"> * - Fix the race condition</span>
+<span class="cm"> *    (if necessary, compare to 02.spmd)</span>
 <span class="cm"> */</span>
 
 <span class="cp">#include &lt;stdio.h&gt;</span>

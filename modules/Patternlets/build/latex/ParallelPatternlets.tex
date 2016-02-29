@@ -13,7 +13,7 @@
 
 
 \title{Parallel Patternlets}
-\date{March 04, 2015}
+\date{February 28, 2016}
 \release{}
 \author{CSinParallel Project}
 \newcommand{\sphinxlogo}{}
@@ -195,9 +195,9 @@ This document is split into chapters of examples.  There are examples for messag
 
 Most of the examples are illustrated
 with the C programming language, using standard popular available libraries. In a few cases, C++
-is used to illustrate a particular difference in code execution between the two languages.
+is used to illustrate a particular difference in code execution between the two languages or to make use of a C++ BigInt class.
 
-There are many small examples that serve to illustrate a common pattern.  They are designed for you to try compiling and running on your own to see how they work.  For each example, there are comments within the code to guide you as you try them out.  In some cases, there may be code snippets that you can comment and/or uncomment to see how the execution of the code changes after you do so and re-compile it.
+There are many small examples that serve to illustrate a common pattern.  They are designed for you to try compiling and running on your own to see how they work.  For each example, there are comments within the code to guide you as you try them out.  In many cases, there may be code snippets that you can comment and/or uncomment to see how the execution of the code changes after you do so and re-compile it.
 
 Depending on you interest, you can now explore MPI Patternlets or OpenMP Patternlets.
 
@@ -307,7 +307,7 @@ for its variables.  This is why we call it single program, multiple data.
     \PYG{n}{printf}\PYG{p}{(}\PYG{l+s}{"}\PYG{l+s}{Process \PYGZsh{}\PYGZpc{}d of \PYGZpc{}d on \PYGZpc{}s is BEFORE the barrier.}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s}{"}\PYG{p}{,}
              \PYG{n}{id}\PYG{p}{,} \PYG{n}{numProcesses}\PYG{p}{,} \PYG{n}{myHostName}\PYG{p}{)}\PYG{p}{;}
 
-\PYG{c+c1}{//     MPI\PYGZus{}Barrier(MPI\PYGZus{}COMM\PYGZus{}WORLD); }
+\PYG{c+c1}{//    MPI\PYGZus{}Barrier(MPI\PYGZus{}COMM\PYGZus{}WORLD); }
 
     \PYG{n}{printf}\PYG{p}{(}\PYG{l+s}{"}\PYG{l+s}{Process \PYGZsh{}\PYGZpc{}d of \PYGZpc{}d on \PYGZpc{}s is AFTER the barrier.}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s}{"}\PYG{p}{,}
              \PYG{n}{id}\PYG{p}{,} \PYG{n}{numProcesses}\PYG{p}{,} \PYG{n}{myHostName}\PYG{p}{)}\PYG{p}{;}
@@ -467,7 +467,7 @@ for its variables.  This is why we call it single program, multiple data.
 
         \PYG{k}{if} \PYG{p}{(} \PYG{n}{odd}\PYG{p}{(}\PYG{n}{id}\PYG{p}{)} \PYG{p}{)} \PYG{p}{\PYGZob{}}  \PYG{c+c1}{// odd processes send, then receive }
             \PYG{n}{MPI\PYGZus{}Send}\PYG{p}{(}\PYG{n}{sendString}\PYG{p}{,} \PYG{n}{strlen}\PYG{p}{(}\PYG{n}{sendString}\PYG{p}{)}\PYG{o}{+}\PYG{l+m+mi}{1}\PYG{p}{,} 
-                      \PYG{n}{MPI\PYGZus{}CHAR}\PYG{p}{,} \PYG{n}{id}\PYG{o}{-}\PYG{l+m+mi}{1}\PYG{p}{,} \PYG{l+m+mi}{1}\PYG{p}{,} \PYG{n}{MPI\PYGZus{}COMM\PYGZus{}WORLD}\PYG{p}{)}\PYG{p}{;}
+                       \PYG{n}{MPI\PYGZus{}CHAR}\PYG{p}{,} \PYG{n}{id}\PYG{o}{-}\PYG{l+m+mi}{1}\PYG{p}{,} \PYG{l+m+mi}{1}\PYG{p}{,} \PYG{n}{MPI\PYGZus{}COMM\PYGZus{}WORLD}\PYG{p}{)}\PYG{p}{;}
             \PYG{n}{MPI\PYGZus{}Recv}\PYG{p}{(}\PYG{n}{receivedString}\PYG{p}{,} \PYG{n}{SIZE}\PYG{p}{,} \PYG{n}{MPI\PYGZus{}CHAR}\PYG{p}{,} \PYG{n}{id}\PYG{o}{-}\PYG{l+m+mi}{1}\PYG{p}{,} \PYG{l+m+mi}{2}\PYG{p}{,} 
                        \PYG{n}{MPI\PYGZus{}COMM\PYGZus{}WORLD}\PYG{p}{,} \PYG{o}{\PYGZam{}}\PYG{n}{status}\PYG{p}{)}\PYG{p}{;}
         \PYG{p}{\PYGZcb{}} \PYG{k}{else} \PYG{p}{\PYGZob{}}          \PYG{c+c1}{// even processes receive, then send }
@@ -480,11 +480,12 @@ for its variables.  This is why we call it single program, multiple data.
         \PYG{n}{printf}\PYG{p}{(}\PYG{l+s}{"}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s}{Process \PYGZpc{}d of \PYGZpc{}d received the message:}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s+se}{\PYGZbs{}t}\PYG{l+s}{'\PYGZpc{}s'}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s}{"}\PYG{p}{,}
                 \PYG{n}{id}\PYG{p}{,} \PYG{n}{numProcesses}\PYG{p}{,} \PYG{n}{receivedString}\PYG{p}{)}\PYG{p}{;}
 
+        \PYG{n}{free}\PYG{p}{(}\PYG{n}{sendString}\PYG{p}{)}\PYG{p}{;}
+        \PYG{n}{free}\PYG{p}{(}\PYG{n}{receivedString}\PYG{p}{)}\PYG{p}{;}
     \PYG{p}{\PYGZcb{}} \PYG{k}{else} \PYG{k}{if} \PYG{p}{(} \PYG{o}{!}\PYG{n}{id}\PYG{p}{)} \PYG{p}{\PYGZob{}}  \PYG{c+c1}{// only process 0 does this part }
         \PYG{n}{printf}\PYG{p}{(}\PYG{l+s}{"}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s}{Please run this program using -np N where N is positive and even.}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s}{"}\PYG{p}{)}\PYG{p}{;}
     \PYG{p}{\PYGZcb{}}
 
-    \PYG{n}{free}\PYG{p}{(}\PYG{n}{sendString}\PYG{p}{)}\PYG{p}{;} \PYG{n}{free}\PYG{p}{(}\PYG{n}{receivedString}\PYG{p}{)}\PYG{p}{;}
     \PYG{n}{MPI\PYGZus{}Finalize}\PYG{p}{(}\PYG{p}{)}\PYG{p}{;}
     \PYG{k}{return} \PYG{l+m+mi}{0}\PYG{p}{;}
 \PYG{p}{\PYGZcb{}}
@@ -1514,7 +1515,10 @@ make your code versatile so that you can use as many threads as you would like.
 \PYG{c+cm}{ *}
 \PYG{c+cm}{ * Exercise:}
 \PYG{c+cm}{ * - Compile \PYGZam{} run with no commandline args }
-\PYG{c+cm}{ * - Rerun with different commandline args}
+\PYG{c+cm}{ * - Rerun with different commandline args,}
+\PYG{c+cm}{ *    until you see a problem with thread ids}
+\PYG{c+cm}{ * - Fix the race condition}
+\PYG{c+cm}{ *    (if necessary, compare to 02.spmd)}
 \PYG{c+cm}{ */}
 
 \PYG{c+cp}{\PYGZsh{}}\PYG{c+cp}{include \PYGZlt{}stdio.h\PYGZgt{}}
@@ -1929,7 +1933,7 @@ which is computed in line 66.
    \PYG{p}{\PYGZcb{}}
 
    \PYG{n}{initialize}\PYG{p}{(}\PYG{n}{array}\PYG{p}{,} \PYG{n}{SIZE}\PYG{p}{)}\PYG{p}{;}
-   \PYG{n}{printf}\PYG{p}{(}\PYG{l+s}{"}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s}{Sequential sum: }\PYG{l+s+se}{\PYGZbs{}t}\PYG{l+s}{\PYGZpc{}d}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s}{Parallel sum: }\PYG{l+s+se}{\PYGZbs{}t}\PYG{l+s}{\PYGZpc{}d}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s}{"}\PYG{p}{,}
+   \PYG{n}{printf}\PYG{p}{(}\PYG{l+s}{"}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s}{Seq. sum: }\PYG{l+s+se}{\PYGZbs{}t}\PYG{l+s}{\PYGZpc{}d}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s}{Par. sum: }\PYG{l+s+se}{\PYGZbs{}t}\PYG{l+s}{\PYGZpc{}d}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s}{"}\PYG{p}{,}
             \PYG{n}{sequentialSum}\PYG{p}{(}\PYG{n}{array}\PYG{p}{,} \PYG{n}{SIZE}\PYG{p}{)}\PYG{p}{,}
             \PYG{n}{parallelSum}\PYG{p}{(}\PYG{n}{array}\PYG{p}{,} \PYG{n}{SIZE}\PYG{p}{)} \PYG{p}{)}\PYG{p}{;}
 
@@ -1970,23 +1974,221 @@ which is computed in line 66.
 \paragraph{Something to think about}
 \label{SharedMemory/DataDecomp_Reduction:something-to-think-about}
 Do you have an ideas about why the parallel for pragma without the reduction clause did not
-produce the correct result?  The next few examples will hopefully shed some light on this.
+produce the correct result?  Later examples will hopefully shed some light on this.
+
+
+\subsubsection{9. Coordination Using Collective Communication: Reduction revisited}
+\label{SharedMemory/DataDecomp_Reduction:coordination-using-collective-communication-reduction-revisited}
+\emph{Build inside 09.reduction-userDefined directory:}
+
+\begin{Verbatim}[commandchars=\\\{\}]
+make reduction2
+\end{Verbatim}
+
+\emph{Execute on the command line inside 09.reduction-userDefined directory:}
+
+\begin{Verbatim}[commandchars=\\\{\}]
+./reduction  4 4096
+Replace 4 with other values for the number of threads
+Replace 4096 with other values for n (computing up to n factorial)
+\end{Verbatim}
+
+The next example uses many threads to generate computations of factorials of n. Though there are likely other better ways to compute factorials, this
+example uses a very simple approach to illustrate how reduction can be used with the
+multiplication operation instead of addition in the previous example. The pragma for
+this is on line 34 in the code below, which also makes use of an additional C++ file, BigInt.h:
+
+\begin{Verbatim}[commandchars=\\\{\},numbers=left,firstnumber=1,stepnumber=1]
+\PYG{c+cm}{/* reduction2.cpp computes a table of factorial values,}
+\PYG{c+cm}{ *  using Owen Astrachan's BigInt class to explore}
+\PYG{c+cm}{ *  OpenMP's user-defined reductions.}
+\PYG{c+cm}{ *}
+\PYG{c+cm}{ *  Joel Adams, Calvin College, December 2015.}
+\PYG{c+cm}{ *}
+\PYG{c+cm}{ *  Usage: ./reduction2 [numThreads] [n]}
+\PYG{c+cm}{ *}
+\PYG{c+cm}{ *  Exercise:}
+\PYG{c+cm}{ *  - Build and run, record sequential time in a spreadsheet}
+\PYG{c+cm}{ *  - Uncomment \PYGZsh{}pragma omp parallel for directive, rebuild,}
+\PYG{c+cm}{ *     and read the error message carefully.}
+\PYG{c+cm}{ *  - Uncomment the \PYGZsh{}pragma omp declare directive, rebuild,}
+\PYG{c+cm}{ *     and note the user-defined * reduction for a BigInt.}
+\PYG{c+cm}{ *  - Rerun, using 2, 4, 6, 8, ... threads, recording}
+\PYG{c+cm}{ *     the times in the spreadsheet.}
+\PYG{c+cm}{ *  - Create a chart that plots the times vs the \PYGZsh{} of threads.}
+\PYG{c+cm}{ *  - Experiment with different n values}
+\PYG{c+cm}{ */}
+
+\PYG{c+cp}{\PYGZsh{}}\PYG{c+cp}{include "BigInt.h"}
+\PYG{c+cp}{\PYGZsh{}}\PYG{c+cp}{include \PYGZlt{}cassert\PYGZgt{}}
+\PYG{c+cp}{\PYGZsh{}}\PYG{c+cp}{include \PYGZlt{}omp.h\PYGZgt{}}
+
+\PYG{c+cm}{/*}
+\PYG{c+cm}{\PYGZsh{}pragma omp declare reduction(*: BigInt: \PYGZbs{}}
+\PYG{c+cm}{				omp\PYGZus{}out = omp\PYGZus{}out * omp\PYGZus{}in) \PYGZbs{}}
+\PYG{c+cm}{				initializer( omp\PYGZus{}priv=BigInt(1))}
+\PYG{c+cm}{*/}
+
+\PYG{n}{BigInt} \PYG{n}{factorial}\PYG{p}{(}\PYG{k+kt}{unsigned} \PYG{n}{n}\PYG{p}{)} \PYG{p}{\PYGZob{}}
+	\PYG{n}{BigInt} \PYG{n}{result} \PYG{o}{=} \PYG{l+m+mi}{1}\PYG{p}{;}
+
+\PYG{c+c1}{//	\PYGZsh{}pragma omp parallel for reduction(*:result) }
+	\PYG{k}{for} \PYG{p}{(}\PYG{k+kt}{unsigned} \PYG{n}{i} \PYG{o}{=} \PYG{l+m+mi}{2}\PYG{p}{;} \PYG{n}{i} \PYG{o}{\PYGZlt{}}\PYG{o}{=} \PYG{n}{n}\PYG{p}{;} \PYG{n}{i} \PYG{o}{+}\PYG{o}{=} \PYG{l+m+mi}{1}\PYG{p}{)} \PYG{p}{\PYGZob{}}
+		\PYG{n}{result} \PYG{o}{*}\PYG{o}{=} \PYG{n}{i}\PYG{p}{;}
+	\PYG{p}{\PYGZcb{}}
+
+	\PYG{k}{return} \PYG{n}{result}\PYG{p}{;}
+\PYG{p}{\PYGZcb{}}
+
+\PYG{k+kt}{int} \PYG{n}{main}\PYG{p}{(}\PYG{k+kt}{int} \PYG{n}{argc}\PYG{p}{,} \PYG{k+kt}{char}\PYG{o}{*}\PYG{o}{*} \PYG{n}{argv}\PYG{p}{)} \PYG{p}{\PYGZob{}}  \PYG{c+c1}{// on a 2GHz i7 CPU:}
+	\PYG{k+kt}{unsigned} \PYG{n}{n} \PYG{o}{=} \PYG{l+m+mi}{4096}\PYG{p}{;}         \PYG{c+c1}{// \PYGZti{}10 secs sequentially}
+	\PYG{k+kt}{unsigned} \PYG{n}{numThreads} \PYG{o}{=} \PYG{l+m+mi}{1}\PYG{p}{;}
+
+	\PYG{k}{switch} \PYG{p}{(}\PYG{n}{argc}\PYG{p}{)} \PYG{p}{\PYGZob{}}
+		\PYG{k}{case} \PYG{l+m+mi}{3}\PYG{o}{:} \PYG{n}{n} \PYG{o}{=} \PYG{n}{atoi}\PYG{p}{(}\PYG{n}{argv}\PYG{p}{[}\PYG{l+m+mi}{2}\PYG{p}{]}\PYG{p}{)}\PYG{p}{;}
+		\PYG{k}{case} \PYG{l+m+mi}{2}\PYG{o}{:} \PYG{n}{numThreads} \PYG{o}{=} \PYG{n}{atoi}\PYG{p}{(}\PYG{n}{argv}\PYG{p}{[}\PYG{l+m+mi}{1}\PYG{p}{]}\PYG{p}{)}\PYG{p}{;}
+		\PYG{k}{case} \PYG{l+m+mi}{1}\PYG{o}{:} \PYG{k}{break}\PYG{p}{;}
+		\PYG{k}{default}\PYG{o}{:} \PYG{n}{cout} \PYG{o}{\PYGZlt{}}\PYG{o}{\PYGZlt{}} \PYG{l+s}{"}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s}{Usage: ./reduction2 [numThreads] [n]}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s}{"}\PYG{p}{;}
+	\PYG{p}{\PYGZcb{}}
+        \PYG{n}{omp\PYGZus{}set\PYGZus{}num\PYGZus{}threads}\PYG{p}{(}\PYG{n}{numThreads}\PYG{p}{)}\PYG{p}{;}
+
+	\PYG{k+kt}{double} \PYG{n}{startTime} \PYG{o}{=} \PYG{n}{omp\PYGZus{}get\PYGZus{}wtime}\PYG{p}{(}\PYG{p}{)}\PYG{p}{;}
+	\PYG{n}{BigInt} \PYG{n}{nFactorial} \PYG{o}{=} \PYG{n}{factorial}\PYG{p}{(}\PYG{n}{n}\PYG{p}{)}\PYG{p}{;}
+	\PYG{k+kt}{double} \PYG{n}{time} \PYG{o}{=} \PYG{n}{omp\PYGZus{}get\PYGZus{}wtime}\PYG{p}{(}\PYG{p}{)} \PYG{o}{-} \PYG{n}{startTime}\PYG{p}{;}
+
+	\PYG{n}{cout} \PYG{o}{\PYGZlt{}}\PYG{o}{\PYGZlt{}} \PYG{l+s}{"}\PYG{l+s}{Computing }\PYG{l+s}{"} \PYG{o}{\PYGZlt{}}\PYG{o}{\PYGZlt{}} \PYG{n}{n} \PYG{o}{\PYGZlt{}}\PYG{o}{\PYGZlt{}} \PYG{l+s}{"}\PYG{l+s}{! using }\PYG{l+s}{"}
+             \PYG{o}{\PYGZlt{}}\PYG{o}{\PYGZlt{}} \PYG{n}{numThreads}  \PYG{o}{\PYGZlt{}}\PYG{o}{\PYGZlt{}} \PYG{l+s}{"}\PYG{l+s}{ threads took: }\PYG{l+s}{"} 
+             \PYG{o}{\PYGZlt{}}\PYG{o}{\PYGZlt{}} \PYG{n}{time} \PYG{o}{\PYGZlt{}}\PYG{o}{\PYGZlt{}} \PYG{l+s}{"}\PYG{l+s}{ secs}\PYG{l+s}{"} \PYG{o}{\PYGZlt{}}\PYG{o}{\PYGZlt{}} \PYG{n}{endl}\PYG{p}{;}
+
+	\PYG{c+c1}{// run a few tests to validate the results}
+	\PYG{n}{assert}\PYG{p}{(} \PYG{n}{factorial}\PYG{p}{(}\PYG{l+m+mi}{0}\PYG{p}{)} \PYG{o}{=}\PYG{o}{=} \PYG{l+m+mi}{1} \PYG{p}{)}\PYG{p}{;}
+	\PYG{n}{assert}\PYG{p}{(} \PYG{n}{factorial}\PYG{p}{(}\PYG{l+m+mi}{1}\PYG{p}{)} \PYG{o}{=}\PYG{o}{=} \PYG{l+m+mi}{1} \PYG{p}{)}\PYG{p}{;}
+	\PYG{n}{assert}\PYG{p}{(} \PYG{n}{factorial}\PYG{p}{(}\PYG{l+m+mi}{2}\PYG{p}{)} \PYG{o}{=}\PYG{o}{=} \PYG{l+m+mi}{2} \PYG{p}{)}\PYG{p}{;}
+	\PYG{n}{assert}\PYG{p}{(} \PYG{n}{factorial}\PYG{p}{(}\PYG{l+m+mi}{3}\PYG{p}{)} \PYG{o}{=}\PYG{o}{=} \PYG{l+m+mi}{6} \PYG{p}{)}\PYG{p}{;}
+	\PYG{n}{assert}\PYG{p}{(} \PYG{n}{factorial}\PYG{p}{(}\PYG{l+m+mi}{4}\PYG{p}{)} \PYG{o}{=}\PYG{o}{=} \PYG{l+m+mi}{24} \PYG{p}{)}\PYG{p}{;}
+	\PYG{n}{assert}\PYG{p}{(} \PYG{n}{factorial}\PYG{p}{(}\PYG{l+m+mi}{5}\PYG{p}{)} \PYG{o}{=}\PYG{o}{=} \PYG{l+m+mi}{120} \PYG{p}{)}\PYG{p}{;}
+	\PYG{n}{assert}\PYG{p}{(} \PYG{n}{factorial}\PYG{p}{(}\PYG{l+m+mi}{32}\PYG{p}{)} \PYG{o}{=}\PYG{o}{=} \PYG{n}{BigInt}\PYG{p}{(}\PYG{l+s}{"}\PYG{l+s}{263130836933693530167218012160000000}\PYG{l+s}{"}\PYG{p}{)} \PYG{p}{)}\PYG{p}{;}
+	\PYG{n}{assert}\PYG{p}{(} \PYG{n}{factorial}\PYG{p}{(}\PYG{l+m+mi}{100}\PYG{p}{)} \PYG{o}{=}\PYG{o}{=} \PYG{n}{BigInt}\PYG{p}{(} \PYG{n}{string}\PYG{p}{(}\PYG{l+s}{"}\PYG{l+s}{9332621544394415268169923885}\PYG{l+s}{"}\PYG{p}{)}
+			                            \PYG{o}{+} \PYG{l+s}{"}\PYG{l+s}{6266700490715968264381621468}\PYG{l+s}{"}
+						    \PYG{o}{+} \PYG{l+s}{"}\PYG{l+s}{5929638952175999932299156089}\PYG{l+s}{"}
+						    \PYG{o}{+} \PYG{l+s}{"}\PYG{l+s}{4146397615651828625369792082}\PYG{l+s}{"}
+						    \PYG{o}{+} \PYG{l+s}{"}\PYG{l+s}{7223758251185210916864000000}\PYG{l+s}{"}
+						    \PYG{o}{+} \PYG{l+s}{"}\PYG{l+s}{000000000000000000}\PYG{l+s}{"} \PYG{p}{)} \PYG{p}{)}\PYG{p}{;}
+	\PYG{n}{cout} \PYG{o}{\PYGZlt{}}\PYG{o}{\PYGZlt{}} \PYG{l+s}{"}\PYG{l+s}{All tests passed!}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s}{"} \PYG{o}{\PYGZlt{}}\PYG{o}{\PYGZlt{}} \PYG{n}{flush}\PYG{p}{;}
+\PYG{p}{\PYGZcb{}}
+\end{Verbatim}
+
+With this code you can begin to explore the time it takes to execute the program when using increasing numbers of threads for various values of n. Follow the instructions at the top of the file.
+
+
+\subsubsection{10. Dynamic Data Decomposition}
+\label{SharedMemory/DataDecomp_Reduction:dynamic-data-decomposition}
+\emph{Build inside 10.parallelLoop-dynamicSchedule directory:}
+
+\begin{Verbatim}[commandchars=\\\{\}]
+make dynamicScheduling
+\end{Verbatim}
+
+\emph{Execute on the command line inside 10.parallelLoop-dynamicSchedule directory:}
+
+\begin{Verbatim}[commandchars=\\\{\}]
+./dynamicScheduling 4
+Replace 4 with other values for the number of threads
+\end{Verbatim}
+
+The following example computes factorials for the numbers 2 through 512, placing the result in an array. This array of results is the data in this data decomposition pattern. Since each number will take a different amount of time to compute, this is
+a case where using dynamic scheduling of the work improves the performance. Try the tasks lsited in the header of the code shown below to see this.
+
+\begin{Verbatim}[commandchars=\\\{\},numbers=left,firstnumber=1,stepnumber=1]
+\PYG{c+cm}{/* dynamicScheduling.cpp computes a table of factorial values,}
+\PYG{c+cm}{ *  using Owen Astrachan's BigInt class to explore}
+\PYG{c+cm}{ *  OpenMP's schedule() clause.}
+\PYG{c+cm}{ *}
+\PYG{c+cm}{ *  @author: Joel Adams, Calvin College, Dec 2015.}
+\PYG{c+cm}{ *}
+\PYG{c+cm}{ *  Usage: ./dynamicScheduling [numThreads]}
+\PYG{c+cm}{ *}
+\PYG{c+cm}{ *  Exercise:}
+\PYG{c+cm}{ *  - Build and run, record sequential run time in a spreadsheet}
+\PYG{c+cm}{ *  - Uncomment \PYGZsh{}pragma omp parallel for, rebuild,}
+\PYG{c+cm}{ *      run using 2, 4, 6, 8, ... threads, record run times.}
+\PYG{c+cm}{ *  - Uncomment schedule(dynamic), rebuild,}
+\PYG{c+cm}{ *      run using 2, 4, 6, 8, ... threads, record run times.}
+\PYG{c+cm}{ *  - Create a line chart plotting run times vs \PYGZsh{} of threads.}
+\PYG{c+cm}{ */}
+
+\PYG{c+cp}{\PYGZsh{}}\PYG{c+cp}{include "BigInt.h"                 }\PYG{c+c1}{// class BigInt}
+\PYG{c+cp}{\PYGZsh{}}\PYG{c+cp}{include \PYGZlt{}omp.h\PYGZgt{}                    }\PYG{c+c1}{// OpenMP functions}
+\PYG{c+cp}{\PYGZsh{}}\PYG{c+cp}{include \PYGZlt{}cassert\PYGZgt{}                  }\PYG{c+c1}{// assert()}
+
+\PYG{c+cm}{/* factorial(n) computes n!}
+\PYG{c+cm}{ * @param: n, an unsigned int.}
+\PYG{c+cm}{ * @return: n!, a BigInt.}
+\PYG{c+cm}{ */}
+\PYG{n}{BigInt} \PYG{n}{factorial}\PYG{p}{(}\PYG{k+kt}{unsigned} \PYG{n}{n}\PYG{p}{)} \PYG{p}{\PYGZob{}}
+	\PYG{n}{BigInt} \PYG{n}{result} \PYG{o}{=} \PYG{l+m+mi}{1}\PYG{p}{;}              \PYG{c+c1}{// 0! or 1!}
+
+	\PYG{k}{for} \PYG{p}{(}\PYG{k+kt}{unsigned} \PYG{n}{i} \PYG{o}{=} \PYG{l+m+mi}{2}\PYG{p}{;} \PYG{n}{i} \PYG{o}{\PYGZlt{}}\PYG{o}{=} \PYG{n}{n}\PYG{p}{;} \PYG{o}{+}\PYG{o}{+}\PYG{n}{i}\PYG{p}{)} \PYG{p}{\PYGZob{}}
+		\PYG{n}{result} \PYG{o}{*}\PYG{o}{=} \PYG{n}{i}\PYG{p}{;}
+	\PYG{p}{\PYGZcb{}}
+
+	\PYG{k}{return} \PYG{n}{result}\PYG{p}{;}
+\PYG{p}{\PYGZcb{}}
+
+\PYG{k+kt}{int} \PYG{n}{main}\PYG{p}{(}\PYG{k+kt}{int} \PYG{n}{argc}\PYG{p}{,} \PYG{k+kt}{char}\PYG{o}{*}\PYG{o}{*} \PYG{n}{argv}\PYG{p}{)} \PYG{p}{\PYGZob{}}            \PYG{c+c1}{// on a 2 GHz i7 CPU:}
+	\PYG{k}{const} \PYG{k+kt}{unsigned} \PYG{n}{MAX} \PYG{o}{=} \PYG{l+m+mi}{512}\PYG{p}{;}            \PYG{c+c1}{//  \PYGZti{}14 secs sequentially}
+\PYG{c+c1}{//	const unsigned MAX = 800;            //  \PYGZti{}60 secs sequentially}
+	\PYG{n}{BigInt} \PYG{n}{factorialTable}\PYG{p}{[}\PYG{n}{MAX}\PYG{o}{+}\PYG{l+m+mi}{1}\PYG{p}{]}\PYG{p}{;}
+
+	\PYG{k}{if} \PYG{p}{(}\PYG{n}{argc} \PYG{o}{\PYGZgt{}} \PYG{l+m+mi}{1}\PYG{p}{)} \PYG{p}{\PYGZob{}} \PYG{n}{omp\PYGZus{}set\PYGZus{}num\PYGZus{}threads}\PYG{p}{(} \PYG{n}{atoi}\PYG{p}{(}\PYG{n}{argv}\PYG{p}{[}\PYG{l+m+mi}{1}\PYG{p}{]}\PYG{p}{)} \PYG{p}{)}\PYG{p}{;} \PYG{p}{\PYGZcb{}}
+
+	\PYG{n}{cout} \PYG{o}{\PYGZlt{}}\PYG{o}{\PYGZlt{}} \PYG{l+s}{"}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s}{Depending on the speed of your computer,}\PYG{l+s}{"}
+             \PYG{o}{\PYGZlt{}}\PYG{o}{\PYGZlt{}} \PYG{l+s}{"}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s}{  this program may take a while to complete,}\PYG{l+s}{"}
+             \PYG{o}{\PYGZlt{}}\PYG{o}{\PYGZlt{}} \PYG{l+s}{"}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s}{  so please wait patiently...}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s}{"} \PYG{o}{\PYGZlt{}}\PYG{o}{\PYGZlt{}} \PYG{n}{endl}\PYG{p}{;}
+
+	\PYG{k+kt}{double} \PYG{n}{startTime} \PYG{o}{=} \PYG{n}{omp\PYGZus{}get\PYGZus{}wtime}\PYG{p}{(}\PYG{p}{)}\PYG{p}{;}
+\PYG{c+c1}{//	\PYGZsh{}pragma omp parallel for // schedule(dynamic)}
+	\PYG{k}{for} \PYG{p}{(}\PYG{k+kt}{unsigned} \PYG{n}{i} \PYG{o}{=} \PYG{l+m+mi}{0}\PYG{p}{;} \PYG{n}{i} \PYG{o}{\PYGZlt{}}\PYG{o}{=} \PYG{n}{MAX}\PYG{p}{;} \PYG{n}{i}\PYG{o}{+}\PYG{o}{+}\PYG{p}{)} \PYG{p}{\PYGZob{}}
+		\PYG{n}{factorialTable}\PYG{p}{[}\PYG{n}{i}\PYG{p}{]} \PYG{o}{=} \PYG{n}{factorial}\PYG{p}{(}\PYG{n}{i}\PYG{p}{)}\PYG{p}{;}
+	\PYG{p}{\PYGZcb{}}
+	\PYG{k+kt}{double} \PYG{n}{totalTime} \PYG{o}{=} \PYG{n}{omp\PYGZus{}get\PYGZus{}wtime}\PYG{p}{(}\PYG{p}{)} \PYG{o}{-} \PYG{n}{startTime}\PYG{p}{;}
+
+	\PYG{n}{cout} \PYG{o}{\PYGZlt{}}\PYG{o}{\PYGZlt{}} \PYG{l+s}{"}\PYG{l+s}{Computing 0! .. }\PYG{l+s}{"} \PYG{o}{\PYGZlt{}}\PYG{o}{\PYGZlt{}} \PYG{n}{MAX} \PYG{o}{\PYGZlt{}}\PYG{o}{\PYGZlt{}} \PYG{l+s}{"}\PYG{l+s}{! took: }\PYG{l+s}{"} 
+             \PYG{o}{\PYGZlt{}}\PYG{o}{\PYGZlt{}} \PYG{n}{totalTime} \PYG{o}{\PYGZlt{}}\PYG{o}{\PYGZlt{}} \PYG{l+s}{"}\PYG{l+s}{ secs}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s}{"} \PYG{o}{\PYGZlt{}}\PYG{o}{\PYGZlt{}} \PYG{n}{endl}\PYG{p}{;}
+
+	\PYG{c+c1}{// run a few tests to validate the results}
+	\PYG{n}{assert}\PYG{p}{(} \PYG{n}{factorialTable}\PYG{p}{[}\PYG{l+m+mi}{0}\PYG{p}{]} \PYG{o}{=}\PYG{o}{=} \PYG{l+m+mi}{1} \PYG{p}{)}\PYG{p}{;}
+	\PYG{n}{assert}\PYG{p}{(} \PYG{n}{factorialTable}\PYG{p}{[}\PYG{l+m+mi}{1}\PYG{p}{]} \PYG{o}{=}\PYG{o}{=} \PYG{l+m+mi}{1} \PYG{p}{)}\PYG{p}{;}
+	\PYG{n}{assert}\PYG{p}{(} \PYG{n}{factorialTable}\PYG{p}{[}\PYG{l+m+mi}{2}\PYG{p}{]} \PYG{o}{=}\PYG{o}{=} \PYG{l+m+mi}{2} \PYG{p}{)}\PYG{p}{;}
+	\PYG{n}{assert}\PYG{p}{(} \PYG{n}{factorialTable}\PYG{p}{[}\PYG{l+m+mi}{3}\PYG{p}{]} \PYG{o}{=}\PYG{o}{=} \PYG{l+m+mi}{6} \PYG{p}{)}\PYG{p}{;}
+	\PYG{n}{assert}\PYG{p}{(} \PYG{n}{factorialTable}\PYG{p}{[}\PYG{l+m+mi}{4}\PYG{p}{]} \PYG{o}{=}\PYG{o}{=} \PYG{l+m+mi}{24} \PYG{p}{)}\PYG{p}{;}
+	\PYG{n}{assert}\PYG{p}{(} \PYG{n}{factorialTable}\PYG{p}{[}\PYG{l+m+mi}{5}\PYG{p}{]} \PYG{o}{=}\PYG{o}{=} \PYG{l+m+mi}{120} \PYG{p}{)}\PYG{p}{;}
+	\PYG{n}{assert}\PYG{p}{(} \PYG{n}{factorialTable}\PYG{p}{[}\PYG{l+m+mi}{32}\PYG{p}{]} \PYG{o}{=}\PYG{o}{=} \PYG{n}{BigInt}\PYG{p}{(}\PYG{l+s}{"}\PYG{l+s}{263130836933693530167218012160000000}\PYG{l+s}{"}\PYG{p}{)} \PYG{p}{)}\PYG{p}{;}
+	\PYG{n}{assert}\PYG{p}{(} \PYG{n}{factorialTable}\PYG{p}{[}\PYG{l+m+mi}{100}\PYG{p}{]} \PYG{o}{=}\PYG{o}{=} \PYG{n}{BigInt}\PYG{p}{(} \PYG{n}{string}\PYG{p}{(}\PYG{l+s}{"}\PYG{l+s}{9332621544394415268169923885}\PYG{l+s}{"}\PYG{p}{)}
+			                            \PYG{o}{+} \PYG{l+s}{"}\PYG{l+s}{6266700490715968264381621468}\PYG{l+s}{"}
+						    \PYG{o}{+} \PYG{l+s}{"}\PYG{l+s}{5929638952175999932299156089}\PYG{l+s}{"}
+						    \PYG{o}{+} \PYG{l+s}{"}\PYG{l+s}{4146397615651828625369792082}\PYG{l+s}{"}
+						    \PYG{o}{+} \PYG{l+s}{"}\PYG{l+s}{7223758251185210916864000000}\PYG{l+s}{"}
+						    \PYG{o}{+} \PYG{l+s}{"}\PYG{l+s}{000000000000000000}\PYG{l+s}{"} \PYG{p}{)} \PYG{p}{)}\PYG{p}{;}
+	\PYG{n}{cout} \PYG{o}{\PYGZlt{}}\PYG{o}{\PYGZlt{}} \PYG{l+s}{"}\PYG{l+s}{All tests passed!}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s}{"} \PYG{o}{\PYGZlt{}}\PYG{o}{\PYGZlt{}} \PYG{n}{endl}\PYG{p}{;}
+\PYG{p}{\PYGZcb{}}
+\end{Verbatim}
 
 
 \subsection{Patterns used when threads share data values}
 \label{SharedMemory/MutualExclusion:patterns-used-when-threads-share-data-values}\label{SharedMemory/MutualExclusion::doc}
 
-\subsubsection{9. Shared Data Algorithm Strategy: Parallel-for-loop pattern needs non-shared, private variables}
+\subsubsection{11. Shared Data Algorithm Strategy: Parallel-for-loop pattern needs non-shared, private variables}
 \label{SharedMemory/MutualExclusion:shared-data-algorithm-strategy-parallel-for-loop-pattern-needs-non-shared-private-variables}
-\emph{file: openMP/09.private/private.c}
+\emph{file: openMP/11.private/private.c}
 
-\emph{Build inside 09.private directory:}
+\emph{Build inside 11.private directory:}
 
 \begin{Verbatim}[commandchars=\\\{\}]
 make private
 \end{Verbatim}
 
-\emph{Execute on the command line inside 09.private directory:}
+\emph{Execute on the command line inside 11.private directory:}
 
 \begin{Verbatim}[commandchars=\\\{\}]
 ./private
@@ -2047,17 +2249,17 @@ In this example, you will try a parallel for loop where additional variables (i,
 \end{Verbatim}
 
 
-\subsubsection{10. Race Condition: missing the mutual exclusion coordination pattern}
+\subsubsection{12. Race Condition: missing the mutual exclusion coordination pattern}
 \label{SharedMemory/MutualExclusion:race-condition-missing-the-mutual-exclusion-coordination-pattern}
-\emph{file: openMP/10.mutualExclusion-atomic/atomic.c}
+\emph{file: openMP/12.mutualExclusion-atomic/atomic.c}
 
-\emph{Build inside 10.mutualExclusion-atomic directory:}
+\emph{Build inside 12.mutualExclusion-atomic directory:}
 
 \begin{Verbatim}[commandchars=\\\{\}]
 make atomic
 \end{Verbatim}
 
-\emph{Execute on the command line inside 10.mutualExclusion-atomic directory:}
+\emph{Execute on the command line inside 12.mutualExclusion-atomic directory:}
 
 \begin{Verbatim}[commandchars=\\\{\}]
 ./atomic
@@ -2106,17 +2308,17 @@ When a variable must be shared by all the threads, as in this example below, an 
 \end{Verbatim}
 
 
-\subsubsection{11. The Mutual Exclusion Coordination Pattern: two ways to ensure}
+\subsubsection{13. The Mutual Exclusion Coordination Pattern: two ways to ensure}
 \label{SharedMemory/MutualExclusion:the-mutual-exclusion-coordination-pattern-two-ways-to-ensure}
-\emph{file: openMP/11.mutualExclusion-critical/critical.c}
+\emph{file: openMP/13.mutualExclusion-critical/critical.c}
 
-\emph{Build inside 11.mutualExclusion-critical directory:}
+\emph{Build inside 13.mutualExclusion-critical directory:}
 
 \begin{Verbatim}[commandchars=\\\{\}]
 make critical
 \end{Verbatim}
 
-\emph{Execute on the command line inside 11.mutualExclusion-critical directory:}
+\emph{Execute on the command line inside 13.mutualExclusion-critical directory:}
 
 \begin{Verbatim}[commandchars=\\\{\}]
 ./critical
@@ -2167,17 +2369,17 @@ Here is another way to ensure \textbf{mutual exclusion} in OpenMP.
 \end{Verbatim}
 
 
-\subsubsection{12.  Mutual Exclusion Coordination Pattern: compare performance}
+\subsubsection{14.  Mutual Exclusion Coordination Pattern: compare performance}
 \label{SharedMemory/MutualExclusion:mutual-exclusion-coordination-pattern-compare-performance}
-\emph{file: openMP/12.mutualExclusion-critical2/critical2.c}
+\emph{file: openMP/14.mutualExclusion-critical2/critical2.c}
 
-\emph{Build inside 12.mutualExclusion-critical2 directory:}
+\emph{Build inside 14.mutualExclusion-critical2 directory:}
 
 \begin{Verbatim}[commandchars=\\\{\}]
 make critical2
 \end{Verbatim}
 
-\emph{Execute on the command line inside 12.mutualExclusion-critical2 directory:}
+\emph{Execute on the command line inside 14.mutualExclusion-critical2 directory:}
 
 \begin{Verbatim}[commandchars=\\\{\}]
 ./critical2
@@ -2256,17 +2458,17 @@ Here is an example of how to compare the performance of using the atomic pragma 
 \end{Verbatim}
 
 
-\subsubsection{13.  Mutual Exclusion Coordination Pattern: language difference}
+\subsubsection{15.  Mutual Exclusion Coordination Pattern: language difference}
 \label{SharedMemory/MutualExclusion:mutual-exclusion-coordination-pattern-language-difference}
-\emph{file: openMP/13.mutualExclusion-critical3/critical2.c}
+\emph{file: openMP/15.mutualExclusion-critical3/critical3.c}
 
-\emph{Build inside 13.mutualExclusion-critical3 directory:}
+\emph{Build inside 15.mutualExclusion-critical3 directory:}
 
 \begin{Verbatim}[commandchars=\\\{\}]
 make critical3
 \end{Verbatim}
 
-\emph{Execute on the command line inside 13.mutualExclusion-critical3 directory:}
+\emph{Execute on the command line inside 15.mutualExclusion-critical3 directory:}
 
 \begin{Verbatim}[commandchars=\\\{\}]
 ./critical3
@@ -2358,17 +2560,17 @@ The other facet that this particular patternlet shows is that OpenMP's atomic di
 All threaded programs have some form of task decomposition, that is, delineating which threads will do what tasks in parallel at certain points in the program. We have seen one way of dictating this by using the master-worker implementation, where one thread does one task and all the others to another.  Here we introduce a more general approach that can be used.
 
 
-\subsubsection{14. Task Decomposition Algorithm Strategy using OpenMP section directive}
+\subsubsection{16. Task Decomposition Algorithm Strategy using OpenMP section directive}
 \label{SharedMemory/TaskDecomp:task-decomposition-algorithm-strategy-using-openmp-section-directive}
-\emph{file: openMP/14.sections/sections.c}
+\emph{file: openMP/16.sections/sections.c}
 
-\emph{Build inside 14.sections directory:}
+\emph{Build inside 16.sections directory:}
 
 \begin{Verbatim}[commandchars=\\\{\}]
 make sections
 \end{Verbatim}
 
-\emph{Execute on the command line inside 14.sections directory:}
+\emph{Execute on the command line inside 16.sections directory:}
 
 \begin{Verbatim}[commandchars=\\\{\}]
 ./sections

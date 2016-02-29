@@ -35,13 +35,15 @@
 \contentsline {subsubsection}{7. Shared Data Decomposition Algorithm Strategy: one iteration per thread in a parallel for loop implementation strategy}{35}{subsubsection*.10}
 \contentsline {subsubsection}{8. Coordination Using Collective Communication: Reduction}{36}{subsubsection*.11}
 \contentsline {paragraph}{Something to think about}{38}{paragraph*.12}
-\contentsline {subsection}{\numberline {3.2.3}Patterns used when threads share data values}{38}{subsection.3.2.3}
-\contentsline {subsubsection}{9. Shared Data Algorithm Strategy: Parallel-for-loop pattern needs non-shared, private variables}{38}{subsubsection*.13}
-\contentsline {subsubsection}{10. Race Condition: missing the mutual exclusion coordination pattern}{39}{subsubsection*.14}
-\contentsline {subsubsection}{11. The Mutual Exclusion Coordination Pattern: two ways to ensure}{40}{subsubsection*.15}
-\contentsline {subsubsection}{12. Mutual Exclusion Coordination Pattern: compare performance}{41}{subsubsection*.16}
-\contentsline {subsubsection}{13. Mutual Exclusion Coordination Pattern: language difference}{42}{subsubsection*.17}
-\contentsline {paragraph}{Some Explanation}{43}{paragraph*.18}
-\contentsline {subsection}{\numberline {3.2.4}Task Decomposition Algorithm Strategies}{44}{subsection.3.2.4}
-\contentsline {subsubsection}{14. Task Decomposition Algorithm Strategy using OpenMP section directive}{44}{subsubsection*.19}
-\contentsline {subsection}{\numberline {3.2.5}Categorizing Patterns}{45}{subsection.3.2.5}
+\contentsline {subsubsection}{9. Coordination Using Collective Communication: Reduction revisited}{38}{subsubsection*.13}
+\contentsline {subsubsection}{10. Dynamic Data Decomposition}{39}{subsubsection*.14}
+\contentsline {subsection}{\numberline {3.2.3}Patterns used when threads share data values}{41}{subsection.3.2.3}
+\contentsline {subsubsection}{11. Shared Data Algorithm Strategy: Parallel-for-loop pattern needs non-shared, private variables}{41}{subsubsection*.15}
+\contentsline {subsubsection}{12. Race Condition: missing the mutual exclusion coordination pattern}{42}{subsubsection*.16}
+\contentsline {subsubsection}{13. The Mutual Exclusion Coordination Pattern: two ways to ensure}{43}{subsubsection*.17}
+\contentsline {subsubsection}{14. Mutual Exclusion Coordination Pattern: compare performance}{44}{subsubsection*.18}
+\contentsline {subsubsection}{15. Mutual Exclusion Coordination Pattern: language difference}{46}{subsubsection*.19}
+\contentsline {paragraph}{Some Explanation}{46}{paragraph*.20}
+\contentsline {subsection}{\numberline {3.2.4}Task Decomposition Algorithm Strategies}{47}{subsection.3.2.4}
+\contentsline {subsubsection}{16. Task Decomposition Algorithm Strategy using OpenMP section directive}{47}{subsubsection*.21}
+\contentsline {subsection}{\numberline {3.2.5}Categorizing Patterns}{48}{subsection.3.2.5}
