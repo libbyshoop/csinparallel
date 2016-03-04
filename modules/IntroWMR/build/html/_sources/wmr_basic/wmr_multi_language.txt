@@ -13,17 +13,20 @@ In this lab you will use a web-based program called `WebMapReduce`
 run them on an underlying *Hadoop* map-reduce system running on a
 cluster of computers.
 
-You will use WebMapReduce on a cluster of computers at Macalester
+You will use WebMapReduce on a cluster of computers at Saint Olaf
 College. You should access WebMapReduce now and register for a
 login by going to this URL on your web browser:
 
-http://selkie.macalester.edu/wmr
+http://cumulus.cs.stolaf.edu/wmr/
 
 Choose the link at the very upper right of this page that says
-'Register'. Use your Macalester email address as your login name,
+'Register'. Use your email address as your login name,
 and provide the other information asked for. You choose your own
 password, so that you can remember it and have control of your
 account.
+
+**Note**: To complete your registration, you will need a registration 
+key from your instructor.
 
 
 For later reference, you may want to check this `documentation for
@@ -276,7 +279,7 @@ carry out the following steps.
 - In a browser, visit the WMR site at (if you don't already have it
   open from registering):
 
-    http://selkie.macalester.edu/wmr
+    http://cumulus.cs.stolaf.edu/wmr/
 
 - After you have registered, you can use your email address and
   password to login. After successfully logging in, you are taken to

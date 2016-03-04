@@ -6,7 +6,7 @@
 Map-reduce Computing for Introductory Students using WebMapReduce
 =============================================================================================
 
-**Last Updated:** Nov. 13, 2012
+**Last Updated:** March 3, 2016
 
 The first section below is preliminary reading for any of the following three sections.
 It describes a map-reduce system, or framework, using distrubted computers in a cluster

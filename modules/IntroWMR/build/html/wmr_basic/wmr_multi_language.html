@@ -25,6 +25,7 @@
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
     <link rel="top" title="Map-reduce Computing for Introductory Students using WebMapReduce" href="../index.html" />
     <link rel="next" title="Counting words with WebMapReduce (WMR): adding efficiency" href="../wmr_py/wmr_py.html" />
     <link rel="prev" title="Using Parallelism to Analyze Very Large Files: Google’s Map Reduce Paradigm" href="../MapReduceIntro/MapReduceIntro.html" /> 
@@ -34,11 +35,8 @@
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
-          <a href="../genindex.html" title="General Index"
-             accesskey="I">index</a></li>
-        <li class="right" >
           <a href="../wmr_py/wmr_py.html" title="Counting words with WebMapReduce (WMR): adding efficiency"
-             accesskey="N">next</a> |</li>
+             accesskey="N">next</a></li>
         <li class="right" >
           <a href="../MapReduceIntro/MapReduceIntro.html" title="Using Parallelism to Analyze Very Large Files: Google’s Map Reduce Paradigm"
              accesskey="P">previous</a> |</li>
@@ -62,15 +60,17 @@ background reading in the previous section entitled
 (<strong>WMR</strong>) that enables you to formulate map-reduce computations and
 run them on an underlying <em>Hadoop</em> map-reduce system running on a
 cluster of computers.</p>
-<p>You will use WebMapReduce on a cluster of computers at Macalester
+<p>You will use WebMapReduce on a cluster of computers at Saint Olaf
 College. You should access WebMapReduce now and register for a
 login by going to this URL on your web browser:</p>
-<p><a class="reference external" href="http://selkie.macalester.edu/wmr">http://selkie.macalester.edu/wmr</a></p>
+<p><a class="reference external" href="http://cumulus.cs.stolaf.edu/wmr/">http://cumulus.cs.stolaf.edu/wmr/</a></p>
 <p>Choose the link at the very upper right of this page that says
-&#8216;Register&#8217;. Use your Macalester email address as your login name,
+&#8216;Register&#8217;. Use your email address as your login name,
 and provide the other information asked for. You choose your own
 password, so that you can remember it and have control of your
 account.</p>
+<p><strong>Note</strong>: To complete your registration, you will need a registration
+key from your instructor.</p>
 <p>For later reference, you may want to check this <a class="reference external" href="http://webmapreduce.sourceforge.net/docs/using/index.html">documentation for
 WMR</a>.</p>
 <p>For this activity, you should be able to follow along with the
@@ -312,7 +312,7 @@ carry out the following steps.</p>
 <li><p class="first">In a browser, visit the WMR site at (if you don&#8217;t already have it
 open from registering):</p>
 <blockquote>
-<div><p><a class="reference external" href="http://selkie.macalester.edu/wmr">http://selkie.macalester.edu/wmr</a></p>
+<div><p><a class="reference external" href="http://cumulus.cs.stolaf.edu/wmr/">http://cumulus.cs.stolaf.edu/wmr/</a></p>
 </div></blockquote>
 </li>
 <li><p class="first">After you have registered, you can use your email address and
@@ -436,8 +436,8 @@ of the identity mapper in Python:</p>
 </thead>
 <tbody valign="top">
 <tr class="row-even"><td>Python</td>
-<td><a class="reference download internal" href="../_downloads/idmapper1.py"><tt class="xref download docutils literal"><span class="pre">idmapper.py</span></tt></a></td>
-<td><a class="reference download internal" href="../_downloads/idreducer1.py"><tt class="xref download docutils literal"><span class="pre">idreducer.py</span></tt></a></td>
+<td><a class="reference download internal" href="../_downloads/idmapper.py"><tt class="xref download docutils literal"><span class="pre">idmapper.py</span></tt></a></td>
+<td><a class="reference download internal" href="../_downloads/idreducer.py"><tt class="xref download docutils literal"><span class="pre">idreducer.py</span></tt></a></td>
 </tr>
 <tr class="row-odd"><td>C++</td>
 <td><a class="reference download internal" href="../_downloads/idmapper.cpp"><tt class="xref download docutils literal"><span class="pre">idmapper.cpp</span></tt></a></td>
@@ -644,19 +644,6 @@ is why the key is split in the mapper shown above.</p>
   <h4>Next topic</h4>
   <p class="topless"><a href="../wmr_py/wmr_py.html"
                         title="next chapter">Counting words with WebMapReduce (WMR): adding efficiency</a></p>
-<div id="searchbox" style="display: none">
-  <h3>Quick search</h3>
-    <form class="search" action="../search.html" method="get">
-      <input type="text" name="q" />
-      <input type="submit" value="Go" />
-      <input type="hidden" name="check_keywords" value="yes" />
-      <input type="hidden" name="area" value="default" />
-    </form>
-    <p class="searchtip" style="font-size: 90%">
-    Enter search terms or a module, class or function name.
-    </p>
-</div>
-<script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
       </div>
       <div class="clearer"></div>
@@ -665,11 +652,8 @@ is why the key is split in the mapper shown above.</p>
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
-          <a href="../genindex.html" title="General Index"
-             >index</a></li>
-        <li class="right" >
           <a href="../wmr_py/wmr_py.html" title="Counting words with WebMapReduce (WMR): adding efficiency"
-             >next</a> |</li>
+             >next</a></li>
         <li class="right" >
           <a href="../MapReduceIntro/MapReduceIntro.html" title="Using Parallelism to Analyze Very Large Files: Google’s Map Reduce Paradigm"
              >previous</a> |</li>
@@ -678,7 +662,7 @@ is why the key is split in the mapper shown above.</p>
     </div>
     <div class="footer">
         &copy; Copyright This work is licensed under a Creative Commons Attribution-ShareAlike 3.0 Unported License.
-      Last updated on Nov 13, 2012.
+      Last updated on Mar 03, 2016.
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
     </div>
   </body>
