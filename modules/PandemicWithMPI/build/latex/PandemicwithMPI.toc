@@ -1,0 +1,64 @@
+\select@language {english}
+\contentsline {chapter}{\numberline {1}Infectious Disease}{2}{chapter.1}
+\contentsline {chapter}{\numberline {2}Program Structure}{7}{chapter.2}
+\contentsline {section}{\numberline {2.1}Program Structure}{7}{section.2.1}
+\contentsline {section}{\numberline {2.2}Pandemic.c}{7}{section.2.2}
+\contentsline {subsection}{\numberline {2.2.1}main()}{7}{subsection.2.2.1}
+\contentsline {chapter}{\numberline {3}Data Structures}{11}{chapter.3}
+\contentsline {section}{\numberline {3.1}global\_t struct}{11}{section.3.1}
+\contentsline {section}{\numberline {3.2}our\_t struct}{12}{section.3.2}
+\contentsline {section}{\numberline {3.3}const\_t struct}{14}{section.3.3}
+\contentsline {section}{\numberline {3.4}stats\_t struct}{14}{section.3.4}
+\contentsline {section}{\numberline {3.5}display\_t struct}{15}{section.3.5}
+\contentsline {chapter}{\numberline {4}Initialize Functions}{17}{chapter.4}
+\contentsline {section}{\numberline {4.1}init()}{17}{section.4.1}
+\contentsline {section}{\numberline {4.2}parse\_args()}{18}{section.4.2}
+\contentsline {section}{\numberline {4.3}init\_check()}{19}{section.4.3}
+\contentsline {section}{\numberline {4.4}find\_size()}{19}{section.4.4}
+\contentsline {section}{\numberline {4.5}allocate\_array}{21}{section.4.5}
+\contentsline {section}{\numberline {4.6}init\_array()}{22}{section.4.6}
+\contentsline {chapter}{\numberline {5}Infection Functions}{26}{chapter.5}
+\contentsline {section}{\numberline {5.1}find\_infected}{26}{section.5.1}
+\contentsline {section}{\numberline {5.2}share\_infected}{27}{section.5.2}
+\contentsline {chapter}{\numberline {6}Display Functions}{30}{chapter.6}
+\contentsline {section}{\numberline {6.1}init\_display}{30}{section.6.1}
+\contentsline {section}{\numberline {6.2}share\_location}{30}{section.6.2}
+\contentsline {section}{\numberline {6.3}do\_display}{31}{section.6.3}
+\contentsline {section}{\numberline {6.4}close\_display}{31}{section.6.4}
+\contentsline {section}{\numberline {6.5}throttle}{31}{section.6.5}
+\contentsline {chapter}{\numberline {7}Core Functions}{33}{chapter.7}
+\contentsline {section}{\numberline {7.1}move()}{33}{section.7.1}
+\contentsline {section}{\numberline {7.2}susceptible()}{35}{section.7.2}
+\contentsline {section}{\numberline {7.3}infected()}{37}{section.7.3}
+\contentsline {section}{\numberline {7.4}update\_days\_infected()}{39}{section.7.4}
+\contentsline {chapter}{\numberline {8}Finish Functions}{40}{chapter.8}
+\contentsline {section}{\numberline {8.1}show\_results()}{40}{section.8.1}
+\contentsline {section}{\numberline {8.2}cleanup}{40}{section.8.2}
+\contentsline {chapter}{\numberline {9}Build and Run the Parallel Version}{42}{chapter.9}
+\contentsline {section}{\numberline {9.1}Build}{43}{section.9.1}
+\contentsline {section}{\numberline {9.2}Run}{43}{section.9.2}
+\contentsline {section}{\numberline {9.3}To think about}{43}{section.9.3}
+\contentsline {chapter}{\numberline {10}Including OpenMP}{44}{chapter.10}
+\contentsline {section}{\numberline {10.1}In Initialize.h}{44}{section.10.1}
+\contentsline {subsection}{\numberline {10.1.1}init\_array()}{44}{subsection.10.1.1}
+\contentsline {section}{\numberline {10.2}In Core.h}{45}{section.10.2}
+\contentsline {subsection}{\numberline {10.2.1}move()}{45}{subsection.10.2.1}
+\contentsline {subsection}{\numberline {10.2.2}susceptible()}{45}{subsection.10.2.2}
+\contentsline {subsection}{\numberline {10.2.3}infected()}{45}{subsection.10.2.3}
+\contentsline {subsection}{\numberline {10.2.4}update\_days\_infected()}{46}{subsection.10.2.4}
+\contentsline {chapter}{\numberline {11}Including CUDA}{47}{chapter.11}
+\contentsline {section}{\numberline {11.1}In Defaults.h}{47}{section.11.1}
+\contentsline {subsection}{\numberline {11.1.1}cuda\_t struct}{47}{subsection.11.1.1}
+\contentsline {section}{\numberline {11.2}In Initialize.h}{49}{section.11.2}
+\contentsline {subsection}{\numberline {11.2.1}cuda\_init()}{50}{subsection.11.2.1}
+\contentsline {section}{\numberline {11.3}Replace file Core.h with file CUDA.cu}{51}{section.11.3}
+\contentsline {subsection}{\numberline {11.3.1}CUDA Global Variable}{51}{subsection.11.3.1}
+\contentsline {subsection}{\numberline {11.3.2}CUDA Device Functions}{52}{subsection.11.3.2}
+\contentsline {subsection}{\numberline {11.3.3}cuda\_move()}{52}{subsection.11.3.3}
+\contentsline {subsection}{\numberline {11.3.4}cuda\_susceptible()}{52}{subsection.11.3.4}
+\contentsline {subsection}{\numberline {11.3.5}cuda\_infected()}{57}{subsection.11.3.5}
+\contentsline {subsection}{\numberline {11.3.6}cuda\_update\_days\_infected()}{59}{subsection.11.3.6}
+\contentsline {section}{\numberline {11.4}Change function calls in Pandemic.c File}{59}{section.11.4}
+\contentsline {subsection}{\numberline {11.4.1}cuda\_run()}{60}{subsection.11.4.1}
+\contentsline {section}{\numberline {11.5}In Finalize.h}{63}{section.11.5}
+\contentsline {subsection}{\numberline {11.5.1}cuda\_finish()}{63}{subsection.11.5.1}

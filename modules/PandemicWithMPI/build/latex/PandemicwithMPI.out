@@ -1,0 +1,47 @@
+\BOOKMARK [0][-]{chapter.1}{Infectious Disease}{}% 1
+\BOOKMARK [0][-]{chapter.2}{Program Structure}{}% 2
+\BOOKMARK [1][-]{section.2.1}{Program Structure}{chapter.2}% 3
+\BOOKMARK [1][-]{section.2.2}{Pandemic.c}{chapter.2}% 4
+\BOOKMARK [0][-]{chapter.3}{Data Structures}{}% 5
+\BOOKMARK [1][-]{section.3.1}{global\137t struct}{chapter.3}% 6
+\BOOKMARK [1][-]{section.3.2}{our\137t struct}{chapter.3}% 7
+\BOOKMARK [1][-]{section.3.3}{const\137t struct}{chapter.3}% 8
+\BOOKMARK [1][-]{section.3.4}{stats\137t struct}{chapter.3}% 9
+\BOOKMARK [1][-]{section.3.5}{display\137t struct}{chapter.3}% 10
+\BOOKMARK [0][-]{chapter.4}{Initialize Functions}{}% 11
+\BOOKMARK [1][-]{section.4.1}{init\(\)}{chapter.4}% 12
+\BOOKMARK [1][-]{section.4.2}{parse\137args\(\)}{chapter.4}% 13
+\BOOKMARK [1][-]{section.4.3}{init\137check\(\)}{chapter.4}% 14
+\BOOKMARK [1][-]{section.4.4}{find\137size\(\)}{chapter.4}% 15
+\BOOKMARK [1][-]{section.4.5}{allocate\137array}{chapter.4}% 16
+\BOOKMARK [1][-]{section.4.6}{init\137array\(\)}{chapter.4}% 17
+\BOOKMARK [0][-]{chapter.5}{Infection Functions}{}% 18
+\BOOKMARK [1][-]{section.5.1}{find\137infected}{chapter.5}% 19
+\BOOKMARK [1][-]{section.5.2}{share\137infected}{chapter.5}% 20
+\BOOKMARK [0][-]{chapter.6}{Display Functions}{}% 21
+\BOOKMARK [1][-]{section.6.1}{init\137display}{chapter.6}% 22
+\BOOKMARK [1][-]{section.6.2}{share\137location}{chapter.6}% 23
+\BOOKMARK [1][-]{section.6.3}{do\137display}{chapter.6}% 24
+\BOOKMARK [1][-]{section.6.4}{close\137display}{chapter.6}% 25
+\BOOKMARK [1][-]{section.6.5}{throttle}{chapter.6}% 26
+\BOOKMARK [0][-]{chapter.7}{Core Functions}{}% 27
+\BOOKMARK [1][-]{section.7.1}{move\(\)}{chapter.7}% 28
+\BOOKMARK [1][-]{section.7.2}{susceptible\(\)}{chapter.7}% 29
+\BOOKMARK [1][-]{section.7.3}{infected\(\)}{chapter.7}% 30
+\BOOKMARK [1][-]{section.7.4}{update\137days\137infected\(\)}{chapter.7}% 31
+\BOOKMARK [0][-]{chapter.8}{Finish Functions}{}% 32
+\BOOKMARK [1][-]{section.8.1}{show\137results\(\)}{chapter.8}% 33
+\BOOKMARK [1][-]{section.8.2}{cleanup}{chapter.8}% 34
+\BOOKMARK [0][-]{chapter.9}{Build and Run the Parallel Version}{}% 35
+\BOOKMARK [1][-]{section.9.1}{Build}{chapter.9}% 36
+\BOOKMARK [1][-]{section.9.2}{Run}{chapter.9}% 37
+\BOOKMARK [1][-]{section.9.3}{To think about}{chapter.9}% 38
+\BOOKMARK [0][-]{chapter.10}{Including OpenMP}{}% 39
+\BOOKMARK [1][-]{section.10.1}{In Initialize.h}{chapter.10}% 40
+\BOOKMARK [1][-]{section.10.2}{In Core.h}{chapter.10}% 41
+\BOOKMARK [0][-]{chapter.11}{Including CUDA}{}% 42
+\BOOKMARK [1][-]{section.11.1}{In Defaults.h}{chapter.11}% 43
+\BOOKMARK [1][-]{section.11.2}{In Initialize.h}{chapter.11}% 44
+\BOOKMARK [1][-]{section.11.3}{Replace file Core.h with file CUDA.cu}{chapter.11}% 45
+\BOOKMARK [1][-]{section.11.4}{Change function calls in Pandemic.c File}{chapter.11}% 46
+\BOOKMARK [1][-]{section.11.5}{In Finalize.h}{chapter.11}% 47
