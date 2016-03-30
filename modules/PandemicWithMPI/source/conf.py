@@ -116,7 +116,7 @@ html_theme = 'default'
 
 # The name for this set of Sphinx documents.  If None, it defaults to
 # "<project> v<release> documentation".
-html_title = 'Pandemic With MPI'
+html_title = 'Pandemic Exemplar With MPI'
 
 # A shorter title for the navigation bar.  Default is the same as html_title.
 #html_short_title = None
@@ -145,6 +145,9 @@ html_static_path = ['_static']
 
 # Custom sidebar templates, maps document names to template names.
 #html_sidebars = {}
+html_sidebars = {
+   '**': ['localtoc.html', 'relations.html'],
+   }
 
 # Additional templates that should be rendered to pages, maps page names to
 # template names.
