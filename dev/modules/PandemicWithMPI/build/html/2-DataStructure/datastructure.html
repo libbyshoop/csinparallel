@@ -34,11 +34,8 @@
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
-          <a href="../genindex.html" title="General Index"
-             accesskey="I">index</a></li>
-        <li class="right" >
           <a href="../3-Initialize/initialize.html" title="Initialize Functions"
-             accesskey="N">next</a> |</li>
+             accesskey="N">next</a></li>
         <li class="right" >
           <a href="../1-ProgramStructure/programstructure.html" title="Program Structure"
              accesskey="P">previous</a> |</li>
@@ -228,12 +225,12 @@ other threads in my process use.</p>
 <div class="highlight-c"><div class="highlight"><pre><span class="c1">// Data being used for the X display</span>
 <span class="k">struct</span> <span class="n">display_t</span> 
 <span class="p">{</span>
-<span class="cp">    #ifdef TEXT_DISPLAY</span>
+    <span class="cp">#ifdef TEXT_DISPLAY</span>
     <span class="c1">// Array of character arrays for text display </span>
     <span class="kt">char</span> <span class="o">**</span><span class="n">environment</span><span class="p">;</span>
-<span class="cp">    #endif</span>
+    <span class="cp">#endif</span>
 
-<span class="cp">    #ifdef X_DISPLAY</span>
+    <span class="cp">#ifdef X_DISPLAY</span>
     <span class="c1">// Declare X-related variables </span>
     <span class="n">Display</span>         <span class="o">*</span><span class="n">display</span><span class="p">;</span>
     <span class="n">Window</span>          <span class="n">window</span><span class="p">;</span>
@@ -249,7 +246,7 @@ other threads in my process use.</p>
     <span class="kt">char</span>            <span class="o">*</span><span class="n">green</span><span class="p">;</span>
     <span class="kt">char</span>            <span class="o">*</span><span class="n">black</span><span class="p">;</span>
     <span class="kt">char</span>            <span class="o">*</span><span class="n">white</span><span class="p">;</span>
-<span class="cp">    #endif</span>
+    <span class="cp">#endif</span>
 <span class="p">};</span>
 </pre></div>
 </div>
@@ -327,11 +324,8 @@ other threads in my process use.</p>
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
-          <a href="../genindex.html" title="General Index"
-             >index</a></li>
-        <li class="right" >
           <a href="../3-Initialize/initialize.html" title="Initialize Functions"
-             >next</a> |</li>
+             >next</a></li>
         <li class="right" >
           <a href="../1-ProgramStructure/programstructure.html" title="Program Structure"
              >previous</a> |</li>

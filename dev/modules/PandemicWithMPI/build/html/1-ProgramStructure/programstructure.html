@@ -34,11 +34,8 @@
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
-          <a href="../genindex.html" title="General Index"
-             accesskey="I">index</a></li>
-        <li class="right" >
           <a href="../2-DataStructure/datastructure.html" title="Data Structures"
-             accesskey="N">next</a> |</li>
+             accesskey="N">next</a></li>
         <li class="right" >
           <a href="../0-Introduction/introduction.html" title="Infectious Disease"
              accesskey="P">previous</a> |</li>
@@ -147,16 +144,16 @@
 </pre></div>
 </div>
 <p>Then, if display is enabled, we display the infection status. In other words, we display everyone&#8217;s location and their states of infection.</p>
-<div class="highlight-c"><div class="highlight"><pre><span class="cp">        /**************** In Display.h *****************/</span>
-<span class="cp">        #if defined(X_DISPLAY) || defined(TEXT_DISPLAY)</span>
+<div class="highlight-c"><div class="highlight"><pre>        <span class="cm">/**************** In Display.h *****************/</span>
+        <span class="cp">#if defined(X_DISPLAY) || defined(TEXT_DISPLAY)</span>
 
         <span class="n">share_display_info</span><span class="p">(</span><span class="o">&amp;</span><span class="n">global</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">our</span><span class="p">);</span>
 
         <span class="n">do_display</span><span class="p">(</span><span class="o">&amp;</span><span class="n">global</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">our</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">constant</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">dpy</span><span class="p">);</span>
 
         <span class="n">throttle</span><span class="p">(</span><span class="o">&amp;</span><span class="n">constant</span><span class="p">);</span>
-<span class="cp">        </span>
-<span class="cp">        #endif</span>
+        
+        <span class="cp">#endif</span>
         <span class="cm">/***********************************************/</span>
 </pre></div>
 </div>
@@ -233,11 +230,8 @@
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
-          <a href="../genindex.html" title="General Index"
-             >index</a></li>
-        <li class="right" >
           <a href="../2-DataStructure/datastructure.html" title="Data Structures"
-             >next</a> |</li>
+             >next</a></li>
         <li class="right" >
           <a href="../0-Introduction/introduction.html" title="Infectious Disease"
              >previous</a> |</li>

@@ -34,11 +34,8 @@
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
-          <a href="../genindex.html" title="General Index"
-             accesskey="I">index</a></li>
-        <li class="right" >
           <a href="../4-Infection/infection.html" title="Infection Functions"
-             accesskey="N">next</a> |</li>
+             accesskey="N">next</a></li>
         <li class="right" >
           <a href="../2-DataStructure/datastructure.html" title="Data Structures"
              accesskey="P">previous</a> |</li>
@@ -66,24 +63,24 @@
 <img alt="image" src="../_images/img-51.png" />
 </div>
 <p>Here we see one process figuring out its rank. It does so by calling</p>
-<div class="highlight-c"><div class="highlight"><pre><span class="cp">    #ifdef _MPI</span>
+<div class="highlight-c"><div class="highlight"><pre>    <span class="cp">#ifdef _MPI</span>
     <span class="n">MPI_Comm_rank</span><span class="p">(</span><span class="n">MPI_COMM_WORLD</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">our</span><span class="o">-&gt;</span><span class="n">our_rank</span><span class="p">);</span>
 </pre></div>
 </div>
 <p>function. This function checks the MPI “world” (the “communicator” of all the MPI processes, MPI_COMM_WORLD). You pass the address of the variable for the process’s rank to the function as the second argument using the ampersand (&amp;).</p>
 <p>If we only have 1 process total (i.e., if we are not using distributed memory), then the rank of the process will be 0, which we set in the code as <strong>our_rank = 0</strong>.</p>
-<div class="highlight-c"><div class="highlight"><pre><span class="cp">    #else</span>
+<div class="highlight-c"><div class="highlight"><pre>    <span class="cp">#else</span>
     <span class="n">our</span><span class="o">-&gt;</span><span class="n">our_rank</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
 </pre></div>
 </div>
 <p>We also see another process figuring out how many processes there are. It does so by calling</p>
-<div class="highlight-c"><div class="highlight"><pre><span class="cp">    #ifdef _MPI</span>
+<div class="highlight-c"><div class="highlight"><pre>    <span class="cp">#ifdef _MPI</span>
     <span class="n">MPI_Comm_size</span><span class="p">(</span><span class="n">MPI_COMM_WORLD</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">global</span><span class="o">-&gt;</span><span class="n">total_number_of_processes</span><span class="p">);</span>
 </pre></div>
 </div>
 <p>function. Just as with <strong>MPI_Comm_rank</strong>, you pass the communicator of all the processes and the address of the variable for the number of processes.</p>
 <p>If we have only 1 process total, we set the number of processes by calling total_number_of_processes = 1.</p>
-<div class="highlight-c"><div class="highlight"><pre><span class="cp">    #else</span>
+<div class="highlight-c"><div class="highlight"><pre>    <span class="cp">#else</span>
     <span class="n">global</span><span class="o">-&gt;</span><span class="n">total_number_of_processes</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
 </pre></div>
 </div>
@@ -92,10 +89,10 @@
     <span class="n">parse_args</span><span class="p">(</span><span class="n">global</span><span class="p">,</span> <span class="n">constant</span><span class="p">,</span> <span class="n">argc</span><span class="p">,</span> <span class="n">argv</span><span class="p">);</span>
     <span class="n">allocate_array</span><span class="p">(</span><span class="n">global</span><span class="p">,</span> <span class="n">our</span><span class="p">,</span> <span class="n">constant</span><span class="p">,</span> <span class="n">dpy</span><span class="p">);</span>
     <span class="n">init_array</span><span class="p">(</span><span class="n">our</span><span class="p">,</span> <span class="n">constant</span><span class="p">);</span>
-<span class="cp">    // if use X_DISPLAY, do init_display()</span>
-<span class="cp">    #ifdef X_DISPLAY</span>
+    <span class="c1">// if use X_DISPLAY, do init_display()</span>
+    <span class="cp">#ifdef X_DISPLAY</span>
         <span class="n">init_display</span><span class="p">(</span><span class="n">our</span><span class="p">,</span> <span class="n">constant</span><span class="p">,</span> <span class="n">dpy</span><span class="p">);</span>
-<span class="cp">    #endif</span>
+    <span class="cp">#endif</span>
 </pre></div>
 </div>
 </div>
@@ -310,11 +307,8 @@ people and set the count of its susceptible people</p>
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
-          <a href="../genindex.html" title="General Index"
-             >index</a></li>
-        <li class="right" >
           <a href="../4-Infection/infection.html" title="Infection Functions"
-             >next</a> |</li>
+             >next</a></li>
         <li class="right" >
           <a href="../2-DataStructure/datastructure.html" title="Data Structures"
              >previous</a> |</li>

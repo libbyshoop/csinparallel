@@ -20,9 +20,9 @@ performance cluster resources.
 **Pre-assessment Rubric**
 
 This rubric is to gauge students’ initial knowledge and experience with
-the materials presented in this module. Students are asked to rate their
+the materials presented in this module. Students can be asked to rate their
 knowledge and experience on the following scale and in the following
-subject areas:
+subject areas, bith before and after they complete this module.
 
    **Scale**
 
@@ -51,6 +51,9 @@ subject areas:
    * Using a cluster
 
    * Scaling parallel code
+
+The goal of the reading and exercises in this module are to see gains in the above subject areas
+after completing it.
 
 **Model**
 
@@ -220,8 +223,7 @@ Amdahl’s Law posits that as the number of processors devoted to the
 problem increases, the advantages of parallelism diminish as the serial
 regions become the only part of the code that take significant time to
 execute. In other words, a parallel program can only execute as fast as
-its serial regions. Amdahl’s Law is represented as an equation in Figure
-2.
+its serial regions. Amdahl’s Law is represented as an equation as follows:
 
 Speedup = :math:`\frac{1}{1-P+\frac{P}{N}}`
 
@@ -235,7 +237,6 @@ where
 
 ***********************************************************************
 
-**Figure 2: Amdahl’s Law**
 
 Amdahl’s Law provides a strong and fundamental argument against
 utilizing parallel processing to achieve speedup. However, it does not
@@ -246,7 +247,7 @@ available to the program. The advantages of parallelism for scaling are
 summarized by John Gustafson in Gustafson’s Law, which says that bigger
 problems can be modeled in the same amount of time as smaller problems
 if the processor count is increased. Gustafson’s Law is represented as
-an equation in Figure 3.
+follows:
 
 Speedup(N) = :math:`N–(1–P)*(N–1)`
 
@@ -258,7 +259,6 @@ where
 
 ***********************************************************************
 
-**Figure 3: Gustafson’s Law**
 
 Amdahl’s Law reveals the limitations of what is known as “strong
 scaling”, in which the number of processes remains constant as the
@@ -274,7 +274,8 @@ The code in this module is written in the C programming language, chosen
 for its ubiquity in scientific computing as well as its well-defined use
 of MPI and OpenMP.
 
-The code is attached to this module in pandemic.zip. After unpacking
+The code is attached to this module in pandemic-MPI.zip (there will be a link to download
+it in the next section). After unpacking
 this using an archive utility, use of the code will require the use of a
 command line terminal. C is a compiled language, so it must be run
 through a compiler first to check for any syntax errors in the code. To

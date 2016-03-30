@@ -34,11 +34,8 @@
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
-          <a href="../genindex.html" title="General Index"
-             accesskey="I">index</a></li>
-        <li class="right" >
           <a href="../7-Finalize/finalize.html" title="Finish Functions"
-             accesskey="N">next</a> |</li>
+             accesskey="N">next</a></li>
         <li class="right" >
           <a href="../5-Display/display.html" title="Display Functions"
              accesskey="P">previous</a> |</li>
@@ -138,11 +135,11 @@
 </div>
 <p>This is where a large chunk of the algorithm’s computation occurs. Each susceptible person must be computed with each infected person to determine how many infected people are nearby each person. Two nested loops means many computations. In this step, the computation is fairly simple, however. The thread simply increments the <strong>my_num_infected_nearby</strong> variable.</p>
 <p>Note in the code that if the number of infected nearby is greater than or equal to 1 and we have <strong>SHOW_RESULTS</strong> enabled, we increment the <strong>our_num_infection_attempts</strong> variable. This helps us keep track of the number of attempted infections, which will help us calculate the actual contagiousness of the disease at the end of the simulation.</p>
-<div class="highlight-c"><div class="highlight"><pre><span class="cp">            // The thread updates stats counter</span>
-<span class="cp">            #ifdef SHOW_RESULTS</span>
+<div class="highlight-c"><div class="highlight"><pre>            <span class="c1">// The thread updates stats counter</span>
+            <span class="cp">#ifdef SHOW_RESULTS</span>
             <span class="k">if</span><span class="p">(</span><span class="n">my_num_infected_nearby</span> <span class="o">&gt;=</span> <span class="mi">1</span><span class="p">)</span>
                 <span class="n">stats</span><span class="o">-&gt;</span><span class="n">our_num_infection_attempts</span><span class="o">++</span><span class="p">;</span>
-<span class="cp">            #endif</span>
+            <span class="cp">#endif</span>
 </pre></div>
 </div>
 <p>If there is at least one infected person nearby, and a random number less than 100 is less than or equal to the contagiousness factor, then</p>
@@ -166,10 +163,10 @@
 <img alt="image" src="../_images/img-22.png" />
 </div>
 <p>Note in the code that if the infection succeeds and we have <strong>SHOW_RESULTS</strong> enabled, we increment the <strong>our_num_infections variable</strong>. This helps us keep track of the actual number of infections, which will help us calculate the actual contagiousness of the disease at the end of the simulation.</p>
-<div class="highlight-c"><div class="highlight"><pre><span class="cp">                // The thread updates stats counter</span>
-<span class="cp">                #ifdef SHOW_RESULTS</span>
+<div class="highlight-c"><div class="highlight"><pre>                <span class="c1">// The thread updates stats counter</span>
+                <span class="cp">#ifdef SHOW_RESULTS</span>
                 <span class="n">stats</span><span class="o">-&gt;</span><span class="n">our_num_infections</span><span class="o">++</span><span class="p">;</span>
-<span class="cp">                #endif</span>
+                <span class="cp">#endif</span>
 </pre></div>
 </div>
 </div>
@@ -187,10 +184,10 @@
 </pre></div>
 </div>
 <p>Note in the code that if we have <strong>SHOW_RESULTS</strong> enabled, we increment the <strong>our_num_recovery_attempts</strong> variable. This helps us keep track of the number of attempted recoveries, which will help us calculate the actual deadliness of the disease at the end of the simulation.</p>
-<div class="highlight-c"><div class="highlight"><pre><span class="cp">            // The thread updates stats counter</span>
-<span class="cp">            #ifdef SHOW_RESULTS</span>
+<div class="highlight-c"><div class="highlight"><pre>            <span class="c1">// The thread updates stats counter</span>
+            <span class="cp">#ifdef SHOW_RESULTS</span>
                 <span class="n">stats</span><span class="o">-&gt;</span><span class="n">our_num_recovery_attempts</span><span class="o">++</span><span class="p">;</span>
-<span class="cp">            #endif</span>
+            <span class="cp">#endif</span>
 </pre></div>
 </div>
 <p>If a random number less than 100 is less than the deadliness factor,</p>
@@ -227,10 +224,10 @@
 </div>
 <p>If deadliness fails, then immunity succeeds.</p>
 <p>Note in the code that if the person dies and we have <strong>SHOW_RESULTS</strong> enabled, we increment the <strong>our_num_deaths</strong> variable. This helps us keep track of the actual number of deaths, which will help us calculate the actual deadliness of the disease at the end of the simulation.</p>
-<div class="highlight-c"><div class="highlight"><pre><span class="cp">                // The thread updates stats counter</span>
-<span class="cp">                #ifdef SHOW_RESULTS</span>
+<div class="highlight-c"><div class="highlight"><pre>                <span class="c1">// The thread updates stats counter</span>
+                <span class="cp">#ifdef SHOW_RESULTS</span>
                     <span class="n">stats</span><span class="o">-&gt;</span><span class="n">our_num_deaths</span><span class="o">++</span><span class="p">;</span>
-<span class="cp">                #endif</span>
+                <span class="cp">#endif</span>
 </pre></div>
 </div>
 </div>
@@ -303,11 +300,8 @@
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
-          <a href="../genindex.html" title="General Index"
-             >index</a></li>
-        <li class="right" >
           <a href="../7-Finalize/finalize.html" title="Finish Functions"
-             >next</a> |</li>
+             >next</a></li>
         <li class="right" >
           <a href="../5-Display/display.html" title="Display Functions"
              >previous</a> |</li>
