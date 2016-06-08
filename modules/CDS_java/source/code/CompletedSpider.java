@@ -78,6 +78,8 @@ public class CompletedSpider {
 	 */
 	public void processPage(String url) {
 		String html = helper.retrieve(url);
+		if(html == null)
+		    return;
 		
 		// TODO: extract all the links from the url
 		// For each link that isn't an image, increment the
