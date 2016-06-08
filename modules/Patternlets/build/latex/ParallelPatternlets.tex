@@ -13,7 +13,7 @@
 
 
 \title{Parallel Patternlets}
-\date{February 28, 2016}
+\date{June 08, 2016}
 \release{}
 \author{CSinParallel Project}
 \newcommand{\sphinxlogo}{}
@@ -275,52 +275,7 @@ for its variables.  This is why we call it single program, multiple data.
 \emph{file: patternlets/MPI/00.spmd/spmd.c}
 
 
-\section{1. The Barrier Coordination Pattern}
-\label{MessagePassing/MPI_Patternlets:the-barrier-coordination-pattern}
-\begin{Verbatim}[commandchars=\\\{\}]
-\PYG{c+cm}{/* barrier.c}
-\PYG{c+cm}{ * ... illustrates the behavior of MPI\PYGZus{}Barrier() ...}
-\PYG{c+cm}{ * Joel Adams, Calvin College, May 2013.}
-\PYG{c+cm}{ *}
-\PYG{c+cm}{ * Usage: mpirun -np 8 ./barrier}
-\PYG{c+cm}{ *}
-\PYG{c+cm}{ * Exercise: }
-\PYG{c+cm}{ *  - Compile; then run the program several times, }
-\PYG{c+cm}{ *     noting the intermixed outputs}
-\PYG{c+cm}{ *  - Uncomment the MPI\PYGZus{}Barrier() call; then recompile and rerun,}
-\PYG{c+cm}{ *     noting how the output changes.}
-\PYG{c+cm}{ *  - Explain what effect MPI\PYGZus{}Barrier() has on process behavior.}
-\PYG{c+cm}{ */}
-
-\PYG{c+cp}{\PYGZsh{}}\PYG{c+cp}{include \PYGZlt{}stdio.h\PYGZgt{}   }\PYG{c+c1}{// printf()}
-\PYG{c+cp}{\PYGZsh{}}\PYG{c+cp}{include \PYGZlt{}mpi.h\PYGZgt{}     }\PYG{c+c1}{// MPI}
-
-\PYG{k+kt}{int} \PYG{n+nf}{main}\PYG{p}{(}\PYG{k+kt}{int} \PYG{n}{argc}\PYG{p}{,} \PYG{k+kt}{char}\PYG{o}{*}\PYG{o}{*} \PYG{n}{argv}\PYG{p}{)} \PYG{p}{\PYGZob{}}
-    \PYG{k+kt}{int} \PYG{n}{id} \PYG{o}{=} \PYG{o}{-}\PYG{l+m+mi}{1}\PYG{p}{,} \PYG{n}{numProcesses} \PYG{o}{=} \PYG{o}{-}\PYG{l+m+mi}{1}\PYG{p}{,} \PYG{n}{length} \PYG{o}{=} \PYG{o}{-}\PYG{l+m+mi}{1}\PYG{p}{;}
-    \PYG{k+kt}{char} \PYG{n}{myHostName}\PYG{p}{[}\PYG{n}{MPI\PYGZus{}MAX\PYGZus{}PROCESSOR\PYGZus{}NAME}\PYG{p}{]}\PYG{p}{;}
-
-    \PYG{n}{MPI\PYGZus{}Init}\PYG{p}{(}\PYG{o}{\PYGZam{}}\PYG{n}{argc}\PYG{p}{,} \PYG{o}{\PYGZam{}}\PYG{n}{argv}\PYG{p}{)}\PYG{p}{;}
-    \PYG{n}{MPI\PYGZus{}Comm\PYGZus{}rank}\PYG{p}{(}\PYG{n}{MPI\PYGZus{}COMM\PYGZus{}WORLD}\PYG{p}{,} \PYG{o}{\PYGZam{}}\PYG{n}{id}\PYG{p}{)}\PYG{p}{;}
-    \PYG{n}{MPI\PYGZus{}Comm\PYGZus{}size}\PYG{p}{(}\PYG{n}{MPI\PYGZus{}COMM\PYGZus{}WORLD}\PYG{p}{,} \PYG{o}{\PYGZam{}}\PYG{n}{numProcesses}\PYG{p}{)}\PYG{p}{;}
-    \PYG{n}{MPI\PYGZus{}Get\PYGZus{}processor\PYGZus{}name} \PYG{p}{(}\PYG{n}{myHostName}\PYG{p}{,} \PYG{o}{\PYGZam{}}\PYG{n}{length}\PYG{p}{)}\PYG{p}{;}
-
-    \PYG{n}{printf}\PYG{p}{(}\PYG{l+s}{"}\PYG{l+s}{Process \PYGZsh{}\PYGZpc{}d of \PYGZpc{}d on \PYGZpc{}s is BEFORE the barrier.}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s}{"}\PYG{p}{,}
-             \PYG{n}{id}\PYG{p}{,} \PYG{n}{numProcesses}\PYG{p}{,} \PYG{n}{myHostName}\PYG{p}{)}\PYG{p}{;}
-
-\PYG{c+c1}{//    MPI\PYGZus{}Barrier(MPI\PYGZus{}COMM\PYGZus{}WORLD); }
-
-    \PYG{n}{printf}\PYG{p}{(}\PYG{l+s}{"}\PYG{l+s}{Process \PYGZsh{}\PYGZpc{}d of \PYGZpc{}d on \PYGZpc{}s is AFTER the barrier.}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s}{"}\PYG{p}{,}
-             \PYG{n}{id}\PYG{p}{,} \PYG{n}{numProcesses}\PYG{p}{,} \PYG{n}{myHostName}\PYG{p}{)}\PYG{p}{;}
-
-    \PYG{n}{MPI\PYGZus{}Finalize}\PYG{p}{(}\PYG{p}{)}\PYG{p}{;}
-    \PYG{k}{return} \PYG{l+m+mi}{0}\PYG{p}{;}
-\PYG{p}{\PYGZcb{}}
-\end{Verbatim}
-
-\emph{file: patternlets/MPI/01.barrier/masterWorker.c}
-
-
-\section{2. The Master-Worker Implementation Strategy Pattern}
+\section{01. The Master-Worker Implementation Strategy Pattern}
 \label{MessagePassing/MPI_Patternlets:the-master-worker-implementation-strategy-pattern}
 \begin{Verbatim}[commandchars=\\\{\}]
 \PYG{c+cm}{/* masterWorker.c}
@@ -360,10 +315,10 @@ for its variables.  This is why we call it single program, multiple data.
 \PYG{p}{\PYGZcb{}}
 \end{Verbatim}
 
-\emph{file: patternlets/MPI/02.masterWorker/masterWorker.c}
+\emph{file: patternlets/MPI/01.masterWorker/masterWorker.c}
 
 
-\section{3. Message passing 1, using Send-Receive of a single value}
+\section{02. Message passing 1, using Send-Receive of a single value}
 \label{MessagePassing/MPI_Patternlets:message-passing-1-using-send-receive-of-a-single-value}
 \begin{Verbatim}[commandchars=\\\{\}]
 \PYG{c+cm}{/* messagePassing.c}
@@ -420,10 +375,10 @@ for its variables.  This is why we call it single program, multiple data.
 \PYG{p}{\PYGZcb{}}
 \end{Verbatim}
 
-\emph{file: patternlets/MPI/03.messagePassing/messagePassing.c}
+\emph{file: patternlets/MPI/02.messagePassing/messagePassing.c}
 
 
-\section{4. Message passing 2,  using Send-Receive of an array of values}
+\section{03. Message passing 2,  using Send-Receive of an array of values}
 \label{MessagePassing/MPI_Patternlets:message-passing-2-using-send-receive-of-an-array-of-values}
 \begin{Verbatim}[commandchars=\\\{\}]
 \PYG{c+cm}{/* messagePassing2.c}
@@ -491,10 +446,10 @@ for its variables.  This is why we call it single program, multiple data.
 \PYG{p}{\PYGZcb{}}
 \end{Verbatim}
 
-\emph{file: patternlets/MPI/04.messagePassing2/messagePassing2.c}
+\emph{file: patternlets/MPI/03.messagePassing2/messagePassing2.c}
 
 
-\section{5. Message passing 3,  using Send-Receive with master-worker pattern}
+\section{04. Message passing 3,  using Send-Receive with master-worker pattern}
 \label{MessagePassing/MPI_Patternlets:message-passing-3-using-send-receive-with-master-worker-pattern}
 \begin{Verbatim}[commandchars=\\\{\}]
 \PYG{c+cm}{/* messagePassing3.c}
@@ -575,11 +530,11 @@ for its variables.  This is why we call it single program, multiple data.
 \PYG{p}{\PYGZcb{}}
 \end{Verbatim}
 
-\emph{file: patternlets/MPI/05.messagePassing3/messagePassing3.c}
+\emph{file: patternlets/MPI/04.messagePassing3/messagePassing3.c}
 
 
-\section{6 (text). Data Decomposition: on \emph{equal-sized chunks} using parallel-for}
-\label{MessagePassing/MPI_Patternlets:text-data-decomposition-on-equal-sized-chunks-using-parallel-for}
+\section{05. Data Decomposition: on \emph{equal-sized chunks} using parallel-for}
+\label{MessagePassing/MPI_Patternlets:data-decomposition-on-equal-sized-chunks-using-parallel-for}
 In this example, the data being decomposed is simply the set of integers
 from zero to REPS * numProcesses, which are used in the for loop.
 
@@ -630,104 +585,11 @@ from zero to REPS * numProcesses, which are used in the for loop.
 \PYG{p}{\PYGZcb{}}
 \end{Verbatim}
 
-\emph{file: patternlets/MPI/06.parallelLoop-equalChunks/textual/parallelLoopEqualChunks.c}
+\emph{file: patternlets/MPI/05.parallelLoop-equalChunks/parallelLoopEqualChunks.c}
 
 
-\section{6 (visual). Data Decomposition: on \emph{equal-sized chunks} using parallel-for}
-\label{MessagePassing/MPI_Patternlets:visual-data-decomposition-on-equal-sized-chunks-using-parallel-for}
-In this example, we can visually see how the slicing of data used in iterations
-of a nested for loop is working.  Run it to see the effect!
-
-\begin{Verbatim}[commandchars=\\\{\}]
-\PYG{c+cm}{/* parallelForBlocks.c is a graphical illustration of}
-\PYG{c+cm}{ *  the 'blocks' version of the parallel for loop design pattern,}
-\PYG{c+cm}{ *  using Argonne Labs' MPE graphics library for X11 systems.}
-\PYG{c+cm}{ *}
-\PYG{c+cm}{ * Summer 2013, Joel Adams, Calvin College.}
-\PYG{c+cm}{ *}
-\PYG{c+cm}{ * Usage: mpirun -np N ./parallelForBlocks}
-\PYG{c+cm}{ *        Click the mouse in the window to terminate the program.}
-\PYG{c+cm}{ *        You must have an X11 server running.}
-\PYG{c+cm}{ *}
-\PYG{c+cm}{ * Exercise: Run the program, varying N from 1 - 32,}
-\PYG{c+cm}{ *            and compare to the 'Stripes' version...}
-\PYG{c+cm}{ */}
-
-\PYG{c+cp}{\PYGZsh{}}\PYG{c+cp}{include \PYGZlt{}mpi.h\PYGZgt{}     }\PYG{c+c1}{// MPI}
-\PYG{c+cp}{\PYGZsh{}}\PYG{c+cp}{include \PYGZlt{}mpe.h\PYGZgt{}     }\PYG{c+c1}{// MPE}
-\PYG{c+cp}{\PYGZsh{}}\PYG{c+cp}{include \PYGZlt{}stdlib.h\PYGZgt{}  }\PYG{c+c1}{// getenv() }
-\PYG{c+cp}{\PYGZsh{}}\PYG{c+cp}{include \PYGZlt{}string.h\PYGZgt{}  }\PYG{c+c1}{// strcmp() }
-\PYG{c+cp}{\PYGZsh{}}\PYG{c+cp}{include \PYGZlt{}stdio.h\PYGZgt{}   }\PYG{c+c1}{// printf(), etc.}
-
-\PYG{c+cm}{/* }
-\PYG{c+cm}{ * getDisplay() retrieves the DISPLAY environment info}
-\PYG{c+cm}{ */}
-
-\PYG{k+kt}{char}\PYG{o}{*} \PYG{n+nf}{getDisplay}\PYG{p}{(}\PYG{p}{)} \PYG{p}{\PYGZob{}}
-	\PYG{k+kt}{char} \PYG{o}{*} \PYG{n}{display} \PYG{o}{=} \PYG{n}{getenv}\PYG{p}{(}\PYG{l+s}{"}\PYG{l+s}{DISPLAY}\PYG{l+s}{"}\PYG{p}{)}\PYG{p}{;}
-	\PYG{k}{if} \PYG{p}{(} \PYG{n}{strncmp}\PYG{p}{(}\PYG{n}{display}\PYG{p}{,} \PYG{l+s}{"}\PYG{l+s}{(null)}\PYG{l+s}{"}\PYG{p}{,} \PYG{l+m+mi}{7}\PYG{p}{)} \PYG{o}{=}\PYG{o}{=} \PYG{l+m+mi}{0} \PYG{p}{)} \PYG{p}{\PYGZob{}}
-		\PYG{n}{fprintf}\PYG{p}{(}\PYG{n}{stderr}\PYG{p}{,} \PYG{l+s}{"}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s}{*** Fatal: DISPLAY variable not set.}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s}{"}\PYG{p}{)}\PYG{p}{;}
-		\PYG{n}{exit}\PYG{p}{(}\PYG{l+m+mi}{1}\PYG{p}{)}\PYG{p}{;}
-	\PYG{p}{\PYGZcb{}}
-	\PYG{k}{return} \PYG{n}{display}\PYG{p}{;}
-\PYG{p}{\PYGZcb{}}
-
-
-\PYG{k+kt}{int} \PYG{n+nf}{main}\PYG{p}{(}\PYG{k+kt}{int} \PYG{n}{argc}\PYG{p}{,} \PYG{k+kt}{char}\PYG{o}{*} \PYG{n}{argv}\PYG{p}{[}\PYG{p}{]}\PYG{p}{)} \PYG{p}{\PYGZob{}}
-    \PYG{k}{const} \PYG{k+kt}{int}  \PYG{n}{WINDOW\PYGZus{}WIDTH} \PYG{o}{=} \PYG{l+m+mi}{800}\PYG{p}{;}
-    \PYG{k}{const} \PYG{k+kt}{int}  \PYG{n}{WINDOW\PYGZus{}HEIGHT} \PYG{o}{=} \PYG{l+m+mi}{400}\PYG{p}{;}
-    \PYG{k+kt}{int}        \PYG{n}{x} \PYG{o}{=} \PYG{l+m+mi}{0}\PYG{p}{,} \PYG{n}{y} \PYG{o}{=} \PYG{l+m+mi}{0}\PYG{p}{;}
-    \PYG{k+kt}{int}        \PYG{n}{id} \PYG{o}{=} \PYG{o}{-}\PYG{l+m+mi}{1}\PYG{p}{,} \PYG{n}{numProcesses} \PYG{o}{=} \PYG{o}{-}\PYG{l+m+mi}{1}\PYG{p}{;}
-    \PYG{k+kt}{int}        \PYG{n}{button} \PYG{o}{=} \PYG{o}{-}\PYG{l+m+mi}{1}\PYG{p}{;}
-    \PYG{k+kt}{int}        \PYG{n}{blockSize} \PYG{o}{=} \PYG{l+m+mi}{0}\PYG{p}{;}
-    \PYG{k+kt}{int}        \PYG{n}{yStart}\PYG{p}{,} \PYG{n}{yEnd}\PYG{p}{;}
-    \PYG{n}{MPE\PYGZus{}XGraph} \PYG{n}{canvas}\PYG{p}{;}
-    \PYG{n}{MPE\PYGZus{}Color} \PYG{o}{*}\PYG{n}{colors} \PYG{o}{=} \PYG{n+nb}{NULL}\PYG{p}{;}
-    \PYG{n}{MPE\PYGZus{}Color}  \PYG{n}{myColor} \PYG{o}{=} \PYG{l+m+mi}{0}\PYG{p}{;}
-
-    \PYG{c+c1}{// initialize environment, variables, etc. }
-    \PYG{n}{MPI\PYGZus{}Init}\PYG{p}{(}\PYG{o}{\PYGZam{}}\PYG{n}{argc}\PYG{p}{,}\PYG{o}{\PYGZam{}}\PYG{n}{argv}\PYG{p}{)}\PYG{p}{;}
-    \PYG{n}{MPI\PYGZus{}Comm\PYGZus{}rank}\PYG{p}{(}\PYG{n}{MPI\PYGZus{}COMM\PYGZus{}WORLD}\PYG{p}{,} \PYG{o}{\PYGZam{}}\PYG{n}{id}\PYG{p}{)}\PYG{p}{;}
-    \PYG{n}{MPI\PYGZus{}Comm\PYGZus{}size}\PYG{p}{(}\PYG{n}{MPI\PYGZus{}COMM\PYGZus{}WORLD}\PYG{p}{,} \PYG{o}{\PYGZam{}}\PYG{n}{numProcesses}\PYG{p}{)}\PYG{p}{;}
-    \PYG{n}{MPE\PYGZus{}Open\PYGZus{}graphics}\PYG{p}{(} \PYG{o}{\PYGZam{}}\PYG{n}{canvas}\PYG{p}{,} \PYG{n}{MPI\PYGZus{}COMM\PYGZus{}WORLD}\PYG{p}{,} 
-                         \PYG{n}{getDisplay}\PYG{p}{(}\PYG{p}{)}\PYG{p}{,}
-                         \PYG{l+m+mi}{5}\PYG{p}{,} \PYG{l+m+mi}{5}\PYG{p}{,}
-                         \PYG{n}{WINDOW\PYGZus{}WIDTH}\PYG{p}{,} \PYG{n}{WINDOW\PYGZus{}HEIGHT}\PYG{p}{,} \PYG{l+m+mi}{0} \PYG{p}{)}\PYG{p}{;}
-    \PYG{n}{colors} \PYG{o}{=} \PYG{n}{malloc}\PYG{p}{(} \PYG{n}{numProcesses} \PYG{o}{*} \PYG{k}{sizeof}\PYG{p}{(}\PYG{n}{MPE\PYGZus{}Color}\PYG{p}{)} \PYG{p}{)}\PYG{p}{;}
-    \PYG{n}{MPE\PYGZus{}Make\PYGZus{}color\PYGZus{}array}\PYG{p}{(}\PYG{n}{canvas}\PYG{p}{,} \PYG{n}{numProcesses}\PYG{p}{,} \PYG{n}{colors}\PYG{p}{)}\PYG{p}{;}
-    \PYG{n}{myColor} \PYG{o}{=} \PYG{n}{colors}\PYG{p}{[}\PYG{n}{id}\PYG{p}{]}\PYG{p}{;}
-    \PYG{n}{blockSize} \PYG{o}{=} \PYG{n}{WINDOW\PYGZus{}HEIGHT} \PYG{o}{/} \PYG{n}{numProcesses}\PYG{p}{;}
-    \PYG{n}{yStart} \PYG{o}{=} \PYG{n}{id} \PYG{o}{*} \PYG{n}{blockSize}\PYG{p}{;}
-    \PYG{n}{yEnd} \PYG{o}{=} \PYG{n}{yStart} \PYG{o}{+} \PYG{n}{blockSize}\PYG{p}{;}
-
-    \PYG{c+c1}{// processes draw the window's pixels in stripes}
-    \PYG{k}{for} \PYG{p}{(}\PYG{n}{y} \PYG{o}{=} \PYG{n}{yStart}\PYG{p}{;} \PYG{n}{y} \PYG{o}{\PYGZlt{}} \PYG{n}{yEnd}\PYG{p}{;} \PYG{n}{y}\PYG{o}{+}\PYG{o}{+}\PYG{p}{)} \PYG{p}{\PYGZob{}}
-       \PYG{k}{for} \PYG{p}{(}\PYG{n}{x} \PYG{o}{=} \PYG{l+m+mi}{0}\PYG{p}{;} \PYG{n}{x} \PYG{o}{\PYGZlt{}} \PYG{n}{WINDOW\PYGZus{}WIDTH}\PYG{p}{;} \PYG{n}{x}\PYG{o}{+}\PYG{o}{+}\PYG{p}{)} \PYG{p}{\PYGZob{}}
-          \PYG{n}{MPE\PYGZus{}Draw\PYGZus{}point}\PYG{p}{(}\PYG{n}{canvas}\PYG{p}{,} \PYG{n}{x}\PYG{p}{,} \PYG{n}{y}\PYG{p}{,} \PYG{n}{myColor}\PYG{p}{)}\PYG{p}{;}
-          \PYG{n}{MPE\PYGZus{}Update}\PYG{p}{(}\PYG{n}{canvas}\PYG{p}{)}\PYG{p}{;}  \PYG{c+c1}{// update here to slow things down}
-       \PYG{p}{\PYGZcb{}}
-    \PYG{p}{\PYGZcb{}}
-
-    \PYG{c+c1}{// pause until mouse-click so the program doesn't terminate}
-    \PYG{k}{if} \PYG{p}{(}\PYG{n}{id} \PYG{o}{=}\PYG{o}{=} \PYG{l+m+mi}{0}\PYG{p}{)} \PYG{p}{\PYGZob{}}
-       \PYG{n}{printf}\PYG{p}{(}\PYG{l+s}{"}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s}{Click in the window to continue...}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s}{"}\PYG{p}{)}\PYG{p}{;}
-       \PYG{n}{MPE\PYGZus{}Get\PYGZus{}mouse\PYGZus{}press}\PYG{p}{(} \PYG{n}{canvas}\PYG{p}{,} \PYG{o}{\PYGZam{}}\PYG{n}{x}\PYG{p}{,} \PYG{o}{\PYGZam{}}\PYG{n}{y}\PYG{p}{,} \PYG{o}{\PYGZam{}}\PYG{n}{button} \PYG{p}{)}\PYG{p}{;}
-    \PYG{p}{\PYGZcb{}}
-
-    \PYG{c+c1}{// clean up }
-    \PYG{n}{MPE\PYGZus{}Close\PYGZus{}graphics}\PYG{p}{(} \PYG{o}{\PYGZam{}}\PYG{n}{canvas}\PYG{p}{)}\PYG{p}{;}
-    \PYG{n}{MPI\PYGZus{}Finalize}\PYG{p}{(}\PYG{p}{)}\PYG{p}{;}
-    \PYG{n}{free}\PYG{p}{(}\PYG{n}{colors}\PYG{p}{)}\PYG{p}{;}
-    \PYG{k}{if} \PYG{p}{(}\PYG{n}{id} \PYG{o}{=}\PYG{o}{=} \PYG{l+m+mi}{0}\PYG{p}{)} \PYG{n}{printf}\PYG{p}{(}\PYG{l+s}{"}\PYG{l+s}{Program complete.}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s}{"}\PYG{p}{)}\PYG{p}{;} 
-    \PYG{k}{return} \PYG{l+m+mi}{0}\PYG{p}{;}
-\PYG{p}{\PYGZcb{}}
-\end{Verbatim}
-
-\emph{file: patternlets/MPI/06.parallelLoop-equalChunks/visual/parallelForBlocks.c}
-
-
-\section{7 (text). Data Decomposition: on \emph{chunks of size 1} using parallel-for}
-\label{MessagePassing/MPI_Patternlets:text-data-decomposition-on-chunks-of-size-1-using-parallel-for}
+\section{06. Data Decomposition: on \emph{chunks of size 1} using parallel-for}
+\label{MessagePassing/MPI_Patternlets:data-decomposition-on-chunks-of-size-1-using-parallel-for}
 This is a basic example that does not yet include a data array, though
 it would typically be used when each process would be working on a portion
 of an array that could have been looped over in a sequential solution.
@@ -770,105 +632,74 @@ of an array that could have been looped over in a sequential solution.
 \PYG{p}{\PYGZcb{}}
 \end{Verbatim}
 
-\emph{file: patternlets/MPI/07.parallelLoop-chunksOf1/textual/parallelLoopChunksOf1.c}
+\emph{file: patternlets/MPI/06.parallelLoop-chunksOf1/parallelLoopChunksOf1.c}
 
 
-\section{7 (visual). Data Decomposition: on \emph{chunks of size 1} using parallel-for}
-\label{MessagePassing/MPI_Patternlets:visual-data-decomposition-on-chunks-of-size-1-using-parallel-for}
-In this example you can see how blocks of values within a matrix might be
-assigned to each process.  Run it to see the effect!
+\section{07. Broadcast: a special form of message passing}
+\label{MessagePassing/MPI_Patternlets:broadcast-a-special-form-of-message-passing}
+This example shows how a data item read from a file can be sent to all the processes.
 
 \begin{Verbatim}[commandchars=\\\{\}]
-\PYG{c+cm}{/* parallelForStripes.c is a graphical illustration of}
-\PYG{c+cm}{ *  the 'slicing' version of the parallel for loop design pattern,}
-\PYG{c+cm}{ *  using Argonne Labs' MPE graphics library for X11 systems.}
+\PYG{c+cm}{/* broadcast.c}
+\PYG{c+cm}{ * ... illustrates the use of MPI\PYGZus{}Bcast() with a scalar value...}
+\PYG{c+cm}{ *      (compare to array version).}
+\PYG{c+cm}{ * Joel Adams, Calvin College, April 2016.}
 \PYG{c+cm}{ *}
-\PYG{c+cm}{ * Summer 2013, Joel Adams, Calvin College.}
+\PYG{c+cm}{ * Usage: mpirun -np N ./broadcast}
 \PYG{c+cm}{ *}
-\PYG{c+cm}{ * Usage: mpirun -np N ./parallelForStripes}
-\PYG{c+cm}{ *        Click the mouse in the window to terminate the program.}
-\PYG{c+cm}{ *        You must have an X11 server running.}
-\PYG{c+cm}{ *}
-\PYG{c+cm}{ * Exercise: Run the program, varying N from 1 - 32,}
-\PYG{c+cm}{ *            and compare to the 'Blocks' version...}
+\PYG{c+cm}{ * Exercise:}
+\PYG{c+cm}{ * - Compile and run several times,}
+\PYG{c+cm}{ *     using 2, 4, and 8 processes}
+\PYG{c+cm}{ * - Use source code to trace execution and output}
+\PYG{c+cm}{ *     (noting contents of file "data.txt");}
+\PYG{c+cm}{ * - Explain behavior/effect of MPI\PYGZus{}Bcast().}
 \PYG{c+cm}{ */}
 
-\PYG{c+cp}{\PYGZsh{}}\PYG{c+cp}{include \PYGZlt{}mpi.h\PYGZgt{}     }\PYG{c+c1}{// MPI}
-\PYG{c+cp}{\PYGZsh{}}\PYG{c+cp}{include \PYGZlt{}mpe.h\PYGZgt{}     }\PYG{c+c1}{// MPE}
-\PYG{c+cp}{\PYGZsh{}}\PYG{c+cp}{include \PYGZlt{}stdlib.h\PYGZgt{}  }\PYG{c+c1}{// getenv()}
-\PYG{c+cp}{\PYGZsh{}}\PYG{c+cp}{include \PYGZlt{}string.h\PYGZgt{}  }\PYG{c+c1}{// strcmp()}
-\PYG{c+cp}{\PYGZsh{}}\PYG{c+cp}{include \PYGZlt{}stdio.h\PYGZgt{}   }\PYG{c+c1}{// printf(), etc.}
+\PYG{c+cp}{\PYGZsh{}}\PYG{c+cp}{include \PYGZlt{}mpi.h\PYGZgt{}}
+\PYG{c+cp}{\PYGZsh{}}\PYG{c+cp}{include \PYGZlt{}stdio.h\PYGZgt{}}
+\PYG{c+cp}{\PYGZsh{}}\PYG{c+cp}{include \PYGZlt{}stdlib.h\PYGZgt{}}
+\PYG{c+cp}{\PYGZsh{}}\PYG{c+cp}{include \PYGZlt{}assert.h\PYGZgt{}}
 
-\PYG{c+cm}{/* }
-\PYG{c+cm}{ * getDisplay() retrieves the DISPLAY environment info}
-\PYG{c+cm}{ */}
+\PYG{k+kt}{int} \PYG{n+nf}{main}\PYG{p}{(}\PYG{k+kt}{int} \PYG{n}{argc}\PYG{p}{,} \PYG{k+kt}{char}\PYG{o}{*}\PYG{o}{*} \PYG{n}{argv}\PYG{p}{)} \PYG{p}{\PYGZob{}}
+	\PYG{k+kt}{int} \PYG{n}{answer} \PYG{o}{=} \PYG{l+m+mi}{0}\PYG{p}{;}
+        \PYG{k+kt}{int} \PYG{n}{numProcs} \PYG{o}{=} \PYG{l+m+mi}{0}\PYG{p}{,} \PYG{n}{myRank} \PYG{o}{=} \PYG{l+m+mi}{0}\PYG{p}{;}
 
-\PYG{k+kt}{char}\PYG{o}{*} \PYG{n+nf}{getDisplay}\PYG{p}{(}\PYG{p}{)} \PYG{p}{\PYGZob{}}
-	\PYG{k+kt}{char} \PYG{o}{*} \PYG{n}{display} \PYG{o}{=} \PYG{n}{getenv}\PYG{p}{(}\PYG{l+s}{"}\PYG{l+s}{DISPLAY}\PYG{l+s}{"}\PYG{p}{)}\PYG{p}{;}
-	\PYG{k}{if} \PYG{p}{(} \PYG{n}{strncmp}\PYG{p}{(}\PYG{n}{display}\PYG{p}{,} \PYG{l+s}{"}\PYG{l+s}{(null)}\PYG{l+s}{"}\PYG{p}{,} \PYG{l+m+mi}{7}\PYG{p}{)} \PYG{o}{=}\PYG{o}{=} \PYG{l+m+mi}{0} \PYG{p}{)} \PYG{p}{\PYGZob{}}
-		\PYG{n}{fprintf}\PYG{p}{(}\PYG{n}{stderr}\PYG{p}{,} \PYG{l+s}{"}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s}{*** Fatal: DISPLAY variable not set.}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s}{"}\PYG{p}{)}\PYG{p}{;}
-		\PYG{n}{exit}\PYG{p}{(}\PYG{l+m+mi}{1}\PYG{p}{)}\PYG{p}{;}
-	\PYG{p}{\PYGZcb{}}
-	\PYG{k}{return} \PYG{n}{display}\PYG{p}{;}
-\PYG{p}{\PYGZcb{}}
+	\PYG{n}{MPI\PYGZus{}Init}\PYG{p}{(}\PYG{o}{\PYGZam{}}\PYG{n}{argc}\PYG{p}{,} \PYG{o}{\PYGZam{}}\PYG{n}{argv}\PYG{p}{)}\PYG{p}{;}
+        \PYG{n}{MPI\PYGZus{}Comm\PYGZus{}size}\PYG{p}{(}\PYG{n}{MPI\PYGZus{}COMM\PYGZus{}WORLD}\PYG{p}{,} \PYG{o}{\PYGZam{}}\PYG{n}{numProcs}\PYG{p}{)}\PYG{p}{;}
+        \PYG{n}{MPI\PYGZus{}Comm\PYGZus{}rank}\PYG{p}{(}\PYG{n}{MPI\PYGZus{}COMM\PYGZus{}WORLD}\PYG{p}{,} \PYG{o}{\PYGZam{}}\PYG{n}{myRank}\PYG{p}{)}\PYG{p}{;}
 
+	\PYG{k}{if} \PYG{p}{(}\PYG{n}{myRank} \PYG{o}{=}\PYG{o}{=} \PYG{l+m+mi}{0}\PYG{p}{)} \PYG{p}{\PYGZob{}}
+               \PYG{k+kt}{FILE} \PYG{o}{*}\PYG{n}{filePtr} \PYG{o}{=} \PYG{n}{fopen}\PYG{p}{(}\PYG{l+s}{"}\PYG{l+s}{data.txt}\PYG{l+s}{"}\PYG{p}{,} \PYG{l+s}{"}\PYG{l+s}{r}\PYG{l+s}{"}\PYG{p}{)}\PYG{p}{;} 
+               \PYG{n}{assert}\PYG{p}{(} \PYG{n}{filePtr} \PYG{o}{!}\PYG{o}{=} \PYG{n+nb}{NULL} \PYG{p}{)}\PYG{p}{;}
+               \PYG{n}{fscanf}\PYG{p}{(}\PYG{n}{filePtr}\PYG{p}{,} \PYG{l+s}{"}\PYG{l+s}{ \PYGZpc{}d}\PYG{l+s}{"}\PYG{p}{,} \PYG{o}{\PYGZam{}}\PYG{n}{answer}\PYG{p}{)}\PYG{p}{;}
+               \PYG{n}{fclose}\PYG{p}{(}\PYG{n}{filePtr}\PYG{p}{)}\PYG{p}{;}
+        \PYG{p}{\PYGZcb{}}
 
-\PYG{k+kt}{int} \PYG{n+nf}{main}\PYG{p}{(}\PYG{k+kt}{int} \PYG{n}{argc}\PYG{p}{,} \PYG{k+kt}{char}\PYG{o}{*} \PYG{n}{argv}\PYG{p}{[}\PYG{p}{]}\PYG{p}{)} \PYG{p}{\PYGZob{}}
-    \PYG{k}{const} \PYG{k+kt}{int}  \PYG{n}{WINDOW\PYGZus{}WIDTH} \PYG{o}{=} \PYG{l+m+mi}{800}\PYG{p}{;}
-    \PYG{k}{const} \PYG{k+kt}{int}  \PYG{n}{WINDOW\PYGZus{}HEIGHT} \PYG{o}{=} \PYG{l+m+mi}{400}\PYG{p}{;}
-    \PYG{k+kt}{int}        \PYG{n}{x} \PYG{o}{=} \PYG{l+m+mi}{0}\PYG{p}{,} \PYG{n}{y} \PYG{o}{=} \PYG{l+m+mi}{0}\PYG{p}{;}
-    \PYG{k+kt}{int}        \PYG{n}{id} \PYG{o}{=} \PYG{o}{-}\PYG{l+m+mi}{1}\PYG{p}{,} \PYG{n}{numProcesses} \PYG{o}{=} \PYG{o}{-}\PYG{l+m+mi}{1}\PYG{p}{;}
-    \PYG{k+kt}{int}        \PYG{n}{button} \PYG{o}{=} \PYG{o}{-}\PYG{l+m+mi}{1}\PYG{p}{;}
-    \PYG{n}{MPE\PYGZus{}XGraph} \PYG{n}{canvas}\PYG{p}{;}
-    \PYG{n}{MPE\PYGZus{}Color} \PYG{o}{*}\PYG{n}{colors} \PYG{o}{=} \PYG{n+nb}{NULL}\PYG{p}{;}
-    \PYG{n}{MPE\PYGZus{}Color}  \PYG{n}{myColor} \PYG{o}{=} \PYG{l+m+mi}{0}\PYG{p}{;}
+	\PYG{n}{printf}\PYG{p}{(}\PYG{l+s}{"}\PYG{l+s}{BEFORE the broadcast, process \PYGZpc{}d's answer = \PYGZpc{}d}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s}{"}\PYG{p}{,}
+                 \PYG{n}{myRank}\PYG{p}{,} \PYG{n}{answer}\PYG{p}{)}\PYG{p}{;}
 
-    \PYG{c+c1}{// initialize environment, variables, etc.}
-    \PYG{n}{MPI\PYGZus{}Init}\PYG{p}{(}\PYG{o}{\PYGZam{}}\PYG{n}{argc}\PYG{p}{,}\PYG{o}{\PYGZam{}}\PYG{n}{argv}\PYG{p}{)}\PYG{p}{;}
-    \PYG{n}{MPI\PYGZus{}Comm\PYGZus{}rank}\PYG{p}{(}\PYG{n}{MPI\PYGZus{}COMM\PYGZus{}WORLD}\PYG{p}{,} \PYG{o}{\PYGZam{}}\PYG{n}{id}\PYG{p}{)}\PYG{p}{;}
-    \PYG{n}{MPI\PYGZus{}Comm\PYGZus{}size}\PYG{p}{(}\PYG{n}{MPI\PYGZus{}COMM\PYGZus{}WORLD}\PYG{p}{,} \PYG{o}{\PYGZam{}}\PYG{n}{numProcesses}\PYG{p}{)}\PYG{p}{;}
-    \PYG{n}{MPE\PYGZus{}Open\PYGZus{}graphics}\PYG{p}{(} \PYG{o}{\PYGZam{}}\PYG{n}{canvas}\PYG{p}{,} \PYG{n}{MPI\PYGZus{}COMM\PYGZus{}WORLD}\PYG{p}{,} 
-                         \PYG{n}{getDisplay}\PYG{p}{(}\PYG{p}{)}\PYG{p}{,}
-                         \PYG{l+m+mi}{5}\PYG{p}{,} \PYG{l+m+mi}{5}\PYG{p}{,}
-                         \PYG{n}{WINDOW\PYGZus{}WIDTH}\PYG{p}{,} \PYG{n}{WINDOW\PYGZus{}HEIGHT}\PYG{p}{,} \PYG{l+m+mi}{0} \PYG{p}{)}\PYG{p}{;}
-    \PYG{n}{colors} \PYG{o}{=} \PYG{n}{malloc}\PYG{p}{(} \PYG{n}{numProcesses} \PYG{o}{*} \PYG{k}{sizeof}\PYG{p}{(}\PYG{n}{MPE\PYGZus{}Color}\PYG{p}{)} \PYG{p}{)}\PYG{p}{;}
-    \PYG{n}{MPE\PYGZus{}Make\PYGZus{}color\PYGZus{}array}\PYG{p}{(}\PYG{n}{canvas}\PYG{p}{,} \PYG{n}{numProcesses}\PYG{p}{,} \PYG{n}{colors}\PYG{p}{)}\PYG{p}{;}
-    \PYG{n}{myColor} \PYG{o}{=} \PYG{n}{colors}\PYG{p}{[}\PYG{n}{id}\PYG{p}{]}\PYG{p}{;}
+        \PYG{n}{MPI\PYGZus{}Bcast}\PYG{p}{(}\PYG{o}{\PYGZam{}}\PYG{n}{answer}\PYG{p}{,} \PYG{l+m+mi}{1}\PYG{p}{,} \PYG{n}{MPI\PYGZus{}INT}\PYG{p}{,} \PYG{l+m+mi}{0}\PYG{p}{,} \PYG{n}{MPI\PYGZus{}COMM\PYGZus{}WORLD}\PYG{p}{)}\PYG{p}{;}
 
-    \PYG{c+c1}{// each process does a block of the window's pixels}
-    \PYG{k}{for} \PYG{p}{(}\PYG{n}{y} \PYG{o}{=} \PYG{n}{id}\PYG{p}{;} \PYG{n}{y} \PYG{o}{\PYGZlt{}} \PYG{n}{WINDOW\PYGZus{}HEIGHT}\PYG{p}{;} \PYG{n}{y} \PYG{o}{+}\PYG{o}{=} \PYG{n}{numProcesses}\PYG{p}{)} \PYG{p}{\PYGZob{}}
-       \PYG{k}{for} \PYG{p}{(}\PYG{n}{x} \PYG{o}{=} \PYG{l+m+mi}{0}\PYG{p}{;} \PYG{n}{x} \PYG{o}{\PYGZlt{}} \PYG{n}{WINDOW\PYGZus{}WIDTH}\PYG{p}{;} \PYG{n}{x}\PYG{o}{+}\PYG{o}{+}\PYG{p}{)} \PYG{p}{\PYGZob{}}
-          \PYG{n}{MPE\PYGZus{}Draw\PYGZus{}point}\PYG{p}{(}\PYG{n}{canvas}\PYG{p}{,} \PYG{n}{x}\PYG{p}{,} \PYG{n}{y}\PYG{p}{,} \PYG{n}{myColor}\PYG{p}{)}\PYG{p}{;}
-          \PYG{n}{MPE\PYGZus{}Update}\PYG{p}{(}\PYG{n}{canvas}\PYG{p}{)}\PYG{p}{;}  \PYG{c+c1}{// update here to slow things down}
-       \PYG{p}{\PYGZcb{}}
-    \PYG{p}{\PYGZcb{}}
+	\PYG{n}{printf}\PYG{p}{(}\PYG{l+s}{"}\PYG{l+s}{AFTER the broadcast, process \PYGZpc{}d's answer = \PYGZpc{}d}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s}{"}\PYG{p}{,}
+                 \PYG{n}{myRank}\PYG{p}{,} \PYG{n}{answer}\PYG{p}{)}\PYG{p}{;}
 
-    \PYG{c+c1}{// pause until mouse-click so the program doesn't terminate}
-    \PYG{k}{if} \PYG{p}{(}\PYG{n}{id} \PYG{o}{=}\PYG{o}{=} \PYG{l+m+mi}{0}\PYG{p}{)} \PYG{p}{\PYGZob{}}
-       \PYG{n}{printf}\PYG{p}{(}\PYG{l+s}{"}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s}{Click in the window to continue...}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s}{"}\PYG{p}{)}\PYG{p}{;}
-       \PYG{n}{MPE\PYGZus{}Get\PYGZus{}mouse\PYGZus{}press}\PYG{p}{(} \PYG{n}{canvas}\PYG{p}{,} \PYG{o}{\PYGZam{}}\PYG{n}{x}\PYG{p}{,} \PYG{o}{\PYGZam{}}\PYG{n}{y}\PYG{p}{,} \PYG{o}{\PYGZam{}}\PYG{n}{button} \PYG{p}{)}\PYG{p}{;}
-    \PYG{p}{\PYGZcb{}}
+ 	\PYG{n}{MPI\PYGZus{}Finalize}\PYG{p}{(}\PYG{p}{)}\PYG{p}{;}
 
-    \PYG{c+c1}{// clean up }
-    \PYG{n}{MPE\PYGZus{}Close\PYGZus{}graphics}\PYG{p}{(} \PYG{o}{\PYGZam{}}\PYG{n}{canvas}\PYG{p}{)}\PYG{p}{;}
-    \PYG{n}{MPI\PYGZus{}Finalize}\PYG{p}{(}\PYG{p}{)}\PYG{p}{;}
-    \PYG{n}{free}\PYG{p}{(}\PYG{n}{colors}\PYG{p}{)}\PYG{p}{;}
-    \PYG{k}{if} \PYG{p}{(}\PYG{n}{id} \PYG{o}{=}\PYG{o}{=} \PYG{l+m+mi}{0}\PYG{p}{)} \PYG{n}{printf}\PYG{p}{(}\PYG{l+s}{"}\PYG{l+s}{Program complete.}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s}{"}\PYG{p}{)}\PYG{p}{;} 
-    \PYG{k}{return} \PYG{l+m+mi}{0}\PYG{p}{;}
+	\PYG{k}{return} \PYG{l+m+mi}{0}\PYG{p}{;}
 \PYG{p}{\PYGZcb{}}
 \end{Verbatim}
 
-\emph{file: atternlets/MPI/07.parallelLoop-chunksOf1/visual/parallelForSlices.c}
+\emph{file: patternlets/MPI/07.broadcast/broadcast.c}
 
 
-\section{8. Broadcast: a special form of message passing}
-\label{MessagePassing/MPI_Patternlets:broadcast-a-special-form-of-message-passing}
+\section{08. Broadcast: send data to all processes}
+\label{MessagePassing/MPI_Patternlets:broadcast-send-data-to-all-processes}
 This example shows how to ensure that all processes have a copy of an array
 created by a single \emph{master} node.
 
 \begin{Verbatim}[commandchars=\\\{\}]
-\PYG{c+cm}{/* broadcast.c}
-\PYG{c+cm}{ * ... illustrates the use of MPI\PYGZus{}Bcast()...}
+\PYG{c+cm}{/* broadcast2.c}
+\PYG{c+cm}{ * ... illustrates the use of MPI\PYGZus{}Bcast() for arrays...}
 \PYG{c+cm}{ * Joel Adams, Calvin College, November 2009.}
 \PYG{c+cm}{ *}
 \PYG{c+cm}{ * Usage: mpirun -np N ./broadcast}
@@ -883,7 +714,13 @@ created by a single \emph{master} node.
 \PYG{c+cp}{\PYGZsh{}}\PYG{c+cp}{include \PYGZlt{}stdio.h\PYGZgt{}}
 \PYG{c+cp}{\PYGZsh{}}\PYG{c+cp}{include \PYGZlt{}stdlib.h\PYGZgt{}}
 
-\PYG{c+cm}{/* fill an array with values }
+\PYG{c+cm}{/* fill an array with some arbitrary values }
+\PYG{c+cm}{ * @param: a, an int*.}
+\PYG{c+cm}{ * @param: size, an int.}
+\PYG{c+cm}{ * Precondition: a is the address of an array of ints.}
+\PYG{c+cm}{ *              \PYGZam{}\PYGZam{} size is the number of ints a can hold.}
+\PYG{c+cm}{ * Postcondition: a has been filled with arbitrary values }
+\PYG{c+cm}{ *                \PYGZob{} 11, 12, 13, ... \PYGZcb{}.}
 \PYG{c+cm}{ */}
 \PYG{k+kt}{void} \PYG{n+nf}{fill}\PYG{p}{(}\PYG{k+kt}{int}\PYG{o}{*} \PYG{n}{a}\PYG{p}{,} \PYG{k+kt}{int} \PYG{n}{size}\PYG{p}{)} \PYG{p}{\PYGZob{}}
 	\PYG{k+kt}{int} \PYG{n}{i}\PYG{p}{;}
@@ -893,10 +730,17 @@ created by a single \emph{master} node.
 \PYG{p}{\PYGZcb{}}
 
 \PYG{c+cm}{/* display a string, a process id, and its array values }
+\PYG{c+cm}{ * @param: str, a char*}
+\PYG{c+cm}{ * @param: id, an int}
+\PYG{c+cm}{ * @param: a, an int*.}
+\PYG{c+cm}{ * Precondition: str points to either "BEFORE" or "AFTER"}
+\PYG{c+cm}{ *              \PYGZam{}\PYGZam{} id is the rank of this MPI process}
+\PYG{c+cm}{ *              \PYGZam{}\PYGZam{} a is the address of an 8-element int array.}
+\PYG{c+cm}{ * Postcondition: str, id, and a have all been written to stdout.}
 \PYG{c+cm}{ */}
 \PYG{k+kt}{void} \PYG{n+nf}{print}\PYG{p}{(}\PYG{k+kt}{char}\PYG{o}{*} \PYG{n}{str}\PYG{p}{,} \PYG{k+kt}{int} \PYG{n}{id}\PYG{p}{,} \PYG{k+kt}{int}\PYG{o}{*} \PYG{n}{a}\PYG{p}{)} \PYG{p}{\PYGZob{}}
-	\PYG{n}{printf}\PYG{p}{(}\PYG{l+s}{"}\PYG{l+s}{process \PYGZpc{}d \PYGZpc{}s: \PYGZob{}\PYGZpc{}d, \PYGZpc{}d, \PYGZpc{}d, \PYGZpc{}d, \PYGZpc{}d, \PYGZpc{}d, \PYGZpc{}d, \PYGZpc{}d\PYGZcb{}}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s}{"}\PYG{p}{,}
-	   \PYG{n}{id}\PYG{p}{,} \PYG{n}{str}\PYG{p}{,} \PYG{n}{a}\PYG{p}{[}\PYG{l+m+mi}{0}\PYG{p}{]}\PYG{p}{,} \PYG{n}{a}\PYG{p}{[}\PYG{l+m+mi}{1}\PYG{p}{]}\PYG{p}{,} \PYG{n}{a}\PYG{p}{[}\PYG{l+m+mi}{2}\PYG{p}{]}\PYG{p}{,} \PYG{n}{a}\PYG{p}{[}\PYG{l+m+mi}{3}\PYG{p}{]}\PYG{p}{,} \PYG{n}{a}\PYG{p}{[}\PYG{l+m+mi}{4}\PYG{p}{]}\PYG{p}{,} \PYG{n}{a}\PYG{p}{[}\PYG{l+m+mi}{5}\PYG{p}{]}\PYG{p}{,} \PYG{n}{a}\PYG{p}{[}\PYG{l+m+mi}{6}\PYG{p}{]}\PYG{p}{,} \PYG{n}{a}\PYG{p}{[}\PYG{l+m+mi}{7}\PYG{p}{]}\PYG{p}{)}\PYG{p}{;}
+	\PYG{n}{printf}\PYG{p}{(}\PYG{l+s}{"}\PYG{l+s}{\PYGZpc{}s broadcast, process \PYGZpc{}d has: \PYGZob{}\PYGZpc{}d, \PYGZpc{}d, \PYGZpc{}d, \PYGZpc{}d, \PYGZpc{}d, \PYGZpc{}d, \PYGZpc{}d, \PYGZpc{}d\PYGZcb{}}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s}{"}\PYG{p}{,}
+	   \PYG{n}{str}\PYG{p}{,} \PYG{n}{id}\PYG{p}{,} \PYG{n}{a}\PYG{p}{[}\PYG{l+m+mi}{0}\PYG{p}{]}\PYG{p}{,} \PYG{n}{a}\PYG{p}{[}\PYG{l+m+mi}{1}\PYG{p}{]}\PYG{p}{,} \PYG{n}{a}\PYG{p}{[}\PYG{l+m+mi}{2}\PYG{p}{]}\PYG{p}{,} \PYG{n}{a}\PYG{p}{[}\PYG{l+m+mi}{3}\PYG{p}{]}\PYG{p}{,} \PYG{n}{a}\PYG{p}{[}\PYG{l+m+mi}{4}\PYG{p}{]}\PYG{p}{,} \PYG{n}{a}\PYG{p}{[}\PYG{l+m+mi}{5}\PYG{p}{]}\PYG{p}{,} \PYG{n}{a}\PYG{p}{[}\PYG{l+m+mi}{6}\PYG{p}{]}\PYG{p}{,} \PYG{n}{a}\PYG{p}{[}\PYG{l+m+mi}{7}\PYG{p}{]}\PYG{p}{)}\PYG{p}{;}
 \PYG{p}{\PYGZcb{}}
 
 \PYG{c+cp}{\PYGZsh{}}\PYG{c+cp}{define MAX 8}
@@ -911,11 +755,11 @@ created by a single \emph{master} node.
 
 	\PYG{k}{if} \PYG{p}{(}\PYG{n}{myRank} \PYG{o}{=}\PYG{o}{=} \PYG{l+m+mi}{0}\PYG{p}{)} \PYG{n}{fill}\PYG{p}{(}\PYG{n}{array}\PYG{p}{,} \PYG{n}{MAX}\PYG{p}{)}\PYG{p}{;}
      
-	\PYG{n}{print}\PYG{p}{(}\PYG{l+s}{"}\PYG{l+s}{array before}\PYG{l+s}{"}\PYG{p}{,} \PYG{n}{myRank}\PYG{p}{,} \PYG{n}{array}\PYG{p}{)}\PYG{p}{;}
+	\PYG{n}{print}\PYG{p}{(}\PYG{l+s}{"}\PYG{l+s}{BEFORE}\PYG{l+s}{"}\PYG{p}{,} \PYG{n}{myRank}\PYG{p}{,} \PYG{n}{array}\PYG{p}{)}\PYG{p}{;}
 
         \PYG{n}{MPI\PYGZus{}Bcast}\PYG{p}{(}\PYG{n}{array}\PYG{p}{,} \PYG{n}{MAX}\PYG{p}{,} \PYG{n}{MPI\PYGZus{}INT}\PYG{p}{,} \PYG{l+m+mi}{0}\PYG{p}{,} \PYG{n}{MPI\PYGZus{}COMM\PYGZus{}WORLD}\PYG{p}{)}\PYG{p}{;}
 
-	\PYG{n}{print}\PYG{p}{(}\PYG{l+s}{"}\PYG{l+s}{array after}\PYG{l+s}{"}\PYG{p}{,} \PYG{n}{myRank}\PYG{p}{,} \PYG{n}{array}\PYG{p}{)}\PYG{p}{;}
+	\PYG{n}{print}\PYG{p}{(}\PYG{l+s}{"}\PYG{l+s}{AFTER}\PYG{l+s}{"}\PYG{p}{,} \PYG{n}{myRank}\PYG{p}{,} \PYG{n}{array}\PYG{p}{)}\PYG{p}{;}
 
  	\PYG{n}{MPI\PYGZus{}Finalize}\PYG{p}{(}\PYG{p}{)}\PYG{p}{;}
 
@@ -923,10 +767,10 @@ created by a single \emph{master} node.
 \PYG{p}{\PYGZcb{}}
 \end{Verbatim}
 
-\emph{file: patternlets/MPI/08.broadcast/broadcast.c}
+\emph{file: patternlets/MPI/08.broadcast2/broadcast2.c}
 
 
-\section{9. Collective Communication: Reduction}
+\section{09. Collective Communication: Reduction}
 \label{MessagePassing/MPI_Patternlets:collective-communication-reduction}
 Once processes have performed independent concurrent computations, possibly
 on some portion of decomposed data, it is quite common to then \emph{reduce}
@@ -1203,6 +1047,282 @@ a copy of its portion of the array back to the root, or master process.
 \end{Verbatim}
 
 \emph{file: patternlets/MPI/12.gather/gather.c}
+
+
+\section{13. The Barrier Coordination Pattern}
+\label{MessagePassing/MPI_Patternlets:the-barrier-coordination-pattern}
+A barrier is used when you want all the processes to complete a portion of
+code before continuing. Use this exercise to verify that is is ocurring when
+you add the call to the MPI\_Barrier funtion.
+
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{c+cm}{/* barrier.c }
+\PYG{c+cm}{ *  ... illustrates the behavior of MPI\PYGZus{}Barrier() ...}
+\PYG{c+cm}{ *}
+\PYG{c+cm}{ * Joel Adams, Calvin College, May 2013.}
+\PYG{c+cm}{ * Bill Siever, April 2016 }
+\PYG{c+cm}{ *   (Converted to master/worker pattern).}
+\PYG{c+cm}{ * Joel Adams, April 2016}
+\PYG{c+cm}{ *   (Refactored code so that just one barrier needed).}
+\PYG{c+cm}{ *}
+\PYG{c+cm}{ * Usage: mpirun -np 8 ./barrier}
+\PYG{c+cm}{ *}
+\PYG{c+cm}{ * Exercise: }
+\PYG{c+cm}{ *  - Compile; then run the program several times, }
+\PYG{c+cm}{ *     noting the interleaved outputs.}
+\PYG{c+cm}{ *  - Uncomment the MPI\PYGZus{}Barrier() call; then recompile and rerun,}
+\PYG{c+cm}{ *     noting how the output changes.}
+\PYG{c+cm}{ *  - Explain what effect MPI\PYGZus{}Barrier() has on process behavior.}
+\PYG{c+cm}{ */}
+
+\PYG{c+cp}{\PYGZsh{}}\PYG{c+cp}{include \PYGZlt{}stdio.h\PYGZgt{}   }\PYG{c+c1}{// printf()}
+\PYG{c+cp}{\PYGZsh{}}\PYG{c+cp}{include \PYGZlt{}mpi.h\PYGZgt{}     }\PYG{c+c1}{// MPI}
+
+\PYG{c+cm}{/* Have workers send messages to the master, which prints them.}
+\PYG{c+cm}{ * @param: id, an int}
+\PYG{c+cm}{ * @param: numProcesses, an int}
+\PYG{c+cm}{ * @param: hostName, a char*}
+\PYG{c+cm}{ * @param: position, a char*}
+\PYG{c+cm}{ *}
+\PYG{c+cm}{ * Precondition: this function is being called by an MPI process}
+\PYG{c+cm}{ *               \PYGZam{}\PYGZam{} id is the MPI rank of that process }
+\PYG{c+cm}{ *               \PYGZam{}\PYGZam{} numProcesses is the number of processes in the computation }
+\PYG{c+cm}{ *               \PYGZam{}\PYGZam{} hostName points to a char array containing the name of the}
+\PYG{c+cm}{ *                    host on which this MPI process is running }
+\PYG{c+cm}{ *               \PYGZam{}\PYGZam{} position points to "BEFORE" or "AFTER".}
+\PYG{c+cm}{ *}
+\PYG{c+cm}{ * Postcondition: each process whose id \PYGZgt{} 0 has sent a message to process 0}
+\PYG{c+cm}{ *                     containing id, numProcesses, hostName, and position }
+\PYG{c+cm}{ *                \PYGZam{}\PYGZam{} process 0 has received and output each message.}
+\PYG{c+cm}{ */}
+
+\PYG{c+cp}{\PYGZsh{}}\PYG{c+cp}{define BUFFER\PYGZus{}SIZE 200}
+\PYG{c+cp}{\PYGZsh{}}\PYG{c+cp}{define MASTER      0}
+
+\PYG{k+kt}{void} \PYG{n+nf}{sendReceivePrint}\PYG{p}{(}\PYG{k+kt}{int} \PYG{n}{id}\PYG{p}{,} \PYG{k+kt}{int} \PYG{n}{numProcesses}\PYG{p}{,} \PYG{k+kt}{char}\PYG{o}{*} \PYG{n}{hostName}\PYG{p}{,} \PYG{k+kt}{char}\PYG{o}{*} \PYG{n}{position}\PYG{p}{)} \PYG{p}{\PYGZob{}}
+    \PYG{k+kt}{char} \PYG{n}{buffer}\PYG{p}{[}\PYG{n}{BUFFER\PYGZus{}SIZE}\PYG{p}{]} \PYG{o}{=} \PYG{p}{\PYGZob{}}\PYG{l+s+sc}{'\PYGZbs{}0'}\PYG{p}{\PYGZcb{}}\PYG{p}{;}\PYG{p}{;}
+    \PYG{n}{MPI\PYGZus{}Status} \PYG{n}{status}\PYG{p}{;}
+
+    \PYG{k}{if} \PYG{p}{(}\PYG{n}{id} \PYG{o}{!}\PYG{o}{=} \PYG{n}{MASTER}\PYG{p}{)} \PYG{p}{\PYGZob{}} 
+        \PYG{c+c1}{// Worker: Build a message and send it to the Master}
+        \PYG{k+kt}{int} \PYG{n}{length} \PYG{o}{=} \PYG{n}{sprintf}\PYG{p}{(}\PYG{n}{buffer}\PYG{p}{,}
+                              \PYG{l+s}{"}\PYG{l+s}{Process \PYGZsh{}\PYGZpc{}d of \PYGZpc{}d on \PYGZpc{}s is \PYGZpc{}s the barrier.}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s}{"}\PYG{p}{,}
+                                \PYG{n}{id}\PYG{p}{,} \PYG{n}{numProcesses}\PYG{p}{,} \PYG{n}{hostName}\PYG{p}{,} \PYG{n}{position}\PYG{p}{)}\PYG{p}{;}       
+        \PYG{n}{MPI\PYGZus{}Send}\PYG{p}{(}\PYG{n}{buffer}\PYG{p}{,} \PYG{n}{length}\PYG{o}{+}\PYG{l+m+mi}{1}\PYG{p}{,} \PYG{n}{MPI\PYGZus{}CHAR}\PYG{p}{,} \PYG{l+m+mi}{0}\PYG{p}{,} \PYG{l+m+mi}{0}\PYG{p}{,} \PYG{n}{MPI\PYGZus{}COMM\PYGZus{}WORLD}\PYG{p}{)}\PYG{p}{;}
+    \PYG{p}{\PYGZcb{}} \PYG{k}{else} \PYG{p}{\PYGZob{}}
+        \PYG{c+c1}{// Master: Receive and print the messages from all Workers}
+        \PYG{k}{for}\PYG{p}{(}\PYG{k+kt}{int} \PYG{n}{i} \PYG{o}{=} \PYG{l+m+mi}{0}\PYG{p}{;} \PYG{n}{i} \PYG{o}{\PYGZlt{}} \PYG{n}{numProcesses}\PYG{o}{-}\PYG{l+m+mi}{1}\PYG{p}{;} \PYG{n}{i}\PYG{o}{+}\PYG{o}{+}\PYG{p}{)} \PYG{p}{\PYGZob{}}
+           \PYG{n}{MPI\PYGZus{}Recv}\PYG{p}{(}\PYG{n}{buffer}\PYG{p}{,} \PYG{n}{BUFFER\PYGZus{}SIZE}\PYG{p}{,} \PYG{n}{MPI\PYGZus{}CHAR}\PYG{p}{,} \PYG{n}{MPI\PYGZus{}ANY\PYGZus{}SOURCE}\PYG{p}{,}
+                     \PYG{n}{MPI\PYGZus{}ANY\PYGZus{}TAG}\PYG{p}{,} \PYG{n}{MPI\PYGZus{}COMM\PYGZus{}WORLD}\PYG{p}{,} \PYG{o}{\PYGZam{}}\PYG{n}{status}\PYG{p}{)}\PYG{p}{;}
+           \PYG{n}{printf}\PYG{p}{(}\PYG{n}{buffer}\PYG{p}{)}\PYG{p}{;}
+        \PYG{p}{\PYGZcb{}}
+    \PYG{p}{\PYGZcb{}}
+\PYG{p}{\PYGZcb{}}
+
+
+\PYG{k+kt}{int} \PYG{n+nf}{main}\PYG{p}{(}\PYG{k+kt}{int} \PYG{n}{argc}\PYG{p}{,} \PYG{k+kt}{char}\PYG{o}{*}\PYG{o}{*} \PYG{n}{argv}\PYG{p}{)} \PYG{p}{\PYGZob{}}
+    \PYG{k+kt}{int} \PYG{n}{id} \PYG{o}{=} \PYG{o}{-}\PYG{l+m+mi}{1}\PYG{p}{,} \PYG{n}{numProcesses} \PYG{o}{=} \PYG{o}{-}\PYG{l+m+mi}{1}\PYG{p}{,} \PYG{n}{length} \PYG{o}{=} \PYG{o}{-}\PYG{l+m+mi}{1}\PYG{p}{;}
+    \PYG{k+kt}{char} \PYG{n}{myHostName}\PYG{p}{[}\PYG{n}{MPI\PYGZus{}MAX\PYGZus{}PROCESSOR\PYGZus{}NAME}\PYG{p}{]} \PYG{o}{=} \PYG{p}{\PYGZob{}}\PYG{l+s+sc}{'\PYGZbs{}0'}\PYG{p}{\PYGZcb{}}\PYG{p}{;}
+
+    \PYG{n}{MPI\PYGZus{}Init}\PYG{p}{(}\PYG{o}{\PYGZam{}}\PYG{n}{argc}\PYG{p}{,} \PYG{o}{\PYGZam{}}\PYG{n}{argv}\PYG{p}{)}\PYG{p}{;}
+    \PYG{n}{MPI\PYGZus{}Comm\PYGZus{}rank}\PYG{p}{(}\PYG{n}{MPI\PYGZus{}COMM\PYGZus{}WORLD}\PYG{p}{,} \PYG{o}{\PYGZam{}}\PYG{n}{id}\PYG{p}{)}\PYG{p}{;}
+    \PYG{n}{MPI\PYGZus{}Comm\PYGZus{}size}\PYG{p}{(}\PYG{n}{MPI\PYGZus{}COMM\PYGZus{}WORLD}\PYG{p}{,} \PYG{o}{\PYGZam{}}\PYG{n}{numProcesses}\PYG{p}{)}\PYG{p}{;}
+    \PYG{n}{MPI\PYGZus{}Get\PYGZus{}processor\PYGZus{}name} \PYG{p}{(}\PYG{n}{myHostName}\PYG{p}{,} \PYG{o}{\PYGZam{}}\PYG{n}{length}\PYG{p}{)}\PYG{p}{;}
+
+    \PYG{n}{sendReceivePrint}\PYG{p}{(}\PYG{n}{id}\PYG{p}{,} \PYG{n}{numProcesses}\PYG{p}{,} \PYG{n}{myHostName}\PYG{p}{,} \PYG{l+s}{"}\PYG{l+s}{BEFORE}\PYG{l+s}{"}\PYG{p}{)}\PYG{p}{;}
+
+\PYG{c+c1}{//    MPI\PYGZus{}Barrier(MPI\PYGZus{}COMM\PYGZus{}WORLD);}
+
+    \PYG{n}{sendReceivePrint}\PYG{p}{(}\PYG{n}{id}\PYG{p}{,} \PYG{n}{numProcesses}\PYG{p}{,} \PYG{n}{myHostName}\PYG{p}{,} \PYG{l+s}{"}\PYG{l+s}{AFTER}\PYG{l+s}{"}\PYG{p}{)}\PYG{p}{;}
+
+    \PYG{n}{MPI\PYGZus{}Finalize}\PYG{p}{(}\PYG{p}{)}\PYG{p}{;}
+    \PYG{k}{return} \PYG{l+m+mi}{0}\PYG{p}{;}
+\PYG{p}{\PYGZcb{}}
+\end{Verbatim}
+
+\emph{file: patternlets/MPI/13.barrier/barrier.c}
+
+
+\section{14. Timing code using the Barrier Coordination Pattern}
+\label{MessagePassing/MPI_Patternlets:timing-code-using-the-barrier-coordination-pattern}
+In this example you can run the code several times and determine the average, median, and minimum
+execution time when the code has a barrier and when it does not. The primary purpose of this exercise
+is to illustrate that one of the most useful uses of a barrier is to ensure that you are getting legitimate
+timings for your code examples. By using a barrier, you ensure that all processes have finished before
+recording the time using the master node.
+
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{c+cm}{/* barrier+timing.c }
+\PYG{c+cm}{ *  ... illustrates the behavior of MPI\PYGZus{}Barrier() }
+\PYG{c+cm}{ *       to coordinate process-timing.}
+\PYG{c+cm}{ *}
+\PYG{c+cm}{ * Joel Adams, April 2016}
+\PYG{c+cm}{ *}
+\PYG{c+cm}{ * Usage: mpirun -np 8 ./barrier+timing}
+\PYG{c+cm}{ *}
+\PYG{c+cm}{ * Exercise: }
+\PYG{c+cm}{ *  - Compile; then run the program five times, }
+\PYG{c+cm}{ *  - In a spreadsheet, compute the average,}
+\PYG{c+cm}{ *     median, and minimum of the five times.}
+\PYG{c+cm}{ *  - Uncomment the two MPI\PYGZus{}Barrier() calls;}
+\PYG{c+cm}{ *     then recompile, rerun five times, and}
+\PYG{c+cm}{ *     compute the new average, median, and min}
+\PYG{c+cm}{ *     times.}
+\PYG{c+cm}{ *  - Why did uncommenting the barrier calls}
+\PYG{c+cm}{ *     produce the change you observed?}
+\PYG{c+cm}{ */}
+
+\PYG{c+cp}{\PYGZsh{}}\PYG{c+cp}{include \PYGZlt{}stdio.h\PYGZgt{}   }\PYG{c+c1}{// printf()}
+\PYG{c+cp}{\PYGZsh{}}\PYG{c+cp}{include \PYGZlt{}mpi.h\PYGZgt{}     }\PYG{c+c1}{// MPI}
+\PYG{c+cp}{\PYGZsh{}}\PYG{c+cp}{include \PYGZlt{}unistd.h\PYGZgt{}  }\PYG{c+c1}{// sleep()}
+
+\PYG{c+cp}{\PYGZsh{}}\PYG{c+cp}{define  MASTER 0}
+
+\PYG{c+cm}{/* answer the ultimate question of life, the universe, }
+\PYG{c+cm}{ *  and everything, based on id and numProcs.}
+\PYG{c+cm}{ * @param: id, an int}
+\PYG{c+cm}{ * @param: numProcs, an int}
+\PYG{c+cm}{ * Precondition: id is the MPI rank of this process}
+\PYG{c+cm}{ *             \PYGZam{}\PYGZam{} numProcs is the number of MPI processes.}
+\PYG{c+cm}{ * Postcondition: The return value is 42.}
+\PYG{c+cm}{ */}
+\PYG{k+kt}{int} \PYG{n+nf}{solveProblem}\PYG{p}{(}\PYG{k+kt}{int} \PYG{n}{id}\PYG{p}{,} \PYG{k+kt}{int} \PYG{n}{numProcs}\PYG{p}{)} \PYG{p}{\PYGZob{}}
+
+    \PYG{n}{sleep}\PYG{p}{(} \PYG{p}{(}\PYG{p}{(}\PYG{k+kt}{double}\PYG{p}{)}\PYG{n}{id}\PYG{o}{+}\PYG{l+m+mi}{1}\PYG{p}{)} \PYG{o}{/} \PYG{n}{numProcs}\PYG{p}{)}\PYG{p}{;}
+
+    \PYG{k}{return} \PYG{l+m+mi}{42}\PYG{p}{;}
+\PYG{p}{\PYGZcb{}}
+
+\PYG{k+kt}{int} \PYG{n+nf}{main}\PYG{p}{(}\PYG{k+kt}{int} \PYG{n}{argc}\PYG{p}{,} \PYG{k+kt}{char}\PYG{o}{*}\PYG{o}{*} \PYG{n}{argv}\PYG{p}{)} \PYG{p}{\PYGZob{}}
+    \PYG{k+kt}{int} \PYG{n}{id} \PYG{o}{=} \PYG{o}{-}\PYG{l+m+mi}{1}\PYG{p}{,} \PYG{n}{numProcesses} \PYG{o}{=} \PYG{o}{-}\PYG{l+m+mi}{1}\PYG{p}{;}
+    \PYG{k+kt}{double} \PYG{n}{startTime} \PYG{o}{=} \PYG{l+m+mf}{0.0}\PYG{p}{,} \PYG{n}{totalTime} \PYG{o}{=} \PYG{l+m+mf}{0.0}\PYG{p}{;}
+    \PYG{k+kt}{int} \PYG{n}{answer} \PYG{o}{=} \PYG{l+m+mf}{0.0}\PYG{p}{;}
+
+    \PYG{n}{MPI\PYGZus{}Init}\PYG{p}{(}\PYG{o}{\PYGZam{}}\PYG{n}{argc}\PYG{p}{,} \PYG{o}{\PYGZam{}}\PYG{n}{argv}\PYG{p}{)}\PYG{p}{;}
+    \PYG{n}{MPI\PYGZus{}Comm\PYGZus{}rank}\PYG{p}{(}\PYG{n}{MPI\PYGZus{}COMM\PYGZus{}WORLD}\PYG{p}{,} \PYG{o}{\PYGZam{}}\PYG{n}{id}\PYG{p}{)}\PYG{p}{;}
+    \PYG{n}{MPI\PYGZus{}Comm\PYGZus{}size}\PYG{p}{(}\PYG{n}{MPI\PYGZus{}COMM\PYGZus{}WORLD}\PYG{p}{,} \PYG{o}{\PYGZam{}}\PYG{n}{numProcesses}\PYG{p}{)}\PYG{p}{;}
+
+\PYG{c+c1}{//    MPI\PYGZus{}Barrier(MPI\PYGZus{}COMM\PYGZus{}WORLD);}
+    \PYG{k}{if} \PYG{p}{(} \PYG{n}{id} \PYG{o}{=}\PYG{o}{=} \PYG{n}{MASTER}\PYG{p}{)} \PYG{p}{\PYGZob{}}
+        \PYG{n}{startTime} \PYG{o}{=} \PYG{n}{MPI\PYGZus{}Wtime}\PYG{p}{(}\PYG{p}{)}\PYG{p}{;}
+    \PYG{p}{\PYGZcb{}}
+
+    \PYG{n}{answer} \PYG{o}{=} \PYG{n}{solveProblem}\PYG{p}{(}\PYG{n}{id}\PYG{p}{,} \PYG{n}{numProcesses}\PYG{p}{)}\PYG{p}{;}
+
+\PYG{c+c1}{//    MPI\PYGZus{}Barrier(MPI\PYGZus{}COMM\PYGZus{}WORLD);}
+    \PYG{k}{if} \PYG{p}{(} \PYG{n}{id} \PYG{o}{=}\PYG{o}{=} \PYG{n}{MASTER} \PYG{p}{)} \PYG{p}{\PYGZob{}}
+        \PYG{n}{totalTime} \PYG{o}{=} \PYG{n}{MPI\PYGZus{}Wtime}\PYG{p}{(}\PYG{p}{)} \PYG{o}{-} \PYG{n}{startTime}\PYG{p}{;}
+        \PYG{n}{printf}\PYG{p}{(}\PYG{l+s}{"}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s}{The answer is \PYGZpc{}d; computing it took \PYGZpc{}f secs.}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s}{"}\PYG{p}{,}
+                   \PYG{n}{answer}\PYG{p}{,} \PYG{n}{totalTime}\PYG{p}{)}\PYG{p}{;}
+    \PYG{p}{\PYGZcb{}}
+
+    \PYG{n}{MPI\PYGZus{}Finalize}\PYG{p}{(}\PYG{p}{)}\PYG{p}{;}
+    \PYG{k}{return} \PYG{l+m+mi}{0}\PYG{p}{;}
+\PYG{p}{\PYGZcb{}}
+\end{Verbatim}
+
+\emph{file: patternlets/MPI/14.barrier+Timing/barrier+timing.c}
+
+
+\section{15. Sequence Numbers}
+\label{MessagePassing/MPI_Patternlets:sequence-numbers}
+Tags can be placed on messages that are sent from a non-master node and received by the master node.
+Using tags is an alternative form of simulating the barrier example in example 13 above.
+
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{c+cm}{/* sequenceNumbers.c}
+\PYG{c+cm}{ *  ... shows how to acheive barrier-like behavior}
+\PYG{c+cm}{ *      by using MPI message tags as sequence numbers.}
+\PYG{c+cm}{ *}
+\PYG{c+cm}{ * Joel Adams, Calvin College, April 2016.}
+\PYG{c+cm}{ *}
+\PYG{c+cm}{ * Usage: mpirun -np 8 ./sequenceNumbers}
+\PYG{c+cm}{ *}
+\PYG{c+cm}{ * Exercise: }
+\PYG{c+cm}{ * 1. Compile; then run the program several times, }
+\PYG{c+cm}{ *     noting the intermixed outputs}
+\PYG{c+cm}{ * 2. Comment out the sendReceivePrint(..., "SECOND", 1); call;}
+\PYG{c+cm}{ *      uncomment the sendReceivePrint(..., "SECOND", 2); call;}
+\PYG{c+cm}{ *      then recompile and rerun, noting how the output changes.}
+\PYG{c+cm}{ * 3. Uncomment the sendReceivePrint(..., "THIRD", 3); }
+\PYG{c+cm}{ *      and sendReceivePrint(..., "FOURTH", 4); calls,}
+\PYG{c+cm}{ *      then recompile and rerun, noting how the output changes.}
+\PYG{c+cm}{ * 4. Explain the differences: what has caused the changes}
+\PYG{c+cm}{ *      in the program's behavior, and why?}
+\PYG{c+cm}{ */}
+
+\PYG{c+cp}{\PYGZsh{}}\PYG{c+cp}{include \PYGZlt{}stdio.h\PYGZgt{}   }\PYG{c+c1}{// printf()}
+\PYG{c+cp}{\PYGZsh{}}\PYG{c+cp}{include \PYGZlt{}mpi.h\PYGZgt{}     }\PYG{c+c1}{// MPI}
+
+\PYG{c+cm}{/* Have workers send messages to the master, which prints them.}
+\PYG{c+cm}{ * @param: id, an int}
+\PYG{c+cm}{ * @param: numProcesses, an int}
+\PYG{c+cm}{ * @param: hostName, a char*}
+\PYG{c+cm}{ * @param: messageNum, a char*}
+\PYG{c+cm}{ * @param: tagValue, an int}
+\PYG{c+cm}{ *}
+\PYG{c+cm}{ * Precondition: this routine is being called by an MPI process }
+\PYG{c+cm}{ *               \PYGZam{}\PYGZam{} id is the MPI rank of that process }
+\PYG{c+cm}{ *               \PYGZam{}\PYGZam{} numProcesses is the number of processes in the computation }
+\PYG{c+cm}{ *               \PYGZam{}\PYGZam{} hostName points to a char array containing the name of the}
+\PYG{c+cm}{ *                    host on which this MPI process is running }
+\PYG{c+cm}{ *               \PYGZam{}\PYGZam{} messageNum is "FIRST", "SECOND", "THIRD", ...}
+\PYG{c+cm}{ *               \PYGZam{}\PYGZam{} tagValue is the value for the tags of the message}
+\PYG{c+cm}{ *                    being sent and received this invocation of the function.}
+\PYG{c+cm}{ *}
+\PYG{c+cm}{ * Postcondition: each process whose id \PYGZgt{} 0 has sent a message to process 0}
+\PYG{c+cm}{ *                    containing id, numProcesses, hostName, messageNum,}
+\PYG{c+cm}{ *                    and tagValue }
+\PYG{c+cm}{ *                \PYGZam{}\PYGZam{} process 0 has received and output each message.}
+\PYG{c+cm}{ */}
+
+\PYG{c+cp}{\PYGZsh{}}\PYG{c+cp}{define BUFFER\PYGZus{}SIZE 200}
+\PYG{c+cp}{\PYGZsh{}}\PYG{c+cp}{define MASTER      0}
+
+\PYG{k+kt}{void} \PYG{n+nf}{sendReceivePrint}\PYG{p}{(}\PYG{k+kt}{int} \PYG{n}{id}\PYG{p}{,} \PYG{k+kt}{int} \PYG{n}{numProcesses}\PYG{p}{,} \PYG{k+kt}{char}\PYG{o}{*} \PYG{n}{hostName}\PYG{p}{,}
+                        \PYG{k+kt}{char}\PYG{o}{*} \PYG{n}{messageNum}\PYG{p}{,} \PYG{k+kt}{int} \PYG{n}{tagValue}\PYG{p}{)} \PYG{p}{\PYGZob{}}
+    \PYG{k+kt}{char} \PYG{n}{buffer}\PYG{p}{[}\PYG{n}{BUFFER\PYGZus{}SIZE}\PYG{p}{]} \PYG{o}{=} \PYG{p}{\PYGZob{}}\PYG{l+s+sc}{'\PYGZbs{}0'}\PYG{p}{\PYGZcb{}}\PYG{p}{;}\PYG{p}{;}
+    \PYG{n}{MPI\PYGZus{}Status} \PYG{n}{status}\PYG{p}{;}
+
+    \PYG{k}{if} \PYG{p}{(}\PYG{n}{id} \PYG{o}{!}\PYG{o}{=} \PYG{n}{MASTER}\PYG{p}{)} \PYG{p}{\PYGZob{}} 
+        \PYG{c+c1}{// Worker: Build a message and send it to the Master}
+        \PYG{k+kt}{int} \PYG{n}{length} \PYG{o}{=} \PYG{n}{sprintf}\PYG{p}{(}\PYG{n}{buffer}\PYG{p}{,}
+                              \PYG{l+s}{"}\PYG{l+s}{This is the \PYGZpc{}s message from process \PYGZsh{}\PYGZpc{}d of \PYGZpc{}d on \PYGZpc{}s.}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s}{"}\PYG{p}{,}
+                                \PYG{n}{messageNum}\PYG{p}{,} \PYG{n}{id}\PYG{p}{,} \PYG{n}{numProcesses}\PYG{p}{,} \PYG{n}{hostName}\PYG{p}{)}\PYG{p}{;}       
+        \PYG{n}{MPI\PYGZus{}Send}\PYG{p}{(}\PYG{n}{buffer}\PYG{p}{,} \PYG{n}{length}\PYG{o}{+}\PYG{l+m+mi}{1}\PYG{p}{,} \PYG{n}{MPI\PYGZus{}CHAR}\PYG{p}{,} \PYG{l+m+mi}{0}\PYG{p}{,} \PYG{n}{tagValue}\PYG{p}{,} \PYG{n}{MPI\PYGZus{}COMM\PYGZus{}WORLD}\PYG{p}{)}\PYG{p}{;}
+    \PYG{p}{\PYGZcb{}} \PYG{k}{else} \PYG{p}{\PYGZob{}}
+        \PYG{c+c1}{// Master: Receive and print the messages from all Workers}
+        \PYG{k}{for}\PYG{p}{(}\PYG{k+kt}{int} \PYG{n}{i} \PYG{o}{=} \PYG{l+m+mi}{0}\PYG{p}{;} \PYG{n}{i} \PYG{o}{\PYGZlt{}} \PYG{n}{numProcesses}\PYG{o}{-}\PYG{l+m+mi}{1}\PYG{p}{;} \PYG{n}{i}\PYG{o}{+}\PYG{o}{+}\PYG{p}{)} \PYG{p}{\PYGZob{}}
+           \PYG{n}{MPI\PYGZus{}Recv}\PYG{p}{(}\PYG{n}{buffer}\PYG{p}{,} \PYG{n}{BUFFER\PYGZus{}SIZE}\PYG{p}{,} \PYG{n}{MPI\PYGZus{}CHAR}\PYG{p}{,} \PYG{n}{MPI\PYGZus{}ANY\PYGZus{}SOURCE}\PYG{p}{,}
+                     \PYG{n}{tagValue}\PYG{p}{,} \PYG{n}{MPI\PYGZus{}COMM\PYGZus{}WORLD}\PYG{p}{,} \PYG{o}{\PYGZam{}}\PYG{n}{status}\PYG{p}{)}\PYG{p}{;}
+           \PYG{n}{printf}\PYG{p}{(}\PYG{n}{buffer}\PYG{p}{)}\PYG{p}{;}
+        \PYG{p}{\PYGZcb{}}
+    \PYG{p}{\PYGZcb{}}
+\PYG{p}{\PYGZcb{}}
+
+
+\PYG{k+kt}{int} \PYG{n+nf}{main}\PYG{p}{(}\PYG{k+kt}{int} \PYG{n}{argc}\PYG{p}{,} \PYG{k+kt}{char}\PYG{o}{*}\PYG{o}{*} \PYG{n}{argv}\PYG{p}{)} \PYG{p}{\PYGZob{}}
+    \PYG{k+kt}{int} \PYG{n}{id} \PYG{o}{=} \PYG{o}{-}\PYG{l+m+mi}{1}\PYG{p}{,} \PYG{n}{numProcesses} \PYG{o}{=} \PYG{o}{-}\PYG{l+m+mi}{1}\PYG{p}{,} \PYG{n}{length} \PYG{o}{=} \PYG{o}{-}\PYG{l+m+mi}{1}\PYG{p}{;}
+    \PYG{k+kt}{char} \PYG{n}{myHostName}\PYG{p}{[}\PYG{n}{MPI\PYGZus{}MAX\PYGZus{}PROCESSOR\PYGZus{}NAME}\PYG{p}{]} \PYG{o}{=} \PYG{p}{\PYGZob{}}\PYG{l+s+sc}{'\PYGZbs{}0'}\PYG{p}{\PYGZcb{}}\PYG{p}{;}
+
+    \PYG{n}{MPI\PYGZus{}Init}\PYG{p}{(}\PYG{o}{\PYGZam{}}\PYG{n}{argc}\PYG{p}{,} \PYG{o}{\PYGZam{}}\PYG{n}{argv}\PYG{p}{)}\PYG{p}{;}
+    \PYG{n}{MPI\PYGZus{}Comm\PYGZus{}rank}\PYG{p}{(}\PYG{n}{MPI\PYGZus{}COMM\PYGZus{}WORLD}\PYG{p}{,} \PYG{o}{\PYGZam{}}\PYG{n}{id}\PYG{p}{)}\PYG{p}{;}
+    \PYG{n}{MPI\PYGZus{}Comm\PYGZus{}size}\PYG{p}{(}\PYG{n}{MPI\PYGZus{}COMM\PYGZus{}WORLD}\PYG{p}{,} \PYG{o}{\PYGZam{}}\PYG{n}{numProcesses}\PYG{p}{)}\PYG{p}{;}
+    \PYG{n}{MPI\PYGZus{}Get\PYGZus{}processor\PYGZus{}name} \PYG{p}{(}\PYG{n}{myHostName}\PYG{p}{,} \PYG{o}{\PYGZam{}}\PYG{n}{length}\PYG{p}{)}\PYG{p}{;}
+
+    \PYG{n}{sendReceivePrint}\PYG{p}{(}\PYG{n}{id}\PYG{p}{,} \PYG{n}{numProcesses}\PYG{p}{,} \PYG{n}{myHostName}\PYG{p}{,} \PYG{l+s}{"}\PYG{l+s}{FIRST}\PYG{l+s}{"}\PYG{p}{,} \PYG{l+m+mi}{1}\PYG{p}{)}\PYG{p}{;}
+
+    \PYG{n}{sendReceivePrint}\PYG{p}{(}\PYG{n}{id}\PYG{p}{,} \PYG{n}{numProcesses}\PYG{p}{,} \PYG{n}{myHostName}\PYG{p}{,} \PYG{l+s}{"}\PYG{l+s}{SECOND}\PYG{l+s}{"}\PYG{p}{,} \PYG{l+m+mi}{1}\PYG{p}{)}\PYG{p}{;}
+\PYG{c+c1}{//    sendReceivePrint(id, numProcesses, myHostName, "SECOND", 2);}
+\PYG{c+c1}{//    sendReceivePrint(id, numProcesses, myHostName, "THIRD", 3);}
+\PYG{c+c1}{//    sendReceivePrint(id, numProcesses, myHostName, "FOURTH", 4);}
+
+    \PYG{n}{MPI\PYGZus{}Finalize}\PYG{p}{(}\PYG{p}{)}\PYG{p}{;}
+    \PYG{k}{return} \PYG{l+m+mi}{0}\PYG{p}{;}
+\PYG{p}{\PYGZcb{}}
+\end{Verbatim}
+
+\emph{file: patternlets/MPI/15.sequenceNumbers/sequenceNumbers.c}
 
 
 \chapter{Shared Memory Parallel Patternlets in OpenMP}

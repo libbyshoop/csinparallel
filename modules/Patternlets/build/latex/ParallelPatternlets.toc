@@ -6,44 +6,45 @@
 \contentsline {chapter}{\numberline {2}Message Passing Parallel Patternlets}{4}{chapter.2}
 \contentsline {section}{\numberline {2.1}Source Code}{4}{section.2.1}
 \contentsline {section}{\numberline {2.2}00. Single Program, Multiple Data}{4}{section.2.2}
-\contentsline {section}{\numberline {2.3}1. The Barrier Coordination Pattern}{5}{section.2.3}
-\contentsline {section}{\numberline {2.4}2. The Master-Worker Implementation Strategy Pattern}{6}{section.2.4}
-\contentsline {section}{\numberline {2.5}3. Message passing 1, using Send-Receive of a single value}{6}{section.2.5}
-\contentsline {section}{\numberline {2.6}4. Message passing 2, using Send-Receive of an array of values}{7}{section.2.6}
-\contentsline {section}{\numberline {2.7}5. Message passing 3, using Send-Receive with master-worker pattern}{9}{section.2.7}
-\contentsline {section}{\numberline {2.8}6 (text). Data Decomposition: on \emph {equal-sized chunks} using parallel-for}{10}{section.2.8}
-\contentsline {section}{\numberline {2.9}6 (visual). Data Decomposition: on \emph {equal-sized chunks} using parallel-for}{11}{section.2.9}
-\contentsline {section}{\numberline {2.10}7 (text). Data Decomposition: on \emph {chunks of size 1} using parallel-for}{13}{section.2.10}
-\contentsline {section}{\numberline {2.11}7 (visual). Data Decomposition: on \emph {chunks of size 1} using parallel-for}{13}{section.2.11}
-\contentsline {section}{\numberline {2.12}8. Broadcast: a special form of message passing}{15}{section.2.12}
-\contentsline {section}{\numberline {2.13}9. Collective Communication: Reduction}{16}{section.2.13}
-\contentsline {section}{\numberline {2.14}10. Collective Communication: Reduction}{17}{section.2.14}
-\contentsline {section}{\numberline {2.15}11. Collective communication: Scatter for message-passing data decomposition}{18}{section.2.15}
-\contentsline {section}{\numberline {2.16}12. Collective communication: Gather for message-passing data decomposition}{19}{section.2.16}
-\contentsline {chapter}{\numberline {3}Shared Memory Parallel Patternlets in OpenMP}{22}{chapter.3}
-\contentsline {section}{\numberline {3.1}Source Code}{22}{section.3.1}
-\contentsline {section}{\numberline {3.2}Patternlets Grouped By Type}{23}{section.3.2}
-\contentsline {subsection}{\numberline {3.2.1}Shared Memory Program Structure and Coordination Patterns}{23}{subsection.3.2.1}
-\contentsline {subsubsection}{0. Program Structure Implementation Strategy: The basic fork-join pattern}{23}{subsubsection*.3}
-\contentsline {subsubsection}{1. Program Structure Implementation Strategy: Fork-join with setting the number of threads}{24}{subsubsection*.4}
-\contentsline {subsubsection}{2. Program Structure Implementation Strategy: Single Program, multiple data}{25}{subsubsection*.5}
-\contentsline {subsubsection}{3. Program Structure Implementation Strategy: Single Program, multiple data with user-defined number of threads}{28}{subsubsection*.6}
-\contentsline {subsubsection}{4. Coordination: Synchronization with a Barrier}{29}{subsubsection*.7}
-\contentsline {subsubsection}{5. Program Structure: The Master-Worker Implementation Strategy}{31}{subsubsection*.8}
-\contentsline {subsection}{\numberline {3.2.2}Data Decomposition Algorithm Strategies and Related Coordination Strategies}{32}{subsection.3.2.2}
-\contentsline {subsubsection}{6. Shared Data Decomposition Algorithm Strategy: chunks of data per thread using a parallel for loop implementation strategy}{32}{subsubsection*.9}
-\contentsline {subsubsection}{7. Shared Data Decomposition Algorithm Strategy: one iteration per thread in a parallel for loop implementation strategy}{35}{subsubsection*.10}
-\contentsline {subsubsection}{8. Coordination Using Collective Communication: Reduction}{36}{subsubsection*.11}
-\contentsline {paragraph}{Something to think about}{38}{paragraph*.12}
-\contentsline {subsubsection}{9. Coordination Using Collective Communication: Reduction revisited}{38}{subsubsection*.13}
-\contentsline {subsubsection}{10. Dynamic Data Decomposition}{39}{subsubsection*.14}
-\contentsline {subsection}{\numberline {3.2.3}Patterns used when threads share data values}{41}{subsection.3.2.3}
-\contentsline {subsubsection}{11. Shared Data Algorithm Strategy: Parallel-for-loop pattern needs non-shared, private variables}{41}{subsubsection*.15}
-\contentsline {subsubsection}{12. Race Condition: missing the mutual exclusion coordination pattern}{42}{subsubsection*.16}
-\contentsline {subsubsection}{13. The Mutual Exclusion Coordination Pattern: two ways to ensure}{43}{subsubsection*.17}
-\contentsline {subsubsection}{14. Mutual Exclusion Coordination Pattern: compare performance}{44}{subsubsection*.18}
-\contentsline {subsubsection}{15. Mutual Exclusion Coordination Pattern: language difference}{46}{subsubsection*.19}
-\contentsline {paragraph}{Some Explanation}{46}{paragraph*.20}
-\contentsline {subsection}{\numberline {3.2.4}Task Decomposition Algorithm Strategies}{47}{subsection.3.2.4}
-\contentsline {subsubsection}{16. Task Decomposition Algorithm Strategy using OpenMP section directive}{47}{subsubsection*.21}
-\contentsline {subsection}{\numberline {3.2.5}Categorizing Patterns}{48}{subsection.3.2.5}
+\contentsline {section}{\numberline {2.3}01. The Master-Worker Implementation Strategy Pattern}{5}{section.2.3}
+\contentsline {section}{\numberline {2.4}02. Message passing 1, using Send-Receive of a single value}{6}{section.2.4}
+\contentsline {section}{\numberline {2.5}03. Message passing 2, using Send-Receive of an array of values}{7}{section.2.5}
+\contentsline {section}{\numberline {2.6}04. Message passing 3, using Send-Receive with master-worker pattern}{8}{section.2.6}
+\contentsline {section}{\numberline {2.7}05. Data Decomposition: on \emph {equal-sized chunks} using parallel-for}{9}{section.2.7}
+\contentsline {section}{\numberline {2.8}06. Data Decomposition: on \emph {chunks of size 1} using parallel-for}{10}{section.2.8}
+\contentsline {section}{\numberline {2.9}07. Broadcast: a special form of message passing}{11}{section.2.9}
+\contentsline {section}{\numberline {2.10}08. Broadcast: send data to all processes}{12}{section.2.10}
+\contentsline {section}{\numberline {2.11}09. Collective Communication: Reduction}{13}{section.2.11}
+\contentsline {section}{\numberline {2.12}10. Collective Communication: Reduction}{14}{section.2.12}
+\contentsline {section}{\numberline {2.13}11. Collective communication: Scatter for message-passing data decomposition}{16}{section.2.13}
+\contentsline {section}{\numberline {2.14}12. Collective communication: Gather for message-passing data decomposition}{17}{section.2.14}
+\contentsline {section}{\numberline {2.15}13. The Barrier Coordination Pattern}{18}{section.2.15}
+\contentsline {section}{\numberline {2.16}14. Timing code using the Barrier Coordination Pattern}{20}{section.2.16}
+\contentsline {section}{\numberline {2.17}15. Sequence Numbers}{21}{section.2.17}
+\contentsline {chapter}{\numberline {3}Shared Memory Parallel Patternlets in OpenMP}{24}{chapter.3}
+\contentsline {section}{\numberline {3.1}Source Code}{24}{section.3.1}
+\contentsline {section}{\numberline {3.2}Patternlets Grouped By Type}{25}{section.3.2}
+\contentsline {subsection}{\numberline {3.2.1}Shared Memory Program Structure and Coordination Patterns}{25}{subsection.3.2.1}
+\contentsline {subsubsection}{0. Program Structure Implementation Strategy: The basic fork-join pattern}{25}{subsubsection*.3}
+\contentsline {subsubsection}{1. Program Structure Implementation Strategy: Fork-join with setting the number of threads}{26}{subsubsection*.4}
+\contentsline {subsubsection}{2. Program Structure Implementation Strategy: Single Program, multiple data}{27}{subsubsection*.5}
+\contentsline {subsubsection}{3. Program Structure Implementation Strategy: Single Program, multiple data with user-defined number of threads}{30}{subsubsection*.6}
+\contentsline {subsubsection}{4. Coordination: Synchronization with a Barrier}{31}{subsubsection*.7}
+\contentsline {subsubsection}{5. Program Structure: The Master-Worker Implementation Strategy}{33}{subsubsection*.8}
+\contentsline {subsection}{\numberline {3.2.2}Data Decomposition Algorithm Strategies and Related Coordination Strategies}{34}{subsection.3.2.2}
+\contentsline {subsubsection}{6. Shared Data Decomposition Algorithm Strategy: chunks of data per thread using a parallel for loop implementation strategy}{34}{subsubsection*.9}
+\contentsline {subsubsection}{7. Shared Data Decomposition Algorithm Strategy: one iteration per thread in a parallel for loop implementation strategy}{37}{subsubsection*.10}
+\contentsline {subsubsection}{8. Coordination Using Collective Communication: Reduction}{38}{subsubsection*.11}
+\contentsline {paragraph}{Something to think about}{40}{paragraph*.12}
+\contentsline {subsubsection}{9. Coordination Using Collective Communication: Reduction revisited}{40}{subsubsection*.13}
+\contentsline {subsubsection}{10. Dynamic Data Decomposition}{41}{subsubsection*.14}
+\contentsline {subsection}{\numberline {3.2.3}Patterns used when threads share data values}{43}{subsection.3.2.3}
+\contentsline {subsubsection}{11. Shared Data Algorithm Strategy: Parallel-for-loop pattern needs non-shared, private variables}{43}{subsubsection*.15}
+\contentsline {subsubsection}{12. Race Condition: missing the mutual exclusion coordination pattern}{44}{subsubsection*.16}
+\contentsline {subsubsection}{13. The Mutual Exclusion Coordination Pattern: two ways to ensure}{45}{subsubsection*.17}
+\contentsline {subsubsection}{14. Mutual Exclusion Coordination Pattern: compare performance}{46}{subsubsection*.18}
+\contentsline {subsubsection}{15. Mutual Exclusion Coordination Pattern: language difference}{48}{subsubsection*.19}
+\contentsline {paragraph}{Some Explanation}{48}{paragraph*.20}
+\contentsline {subsection}{\numberline {3.2.4}Task Decomposition Algorithm Strategies}{49}{subsection.3.2.4}
+\contentsline {subsubsection}{16. Task Decomposition Algorithm Strategy using OpenMP section directive}{49}{subsubsection*.21}
+\contentsline {subsection}{\numberline {3.2.5}Categorizing Patterns}{50}{subsection.3.2.5}

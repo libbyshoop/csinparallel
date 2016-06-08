@@ -36,107 +36,89 @@ for its variables.  This is why we call it single program, multiple data.
 
 *file: patternlets/MPI/00.spmd/spmd.c*
 
-1. The Barrier Coordination Pattern
+
+
+01. The Master-Worker Implementation Strategy Pattern
 *****************************************************
 
-.. literalinclude:: ../patternlets/MPI/01.barrier/barrier.c
+.. literalinclude:: ../patternlets/MPI/01.masterWorker/masterWorker.c
     :language: c
 
 
-*file: patternlets/MPI/01.barrier/masterWorker.c*
+*file: patternlets/MPI/01.masterWorker/masterWorker.c*
 
-2. The Master-Worker Implementation Strategy Pattern
-*****************************************************
+02. Message passing 1, using Send-Receive of a single value
+***********************************************************
 
-.. literalinclude:: ../patternlets/MPI/02.masterWorker/masterWorker.c
+.. literalinclude:: ../patternlets/MPI/02.messagePassing/messagePassing.c
     :language: c
 
+*file: patternlets/MPI/02.messagePassing/messagePassing.c*
 
-*file: patternlets/MPI/02.masterWorker/masterWorker.c*
+03. Message passing 2,  using Send-Receive of an array of values
+****************************************************************
 
-3. Message passing 1, using Send-Receive of a single value
-**********************************************************
-
-.. literalinclude:: ../patternlets/MPI/03.messagePassing/messagePassing.c
+.. literalinclude:: ../patternlets/MPI/03.messagePassing2/messagePassing2.c
     :language: c
 
-*file: patternlets/MPI/03.messagePassing/messagePassing.c*
+*file: patternlets/MPI/03.messagePassing2/messagePassing2.c*
 
-4. Message passing 2,  using Send-Receive of an array of values
-***************************************************************
+04. Message passing 3,  using Send-Receive with master-worker pattern
+*********************************************************************
 
-.. literalinclude:: ../patternlets/MPI/04.messagePassing2/messagePassing2.c
+.. literalinclude:: ../patternlets/MPI/04.messagePassing3/messagePassing3.c
     :language: c
 
-*file: patternlets/MPI/04.messagePassing2/messagePassing2.c*
+*file: patternlets/MPI/04.messagePassing3/messagePassing3.c*
 
-5. Message passing 3,  using Send-Receive with master-worker pattern
-********************************************************************
-
-.. literalinclude:: ../patternlets/MPI/05.messagePassing3/messagePassing3.c
-    :language: c
-
-*file: patternlets/MPI/05.messagePassing3/messagePassing3.c*
-
-6 (text). Data Decomposition: on *equal-sized chunks* using parallel-for 
+05. Data Decomposition: on *equal-sized chunks* using parallel-for 
 ************************************************************************
 
 In this example, the data being decomposed is simply the set of integers 
 from zero to REPS * numProcesses, which are used in the for loop.
 
-.. literalinclude:: ../patternlets/MPI/06.parallelLoop-equalChunks/textual/parallelLoopEqualChunks.c
+.. literalinclude:: ../patternlets/MPI/05.parallelLoop-equalChunks/parallelLoopEqualChunks.c
     :language: c
 
-*file: patternlets/MPI/06.parallelLoop-equalChunks/textual/parallelLoopEqualChunks.c*
-
-6 (visual). Data Decomposition: on *equal-sized chunks* using parallel-for
-**************************************************************************
-
-In this example, we can visually see how the slicing of data used in iterations
-of a nested for loop is working.  Run it to see the effect!
-
-.. literalinclude:: ../patternlets/MPI/06.parallelLoop-equalChunks/visual/parallelForBlocks.c
-    :language: c
+*file: patternlets/MPI/05.parallelLoop-equalChunks/parallelLoopEqualChunks.c*
 
 
-*file: patternlets/MPI/06.parallelLoop-equalChunks/visual/parallelForBlocks.c*
-
-7 (text). Data Decomposition: on *chunks of size 1* using parallel-for 
+06. Data Decomposition: on *chunks of size 1* using parallel-for 
 **************************************************************************
 
 This is a basic example that does not yet include a data array, though
 it would typically be used when each process would be working on a portion
 of an array that could have been looped over in a sequential solution.
 
-.. literalinclude:: ../patternlets/MPI/07.parallelLoop-chunksOf1/textual/parallelLoopChunksOf1.c
+.. literalinclude:: ../patternlets/MPI/06.parallelLoop-chunksOf1/parallelLoopChunksOf1.c
     :language: c
 
-*file: patternlets/MPI/07.parallelLoop-chunksOf1/textual/parallelLoopChunksOf1.c*
+*file: patternlets/MPI/06.parallelLoop-chunksOf1/parallelLoopChunksOf1.c*
 
-7 (visual). Data Decomposition: on *chunks of size 1* using parallel-for 
-**************************************************************************
 
-In this example you can see how blocks of values within a matrix might be
-assigned to each process.  Run it to see the effect!
+07. Broadcast: a special form of message passing
+**************************************************
 
-.. literalinclude:: ../patternlets/MPI/07.parallelLoop-chunksOf1/visual/parallelForSlices.c
+This example shows how a data item read from a file can be sent to all the processes.
+
+.. literalinclude:: ../patternlets/MPI/07.broadcast/broadcast.c
     :language: c
 
-*file: atternlets/MPI/07.parallelLoop-chunksOf1/visual/parallelForSlices.c*
+*file: patternlets/MPI/07.broadcast/broadcast.c*
 
-8. Broadcast: a special form of message passing
+08. Broadcast: send data to all processes
 **************************************************
 
 This example shows how to ensure that all processes have a copy of an array
 created by a single *master* node.
 
-.. literalinclude:: ../patternlets/MPI/08.broadcast/broadcast.c
+.. literalinclude:: ../patternlets/MPI/08.broadcast2/broadcast2.c
     :language: c
 
-*file: patternlets/MPI/08.broadcast/broadcast.c*
+*file: patternlets/MPI/08.broadcast2/broadcast2.c*
 
-9. Collective Communication: Reduction
-**************************************
+09. Collective Communication: Reduction
+***************************************
 
 Once processes have performed independent concurrent computations, possibly
 on some portion of decomposed data, it is quite common to then *reduce*
@@ -186,4 +168,43 @@ a copy of its portion of the array back to the root, or master process.
 
 *file: patternlets/MPI/12.gather/gather.c*
 
+13. The Barrier Coordination Pattern
+*****************************************************
+
+A barrier is used when you want all the processes to complete a portion of
+code before continuing. Use this exercise to verify that is is ocurring when
+you add the call to the MPI_Barrier funtion.
+
+.. literalinclude:: ../patternlets/MPI/13.barrier/barrier.c
+    :language: c
+
+
+*file: patternlets/MPI/13.barrier/barrier.c*
+
+14. Timing code using the Barrier Coordination Pattern
+******************************************************
+
+In this example you can run the code several times and determine the average, median, and minimum
+execution time when the code has a barrier and when it does not. The primary purpose of this exercise
+is to illustrate that one of the most useful uses of a barrier is to ensure that you are getting legitimate
+timings for your code examples. By using a barrier, you ensure that all processes have finished before
+recording the time using the master node.
+
+.. literalinclude:: ../patternlets/MPI/14.barrier+Timing/barrier+timing.c
+    :language: c
+
+
+*file: patternlets/MPI/14.barrier+Timing/barrier+timing.c*
+
+15. Sequence Numbers
+*****************************************************
+
+Tags can be placed on messages that are sent from a non-master node and received by the master node.
+Using tags is an alternative form of simulating the barrier example in example 13 above.
+
+.. literalinclude:: ../patternlets/MPI/15.sequenceNumbers/sequenceNumbers.c
+    :language: c
+
+
+*file: patternlets/MPI/15.sequenceNumbers/sequenceNumbers.c*
 

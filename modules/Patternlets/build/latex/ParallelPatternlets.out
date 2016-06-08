@@ -3,20 +3,21 @@
 \BOOKMARK [0][-]{chapter.2}{Message Passing Parallel Patternlets}{}% 3
 \BOOKMARK [1][-]{section.2.1}{Source Code}{chapter.2}% 4
 \BOOKMARK [1][-]{section.2.2}{00. Single Program, Multiple Data}{chapter.2}% 5
-\BOOKMARK [1][-]{section.2.3}{1. The Barrier Coordination Pattern}{chapter.2}% 6
-\BOOKMARK [1][-]{section.2.4}{2. The Master-Worker Implementation Strategy Pattern}{chapter.2}% 7
-\BOOKMARK [1][-]{section.2.5}{3. Message passing 1, using Send-Receive of a single value}{chapter.2}% 8
-\BOOKMARK [1][-]{section.2.6}{4. Message passing 2, using Send-Receive of an array of values}{chapter.2}% 9
-\BOOKMARK [1][-]{section.2.7}{5. Message passing 3, using Send-Receive with master-worker pattern}{chapter.2}% 10
-\BOOKMARK [1][-]{section.2.8}{6 \(text\). Data Decomposition: on equal-sized chunks using parallel-for}{chapter.2}% 11
-\BOOKMARK [1][-]{section.2.9}{6 \(visual\). Data Decomposition: on equal-sized chunks using parallel-for}{chapter.2}% 12
-\BOOKMARK [1][-]{section.2.10}{7 \(text\). Data Decomposition: on chunks of size 1 using parallel-for}{chapter.2}% 13
-\BOOKMARK [1][-]{section.2.11}{7 \(visual\). Data Decomposition: on chunks of size 1 using parallel-for}{chapter.2}% 14
-\BOOKMARK [1][-]{section.2.12}{8. Broadcast: a special form of message passing}{chapter.2}% 15
-\BOOKMARK [1][-]{section.2.13}{9. Collective Communication: Reduction}{chapter.2}% 16
-\BOOKMARK [1][-]{section.2.14}{10. Collective Communication: Reduction}{chapter.2}% 17
-\BOOKMARK [1][-]{section.2.15}{11. Collective communication: Scatter for message-passing data decomposition}{chapter.2}% 18
-\BOOKMARK [1][-]{section.2.16}{12. Collective communication: Gather for message-passing data decomposition}{chapter.2}% 19
-\BOOKMARK [0][-]{chapter.3}{Shared Memory Parallel Patternlets in OpenMP}{}% 20
-\BOOKMARK [1][-]{section.3.1}{Source Code}{chapter.3}% 21
-\BOOKMARK [1][-]{section.3.2}{Patternlets Grouped By Type}{chapter.3}% 22
+\BOOKMARK [1][-]{section.2.3}{01. The Master-Worker Implementation Strategy Pattern}{chapter.2}% 6
+\BOOKMARK [1][-]{section.2.4}{02. Message passing 1, using Send-Receive of a single value}{chapter.2}% 7
+\BOOKMARK [1][-]{section.2.5}{03. Message passing 2, using Send-Receive of an array of values}{chapter.2}% 8
+\BOOKMARK [1][-]{section.2.6}{04. Message passing 3, using Send-Receive with master-worker pattern}{chapter.2}% 9
+\BOOKMARK [1][-]{section.2.7}{05. Data Decomposition: on equal-sized chunks using parallel-for}{chapter.2}% 10
+\BOOKMARK [1][-]{section.2.8}{06. Data Decomposition: on chunks of size 1 using parallel-for}{chapter.2}% 11
+\BOOKMARK [1][-]{section.2.9}{07. Broadcast: a special form of message passing}{chapter.2}% 12
+\BOOKMARK [1][-]{section.2.10}{08. Broadcast: send data to all processes}{chapter.2}% 13
+\BOOKMARK [1][-]{section.2.11}{09. Collective Communication: Reduction}{chapter.2}% 14
+\BOOKMARK [1][-]{section.2.12}{10. Collective Communication: Reduction}{chapter.2}% 15
+\BOOKMARK [1][-]{section.2.13}{11. Collective communication: Scatter for message-passing data decomposition}{chapter.2}% 16
+\BOOKMARK [1][-]{section.2.14}{12. Collective communication: Gather for message-passing data decomposition}{chapter.2}% 17
+\BOOKMARK [1][-]{section.2.15}{13. The Barrier Coordination Pattern}{chapter.2}% 18
+\BOOKMARK [1][-]{section.2.16}{14. Timing code using the Barrier Coordination Pattern}{chapter.2}% 19
+\BOOKMARK [1][-]{section.2.17}{15. Sequence Numbers}{chapter.2}% 20
+\BOOKMARK [0][-]{chapter.3}{Shared Memory Parallel Patternlets in OpenMP}{}% 21
+\BOOKMARK [1][-]{section.3.1}{Source Code}{chapter.3}% 22
+\BOOKMARK [1][-]{section.3.2}{Patternlets Grouped By Type}{chapter.3}% 23
