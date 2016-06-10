@@ -7,6 +7,8 @@
 Parallel Patternlets
 **********************
 
+**Last Updated:** |date|
+
 This document contains simple examples of basic elements that are combined to form patterns often used in programs employing parallelism.  We call these examples *patternlets* because they are deliberately trivial, small, yet functioning programs that illustrate a basic shell of how a particular parallel pattern is created in a program.  They are starting points you can use to create realistic working programs of your own that use the patterns.  Before diving into the examples, first there will be some background on parallel programming patterns.
 
 .. toctree::
@@ -23,3 +25,4 @@ This document contains simple examples of basic elements that are combined to fo
 	* :ref:`modindex`
 	* :ref:`search`
 
+.. |date| date::

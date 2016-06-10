@@ -13,7 +13,7 @@
 
 
 \title{Map-reduce Computing for Introductory Students using WebMapReduce}
-\date{March 05, 2013}
+\date{June 10, 2016}
 \release{}
 \author{CSInParallel Project}
 \newcommand{\sphinxlogo}{}
@@ -117,7 +117,7 @@
 \phantomsection\label{index::doc}
 
 
-\textbf{Last Updated:} Nov. 13, 2012
+\textbf{Last Updated:} 2016-06-10
 
 The first section below is preliminary reading for any of the following three sections.
 It describes a map-reduce system, or framework, using distrubted computers in a cluster
@@ -339,17 +339,20 @@ In this lab you will use a web-based program called \emph{WebMapReduce}
 run them on an underlying \emph{Hadoop} map-reduce system running on a
 cluster of computers.
 
-You will use WebMapReduce on a cluster of computers at Macalester
+You will use WebMapReduce on a cluster of computers at Saint Olaf
 College. You should access WebMapReduce now and register for a
 login by going to this URL on your web browser:
 
-\href{http://selkie.macalester.edu/wmr}{http://selkie.macalester.edu/wmr}
+\href{http://cumulus.cs.stolaf.edu/wmr/}{http://cumulus.cs.stolaf.edu/wmr/}
 
 Choose the link at the very upper right of this page that says
-`Register'. Use your Macalester email address as your login name,
+`Register'. Use your email address as your login name,
 and provide the other information asked for. You choose your own
 password, so that you can remember it and have control of your
 account.
+
+\textbf{Note}: To complete your registration, you will need a registration
+key from your instructor.
 
 For later reference, you may want to check this \href{http://webmapreduce.sourceforge.net/docs/using/index.html}{documentation for
 WMR}.
@@ -636,7 +639,7 @@ In a browser, visit the WMR site at (if you don't already have it
 open from registering):
 \begin{quote}
 
-\href{http://selkie.macalester.edu/wmr}{http://selkie.macalester.edu/wmr}
+\href{http://cumulus.cs.stolaf.edu/wmr/}{http://cumulus.cs.stolaf.edu/wmr/}
 \end{quote}
 
 \item {} 
@@ -1364,16 +1367,20 @@ size.
 The first data set we will explore is about Poker Hands. The Poker
 Hand Dataset contains a listing of 1,000,000 randomly generated, 5
 card poker hands. Each line of the document contains a
-comma-separated list of the information of each hand. If you read
+comma-separated list of the information for each hand. If you read
 it in order, each line describes first the suit, then the value of
-each card. The final value on the line is the ranking of the hand.
-So, each line reads, in abbreviated phrasing
+each card. The final value on the line is the ranking of the hand (described below).
+
+So, each line representing a particular hand reads, in abbreviated phrasing:
 
 \begin{Verbatim}[commandchars=\\\{\}]
-\PYG{l+s+sb}{{}`S1,C1,S2,C2,S3,C3,S4,C4,S5,C4,R{}`}
+\PYG{l+s+sb}{{}`S1,C1,S2,C2,S3,C3,S4,C4,S5,C5,R{}`}
 \end{Verbatim}
 
-The suits are translated as:
+where S1 is the value of the suit of card 1 in the hand, C1 is the value of card 1,
+S2 is the value of the suit of card 2, C2 the value of card 2, and so on.
+
+The suit data values used are:
 
 \begin{Verbatim}[commandchars=\\\{\}]
 1    Hearts
@@ -1382,7 +1389,20 @@ The suits are translated as:
 4    Clubs
 \end{Verbatim}
 
-The rankings move in standard poker hand rank ordering:
+The card data values are:
+
+\begin{Verbatim}[commandchars=\\\{\}]
+1    Ace
+2    Two
+3    Three
+...
+10   Ten
+11   Jack
+12   Queen
+13   King
+\end{Verbatim}
+
+The rankings are numbered in standard poker hand rank ordering:
 
 \begin{Verbatim}[commandchars=\\\{\}]
 0    High Card
@@ -1397,10 +1417,11 @@ The rankings move in standard poker hand rank ordering:
 9    Royal flush (Ace, King, Queen, Jack, Ten, all of the same suit)
 \end{Verbatim}
 
-So, a royal flush in hearts would look like:
+So, using the mapping of data values on the left to actual cards and hands on the right
+in the above three tables, a data line for a royal flush in hearts would look like:
 
 \begin{Verbatim}[commandchars=\\\{\}]
-\PYG{l+s+sb}{{}`1,1,1,13,1,12,1,11,1,10,9{}`}
+\PYG{l+m+mi}{1}\PYG{p}{,}\PYG{l+m+mi}{1}\PYG{p}{,}\PYG{l+m+mi}{1}\PYG{p}{,}\PYG{l+m+mi}{13}\PYG{p}{,}\PYG{l+m+mi}{1}\PYG{p}{,}\PYG{l+m+mi}{12}\PYG{p}{,}\PYG{l+m+mi}{1}\PYG{p}{,}\PYG{l+m+mi}{11}\PYG{p}{,}\PYG{l+m+mi}{1}\PYG{p}{,}\PYG{l+m+mi}{10}\PYG{p}{,}\PYG{l+m+mi}{9}
 \end{Verbatim}
 
 The first thing we'll do with this is count how many of the

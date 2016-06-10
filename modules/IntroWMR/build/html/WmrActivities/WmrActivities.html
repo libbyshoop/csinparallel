@@ -55,20 +55,32 @@ size.</p>
 <p>The first data set we will explore is about Poker Hands. The Poker
 Hand Dataset contains a listing of 1,000,000 randomly generated, 5
 card poker hands. Each line of the document contains a
-comma-separated list of the information of each hand. If you read
+comma-separated list of the information for each hand. If you read
 it in order, each line describes first the suit, then the value of
-each card. The final value on the line is the ranking of the hand.
-So, each line reads, in abbreviated phrasing</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="sb">`S1,C1,S2,C2,S3,C3,S4,C4,S5,C4,R`</span>
+each card. The final value on the line is the ranking of the hand (described below).</p>
+<p>So, each line representing a particular hand reads, in abbreviated phrasing:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="sb">`S1,C1,S2,C2,S3,C3,S4,C4,S5,C5,R`</span>
 </pre></div>
 </div>
-<p>The suits are translated as:</p>
+<p>where S1 is the value of the suit of card 1 in the hand, C1 is the value of card 1,
+S2 is the value of the suit of card 2, C2 the value of card 2, and so on.</p>
+<p>The suit data values used are:</p>
 <div class="highlight-python"><pre>1    Hearts
 2    Spades
 3    Diamonds
 4    Clubs</pre>
 </div>
-<p>The rankings move in standard poker hand rank ordering:</p>
+<p>The card data values are:</p>
+<div class="highlight-python"><pre>1    Ace
+2    Two
+3    Three
+...
+10   Ten
+11   Jack
+12   Queen
+13   King</pre>
+</div>
+<p>The rankings are numbered in standard poker hand rank ordering:</p>
 <div class="highlight-python"><pre>0    High Card
 1    Pair
 2    Two-Pair
@@ -80,8 +92,9 @@ So, each line reads, in abbreviated phrasing</p>
 8    Straight flush (straight of cards all in the same suit)
 9    Royal flush (Ace, King, Queen, Jack, Ten, all of the same suit)</pre>
 </div>
-<p>So, a royal flush in hearts would look like:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="sb">`1,1,1,13,1,12,1,11,1,10,9`</span>
+<p>So, using the mapping of data values on the left to actual cards and hands on the right
+in the above three tables, a data line for a royal flush in hearts would look like:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">13</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">12</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">11</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">10</span><span class="p">,</span><span class="mi">9</span>
 </pre></div>
 </div>
 <p>The first thing we&#8217;ll do with this is count how many of the
@@ -577,7 +590,7 @@ on your keyboard as you select the columns in the list.</li>
     </div>
     <div class="footer">
         &copy; Copyright This work is licensed under a Creative Commons Attribution-ShareAlike 3.0 Unported License.
-      Last updated on Mar 03, 2016.
+      Last updated on Jun 10, 2016.
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
     </div>
   </body>

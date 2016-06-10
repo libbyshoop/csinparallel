@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-2.3-1.40.12 (TeX Live 2011) (format=pdflatex 2011.7.3)  8 JUN 2016 18:24
+This is pdfTeX, Version 3.1415926-2.3-1.40.12 (TeX Live 2011) (format=pdflatex 2011.7.3)  10 JUN 2016 15:09
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -920,97 +920,97 @@ less on input line 116.
 ]
 Chapter 1.
 LaTeX Font Info:    Font shape `T1/phv/bx/n' in size <14.4> not available
-(Font)              Font shape `T1/phv/b/n' tried instead on input line 123.
+(Font)              Font shape `T1/phv/b/n' tried instead on input line 125.
 LaTeX Font Info:    Font shape `T1/phv/bx/n' in size <12> not available
-(Font)              Font shape `T1/phv/b/n' tried instead on input line 141.
+(Font)              Font shape `T1/phv/b/n' tried instead on input line 143.
 
 Package Fancyhdr Warning: \fancyfoot's `E' option without twoside option is use
-less on input line 165.
+less on input line 167.
 
 [2
 
 ] [3]
 Chapter 2.
-LaTeX Font Info:    Try loading font information for T1+pcr on input line 223.
+LaTeX Font Info:    Try loading font information for T1+pcr on input line 225.
 (/usr/local/texlive/2011/texmf-dist/tex/latex/psnfss/t1pcr.fd
 File: t1pcr.fd 2001/06/04 font definitions for T1/pcr.
 )
 LaTeX Font Info:    Font shape `T1/pcr/m/it' in size <9> not available
-(Font)              Font shape `T1/pcr/m/sl' tried instead on input line 238.
+(Font)              Font shape `T1/pcr/m/sl' tried instead on input line 240.
 LaTeX Font Info:    Font shape `T1/pcr/bx/n' in size <9> not available
-(Font)              Font shape `T1/pcr/b/n' tried instead on input line 258.
+(Font)              Font shape `T1/pcr/b/n' tried instead on input line 260.
 
 
 Package Fancyhdr Warning: \fancyfoot's `E' option without twoside option is use
-less on input line 273.
+less on input line 275.
 
 [4
 
 ] [5] [6] [7] [8]
 LaTeX Font Info:    Font shape `T1/phv/bx/it' in size <14.4> not available
-(Font)              Font shape `T1/phv/b/it' tried instead on input line 536.
+(Font)              Font shape `T1/phv/b/it' tried instead on input line 538.
 LaTeX Font Info:    Font shape `T1/phv/b/it' in size <14.4> not available
-(Font)              Font shape `T1/phv/b/sl' tried instead on input line 536.
+(Font)              Font shape `T1/phv/b/sl' tried instead on input line 538.
 LaTeX Font Info:    Font shape `T1/phv/bx/it' in size <10> not available
-(Font)              Font shape `T1/phv/b/it' tried instead on input line 586.
+(Font)              Font shape `T1/phv/b/it' tried instead on input line 588.
 LaTeX Font Info:    Font shape `T1/phv/b/it' in size <10> not available
-(Font)              Font shape `T1/phv/b/sl' tried instead on input line 586.
+(Font)              Font shape `T1/phv/b/sl' tried instead on input line 588.
  [9] [10] [11] [12] [13] [14] [15] [16]
-Overfull \vbox (0.71419pt too high) detected at line 1047
+Overfull \vbox (0.71419pt too high) detected at line 1049
  []
 
 [17] [18] [19] [20] [21]
-Underfull \vbox (badness 10000) detected at line 1323
+Underfull \vbox (badness 10000) detected at line 1325
  []
 
 
-Underfull \vbox (badness 10000) detected at line 1323
+Underfull \vbox (badness 10000) detected at line 1325
  []
 
 [22] [23]
 Chapter 3.
-LaTeX Font Info:    Try loading font information for TS1+ptm on input line 1347
+LaTeX Font Info:    Try loading font information for TS1+ptm on input line 1349
 .
 (/usr/local/texlive/2011/texmf-dist/tex/latex/psnfss/ts1ptm.fd
 File: ts1ptm.fd 2001/06/04 font definitions for TS1/ptm.
 )
 
 Package Fancyhdr Warning: \fancyfoot's `E' option without twoside option is use
-less on input line 1382.
+less on input line 1384.
 
 [24
 
 ] <ForkJoin.png, id=257, 1334.9875pt x 803.0pt>
 File: ForkJoin.png Graphic file (type png)
  <use ForkJoin.png>
-Package pdftex.def Info: ForkJoin.png used on input line 1415.
+Package pdftex.def Info: ForkJoin.png used on input line 1417.
 (pdftex.def)             Requested size: 1334.98427pt x 802.99805pt.
 File: ForkJoin.png Graphic file (type png)
 
 <use ForkJoin.png>
-Package pdftex.def Info: ForkJoin.png used on input line 1415.
+Package pdftex.def Info: ForkJoin.png used on input line 1417.
 (pdftex.def)             Requested size: 469.755pt x 282.5613pt.
  [25 <./ForkJoin.png>] [26] [27]
 <ForkJoin_SPMD.png, id=281, 1365.1pt x 1766.6pt>
 File: ForkJoin_SPMD.png Graphic file (type png)
  <use ForkJoin_SPMD.png>
-Package pdftex.def Info: ForkJoin_SPMD.png used on input line 1560.
+Package pdftex.def Info: ForkJoin_SPMD.png used on input line 1562.
 (pdftex.def)             Requested size: 1365.09668pt x 1766.5957pt.
 File: ForkJoin_SPMD.png Graphic file (type png)
 
 <use ForkJoin_SPMD.png>
-Package pdftex.def Info: ForkJoin_SPMD.png used on input line 1560.
+Package pdftex.def Info: ForkJoin_SPMD.png used on input line 1562.
 (pdftex.def)             Requested size: 469.755pt x 607.91422pt.
  [28] [29 <./ForkJoin_SPMD.png>] [30]
 <ForkJoin_Barrier.png, id=297, 1736.4875pt x 823.075pt>
 File: ForkJoin_Barrier.png Graphic file (type png)
 
 <use ForkJoin_Barrier.png>
-Package pdftex.def Info: ForkJoin_Barrier.png used on input line 1693.
+Package pdftex.def Info: ForkJoin_Barrier.png used on input line 1695.
 (pdftex.def)             Requested size: 1736.48328pt x 823.07298pt.
 File: ForkJoin_Barrier.png Graphic file (type png)
  <use ForkJoin_Barrier.png>
-Package pdftex.def Info: ForkJoin_Barrier.png used on input line 1693.
+Package pdftex.def Info: ForkJoin_Barrier.png used on input line 1695.
 (pdftex.def)             Requested size: 469.755pt x 222.66022pt.
  [31] [32 <./ForkJoin_Barrier.png>] [33] [34]
 <ParalleFor_Chunks-4_threads-1.png, id=318, 271.0125pt x 572.1375pt>
@@ -1018,51 +1018,51 @@ File: ParalleFor_Chunks-4_threads-1.png Graphic file (type png)
 
 <use ParalleFor_Chunks-4_threads-1.png>
 Package pdftex.def Info: ParalleFor_Chunks-4_threads-1.png used on input line 1
-887.
+889.
 (pdftex.def)             Requested size: 271.01183pt x 572.1361pt.
 File: ParalleFor_Chunks-4_threads-1.png Graphic file (type png)
 
 <use ParalleFor_Chunks-4_threads-1.png>
 Package pdftex.def Info: ParalleFor_Chunks-4_threads-1.png used on input line 1
-887.
+889.
 (pdftex.def)             Requested size: 271.01183pt x 572.1361pt.
  [35] [36 <./ParalleFor_Chunks-4_threads-1.png>] [37] [38]
-Underfull \vbox (badness 10000) detected at line 2091
+Underfull \vbox (badness 10000) detected at line 2093
  []
 
 
-Underfull \vbox (badness 10000) detected at line 2091
+Underfull \vbox (badness 10000) detected at line 2093
  []
 
 [39]
 LaTeX Font Info:    Font shape `T1/phv/bx/n' in size <9> not available
-(Font)              Font shape `T1/phv/b/n' tried instead on input line 2094.
+(Font)              Font shape `T1/phv/b/n' tried instead on input line 2096.
  [40] [41]
-Underfull \vbox (badness 1231) detected at line 2295
+Underfull \vbox (badness 1231) detected at line 2297
  []
 
 [42] [43] [44] [45] [46] [47] [48] [49]
 <OMP_Patterns.png, id=395, 580.1675pt x 520.94624pt>
 File: OMP_Patterns.png Graphic file (type png)
  <use OMP_Patterns.png>
-Package pdftex.def Info: OMP_Patterns.png used on input line 2756.
+Package pdftex.def Info: OMP_Patterns.png used on input line 2758.
 (pdftex.def)             Requested size: 580.16606pt x 520.94498pt.
 File: OMP_Patterns.png Graphic file (type png)
 
 <use OMP_Patterns.png>
-Package pdftex.def Info: OMP_Patterns.png used on input line 2756.
+Package pdftex.def Info: OMP_Patterns.png used on input line 2758.
 (pdftex.def)             Requested size: 469.755pt x 421.80518pt.
  [50] (./ParallelPatternlets.ind)
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 2764.
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 2766.
  [51 <./OMP_Patterns.png (PNG copy)>]
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 2764.
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 2766.
  (./ParallelPatternlets.aux)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 2764.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 2764.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 2766.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 2766.
 
 Package rerunfilecheck Info: File `ParallelPatternlets.out' has not changed.
 (rerunfilecheck)             Checksum: 9E587BAC04A6776D55C0A585606FE66E;2071.
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 2764.
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 2766.
  ) 
 Here is how much of TeX's memory you used:
  8934 strings out of 493633
@@ -1081,7 +1081,7 @@ ype1/urw/helvetic/uhvbo8a.pfb></usr/local/texlive/2011/texmf-dist/fonts/type1/u
 rw/times/utmb8a.pfb></usr/local/texlive/2011/texmf-dist/fonts/type1/urw/times/u
 tmr8a.pfb></usr/local/texlive/2011/texmf-dist/fonts/type1/urw/times/utmri8a.pfb
 >
-Output written on ParallelPatternlets.pdf (53 pages, 399685 bytes).
+Output written on ParallelPatternlets.pdf (53 pages, 400079 bytes).
 PDF statistics:
  461 PDF objects out of 1000 (max. 8388607)
  385 compressed objects within 4 object streams
