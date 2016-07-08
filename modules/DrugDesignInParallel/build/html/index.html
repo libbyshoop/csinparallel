@@ -27,18 +27,15 @@
     <script type="text/javascript" src="_static/doctools.js"></script>
     <link rel="shortcut icon" href="_static/favicon.ico"/>
     <link rel="top" title="Drug Design in Parallel" href="#" />
-    <link rel="next" title="OpenMP Solution" href="openmp/openmp.html" /> 
+    <link rel="next" title="Introduction" href="intro/intro.html" /> 
   </head>
   <body>
     <div class="related">
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
-          <a href="genindex.html" title="General Index"
-             accesskey="I">index</a></li>
-        <li class="right" >
-          <a href="openmp/openmp.html" title="OpenMP Solution"
-             accesskey="N">next</a> |</li>
+          <a href="intro/intro.html" title="Introduction"
+             accesskey="N">next</a></li>
         <li><a href="#">Drug Design in Parallel</a> &raquo;</li> 
       </ul>
     </div>  
@@ -50,15 +47,45 @@
             
   <div class="section" id="drug-design-in-parallel">
 <h1>Drug Design in Parallel<a class="headerlink" href="#drug-design-in-parallel" title="Permalink to this headline">¶</a></h1>
-<p>This document contains several parallel programming solutions to the drug design exemplar using alternative parallel and distributed computing (PDC) technologies.  The last chapter provides a discussion of the performance implications of the solutions and the parallel design patterns used in them.</p>
+<p>This document contains several parallel programming solutions to the drug design exemplar using alternative parallel and distributed computing (PDC) technologies. We begin by describing a general solution with a simplification for educational purposes and provide a serial, or sequential version using this algorithm. Then we describe each of several parallel implementations that follow this general algorithm. The last chapter provides a discussion of the performance implications of the solutions and the parallel design patterns used in them.</p>
+<div class="section" id="an-example-on-multiple-parallel-and-distributed-systems">
+<h2>An example on multiple parallel and distributed systems<a class="headerlink" href="#an-example-on-multiple-parallel-and-distributed-systems" title="Permalink to this headline">¶</a></h2>
+<p>If you work through all of the versions of the code, you will be using different software libraries on different types of hardware:</p>
+<ul class="simple">
+<li>Single shared-memory multicore machines using the OpenMP library with C++11</li>
+<li>Single shared-memory multicore machines using the C++11 threads library</li>
+<li>Single shared-memory multicore machines using the Go programming language</li>
+<li>Distributed system clusters with several machines using the Message Passing Interface (MPI) library and C++11</li>
+<li>Distributed system clusters with Hadoop installed for map-reduce computing using a Java code example</li>
+</ul>
+<p>You will need access to these hardware/software combinations in order to run each version.</p>
+<div class="section" id="additional-system-requirements">
+<h3>Additional System Requirements<a class="headerlink" href="#additional-system-requirements" title="Permalink to this headline">¶</a></h3>
+<p>The following examples require that you have Threaded Building Blocks (TBB) installed on your system. This library from Intel is typically simple to install on linux systems (or you may already have it).</p>
+<ul class="simple">
+<li>The OpenMP version</li>
+<li>The C++11 threads version</li>
+</ul>
+<p>To explore the Go language implementation, you will need to have Go installed on your system and know how to compile and run Go programs.</p>
+</div>
+</div>
+<div class="section" id="code">
+<h2>Code<a class="headerlink" href="#code" title="Permalink to this headline">¶</a></h2>
+<p>You can download a full set of code as <a class="reference download internal" href="_downloads/dd.tar3.gz"><tt class="xref download docutils literal"><span class="pre">dd.tar.gz</span></tt></a>.
+If you are going to work only with some individual versions, a link to the code and the Makefile (when appropriate) are given for each implementation. The sequential, OpenMP, MPI, and threads versions are written in C++11 and have a Makefile.</p>
 <div class="toctree-wrapper compound">
 <ul>
+<li class="toctree-l1"><a class="reference internal" href="intro/intro.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="sequentialimplementation/sequentialimplementation.html">A Sequential Solution</a></li>
 <li class="toctree-l1"><a class="reference internal" href="openmp/openmp.html">OpenMP Solution</a></li>
-<li class="toctree-l1"><a class="reference internal" href="boostthreads/boostthreads.html">Boost Threads Solution</a></li>
+<li class="toctree-l1"><a class="reference internal" href="c++11threads/c++11threads.html">C++11 Threads Solution</a></li>
+<li class="toctree-l1"><a class="reference internal" href="mpi/mpi.html">A Message Passing Interface (MPI) Solution</a></li>
 <li class="toctree-l1"><a class="reference internal" href="go/go.html">Go Solution</a></li>
 <li class="toctree-l1"><a class="reference internal" href="hadoop/hadoop.html">Hadoop Solution</a></li>
 <li class="toctree-l1"><a class="reference internal" href="evaluation/evaluation.html">Evaluating the Implementations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="lookingahead/lookingahead.html">Looking Ahead</a></li>
 </ul>
+</div>
 </div>
 </div>
 
@@ -71,9 +98,23 @@
             <p class="logo"><a href="#">
               <img class="logo" src="_static/CSInParallel200wide.png" alt="Logo"/>
             </a></p>
+  <h3><a href="#">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Drug Design in Parallel</a><ul>
+<li><a class="reference internal" href="#an-example-on-multiple-parallel-and-distributed-systems">An example on multiple parallel and distributed systems</a><ul>
+<li><a class="reference internal" href="#additional-system-requirements">Additional System Requirements</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#code">Code</a><ul>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
   <h4>Next topic</h4>
-  <p class="topless"><a href="openmp/openmp.html"
-                        title="next chapter">OpenMP Solution</a></p>
+  <p class="topless"><a href="intro/intro.html"
+                        title="next chapter">Introduction</a></p>
         </div>
       </div>
       <div class="clearer"></div>
@@ -82,11 +123,8 @@
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
-          <a href="genindex.html" title="General Index"
-             >index</a></li>
-        <li class="right" >
-          <a href="openmp/openmp.html" title="OpenMP Solution"
-             >next</a> |</li>
+          <a href="intro/intro.html" title="Introduction"
+             >next</a></li>
         <li><a href="#">Drug Design in Parallel</a> &raquo;</li> 
       </ul>
     </div>

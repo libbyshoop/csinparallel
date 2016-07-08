@@ -1,11 +1,14 @@
-﻿#include <iostream>
+/** drug design example with C++11 threads and tbb containers */
+#include <iostream>
 #include <queue>
 #include <string>
 #include <vector>
 #include <algorithm>
 #include <cstdlib>
 #include <tbb/concurrent_vector.h>
+#include <tbb/concurrent_queue.h>
 #include <tbb/parallel_sort.h>
+#include <thread>
 
 
 #define DEFAULT_max_ligand 7
@@ -32,20 +35,22 @@ private:
   int nligands;
   int nthreads;
   string protein;
+  string SENTINEL;  // indicates end of task queue
 
 
-  vector<string> tasks;
+  tbb::concurrent_bounded_queue<string> tasks;
   tbb::concurrent_vector<Pair> pairs;
   vector<Pair> results;
 
 
-  void Generate_tasks(vector<string> &q);
+  void Generate_tasks(tbb::concurrent_bounded_queue<string> &q);
+  void do_Maps(void);
   void Map(const string &str, tbb::concurrent_vector<Pair> &pairs);
   void do_sort(tbb::concurrent_vector<Pair> &vec);
   int Reduce(int key, const tbb::concurrent_vector<Pair> &pairs, int index, 
              string &values);
 public:
-  MR() {}
+  MR() { SENTINEL=""; }
   const vector<Pair> &run(int ml, int nl, int nt, const string& p);
 };
 
@@ -77,13 +82,9 @@ int main(int argc, char **argv) {
     protein = argv[4];
   // command-line args parsed
 
-
-#ifdef _OPENMP
-   cout << "OMP defined" << endl;
-#else
-   cout << "OMP not defined" << endl;
-#endif
-
+  cout << "max_ligand=" << max_ligand 
+       << "  nligands=" << nligands
+       << "  nthreads=" << nthreads << endl;
 
   MR map_reduce;
   vector<Pair> results = 
@@ -110,11 +111,15 @@ const vector<Pair> &MR::run(int ml, int nl, int nt, const string& p) {
   // assert -- tasks is non-empty
 
 
-#pragma omp parallel for num_threads(nthreads)
-  for (int t = 0;  t < tasks.size();  t++) {
-    Map(tasks[t], pairs);
-  }
-  
+  thread *pool = new thread[nthreads];
+  for (int i = 0;  i < nthreads;  i++)
+    pool[i] = thread(&MR::do_Maps, this);
+
+
+  for (int i = 0;  i < nthreads;  i++)
+    pool[i].join();
+
+
   do_sort(pairs);
 
 
@@ -133,10 +138,22 @@ const vector<Pair> &MR::run(int ml, int nl, int nt, const string& p) {
 }
 
 
-void MR::Generate_tasks(vector<string> &q) {
+void MR::Generate_tasks(tbb::concurrent_bounded_queue<string> &q) {
   for (int i = 0;  i < nligands;  i++) {
-    q.push_back(Help::get_ligand(max_ligand));
+    q.push(Help::get_ligand(max_ligand));
   }
+  q.push(SENTINEL);
+}
+
+
+void MR::do_Maps(void) {
+  string lig;
+  tasks.pop(lig);
+  while (lig != SENTINEL) {
+    Map(lig, pairs);
+    tasks.pop(lig);
+  }
+  tasks.push(SENTINEL);  // restore end marker for another thread
 }
 
 

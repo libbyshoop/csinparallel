@@ -28,20 +28,17 @@
     <link rel="shortcut icon" href="../_static/favicon.ico"/>
     <link rel="top" title="Drug Design in Parallel" href="../index.html" />
     <link rel="next" title="Hadoop Solution" href="../hadoop/hadoop.html" />
-    <link rel="prev" title="Boost Threads Solution" href="../boostthreads/boostthreads.html" /> 
+    <link rel="prev" title="A Message Passing Interface (MPI) Solution" href="../mpi/mpi.html" /> 
   </head>
   <body>
     <div class="related">
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
-          <a href="../genindex.html" title="General Index"
-             accesskey="I">index</a></li>
-        <li class="right" >
           <a href="../hadoop/hadoop.html" title="Hadoop Solution"
-             accesskey="N">next</a> |</li>
+             accesskey="N">next</a></li>
         <li class="right" >
-          <a href="../boostthreads/boostthreads.html" title="Boost Threads Solution"
+          <a href="../mpi/mpi.html" title="A Message Passing Interface (MPI) Solution"
              accesskey="P">previous</a> |</li>
         <li><a href="../index.html">Drug Design in Parallel</a> &raquo;</li> 
       </ul>
@@ -54,18 +51,15 @@
             
   <div class="section" id="go-solution">
 <h1>Go Solution<a class="headerlink" href="#go-solution" title="Permalink to this headline">¶</a></h1>
+<p>In the complete archive, <a class="reference download internal" href="../_downloads/dd.tar1.gz"><tt class="xref download docutils literal"><span class="pre">dd.tar.gz</span></tt></a>, this example is under the dd/go directory.</p>
+<p>Alternatively, for this chapter, this is the individual file to download:</p>
+<p><a class="reference download internal" href="../_downloads/dd_go1.go"><tt class="xref download docutils literal"><span class="pre">dd_go.go</span></tt></a></p>
+<p>You will also need to refer to the C++11 threads solution, found in the dd/threads directory in the full archive or available individually:</p>
+<p><a class="reference download internal" href="../_downloads/dd_threads1.cpp"><tt class="xref download docutils literal"><span class="pre">dd_threads.cpp</span></tt></a></p>
 <p>Google’s Go language makes it possible to program with implicitly launched threads, and its channel feature enables simplified thread-safe processing of shared data.</p>
-<p>We will compare the “map” stage in the Go implementation <a class="reference download internal" href="../_downloads/dd_go1.go"><tt class="xref download docutils literal"><span class="pre">dd_go.go</span></tt></a> to the “map” stage in the Boost thread code <a class="reference download internal" href="../_downloads/dd_boost2.cpp"><tt class="xref download docutils literal"><span class="pre">dd_boost.cpp</span></tt></a>. The segment of <tt class="docutils literal"><span class="pre">main()</span></tt> in <a class="reference download internal" href="../_downloads/dd_go1.go"><tt class="xref download docutils literal"><span class="pre">dd_go.go</span></tt></a> that implements the “map” stage appears below.</p>
+<p>We will compare the “map” stage in the Go implementation to the “map” stage in the C++11 thread code. The segment of <tt class="docutils literal"><span class="pre">main()</span></tt> in dd_go.go that implements the “map” stage appears below.</p>
 <blockquote>
-<div><div class="highlight-go"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
-2
-3
-4
-5
-6
-7
-8
-9</pre></div></td><td class="code"><div class="highlight"><pre><span class="hll"><span class="n">pairs</span> <span class="p">:=</span> <span class="nb">make</span><span class="p">(</span><span class="k">chan</span> <span class="n">Pair</span><span class="p">,</span> <span class="mi">1024</span><span class="p">)</span>
+<div><div class="highlight-go"><div class="highlight"><pre><span class="hll"><span class="n">pairs</span> <span class="p">:=</span> <span class="nb">make</span><span class="p">(</span><span class="k">chan</span> <span class="n">Pair</span><span class="p">,</span> <span class="mi">1024</span><span class="p">)</span>
 </span><span class="k">for</span> <span class="n">i</span> <span class="p">:=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="p">&lt;</span> <span class="p">*</span><span class="n">nCPU</span><span class="p">;</span> <span class="n">i</span><span class="p">++</span> <span class="p">{</span>
 <span class="hll"><span class="k">go</span> <span class="k">func</span><span class="p">()</span> <span class="p">{</span>
 </span>                <span class="n">p</span> <span class="p">:=</span> <span class="p">[]</span><span class="nb">byte</span><span class="p">(*</span><span class="n">protein</span><span class="p">)</span>
@@ -75,18 +69,16 @@
 <span class="hll">        <span class="p">}()</span>
 </span><span class="p">}</span>
 </pre></div>
-</td></tr></table></div>
+</div>
 </div></blockquote>
-<p>Instead of a vector of <tt class="docutils literal"><span class="pre">Pair</span></tt> as in <a class="reference download internal" href="../_downloads/dd_boost2.cpp"><tt class="xref download docutils literal"><span class="pre">dd_boost.cpp</span></tt></a> , the Go implementation creates a <em>channel</em> object called <tt class="docutils literal"><span class="pre">pairs</span></tt> for communicating <tt class="docutils literal"><span class="pre">Pair</span></tt> objects through message passing. The “map” stage will send <tt class="docutils literal"><span class="pre">Pair</span></tt>s into the channel <tt class="docutils literal"><span class="pre">pairs</span></tt>, and the sorting stage will receive those <tt class="docutils literal"><span class="pre">Pair</span></tt>s from that same channel. In effect, channel <tt class="docutils literal"><span class="pre">pairs</span></tt> behaves like a queue, in which the send operation (<tt class="docutils literal"><span class="pre">&lt;-</span></tt>) functions like <tt class="docutils literal"><span class="pre">push_back</span></tt> and the receive operation (also <tt class="docutils literal"><span class="pre">&lt;-</span></tt>, but with the channel on the right side; not shown in the snippet above) acts like <tt class="docutils literal"><span class="pre">pop</span></tt>.</p>
-<p>The Boost implementation allocated an array <tt class="docutils literal"><span class="pre">pool</span></tt> of threads, then had each thread call <tt class="docutils literal"><span class="pre">do_Map()</span></tt> in order to carry out that thread’s work in the “map” stage. The following code from <a class="reference download internal" href="../_downloads/dd_boost2.cpp"><tt class="xref download docutils literal"><span class="pre">dd_boost.cpp</span></tt></a> accomplished these operations.</p>
+<p>Instead of a vector of <tt class="docutils literal"><span class="pre">Pair</span></tt> as in dd_threads.cpp, the Go implementation creates a <em>channel</em> object called <tt class="docutils literal"><span class="pre">pairs</span></tt> for communicating <tt class="docutils literal"><span class="pre">Pair</span></tt> objects through message passing. The “map” stage will send <tt class="docutils literal"><span class="pre">Pair</span></tt>s into the channel <tt class="docutils literal"><span class="pre">pairs</span></tt>, and the sorting stage will receive those <tt class="docutils literal"><span class="pre">Pair</span></tt>s from that same channel. In effect, channel <tt class="docutils literal"><span class="pre">pairs</span></tt> behaves like a queue, in which the send operation (<tt class="docutils literal"><span class="pre">&lt;-</span></tt>) functions like <tt class="docutils literal"><span class="pre">push_back</span></tt> and the receive operation (also <tt class="docutils literal"><span class="pre">&lt;-</span></tt>, but with the channel on the right side; not shown in the snippet above) acts like <tt class="docutils literal"><span class="pre">pop</span></tt>.</p>
+<p>The C++11 threads implementation allocated an array <tt class="docutils literal"><span class="pre">pool</span></tt> of threads, then had each thread call <tt class="docutils literal"><span class="pre">do_Map()</span></tt> in order to carry out that thread’s work in the “map” stage. The following code from dd_threads.cpp  accomplished these operations.</p>
 <blockquote>
-<div><div class="highlight-cpp"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
-2
-3</pre></div></td><td class="code"><div class="highlight"><pre><span class="hll"><span class="n">boost</span><span class="o">::</span><span class="kr">thread</span> <span class="o">*</span><span class="n">pool</span> <span class="o">=</span> <span class="k">new</span> <span class="n">boost</span><span class="o">::</span><span class="kr">thread</span><span class="p">[</span><span class="n">nthreads</span><span class="p">];</span>
-</span><span class="hll"><span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>  <span class="n">i</span> <span class="o">&lt;</span> <span class="n">nthreads</span><span class="p">;</span>  <span class="n">i</span><span class="o">++</span><span class="p">)</span>
-</span><span class="hll">        <span class="n">pool</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">boost</span><span class="o">::</span><span class="kr">thread</span><span class="p">(</span><span class="n">boost</span><span class="o">::</span><span class="n">bind</span><span class="p">(</span><span class="o">&amp;</span><span class="n">MR</span><span class="o">::</span><span class="n">do_Maps</span><span class="p">,</span> <span class="k">this</span><span class="p">));</span>
+<div><div class="highlight-cpp"><div class="highlight"><pre><span class="hll">  <span class="kr">thread</span> <span class="o">*</span><span class="n">pool</span> <span class="o">=</span> <span class="k">new</span> <span class="kr">thread</span><span class="p">[</span><span class="n">nthreads</span><span class="p">];</span>
+</span><span class="hll">  <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>  <span class="n">i</span> <span class="o">&lt;</span> <span class="n">nthreads</span><span class="p">;</span>  <span class="n">i</span><span class="o">++</span><span class="p">)</span>
+</span><span class="hll">    <span class="n">pool</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="kr">thread</span><span class="p">(</span><span class="o">&amp;</span><span class="n">MR</span><span class="o">::</span><span class="n">do_Maps</span><span class="p">,</span> <span class="k">this</span><span class="p">);</span>
 </span></pre></div>
-</td></tr></table></div>
+</div>
 </div></blockquote>
 <p>Instead of explicitly constructing and storing threads, the Go implementation uses the construct</p>
 <blockquote>
@@ -96,16 +88,9 @@
 </div>
 </div></blockquote>
 <p>This <tt class="docutils literal"><span class="pre">go</span></tt> statement launches threads that each execute an (anonymous) function to do their work, i.e., carry out the (omitted) instructions indicated by the ellipses … (in essence, these instructions carry out the work corresponding to <tt class="docutils literal"><span class="pre">do_Maps</span></tt>). Note that we could also have defined that as a function <tt class="docutils literal"><span class="pre">foo()</span></tt> elsewhere and called it this way (i.e., <tt class="docutils literal"><span class="pre">go</span> <span class="pre">foo()</span></tt>), but Go is able to employ anonymous functions because it is garbage-collected.</p>
-<p>In the Boost threads implementation, the threads must retrieve ligand values repeatedly from a queue <tt class="docutils literal"><span class="pre">ligands</span></tt> and then append the retrieved ligand and its score to the vector <tt class="docutils literal"><span class="pre">pairs</span></tt>. The methods <tt class="docutils literal"><span class="pre">do_Maps()</span></tt> and <tt class="docutils literal"><span class="pre">Map()</span></tt> in our Boost implementation accomplish these steps; their code could be combined into something like this.</p>
+<p>In the C++11 threads implementation, the threads must retrieve ligand values repeatedly from a queue <tt class="docutils literal"><span class="pre">ligands</span></tt> and then append the retrieved ligand and its score to the vector <tt class="docutils literal"><span class="pre">pairs</span></tt>. The methods <tt class="docutils literal"><span class="pre">do_Maps()</span></tt> and <tt class="docutils literal"><span class="pre">Map()</span></tt> in our C++11 threads implementation accomplish these steps; their code could be combined into something like this:</p>
 <blockquote>
-<div><div class="highlight-cpp"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
-2
-3
-4
-5
-6
-7
-8</pre></div></td><td class="code"><div class="highlight"><pre><span class="n">string</span> <span class="n">lig</span><span class="p">;</span>
+<div><div class="highlight-cpp"><div class="highlight"><pre><span class="n">string</span> <span class="n">lig</span><span class="p">;</span>
 <span class="n">tasks</span><span class="p">.</span><span class="n">pop</span><span class="p">(</span><span class="n">lig</span><span class="p">);</span>
 <span class="k">while</span> <span class="p">(</span><span class="n">lig</span> <span class="o">!=</span> <span class="n">SENTINEL</span><span class="p">)</span> <span class="p">{</span>
 <span class="hll">        <span class="n">Pair</span> <span class="n">p</span><span class="p">(</span><span class="n">Help</span><span class="o">::</span><span class="n">score</span><span class="p">(</span><span class="n">ligand</span><span class="p">.</span><span class="n">c_str</span><span class="p">(),</span> <span class="n">protein</span><span class="p">.</span><span class="n">c_str</span><span class="p">()),</span> <span class="n">ligand</span><span class="p">);</span>
@@ -114,31 +99,28 @@
 <span class="p">}</span>
 <span class="n">tasks</span><span class="p">.</span><span class="n">push</span><span class="p">(</span><span class="n">SENTINEL</span><span class="p">);</span>  <span class="c1">// restore end marker for another thread</span>
 </pre></div>
-</td></tr></table></div>
+</div>
 </div></blockquote>
 <p>In comparison, the goroutines (threads) in the Go implementation carry out the following code.</p>
 <blockquote>
-<div><div class="highlight-go"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
-2
-3
-4</pre></div></td><td class="code"><div class="highlight"><pre><span class="n">p</span> <span class="p">:=</span> <span class="p">[]</span><span class="nb">byte</span><span class="p">(*</span><span class="n">protein</span><span class="p">)</span>
+<div><div class="highlight-go"><div class="highlight"><pre><span class="n">p</span> <span class="p">:=</span> <span class="p">[]</span><span class="nb">byte</span><span class="p">(*</span><span class="n">protein</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">l</span> <span class="p">:=</span> <span class="k">range</span> <span class="n">ligands</span> <span class="p">{</span>
 <span class="hll">                <span class="n">pairs</span> <span class="p">&lt;-</span> <span class="n">Pair</span><span class="p">{</span><span class="n">score</span><span class="p">(</span><span class="n">l</span><span class="p">,</span> <span class="n">p</span><span class="p">),</span> <span class="n">l</span><span class="p">}</span>
 </span>        <span class="p">}</span>
 </pre></div>
-</td></tr></table></div>
+</div>
 </div></blockquote>
-<p>Here, a goroutine obtains its ligand work tasks from a channel <tt class="docutils literal"><span class="pre">ligands</span></tt> (created and filled during the “task generation” stage), similarly to the work queue <tt class="docutils literal"><span class="pre">tasks</span></tt> in the Boost threads implementation. Also, that ligand and its score are sent to the channel <tt class="docutils literal"><span class="pre">pairs</span></tt> discussed above.</p>
+<p>Here, a goroutine obtains its ligand work tasks from a channel <tt class="docutils literal"><span class="pre">ligands</span></tt> (created and filled during the “task generation” stage), similarly to the work queue <tt class="docutils literal"><span class="pre">tasks</span></tt> in the C++11 threads implementation. Also, that ligand and its score are sent to the channel <tt class="docutils literal"><span class="pre">pairs</span></tt> discussed above.</p>
 <div class="section" id="further-notes">
 <h2>Further Notes<a class="headerlink" href="#further-notes" title="Permalink to this headline">¶</a></h2>
 <ul>
-<li><p class="first">The use of Go’s channel feature made some key parts of the Go code more concise, as seen above. For example, highlighted sections above show that we needed fewer lines of (arguably) less complex code to process a ligand and produce a <tt class="docutils literal"><span class="pre">Pair</span></tt> in the Go code than in the Boost threads code. Also, the Go runtime manages thread creation implicitly, somewhat like OpenMP, whereas we must allocate and manage Boost threads explicitly.</p>
+<li><p class="first">The use of Go’s channel feature made some key parts of the Go code more concise, as seen above. For example, highlighted sections above show that we needed fewer lines of (arguably) less complex code to process a ligand and produce a <tt class="docutils literal"><span class="pre">Pair</span></tt> in the Go code than in the C++11 threads code. Also, the Go runtime manages thread creation implicitly, somewhat like OpenMP, whereas we must allocate and manage C++11 threads explicitly.</p>
 </li>
 <li><p class="first">Using channels also simplified the synchronization logic in our Go implementation.</p>
 <blockquote>
 <div><ul class="simple">
 <li>We used (thread-safe) Go channels in place of the task queue <tt class="docutils literal"><span class="pre">tasks</span></tt> and the vector of Pair <tt class="docutils literal"><span class="pre">pairs</span></tt> to manage the flow of our data. Reasoning with the send and receive operations on channels is at least as easy as reasoning about queue and vector operations.</li>
-<li>The Boost implementation used TBB <tt class="docutils literal"><span class="pre">concurrent_bounded_queue</span></tt> instead of <tt class="docutils literal"><span class="pre">concurrent_queue</span></tt> because of the availability of a blocking <tt class="docutils literal"><span class="pre">pop()</span></tt> operation, so that one could modify <a class="reference download internal" href="../_downloads/dd_boost2.cpp"><tt class="xref download docutils literal"><span class="pre">dd_boost.cpp</span></tt></a> to include dynamic ligand generation in a straightforward and correct way, and used a value <tt class="docutils literal"><span class="pre">SENTINEL</span></tt> to detect when ligands were actually exhausted. Go channels provide these features in a simpler and readily understood way.</li>
+<li>The C++11 threads implementation used TBB <tt class="docutils literal"><span class="pre">concurrent_bounded_queue</span></tt> instead of <tt class="docutils literal"><span class="pre">concurrent_queue</span></tt> because of the availability of a blocking <tt class="docutils literal"><span class="pre">pop()</span></tt> operation, so that one could modify dd_threads.cpp to include dynamic ligand generation in a straightforward and correct way, and used a value <tt class="docutils literal"><span class="pre">SENTINEL</span></tt> to detect when ligands were actually exhausted. Go channels provide these features in a simpler and readily understood way.</li>
 </ul>
 </div></blockquote>
 </li>
@@ -149,108 +131,7 @@
 <div class="section" id="questions-for-exploration">
 <h2>Questions for exploration<a class="headerlink" href="#questions-for-exploration" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
-<li>Compile and run <a class="reference download internal" href="../_downloads/dd_go1.go"><tt class="xref download docutils literal"><span class="pre">dd_go.go</span></tt></a>, and compare its performance to <a class="reference download internal" href="../_downloads/dd_serial2.cpp"><tt class="xref download docutils literal"><span class="pre">dd_serial.cpp</span></tt></a> and to other parallel implementations.</li>
-</ul>
-<div class="section" id="id1">
-<h3>Go Solution<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h3>
-<p>Google’s Go language makes it possible to program with implicitly launched threads, and its channel feature enables simplified thread-safe processing of shared data.</p>
-<p>We will compare the “map” stage in the Go implementation <a class="reference download internal" href="../_downloads/dd_go1.go"><tt class="xref download docutils literal"><span class="pre">dd_go.go</span></tt></a> to the “map” stage in the Boost thread code <a class="reference download internal" href="../_downloads/dd_boost2.cpp"><tt class="xref download docutils literal"><span class="pre">dd_boost.cpp</span></tt></a>. The segment of <tt class="docutils literal"><span class="pre">main()</span></tt> in <a class="reference download internal" href="../_downloads/dd_go1.go"><tt class="xref download docutils literal"><span class="pre">dd_go.go</span></tt></a> that implements the “map” stage appears below.</p>
-<blockquote>
-<div><div class="highlight-go"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
-2
-3
-4
-5
-6
-7
-8
-9</pre></div></td><td class="code"><div class="highlight"><pre><span class="hll"><span class="n">pairs</span> <span class="p">:=</span> <span class="nb">make</span><span class="p">(</span><span class="k">chan</span> <span class="n">Pair</span><span class="p">,</span> <span class="mi">1024</span><span class="p">)</span>
-</span><span class="k">for</span> <span class="n">i</span> <span class="p">:=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="p">&lt;</span> <span class="p">*</span><span class="n">nCPU</span><span class="p">;</span> <span class="n">i</span><span class="p">++</span> <span class="p">{</span>
-<span class="hll"><span class="k">go</span> <span class="k">func</span><span class="p">()</span> <span class="p">{</span>
-</span>                <span class="n">p</span> <span class="p">:=</span> <span class="p">[]</span><span class="nb">byte</span><span class="p">(*</span><span class="n">protein</span><span class="p">)</span>
-                <span class="k">for</span> <span class="n">l</span> <span class="p">:=</span> <span class="k">range</span> <span class="n">ligands</span> <span class="p">{</span>
-<span class="hll">                        <span class="n">pairs</span> <span class="p">&lt;-</span> <span class="n">Pair</span><span class="p">{</span><span class="n">score</span><span class="p">(</span><span class="n">l</span><span class="p">,</span> <span class="n">p</span><span class="p">),</span> <span class="n">l</span><span class="p">}</span>
-</span>                <span class="p">}</span>
-<span class="hll">        <span class="p">}()</span>
-</span><span class="p">}</span>
-</pre></div>
-</td></tr></table></div>
-</div></blockquote>
-<p>Instead of a vector of <tt class="docutils literal"><span class="pre">Pair</span></tt> as in <a class="reference download internal" href="../_downloads/dd_boost2.cpp"><tt class="xref download docutils literal"><span class="pre">dd_boost.cpp</span></tt></a> , the Go implementation creates a <em>channel</em> object called <tt class="docutils literal"><span class="pre">pairs</span></tt> for communicating <tt class="docutils literal"><span class="pre">Pair</span></tt> objects through message passing. The “map” stage will send <tt class="docutils literal"><span class="pre">Pair</span></tt>s into the channel <tt class="docutils literal"><span class="pre">pairs</span></tt>, and the sorting stage will receive those <tt class="docutils literal"><span class="pre">Pair</span></tt>s from that same channel. In effect, channel <tt class="docutils literal"><span class="pre">pairs</span></tt> behaves like a queue, in which the send operation (<tt class="docutils literal"><span class="pre">&lt;-</span></tt>) functions like <tt class="docutils literal"><span class="pre">push_back</span></tt> and the receive operation (also <tt class="docutils literal"><span class="pre">&lt;-</span></tt>, but with the channel on the right side; not shown in the snippet above) acts like <tt class="docutils literal"><span class="pre">pop</span></tt>.</p>
-<p>The Boost implementation allocated an array <tt class="docutils literal"><span class="pre">pool</span></tt> of threads, then had each thread call <tt class="docutils literal"><span class="pre">do_Map()</span></tt> in order to carry out that thread’s work in the “map” stage. The following code from <a class="reference download internal" href="../_downloads/dd_boost2.cpp"><tt class="xref download docutils literal"><span class="pre">dd_boost.cpp</span></tt></a> accomplished these operations.</p>
-<blockquote>
-<div><div class="highlight-cpp"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
-2
-3</pre></div></td><td class="code"><div class="highlight"><pre><span class="hll"><span class="n">boost</span><span class="o">::</span><span class="kr">thread</span> <span class="o">*</span><span class="n">pool</span> <span class="o">=</span> <span class="k">new</span> <span class="n">boost</span><span class="o">::</span><span class="kr">thread</span><span class="p">[</span><span class="n">nthreads</span><span class="p">];</span>
-</span><span class="hll"><span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>  <span class="n">i</span> <span class="o">&lt;</span> <span class="n">nthreads</span><span class="p">;</span>  <span class="n">i</span><span class="o">++</span><span class="p">)</span>
-</span><span class="hll">        <span class="n">pool</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">boost</span><span class="o">::</span><span class="kr">thread</span><span class="p">(</span><span class="n">boost</span><span class="o">::</span><span class="n">bind</span><span class="p">(</span><span class="o">&amp;</span><span class="n">MR</span><span class="o">::</span><span class="n">do_Maps</span><span class="p">,</span> <span class="k">this</span><span class="p">));</span>
-</span></pre></div>
-</td></tr></table></div>
-</div></blockquote>
-<p>Instead of explicitly constructing and storing threads, the Go implementation uses the construct</p>
-<blockquote>
-<div><div class="highlight-go"><pre>go func() {
-                        …
-        }()</pre>
-</div>
-</div></blockquote>
-<p>This <tt class="docutils literal"><span class="pre">go</span></tt> statement launches threads that each execute an (anonymous) function to do their work, i.e., carry out the (omitted) instructions indicated by the ellipses … (in essence, these instructions carry out the work corresponding to <tt class="docutils literal"><span class="pre">do_Maps</span></tt>). Note that we could also have defined that as a function <tt class="docutils literal"><span class="pre">foo()</span></tt> elsewhere and called it this way (i.e., <tt class="docutils literal"><span class="pre">go</span> <span class="pre">foo()</span></tt>), but Go is able to employ anonymous functions because it is garbage-collected.</p>
-<p>In the Boost threads implementation, the threads must retrieve ligand values repeatedly from a queue <tt class="docutils literal"><span class="pre">ligands</span></tt> and then append the retrieved ligand and its score to the vector <tt class="docutils literal"><span class="pre">pairs</span></tt>. The methods <tt class="docutils literal"><span class="pre">do_Maps()</span></tt> and <tt class="docutils literal"><span class="pre">Map()</span></tt> in our Boost implementation accomplish these steps; their code could be combined into something like this.</p>
-<blockquote>
-<div><div class="highlight-cpp"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
-2
-3
-4
-5
-6
-7
-8</pre></div></td><td class="code"><div class="highlight"><pre><span class="n">string</span> <span class="n">lig</span><span class="p">;</span>
-<span class="n">tasks</span><span class="p">.</span><span class="n">pop</span><span class="p">(</span><span class="n">lig</span><span class="p">);</span>
-<span class="k">while</span> <span class="p">(</span><span class="n">lig</span> <span class="o">!=</span> <span class="n">SENTINEL</span><span class="p">)</span> <span class="p">{</span>
-<span class="hll">        <span class="n">Pair</span> <span class="n">p</span><span class="p">(</span><span class="n">Help</span><span class="o">::</span><span class="n">score</span><span class="p">(</span><span class="n">ligand</span><span class="p">.</span><span class="n">c_str</span><span class="p">(),</span> <span class="n">protein</span><span class="p">.</span><span class="n">c_str</span><span class="p">()),</span> <span class="n">ligand</span><span class="p">);</span>
-</span><span class="hll">        <span class="n">pairs</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">p</span><span class="p">);</span>
-</span>        <span class="n">tasks</span><span class="p">.</span><span class="n">pop</span><span class="p">(</span><span class="n">lig</span><span class="p">);</span>
-<span class="p">}</span>
-<span class="n">tasks</span><span class="p">.</span><span class="n">push</span><span class="p">(</span><span class="n">SENTINEL</span><span class="p">);</span>  <span class="c1">// restore end marker for another thread</span>
-</pre></div>
-</td></tr></table></div>
-</div></blockquote>
-<p>In comparison, the goroutines (threads) in the Go implementation carry out the following code.</p>
-<blockquote>
-<div><div class="highlight-go"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
-2
-3
-4</pre></div></td><td class="code"><div class="highlight"><pre><span class="n">p</span> <span class="p">:=</span> <span class="p">[]</span><span class="nb">byte</span><span class="p">(*</span><span class="n">protein</span><span class="p">)</span>
-        <span class="k">for</span> <span class="n">l</span> <span class="p">:=</span> <span class="k">range</span> <span class="n">ligands</span> <span class="p">{</span>
-<span class="hll">                <span class="n">pairs</span> <span class="p">&lt;-</span> <span class="n">Pair</span><span class="p">{</span><span class="n">score</span><span class="p">(</span><span class="n">l</span><span class="p">,</span> <span class="n">p</span><span class="p">),</span> <span class="n">l</span><span class="p">}</span>
-</span>        <span class="p">}</span>
-</pre></div>
-</td></tr></table></div>
-</div></blockquote>
-<p>Here, a goroutine obtains its ligand work tasks from a channel <tt class="docutils literal"><span class="pre">ligands</span></tt> (created and filled during the “task generation” stage), similarly to the work queue <tt class="docutils literal"><span class="pre">tasks</span></tt> in the Boost threads implementation. Also, that ligand and its score are sent to the channel <tt class="docutils literal"><span class="pre">pairs</span></tt> discussed above.</p>
-</div>
-</div>
-<div class="section" id="id2">
-<h2>Further Notes<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h2>
-<ul>
-<li><p class="first">The use of Go’s channel feature made some key parts of the Go code more concise, as seen above. For example, highlighted sections above show that we needed fewer lines of (arguably) less complex code to process a ligand and produce a <tt class="docutils literal"><span class="pre">Pair</span></tt> in the Go code than in the Boost threads code. Also, the Go runtime manages thread creation implicitly, somewhat like OpenMP, whereas we must allocate and manage Boost threads explicitly.</p>
-</li>
-<li><p class="first">Using channels also simplified the synchronization logic in our Go implementation.</p>
-<blockquote>
-<div><ul class="simple">
-<li>We used (thread-safe) Go channels in place of the task queue <tt class="docutils literal"><span class="pre">tasks</span></tt> and the vector of Pair <tt class="docutils literal"><span class="pre">pairs</span></tt> to manage the flow of our data. Reasoning with the send and receive operations on channels is at least as easy as reasoning about queue and vector operations.</li>
-<li>The Boost implementation used TBB <tt class="docutils literal"><span class="pre">concurrent_bounded_queue</span></tt> instead of <tt class="docutils literal"><span class="pre">concurrent_queue</span></tt> because of the availability of a blocking <tt class="docutils literal"><span class="pre">pop()</span></tt> operation, so that one could modify <a class="reference download internal" href="../_downloads/dd_boost2.cpp"><tt class="xref download docutils literal"><span class="pre">dd_boost.cpp</span></tt></a> to include dynamic ligand generation in a straightforward and correct way, and used a value <tt class="docutils literal"><span class="pre">SENTINEL</span></tt> to detect when ligands were actually exhausted. Go channels provide these features in a simpler and readily understood way.</li>
-</ul>
-</div></blockquote>
-</li>
-<li><p class="first">Just after the “map” stage, the Go implementation stores all Pairs in the channel <tt class="docutils literal"><span class="pre">pairs</span></tt> into an array for sorting. We cannot store into that array directly during the parallel “map” stage, since that array is not thread-safe.</p>
-</li>
-</ul>
-</div>
-<div class="section" id="id3">
-<h2>Questions for exploration<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h2>
-<ul class="simple">
-<li>Compile and run <a class="reference download internal" href="../_downloads/dd_go1.go"><tt class="xref download docutils literal"><span class="pre">dd_go.go</span></tt></a>, and compare its performance to <a class="reference download internal" href="../_downloads/dd_serial2.cpp"><tt class="xref download docutils literal"><span class="pre">dd_serial.cpp</span></tt></a> and to other parallel implementations.</li>
+<li>Compile and run dd_go.go, and compare its performance to dd_serial.cpp and to other parallel implementations.</li>
 <li>For further ideas, see exercises for other parallel implementations.</li>
 </ul>
 </div>
@@ -269,19 +150,14 @@
   <ul>
 <li><a class="reference internal" href="#">Go Solution</a><ul>
 <li><a class="reference internal" href="#further-notes">Further Notes</a></li>
-<li><a class="reference internal" href="#questions-for-exploration">Questions for exploration</a><ul>
-<li><a class="reference internal" href="#id1">Go Solution</a></li>
-</ul>
-</li>
-<li><a class="reference internal" href="#id2">Further Notes</a></li>
-<li><a class="reference internal" href="#id3">Questions for exploration</a></li>
+<li><a class="reference internal" href="#questions-for-exploration">Questions for exploration</a></li>
 </ul>
 </li>
 </ul>
 
   <h4>Previous topic</h4>
-  <p class="topless"><a href="../boostthreads/boostthreads.html"
-                        title="previous chapter">Boost Threads Solution</a></p>
+  <p class="topless"><a href="../mpi/mpi.html"
+                        title="previous chapter">A Message Passing Interface (MPI) Solution</a></p>
   <h4>Next topic</h4>
   <p class="topless"><a href="../hadoop/hadoop.html"
                         title="next chapter">Hadoop Solution</a></p>
@@ -293,13 +169,10 @@
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
-          <a href="../genindex.html" title="General Index"
-             >index</a></li>
-        <li class="right" >
           <a href="../hadoop/hadoop.html" title="Hadoop Solution"
-             >next</a> |</li>
+             >next</a></li>
         <li class="right" >
-          <a href="../boostthreads/boostthreads.html" title="Boost Threads Solution"
+          <a href="../mpi/mpi.html" title="A Message Passing Interface (MPI) Solution"
              >previous</a> |</li>
         <li><a href="../index.html">Drug Design in Parallel</a> &raquo;</li> 
       </ul>

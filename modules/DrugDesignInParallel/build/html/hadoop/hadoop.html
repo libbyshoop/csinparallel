@@ -35,11 +35,8 @@
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
-          <a href="../genindex.html" title="General Index"
-             accesskey="I">index</a></li>
-        <li class="right" >
           <a href="../evaluation/evaluation.html" title="Evaluating the Implementations"
-             accesskey="N">next</a> |</li>
+             accesskey="N">next</a></li>
         <li class="right" >
           <a href="../go/go.html" title="Go Solution"
              accesskey="P">previous</a> |</li>
@@ -54,21 +51,14 @@
             
   <div class="section" id="hadoop-solution">
 <h1>Hadoop Solution<a class="headerlink" href="#hadoop-solution" title="Permalink to this headline">¶</a></h1>
-<p>Hadoop is an open-source framework for data-intensive scalable map-reduce computation. Originally developed by Yahoo! engineers and now an Apache project, Hadoop supports petascale computations in a reasonable amount of time (given sufficiently large cluster resources), and is used in numerous production web-service enterprises. The code <a class="reference download internal" href="../_downloads/dd_hadoop1.java"><tt class="xref download docutils literal"><span class="pre">dd_hadoop.java</span></tt></a> implements a solution to our problem for the Hadoop map-reduce framework, which is capable of data-intensive scalable computing.</p>
+<p>In the complete archive, <a class="reference download internal" href="../_downloads/dd.tar2.gz"><tt class="xref download docutils literal"><span class="pre">dd.tar.gz</span></tt></a>, this example is under the dd/hadoop directory.</p>
+<p>Alternatively, for this chapter, this is the individual file to download:</p>
+<p><a class="reference download internal" href="../_downloads/dd_hadoop1.java"><tt class="xref download docutils literal"><span class="pre">dd_hadoop.java</span></tt></a></p>
+<p>Hadoop is an open-source framework for data-intensive scalable map-reduce computation. Originally developed by Yahoo! engineers and now an Apache project, Hadoop supports petascale computations in a reasonable amount of time (given sufficiently large cluster resources), and is used in numerous production web-service enterprises. The code dd_hadoop.java, implements a solution to our problem for the Hadoop map-reduce framework, which is capable of data-intensive scalable computing.</p>
 <p>In our previous examples, we have modified the coding of a map-reduce framework represented by the C++ method <tt class="docutils literal"><span class="pre">MR::run()</span></tt> in order to create implementations with various parallelization technologies. Hadoop provides a powerful implementation of such a framework, with optimizations for large-scale data, adaptive scheduling of tasks, automated recovery from failures (which will likely occur when using many nodes for lengthy computations), and an extensive system for reusable configuration of jobs. To use Hadoop, one needs only provide <tt class="docutils literal"><span class="pre">Map()</span></tt>, <tt class="docutils literal"><span class="pre">Reduce()</span></tt>, configuration options, and the desired data.  This framework-based strategy makes it convenient for Hadoop programmers to create and launch effective, scalably large computations.</p>
-<p>Therefore, we will compare definitions of <tt class="docutils literal"><span class="pre">Map()</span></tt> and <tt class="docutils literal"><span class="pre">Reduce()</span></tt> found in the serial implementation <a class="reference download internal" href="../_downloads/dd_serial3.cpp"><tt class="xref download docutils literal"><span class="pre">dd_serial.cpp</span></tt></a> to the corresponding definitions in a Hadoop implementation <a class="reference download internal" href="../_downloads/dd_hadoop1.java"><tt class="xref download docutils literal"><span class="pre">dd_hadoop.java</span></tt></a>. The serial implementations for our simplified problem are quite simple:</p>
+<p>Therefore, we will compare definitions of <tt class="docutils literal"><span class="pre">Map()</span></tt> and <tt class="docutils literal"><span class="pre">Reduce()</span></tt> found in the serial implementation, dd_serial.cpp to the corresponding definitions in a Hadoop implementation. The serial implementations for our simplified problem are quite simple:</p>
 <blockquote>
-<div><div class="highlight-java"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
- 2
- 3
- 4
- 5
- 6
- 7
- 8
- 9
-10
-11</pre></div></td><td class="code"><div class="highlight"><pre><span class="hll"><span class="kt">void</span> <span class="nl">MR:</span><span class="o">:</span><span class="n">Map</span><span class="o">(</span><span class="kd">const</span> <span class="n">string</span> <span class="o">&amp;</span><span class="n">ligand</span><span class="o">,</span> <span class="n">vector</span><span class="o">&lt;</span><span class="n">Pair</span><span class="o">&gt;</span> <span class="o">&amp;</span><span class="n">pairs</span><span class="o">)</span> <span class="o">{</span>
+<div><div class="highlight-java"><div class="highlight"><pre><span class="hll"><span class="kt">void</span> <span class="nl">MR:</span><span class="o">:</span><span class="n">Map</span><span class="o">(</span><span class="kd">const</span> <span class="n">string</span> <span class="o">&amp;</span><span class="n">ligand</span><span class="o">,</span> <span class="n">vector</span><span class="o">&lt;</span><span class="n">Pair</span><span class="o">&gt;</span> <span class="o">&amp;</span><span class="n">pairs</span><span class="o">)</span> <span class="o">{</span>
 </span>        <span class="n">Pair</span> <span class="nf">p</span><span class="o">(</span><span class="nl">Help:</span><span class="o">:</span><span class="n">score</span><span class="o">(</span><span class="n">ligand</span><span class="o">.</span><span class="na">c_str</span><span class="o">(),</span> <span class="n">protein</span><span class="o">.</span><span class="na">c_str</span><span class="o">()),</span> <span class="n">ligand</span><span class="o">);</span>
         <span class="n">pairs</span><span class="o">.</span><span class="na">push_back</span><span class="o">(</span><span class="n">p</span><span class="o">);</span>
 <span class="o">}</span>
@@ -80,27 +70,12 @@
         <span class="k">return</span> <span class="n">index</span><span class="o">;</span>
 <span class="o">}</span>
 </pre></div>
-</td></tr></table></div>
+</div>
 </div></blockquote>
 <p>Here, <tt class="docutils literal"><span class="pre">Map()</span></tt> has two arguments, a ligand to compare to the target protein and an STL vector <tt class="docutils literal"><span class="pre">pairs</span></tt> of key-value pairs. A call to <tt class="docutils literal"><span class="pre">Map()</span></tt> appends a pair consisting of that ligand’s score (as key) and that ligand itself (as value) to the vector <tt class="docutils literal"><span class="pre">pairs</span></tt>. Our <tt class="docutils literal"><span class="pre">Reduce()</span></tt> function extracts all the key-value pairs from the (now sorted) vector <tt class="docutils literal"><span class="pre">pairs</span></tt> having a given key (i.e., score). It then appends a string consisting of all those values (i.e., ligands) to an array <tt class="docutils literal"><span class="pre">values</span></tt>. The argument <tt class="docutils literal"><span class="pre">index</span></tt> and the return value are used by <tt class="docutils literal"><span class="pre">MR::run()</span></tt> in order to manage progress through the vector <tt class="docutils literal"><span class="pre">pairs</span></tt>(our multi-threaded implementations have identical <tt class="docutils literal"><span class="pre">Map()</span></tt> and <tt class="docutils literal"><span class="pre">Reduce()</span></tt> methods, except that a thread-safe vector type is used for <tt class="docutils literal"><span class="pre">pairs</span></tt>). In brief, <tt class="docutils literal"><span class="pre">Map()</span></tt> receives <tt class="docutils literal"><span class="pre">ligand</span></tt> values and produces pairs, and <tt class="docutils literal"><span class="pre">Reduce()</span></tt> receives pairs and produces consolidated results in <tt class="docutils literal"><span class="pre">values</span></tt>.</p>
-<p>In Hadoop, we define the “map” and “reduce” operations as Java methods <tt class="docutils literal"><span class="pre">Map.map()</span></tt> and <tt class="docutils literal"><span class="pre">Reduce.reduce()</span></tt>. Here are definitions of those methods from :download: <cite>dd_hadoop.java &lt;code/dd_hadoop.java&gt;</cite>:</p>
+<p>In Hadoop, we define the “map” and “reduce” operations as Java methods <tt class="docutils literal"><span class="pre">Map.map()</span></tt> and <tt class="docutils literal"><span class="pre">Reduce.reduce()</span></tt>. Here are definitions of those methods from dd_hadoop.java:</p>
 <blockquote>
-<div><div class="highlight-java"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
- 2
- 3
- 4
- 5
- 6
- 7
- 8
- 9
-10
-11
-12
-13
-14
-15
-16</pre></div></td><td class="code"><div class="highlight"><pre><span class="hll"><span class="kd">public</span> <span class="kt">void</span> <span class="nf">map</span><span class="o">(</span><span class="n">LongWritable</span> <span class="n">key</span><span class="o">,</span> <span class="n">Text</span> <span class="n">value</span><span class="o">,</span> <span class="n">OutputCollector</span><span class="o">&lt;</span><span class="n">IntWritable</span><span class="o">,</span> <span class="n">Text</span><span class="o">&gt;</span> <span class="n">output</span><span class="o">,</span> <span class="n">Reporter</span> <span class="n">reporter</span><span class="o">)</span>
+<div><div class="highlight-java"><div class="highlight"><pre><span class="hll"><span class="kd">public</span> <span class="kt">void</span> <span class="nf">map</span><span class="o">(</span><span class="n">LongWritable</span> <span class="n">key</span><span class="o">,</span> <span class="n">Text</span> <span class="n">value</span><span class="o">,</span> <span class="n">OutputCollector</span><span class="o">&lt;</span><span class="n">IntWritable</span><span class="o">,</span> <span class="n">Text</span><span class="o">&gt;</span> <span class="n">output</span><span class="o">,</span> <span class="n">Reporter</span> <span class="n">reporter</span><span class="o">)</span>
 </span>                <span class="kd">throws</span> <span class="n">IOException</span> <span class="o">{</span>
         <span class="n">String</span> <span class="n">ligand</span> <span class="o">=</span> <span class="n">value</span><span class="o">.</span><span class="na">toString</span><span class="o">();</span>
         <span class="n">output</span><span class="o">.</span><span class="na">collect</span><span class="o">(</span><span class="k">new</span> <span class="n">IntWritable</span><span class="o">(</span><span class="n">score</span><span class="o">(</span><span class="n">ligand</span><span class="o">,</span> <span class="n">protein</span><span class="o">)),</span> <span class="n">value</span><span class="o">);</span>
@@ -117,7 +92,7 @@
         <span class="n">output</span><span class="o">.</span><span class="na">collect</span><span class="o">(</span><span class="n">key</span><span class="o">,</span> <span class="k">new</span> <span class="n">Text</span><span class="o">(</span><span class="n">result</span><span class="o">));</span>
 <span class="o">}</span>
 </pre></div>
-</td></tr></table></div>
+</div>
 </div></blockquote>
 <p>In brief, our Hadoop implementation’s <tt class="docutils literal"><span class="pre">map()</span></tt> receives a key and a value, and produces pairs to the <tt class="docutils literal"><span class="pre">OutputCollector</span></tt> argument <tt class="docutils literal"><span class="pre">output</span></tt>, and <tt class="docutils literal"><span class="pre">reduce()</span></tt> receives a key and an iterator of values and produces consolidated results in an <tt class="docutils literal"><span class="pre">OutputCollector</span></tt> argument (also named <tt class="docutils literal"><span class="pre">output</span></tt>). In Hadoop, the values from key-value pairs sent to a particular call of <tt class="docutils literal"><span class="pre">reduce()</span></tt> are provided in an <em>iterator</em> rather than a vector or array, since there may be too many values to hold in memory with very large scale data. Likewise, the <tt class="docutils literal"><span class="pre">OutputCollector</span></tt> type can handle arbitrarily many key-value pairs.</p>
 <div class="section" id="further-notes">
@@ -130,7 +105,7 @@
 <div class="section" id="questions-for-exploration">
 <h2>Questions for exploration<a class="headerlink" href="#questions-for-exploration" title="Permalink to this headline">¶</a></h2>
 <ul>
-<li><p class="first">Try running the example <a class="reference download internal" href="../_downloads/dd_hadoop1.java"><tt class="xref download docutils literal"><span class="pre">dd_hadoop.java</span></tt></a> on a system with Hadoop installed.</p>
+<li><p class="first">Try running the example dd_hadoop.java on a system with Hadoop installed.</p>
 <blockquote>
 <div><ul class="simple">
 <li>This code does not generate data for the “map” stage, so you will have to produce your own randomly generated ligands, perhaps capturing the output from <tt class="docutils literal"><span class="pre">Generate_tasks()</span></tt> for one of the other implementations.</li>
@@ -140,7 +115,7 @@
 </ul>
 </div></blockquote>
 </li>
-<li><p class="first">Modify <a class="reference download internal" href="../_downloads/dd_hadoop1.java"><tt class="xref download docutils literal"><span class="pre">dd_hadoop.java</span></tt></a> to use a trivial reducer instead of a reducer that concatenates ligand strings. Compare the output generated with a trivial reducer to the output generated by <a class="reference download internal" href="../_downloads/dd_hadoop1.java"><tt class="xref download docutils literal"><span class="pre">dd_hadoop.java</span></tt></a>.</p>
+<li><p class="first">Modify dd_hadoop.java to use a trivial reducer instead of a reducer that concatenates ligand strings. Compare the output generated with a trivial reducer to the output generated by dd_hadoop.java.</p>
 </li>
 <li><p class="first">Research the configuration change(s) necessary in order to compute with multiple <tt class="docutils literal"><span class="pre">reduce()</span></tt> threads/processes at the “reduce” stage. Note that each such thread or process produces its own output file <tt class="docutils literal"><span class="pre">part-NNNNN</span></tt>. Examine those output files, and note that they are sorted by the <tt class="docutils literal"><span class="pre">key</span></tt> argument for <tt class="docutils literal"><span class="pre">reduce()</span></tt> within each output file.</p>
 </li>
@@ -193,11 +168,8 @@
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
-          <a href="../genindex.html" title="General Index"
-             >index</a></li>
-        <li class="right" >
           <a href="../evaluation/evaluation.html" title="Evaluating the Implementations"
-             >next</a> |</li>
+             >next</a></li>
         <li class="right" >
           <a href="../go/go.html" title="Go Solution"
              >previous</a> |</li>

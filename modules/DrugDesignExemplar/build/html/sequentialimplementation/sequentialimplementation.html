@@ -87,9 +87,15 @@
 </div></blockquote>
 </div>
 </div></blockquote>
+</div>
+<div class="section" id="compilation">
+<h2>Compilation:<a class="headerlink" href="#compilation" title="Permalink to this headline">¶</a></h2>
+<p>A straightforward compile can be used for this sequential example:</p>
+<blockquote>
+<div>g++ -o dd_serial dd_serial.cpp</div></blockquote>
 <div class="section" id="the-code">
 <h3>The Code<a class="headerlink" href="#the-code" title="Permalink to this headline">¶</a></h3>
-<p>In this implementation, the class <tt class="docutils literal"><span class="pre">MR</span></tt> encapsulates the map-reduce steps <tt class="docutils literal"><span class="pre">Generate_tasks()</span></tt>, <tt class="docutils literal"><span class="pre">Map()</span></tt>, and <tt class="docutils literal"><span class="pre">Reduce()</span></tt> as private methods (member functions of the class), and a public method <tt class="docutils literal"><span class="pre">run()</span></tt> invokes those steps according to a map-reduce algorithmic strategy (see above for detailed explanation). We have highlighted calls to the methods representing map-reduce steps in the following code segment from <tt class="docutils literal"><span class="pre">MR::run()</span></tt>.</p>
+<p>In this implementation, the class <tt class="docutils literal"><span class="pre">MR</span></tt> encapsulates the map-reduce steps <tt class="docutils literal"><span class="pre">Generate_tasks()</span></tt>, <tt class="docutils literal"><span class="pre">Map()</span></tt>, and <tt class="docutils literal"><span class="pre">Reduce()</span></tt> as private methods (member functions of the class), and a public method <tt class="docutils literal"><span class="pre">run()</span></tt> invokes those steps according to a map-reduce algorithmic strategy (see previous Introduction section for detailed explanation). We have highlighted calls to the methods representing map-reduce steps in the following code segment from <tt class="docutils literal"><span class="pre">MR::run()</span></tt>.</p>
 <blockquote>
 <div><div class="highlight-c++"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
  2
@@ -202,7 +208,8 @@
   <ul>
 <li><a class="reference internal" href="#">A Sequential Solution</a><ul>
 <li><a class="reference internal" href="#problem-definition">Problem Definition</a></li>
-<li><a class="reference internal" href="#implementation">Implementation</a><ul>
+<li><a class="reference internal" href="#implementation">Implementation</a></li>
+<li><a class="reference internal" href="#compilation">Compilation:</a><ul>
 <li><a class="reference internal" href="#the-code">The Code</a></li>
 <li><a class="reference internal" href="#comments">Comments</a></li>
 <li><a class="reference internal" href="#questions-for-exploration">Questions for Exploration</a></li>

@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-2.3-1.40.12 (TeX Live 2011) (format=pdflatex 2011.7.3)  4 MAR 2014 13:57
+This is pdfTeX, Version 3.1415926-2.3-1.40.12 (TeX Live 2011) (format=pdflatex 2011.7.3)  8 JUL 2016 17:32
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -921,110 +921,119 @@ less on input line 116.
 Chapter 1.
 LaTeX Font Info:    Font shape `T1/phv/bx/n' in size <14.4> not available
 (Font)              Font shape `T1/phv/b/n' tried instead on input line 123.
-LaTeX Font Info:    Try loading font information for T1+pcr on input line 130.
-(/usr/local/texlive/2011/texmf-dist/tex/latex/psnfss/t1pcr.fd
-File: t1pcr.fd 2001/06/04 font definitions for T1/pcr.
-)
-LaTeX Font Info:    Font shape `T1/pcr/bx/n' in size <9> not available
-(Font)              Font shape `T1/pcr/b/n' tried instead on input line 135.
-LaTeX Font Info:    Font shape `T1/pcr/m/it' in size <9> not available
-(Font)              Font shape `T1/pcr/m/sl' tried instead on input line 153.
+LaTeX Font Info:    Try loading font information for TS1+ptm on input line 127.
 
+(/usr/local/texlive/2011/texmf-dist/tex/latex/psnfss/ts1ptm.fd
+File: ts1ptm.fd 2001/06/04 font definitions for TS1/ptm.
+)
 
 Package Fancyhdr Warning: \fancyfoot's `E' option without twoside option is use
-less on input line 159.
+less on input line 162.
 
 [2
 
 ]
-LaTeX Font Info:    Try loading font information for TS1+ptm on input line 166.
-
- (/usr/local/texlive/2011/texmf-dist/tex/latex/psnfss/ts1ptm.fd
-File: ts1ptm.fd 2001/06/04 font definitions for TS1/ptm.
-) [3]
-[4]
 Chapter 2.
+LaTeX Font Info:    Try loading font information for T1+pcr on input line 164.
+(/usr/local/texlive/2011/texmf-dist/tex/latex/psnfss/t1pcr.fd
+File: t1pcr.fd 2001/06/04 font definitions for T1/pcr.
+)
+LaTeX Font Info:    Font shape `T1/phv/bx/n' in size <12> not available
+(Font)              Font shape `T1/phv/b/n' tried instead on input line 171.
+
+<proteinligand.jpg, id=85, 438.13687pt x 231.86626pt>
+File: proteinligand.jpg Graphic file (type jpg)
+ <use proteinligand.jpg>
+Package pdftex.def Info: proteinligand.jpg used on input line 177.
+(pdftex.def)             Requested size: 438.13579pt x 231.86568pt.
+File: proteinligand.jpg Graphic file (type jpg)
+
+<use proteinligand.jpg>
+Package pdftex.def Info: proteinligand.jpg used on input line 177.
+(pdftex.def)             Requested size: 438.13579pt x 231.86568pt.
+
 
 Package Fancyhdr Warning: \fancyfoot's `E' option without twoside option is use
-less on input line 280.
+less on input line 187.
 
-[5
+[3
 
-]
-Underfull \hbox (badness 10000) in paragraph at lines 295--296
-[]\T1/ptm/m/n/10 As with \T1/pcr/m/n/10 dd_omp.cpp\T1/ptm/m/n/10 , the Boost th
-reads im-ple-men-ta-tion uses a thread-safe vec-tor
+ <./proteinligand.jpg>]
+Underfull \hbox (badness 6157) in paragraph at lines 190--191
+[]\T1/ptm/m/n/10 First, we will gen-er-ate many lig-ands to be tested agains a 
+given pro-tein, us-ing a func-tion
+ []
+
+<seq1.jpg, id=95, 203.76125pt x 85.31876pt>
+File: seq1.jpg Graphic file (type jpg)
+ <use seq1.jpg>
+Package pdftex.def Info: seq1.jpg used on input line 225.
+(pdftex.def)             Requested size: 203.76074pt x 85.31853pt.
+File: seq1.jpg Graphic file (type jpg)
+ <use seq1.jpg>
+Package pdftex.def Info: seq1.jpg used on input line 225.
+(pdftex.def)             Requested size: 203.76074pt x 85.31853pt.
+
+<seq2.jpg, id=96, 182.6825pt x 65.24374pt>
+File: seq2.jpg Graphic file (type jpg)
+ <use seq2.jpg>
+Package pdftex.def Info: seq2.jpg used on input line 234.
+(pdftex.def)             Requested size: 182.68204pt x 65.24358pt.
+File: seq2.jpg Graphic file (type jpg)
+ <use seq2.jpg>
+Package pdftex.def Info: seq2.jpg used on input line 234.
+(pdftex.def)             Requested size: 182.68204pt x 65.24358pt.
+
+[4 <./seq1.jpg>]
+LaTeX Font Info:    Font shape `T1/pcr/m/it' in size <9> not available
+(Font)              Font shape `T1/pcr/m/sl' tried instead on input line 298.
+LaTeX Font Info:    Font shape `T1/pcr/bx/n' in size <9> not available
+(Font)              Font shape `T1/pcr/b/n' tried instead on input line 300.
+ [5 <./seq2.jpg>] [6] [7] [8] [9] [10]
+Underfull \hbox (badness 10000) in paragraph at lines 585--586
+[]\T1/ptm/m/n/10 As with the OpenMP ver-sion, the threads im-ple-men-ta-tion us
+es a thread-safe vec-tor
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 318--319
+Underfull \hbox (badness 10000) in paragraph at lines 608--609
 []\T1/ptm/m/n/10 TBB con-tainer classes \T1/pcr/m/n/10 tbb::concurrent_queue \T
 1/ptm/m/n/10 and
  []
 
-[6]
-Underfull \hbox (badness 10000) in paragraph at lines 343--344
-[]\T1/ptm/m/n/10 Revise \T1/pcr/m/n/10 dd_boost.cpp \T1/ptm/m/n/10 to use a \T1
-/pcr/m/n/10 tbb::concurrent_queue \T1/ptm/m/n/10 con-tainer in-stead of a
- []
-
-[7]
-Chapter 3.
-
-Package Fancyhdr Warning: \fancyfoot's `E' option without twoside option is use
-less on input line 416.
-
-[8
-
-]
-Underfull \hbox (badness 10000) in paragraph at lines 454--455
-[]\T1/ptm/m/n/10 The Boost im-ple-men-ta-tion used TBB \T1/pcr/m/n/10 concurren
-t_bounded_queue \T1/ptm/m/n/10 in-stead of
- []
-
-LaTeX Font Info:    Font shape `T1/phv/bx/n' in size <12> not available
-(Font)              Font shape `T1/phv/b/n' tried instead on input line 472.
-[9] [10]
-Underfull \hbox (badness 10000) in paragraph at lines 557--558
-[]\T1/ptm/m/n/10 The Boost im-ple-men-ta-tion used TBB \T1/pcr/m/n/10 concurren
-t_bounded_queue \T1/ptm/m/n/10 in-stead of
- []
-
 [11]
-Chapter 4.
+Underfull \hbox (badness 10000) in paragraph at lines 633--634
+[]\T1/ptm/m/n/10 Revise dd_threads.cpp> to use a \T1/pcr/m/n/10 tbb::concurrent
+_queue \T1/ptm/m/n/10 con-tainer in-stead of a
+ []
 
-Package Fancyhdr Warning: \fancyfoot's `E' option without twoside option is use
-less on input line 607.
+[12] [13] [14]
+Underfull \hbox (badness 6859) in paragraph at lines 835--836
+[]\T1/ptm/m/n/10 The C++11 threads im-ple-men-ta-tion used TBB \T1/pcr/m/n/10 c
+oncurrent_bounded_queue \T1/ptm/m/n/10 in-stead of
+ []
 
-[12
+[15] [16] [17] [18] [19] (./DrugDesignInParallel.ind)
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 1095.
+ [20]
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 1095.
 
-] [13] [14]
-Chapter 5.
+(./DrugDesignInParallel.aux)
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 1095.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 1095.
 
-Package Fancyhdr Warning: \fancyfoot's `E' option without twoside option is use
-less on input line 725.
-
-[15
-
-] [16] (./DrugDesignInParallel.ind)
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 783.
- [17]
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 783.
- (./DrugDesignInParallel.aux)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 783.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 783.
 Package rerunfilecheck Info: File `DrugDesignInParallel.out' has not changed.
-(rerunfilecheck)             Checksum: 996CE9147146AF2E9B56A076D3B24175;1483.
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 783.
+(rerunfilecheck)             Checksum: 8B11351FCE1244EFFBEABA2A6EFD7562;805.
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 1095.
  ) 
 Here is how much of TeX's memory you used:
- 8797 strings out of 493633
- 122984 string characters out of 3143378
- 224629 words of memory out of 3000000
- 11867 multiletter control sequences out of 15000+200000
- 57976 words of font info for 66 fonts, out of 3000000 for 9000
+ 8857 strings out of 493633
+ 124657 string characters out of 3143378
+ 224029 words of memory out of 3000000
+ 11895 multiletter control sequences out of 15000+200000
+ 55254 words of font info for 64 fonts, out of 3000000 for 9000
  832 hyphenation exceptions out of 8191
- 36i,12n,45p,1326b,606s stack positions out of 5000i,500n,10000p,200000b,50000s
+ 36i,12n,45p,1569b,507s stack positions out of 5000i,500n,10000p,200000b,50000s
 {/usr/local/texlive/2011/texmf-dist/fonts/enc/dvips/base/8r.enc}</usr/local/t
 exlive/2011/texmf-dist/fonts/type1/urw/courier/ucrb8a.pfb></usr/local/texlive/2
 011/texmf-dist/fonts/type1/urw/courier/ucrr8a.pfb></usr/local/texlive/2011/texm
@@ -1033,10 +1042,10 @@ fonts/type1/urw/helvetic/uhvb8a.pfb></usr/local/texlive/2011/texmf-dist/fonts/t
 ype1/urw/times/utmb8a.pfb></usr/local/texlive/2011/texmf-dist/fonts/type1/urw/t
 imes/utmr8a.pfb></usr/local/texlive/2011/texmf-dist/fonts/type1/urw/times/utmri
 8a.pfb>
-Output written on DrugDesignInParallel.pdf (19 pages, 142198 bytes).
+Output written on DrugDesignInParallel.pdf (22 pages, 224098 bytes).
 PDF statistics:
- 254 PDF objects out of 1000 (max. 8388607)
- 223 compressed objects within 3 object streams
- 48 named destinations out of 1000 (max. 500000)
- 177 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 265 PDF objects out of 1000 (max. 8388607)
+ 228 compressed objects within 3 object streams
+ 77 named destinations out of 1000 (max. 500000)
+ 112 words of extra memory for PDF output out of 10000 (max. 10000000)
 

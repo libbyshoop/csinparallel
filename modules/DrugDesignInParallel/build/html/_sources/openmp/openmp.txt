@@ -2,22 +2,31 @@
 OpenMP Solution
 ***************
 
+In the complete archive, :download:`dd.tar.gz <../code/dd.tar.gz>`, this example is under the dd/openMP directory.
+
+Alternatively, for this chapter, these are the individual files to download:
+
+:download:`dd_omp.cpp <../code/dd/openMP/dd_omp.cpp>`
+
+:download:`Makefile <../code/dd/openMP/Makefile>`
+
+The Makefile is for use on linux systems.
+
 Here, we implement our drug design simulation in parallel using OpenMP, an API that provides compiler directives, library routines, and environment variables that allow shared-memory multithreading in C/C++. A master thread will fork off a specified number of worker threads and assign parts of a task to them (read `more`_).
 
 Implementation
 ##############
 
-The implementation :download:`dd_omp.cpp <code/dd_omp.cpp>` parallelizes the ``Map()`` loop using OpenMP and uses a thread-safe container from `TBB`_, a C++ template library designed to help avoid some of the difficulties associated with multithreading.
+The implementation dd_omp.cpp parallelizes the ``Map()`` loop using OpenMP and uses a thread-safe container from `TBB`_, a C++ template library designed to help avoid some of the difficulties associated with multithreading.
 
-Since we expect the docking algorithm (here represented by computing a match score for comparing a ligand string to a protein string) to require the bulk of compute time, we will parallelize the ``Map()`` stage in our sequential algorithm. The loop to be parallelized is shown below; the full sequential implementation is available at :download:`dd_serial.cpp <code/dd_serial.cpp>`\ . 
+Since we expect the docking algorithm (here represented by computing a match score for comparing a ligand string to a protein string) to require the bulk of compute time, we will parallelize the ``Map()`` stage in our sequential algorithm. The loop to be parallelized is shown below, from the full sequential implementation, dd_serial.cpp, discussed in the previous chapter. 
 
 .. code-block:: c++
 	:emphasize-lines: 2
-	:linenos:
 
 	while (!tasks.empty()) {
    		Map(tasks.front(), pairs);
-   	tasks.pop();
+   		tasks.pop();
  	}
 
 We will now parallelize this mapping loop by converting it to a ``for`` loop, then applying OpenMP’s ``parallel for`` feature - there is no ``parallel while``\ . For easier use with a ``for`` loop, we will replace the ``tasks`` queue with a vector (of the same name) and iterate on index values for that vector.  
@@ -28,7 +37,6 @@ Therefore, we will use TBB’s thread-safe ``concurrent_vector`` container for `
 
 .. code-block:: cpp
 	:emphasize-lines: 2,8,10
-	:linenos:
 
 	vector<string> tasks;
 	tbb::concurrent_vector<Pair> pairs;
@@ -42,7 +50,7 @@ Therefore, we will use TBB’s thread-safe ``concurrent_vector`` container for `
 			Map(tasks[t], pairs);
   		}
 
-Since the main thread (i.e., the thread that executes ``run()``\ ) is the only thread that performs the stages that call ``Generate_tasks()``, ``to_sort()``, and ``Reduce()``, it is safe for the vectors ``tasks`` or ``results`` to remain implemented as (non-thread safe) STL containers.  See the implementation :download:`dd_omp.cpp <code/dd_omp.cpp>` for complete details. 
+Since the main thread (i.e., the thread that executes ``run()``\ ) is the only thread that performs the stages that call ``Generate_tasks()``, ``to_sort()``, and ``Reduce()``, it is safe for the vectors ``tasks`` or ``results`` to remain implemented as (non-thread safe) STL containers.  See the implementation (dd_omp.cpp) for complete details. 
 
 .. _more: http://en.wikipedia.org/wiki/OpenMP 
 
@@ -66,19 +74,19 @@ Further Notes
 Questions for Exploration
 #########################
 
-- Compare the performance of :download:`dd_serial.cpp <code/dd_serial.cpp>` with :download:`dd_omp.cpp <code/dd_omp.cpp>` on a multicore computer using the same values for ``max_ligand`` and ``nligands``. Do you observe speedup for the parallel version?  
+- Compare the performance of dd_serial.cpp with dd_omp.cpp on a multicore computer using the same values for ``max_ligand`` and ``nligands``. Do you observe speedup for the parallel version?  
 
-- Our development system has four cores, and ``nthreads=4`` was used for one of our test runs. We found that :download:`dd_omp.cpp <code/dd_omp.cpp>` performed about *three* times as fast as :download:`dd_serial.cpp <code/dd_serial.cpp>` for the same values of ``max_ligand`` and ``nligands``. Can you explain why it didn’t perform four times as fast?
+- Our development system has four cores, and ``nthreads=4`` was used for one of our test runs. We found that the omp version performed about *three* times as fast as :the serial version for the same values of ``max_ligand`` and ``nligands``. Can you explain why it didn’t perform four times as fast?
 
-- Use the command-line arguments to experiment with varying the number of OpenMP threads in an invocation of :download:`dd_omp.cpp <code/dd_omp.cpp>`, while holding ``max_ligand`` and ``nligands`` unchanged. On a multi-core system, we hope for better performance when more threads are used. Do you observe such performance improvement when you time the execution? What happens when the number of threads exceeds the number of cores (or hyperthreads) on your system? Explain as much as you can about the timing results you observe when you vary the number of threads.
+- Use the command-line arguments to experiment with varying the number of OpenMP threads in an invocation of dd_omp.cpp, while holding ``max_ligand`` and ``nligands`` unchanged. On a multi-core system, we hope for better performance when more threads are used. Do you observe such performance improvement when you time the execution? What happens when the number of threads exceeds the number of cores (or hyperthreads) on your system? Explain as much as you can about the timing results you observe when you vary the number of threads.
 
-- You may notice that :download:`dd_omp.cpp <code/dd_omp.cpp>` computes the same maximal score and identifies the same ligands as :download:`dd_serial.cpp <code/dd_serial.cpp>` that produce that score, but if more than one ligand yields the maximal score, the *order* of those maximal-scoring ligands may differ between the two versions. Can you explain why? 
+- You may notice that dd_omp.cpp computes the same maximal score and identifies the same ligands as the serial version that produces that score, but if more than one ligand yields the maximal score, the *order* of those maximal-scoring ligands may differ between the two versions. Can you explain why? 
 
-- Our sequential program :download:`dd_serial.cpp <code/dd_serial.cpp>` always produces the same results for given values of the ``max_ligand``, ``nligands``,  and ``protein`` command-line arguments. This is because we use the default random-number seed in our code. Because of this consistency, we can describe the sequential version as being a *deterministic* computation. Is :download:`dd_omp.cpp <code/dd_omp.cpp>` a deterministic computation? Explain your answer, and/or state what more you need to know in order to answer this question.
+- Our sequential program always produces the same results for given values of the ``max_ligand``, ``nligands``,  and ``protein`` command-line arguments. This is because we use the default random-number seed in our code. Because of this consistency, we can describe the sequential version as being a *deterministic* computation. Is dd_omp.cpp a deterministic computation? Explain your answer, and/or state what more you need to know in order to answer this question.
 
-- If you have *more realistic algorithms for docking and/or more realistic data for ligands and proteins*\ , modify the program :download:`dd_omp.cpp <code/dd_omp.cpp>` to incorporate those elements, and compare the results from your modified program to results obtained by other means (other software, wet-lab results, etc.). How does the performance of your modified OpenMP version compare to what you observed from your modified sequential version?
+- If you have *more realistic algorithms for docking and/or more realistic data for ligands and proteins*\ , modify the openMP program to incorporate those elements, and compare the results from your modified program to results obtained by other means (other software, wet-lab results, etc.). How does the performance of your modified OpenMP version compare to what you observed from your modified sequential version?
 
-- Whereas our serial implementation used a queue data structure for ``tasks``, this implementation uses a vector data structure, and parallelizes the “map” stage using OpenMP’s ``omp parallel for`` pragma. This suffices for our simplified example, because we generate all ligands before processing any of them. However, some computations require a task queue, since processing some tasks may generate others (not out of the question for drug design, since high-scoring ligands might lead one to consider similar ligands in search of even higher scores). **Challenge problem:** Modify :download:`dd_omp.cpp <code/dd_omp.cpp>` to use a task *queue* instead of a task vector.
+- Whereas our serial implementation used a queue data structure for ``tasks``, this implementation uses a vector data structure, and parallelizes the “map” stage using OpenMP’s ``omp parallel for`` pragma. This suffices for our simplified example, because we generate all ligands before processing any of them. However, some computations require a task queue, since processing some tasks may generate others (not out of the question for drug design, since high-scoring ligands might lead one to consider similar ligands in search of even higher scores). **Challenge problem:** Modify dd_omp.cpp to use a task *queue* instead of a task vector.
 	
 	.. note:: 
 		- Use a thread-safe queue data structure for ``tasks``, such as ``tbb::concurrent_queue`` or ``tbb::concurrent_bounded_queue``, because multiple threads may attempt to modify the queue at the same time.

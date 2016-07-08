@@ -26,15 +26,16 @@
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
     <link rel="shortcut icon" href="../_static/favicon.ico"/>
-    <link rel="top" title="Drug Design in Parallel" href="../index.html" /> 
+    <link rel="top" title="Drug Design in Parallel" href="../index.html" />
+    <link rel="prev" title="Evaluating the Implementations" href="../evaluation/evaluation.html" /> 
   </head>
   <body>
     <div class="related">
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
-          <a href="../genindex.html" title="General Index"
-             accesskey="I">index</a></li>
+          <a href="../evaluation/evaluation.html" title="Evaluating the Implementations"
+             accesskey="P">previous</a></li>
         <li><a href="../index.html">Drug Design in Parallel</a> &raquo;</li> 
       </ul>
     </div>  
@@ -61,7 +62,7 @@
 </ul>
 </div></blockquote>
 </li>
-<li><p class="first">We named our array of threads <tt class="docutils literal"><span class="pre">pool</span></tt> in the Boost threads implementation in view of the <span class="uline">Thread pool advancing-program-counter</span> pattern. Note that OpenMP also manages a thread pool, and that most runtime implementations of OpenMP create all the threads they’ll need at the outset of a program and reuse them as needed for parallel operations throughout that program. Go also manages its own pool of goroutines (threads). The Go example demonstrates the <span class="uline">Message passing coordination</span> pattern. We used no other explicit coordination patterns in our examples, although the TBB shared data structures internally employ (scalable) <span class="uline">Mutual exclusion</span> in order to avoid race conditions.</p>
+<li><p class="first">We named our array of threads <tt class="docutils literal"><span class="pre">pool</span></tt> in the C++11 threads implementation in view of the <span class="uline">Thread pool advancing-program-counter</span> pattern. Note that OpenMP also manages a thread pool, and that most runtime implementations of OpenMP create all the threads they’ll need at the outset of a program and reuse them as needed for parallel operations throughout that program. Go also manages its own pool of goroutines (threads). The Go example demonstrates the <span class="uline">Message passing coordination</span> pattern. We used no other explicit coordination patterns in our examples, although the TBB shared data structures internally employ (scalable) <span class="uline">Mutual exclusion</span> in order to avoid race conditions.</p>
 </li>
 </ol>
 </div>
@@ -84,6 +85,9 @@
 </li>
 </ul>
 
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="../evaluation/evaluation.html"
+                        title="previous chapter">Evaluating the Implementations</a></p>
         </div>
       </div>
       <div class="clearer"></div>
@@ -92,8 +96,8 @@
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
-          <a href="../genindex.html" title="General Index"
-             >index</a></li>
+          <a href="../evaluation/evaluation.html" title="Evaluating the Implementations"
+             >previous</a></li>
         <li><a href="../index.html">Drug Design in Parallel</a> &raquo;</li> 
       </ul>
     </div>

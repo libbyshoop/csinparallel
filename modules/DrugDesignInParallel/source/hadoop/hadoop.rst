@@ -2,15 +2,20 @@
 Hadoop Solution
 ***************
 
-Hadoop is an open-source framework for data-intensive scalable map-reduce computation. Originally developed by Yahoo! engineers and now an Apache project, Hadoop supports petascale computations in a reasonable amount of time (given sufficiently large cluster resources), and is used in numerous production web-service enterprises. The code :download:`dd_hadoop.java <code/dd_hadoop.java>` implements a solution to our problem for the Hadoop map-reduce framework, which is capable of data-intensive scalable computing.  
+In the complete archive, :download:`dd.tar.gz <../code/dd.tar.gz>`, this example is under the dd/hadoop directory.
+
+Alternatively, for this chapter, this is the individual file to download:
+
+:download:`dd_hadoop.java <../code/dd/hadoop/dd_hadoop.java>`
+
+Hadoop is an open-source framework for data-intensive scalable map-reduce computation. Originally developed by Yahoo! engineers and now an Apache project, Hadoop supports petascale computations in a reasonable amount of time (given sufficiently large cluster resources), and is used in numerous production web-service enterprises. The code dd_hadoop.java, implements a solution to our problem for the Hadoop map-reduce framework, which is capable of data-intensive scalable computing.  
 
 In our previous examples, we have modified the coding of a map-reduce framework represented by the C++ method ``MR::run()`` in order to create implementations with various parallelization technologies. Hadoop provides a powerful implementation of such a framework, with optimizations for large-scale data, adaptive scheduling of tasks, automated recovery from failures (which will likely occur when using many nodes for lengthy computations), and an extensive system for reusable configuration of jobs. To use Hadoop, one needs only provide ``Map()``, ``Reduce()``, configuration options, and the desired data.  This framework-based strategy makes it convenient for Hadoop programmers to create and launch effective, scalably large computations. 
 
-Therefore, we will compare definitions of ``Map()`` and ``Reduce()`` found in the serial implementation :download:`dd_serial.cpp <code/dd_serial.cpp>` to the corresponding definitions in a Hadoop implementation :download:`dd_hadoop.java <code/dd_hadoop.java>`. The serial implementations for our simplified problem are quite simple:
+Therefore, we will compare definitions of ``Map()`` and ``Reduce()`` found in the serial implementation, dd_serial.cpp to the corresponding definitions in a Hadoop implementation. The serial implementations for our simplified problem are quite simple:
 
 	.. code-block:: java
 		:emphasize-lines: 1,6
-		:linenos:
 
 		void MR::Map(const string &ligand, vector<Pair> &pairs) {
 			Pair p(Help::score(ligand.c_str(), protein.c_str()), ligand);
@@ -26,11 +31,10 @@ Therefore, we will compare definitions of ``Map()`` and ``Reduce()`` found in th
 
 Here, ``Map()`` has two arguments, a ligand to compare to the target protein and an STL vector ``pairs`` of key-value pairs. A call to ``Map()`` appends a pair consisting of that ligand’s score (as key) and that ligand itself (as value) to the vector ``pairs``. Our ``Reduce()`` function extracts all the key-value pairs from the (now sorted) vector ``pairs`` having a given key (i.e., score). It then appends a string consisting of all those values (i.e., ligands) to an array ``values``\ . The argument ``index`` and the return value are used by ``MR::run()`` in order to manage progress through the vector ``pairs``\ (our multi-threaded implementations have identical ``Map()`` and ``Reduce()`` methods, except that a thread-safe vector type is used for ``pairs``\ ). In brief, ``Map()`` receives ``ligand`` values and produces pairs, and ``Reduce()`` receives pairs and produces consolidated results in ``values``\ .  
 
-In Hadoop, we define the “map” and “reduce” operations as Java methods ``Map.map()`` and ``Reduce.reduce()``\ . Here are definitions of those methods from :download: `dd_hadoop.java <code/dd_hadoop.java>`\ :
+In Hadoop, we define the “map” and “reduce” operations as Java methods ``Map.map()`` and ``Reduce.reduce()``\ . Here are definitions of those methods from dd_hadoop.java:
 
 	.. code-block:: java
 		:emphasize-lines: 1,9
-		:linenos:
 
 		public void map(LongWritable key, Text value, OutputCollector<IntWritable, Text> output, Reporter reporter) 
 				throws IOException {
@@ -61,7 +65,7 @@ Further Notes
 Questions for exploration
 #########################
 
-- Try running the example :download:`dd_hadoop.java <code/dd_hadoop.java>` on a system with Hadoop installed.  
+- Try running the example dd_hadoop.java on a system with Hadoop installed.  
 
 	- This code does not generate data for the “map” stage, so you will have to produce your own randomly generated ligands, perhaps capturing the output from ``Generate_tasks()`` for one of the other implementations.  
 
@@ -71,7 +75,7 @@ Questions for exploration
 
 	- Hadoop typically places the output from processing in a specified directory on the HDFS. By default, if the “map” stage generates relatively few key-value pairs, a single thread/process performs ``reduce()`` calls in the “reduce” stage, yielding a single output file (typically named ``part-00000``).  
 
-- Modify :download:`dd_hadoop.java <code/dd_hadoop.java>` to use a trivial reducer instead of a reducer that concatenates ligand strings. Compare the output generated with a trivial reducer to the output generated by :download:`dd_hadoop.java <code/dd_hadoop.java>`.
+- Modify dd_hadoop.java to use a trivial reducer instead of a reducer that concatenates ligand strings. Compare the output generated with a trivial reducer to the output generated by dd_hadoop.java.
 
 - Research the configuration change(s) necessary in order to compute with multiple ``reduce()`` threads/processes at the “reduce” stage. Note that each such thread or process produces its own output file ``part-NNNNN``\ . Examine those output files, and note that they are sorted by the ``key`` argument for ``reduce()`` within each output file.  
 

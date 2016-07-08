@@ -1,4 +1,4 @@
-﻿#include <iostream>
+#include <iostream>
 #include <queue>
 #include <string>
 #include <vector>
@@ -77,6 +77,9 @@ int main(int argc, char **argv) {
     protein = argv[4];
   // command-line args parsed
 
+  cout << "max_ligand=" << max_ligand 
+       << "  nligands=" << nligands
+       << "  nthreads=" << nthreads << endl;
 
 #ifdef _OPENMP
    cout << "OMP defined" << endl;

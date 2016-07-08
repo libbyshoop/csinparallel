@@ -48,10 +48,19 @@ The example program :download:`dd_serial.cpp <code/dd_serial.cpp>` provides a se
 
       #. protein string to which ligands will be compared
 
+Compilation:
+############
+
+A straightforward compile can be used for this sequential example:
+
+..
+
+  g++ -o dd_serial dd_serial.cpp 
+
 
 The Code
 ********
-In this implementation, the class ``MR`` encapsulates the map-reduce steps ``Generate_tasks()``, ``Map()``, and ``Reduce()`` as private methods (member functions of the class), and a public method ``run()`` invokes those steps according to a map-reduce algorithmic strategy (see above for detailed explanation). We have highlighted calls to the methods representing map-reduce steps in the following code segment from ``MR::run()``.
+In this implementation, the class ``MR`` encapsulates the map-reduce steps ``Generate_tasks()``, ``Map()``, and ``Reduce()`` as private methods (member functions of the class), and a public method ``run()`` invokes those steps according to a map-reduce algorithmic strategy (see previous Introduction section for detailed explanation). We have highlighted calls to the methods representing map-reduce steps in the following code segment from ``MR::run()``.
 
   .. code-block:: c++
     :emphasize-lines: 1,5,16

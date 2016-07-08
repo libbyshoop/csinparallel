@@ -1,16 +1,13 @@
-﻿#include <iostream>
+#include <iostream>
 #include <queue>
 #include <string>
 #include <vector>
 #include <algorithm>
 #include <cstdlib>
-#include <tbb/concurrent_vector.h>
-#include <tbb/parallel_sort.h>
 
 
 #define DEFAULT_max_ligand 7
 #define DEFAULT_nligands 120
-#define DEFAULT_nthreads 4
 #define DEFAULT_protein "the cat in the hat wore the hat to the cat hat party"
 
 
@@ -30,23 +27,20 @@ class MR {
 private:
   int max_ligand;
   int nligands;
-  int nthreads;
   string protein;
 
 
-  vector<string> tasks;
-  tbb::concurrent_vector<Pair> pairs;
-  vector<Pair> results;
+  queue<string> tasks;
+  vector<Pair> pairs, results;
 
 
-  void Generate_tasks(vector<string> &q);
-  void Map(const string &str, tbb::concurrent_vector<Pair> &pairs);
-  void do_sort(tbb::concurrent_vector<Pair> &vec);
-  int Reduce(int key, const tbb::concurrent_vector<Pair> &pairs, int index, 
-             string &values);
+  void Generate_tasks(queue<string> &q);
+  void Map(const string &str, vector<Pair> &pairs);
+  void do_sort(vector<Pair> &vec);
+  int Reduce(int key, const vector<Pair> &pairs, int index, string &values);
 public:
   MR() {}
-  const vector<Pair> &run(int ml, int nl, int nt, const string& p);
+  const vector<Pair> &run(int ml, int nl, const string& p);
 };
 
 
@@ -58,13 +52,10 @@ public:
 };
 
 
-
-
 // Main program
 int main(int argc, char **argv) {
   int max_ligand = DEFAULT_max_ligand;
   int nligands = DEFAULT_nligands;
-  int nthreads = DEFAULT_nthreads;
   string protein = DEFAULT_protein;
   
   if (argc > 1)
@@ -72,22 +63,13 @@ int main(int argc, char **argv) {
   if (argc > 2)
     nligands = strtol(argv[2], NULL, 10);
   if (argc > 3)
-    nthreads = strtol(argv[3], NULL, 10);
-  if (argc > 4)
-    protein = argv[4];
+    protein = argv[3];
   // command-line args parsed
-
-
-#ifdef _OPENMP
-   cout << "OMP defined" << endl;
-#else
-   cout << "OMP not defined" << endl;
-#endif
 
 
   MR map_reduce;
   vector<Pair> results = 
-    map_reduce.run(max_ligand, nligands, nthreads, protein);
+    map_reduce.run(max_ligand, nligands, protein);
 
 
   cout << "maximal score is " << results[0].key 
@@ -102,17 +84,17 @@ int main(int argc, char **argv) {
 /*  class MR methods */
 
 
-const vector<Pair> &MR::run(int ml, int nl, int nt, const string& p) {
-  max_ligand = ml;  nligands = nl;  nthreads = nt;  protein = p;
+const vector<Pair> &MR::run(int ml, int nl, const string& p) {
+  max_ligand = ml;  nligands = nl;  protein = p;
 
 
   Generate_tasks(tasks);
   // assert -- tasks is non-empty
 
 
-#pragma omp parallel for num_threads(nthreads)
-  for (int t = 0;  t < tasks.size();  t++) {
-    Map(tasks[t], pairs);
+  while (!tasks.empty()) {
+    Map(tasks.front(), pairs);
+    tasks.pop();
   }
   
   do_sort(pairs);
@@ -133,14 +115,14 @@ const vector<Pair> &MR::run(int ml, int nl, int nt, const string& p) {
 }
 
 
-void MR::Generate_tasks(vector<string> &q) {
+void MR::Generate_tasks(queue<string> &q) {
   for (int i = 0;  i < nligands;  i++) {
-    q.push_back(Help::get_ligand(max_ligand));
+    q.push(Help::get_ligand(max_ligand));
   }
 }
 
 
-void MR::Map(const string &ligand, tbb::concurrent_vector<Pair> &pairs) {
+void MR::Map(const string &ligand, vector<Pair> &pairs) {
   Pair p(Help::score(ligand.c_str(), protein.c_str()), ligand);
   pairs.push_back(p);
 }
@@ -151,13 +133,11 @@ bool compare(const Pair &p1, const Pair &p2) {
 }
 
 
-void MR::do_sort(tbb::concurrent_vector<Pair> &vec) {
-  tbb::parallel_sort(vec.begin(), vec.end(), compare);
+void MR::do_sort(vector<Pair> &vec) {
+  sort(vec.begin(), vec.end(), compare);
 }
-
-
-int MR::Reduce(int key, const tbb::concurrent_vector<Pair> &pairs, int index, 
-           string &values) {
+  
+int MR::Reduce(int key, const vector<Pair> &pairs, int index, string &values) {
   while (index < pairs.size() && pairs[index].key == key) 
     values += pairs[index++].val + " ";
   return index;

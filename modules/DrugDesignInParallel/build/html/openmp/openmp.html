@@ -27,21 +27,18 @@
     <script type="text/javascript" src="../_static/doctools.js"></script>
     <link rel="shortcut icon" href="../_static/favicon.ico"/>
     <link rel="top" title="Drug Design in Parallel" href="../index.html" />
-    <link rel="next" title="Boost Threads Solution" href="../boostthreads/boostthreads.html" />
-    <link rel="prev" title="Drug Design in Parallel" href="../index.html" /> 
+    <link rel="next" title="C++11 Threads Solution" href="../c++11threads/c++11threads.html" />
+    <link rel="prev" title="A Sequential Solution" href="../sequentialimplementation/sequentialimplementation.html" /> 
   </head>
   <body>
     <div class="related">
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
-          <a href="../genindex.html" title="General Index"
-             accesskey="I">index</a></li>
+          <a href="../c++11threads/c++11threads.html" title="C++11 Threads Solution"
+             accesskey="N">next</a></li>
         <li class="right" >
-          <a href="../boostthreads/boostthreads.html" title="Boost Threads Solution"
-             accesskey="N">next</a> |</li>
-        <li class="right" >
-          <a href="../index.html" title="Drug Design in Parallel"
+          <a href="../sequentialimplementation/sequentialimplementation.html" title="A Sequential Solution"
              accesskey="P">previous</a> |</li>
         <li><a href="../index.html">Drug Design in Parallel</a> &raquo;</li> 
       </ul>
@@ -54,34 +51,26 @@
             
   <div class="section" id="openmp-solution">
 <h1>OpenMP Solution<a class="headerlink" href="#openmp-solution" title="Permalink to this headline">¶</a></h1>
+<p>In the complete archive, <a class="reference download internal" href="../_downloads/dd.tar5.gz"><tt class="xref download docutils literal"><span class="pre">dd.tar.gz</span></tt></a>, this example is under the dd/openMP directory.</p>
+<p>Alternatively, for this chapter, these are the individual files to download:</p>
+<p><a class="reference download internal" href="../_downloads/dd_omp2.cpp"><tt class="xref download docutils literal"><span class="pre">dd_omp.cpp</span></tt></a></p>
+<p><a class="reference download internal" href="../_downloads/Makefile2"><tt class="xref download docutils literal"><span class="pre">Makefile</span></tt></a></p>
+<p>The Makefile is for use on linux systems.</p>
 <p>Here, we implement our drug design simulation in parallel using OpenMP, an API that provides compiler directives, library routines, and environment variables that allow shared-memory multithreading in C/C++. A master thread will fork off a specified number of worker threads and assign parts of a task to them (read <a class="reference external" href="http://en.wikipedia.org/wiki/OpenMP">more</a>).</p>
 <div class="section" id="implementation">
 <h2>Implementation<a class="headerlink" href="#implementation" title="Permalink to this headline">¶</a></h2>
-<p>The implementation <a class="reference download internal" href="../_downloads/dd_omp2.cpp"><tt class="xref download docutils literal"><span class="pre">dd_omp.cpp</span></tt></a> parallelizes the <tt class="docutils literal"><span class="pre">Map()</span></tt> loop using OpenMP and uses a thread-safe container from <a class="reference external" href="http://en.wikipedia.org/wiki/Intel_Threading_Building_Blocks">TBB</a>, a C++ template library designed to help avoid some of the difficulties associated with multithreading.</p>
-<p>Since we expect the docking algorithm (here represented by computing a match score for comparing a ligand string to a protein string) to require the bulk of compute time, we will parallelize the <tt class="docutils literal"><span class="pre">Map()</span></tt> stage in our sequential algorithm. The loop to be parallelized is shown below; the full sequential implementation is available at <a class="reference download internal" href="../_downloads/dd_serial4.cpp"><tt class="xref download docutils literal"><span class="pre">dd_serial.cpp</span></tt></a>.</p>
-<div class="highlight-c++"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
-2
-3
-4</pre></div></td><td class="code"><div class="highlight"><pre><span class="k">while</span> <span class="p">(</span><span class="o">!</span><span class="n">tasks</span><span class="p">.</span><span class="n">empty</span><span class="p">())</span> <span class="p">{</span>
+<p>The implementation dd_omp.cpp parallelizes the <tt class="docutils literal"><span class="pre">Map()</span></tt> loop using OpenMP and uses a thread-safe container from <a class="reference external" href="http://en.wikipedia.org/wiki/Intel_Threading_Building_Blocks">TBB</a>, a C++ template library designed to help avoid some of the difficulties associated with multithreading.</p>
+<p>Since we expect the docking algorithm (here represented by computing a match score for comparing a ligand string to a protein string) to require the bulk of compute time, we will parallelize the <tt class="docutils literal"><span class="pre">Map()</span></tt> stage in our sequential algorithm. The loop to be parallelized is shown below, from the full sequential implementation, dd_serial.cpp, discussed in the previous chapter.</p>
+<div class="highlight-c++"><div class="highlight"><pre><span class="k">while</span> <span class="p">(</span><span class="o">!</span><span class="n">tasks</span><span class="p">.</span><span class="n">empty</span><span class="p">())</span> <span class="p">{</span>
 <span class="hll">        <span class="n">Map</span><span class="p">(</span><span class="n">tasks</span><span class="p">.</span><span class="n">front</span><span class="p">(),</span> <span class="n">pairs</span><span class="p">);</span>
-</span><span class="n">tasks</span><span class="p">.</span><span class="n">pop</span><span class="p">();</span>
+</span>        <span class="n">tasks</span><span class="p">.</span><span class="n">pop</span><span class="p">();</span>
 <span class="p">}</span>
 </pre></div>
-</td></tr></table></div>
+</div>
 <p>We will now parallelize this mapping loop by converting it to a <tt class="docutils literal"><span class="pre">for</span></tt> loop, then applying OpenMP’s <tt class="docutils literal"><span class="pre">parallel</span> <span class="pre">for</span></tt> feature - there is no <tt class="docutils literal"><span class="pre">parallel</span> <span class="pre">while</span></tt>. For easier use with a <tt class="docutils literal"><span class="pre">for</span></tt> loop, we will replace the <tt class="docutils literal"><span class="pre">tasks</span></tt> queue with a vector (of the same name) and iterate on index values for that vector.</p>
 <p>This causes a potential concurrency problem, though, because multiple OpenMP threads will now each be calling <tt class="docutils literal"><span class="pre">Map()</span></tt>, and those multiple calls by parallel threads may overlap. There is no potential for error from the first argument <tt class="docutils literal"><span class="pre">ligand</span></tt> of <tt class="docutils literal"><span class="pre">Map()</span></tt>, since <tt class="docutils literal"><span class="pre">Map()</span></tt> requires simply read-only access for that argument. However, multiple calls of <tt class="docutils literal"><span class="pre">Map()</span></tt> in different threads might interfere with each other when changing the writable second argument <tt class="docutils literal"><span class="pre">pairs</span></tt> of <tt class="docutils literal"><span class="pre">Map()</span></tt>, leading to a data race condition. The STL containers are <em>not</em> thread safe, meaning that they provide no protection against such interference, and errors may result.</p>
 <p>Therefore, we will use TBB’s thread-safe <tt class="docutils literal"><span class="pre">concurrent_vector</span></tt> container for <tt class="docutils literal"><span class="pre">pairs</span></tt>, leading to the following code segments in our OpenMP implementation.</p>
-<div class="highlight-cpp"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
- 2
- 3
- 4
- 5
- 6
- 7
- 8
- 9
-10
-11</pre></div></td><td class="code"><div class="highlight"><pre><span class="n">vector</span><span class="o">&lt;</span><span class="n">string</span><span class="o">&gt;</span> <span class="n">tasks</span><span class="p">;</span>
+<div class="highlight-cpp"><div class="highlight"><pre><span class="n">vector</span><span class="o">&lt;</span><span class="n">string</span><span class="o">&gt;</span> <span class="n">tasks</span><span class="p">;</span>
 <span class="hll"><span class="n">tbb</span><span class="o">::</span><span class="n">concurrent_vector</span><span class="o">&lt;</span><span class="n">Pair</span><span class="o">&gt;</span> <span class="n">pairs</span><span class="p">;</span>
 </span><span class="n">vector</span><span class="o">&lt;</span><span class="n">Pair</span><span class="o">&gt;</span> <span class="n">results</span><span class="p">;</span>
 
@@ -93,8 +82,8 @@
 <span class="hll">                <span class="n">Map</span><span class="p">(</span><span class="n">tasks</span><span class="p">[</span><span class="n">t</span><span class="p">],</span> <span class="n">pairs</span><span class="p">);</span>
 </span>        <span class="p">}</span>
 </pre></div>
-</td></tr></table></div>
-<p>Since the main thread (i.e., the thread that executes <tt class="docutils literal"><span class="pre">run()</span></tt>) is the only thread that performs the stages that call <tt class="docutils literal"><span class="pre">Generate_tasks()</span></tt>, <tt class="docutils literal"><span class="pre">to_sort()</span></tt>, and <tt class="docutils literal"><span class="pre">Reduce()</span></tt>, it is safe for the vectors <tt class="docutils literal"><span class="pre">tasks</span></tt> or <tt class="docutils literal"><span class="pre">results</span></tt> to remain implemented as (non-thread safe) STL containers.  See the implementation <a class="reference download internal" href="../_downloads/dd_omp2.cpp"><tt class="xref download docutils literal"><span class="pre">dd_omp.cpp</span></tt></a> for complete details.</p>
+</div>
+<p>Since the main thread (i.e., the thread that executes <tt class="docutils literal"><span class="pre">run()</span></tt>) is the only thread that performs the stages that call <tt class="docutils literal"><span class="pre">Generate_tasks()</span></tt>, <tt class="docutils literal"><span class="pre">to_sort()</span></tt>, and <tt class="docutils literal"><span class="pre">Reduce()</span></tt>, it is safe for the vectors <tt class="docutils literal"><span class="pre">tasks</span></tt> or <tt class="docutils literal"><span class="pre">results</span></tt> to remain implemented as (non-thread safe) STL containers.  See the implementation (dd_omp.cpp) for complete details.</p>
 </div>
 <div class="section" id="further-notes">
 <h2>Further Notes<a class="headerlink" href="#further-notes" title="Permalink to this headline">¶</a></h2>
@@ -116,19 +105,19 @@
 <div class="section" id="questions-for-exploration">
 <h2>Questions for Exploration<a class="headerlink" href="#questions-for-exploration" title="Permalink to this headline">¶</a></h2>
 <ul>
-<li><p class="first">Compare the performance of <a class="reference download internal" href="../_downloads/dd_serial4.cpp"><tt class="xref download docutils literal"><span class="pre">dd_serial.cpp</span></tt></a> with <a class="reference download internal" href="../_downloads/dd_omp2.cpp"><tt class="xref download docutils literal"><span class="pre">dd_omp.cpp</span></tt></a> on a multicore computer using the same values for <tt class="docutils literal"><span class="pre">max_ligand</span></tt> and <tt class="docutils literal"><span class="pre">nligands</span></tt>. Do you observe speedup for the parallel version?</p>
+<li><p class="first">Compare the performance of dd_serial.cpp with dd_omp.cpp on a multicore computer using the same values for <tt class="docutils literal"><span class="pre">max_ligand</span></tt> and <tt class="docutils literal"><span class="pre">nligands</span></tt>. Do you observe speedup for the parallel version?</p>
 </li>
-<li><p class="first">Our development system has four cores, and <tt class="docutils literal"><span class="pre">nthreads=4</span></tt> was used for one of our test runs. We found that <a class="reference download internal" href="../_downloads/dd_omp2.cpp"><tt class="xref download docutils literal"><span class="pre">dd_omp.cpp</span></tt></a> performed about <em>three</em> times as fast as <a class="reference download internal" href="../_downloads/dd_serial4.cpp"><tt class="xref download docutils literal"><span class="pre">dd_serial.cpp</span></tt></a> for the same values of <tt class="docutils literal"><span class="pre">max_ligand</span></tt> and <tt class="docutils literal"><span class="pre">nligands</span></tt>. Can you explain why it didn’t perform four times as fast?</p>
+<li><p class="first">Our development system has four cores, and <tt class="docutils literal"><span class="pre">nthreads=4</span></tt> was used for one of our test runs. We found that the omp version performed about <em>three</em> times as fast as :the serial version for the same values of <tt class="docutils literal"><span class="pre">max_ligand</span></tt> and <tt class="docutils literal"><span class="pre">nligands</span></tt>. Can you explain why it didn’t perform four times as fast?</p>
 </li>
-<li><p class="first">Use the command-line arguments to experiment with varying the number of OpenMP threads in an invocation of <a class="reference download internal" href="../_downloads/dd_omp2.cpp"><tt class="xref download docutils literal"><span class="pre">dd_omp.cpp</span></tt></a>, while holding <tt class="docutils literal"><span class="pre">max_ligand</span></tt> and <tt class="docutils literal"><span class="pre">nligands</span></tt> unchanged. On a multi-core system, we hope for better performance when more threads are used. Do you observe such performance improvement when you time the execution? What happens when the number of threads exceeds the number of cores (or hyperthreads) on your system? Explain as much as you can about the timing results you observe when you vary the number of threads.</p>
+<li><p class="first">Use the command-line arguments to experiment with varying the number of OpenMP threads in an invocation of dd_omp.cpp, while holding <tt class="docutils literal"><span class="pre">max_ligand</span></tt> and <tt class="docutils literal"><span class="pre">nligands</span></tt> unchanged. On a multi-core system, we hope for better performance when more threads are used. Do you observe such performance improvement when you time the execution? What happens when the number of threads exceeds the number of cores (or hyperthreads) on your system? Explain as much as you can about the timing results you observe when you vary the number of threads.</p>
 </li>
-<li><p class="first">You may notice that <a class="reference download internal" href="../_downloads/dd_omp2.cpp"><tt class="xref download docutils literal"><span class="pre">dd_omp.cpp</span></tt></a> computes the same maximal score and identifies the same ligands as <a class="reference download internal" href="../_downloads/dd_serial4.cpp"><tt class="xref download docutils literal"><span class="pre">dd_serial.cpp</span></tt></a> that produce that score, but if more than one ligand yields the maximal score, the <em>order</em> of those maximal-scoring ligands may differ between the two versions. Can you explain why?</p>
+<li><p class="first">You may notice that dd_omp.cpp computes the same maximal score and identifies the same ligands as the serial version that produces that score, but if more than one ligand yields the maximal score, the <em>order</em> of those maximal-scoring ligands may differ between the two versions. Can you explain why?</p>
 </li>
-<li><p class="first">Our sequential program <a class="reference download internal" href="../_downloads/dd_serial4.cpp"><tt class="xref download docutils literal"><span class="pre">dd_serial.cpp</span></tt></a> always produces the same results for given values of the <tt class="docutils literal"><span class="pre">max_ligand</span></tt>, <tt class="docutils literal"><span class="pre">nligands</span></tt>,  and <tt class="docutils literal"><span class="pre">protein</span></tt> command-line arguments. This is because we use the default random-number seed in our code. Because of this consistency, we can describe the sequential version as being a <em>deterministic</em> computation. Is <a class="reference download internal" href="../_downloads/dd_omp2.cpp"><tt class="xref download docutils literal"><span class="pre">dd_omp.cpp</span></tt></a> a deterministic computation? Explain your answer, and/or state what more you need to know in order to answer this question.</p>
+<li><p class="first">Our sequential program always produces the same results for given values of the <tt class="docutils literal"><span class="pre">max_ligand</span></tt>, <tt class="docutils literal"><span class="pre">nligands</span></tt>,  and <tt class="docutils literal"><span class="pre">protein</span></tt> command-line arguments. This is because we use the default random-number seed in our code. Because of this consistency, we can describe the sequential version as being a <em>deterministic</em> computation. Is dd_omp.cpp a deterministic computation? Explain your answer, and/or state what more you need to know in order to answer this question.</p>
 </li>
-<li><p class="first">If you have <em>more realistic algorithms for docking and/or more realistic data for ligands and proteins</em>, modify the program <a class="reference download internal" href="../_downloads/dd_omp2.cpp"><tt class="xref download docutils literal"><span class="pre">dd_omp.cpp</span></tt></a> to incorporate those elements, and compare the results from your modified program to results obtained by other means (other software, wet-lab results, etc.). How does the performance of your modified OpenMP version compare to what you observed from your modified sequential version?</p>
+<li><p class="first">If you have <em>more realistic algorithms for docking and/or more realistic data for ligands and proteins</em>, modify the openMP program to incorporate those elements, and compare the results from your modified program to results obtained by other means (other software, wet-lab results, etc.). How does the performance of your modified OpenMP version compare to what you observed from your modified sequential version?</p>
 </li>
-<li><p class="first">Whereas our serial implementation used a queue data structure for <tt class="docutils literal"><span class="pre">tasks</span></tt>, this implementation uses a vector data structure, and parallelizes the “map” stage using OpenMP’s <tt class="docutils literal"><span class="pre">omp</span> <span class="pre">parallel</span> <span class="pre">for</span></tt> pragma. This suffices for our simplified example, because we generate all ligands before processing any of them. However, some computations require a task queue, since processing some tasks may generate others (not out of the question for drug design, since high-scoring ligands might lead one to consider similar ligands in search of even higher scores). <strong>Challenge problem:</strong> Modify <a class="reference download internal" href="../_downloads/dd_omp2.cpp"><tt class="xref download docutils literal"><span class="pre">dd_omp.cpp</span></tt></a> to use a task <em>queue</em> instead of a task vector.</p>
+<li><p class="first">Whereas our serial implementation used a queue data structure for <tt class="docutils literal"><span class="pre">tasks</span></tt>, this implementation uses a vector data structure, and parallelizes the “map” stage using OpenMP’s <tt class="docutils literal"><span class="pre">omp</span> <span class="pre">parallel</span> <span class="pre">for</span></tt> pragma. This suffices for our simplified example, because we generate all ligands before processing any of them. However, some computations require a task queue, since processing some tasks may generate others (not out of the question for drug design, since high-scoring ligands might lead one to consider similar ligands in search of even higher scores). <strong>Challenge problem:</strong> Modify dd_omp.cpp to use a task <em>queue</em> instead of a task vector.</p>
 <blockquote>
 <div><div class="admonition note">
 <p class="first admonition-title">Note</p>
@@ -164,11 +153,11 @@
 </ul>
 
   <h4>Previous topic</h4>
-  <p class="topless"><a href="../index.html"
-                        title="previous chapter">Drug Design in Parallel</a></p>
+  <p class="topless"><a href="../sequentialimplementation/sequentialimplementation.html"
+                        title="previous chapter">A Sequential Solution</a></p>
   <h4>Next topic</h4>
-  <p class="topless"><a href="../boostthreads/boostthreads.html"
-                        title="next chapter">Boost Threads Solution</a></p>
+  <p class="topless"><a href="../c++11threads/c++11threads.html"
+                        title="next chapter">C++11 Threads Solution</a></p>
         </div>
       </div>
       <div class="clearer"></div>
@@ -177,13 +166,10 @@
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
-          <a href="../genindex.html" title="General Index"
-             >index</a></li>
+          <a href="../c++11threads/c++11threads.html" title="C++11 Threads Solution"
+             >next</a></li>
         <li class="right" >
-          <a href="../boostthreads/boostthreads.html" title="Boost Threads Solution"
-             >next</a> |</li>
-        <li class="right" >
-          <a href="../index.html" title="Drug Design in Parallel"
+          <a href="../sequentialimplementation/sequentialimplementation.html" title="A Sequential Solution"
              >previous</a> |</li>
         <li><a href="../index.html">Drug Design in Parallel</a> &raquo;</li> 
       </ul>
