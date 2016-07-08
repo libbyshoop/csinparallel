@@ -1,0 +1,147 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Introduction &mdash; Drug Design in Parallel</title>
+    
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+    <link rel="top" title="Drug Design in Parallel" href="../index.html" />
+    <link rel="next" title="A Sequential Solution" href="../sequentialimplementation/sequentialimplementation.html" />
+    <link rel="prev" title="Drug Design in Parallel" href="../index.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../sequentialimplementation/sequentialimplementation.html" title="A Sequential Solution"
+             accesskey="N">next</a></li>
+        <li class="right" >
+          <a href="../index.html" title="Drug Design in Parallel"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../index.html">Drug Design in Parallel</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="introduction">
+<h1>Introduction<a class="headerlink" href="#introduction" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="background-drug-design">
+<h2>Background: Drug Design<a class="headerlink" href="#background-drug-design" title="Permalink to this headline">¶</a></h2>
+<p>An important problem in the biological sciences is that of drug design. The goal is to find small molecules, called <em>ligands</em>, that are good candidates for use as drugs.</p>
+<div class="align-center figure align-center">
+<img alt="Diagram of a ligand binding to a protein." src="../_images/proteinligand.jpg" style="width: 582px; height: 308px;" />
+</div>
+<p>At a high level, the problem is simple to state: a protein associated with the disease of interest is identified, and its three-dimensional structure is found either experimentally or through a molecular modeling computation. A collection of ligands is tested against the protein: for example, for every orientation of the ligand relative to the protein, computation is done to test whether the ligand binds with the protein in useful ways (such as tying up a biologically active region on the protein). A score is set based on these binding properties, and the best scores are flagged, identifying ligands that would make good drug candidates.</p>
+</div>
+<div class="section" id="algorithmic-strategy">
+<h2>Algorithmic Strategy<a class="headerlink" href="#algorithmic-strategy" title="Permalink to this headline">¶</a></h2>
+<p>We will apply a <em>map-reduce</em> strategy to this problem, which can be implemented using a <em>master-worker</em> design pattern.</p>
+<p>Our map-reduce strategy uses three stages of processing.</p>
+<blockquote>
+<div><ol class="arabic simple">
+<li>First, we will generate many ligands to be tested agains a given protein, using a function <tt class="docutils literal"><span class="pre">Generate_tasks().</span></tt> This function produces many <tt class="docutils literal"><span class="pre">[ligand,</span> <span class="pre">protein]</span></tt> pairs (in this case, all with the same protein) for the next stage.</li>
+<li>Next, we will apply a <tt class="docutils literal"><span class="pre">Map()</span></tt> function to each ligand and the given protein,       which will compute the binding score for that <tt class="docutils literal"><span class="pre">[ligand,</span> <span class="pre">protein]</span></tt> pair. This <tt class="docutils literal"><span class="pre">Map()</span></tt> function will produce a pair <tt class="docutils literal"><span class="pre">[score,</span> <span class="pre">ligand]</span></tt> since we want to know the highest-scoring ligands.</li>
+<li>Finally, we identify the ligands with the highest scores, using a function <tt class="docutils literal"><span class="pre">Reduce()</span></tt> applied to the <tt class="docutils literal"><span class="pre">[score,</span> <span class="pre">ligand]</span></tt> pairs.</li>
+</ol>
+</div></blockquote>
+<p>These functions could be implemented sequentially, or they can be called by multiple processes or threads to perform the drug-design computation in parallel: one process, called the <em>master</em>, can fill a task queue with pairs obtained from <tt class="docutils literal"><span class="pre">Generate_tasks().</span></tt>
+Many <em>worker</em> processes can pull tasks off the task queue and apply the function <tt class="docutils literal"><span class="pre">Map()</span></tt> to them. The master can then collect results from the workers and apply <tt class="docutils literal"><span class="pre">Reduce()</span></tt> to determine the highest-scoring ligand(s).</p>
+<p>Note that if the <tt class="docutils literal"><span class="pre">Reduce()</span></tt> function is expensive to apply, or if the stream of <tt class="docutils literal"><span class="pre">[score,</span> <span class="pre">ligand]</span></tt> pairs produced by calls to <tt class="docutils literal"><span class="pre">Map()</span></tt> becomes too large, the <tt class="docutils literal"><span class="pre">Reduce()</span></tt> stage may be parallelized as well.</p>
+<p>This map-reduce approach has been used on clusters and large <a class="reference external" href="http://en.wikipedia.org/wiki/Non-Uniform_Memory_Access">NUMA</a> machines. Stanford University&#8217;s <a class="reference external" href="http://folding.stanford.edu/">Folding&#64;home</a> project also involves using idle processing resources from thousands of volunteers&#8217; personal computers to run computations on protein folding and related diseases.</p>
+</div>
+<div class="section" id="simplified-problem-definition">
+<h2>Simplified Problem Definition<a class="headerlink" href="#simplified-problem-definition" title="Permalink to this headline">¶</a></h2>
+<p>Working with actual ligand and protein data is beyond the scope of this example, so we will represent the computation by a simpler string-based comparison.</p>
+<p>Specifically, we simplify the computation as follows:</p>
+<blockquote>
+<div><ul class="simple">
+<li>Proteins and ligands will be represented as (randomly-generated) character strings.</li>
+<li>The docking-problem computation will be represented by comparing a ligand string <tt class="docutils literal"><span class="pre">L</span></tt> to a protein string <tt class="docutils literal"><span class="pre">P</span></tt>.  The score for a pair <tt class="docutils literal"><span class="pre">[L,</span> <span class="pre">P]</span></tt> will be the maximum number of matching characters among all possibilities when <tt class="docutils literal"><span class="pre">L</span></tt> is compared to <tt class="docutils literal"><span class="pre">P</span></tt>, moving from left to right, allowing possible insertions and deletions.  For example, if <tt class="docutils literal"><span class="pre">L</span></tt> is the string “cxtbcrv” and <tt class="docutils literal"><span class="pre">P</span></tt> is the string “lcacxtqvivg,” then the score is 4, arising from this comparison of <tt class="docutils literal"><span class="pre">L</span></tt> to a segment of <tt class="docutils literal"><span class="pre">P</span></tt>:</li>
+</ul>
+<div class="align-center figure align-center">
+<img alt="the two sequences, with c x t v aligned" src="../_images/seq1.jpg" style="width: 203px; height: 85px;" />
+</div>
+</div></blockquote>
+<p>This is not the only comparison of that ligand to that protein that yields four matching characters. Another one is</p>
+<blockquote>
+<div><div class="align-center figure align-center">
+<img alt="another alignment of c x t v in the two sequences" src="../_images/seq2.jpg" style="width: 182px; height: 65px;" />
+</div>
+</div></blockquote>
+<p>However, there is no comparison that matches five characters while moving from left to right, so the score is 4.</p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../index.html">
+              <img class="logo" src="../_static/CSInParallel200wide.png" alt="Logo"/>
+            </a></p>
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Introduction</a><ul>
+<li><a class="reference internal" href="#background-drug-design">Background: Drug Design</a></li>
+<li><a class="reference internal" href="#algorithmic-strategy">Algorithmic Strategy</a></li>
+<li><a class="reference internal" href="#simplified-problem-definition">Simplified Problem Definition</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="../index.html"
+                        title="previous chapter">Drug Design in Parallel</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="../sequentialimplementation/sequentialimplementation.html"
+                        title="next chapter">A Sequential Solution</a></p>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../sequentialimplementation/sequentialimplementation.html" title="A Sequential Solution"
+             >next</a></li>
+        <li class="right" >
+          <a href="../index.html" title="Drug Design in Parallel"
+             >previous</a> |</li>
+        <li><a href="../index.html">Drug Design in Parallel</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright This work is licensed under a Creative Commons Attribution-ShareAlike 3.0 Unported License.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>

@@ -1,0 +1,150 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>A Message Passing Interface (MPI) Solution &mdash; Drug Design in Parallel</title>
+    
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+    <link rel="top" title="Drug Design in Parallel" href="../index.html" />
+    <link rel="next" title="Go Solution" href="../go/go.html" />
+    <link rel="prev" title="C++11 Threads Solution" href="../c++11threads/c++11threads.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../go/go.html" title="Go Solution"
+             accesskey="N">next</a></li>
+        <li class="right" >
+          <a href="../c++11threads/c++11threads.html" title="C++11 Threads Solution"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../index.html">Drug Design in Parallel</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="a-message-passing-interface-mpi-solution">
+<h1>A Message Passing Interface (MPI) Solution<a class="headerlink" href="#a-message-passing-interface-mpi-solution" title="Permalink to this headline">¶</a></h1>
+<p>In the complete archive, <a class="reference download internal" href="../_downloads/dd.tar4.gz"><tt class="xref download docutils literal"><span class="pre">dd.tar.gz</span></tt></a>, this example is under the dd/MPI directory.</p>
+<p>Alternatively, for this chapter, these are the individual files to download:</p>
+<p><a class="reference download internal" href="../_downloads/dd_mpi.cpp"><tt class="xref download docutils literal"><span class="pre">dd_mpi.cpp</span></tt></a></p>
+<p><a class="reference download internal" href="../_downloads/Makefile1"><tt class="xref download docutils literal"><span class="pre">Makefile</span></tt></a></p>
+<p>The Makefile is for use on linux systems.</p>
+<div class="section" id="a-cluster-system">
+<h2>A cluster system<a class="headerlink" href="#a-cluster-system" title="Permalink to this headline">¶</a></h2>
+<p>Now we turn to a solution for use on clusters of computer systems. Because each computer in the cluster is a standalone machine, the work will need to be coordinated by distributing it across the machines in separate processes and ccommunicating between those processes using message passing, which is provided by the MPI library.</p>
+</div>
+<div class="section" id="single-program-multiple-data">
+<h2>Single Program, Multiple Data<a class="headerlink" href="#single-program-multiple-data" title="Permalink to this headline">¶</a></h2>
+<p>This program uses the master-worker strategy within a single program. This strategy is implemented within the <tt class="docutils literal"><span class="pre">run</span></tt> method of the <tt class="docutils literal"><span class="pre">MR</span></tt> class. One process, called the root, or master, has the responsibility for:</p>
+<ul class="simple">
+<li>generating all of the ligand scoring tasks</li>
+<li>sending the next available ligand scoring task to a worker when asked</li>
+<li>cordinating when all scoring tasks have been completed</li>
+</ul>
+<p>All of the other processes, called workers, will be responsible for:</p>
+<ul class="simple">
+<li>asking the master for some work by sending that process a message</li>
+<li>receiving the work and computing the score for that ligand</li>
+</ul>
+<p>In the code, the separation of these tasks is done by keeping track of the <em>rank</em> of each process (a unique number given to each process that was initialized) and using it to determine what it will do. In this code, this line indicates the section of code for the master (by tradition number 0):</p>
+<blockquote>
+<div><div class="highlight-cpp"><div class="highlight"><pre><span class="k">if</span> <span class="p">(</span><span class="n">rank</span> <span class="o">==</span> <span class="n">root</span><span class="p">)</span> <span class="p">{</span>
+</pre></div>
+</div>
+</div></blockquote>
+<p>and the else block corresponding to this if statement holds the code that each worker process on other machines will execute. This way of indicating code for different types of processes (master and worker) within the same program is commonly refered to as the single-program, multiple data software pattern in parallel and distributed computing. The MPI library was designed to use this pattern in this manner.</p>
+<p>In a cluster, memory is not shared between all processes, so not every worker process running on a different machine will have a copy of the vector containing the pairs of processed ligands and their scores. This will be maintained by the master, or root process. Because of this, the Map function found in previous examples that looked like this:</p>
+<blockquote>
+<div><div class="highlight-cpp"><div class="highlight"><pre><span class="kt">void</span> <span class="n">MR</span><span class="o">::</span><span class="n">Map</span><span class="p">(</span><span class="k">const</span> <span class="n">string</span> <span class="o">&amp;</span><span class="n">ligand</span><span class="p">,</span> <span class="n">tbb</span><span class="o">::</span><span class="n">concurrent_vector</span><span class="o">&lt;</span><span class="n">Pair</span><span class="o">&gt;</span> <span class="o">&amp;</span><span class="n">pairs</span><span class="p">)</span> <span class="p">{</span>
+  <span class="n">Pair</span> <span class="n">p</span><span class="p">(</span><span class="n">Help</span><span class="o">::</span><span class="n">score</span><span class="p">(</span><span class="n">ligand</span><span class="p">.</span><span class="n">c_str</span><span class="p">(),</span> <span class="n">protein</span><span class="p">.</span><span class="n">c_str</span><span class="p">()),</span> <span class="n">ligand</span><span class="p">);</span>
+  <span class="n">pairs</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">p</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div></blockquote>
+<p>now must be split up between the workers, who will do the scoring, and the master, who will take on the task of pushing the result received from each worker back onto the vector. Take note of where the score method is called in the worker portion of the <tt class="docutils literal"><span class="pre">run</span></tt> function of the MR class, and the result is sent to the master process. Then note where that score is received in the master process section of the code and pushed onto the pairs vector.</p>
+</div>
+<div class="section" id="questions-for-explortion">
+<h2>Questions for Explortion<a class="headerlink" href="#questions-for-explortion" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li>Compile and run the code on a cluster (using mpirun). Generally speaking, does it seem faster for a given set of problem sizes (number of ligands, size of input protein string). As you add processes, does it seem to get faster?</li>
+<li>Investigate how to time how long the code takes to run, using a function called <em>MPI_get_wtime()</em>. Improve this code by adding the capability to determine its running time and report it with the results.</li>
+<li>What issues arise with timing code like this when the ligands are randomly generated?</li>
+</ul>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../index.html">
+              <img class="logo" src="../_static/CSInParallel200wide.png" alt="Logo"/>
+            </a></p>
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">A Message Passing Interface (MPI) Solution</a><ul>
+<li><a class="reference internal" href="#a-cluster-system">A cluster system</a></li>
+<li><a class="reference internal" href="#single-program-multiple-data">Single Program, Multiple Data</a></li>
+<li><a class="reference internal" href="#questions-for-explortion">Questions for Explortion</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="../c++11threads/c++11threads.html"
+                        title="previous chapter">C++11 Threads Solution</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="../go/go.html"
+                        title="next chapter">Go Solution</a></p>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../go/go.html" title="Go Solution"
+             >next</a></li>
+        <li class="right" >
+          <a href="../c++11threads/c++11threads.html" title="C++11 Threads Solution"
+             >previous</a> |</li>
+        <li><a href="../index.html">Drug Design in Parallel</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright This work is licensed under a Creative Commons Attribution-ShareAlike 3.0 Unported License.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>
