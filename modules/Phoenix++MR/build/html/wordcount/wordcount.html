@@ -1,0 +1,218 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Counting Pease With MapReduce &mdash; Introducing Students to MapReduce with Phoenix++ 1 documentation</title>
+    
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="top" title="Introducing Students to MapReduce with Phoenix++ 1 documentation" href="../index.html" />
+    <link rel="next" title="Getting Started with Phoenix++" href="../phoenix/phoenix.html" />
+    <link rel="prev" title="What is MapReduce?" href="../MRIntro/MRIntro.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../phoenix/phoenix.html" title="Getting Started with Phoenix++"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="../MRIntro/MRIntro.html" title="What is MapReduce?"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../index.html">Introducing Students to MapReduce with Phoenix++ 1 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="counting-pease-with-mapreduce">
+<h1>Counting Pease With MapReduce<a class="headerlink" href="#counting-pease-with-mapreduce" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="word-frequency">
+<h2>Word Frequency<a class="headerlink" href="#word-frequency" title="Permalink to this headline">¶</a></h2>
+<p>We will discuss a classic example called Word Frequency, or Word Count. In this
+example, the goal is to identify the set of unique words in a text file and
+compute their associated &#8220;counts&#8221; or frequencies. Consider the follow poem by
+Mother Goose:</p>
+<div class="highlight-python"><div class="highlight"><pre>Pease-porridge hot
+Pease-porridge cold
+Pease-porridge in the pot
+Nine days old
+Some like it hot
+Some like it cold
+Some like it in the pot
+Nine days old
+</pre></div>
+</div>
+<p>If we were to count the word frequencies in this file, we may get output that
+looks like the following:</p>
+<div class="highlight-python"><div class="highlight"><pre>cold : 2
+days : 2
+hot : 2
+in : 2
+it : 3
+like : 3
+nine : 2
+old : 2
+pease-porridge : 3
+pot : 2
+some : 3
+the : 2
+</pre></div>
+</div>
+<p>Notice that each word is associated with the frequency of its occurrence in the
+poem.</p>
+</div>
+<div class="section" id="solving-the-problem-using-mapreduce">
+<h2>Solving the Problem Using MapReduce<a class="headerlink" href="#solving-the-problem-using-mapreduce" title="Permalink to this headline">¶</a></h2>
+<p>In MapReduce, the programmer is responsible for mainly writing two serial
+functions: <tt class="docutils literal"><span class="pre">map()</span></tt> and <tt class="docutils literal"><span class="pre">reduce()</span></tt>. The framework takes care of running
+everything in parallel. The components of the system are as follows:</p>
+<ul class="simple">
+<li>The <tt class="docutils literal"><span class="pre">map()</span></tt> function takes a chunk of input, processes it, and outputs a
+series of <em>(key, value)</em> pairs. All instances of the <tt class="docutils literal"><span class="pre">map()</span></tt> function
+(mappers) run independently and simultaneously. This is known as the Map
+phase.</li>
+<li>A Combiner function sorts all the <em>(key,value)</em> pairs coming from the Map
+phase. The combiner uses a hashing function to aggregate all the values
+associated with a particular key. Thus, the ouput from the combiner is a
+series of <em>(key,list(value))</em> pairs.</li>
+<li>The <tt class="docutils literal"><span class="pre">reduce()</span></tt> function takes <em>(key, list(value))</em> pairs and performs a
+<em>reduction operation</em> on each. A reduction operation is any operation that
+combines the values in some way. The output is a final <em>(key, value)</em> pair,
+where the value is the result of the reduction operation performed on the
+list. Each instance of the reduce() function (reducer) run independently and in parallel.</li>
+</ul>
+<p>So how do we calculate Word Frequency with MapReduce? In the following example,
+we have three mappers and three reducers. For simplicity, we assume that the
+file is split on new lines (<tt class="docutils literal"><span class="pre">\n</span></tt>) though this need not be the case. Each
+mapper takes its assigned chunk of text and splits it into words, and emits
+<em>(key,value)</em> pairs where the key is an individual word, and the value is <tt class="docutils literal"><span class="pre">1.</span></tt></p>
+<blockquote>
+<div>If multiple instances of a word are assigned to the same mapper, the local</div></blockquote>
+<p>frequencies can be added and emitted instead.</p>
+<p>Below, we have an illustration of the Map phase of the algorithm. Observe that
+the first mapper is emitting a (key,value) pair of (Pease-porridge,3) instead
+of three instances of the pair (Pease-porridge,1). Notice that all mappers run
+in parallell.</p>
+<div class="align-center figure">
+<a class="reference internal image-reference" href="../_images/map.png"><img alt="alternate text" src="../_images/map.png" style="width: 460px; height: 300px;" /></a>
+<p class="caption">Figure 1: How the Map Phase of the algorithm works.</p>
+</div>
+<p>The combiner acts as a synchronization point; all the mappers must finish prior
+to the combiner finishing execution. The combiner constructs <em>(key,list(value))</em> pairs from the output from the mappers. For example, mapper 2 produced
+the <em>(key,value)</em> pair (<tt class="docutils literal"><span class="pre">it</span></tt>,``2``), while mapper 3 produced the <em>(key,value)</em>
+pair (<tt class="docutils literal"><span class="pre">it</span></tt>,``1``). The combiner will aggregate these two pairs and output
+(<tt class="docutils literal"><span class="pre">it</span></tt>, <tt class="docutils literal"><span class="pre">[2,1]</span></tt>).</p>
+<p>After the combiner finishes executing, the <em>(key,list(value))</em> pairs go to to
+the reducers for processing. We refer to this as the Reduce phase. The figure
+below illustrates the Reduce phase for this example. Each reducer gets assigned
+a set of <em>(key,list(value))</em> pairs. For each pair, it performs a reduction
+operation. In this case, the reduction operation is addition; all the values
+in the list are simply added together. For example, reducer 2 reduces the pair
+(<tt class="docutils literal"><span class="pre">Some</span></tt>,``[2,1]``) to (<tt class="docutils literal"><span class="pre">Some</span></tt>,``3``).</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">One thing we do not discuss here is <em>fault tolerance</em>. Fault
+tolerance is most important for large distributed systems. When you
+have that many computers networked together, it’s likely that some
+subset of them will fail. Fault tolerance allows us to recover from
+failures on the fly. In the case of Google’s Mapreduce, fault
+tolerance is maintained by constantly pinging nodes. If any node stays
+silent for too long, the framework marks that node as being “dead”,
+and redistributes its work to other worker nodes. Phoenix and
+Phoenix++ both have fault tolerance protections. Phoenix++ has an
+optional execution mode that enables a user to skip data records in
+the case of segnmentation faults and bus errors. This can be invoked
+through the use of the signal handler.</p>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Counting Pease With MapReduce</a><ul>
+<li><a class="reference internal" href="#word-frequency">Word Frequency</a></li>
+<li><a class="reference internal" href="#solving-the-problem-using-mapreduce">Solving the Problem Using MapReduce</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="../MRIntro/MRIntro.html"
+                        title="previous chapter">What is MapReduce?</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="../phoenix/phoenix.html"
+                        title="next chapter">Getting Started with Phoenix++</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="../_sources/wordcount/wordcount.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../phoenix/phoenix.html" title="Getting Started with Phoenix++"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="../MRIntro/MRIntro.html" title="What is MapReduce?"
+             >previous</a> |</li>
+        <li><a href="../index.html">Introducing Students to MapReduce with Phoenix++ 1 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2016, Suzanne J. Matthews.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
+    </div>
+  </body>
+</html>

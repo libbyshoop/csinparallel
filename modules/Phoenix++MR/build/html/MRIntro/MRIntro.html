@@ -1,0 +1,193 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>What is MapReduce? &mdash; Introducing Students to MapReduce with Phoenix++ 1 documentation</title>
+    
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="top" title="Introducing Students to MapReduce with Phoenix++ 1 documentation" href="../index.html" />
+    <link rel="next" title="Counting Pease With MapReduce" href="../wordcount/wordcount.html" />
+    <link rel="prev" title="Introducing Students to MapReduce with Phoenix++" href="../index.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../wordcount/wordcount.html" title="Counting Pease With MapReduce"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="../index.html" title="Introducing Students to MapReduce with Phoenix++"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../index.html">Introducing Students to MapReduce with Phoenix++ 1 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="what-is-mapreduce">
+<h1>What is MapReduce?<a class="headerlink" href="#what-is-mapreduce" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="motivation">
+<h2>Motivation<a class="headerlink" href="#motivation" title="Permalink to this headline">¶</a></h2>
+<p>In today&#8217;s world, multicore architectures are ubiquitous. But, the majority of
+programs that people write are still serial. Why is that? While some people may
+be unaware that they can leverage the multiple cores on their computers, the
+truth is that parallel computing is very difficult. In many cases, the
+programmer must consider many factors that have nothing to do with problem he
+or she is trying to parallelize. For example, to implement a program in Pthreads,
+a programmer must physically allocate, create and join any threads they want to
+use. The programmer must also be aware data races, and use synchronization
+constructs as necessary.</p>
+<p>This is not unique to Pthreads. In MPI for example, you have to explicitly
+specify what messages you want to send to what node, and how to synchronize
+messages. As you can imagine, this creates a lot of overhead for the
+programmer. As those who have programmed previously in Pthreads, MPI, or OpenMP
+can attest, debugging parallel programs can be very difficult! When things
+execute in parallel, they execute non-deterministically. This non-determinism
+can cause a lot of headaches.</p>
+<p>As multicore and parallel systems became more prevalent, computer scientists
+began to ask the question if parallel computing is harder that it needs to be.
+Some libraries such as OpenMP &#8220;hide&#8221; some of the work required with threads
+through the use of pragmas. Hiding implementation details is known as
+abstraction. However, even with abstraction, the programming still has to worry
+a lot about the &#8220;management&#8221; aspects of the program. Furthermore, similar
+applications can be parallelized in the way. Researchers began exploring ways
+to create an automated framework for parallel computing.</p>
+</div>
+<div class="section" id="enter-mapreduce">
+<h2>Enter MapReduce<a class="headerlink" href="#enter-mapreduce" title="Permalink to this headline">¶</a></h2>
+<p>In 2004, Jeffrey Dean and Sanjay Ghemawhat of Google published a paper on the
+MapReduce paradigm. Google uses MapReduce as the backbone of its search engine,
+and uses it for multiple operations. It is important to note that Google did
+<em>not</em> invent MapReduce; the paradigm has existed for decades in functional
+languages. However, the paper&#8217;s release was a watershed moment in parallel
+computing, and spelled the beginning of an upsurge in interest in the paradigm
+that has led to many innovations over the last decade.</p>
+<p>Google&#8217;s implementation of MapReduce is closed source and proprietary. In 2006,
+work on the Hadoop project was started by Doug Cutting, an employee of Yahoo!.
+Hadoop is named after a plush toy elephant belonging to Cutting&#8217;s son, and the
+eponymous elephant features prominently in the Hadoop logo. Over the last six
+years, Hadoop has been widely adopted by many tech giants, including Amazon,
+Facebook and Microsoft.</p>
+<p>It is important to note that both Google&#8217;s implementation of MapReduce and
+Hadoop MapReduce were designed for very large datasets, on the order of
+hundreds of gigabytes and petabytes. The goal is to efficiently streamline the
+processing of these large numbers of documents by distributing them over
+thousands of machines. Note that for smaller datasets, the system may have
+limited benefit; the Hadoop Distributed File System (HDFS) can prove to be a
+bottleneck. However, the concept of MapReduce is still very attractive to
+programmers with smaller datasets or more limited computational resources, due
+to its relative simplicity.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Want to play with a Hadoop system on the web? Check out WebMapReduce!
+Access the module at this link.</p>
+</div>
+</div>
+<div class="section" id="phoenix-and-phoenix">
+<h2>Phoenix and Phoenix++<a class="headerlink" href="#phoenix-and-phoenix" title="Permalink to this headline">¶</a></h2>
+<p>In 2007, a team at Stanford University led by Christos Kozyrakis began
+exploring how to implement the MapReduce paradigm on multi-core platform. Their
+thread-based solution, Phoenix, won best paper at HPCA&#8216;07, and has been cited
+over 800 times. An update on Phoenix (Phoenix 2) was released in 2009. In 2011,
+Phoenix++ was released. A complete re-write of the earlier Phoenix systems,
+Phoenix++ enables development in C++, and significantly modularizes and
+improves the performance of the original code base.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">This entire module is based on Phoenix++ the latest release of
+Phoenix. Please note that if you are interested in using the earlier
+modules, these instructions may not directly apply.</p>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">What is MapReduce?</a><ul>
+<li><a class="reference internal" href="#motivation">Motivation</a></li>
+<li><a class="reference internal" href="#enter-mapreduce">Enter MapReduce</a></li>
+<li><a class="reference internal" href="#phoenix-and-phoenix">Phoenix and Phoenix++</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="../index.html"
+                        title="previous chapter">Introducing Students to MapReduce with Phoenix++</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="../wordcount/wordcount.html"
+                        title="next chapter">Counting Pease With MapReduce</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="../_sources/MRIntro/MRIntro.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../wordcount/wordcount.html" title="Counting Pease With MapReduce"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="../index.html" title="Introducing Students to MapReduce with Phoenix++"
+             >previous</a> |</li>
+        <li><a href="../index.html">Introducing Students to MapReduce with Phoenix++ 1 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2016, Suzanne J. Matthews.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
+    </div>
+  </body>
+</html>
