@@ -100,7 +100,7 @@ const std::vector<Pair>& MR::run(int ml, int nl, const std::string& p) {
   
   char empty = 0;
   
-  if(rank == root) {
+  if (rank == root) {
     // Only the root will generate the tasks
     Generate_tasks(tasks);
     

@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Getting Started with Phoenix++ &mdash; Introducing Students to MapReduce with Phoenix++ 1 documentation</title>
+    <title>Getting Started with Phoenix++ &mdash; Introducion to MapReduce with Phoenix++</title>
     
     <link rel="stylesheet" href="../_static/default.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
@@ -14,7 +14,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '1',
+        VERSION:     '',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -23,27 +23,25 @@
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
-    <link rel="top" title="Introducing Students to MapReduce with Phoenix++ 1 documentation" href="../index.html" />
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+    <link rel="top" title="Introducion to MapReduce with Phoenix++" href="../index.html" />
     <link rel="prev" title="Counting Pease With MapReduce" href="../wordcount/wordcount.html" /> 
   </head>
-  <body>
-    <div class="related">
+  <body role="document">
+    <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
-          <a href="../genindex.html" title="General Index"
-             accesskey="I">index</a></li>
-        <li class="right" >
           <a href="../wordcount/wordcount.html" title="Counting Pease With MapReduce"
-             accesskey="P">previous</a> |</li>
-        <li><a href="../index.html">Introducing Students to MapReduce with Phoenix++ 1 documentation</a> &raquo;</li> 
+             accesskey="P">previous</a></li>
+        <li class="nav-item nav-item-0"><a href="../index.html">MapReduce with Pheonix++</a> &raquo;</li> 
       </ul>
     </div>  
 
     <div class="document">
       <div class="documentwrapper">
         <div class="bodywrapper">
-          <div class="body">
+          <div class="body" role="main">
             
   <div class="section" id="getting-started-with-phoenix">
 <h1>Getting Started with Phoenix++<a class="headerlink" href="#getting-started-with-phoenix" title="Permalink to this headline">¶</a></h1>
@@ -52,8 +50,8 @@
 <p>In this section, we will discuss the Phoenix++ wordcount example in detail. You
 will need a basic knowledge of C/C++ to follow along with these concepts. You
 can download a copy of the Phoenix++ word count example
-:<tt class="xref download docutils literal"><span class="pre">here</span></tt>. We will start by looking at the file
-<tt class="docutils literal"><span class="pre">word_count.cpp</span></tt>. At the top of the file, there are three structs we should
+:<code class="xref download docutils literal"><span class="pre">here</span></code>. We will start by looking at the file
+<code class="docutils literal"><span class="pre">word_count.cpp</span></code>. At the top of the file, there are three structs we should
 pay attention to:</p>
 <div class="highlight-cpp"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
  2
@@ -87,7 +85,7 @@ pay attention to:</p>
 30
 31
 32
-33</pre></div></td><td class="code"><div class="highlight"><pre><span class="c1">// a passage from the text. The input data to the Map-Reduce</span>
+33</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="c1">// a passage from the text. The input data to the Map-Reduce</span>
 <span class="k">struct</span> <span class="n">wc_string</span> <span class="p">{</span>
     <span class="kt">char</span><span class="o">*</span> <span class="n">data</span><span class="p">;</span>
     <span class="kt">uint64_t</span> <span class="n">len</span><span class="p">;</span>
@@ -122,16 +120,16 @@ pay attention to:</p>
 <span class="p">};</span>
 </pre></div>
 </td></tr></table></div>
-<p>These three structs define the type of our input chunk (<tt class="docutils literal"><span class="pre">wc_string</span></tt>), our keys
-(<tt class="docutils literal"><span class="pre">wc_word</span></tt>) and the hash function that we are going to use to aggregate
-common keys (<tt class="docutils literal"><span class="pre">wc_word_hash</span></tt>). The <tt class="docutils literal"><span class="pre">wc_string</span></tt> struct has a data pointer
-field  (which points to to the start of the chunk), and a <tt class="docutils literal"><span class="pre">len</span></tt> field which
-indicates the size of the chunk. The <tt class="docutils literal"><span class="pre">wc_word</span></tt> struct contains only a
+<p>These three structs define the type of our input chunk (<code class="docutils literal"><span class="pre">wc_string</span></code>), our keys
+(<code class="docutils literal"><span class="pre">wc_word</span></code>) and the hash function that we are going to use to aggregate
+common keys (<code class="docutils literal"><span class="pre">wc_word_hash</span></code>). The <code class="docutils literal"><span class="pre">wc_string</span></code> struct has a data pointer
+field  (which points to to the start of the chunk), and a <code class="docutils literal"><span class="pre">len</span></code> field which
+indicates the size of the chunk. The <code class="docutils literal"><span class="pre">wc_word</span></code> struct contains only a
 pointer to the start of a word, along with the defintions on how to compare
 two &#8220;words&#8221;. At this point, you may be asking yourself, <em>but, how do you know
 where a word ends?</em> Be patient; when we get to the main body of code, it will
-all become clear. The last struct contains only an operator definition for <tt class="docutils literal"><span class="pre">()</span></tt>,
-which requires a key of type <tt class="docutils literal"><span class="pre">wc_count</span></tt> as its single parameter. This is an
+all become clear. The last struct contains only an operator definition for <code class="docutils literal"><span class="pre">()</span></code>,
+which requires a key of type <code class="docutils literal"><span class="pre">wc_count</span></code> as its single parameter. This is an
 implementation of the Fowler-Noll-Vo hash function. While other hash functions
 can be used, it is best just to leave this code alone.</p>
 </div>
@@ -139,101 +137,116 @@ can be used, it is best just to leave this code alone.</p>
 <h2>WordsMR: The word count class<a class="headerlink" href="#wordsmr-the-word-count-class" title="Permalink to this headline">¶</a></h2>
 <p>For every application you write using Phoenix++, you will need to define a
 class for it. Let&#8217;s start by taking a look at the class header:</p>
-<p>::
-class WordsMR : public MapReduceSort&lt;WordsMR, wc_string, wc_word, uint64_t, hash_container&lt;wc_word, uint64_t, sum_combiner, wc_word_hash&gt; &gt;</p>
-<p>The first thing to note about this definition is that <tt class="docutils literal"><span class="pre">WordsMR</span></tt> is derived
-from class <tt class="docutils literal"><span class="pre">MapReduceSort</span></tt>, which is defined in <tt class="docutils literal"><span class="pre">mapreduce.h</span></tt>. This is the
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">WordsMR</span> <span class="p">:</span> <span class="n">public</span> <span class="n">MapReduceSort</span><span class="o">&lt;</span><span class="n">WordsMR</span><span class="p">,</span> <span class="n">wc_string</span><span class="p">,</span> <span class="n">wc_word</span><span class="p">,</span> <span class="n">uint64_t</span><span class="p">,</span>
+                                     <span class="n">hash_container</span><span class="o">&lt;</span><span class="n">wc_word</span><span class="p">,</span> <span class="n">uint64_t</span><span class="p">,</span> <span class="n">sum_combiner</span><span class="p">,</span> <span class="n">wc_word_hash</span><span class="o">&gt;</span>
+                                     <span class="o">&gt;</span>
+</pre></div>
+</div>
+<p>The first thing to note about this definition is that <code class="docutils literal"><span class="pre">WordsMR</span></code> is derived
+from class <code class="docutils literal"><span class="pre">MapReduceSort</span></code>, which is defined in <code class="docutils literal"><span class="pre">mapreduce.h</span></code>. This is the
 primary beauty of Phoenix++; to write your own MapReduce programs, you simply
 overload the default function defined in the base class. We define the class
 with the following parameters (in order):</p>
 <ul class="simple">
-<li>the implemented class type (<a href="#id1"><span class="problematic" id="id2">*</span></a>Impl*=``WordsMR``)</li>
-<li>the input data type (<a href="#id3"><span class="problematic" id="id4">*</span></a>D*=``wc_string``)</li>
-<li>the key type (<a href="#id5"><span class="problematic" id="id6">*</span></a>K*=``wc_word``)</li>
-<li>the value type (<a href="#id7"><span class="problematic" id="id8">*</span></a>V*=``uint_64``)</li>
-<li>the definition of the hash container (<tt class="docutils literal"><span class="pre">hash_container&lt;...&gt;</span></tt>)</li>
+<li>the implemented class type (<em>Impl</em> =``WordsMR``)</li>
+<li>the input data type (<em>D</em> =``wc_string``)</li>
+<li>the key type (<em>K</em> =``wc_word``)</li>
+<li>the value type (<em>V</em> =``uint_64``)</li>
+<li>the definition of the hash container (<code class="docutils literal"><span class="pre">hash_container&lt;...&gt;</span></code>)</li>
 </ul>
-<p><tt class="docutils literal"><span class="pre">hash_container</span></tt> defines the parameters for the hashtable used to aggregate
-<em>(key, value)</em> pairs. A full definition of the <tt class="docutils literal"><span class="pre">hash_container</span></tt> class can be
-found in <tt class="docutils literal"><span class="pre">container.h</span></tt>. It&#8217;s input parameters are:</p>
+<p><code class="docutils literal"><span class="pre">hash_container</span></code> defines the parameters for the hashtable used to aggregate
+<em>(key, value)</em> pairs. A full definition of the <code class="docutils literal"><span class="pre">hash_container</span></code> class can be
+found in <code class="docutils literal"><span class="pre">container.h</span></code>. It&#8217;s input parameters are:</p>
 <ul class="simple">
-<li>the key type (<a href="#id9"><span class="problematic" id="id10">*</span></a>K*=``wc_word``)</li>
-<li>the value type (<a href="#id11"><span class="problematic" id="id12">*</span></a>V*=``uint_64``)</li>
-<li>the type of combiner function (<a href="#id13"><span class="problematic" id="id14">*</span></a>Combiner*=``sum_combiner``)</li>
-<li>The hash function to use (<a href="#id15"><span class="problematic" id="id16">*</span></a>hash*=``wc_word_hash``)</li>
+<li>the key type (<em>K</em> =``wc_word``)</li>
+<li>the value type (<em>V</em> =``uint_64``)</li>
+<li>the type of combiner function (<em>Combiner</em> =``sum_combiner``)</li>
+<li>The hash function to use (<em>hash</em> =``wc_word_hash``)</li>
 </ul>
-<p>Note the use of the combiner <tt class="docutils literal"><span class="pre">sum_combiner</span></tt>, an associative combiner
+<p>Note the use of the combiner <code class="docutils literal"><span class="pre">sum_combiner</span></code>, an associative combiner
 implemented in Phoenix++. This means, as collisions in our hash table occur,
 the values are added together. This actually eliminates the need for a reduce
 function in our application! The other type of combiner is known as the
-<tt class="docutils literal"><span class="pre">buffer_combiner</span></tt>, and reflects typical MapReduce behavior. This combiner
+<code class="docutils literal"><span class="pre">buffer_combiner</span></code>, and reflects typical MapReduce behavior. This combiner
 chains all the values together. The functions shown below are ones that are
 commonly overloaded when creating a Phoenix++ MapReduce class:</p>
-<p>+&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8211;+&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8211;
-| Function Name      |                    Description                     |
-+====================+====================================================+
-<a href="#id53"><span class="problematic" id="id54">|``map()``           |Defines the functionality for map tasks. The default|</span></a>
-|                    <a href="#id17"><span class="problematic" id="id18">|</span></a>definition of the <tt class="docutils literal"><span class="pre">map()</span></tt> function is empty. This |
-|                    <a href="#id19"><span class="problematic" id="id20">|</span></a>function must be overloaded for every user-defined  |
-|                    <a href="#id21"><span class="problematic" id="id22">|</span></a>MapReduce class.                                    |
-+&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8211;+&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;-+
-<a href="#id23"><span class="problematic" id="id24">|</span></a><tt class="docutils literal"><span class="pre">reduce()</span></tt>        <a href="#id25"><span class="problematic" id="id26">|</span></a>Defines the functionality for the reduce tasks. By  |
-|                    <a href="#id27"><span class="problematic" id="id28">|</span></a>default, the <tt class="docutils literal"><span class="pre">reduce()</span></tt> function generates a list |
-|                    <a href="#id29"><span class="problematic" id="id30">|</span></a>of <em>(key,value)</em> pairs from a given key and         |
-|                    <a href="#id31"><span class="problematic" id="id32">|</span></a><em>list(value)</em> input.                                |
-+&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8211;+&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;-+
-<a href="#id33"><span class="problematic" id="id34">|</span></a><tt class="docutils literal"><span class="pre">split()</span></tt>         <a href="#id35"><span class="problematic" id="id36">|</span></a>Defines how input data should be chunked. The       |
-|                    <a href="#id37"><span class="problematic" id="id38">|</span></a>default <tt class="docutils literal"><span class="pre">split()</span></tt> function returns <tt class="docutils literal"><span class="pre">0</span></tt>. This    |
-|                    <a href="#id39"><span class="problematic" id="id40">|</span></a>function must be overloaded for every user-defined  |
-|                    <a href="#id41"><span class="problematic" id="id42">|</span></a>MapReduce class.                                    |
-+&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8211;+&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;-+
-<a href="#id43"><span class="problematic" id="id44">|</span></a><tt class="docutils literal"><span class="pre">locate()</span></tt>        <a href="#id45"><span class="problematic" id="id46">|</span></a>Indicates where to access the input data from. By   |
-|                    <a href="#id47"><span class="problematic" id="id48">|</span></a>default, the <tt class="docutils literal"><span class="pre">locate()</span></tt> function casts the input  |
-|                    <a href="#id49"><span class="problematic" id="id50">|</span></a>data as a void pointer.                             |
-+&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8211;+&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;-+</p>
-<p>For the word count application, the <tt class="docutils literal"><span class="pre">map()</span></tt>, <tt class="docutils literal"><span class="pre">locate()</span></tt> and <tt class="docutils literal"><span class="pre">split()</span></tt>
+<table border="1" class="docutils">
+<colgroup>
+<col width="28%" />
+<col width="72%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Function Name</th>
+<th class="head">Description</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td><code class="docutils literal"><span class="pre">map()</span></code></td>
+<td>Defines the functionality for map tasks. The default
+definition of the <code class="docutils literal"><span class="pre">map()</span></code> function is empty. This
+function must be overloaded for every user-defined
+MapReduce class.</td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal"><span class="pre">reduce()</span></code></td>
+<td>Defines the functionality for the reduce tasks. By
+default, the <code class="docutils literal"><span class="pre">reduce()</span></code> function generates a list
+of <em>(key,value)</em> pairs from a given key and
+<em>list(value)</em> input.</td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal"><span class="pre">split()</span></code></td>
+<td>Defines how input data should be chunked. The
+default <code class="docutils literal"><span class="pre">split()</span></code> function returns <code class="docutils literal"><span class="pre">0</span></code>. This
+function must be overloaded for every user-defined
+MapReduce class.</td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal"><span class="pre">locate()</span></code></td>
+<td>Indicates where to access the input data from. By
+default, the <code class="docutils literal"><span class="pre">locate()</span></code> function casts the input
+data as a void pointer.</td>
+</tr>
+</tbody>
+</table>
+<p>For the word count application, the <code class="docutils literal"><span class="pre">map()</span></code>, <code class="docutils literal"><span class="pre">locate()</span></code> and <code class="docutils literal"><span class="pre">split()</span></code>
 functions are overloaded as public methods.</p>
 <p>The class declares a number of global variables, that will be initialized by
 user input:</p>
-<p>::
-char* data;
-uint64_t data_size;
-uint64_t chunk_size;
-uint64_t splitter_pos;</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">char</span><span class="o">*</span> <span class="n">data</span><span class="p">;</span>
+<span class="n">uint64_t</span> <span class="n">data_size</span><span class="p">;</span>
+<span class="n">uint64_t</span> <span class="n">chunk_size</span><span class="p">;</span>
+<span class="n">uint64_t</span> <span class="n">splitter_pos</span><span class="p">;</span>
+</pre></div>
+</div>
 <p>We can see these values getting initialized in the constructor below.</p>
-<p>::
-explicit WordsMR(char* _data, uint64_t length, uint64_t _chunk_size) :</p>
-<blockquote>
-<div><dl class="docutils">
-<dt>data(_data), data_size(length), chunk_size(_chunk_size),</dt>
-<dd>splitter_pos(0) {}</dd>
-</dl>
-</div></blockquote>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">explicit</span> <span class="n">WordsMR</span><span class="p">(</span><span class="n">char</span><span class="o">*</span> <span class="n">_data</span><span class="p">,</span> <span class="n">uint64_t</span> <span class="n">length</span><span class="p">,</span> <span class="n">uint64_t</span> <span class="n">_chunk_size</span><span class="p">)</span> <span class="p">:</span>
+         <span class="n">data</span><span class="p">(</span><span class="n">_data</span><span class="p">),</span> <span class="n">data_size</span><span class="p">(</span><span class="n">length</span><span class="p">),</span> <span class="n">chunk_size</span><span class="p">(</span><span class="n">_chunk_size</span><span class="p">),</span>
+         <span class="n">splitter_pos</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span> <span class="p">{}</span>
+</pre></div>
+</div>
 <div class="section" id="the-locate-function">
 <h3>The locate() function<a class="headerlink" href="#the-locate-function" title="Permalink to this headline">¶</a></h3>
-<p>The first function declared in the public scope of the class is <tt class="docutils literal"><span class="pre">locate()</span></tt>:</p>
+<p>The first function declared in the public scope of the class is <code class="docutils literal"><span class="pre">locate()</span></code>:</p>
 <div class="highlight-cpp"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
 2
 3
-4</pre></div></td><td class="code"><div class="highlight"><pre>    <span class="kt">void</span><span class="o">*</span> <span class="n">locate</span><span class="p">(</span><span class="n">data_type</span><span class="o">*</span> <span class="n">str</span><span class="p">,</span> <span class="kt">uint64_t</span> <span class="n">len</span><span class="p">)</span> <span class="k">const</span>
+4</pre></div></td><td class="code"><div class="highlight"><pre><span></span>    <span class="kt">void</span><span class="o">*</span> <span class="nf">locate</span><span class="p">(</span><span class="n">data_type</span><span class="o">*</span> <span class="n">str</span><span class="p">,</span> <span class="kt">uint64_t</span> <span class="n">len</span><span class="p">)</span> <span class="k">const</span>
     <span class="p">{</span>
         <span class="k">return</span> <span class="n">str</span><span class="o">-&gt;</span><span class="n">data</span><span class="p">;</span>
     <span class="p">}</span>
 </pre></div>
 </td></tr></table></div>
-<p>The <tt class="docutils literal"><span class="pre">locate()</span></tt> function takes two parameters: a pointer to the input data
-type (<tt class="docutils literal"><span class="pre">data_type*</span></tt>), and a length (<tt class="docutils literal"><span class="pre">len</span></tt>). It returns a pointer to the
+<p>The <code class="docutils literal"><span class="pre">locate()</span></code> function takes two parameters: a pointer to the input data
+type (<code class="docutils literal"><span class="pre">data_type*</span></code>), and a length (<code class="docutils literal"><span class="pre">len</span></code>). It returns a pointer to the
 start of readable data. In this case, it will be the data field of the
-<tt class="docutils literal"><span class="pre">wc_string</span></tt> struct, which is our input data type.</p>
+<code class="docutils literal"><span class="pre">wc_string</span></code> struct, which is our input data type.</p>
 </div>
 <div class="section" id="the-map-function">
 <h3>The map() function<a class="headerlink" href="#the-map-function" title="Permalink to this headline">¶</a></h3>
-<p>The <tt class="docutils literal"><span class="pre">map()</span></tt> function is declared next. Its two parameters is the input data
-type (passed by reference), and the ouput data container (<tt class="docutils literal"><span class="pre">out</span></tt>). Remember,
-our input data type is <tt class="docutils literal"><span class="pre">wc_string</span></tt>. Remember that <tt class="docutils literal"><span class="pre">wc_string</span></tt> is a struct
-with two fields: <tt class="docutils literal"><span class="pre">data</span></tt> and <tt class="docutils literal"><span class="pre">len</span></tt>. The input represents a &#8220;chunk&#8221; of data
+<p>The <code class="docutils literal"><span class="pre">map()</span></code> function is declared next. Its two parameters is the input data
+type (passed by reference), and the ouput data container (<code class="docutils literal"><span class="pre">out</span></code>). Remember,
+our input data type is <code class="docutils literal"><span class="pre">wc_string</span></code>. Remember that <code class="docutils literal"><span class="pre">wc_string</span></code> is a struct
+with two fields: <code class="docutils literal"><span class="pre">data</span></code> and <code class="docutils literal"><span class="pre">len</span></code>. The input represents a &#8220;chunk&#8221; of data
 which we want to parse words from and emit <em>(key,value)</em> pairs associating each
-word with the count of <tt class="docutils literal"><span class="pre">1</span></tt>:</p>
+word with the count of <code class="docutils literal"><span class="pre">1</span></code>:</p>
 <div class="highlight-cpp"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
  2
  3
@@ -256,7 +269,7 @@ word with the count of <tt class="docutils literal"><span class="pre">1</span></
 20
 21
 22
-23</pre></div></td><td class="code"><div class="highlight"><pre>    <span class="kt">void</span> <span class="n">map</span><span class="p">(</span><span class="n">data_type</span> <span class="k">const</span><span class="o">&amp;</span> <span class="n">s</span><span class="p">,</span> <span class="n">map_container</span><span class="o">&amp;</span> <span class="n">out</span><span class="p">)</span> <span class="k">const</span>
+23</pre></div></td><td class="code"><div class="highlight"><pre><span></span>    <span class="kt">void</span> <span class="nf">map</span><span class="p">(</span><span class="n">data_type</span> <span class="k">const</span><span class="o">&amp;</span> <span class="n">s</span><span class="p">,</span> <span class="n">map_container</span><span class="o">&amp;</span> <span class="n">out</span><span class="p">)</span> <span class="k">const</span>
     <span class="p">{</span>
         <span class="k">for</span> <span class="p">(</span><span class="kt">uint64_t</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">s</span><span class="p">.</span><span class="n">len</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span>
         <span class="p">{</span>
@@ -282,8 +295,8 @@ word with the count of <tt class="docutils literal"><span class="pre">1</span></
 </pre></div>
 </td></tr></table></div>
 <p>The first four lines of the function converts every character in the input
-chunk to uppercase. The function <tt class="docutils literal"><span class="pre">toupper</span></tt> is declared in the standard header
-file <tt class="docutils literal"><span class="pre">cctype.h</span></tt>. This is to ensure the word count application ignores case
+chunk to uppercase. The function <code class="docutils literal"><span class="pre">toupper</span></code> is declared in the standard header
+file <code class="docutils literal"><span class="pre">cctype.h</span></code>. This is to ensure the word count application ignores case
 as it counts words.</p>
 <p>The while code block contains the majority of the work . It contains two inner
 while loops and an if statement.</p>
@@ -291,30 +304,31 @@ while loops and an if statement.</p>
 <li>The first inner while loop determines the starting point of the word. It
 skips any characters that are outside the ASCII range of A to Z. As soon as
 it exceeds the length of the string or hits an alphabetic character, it stops
-incrementing <tt class="docutils literal"><span class="pre">i</span></tt>. This value of <tt class="docutils literal"><span class="pre">i</span></tt> is designated as the start of the
-word (<tt class="docutils literal"><span class="pre">start</span> <span class="pre">=</span> <span class="pre">i</span></tt>).</li>
+incrementing <code class="docutils literal"><span class="pre">i</span></code>. This value of <code class="docutils literal"><span class="pre">i</span></code> is designated as the start of the
+word (<code class="docutils literal"><span class="pre">start</span> <span class="pre">=</span> <span class="pre">i</span></code>).</li>
 <li>The second inner while loop determines the end of a word. It keeps
-incrementing <tt class="docutils literal"><span class="pre">i</span></tt>, so long as the current character is alphabetic, and the
-value of <tt class="docutils literal"><span class="pre">i</span></tt> is less than the length of the input chunk. The variable <tt class="docutils literal"><span class="pre">i</span></tt>
+incrementing <code class="docutils literal"><span class="pre">i</span></code>, so long as the current character is alphabetic, and the
+value of <code class="docutils literal"><span class="pre">i</span></code> is less than the length of the input chunk. The variable <code class="docutils literal"><span class="pre">i</span></code>
 stops incrementing once we hit a non-alphebetic character or the end of the
 input chunk.</li>
 </ul>
 <p>The next few line of code is crucial to understanding how the word count
 applicaton works:</p>
-<p>::
-s.data[i] = 0;
-wc_word word = { s.data+start };
-emit_intermediate(out, word, 1);</p>
-<p>Recall that <tt class="docutils literal"><span class="pre">0</span></tt> is the integer value of <tt class="docutils literal"><span class="pre">\0</span></tt>, the null terminator, which
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">s</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+<span class="n">wc_word</span> <span class="n">word</span> <span class="o">=</span> <span class="p">{</span> <span class="n">s</span><span class="o">.</span><span class="n">data</span><span class="o">+</span><span class="n">start</span> <span class="p">};</span>
+<span class="n">emit_intermediate</span><span class="p">(</span><span class="n">out</span><span class="p">,</span> <span class="n">word</span><span class="p">,</span> <span class="mi">1</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>Recall that <code class="docutils literal"><span class="pre">0</span></code> is the integer value of <code class="docutils literal"><span class="pre">\0</span></code>, the null terminator, which
 indicates where a string should be terminated. We define our key data
-(<tt class="docutils literal"><span class="pre">wc_word</span> <span class="pre">word</span></tt>) to be a pointer to our input chunk, at offset <tt class="docutils literal"><span class="pre">start</span></tt>.
-Next, we emit the word key with the value <tt class="docutils literal"><span class="pre">1</span></tt>.</p>
+(<code class="docutils literal"><span class="pre">wc_word</span> <span class="pre">word</span></code>) to be a pointer to our input chunk, at offset <code class="docutils literal"><span class="pre">start</span></code>.
+Next, we emit the word key with the value <code class="docutils literal"><span class="pre">1</span></code>.</p>
 <p>The above process repeats until all the valid words in the input chunk are
 consumed.</p>
 </div>
 <div class="section" id="the-split-function">
 <h3>The split() function<a class="headerlink" href="#the-split-function" title="Permalink to this headline">¶</a></h3>
-<p>The <tt class="docutils literal"><span class="pre">split()</span></tt> function tokenizes the input prior to its going to the <tt class="docutils literal"><span class="pre">map()</span></tt>
+<p>The <code class="docutils literal"><span class="pre">split()</span></code> function tokenizes the input prior to its going to the <code class="docutils literal"><span class="pre">map()</span></code>
 function:</p>
 <div class="highlight-cpp"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
  2
@@ -350,7 +364,7 @@ function:</p>
 32
 33
 34
-35</pre></div></td><td class="code"><div class="highlight"><pre>    <span class="cm">/** wordcount split()</span>
+35</pre></div></td><td class="code"><div class="highlight"><pre><span></span>    <span class="cm">/** wordcount split()</span>
 <span class="cm">     *  Memory map the file and divide file on a word border i.e. a space.</span>
 <span class="cm">     */</span>
     <span class="kt">int</span> <span class="nf">split</span><span class="p">(</span><span class="n">wc_string</span><span class="o">&amp;</span> <span class="n">out</span><span class="p">)</span>
@@ -388,49 +402,49 @@ function:</p>
 </pre></div>
 </td></tr></table></div>
 <p>Keep in mind while reading this code that the input file is in shared memory.
-The function takes a single parameter, a reference to a <tt class="docutils literal"><span class="pre">wc_string</span></tt> object,
-which is our input data type. Recall that the variables <tt class="docutils literal"><span class="pre">splitter_pos</span></tt> and
-<tt class="docutils literal"><span class="pre">data_size</span></tt> are global. The variable <tt class="docutils literal"><span class="pre">splitter_pos</span></tt> tells us where we are
-currently in the file. The variable <tt class="docutils literal"><span class="pre">data_size</span></tt> represents the size of the
-entire file. The variable <tt class="docutils literal"><span class="pre">chunk_size</span></tt> represents the size of each chunk.</p>
-<ul class="simple">
-<li>The first if statement simply ensures that our current position does not</li>
-</ul>
-<p>exceed the bounds of the file. If so, we exit the function by returning 0
+The function takes a single parameter, a reference to a <code class="docutils literal"><span class="pre">wc_string</span></code> object,
+which is our input data type. Recall that the variables <code class="docutils literal"><span class="pre">splitter_pos</span></code> and
+<code class="docutils literal"><span class="pre">data_size</span></code> are global. The variable <code class="docutils literal"><span class="pre">splitter_pos</span></code> tells us where we are
+currently in the file. The variable <code class="docutils literal"><span class="pre">data_size</span></code> represents the size of the
+entire file. The variable <code class="docutils literal"><span class="pre">chunk_size</span></code> represents the size of each chunk.</p>
+<p>The first if statement simply ensures that our current position does not
+exceed the bounds of the file. If so, we exit the function by returning 0
 (indicating failure, and that there is nothing more to split).</p>
 <p>We want each chunk to be approximately the same. We first determine a
 &#8220;nominal&#8221; end-point, or position to &#8220;chunk&#8221; the data:</p>
-<p>::
-uint64_t end = std::min(splitter_pos + chunk_size, data_size);</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">uint64_t</span> <span class="n">end</span> <span class="o">=</span> <span class="n">std</span><span class="p">::</span><span class="nb">min</span><span class="p">(</span><span class="n">splitter_pos</span> <span class="o">+</span> <span class="n">chunk_size</span><span class="p">,</span> <span class="n">data_size</span><span class="p">);</span>
+</pre></div>
+</div>
 <p>Obviously, this end-point won&#8217;t always work. What if we land in the middle of a
-word? Therefore, we want to increment <tt class="docutils literal"><span class="pre">end</span></tt> until we hit a natural word
-boundry. The <tt class="docutils literal"><span class="pre">split()</span></tt> function declares this boundry as being either a
+word? Therefore, we want to increment <code class="docutils literal"><span class="pre">end</span></code> until we hit a natural word
+boundry. The <code class="docutils literal"><span class="pre">split()</span></code> function declares this boundry as being either a
 space, tab, return carriage, or new line character. This is achieved by the
-following code:
-::
-while(end &lt; data_size &amp;&amp;</p>
-<blockquote>
-<div>data[end] != &#8216; &#8216; &amp;&amp; data[end] != &#8216;t&#8217; &amp;&amp;
-data[end] != &#8216;r&#8217; &amp;&amp; data[end] != &#8216;n&#8217;)
-end++;</div></blockquote>
-<p>Once we determine a valid end-point, we populate the inputted <tt class="docutils literal"><span class="pre">wc_string</span></tt>
+following code:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="k">while</span><span class="p">(</span><span class="n">end</span> <span class="o">&lt;</span> <span class="n">data_size</span> <span class="o">&amp;&amp;</span>
+          <span class="n">data</span><span class="p">[</span><span class="n">end</span><span class="p">]</span> <span class="o">!=</span> <span class="s1">&#39; &#39;</span> <span class="o">&amp;&amp;</span> <span class="n">data</span><span class="p">[</span><span class="n">end</span><span class="p">]</span> <span class="o">!=</span> <span class="s1">&#39;</span><span class="se">\t</span><span class="s1">&#39;</span> <span class="o">&amp;&amp;</span>
+          <span class="n">data</span><span class="p">[</span><span class="n">end</span><span class="p">]</span> <span class="o">!=</span> <span class="s1">&#39;</span><span class="se">\r</span><span class="s1">&#39;</span> <span class="o">&amp;&amp;</span> <span class="n">data</span><span class="p">[</span><span class="n">end</span><span class="p">]</span> <span class="o">!=</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+          <span class="n">end</span><span class="o">++</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>Once we determine a valid end-point, we populate the inputted <code class="docutils literal"><span class="pre">wc_string</span></code>
 object:</p>
-<p>::
-out.data = data + splitter_pos;
-out.len = end - splitter_pos;</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">out</span><span class="o">.</span><span class="n">data</span> <span class="o">=</span> <span class="n">data</span> <span class="o">+</span> <span class="n">splitter_pos</span><span class="p">;</span>
+<span class="n">out</span><span class="o">.</span><span class="n">len</span> <span class="o">=</span> <span class="n">end</span> <span class="o">-</span> <span class="n">splitter_pos</span><span class="p">;</span>
+</pre></div>
+</div>
 <p>The starting point is set to data pointer plus the starting value of
-<tt class="docutils literal"><span class="pre">splitter_pos</span></tt>. The length is determined by subtracting <tt class="docutils literal"><span class="pre">end</span></tt> from
-<tt class="docutils literal"><span class="pre">splitter_pos</span></tt>.</p>
-<p>Finally, we update <tt class="docutils literal"><span class="pre">splitter_pos</span></tt> to be the end point (<tt class="docutils literal"><span class="pre">end</span></tt>), and return
-<tt class="docutils literal"><span class="pre">1</span></tt> to indicate that we were able to successfully split the input.</p>
+<code class="docutils literal"><span class="pre">splitter_pos</span></code>. The length is determined by subtracting <code class="docutils literal"><span class="pre">end</span></code> from
+<code class="docutils literal"><span class="pre">splitter_pos</span></code>.</p>
+<p>Finally, we update <code class="docutils literal"><span class="pre">splitter_pos</span></code> to be the end point (<code class="docutils literal"><span class="pre">end</span></code>), and return
+<code class="docutils literal"><span class="pre">1</span></code> to indicate that we were able to successfully split the input.</p>
 </div>
 </div>
 <div class="section" id="the-main-function">
 <h2>The main() function<a class="headerlink" href="#the-main-function" title="Permalink to this headline">¶</a></h2>
-<p>A simplified version of the <tt class="docutils literal"><span class="pre">main()</span></tt> function is shown below. This version
+<p>A simplified version of the <code class="docutils literal"><span class="pre">main()</span></code> function is shown below. This version
 only shows the non memory mapped code. The memory mapped version of the code
 can be viewed here. We also remove timing code for simplicity. The
-<tt class="docutils literal"><span class="pre">CHECK_ERROR</span></tt> function is defined in the file <tt class="docutils literal"><span class="pre">stddefines.h</span></tt> and is a
+<code class="docutils literal"><span class="pre">CHECK_ERROR</span></code> function is defined in the file <code class="docutils literal"><span class="pre">stddefines.h</span></code> and is a
 useful wrapper for error handling.</p>
 <div class="highlight-cpp"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
  2
@@ -519,94 +533,94 @@ useful wrapper for error handling.</p>
 85
 86
 87
-88</pre></div></td><td class="code"><div class="highlight"><pre>int main(int argc, char *argv[]) 
-{
-    int fd;
-    char * fdata;
-    unsigned int disp_num;
-    struct stat finfo;
-    char * fname, * disp_num_str;
-    struct timespec begin, end;
+88</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="kt">int</span> <span class="nf">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span> <span class="o">*</span><span class="n">argv</span><span class="p">[])</span> 
+<span class="p">{</span>
+    <span class="kt">int</span> <span class="n">fd</span><span class="p">;</span>
+    <span class="kt">char</span> <span class="o">*</span> <span class="n">fdata</span><span class="p">;</span>
+    <span class="kt">unsigned</span> <span class="kt">int</span> <span class="n">disp_num</span><span class="p">;</span>
+    <span class="k">struct</span> <span class="n">stat</span> <span class="n">finfo</span><span class="p">;</span>
+    <span class="kt">char</span> <span class="o">*</span> <span class="n">fname</span><span class="p">,</span> <span class="o">*</span> <span class="n">disp_num_str</span><span class="p">;</span>
+    <span class="k">struct</span> <span class="n">timespec</span> <span class="n">begin</span><span class="p">,</span> <span class="n">end</span><span class="p">;</span>
 
-    get_time (begin);
+    <span class="n">get_time</span> <span class="p">(</span><span class="n">begin</span><span class="p">);</span>
 
-    // Make sure a filename is specified
-    if (argv[1] == NULL)
-    {
-        printf(&quot;USAGE: %s &lt;filename&gt; [Top # of results to display]\n&quot;, argv[0]);
-        exit(1);
-    }
+    <span class="c1">// Make sure a filename is specified</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="nb">NULL</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="n">printf</span><span class="p">(</span><span class="s">&quot;USAGE: %s &lt;filename&gt; [Top # of results to display]</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">argv</span><span class="p">[</span><span class="mi">0</span><span class="p">]);</span>
+        <span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+    <span class="p">}</span>
 
-    fname = argv[1];
-    disp_num_str = argv[2];
+    <span class="n">fname</span> <span class="o">=</span> <span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">];</span>
+    <span class="n">disp_num_str</span> <span class="o">=</span> <span class="n">argv</span><span class="p">[</span><span class="mi">2</span><span class="p">];</span>
 
-    printf(&quot;Wordcount: Running...\n&quot;);
+    <span class="n">printf</span><span class="p">(</span><span class="s">&quot;Wordcount: Running...</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">);</span>
 
-    // Read in the file
-    CHECK_ERROR((fd = open(fname, O_RDONLY)) &lt; 0);
-    // Get the file info (for file length)
-    CHECK_ERROR(fstat(fd, &amp;finfo) &lt; 0);
+    <span class="c1">// Read in the file</span>
+    <span class="n">CHECK_ERROR</span><span class="p">((</span><span class="n">fd</span> <span class="o">=</span> <span class="n">open</span><span class="p">(</span><span class="n">fname</span><span class="p">,</span> <span class="n">O_RDONLY</span><span class="p">))</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">);</span>
+    <span class="c1">// Get the file info (for file length)</span>
+    <span class="n">CHECK_ERROR</span><span class="p">(</span><span class="n">fstat</span><span class="p">(</span><span class="n">fd</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">finfo</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">);</span>
 
-    uint64_t r = 0;
+    <span class="kt">uint64_t</span> <span class="n">r</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
 
-    fdata = (char *)malloc (finfo.st_size);
-    CHECK_ERROR (fdata == NULL);
-    while(r &lt; (uint64_t)finfo.st_size)
-        r += pread (fd, fdata + r, finfo.st_size, r);
-    CHECK_ERROR (r != (uint64_t)finfo.st_size);
+    <span class="n">fdata</span> <span class="o">=</span> <span class="p">(</span><span class="kt">char</span> <span class="o">*</span><span class="p">)</span><span class="n">malloc</span> <span class="p">(</span><span class="n">finfo</span><span class="p">.</span><span class="n">st_size</span><span class="p">);</span>
+    <span class="n">CHECK_ERROR</span> <span class="p">(</span><span class="n">fdata</span> <span class="o">==</span> <span class="nb">NULL</span><span class="p">);</span>
+    <span class="k">while</span><span class="p">(</span><span class="n">r</span> <span class="o">&lt;</span> <span class="p">(</span><span class="kt">uint64_t</span><span class="p">)</span><span class="n">finfo</span><span class="p">.</span><span class="n">st_size</span><span class="p">)</span>
+        <span class="n">r</span> <span class="o">+=</span> <span class="n">pread</span> <span class="p">(</span><span class="n">fd</span><span class="p">,</span> <span class="n">fdata</span> <span class="o">+</span> <span class="n">r</span><span class="p">,</span> <span class="n">finfo</span><span class="p">.</span><span class="n">st_size</span><span class="p">,</span> <span class="n">r</span><span class="p">);</span>
+    <span class="n">CHECK_ERROR</span> <span class="p">(</span><span class="n">r</span> <span class="o">!=</span> <span class="p">(</span><span class="kt">uint64_t</span><span class="p">)</span><span class="n">finfo</span><span class="p">.</span><span class="n">st_size</span><span class="p">);</span>
 
     
-    // Get the number of results to display
-    CHECK_ERROR((disp_num = (disp_num_str == NULL) ? 
-      DEFAULT_DISP_NUM : atoi(disp_num_str)) &lt;= 0);
+    <span class="c1">// Get the number of results to display</span>
+    <span class="n">CHECK_ERROR</span><span class="p">((</span><span class="n">disp_num</span> <span class="o">=</span> <span class="p">(</span><span class="n">disp_num_str</span> <span class="o">==</span> <span class="nb">NULL</span><span class="p">)</span> <span class="o">?</span> 
+      <span class="nl">DEFAULT_DISP_NUM</span> <span class="p">:</span> <span class="n">atoi</span><span class="p">(</span><span class="n">disp_num_str</span><span class="p">))</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">);</span>
 
-    get_time (end);
+    <span class="n">get_time</span> <span class="p">(</span><span class="n">end</span><span class="p">);</span>
 
-    #ifdef TIMING
-    print_time(&quot;initialize&quot;, begin, end);
-    #endif
+    <span class="cp">#ifdef TIMING</span>
+    <span class="n">print_time</span><span class="p">(</span><span class="s">&quot;initialize&quot;</span><span class="p">,</span> <span class="n">begin</span><span class="p">,</span> <span class="n">end</span><span class="p">);</span>
+    <span class="cp">#endif</span>
 
-    printf(&quot;Wordcount: Calling MapReduce Scheduler Wordcount\n&quot;);
-    get_time (begin);
-    std::vector&lt;WordsMR::keyval&gt; result;    
-    WordsMR mapReduce(fdata, finfo.st_size, 1024*1024);
-    CHECK_ERROR( mapReduce.run(result) &lt; 0);
-    get_time (end);
+    <span class="n">printf</span><span class="p">(</span><span class="s">&quot;Wordcount: Calling MapReduce Scheduler Wordcount</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">);</span>
+    <span class="n">get_time</span> <span class="p">(</span><span class="n">begin</span><span class="p">);</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">WordsMR</span><span class="o">::</span><span class="n">keyval</span><span class="o">&gt;</span> <span class="n">result</span><span class="p">;</span>    
+    <span class="n">WordsMR</span> <span class="n">mapReduce</span><span class="p">(</span><span class="n">fdata</span><span class="p">,</span> <span class="n">finfo</span><span class="p">.</span><span class="n">st_size</span><span class="p">,</span> <span class="mi">1024</span><span class="o">*</span><span class="mi">1024</span><span class="p">);</span>
+    <span class="n">CHECK_ERROR</span><span class="p">(</span> <span class="n">mapReduce</span><span class="p">.</span><span class="n">run</span><span class="p">(</span><span class="n">result</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">);</span>
+    <span class="n">get_time</span> <span class="p">(</span><span class="n">end</span><span class="p">);</span>
 
-    #ifdef TIMING
-    print_time(&quot;library&quot;, begin, end);
-    #endif
-    printf(&quot;Wordcount: MapReduce Completed\n&quot;);
+    <span class="cp">#ifdef TIMING</span>
+    <span class="n">print_time</span><span class="p">(</span><span class="s">&quot;library&quot;</span><span class="p">,</span> <span class="n">begin</span><span class="p">,</span> <span class="n">end</span><span class="p">);</span>
+    <span class="cp">#endif</span>
+    <span class="n">printf</span><span class="p">(</span><span class="s">&quot;Wordcount: MapReduce Completed</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">);</span>
 
-    get_time (begin);
+    <span class="n">get_time</span> <span class="p">(</span><span class="n">begin</span><span class="p">);</span>
 
-    unsigned int dn = std::min(disp_num, (unsigned int)result.size());
-    printf(&quot;\nWordcount: Results (TOP %d of %lu):\n&quot;, dn, result.size());
-    uint64_t total = 0;
-    for (size_t i = 0; i &lt; dn; i++)
-    {
-        printf(&quot;%15s - %lu\n&quot;, result[result.size()-1-i].key.data, result[result.size()-1-i].val);
-    }
+    <span class="kt">unsigned</span> <span class="kt">int</span> <span class="n">dn</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">min</span><span class="p">(</span><span class="n">disp_num</span><span class="p">,</span> <span class="p">(</span><span class="kt">unsigned</span> <span class="kt">int</span><span class="p">)</span><span class="n">result</span><span class="p">.</span><span class="n">size</span><span class="p">());</span>
+    <span class="n">printf</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\n</span><span class="s">Wordcount: Results (TOP %d of %lu):</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">dn</span><span class="p">,</span> <span class="n">result</span><span class="p">.</span><span class="n">size</span><span class="p">());</span>
+    <span class="kt">uint64_t</span> <span class="n">total</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">dn</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="n">printf</span><span class="p">(</span><span class="s">&quot;%15s - %lu</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">result</span><span class="p">[</span><span class="n">result</span><span class="p">.</span><span class="n">size</span><span class="p">()</span><span class="o">-</span><span class="mi">1</span><span class="o">-</span><span class="n">i</span><span class="p">].</span><span class="n">key</span><span class="p">.</span><span class="n">data</span><span class="p">,</span> <span class="n">result</span><span class="p">[</span><span class="n">result</span><span class="p">.</span><span class="n">size</span><span class="p">()</span><span class="o">-</span><span class="mi">1</span><span class="o">-</span><span class="n">i</span><span class="p">].</span><span class="n">val</span><span class="p">);</span>
+    <span class="p">}</span>
 
-    for(size_t i = 0; i &lt; result.size(); i++)
-    {
-        total += result[i].val;
-    }
+    <span class="k">for</span><span class="p">(</span><span class="kt">size_t</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">result</span><span class="p">.</span><span class="n">size</span><span class="p">();</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="n">total</span> <span class="o">+=</span> <span class="n">result</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">val</span><span class="p">;</span>
+    <span class="p">}</span>
 
-    printf(&quot;Total: %lu\n&quot;, total);
+    <span class="n">printf</span><span class="p">(</span><span class="s">&quot;Total: %lu</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">total</span><span class="p">);</span>
 
-    free (fdata);
+    <span class="n">free</span> <span class="p">(</span><span class="n">fdata</span><span class="p">);</span>
 
-    CHECK_ERROR(close(fd) &lt; 0);
+    <span class="n">CHECK_ERROR</span><span class="p">(</span><span class="n">close</span><span class="p">(</span><span class="n">fd</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">);</span>
 
-    get_time (end);
+    <span class="n">get_time</span> <span class="p">(</span><span class="n">end</span><span class="p">);</span>
 
-    #ifdef TIMING
-    print_time(&quot;finalize&quot;, begin, end);
-    #endif
+    <span class="cp">#ifdef TIMING</span>
+    <span class="n">print_time</span><span class="p">(</span><span class="s">&quot;finalize&quot;</span><span class="p">,</span> <span class="n">begin</span><span class="p">,</span> <span class="n">end</span><span class="p">);</span>
+    <span class="cp">#endif</span>
 
-    return 0;
-}
+    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
 </pre></div>
 </td></tr></table></div>
 <p>We analyze this code in parts:</p>
@@ -614,171 +628,167 @@ useful wrapper for error handling.</p>
 program are required to input a file, and may choose to specify the top number
 of results to display. Variables are declared to facillitate file reading and
 command line parsing:</p>
-<p>::
-int fd;
-char * fdata;
-unsigned int disp_num;
-struct stat finfo;
-char * fname, * disp_num_str;
-// Make sure a filename is specified
-if (argv[1] == NULL)</p>
-<blockquote>
-<div><dl class="docutils">
-<dt>{</dt>
-<dd><dl class="first last docutils">
-<dt>printf(&#8220;USAGE: %s  [Top # of results to display]n&#8221;, argv[0]);</dt>
-<dd>exit(1);</dd>
-</dl>
-</dd>
-</dl>
-<p>}</p>
-</div></blockquote>
-<p>fname = argv[1];
-disp_num_str = argv[2];</p>
-<p>We next open the file for reading, and get its size using the <tt class="docutils literal"><span class="pre">fstat</span></tt> function.
-We <tt class="docutils literal"><span class="pre">malloc()</span></tt> a block of memory, and have the descriptor <tt class="docutils literal"><span class="pre">fdata</span></tt> point to
-it. Next, we read the file into memory using the <tt class="docutils literal"><span class="pre">pread()</span></tt> system call. We
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="nb">int</span> <span class="n">fd</span><span class="p">;</span>
+<span class="n">char</span> <span class="o">*</span> <span class="n">fdata</span><span class="p">;</span>
+<span class="n">unsigned</span> <span class="nb">int</span> <span class="n">disp_num</span><span class="p">;</span>
+<span class="n">struct</span> <span class="n">stat</span> <span class="n">finfo</span><span class="p">;</span>
+<span class="n">char</span> <span class="o">*</span> <span class="n">fname</span><span class="p">,</span> <span class="o">*</span> <span class="n">disp_num_str</span><span class="p">;</span>
+<span class="o">//</span> <span class="n">Make</span> <span class="n">sure</span> <span class="n">a</span> <span class="n">filename</span> <span class="ow">is</span> <span class="n">specified</span>
+<span class="k">if</span> <span class="p">(</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="n">NULL</span><span class="p">)</span>
+ <span class="p">{</span>
+       <span class="n">printf</span><span class="p">(</span><span class="s2">&quot;USAGE: </span><span class="si">%s</span><span class="s2">  [Top # of results to display]</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">argv</span><span class="p">[</span><span class="mi">0</span><span class="p">]);</span>
+        <span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+ <span class="p">}</span>
+<span class="n">fname</span> <span class="o">=</span> <span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">];</span>
+<span class="n">disp_num_str</span> <span class="o">=</span> <span class="n">argv</span><span class="p">[</span><span class="mi">2</span><span class="p">];</span>
+</pre></div>
+</div>
+<p>We next open the file for reading, and get its size using the <code class="docutils literal"><span class="pre">fstat</span></code> function.
+We <code class="docutils literal"><span class="pre">malloc()</span></code> a block of memory, and have the descriptor <code class="docutils literal"><span class="pre">fdata</span></code> point to
+it. Next, we read the file into memory using the <code class="docutils literal"><span class="pre">pread()</span></code> system call. We
 also check to see if the user inputted the optional parameter that sets the
 maximum number of entries to display. If so, we update the variable
-<tt class="docutils literal"><span class="pre">DEFAULT_DISP_NUM</span></tt> to reflect this amount:</p>
-<p>::
-uint64_t r = 0;
-fdata = (char <a href="#id51"><span class="problematic" id="id52">*</span></a>)malloc (finfo.st_size);
+<code class="docutils literal"><span class="pre">DEFAULT_DISP_NUM</span></code> to reflect this amount:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span>uint64_t r = 0;
+fdata = (char *)malloc (finfo.st_size);
 CHECK_ERROR (fdata == NULL);
-while(r &lt; (uint64_t)finfo.st_size)</p>
-<blockquote>
-<div>r += pread (fd, fdata + r, finfo.st_size, r);</div></blockquote>
-<p>CHECK_ERROR (r != (uint64_t)finfo.st_size);
+while(r &lt; (uint64_t)finfo.st_size)
+       r += pread (fd, fdata + r, finfo.st_size, r);
+CHECK_ERROR (r != (uint64_t)finfo.st_size);
 // Get the number of results to display
-CHECK_ERROR((disp_num = (disp_num_str == NULL) ?</p>
-<blockquote>
-<div>DEFAULT_DISP_NUM : atoi(disp_num_str)) &lt;= 0);</div></blockquote>
+CHECK_ERROR((disp_num = (disp_num_str == NULL) ?
+             DEFAULT_DISP_NUM : atoi(disp_num_str)) &lt;= 0);
+</pre></div>
+</div>
 <p>Now the magic happens: we run our MapReduce job. This is easily accomplished
-in three lines. We first instantiate a <tt class="docutils literal"><span class="pre">result</span></tt> vector. We instantiate a
+in three lines. We first instantiate a <code class="docutils literal"><span class="pre">result</span></code> vector. We instantiate a
 mapreduce job with the line:</p>
-<p>::
-WordsMR mapReduce(fdata, finfo.st_size, 1024*1024);</p>
-<p>Here, <tt class="docutils literal"><span class="pre">fdata</span></tt> will bind to the data pointer in <tt class="docutils literal"><span class="pre">WordsMR</span></tt>, <tt class="docutils literal"><span class="pre">finfo.st_size</span></tt>
-will bind to <tt class="docutils literal"><span class="pre">data_size</span></tt> and <tt class="docutils literal"><span class="pre">chunk_size</span></tt> wil be set to the quantity
-<tt class="docutils literal"><span class="pre">1024*1024</span></tt>. The following line just ensure the result array is non empty:</p>
-<p>::
-CHECK_ERROR( mapReduce.run(result) &lt; 0);</p>
-<p>The final part of the code prints out the top <tt class="docutils literal"><span class="pre">DEFAULT_DISP_NUM</span></tt> entries,
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">WordsMR</span> <span class="n">mapReduce</span><span class="p">(</span><span class="n">fdata</span><span class="p">,</span> <span class="n">finfo</span><span class="o">.</span><span class="n">st_size</span><span class="p">,</span> <span class="mi">1024</span><span class="o">*</span><span class="mi">1024</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>Here, <code class="docutils literal"><span class="pre">fdata</span></code> will bind to the data pointer in <code class="docutils literal"><span class="pre">WordsMR</span></code>, <code class="docutils literal"><span class="pre">finfo.st_size</span></code>
+will bind to <code class="docutils literal"><span class="pre">data_size</span></code> and <code class="docutils literal"><span class="pre">chunk_size</span></code> wil be set to the quantity
+<code class="docutils literal"><span class="pre">1024*1024</span></code>. The following line just ensure the result array is non empty:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">CHECK_ERROR</span><span class="p">(</span> <span class="n">mapReduce</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">result</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>The final part of the code prints out the top <code class="docutils literal"><span class="pre">DEFAULT_DISP_NUM</span></code> entries,
 sorted in order of greatest to least count. Since the output of the MapReduce
 task is in sorted descending order, it suffices just to print the first
-<tt class="docutils literal"><span class="pre">DEFAULT_DISP_NUM</span></tt> values. A second loop counts the total number of words
-found:
-::
-unsigned int dn = std::min(disp_num, (unsigned int)result.size());
-printf(&#8220;nWordcount: Results (TOP %d of %lu):n&#8221;, dn, result.size());
-uint64_t total = 0;
-for (size_t i = 0; i &lt; dn; i++)
-{</p>
-<blockquote>
-<div>printf(&#8220;%15s - %lun&#8221;, result[result.size()-1-i].key.data, result[result.size()-1-i].val);</div></blockquote>
-<p>}
-for (size_t i = 0; i &lt; result.size(); i++)
-{</p>
-<blockquote>
-<div>total += result[i].val;</div></blockquote>
-<p>}
-printf(&#8220;Total: %lun&#8221;, total);</p>
-<p>Finally, the <tt class="docutils literal"><span class="pre">fdata</span></tt> pointer is freed and we end the program:</p>
-<p>::
-free (fdata);
-CHECK_ERROR(close(fd) &lt; 0);
-return 0;</p>
+<code class="docutils literal"><span class="pre">DEFAULT_DISP_NUM</span></code> values. A second loop counts the total number of words
+found:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">unsigned</span> <span class="nb">int</span> <span class="n">dn</span> <span class="o">=</span> <span class="n">std</span><span class="p">::</span><span class="nb">min</span><span class="p">(</span><span class="n">disp_num</span><span class="p">,</span> <span class="p">(</span><span class="n">unsigned</span> <span class="nb">int</span><span class="p">)</span><span class="n">result</span><span class="o">.</span><span class="n">size</span><span class="p">());</span>
+<span class="n">printf</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Wordcount: Results (TOP </span><span class="si">%d</span><span class="s2"> of </span><span class="si">%lu</span><span class="s2">):</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">dn</span><span class="p">,</span> <span class="n">result</span><span class="o">.</span><span class="n">size</span><span class="p">());</span>
+<span class="n">uint64_t</span> <span class="n">total</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+<span class="k">for</span> <span class="p">(</span><span class="n">size_t</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">dn</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span>
+<span class="p">{</span>
+     <span class="n">printf</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">%15s</span><span class="s2"> - </span><span class="si">%lu</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">result</span><span class="p">[</span><span class="n">result</span><span class="o">.</span><span class="n">size</span><span class="p">()</span><span class="o">-</span><span class="mi">1</span><span class="o">-</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">key</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="n">result</span><span class="p">[</span><span class="n">result</span><span class="o">.</span><span class="n">size</span><span class="p">()</span><span class="o">-</span><span class="mi">1</span><span class="o">-</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">val</span><span class="p">);</span>
+<span class="p">}</span>
+<span class="k">for</span> <span class="p">(</span><span class="n">size_t</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">result</span><span class="o">.</span><span class="n">size</span><span class="p">();</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span>
+<span class="p">{</span>
+        <span class="n">total</span> <span class="o">+=</span> <span class="n">result</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">val</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="n">printf</span><span class="p">(</span><span class="s2">&quot;Total: </span><span class="si">%lu</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">total</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>Finally, the <code class="docutils literal"><span class="pre">fdata</span></code> pointer is freed and we end the program:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">free</span> <span class="p">(</span><span class="n">fdata</span><span class="p">);</span>
+<span class="n">CHECK_ERROR</span><span class="p">(</span><span class="n">close</span><span class="p">(</span><span class="n">fd</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">);</span>
+<span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+</pre></div>
+</div>
 </div>
 <div class="section" id="running-the-code">
 <h2>Running the Code<a class="headerlink" href="#running-the-code" title="Permalink to this headline">¶</a></h2>
-<p>We prepared a simplified version of the word count program,
-::download`here&lt;phoenix++-wc.tar.gz&gt;`, which shows what a standalone Phoenix++
-application looks like. Alternatively, you can access the official Phoenix++
+<p>We prepared a simplified version of the word count program, <code class="xref download docutils literal"><span class="pre">in</span> <span class="pre">this</span> <span class="pre">archive</span> <span class="pre">called</span> <span class="pre">phoenix++-wc.tar.gz</span></code>, which shows what a standalone Phoenix++ application looks like. Alternatively, you can access the official Phoenix++
 release at this link. The following instructions assume that you downloaded the
 <cite>phoenix++-wc.tar.gz</cite> file.</p>
 <p>After downloading the file, untar it with the following command:</p>
-<p>::
-tar -xzvf phoenix++-wc.tar.gz</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">tar</span> <span class="o">-</span><span class="n">xzvf</span> <span class="n">phoenix</span><span class="o">++-</span><span class="n">wc</span><span class="o">.</span><span class="n">tar</span><span class="o">.</span><span class="n">gz</span>
+</pre></div>
+</div>
 <p>Let&#8217;s look at this folder&#8217;s directory structure:</p>
-<p>::
-├── data
-│&nbsp;&nbsp; ├── dickens.txt
-│&nbsp;&nbsp; └── sherlock.txt
+<div class="highlight-default"><div class="highlight"><pre><span></span>├── data
+│   ├── dickens.txt
+│   └── sherlock.txt
 ├── Defines.mk
 ├── docs
-│&nbsp;&nbsp; └── 2011.phoenixplus.mapreduce.pdf
+│   └── 2011.phoenixplus.mapreduce.pdf
 ├── include
-│&nbsp;&nbsp; ├── atomic.h
-│&nbsp;&nbsp; ├── combiner.h
-│&nbsp;&nbsp; ├── container.h
-│&nbsp;&nbsp; ├── locality.h
-│&nbsp;&nbsp; ├── map_reduce.h
-│&nbsp;&nbsp; ├── processor.h
-│&nbsp;&nbsp; ├── scheduler.h
-│&nbsp;&nbsp; ├── stddefines.h
-│&nbsp;&nbsp; ├── synch.h
-│&nbsp;&nbsp; ├── task_queue.h
-│&nbsp;&nbsp; └── thread_pool.h
+│   ├── atomic.h
+│   ├── combiner.h
+│   ├── container.h
+│   ├── locality.h
+│   ├── map_reduce.h
+│   ├── processor.h
+│   ├── scheduler.h
+│   ├── stddefines.h
+│   ├── synch.h
+│   ├── task_queue.h
+│   └── thread_pool.h
 ├── lib
 ├── Makefile
 ├── README
 ├── src
-│&nbsp;&nbsp; ├── Makefile
-│&nbsp;&nbsp; ├── task_queue.cpp
-│&nbsp;&nbsp; └── thread_pool.cpp
-└── word_count</p>
-<blockquote>
-<div>├── Makefile
-├── README
-├── word_count.cpp</div></blockquote>
-<p>The folder <tt class="docutils literal"><span class="pre">data</span></tt> contains some sample data files for you to play with. The
-file <tt class="docutils literal"><span class="pre">Defines.mk</span></tt> contains many of the compiler flags and other directives
-needed to compile our code. The <tt class="docutils literal"><span class="pre">docs</span></tt> folder contains the Phoenix++ paper
-that you can read. The <tt class="docutils literal"><span class="pre">include</span></tt> folder contains all the header files we need
-for our Phoenix++ application. The <tt class="docutils literal"><span class="pre">lib</span></tt> directory is currently empty; once
+│   ├── Makefile
+│   ├── task_queue.cpp
+│   └── thread_pool.cpp
+└── word_count
+    ├── Makefile
+    ├── README
+    ├── word_count.cpp
+</pre></div>
+</div>
+<p>The folder <code class="docutils literal"><span class="pre">data</span></code> contains some sample data files for you to play with. The
+file <code class="docutils literal"><span class="pre">Defines.mk</span></code> contains many of the compiler flags and other directives
+needed to compile our code. The <code class="docutils literal"><span class="pre">docs</span></code> folder contains the Phoenix++ paper
+that you can read. The <code class="docutils literal"><span class="pre">include</span></code> folder contains all the header files we need
+for our Phoenix++ application. The <code class="docutils literal"><span class="pre">lib</span></code> directory is currently empty; once
 we compile our code, it will contain the phoenix++ library file,
-<tt class="docutils literal"><span class="pre">libphoenix.a</span></tt>. The <tt class="docutils literal"><span class="pre">src</span></tt> folder contains the code needed to make the
+<code class="docutils literal"><span class="pre">libphoenix.a</span></code>. The <code class="docutils literal"><span class="pre">src</span></code> folder contains the code needed to make the
 Phoenix++ library file. Lastly, our word count application is located in the
-directory <tt class="docutils literal"><span class="pre">word_count</span></tt>.</p>
+directory <code class="docutils literal"><span class="pre">word_count</span></code>.</p>
 <dl class="docutils">
-<dt>To compile the application, run the <tt class="docutils literal"><span class="pre">make</span></tt> command in the main Phoenix++-wc</dt>
+<dt>To compile the application, run the <code class="docutils literal"><span class="pre">make</span></code> command in the main Phoenix++-wc</dt>
 <dd>directory:</dd>
 </dl>
-<p>::
-make</p>
-<p>Let&#8217;s run the application on the file <tt class="docutils literal"><span class="pre">dickens.txt</span></tt>. This file is 21MB, and
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">make</span>
+</pre></div>
+</div>
+<p>Let&#8217;s run the application on the file <code class="docutils literal"><span class="pre">dickens.txt</span></code>. This file is 21MB, and
 contains the collective works of Charles Dickens. Run the application with the
 following command:</p>
-<p>::
-time -p ./word_count/word_count data/dickens.txt</p>
-<p>This will show you the top 10 most frequent words detected in <tt class="docutils literal"><span class="pre">dickens.txt</span></tt>.
-To see detailed timing information, uncomment the line <tt class="docutils literal"><span class="pre">#define</span> <span class="pre">TIMING</span></tt> in
-<tt class="docutils literal"><span class="pre">include/stddefines.h</span></tt>.</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">time</span> <span class="o">-</span><span class="n">p</span> <span class="o">./</span><span class="n">word_count</span><span class="o">/</span><span class="n">word_count</span> <span class="n">data</span><span class="o">/</span><span class="n">dickens</span><span class="o">.</span><span class="n">txt</span>
+</pre></div>
+</div>
+<p>This will show you the top 10 most frequent words detected in <code class="docutils literal"><span class="pre">dickens.txt</span></code>.
+To see detailed timing information, uncomment the line <code class="docutils literal"><span class="pre">#define</span> <span class="pre">TIMING</span></code> in
+<code class="docutils literal"><span class="pre">include/stddefines.h</span></code>.</p>
 <p>Below you will find a series of exercises to explore the example further.
 Happy analyzing!</p>
 </div>
 <div class="section" id="exercises">
 <h2>Exercises<a class="headerlink" href="#exercises" title="Permalink to this headline">¶</a></h2>
-<p>Let&#8217;s explore the <tt class="docutils literal"><span class="pre">word_count.cpp</span></tt> file a bit futher by modifying it slightly.
+<p>Let&#8217;s explore the <code class="docutils literal"><span class="pre">word_count.cpp</span></code> file a bit futher by modifying it slightly.
 Remember, every time you change this file, you must recompile your code using
-the <tt class="docutils literal"><span class="pre">make</span></tt> command!</p>
+the <code class="docutils literal"><span class="pre">make</span></code> command!</p>
 <ul class="simple">
 <li>Run the word count program to print the top 20 words, the top 50 words, and
 the top 100 words. How does the run-time change?</li>
 <li>Most of the words that have been showing up are common short words, such as
-&#8220;and&#8221;, &#8220;the&#8221;, &#8220;of&#8221;, &#8220;in&#8221;, and &#8220;a&#8221;. Modify the <tt class="docutils literal"><span class="pre">map()</span></tt> function to only
+&#8220;and&#8221;, &#8220;the&#8221;, &#8220;of&#8221;, &#8220;in&#8221;, and &#8220;a&#8221;. Modify the <code class="docutils literal"><span class="pre">map()</span></code> function to only
 print out words that are five characters or longer. What are the top ten
 words now? How does Charles Dickens&#8217; top 10 words differ from Arthur Conan
 Doyle&#8217;s?</li>
-<li>Use the setenv command to set the <tt class="docutils literal"><span class="pre">MR_NUMTHREADS</span></tt> environmental variable to
-a user inutted number of threads in <tt class="docutils literal"><span class="pre">main.cpp</span></tt>. Check the setenv
+<li>Use the setenv command to set the <code class="docutils literal"><span class="pre">MR_NUMTHREADS</span></code> environmental variable to
+a user inutted number of threads in <code class="docutils literal"><span class="pre">main.cpp</span></code>. Check the setenv
 documentation for more details.</li>
-<li>Check the number of CPU cores on your machine by checking <tt class="docutils literal"><span class="pre">/proc/cpuinfo</span></tt>.
+<li>Check the number of CPU cores on your machine by checking <code class="docutils literal"><span class="pre">/proc/cpuinfo</span></code>.
 Vary the number of threads from <em>1...c</em> where <em>c</em> is the number of CPU cores.
 Plot your timing results using Matplotlib.</li>
 <li><em>Challenge</em>: The words that are showing up are still those that largely
 reflect the grammar of an author&#8217;s writing. These are known as function words.
-Modify the <tt class="docutils literal"><span class="pre">map()</span></tt> function to <em>exclude</em> any words that are function words.
+Modify the <code class="docutils literal"><span class="pre">map()</span></code> function to <em>exclude</em> any words that are function words.
 A list of 321 common function words can be found at this link.</li>
 </ul>
 </div>
@@ -788,8 +798,11 @@ A list of 321 common function words can be found at this link.</li>
           </div>
         </div>
       </div>
-      <div class="sphinxsidebar">
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../index.html">
+              <img class="logo" src="../_static/CSInParallel200wide.png" alt="Logo"/>
+            </a></p>
   <h3><a href="../index.html">Table Of Contents</a></h3>
   <ul>
 <li><a class="reference internal" href="#">Getting Started with Phoenix++</a><ul>
@@ -810,43 +823,22 @@ A list of 321 common function words can be found at this link.</li>
   <h4>Previous topic</h4>
   <p class="topless"><a href="../wordcount/wordcount.html"
                         title="previous chapter">Counting Pease With MapReduce</a></p>
-  <h3>This Page</h3>
-  <ul class="this-page-menu">
-    <li><a href="../_sources/phoenix/phoenix.txt"
-           rel="nofollow">Show Source</a></li>
-  </ul>
-<div id="searchbox" style="display: none">
-  <h3>Quick search</h3>
-    <form class="search" action="../search.html" method="get">
-      <input type="text" name="q" />
-      <input type="submit" value="Go" />
-      <input type="hidden" name="check_keywords" value="yes" />
-      <input type="hidden" name="area" value="default" />
-    </form>
-    <p class="searchtip" style="font-size: 90%">
-    Enter search terms or a module, class or function name.
-    </p>
-</div>
-<script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
       </div>
       <div class="clearer"></div>
     </div>
-    <div class="related">
+    <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
-          <a href="../genindex.html" title="General Index"
-             >index</a></li>
-        <li class="right" >
           <a href="../wordcount/wordcount.html" title="Counting Pease With MapReduce"
-             >previous</a> |</li>
-        <li><a href="../index.html">Introducing Students to MapReduce with Phoenix++ 1 documentation</a> &raquo;</li> 
+             >previous</a></li>
+        <li class="nav-item nav-item-0"><a href="../index.html">MapReduce with Pheonix++</a> &raquo;</li> 
       </ul>
     </div>
-    <div class="footer">
+    <div class="footer" role="contentinfo">
         &copy; Copyright 2016, Suzanne J. Matthews.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.4.1.
     </div>
   </body>
 </html>

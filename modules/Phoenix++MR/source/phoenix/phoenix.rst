@@ -35,7 +35,10 @@ For every application you write using Phoenix++, you will need to define a
 class for it. Let's start by taking a look at the class header:
 
 ::
-class WordsMR : public MapReduceSort<WordsMR, wc_string, wc_word, uint64_t, hash_container<wc_word, uint64_t, sum_combiner, wc_word_hash> >
+
+  class WordsMR : public MapReduceSort<WordsMR, wc_string, wc_word, uint64_t, 
+                                       hash_container<wc_word, uint64_t, sum_combiner, wc_word_hash> 
+                                       >
 
 The first thing to note about this definition is that ``WordsMR`` is derived 
 from class ``MapReduceSort``, which is defined in ``mapreduce.h``. This is the 
@@ -43,20 +46,20 @@ primary beauty of Phoenix++; to write your own MapReduce programs, you simply
 overload the default function defined in the base class. We define the class 
 with the following parameters (in order):
 
-- the implemented class type (*Impl*=``WordsMR``)
-- the input data type (*D*=``wc_string``)
-- the key type (*K*=``wc_word``)
-- the value type (*V*=``uint_64``)
+- the implemented class type (*Impl* =``WordsMR``)
+- the input data type (*D* =``wc_string``)
+- the key type (*K* =``wc_word``)
+- the value type (*V* =``uint_64``)
 - the definition of the hash container (``hash_container<...>``)
 
 ``hash_container`` defines the parameters for the hashtable used to aggregate 
 *(key, value)* pairs. A full definition of the ``hash_container`` class can be 
 found in ``container.h``. It's input parameters are:
 
-- the key type (*K*=``wc_word``)
-- the value type (*V*=``uint_64``)
-- the type of combiner function (*Combiner*=``sum_combiner``)
-- The hash function to use (*hash*=``wc_word_hash``)
+- the key type (*K* =``wc_word``)
+- the value type (*V* =``uint_64``)
+- the type of combiner function (*Combiner* =``sum_combiner``)
+- The hash function to use (*hash* =``wc_word_hash``)
 
 Note the use of the combiner ``sum_combiner``, an associative combiner 
 implemented in Phoenix++. This means, as collisions in our hash table occur, 
@@ -66,7 +69,7 @@ function in our application! The other type of combiner is known as the
 chains all the values together. The functions shown below are ones that are 
 commonly overloaded when creating a Phoenix++ MapReduce class:
 
-+--------------------+-----------------------------------------------------
++--------------------+----------------------------------------------------+
 | Function Name      |                    Description                     |
 +====================+====================================================+
 |``map()``           |Defines the functionality for map tasks. The default| 
@@ -96,17 +99,19 @@ The class declares a number of global variables, that will be initialized by
 user input:
 
 ::
-char* data;
-uint64_t data_size;
-uint64_t chunk_size;
-uint64_t splitter_pos;
+
+  char* data;
+  uint64_t data_size;
+  uint64_t chunk_size;
+  uint64_t splitter_pos;
 
 We can see these values getting initialized in the constructor below.
 
 ::
-explicit WordsMR(char* _data, uint64_t length, uint64_t _chunk_size) :
-        data(_data), data_size(length), chunk_size(_chunk_size), 
-            splitter_pos(0) {}
+
+  explicit WordsMR(char* _data, uint64_t length, uint64_t _chunk_size) :
+           data(_data), data_size(length), chunk_size(_chunk_size), 
+           splitter_pos(0) {}
 
 
 The locate() function
@@ -161,9 +166,10 @@ The next few line of code is crucial to understanding how the word count
 applicaton works:
 
 ::
-s.data[i] = 0;
-wc_word word = { s.data+start };
-emit_intermediate(out, word, 1);
+
+  s.data[i] = 0;
+  wc_word word = { s.data+start };
+  emit_intermediate(out, word, 1);
 
 Recall that ``0`` is the integer value of ``\0``, the null terminator, which 
 indicates where a string should be terminated. We define our key data 
@@ -190,7 +196,7 @@ which is our input data type. Recall that the variables ``splitter_pos`` and
 currently in the file. The variable ``data_size`` represents the size of the 
 entire file. The variable ``chunk_size`` represents the size of each chunk.
 
-- The first if statement simply ensures that our current position does not 
+The first if statement simply ensures that our current position does not 
 exceed the bounds of the file. If so, we exit the function by returning 0 
 (indicating failure, and that there is nothing more to split).
 
@@ -198,15 +204,18 @@ We want each chunk to be approximately the same. We first determine a
 "nominal" end-point, or position to "chunk" the data:  
 
 ::
-uint64_t end = std::min(splitter_pos + chunk_size, data_size);  
+
+  uint64_t end = std::min(splitter_pos + chunk_size, data_size);  
 
 Obviously, this end-point won't always work. What if we land in the middle of a 
 word? Therefore, we want to increment ``end`` until we hit a natural word 
 boundry. The ``split()`` function declares this boundry as being either a 
 space, tab, return carriage, or new line character. This is achieved by the 
-following code:   
+following code: 
+
 ::
-while(end < data_size && 
+
+  while(end < data_size && 
             data[end] != ' ' && data[end] != '\t' && 
             data[end] != '\r' && data[end] != '\n')
             end++;
@@ -216,8 +225,9 @@ Once we determine a valid end-point, we populate the inputted ``wc_string``
 object: 
 
 ::
-out.data = data + splitter_pos;
-out.len = end - splitter_pos; 
+
+  out.data = data + splitter_pos;
+  out.len = end - splitter_pos; 
 
 The starting point is set to data pointer plus the starting value of 
 ``splitter_pos``. The length is determined by subtracting ``end`` from 
@@ -247,19 +257,20 @@ of results to display. Variables are declared to facillitate file reading and
 command line parsing: 
 
 ::
-int fd;
-char * fdata;
-unsigned int disp_num;
-struct stat finfo;
-char * fname, * disp_num_str;
-// Make sure a filename is specified
-if (argv[1] == NULL)
- {
-       printf("USAGE: %s  [Top # of results to display]\n", argv[0]);
-        exit(1);
- }	
-fname = argv[1];
-disp_num_str = argv[2];
+
+  int fd;
+  char * fdata;
+  unsigned int disp_num;
+  struct stat finfo;
+  char * fname, * disp_num_str;
+  // Make sure a filename is specified
+  if (argv[1] == NULL)
+   {
+         printf("USAGE: %s  [Top # of results to display]\n", argv[0]);
+          exit(1);
+   }	
+  fname = argv[1];
+  disp_num_str = argv[2];
  
 
 We next open the file for reading, and get its size using the ``fstat`` function. 
@@ -270,102 +281,108 @@ maximum number of entries to display. If so, we update the variable
 ``DEFAULT_DISP_NUM`` to reflect this amount: 
 
 :: 
-uint64_t r = 0;
-fdata = (char *)malloc (finfo.st_size);
-CHECK_ERROR (fdata == NULL);
-while(r < (uint64_t)finfo.st_size)
-       r += pread (fd, fdata + r, finfo.st_size, r);
-CHECK_ERROR (r != (uint64_t)finfo.st_size);	
-// Get the number of results to display
-CHECK_ERROR((disp_num = (disp_num_str == NULL) ? 
-             DEFAULT_DISP_NUM : atoi(disp_num_str)) <= 0);
+
+  uint64_t r = 0;
+  fdata = (char *)malloc (finfo.st_size);
+  CHECK_ERROR (fdata == NULL);
+  while(r < (uint64_t)finfo.st_size)
+         r += pread (fd, fdata + r, finfo.st_size, r);
+  CHECK_ERROR (r != (uint64_t)finfo.st_size);	
+  // Get the number of results to display
+  CHECK_ERROR((disp_num = (disp_num_str == NULL) ? 
+               DEFAULT_DISP_NUM : atoi(disp_num_str)) <= 0);
 	 
 Now the magic happens: we run our MapReduce job. This is easily accomplished 
 in three lines. We first instantiate a ``result`` vector. We instantiate a 
 mapreduce job with the line: 
 
 ::
-WordsMR mapReduce(fdata, finfo.st_size, 1024*1024);
+
+  WordsMR mapReduce(fdata, finfo.st_size, 1024*1024);
 
  Here, ``fdata`` will bind to the data pointer in ``WordsMR``, ``finfo.st_size`` 
 will bind to ``data_size`` and ``chunk_size`` wil be set to the quantity 
 ``1024*1024``. The following line just ensure the result array is non empty: 
 
 ::
-CHECK_ERROR( mapReduce.run(result) < 0);
+
+  CHECK_ERROR( mapReduce.run(result) < 0);
 	 
 The final part of the code prints out the top ``DEFAULT_DISP_NUM`` entries, 
 sorted in order of greatest to least count. Since the output of the MapReduce 
 task is in sorted descending order, it suffices just to print the first 
 ``DEFAULT_DISP_NUM`` values. A second loop counts the total number of words 
-found: 
+found:
+
 ::
-unsigned int dn = std::min(disp_num, (unsigned int)result.size());
-printf("\nWordcount: Results (TOP %d of %lu):\n", dn, result.size());
-uint64_t total = 0;
-for (size_t i = 0; i < dn; i++)
-{
-     printf("%15s - %lu\n", result[result.size()-1-i].key.data, result[result.size()-1-i].val);
-}
-for (size_t i = 0; i < result.size(); i++)
-{
-        total += result[i].val;
-}	
-printf("Total: %lu\n", total); 
+
+  unsigned int dn = std::min(disp_num, (unsigned int)result.size());
+  printf("\nWordcount: Results (TOP %d of %lu):\n", dn, result.size());
+  uint64_t total = 0;
+  for (size_t i = 0; i < dn; i++)
+  {
+       printf("%15s - %lu\n", result[result.size()-1-i].key.data, result[result.size()-1-i].val);
+  }
+  for (size_t i = 0; i < result.size(); i++)
+  {
+          total += result[i].val;
+  }	
+  printf("Total: %lu\n", total); 
 
 Finally, the ``fdata`` pointer is freed and we end the program: 
 
 ::
-free (fdata);
-CHECK_ERROR(close(fd) < 0);
-return 0;
+
+  free (fdata);
+  CHECK_ERROR(close(fd) < 0);
+  return 0;
 
 Running the Code
 ----------------
 
-We prepared a simplified version of the word count program, 
-::download`here<phoenix++-wc.tar.gz>`, which shows what a standalone Phoenix++ 
-application looks like. Alternatively, you can access the official Phoenix++ 
+We prepared a simplified version of the word count program, :download:`in this archive called phoenix++-wc.tar.gz <phoenix++-wc.tar.gz>`, which shows what a standalone Phoenix++ application looks like. Alternatively, you can access the official Phoenix++ 
 release at this link. The following instructions assume that you downloaded the 
 `phoenix++-wc.tar.gz` file.
 
 After downloading the file, untar it with the following command: 
 
 ::
-tar -xzvf phoenix++-wc.tar.gz  
+
+  tar -xzvf phoenix++-wc.tar.gz  
 
 Let's look at this folder's directory structure: 
 
 ::
-├── data
-│   ├── dickens.txt
-│   └── sherlock.txt
-├── Defines.mk
-├── docs
-│   └── 2011.phoenixplus.mapreduce.pdf
-├── include
-│   ├── atomic.h
-│   ├── combiner.h
-│   ├── container.h
-│   ├── locality.h
-│   ├── map_reduce.h
-│   ├── processor.h
-│   ├── scheduler.h
-│   ├── stddefines.h
-│   ├── synch.h
-│   ├── task_queue.h
-│   └── thread_pool.h
-├── lib
-├── Makefile
-├── README
-├── src
-│   ├── Makefile
-│   ├── task_queue.cpp
-│   └── thread_pool.cpp
-└── word_count
-    ├── Makefile
-    ├── README
-    ├── word_count.cpp
+
+  ├── data
+  │   ├── dickens.txt
+  │   └── sherlock.txt
+  ├── Defines.mk
+  ├── docs
+  │   └── 2011.phoenixplus.mapreduce.pdf
+  ├── include
+  │   ├── atomic.h
+  │   ├── combiner.h
+  │   ├── container.h
+  │   ├── locality.h
+  │   ├── map_reduce.h
+  │   ├── processor.h
+  │   ├── scheduler.h
+  │   ├── stddefines.h
+  │   ├── synch.h
+  │   ├── task_queue.h
+  │   └── thread_pool.h
+  ├── lib
+  ├── Makefile
+  ├── README
+  ├── src
+  │   ├── Makefile
+  │   ├── task_queue.cpp
+  │   └── thread_pool.cpp
+  └── word_count
+      ├── Makefile
+      ├── README
+      ├── word_count.cpp
 
 The folder ``data`` contains some sample data files for you to play with. The 
 file ``Defines.mk`` contains many of the compiler flags and other directives 
@@ -379,15 +396,18 @@ directory ``word_count``.
 
 To compile the application, run the ``make`` command in the main Phoenix++-wc 
   directory: 
+  
 ::
-make 
+
+  make 
 
 Let's run the application on the file ``dickens.txt``. This file is 21MB, and 
 contains the collective works of Charles Dickens. Run the application with the 
 following command: 
 
 ::
-time -p ./word_count/word_count data/dickens.txt  
+
+  time -p ./word_count/word_count data/dickens.txt  
 
 This will show you the top 10 most frequent words detected in ``dickens.txt``. 
 To see detailed timing information, uncomment the line ``#define TIMING`` in 

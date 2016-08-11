@@ -67,9 +67,9 @@ everything in parallel. The components of the system are as follows:
 So how do we calculate Word Frequency with MapReduce? In the following example, 
 we have three mappers and three reducers. For simplicity, we assume that the 
 file is split on new lines (``\n``) though this need not be the case. Each 
-mapper takes its assigned chunk of text and splits it into words, and emits 
-*(key,value)* pairs where the key is an individual word, and the value is ``1.``
- If multiple instances of a word are assigned to the same mapper, the local 
+mapper takes its assigned chunk of text and splits it into words, and 
+emits *(key,value)* pairs where the key is an individual word, and the value is ``1``.
+If multiple instances of a word are assigned to the same mapper, the local 
 frequencies can be added and emitted instead. 
 
 Below, we have an illustration of the Map phase of the algorithm. Observe that 
@@ -78,9 +78,8 @@ of three instances of the pair (Pease-porridge,1). Notice that all mappers run
 in parallell.
 
 .. figure:: map.png
-    :width: 460px
+    :width: 860px
     :align: center
-    :height: 300px
     :alt: alternate text
     :figclass: align-center
 
@@ -88,8 +87,8 @@ in parallell.
 
 The combiner acts as a synchronization point; all the mappers must finish prior 
 to the combiner finishing execution. The combiner constructs *(key,list(value))* pairs from the output from the mappers. For example, mapper 2 produced 
-the *(key,value)* pair (``it``,``2``), while mapper 3 produced the *(key,value)* 
-pair (``it``,``1``). The combiner will aggregate these two pairs and output 
+the *(key,value)* pair (``it, 2``), while mapper 3 produced the *(key,value)* 
+pair (``it, 1``). The combiner will aggregate these two pairs and output 
 (``it``, ``[2,1]``).
 
 After the combiner finishes executing, the *(key,list(value))* pairs go to to 
@@ -98,7 +97,7 @@ below illustrates the Reduce phase for this example. Each reducer gets assigned
 a set of *(key,list(value))* pairs. For each pair, it performs a reduction 
 operation. In this case, the reduction operation is addition; all the values 
 in the list are simply added together. For example, reducer 2 reduces the pair 
-(``Some``,``[2,1]``) to (``Some``,``3``).
+(``Some, [2,1]``) to (``Some, 3``).
 
 .. note:: One thing we do not discuss here is *fault tolerance*. Fault 
           tolerance is most important for large distributed systems. When you 
