@@ -12,7 +12,7 @@ truth is that parallel computing is very difficult. In many cases, the
 programmer must consider many factors that have nothing to do with problem he 
 or she is trying to parallelize. For example, to implement a program in Pthreads, 
 a programmer must physically allocate, create and join any threads they want to 
-use. The programmer must also be aware data races, and use synchronization 
+use. The programmer must also be aware of data races, and use synchronization 
 constructs as necessary.
 
 This is not unique to Pthreads. In MPI for example, you have to explicitly 
@@ -20,7 +20,7 @@ specify what messages you want to send to what node, and how to synchronize
 messages. As you can imagine, this creates a lot of overhead for the 
 programmer. As those who have programmed previously in Pthreads, MPI, or OpenMP 
 can attest, debugging parallel programs can be very difficult! When things 
-execute in parallel, they execute non-deterministically. This non-determinism 
+execute in parallel, they execute *non-deterministically*. This `non-determinism <https://en.wikipedia.org/wiki/Unbounded_nondeterminism>`_ 
 can cause a lot of headaches.
 
 As multicore and parallel systems became more prevalent, computer scientists 
@@ -36,7 +36,7 @@ Enter MapReduce
 ----------------
 
 
-In 2004, Jeffrey Dean and Sanjay Ghemawhat of Google published a paper on the 
+In 2004, Jeffrey Dean and Sanjay Ghemawhat of Google `published a paper <http://static.usenix.org/publications/library/proceedings/osdi04/tech/full_papers/dean/dean_html/>`_ on the 
 MapReduce paradigm. Google uses MapReduce as the backbone of its search engine, 
 and uses it for multiple operations. It is important to note that Google did 
 *not* invent MapReduce; the paradigm has existed for decades in functional 
@@ -45,7 +45,7 @@ computing, and spelled the beginning of an upsurge in interest in the paradigm
 that has led to many innovations over the last decade.
 
 Google's implementation of MapReduce is closed source and proprietary. In 2006, 
-work on the Hadoop project was started by Doug Cutting, an employee of Yahoo!. 
+work on the `Hadoop <http://hadoop.apache.org/>`_ project was started by Doug Cutting, an employee of Yahoo!. 
 Hadoop is named after a plush toy elephant belonging to Cutting's son, and the 
 eponymous elephant features prominently in the Hadoop logo. Over the last six 
 years, Hadoop has been widely adopted by many tech giants, including Amazon, 
@@ -61,8 +61,8 @@ bottleneck. However, the concept of MapReduce is still very attractive to
 programmers with smaller datasets or more limited computational resources, due 
 to its relative simplicity.
 
-.. note:: Want to play with a Hadoop system on the web? Check out WebMapReduce!  
-          Access the module at this link. 
+.. note:: Want to play with a Hadoop system on the web? Check out `WebMapReduce <http://csinparallel.org/csinparallel/modules/IntroWMR.html>`_!  
+          Access the module at `this link <http://csinparallel.org/csinparallel/modules/IntroWMR.html>`_. 
 
 Phoenix and Phoenix++
 ----------------------
@@ -70,11 +70,12 @@ Phoenix and Phoenix++
 
 In 2007, a team at Stanford University led by Christos Kozyrakis began 
 exploring how to implement the MapReduce paradigm on multi-core platform. Their 
-thread-based solution, Phoenix, won best paper at HPCA'07, and has been cited 
-over 800 times. An update on Phoenix (Phoenix 2) was released in 2009. In 2011, 
-Phoenix++ was released. A complete re-write of the earlier Phoenix systems, 
-Phoenix++ enables development in C++, and significantly modularizes and 
-improves the performance of the original code base.
+thread-based solution, `Phoenix <http://csl.stanford.edu/~christos/publications/2007.cmp_mapreduce.hpca.pdf>`_, 
+won best paper at HPCA'07, and has been cited over 900 times. An update on Phoenix (`Phoenix 2 <http://csl.stanford.edu/~christos/publications/2009.scalable_phoenix.iiswc.pdf>`_) 
+was released in 2009. In 2011, `Phoenix++ <https://research.tableau.com/sites/default/files/mapreduce2011-talbot-phoenixplusplus.pdf>`_ was released. 
+A complete re-write of the earlier Phoenix systems, Phoenix++ enables 
+development in C++, and significantly modularizes and improves the 
+performance of the original code base.
 
 .. note:: This entire module is based on Phoenix++ the latest release of 
           Phoenix. Please note that if you are interested in using the earlier 

@@ -6,8 +6,7 @@ Introduction
 
 In this section, we will discuss the Phoenix++ wordcount example in detail. You 
 will need a basic knowledge of C/C++ to follow along with these concepts. You 
-can download a copy of the Phoenix++ word count example 
-::download:`here <phoenix++-wc.tar.gz>`. We will start by looking at the file 
+can download a copy of the Phoenix++ word count example `here <phoenix++-wc.tar.gz>`_. We will start by looking at the file 
 ``word_count.cpp``. At the top of the file, there are three structs we should 
 pay attention to:
 
@@ -25,7 +24,7 @@ two "words". At this point, you may be asking yourself, *but, how do you know
 where a word ends?* Be patient; when we get to the main body of code, it will 
 all become clear. The last struct contains only an operator definition for ``()``, 
 which requires a key of type ``wc_count`` as its single parameter. This is an 
-implementation of the Fowler-Noll-Vo hash function. While other hash functions 
+implementation of the `Fowler-Noll-Vo hash function <https://en.wikipedia.org/wiki/Fowler%E2%80%93Noll%E2%80%93Vo_hash_function>`_. While other hash functions 
 can be used, it is best just to leave this code alone.
 
 WordsMR: The word count class
@@ -46,20 +45,20 @@ primary beauty of Phoenix++; to write your own MapReduce programs, you simply
 overload the default function defined in the base class. We define the class 
 with the following parameters (in order):
 
-- the implemented class type (*Impl* =``WordsMR``)
-- the input data type (*D* =``wc_string``)
-- the key type (*K* =``wc_word``)
-- the value type (*V* =``uint_64``)
+- the implemented class type (*Impl* = ``WordsMR``)
+- the input data type (*D* = ``wc_string``)
+- the key type (*K* = ``wc_word``)
+- the value type (*V* = ``uint_64``)
 - the definition of the hash container (``hash_container<...>``)
 
 ``hash_container`` defines the parameters for the hashtable used to aggregate 
 *(key, value)* pairs. A full definition of the ``hash_container`` class can be 
 found in ``container.h``. It's input parameters are:
 
-- the key type (*K* =``wc_word``)
-- the value type (*V* =``uint_64``)
-- the type of combiner function (*Combiner* =``sum_combiner``)
-- The hash function to use (*hash* =``wc_word_hash``)
+- the key type (*K* = ``wc_word``)
+- the value type (*V* = ``uint_64``)
+- the type of combiner function (*Combiner* = ``sum_combiner``)
+- The hash function to use (*hash* = ``wc_word_hash``)
 
 Note the use of the combiner ``sum_combiner``, an associative combiner 
 implemented in Phoenix++. This means, as collisions in our hash table occur, 
@@ -340,9 +339,9 @@ Finally, the ``fdata`` pointer is freed and we end the program:
 Running the Code
 ----------------
 
-We prepared a simplified version of the word count program, :download:`in this archive called phoenix++-wc.tar.gz <phoenix++-wc.tar.gz>`, which shows what a standalone Phoenix++ application looks like. Alternatively, you can access the official Phoenix++ 
+We prepared a simplified version of the word count program, `in this archive called phoenix++-wc.tar.gz <phoenix++-wc.tar.gz>`_, which shows what a standalone Phoenix++ application looks like. Alternatively, you can access the official Phoenix++ 
 release at this link. The following instructions assume that you downloaded the 
-`phoenix++-wc.tar.gz` file.
+`phoenix++-wc.tar.gz <phoenix++-wc.tar.gz>`_ file.
 
 After downloading the file, untar it with the following command: 
 

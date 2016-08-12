@@ -66,16 +66,16 @@ everything in parallel. The components of the system are as follows:
 
 So how do we calculate Word Frequency with MapReduce? In the following example, 
 we have three mappers and three reducers. For simplicity, we assume that the 
-file is split on new lines (``\n``) though this need not be the case. Each 
+file is split on new lines (``\n``) although this need not always be the case. Each 
 mapper takes its assigned chunk of text and splits it into words, and 
 emits *(key,value)* pairs where the key is an individual word, and the value is ``1``.
 If multiple instances of a word are assigned to the same mapper, the local 
 frequencies can be added and emitted instead. 
 
 Below, we have an illustration of the Map phase of the algorithm. Observe that 
-the first mapper is emitting a (key,value) pair of (Pease-porridge,3) instead 
-of three instances of the pair (Pease-porridge,1). Notice that all mappers run 
-in parallell.
+the first mapper is emitting a single *(key,value)* pair of (``Pease-porridge,3``) instead 
+of three instances of the pair (``Pease-porridge, 1``). Notice that all mappers run 
+in parallell. This assumes that a local combination operation is occuring.
 
 .. figure:: map.png
     :width: 860px
@@ -99,6 +99,14 @@ operation. In this case, the reduction operation is addition; all the values
 in the list are simply added together. For example, reducer 2 reduces the pair 
 (``Some, [2,1]``) to (``Some, 3``).
 
+.. figure:: reduce.png
+    :width: 500px
+    :align: center
+    :alt: alternate text
+    :figclass: align-center
+
+    Figure 2: How the Reduce Phase of the algorithm works.
+
 .. note:: One thing we do not discuss here is *fault tolerance*. Fault 
           tolerance is most important for large distributed systems. When you 
           have that many computers networked together, it’s likely that some 
@@ -109,5 +117,5 @@ in the list are simply added together. For example, reducer 2 reduces the pair
           and redistributes its work to other worker nodes. Phoenix and 
           Phoenix++ both have fault tolerance protections. Phoenix++ has an 
           optional execution mode that enables a user to skip data records in 
-          the case of segnmentation faults and bus errors. This can be invoked 
+          the case of segmentation faults and bus errors. This can be invoked 
           through the use of the signal handler.

@@ -106,15 +106,15 @@ list. Each instance of the reduce() function (reducer) run independently and in 
 </ul>
 <p>So how do we calculate Word Frequency with MapReduce? In the following example,
 we have three mappers and three reducers. For simplicity, we assume that the
-file is split on new lines (<code class="docutils literal"><span class="pre">\n</span></code>) though this need not be the case. Each
+file is split on new lines (<code class="docutils literal"><span class="pre">\n</span></code>) although this need not always be the case. Each
 mapper takes its assigned chunk of text and splits it into words, and
 emits <em>(key,value)</em> pairs where the key is an individual word, and the value is <code class="docutils literal"><span class="pre">1</span></code>.
 If multiple instances of a word are assigned to the same mapper, the local
 frequencies can be added and emitted instead.</p>
 <p>Below, we have an illustration of the Map phase of the algorithm. Observe that
-the first mapper is emitting a (key,value) pair of (Pease-porridge,3) instead
-of three instances of the pair (Pease-porridge,1). Notice that all mappers run
-in parallell.</p>
+the first mapper is emitting a single <em>(key,value)</em> pair of (<code class="docutils literal"><span class="pre">Pease-porridge,3</span></code>) instead
+of three instances of the pair (<code class="docutils literal"><span class="pre">Pease-porridge,</span> <span class="pre">1</span></code>). Notice that all mappers run
+in parallell. This assumes that a local combination operation is occuring.</p>
 <div class="align-center figure" id="id1">
 <a class="reference internal image-reference" href="../_images/map.png"><img alt="alternate text" src="../_images/map.png" style="width: 860px;" /></a>
 <p class="caption"><span class="caption-text">Figure 1: How the Map Phase of the algorithm works.</span></p>
@@ -131,6 +131,10 @@ a set of <em>(key,list(value))</em> pairs. For each pair, it performs a reductio
 operation. In this case, the reduction operation is addition; all the values
 in the list are simply added together. For example, reducer 2 reduces the pair
 (<code class="docutils literal"><span class="pre">Some,</span> <span class="pre">[2,1]</span></code>) to (<code class="docutils literal"><span class="pre">Some,</span> <span class="pre">3</span></code>).</p>
+<div class="align-center figure" id="id2">
+<a class="reference internal image-reference" href="../_images/reduce.png"><img alt="alternate text" src="../_images/reduce.png" style="width: 500px;" /></a>
+<p class="caption"><span class="caption-text">Figure 2: How the Reduce Phase of the algorithm works.</span></p>
+</div>
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
 <p class="last">One thing we do not discuss here is <em>fault tolerance</em>. Fault
@@ -143,7 +147,7 @@ silent for too long, the framework marks that node as being “dead”,
 and redistributes its work to other worker nodes. Phoenix and
 Phoenix++ both have fault tolerance protections. Phoenix++ has an
 optional execution mode that enables a user to skip data records in
-the case of segnmentation faults and bus errors. This can be invoked
+the case of segmentation faults and bus errors. This can be invoked
 through the use of the signal handler.</p>
 </div>
 </div>
@@ -191,7 +195,7 @@ through the use of the signal handler.</p>
     </div>
     <div class="footer" role="contentinfo">
         &copy; Copyright 2016, Suzanne J. Matthews.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.4.1.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.4.5.
     </div>
   </body>
 </html>

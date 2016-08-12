@@ -58,14 +58,14 @@ truth is that parallel computing is very difficult. In many cases, the
 programmer must consider many factors that have nothing to do with problem he
 or she is trying to parallelize. For example, to implement a program in Pthreads,
 a programmer must physically allocate, create and join any threads they want to
-use. The programmer must also be aware data races, and use synchronization
+use. The programmer must also be aware of data races, and use synchronization
 constructs as necessary.</p>
 <p>This is not unique to Pthreads. In MPI for example, you have to explicitly
 specify what messages you want to send to what node, and how to synchronize
 messages. As you can imagine, this creates a lot of overhead for the
 programmer. As those who have programmed previously in Pthreads, MPI, or OpenMP
 can attest, debugging parallel programs can be very difficult! When things
-execute in parallel, they execute non-deterministically. This non-determinism
+execute in parallel, they execute <em>non-deterministically</em>. This <a class="reference external" href="https://en.wikipedia.org/wiki/Unbounded_nondeterminism">non-determinism</a>
 can cause a lot of headaches.</p>
 <p>As multicore and parallel systems became more prevalent, computer scientists
 began to ask the question if parallel computing is harder that it needs to be.
@@ -78,7 +78,7 @@ to create an automated framework for parallel computing.</p>
 </div>
 <div class="section" id="enter-mapreduce">
 <h2>Enter MapReduce<a class="headerlink" href="#enter-mapreduce" title="Permalink to this headline">¶</a></h2>
-<p>In 2004, Jeffrey Dean and Sanjay Ghemawhat of Google published a paper on the
+<p>In 2004, Jeffrey Dean and Sanjay Ghemawhat of Google <a class="reference external" href="http://static.usenix.org/publications/library/proceedings/osdi04/tech/full_papers/dean/dean_html/">published a paper</a> on the
 MapReduce paradigm. Google uses MapReduce as the backbone of its search engine,
 and uses it for multiple operations. It is important to note that Google did
 <em>not</em> invent MapReduce; the paradigm has existed for decades in functional
@@ -86,7 +86,7 @@ languages. However, the paper&#8217;s release was a watershed moment in parallel
 computing, and spelled the beginning of an upsurge in interest in the paradigm
 that has led to many innovations over the last decade.</p>
 <p>Google&#8217;s implementation of MapReduce is closed source and proprietary. In 2006,
-work on the Hadoop project was started by Doug Cutting, an employee of Yahoo!.
+work on the <a class="reference external" href="http://hadoop.apache.org/">Hadoop</a> project was started by Doug Cutting, an employee of Yahoo!.
 Hadoop is named after a plush toy elephant belonging to Cutting&#8217;s son, and the
 eponymous elephant features prominently in the Hadoop logo. Over the last six
 years, Hadoop has been widely adopted by many tech giants, including Amazon,
@@ -102,19 +102,20 @@ programmers with smaller datasets or more limited computational resources, due
 to its relative simplicity.</p>
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
-<p class="last">Want to play with a Hadoop system on the web? Check out WebMapReduce!
-Access the module at this link.</p>
+<p class="last">Want to play with a Hadoop system on the web? Check out <a class="reference external" href="http://csinparallel.org/csinparallel/modules/IntroWMR.html">WebMapReduce</a>!
+Access the module at <a class="reference external" href="http://csinparallel.org/csinparallel/modules/IntroWMR.html">this link</a>.</p>
 </div>
 </div>
 <div class="section" id="phoenix-and-phoenix">
 <h2>Phoenix and Phoenix++<a class="headerlink" href="#phoenix-and-phoenix" title="Permalink to this headline">¶</a></h2>
 <p>In 2007, a team at Stanford University led by Christos Kozyrakis began
 exploring how to implement the MapReduce paradigm on multi-core platform. Their
-thread-based solution, Phoenix, won best paper at HPCA&#8216;07, and has been cited
-over 800 times. An update on Phoenix (Phoenix 2) was released in 2009. In 2011,
-Phoenix++ was released. A complete re-write of the earlier Phoenix systems,
-Phoenix++ enables development in C++, and significantly modularizes and
-improves the performance of the original code base.</p>
+thread-based solution, <a class="reference external" href="http://csl.stanford.edu/~christos/publications/2007.cmp_mapreduce.hpca.pdf">Phoenix</a>,
+won best paper at HPCA&#8216;07, and has been cited over 900 times. An update on Phoenix (<a class="reference external" href="http://csl.stanford.edu/~christos/publications/2009.scalable_phoenix.iiswc.pdf">Phoenix 2</a>)
+was released in 2009. In 2011, <a class="reference external" href="https://research.tableau.com/sites/default/files/mapreduce2011-talbot-phoenixplusplus.pdf">Phoenix++</a> was released.
+A complete re-write of the earlier Phoenix systems, Phoenix++ enables
+development in C++, and significantly modularizes and improves the
+performance of the original code base.</p>
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
 <p class="last">This entire module is based on Phoenix++ the latest release of
@@ -167,7 +168,7 @@ modules, these instructions may not directly apply.</p>
     </div>
     <div class="footer" role="contentinfo">
         &copy; Copyright 2016, Suzanne J. Matthews.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.4.1.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.4.5.
     </div>
   </body>
 </html>

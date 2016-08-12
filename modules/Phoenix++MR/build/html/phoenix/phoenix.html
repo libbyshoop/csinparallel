@@ -49,8 +49,7 @@
 <h2>Introduction<a class="headerlink" href="#introduction" title="Permalink to this headline">¶</a></h2>
 <p>In this section, we will discuss the Phoenix++ wordcount example in detail. You
 will need a basic knowledge of C/C++ to follow along with these concepts. You
-can download a copy of the Phoenix++ word count example
-:<code class="xref download docutils literal"><span class="pre">here</span></code>. We will start by looking at the file
+can download a copy of the Phoenix++ word count example <a class="reference external" href="phoenix++-wc.tar.gz">here</a>. We will start by looking at the file
 <code class="docutils literal"><span class="pre">word_count.cpp</span></code>. At the top of the file, there are three structs we should
 pay attention to:</p>
 <div class="highlight-cpp"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
@@ -130,7 +129,7 @@ two &#8220;words&#8221;. At this point, you may be asking yourself, <em>but, how
 where a word ends?</em> Be patient; when we get to the main body of code, it will
 all become clear. The last struct contains only an operator definition for <code class="docutils literal"><span class="pre">()</span></code>,
 which requires a key of type <code class="docutils literal"><span class="pre">wc_count</span></code> as its single parameter. This is an
-implementation of the Fowler-Noll-Vo hash function. While other hash functions
+implementation of the <a class="reference external" href="https://en.wikipedia.org/wiki/Fowler%E2%80%93Noll%E2%80%93Vo_hash_function">Fowler-Noll-Vo hash function</a>. While other hash functions
 can be used, it is best just to leave this code alone.</p>
 </div>
 <div class="section" id="wordsmr-the-word-count-class">
@@ -148,20 +147,20 @@ primary beauty of Phoenix++; to write your own MapReduce programs, you simply
 overload the default function defined in the base class. We define the class
 with the following parameters (in order):</p>
 <ul class="simple">
-<li>the implemented class type (<em>Impl</em> =``WordsMR``)</li>
-<li>the input data type (<em>D</em> =``wc_string``)</li>
-<li>the key type (<em>K</em> =``wc_word``)</li>
-<li>the value type (<em>V</em> =``uint_64``)</li>
+<li>the implemented class type (<em>Impl</em> = <code class="docutils literal"><span class="pre">WordsMR</span></code>)</li>
+<li>the input data type (<em>D</em> = <code class="docutils literal"><span class="pre">wc_string</span></code>)</li>
+<li>the key type (<em>K</em> = <code class="docutils literal"><span class="pre">wc_word</span></code>)</li>
+<li>the value type (<em>V</em> = <code class="docutils literal"><span class="pre">uint_64</span></code>)</li>
 <li>the definition of the hash container (<code class="docutils literal"><span class="pre">hash_container&lt;...&gt;</span></code>)</li>
 </ul>
 <p><code class="docutils literal"><span class="pre">hash_container</span></code> defines the parameters for the hashtable used to aggregate
 <em>(key, value)</em> pairs. A full definition of the <code class="docutils literal"><span class="pre">hash_container</span></code> class can be
 found in <code class="docutils literal"><span class="pre">container.h</span></code>. It&#8217;s input parameters are:</p>
 <ul class="simple">
-<li>the key type (<em>K</em> =``wc_word``)</li>
-<li>the value type (<em>V</em> =``uint_64``)</li>
-<li>the type of combiner function (<em>Combiner</em> =``sum_combiner``)</li>
-<li>The hash function to use (<em>hash</em> =``wc_word_hash``)</li>
+<li>the key type (<em>K</em> = <code class="docutils literal"><span class="pre">wc_word</span></code>)</li>
+<li>the value type (<em>V</em> = <code class="docutils literal"><span class="pre">uint_64</span></code>)</li>
+<li>the type of combiner function (<em>Combiner</em> = <code class="docutils literal"><span class="pre">sum_combiner</span></code>)</li>
+<li>The hash function to use (<em>hash</em> = <code class="docutils literal"><span class="pre">wc_word_hash</span></code>)</li>
 </ul>
 <p>Note the use of the combiner <code class="docutils literal"><span class="pre">sum_combiner</span></code>, an associative combiner
 implemented in Phoenix++. This means, as collisions in our hash table occur,
@@ -700,9 +699,9 @@ found:</p>
 </div>
 <div class="section" id="running-the-code">
 <h2>Running the Code<a class="headerlink" href="#running-the-code" title="Permalink to this headline">¶</a></h2>
-<p>We prepared a simplified version of the word count program, <code class="xref download docutils literal"><span class="pre">in</span> <span class="pre">this</span> <span class="pre">archive</span> <span class="pre">called</span> <span class="pre">phoenix++-wc.tar.gz</span></code>, which shows what a standalone Phoenix++ application looks like. Alternatively, you can access the official Phoenix++
+<p>We prepared a simplified version of the word count program, <a class="reference external" href="phoenix++-wc.tar.gz">in this archive called phoenix++-wc.tar.gz</a>, which shows what a standalone Phoenix++ application looks like. Alternatively, you can access the official Phoenix++
 release at this link. The following instructions assume that you downloaded the
-<cite>phoenix++-wc.tar.gz</cite> file.</p>
+<a class="reference external" href="phoenix++-wc.tar.gz">phoenix++-wc.tar.gz</a> file.</p>
 <p>After downloading the file, untar it with the following command:</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">tar</span> <span class="o">-</span><span class="n">xzvf</span> <span class="n">phoenix</span><span class="o">++-</span><span class="n">wc</span><span class="o">.</span><span class="n">tar</span><span class="o">.</span><span class="n">gz</span>
 </pre></div>
@@ -838,7 +837,7 @@ A list of 321 common function words can be found at this link.</li>
     </div>
     <div class="footer" role="contentinfo">
         &copy; Copyright 2016, Suzanne J. Matthews.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.4.1.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.4.5.
     </div>
   </body>
 </html>
