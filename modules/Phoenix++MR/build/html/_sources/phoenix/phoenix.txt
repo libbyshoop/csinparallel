@@ -6,7 +6,7 @@ Introduction
 
 In this section, we will discuss the Phoenix++ wordcount example in detail. You 
 will need a basic knowledge of C/C++ to follow along with these concepts. You 
-can download a copy of the Phoenix++ word count example `here <phoenix++-wc.tar.gz>`_. We will start by looking at the file 
+can download a copy of the Phoenix++ word count example `here <http://d32ogoqmya1dw8.cloudfront.net/files/csinparallel/modules/code_data_phoenix_module.gz>`_. We will start by looking at the file 
 ``word_count.cpp``. At the top of the file, there are three structs we should 
 pay attention to:
 
@@ -24,7 +24,10 @@ two "words". At this point, you may be asking yourself, *but, how do you know
 where a word ends?* Be patient; when we get to the main body of code, it will 
 all become clear. The last struct contains only an operator definition for ``()``, 
 which requires a key of type ``wc_count`` as its single parameter. This is an 
-implementation of the `Fowler-Noll-Vo hash function <https://en.wikipedia.org/wiki/Fowler%E2%80%93Noll%E2%80%93Vo_hash_function>`_. While other hash functions 
+implementation of the 
+`Fowler-Noll-Vo hash function <https://en.wikipedia.org/wiki/Fowler-Noll-Vo_hash_function>`_. 
+
+While other hash functions 
 can be used, it is best just to leave this code alone.
 
 WordsMR: The word count class
@@ -204,7 +207,7 @@ We want each chunk to be approximately the same. We first determine a
 
 ::
 
-  uint64_t end = std::min(splitter_pos + chunk_size, data_size);  
+  uint64_t end = std::min(splitter_pos + chunk_size, data_size);
 
 Obviously, this end-point won't always work. What if we land in the middle of a 
 word? Therefore, we want to increment ``end`` until we hit a natural word 
@@ -218,7 +221,6 @@ following code:
             data[end] != ' ' && data[end] != '\t' && 
             data[end] != '\r' && data[end] != '\n')
             end++;
-	 
 
 Once we determine a valid end-point, we populate the inputted ``wc_string`` 
 object: 
@@ -226,7 +228,7 @@ object:
 ::
 
   out.data = data + splitter_pos;
-  out.len = end - splitter_pos; 
+  out.len = end - splitter_pos;
 
 The starting point is set to data pointer plus the starting value of 
 ``splitter_pos``. The length is determined by subtracting ``end`` from 
@@ -270,7 +272,6 @@ command line parsing:
    }	
   fname = argv[1];
   disp_num_str = argv[2];
- 
 
 We next open the file for reading, and get its size using the ``fstat`` function. 
 We ``malloc()`` a block of memory, and have the descriptor ``fdata`` point to 
@@ -290,7 +291,7 @@ maximum number of entries to display. If so, we update the variable
   // Get the number of results to display
   CHECK_ERROR((disp_num = (disp_num_str == NULL) ? 
                DEFAULT_DISP_NUM : atoi(disp_num_str)) <= 0);
-	 
+
 Now the magic happens: we run our MapReduce job. This is easily accomplished 
 in three lines. We first instantiate a ``result`` vector. We instantiate a 
 mapreduce job with the line: 
@@ -299,14 +300,14 @@ mapreduce job with the line:
 
   WordsMR mapReduce(fdata, finfo.st_size, 1024*1024);
 
- Here, ``fdata`` will bind to the data pointer in ``WordsMR``, ``finfo.st_size`` 
+Here, ``fdata`` will bind to the data pointer in ``WordsMR``, ``finfo.st_size`` 
 will bind to ``data_size`` and ``chunk_size`` wil be set to the quantity 
 ``1024*1024``. The following line just ensure the result array is non empty: 
 
 ::
 
   CHECK_ERROR( mapReduce.run(result) < 0);
-	 
+   
 The final part of the code prints out the top ``DEFAULT_DISP_NUM`` entries, 
 sorted in order of greatest to least count. Since the output of the MapReduce 
 task is in sorted descending order, it suffices just to print the first 
@@ -353,35 +354,35 @@ Let's look at this folder's directory structure:
 
 ::
 
-  ├── data
-  │   ├── dickens.txt
-  │   └── sherlock.txt
-  ├── Defines.mk
-  ├── docs
-  │   └── 2011.phoenixplus.mapreduce.pdf
-  ├── include
-  │   ├── atomic.h
-  │   ├── combiner.h
-  │   ├── container.h
-  │   ├── locality.h
-  │   ├── map_reduce.h
-  │   ├── processor.h
-  │   ├── scheduler.h
-  │   ├── stddefines.h
-  │   ├── synch.h
-  │   ├── task_queue.h
-  │   └── thread_pool.h
-  ├── lib
-  ├── Makefile
-  ├── README
-  ├── src
-  │   ├── Makefile
-  │   ├── task_queue.cpp
-  │   └── thread_pool.cpp
-  └── word_count
-      ├── Makefile
-      ├── README
-      ├── word_count.cpp
+  |-- data
+  |   |-- dickens.txt
+  |   |-- sherlock.txt
+  |-- Defines.mk
+  |-- docs
+  |   |-- 2011.phoenixplus.mapreduce.pdf
+  |-- include
+  |   |-- atomic.h
+  |   |-- combiner.h
+  |   |-- container.h
+  |   |-- locality.h
+  |   |-- map_reduce.h
+  |   |-- processor.h
+  |   |-- scheduler.h
+  |   |-- stddefines.h
+  |   |-- synch.h
+  |   |-- task_queue.h
+  |   |-- thread_pool.h
+  |-- lib
+  |-- Makefile
+  |-- README
+  |-- src
+  |   |-- Makefile
+  |   |-- task_queue.cpp
+  |   |-- thread_pool.cpp
+  |-- word_count
+      |-- Makefile
+      |-- README
+      |-- word_count.cpp
 
 The folder ``data`` contains some sample data files for you to play with. The 
 file ``Defines.mk`` contains many of the compiler flags and other directives 

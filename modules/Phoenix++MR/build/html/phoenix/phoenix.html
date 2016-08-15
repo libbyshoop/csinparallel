@@ -49,7 +49,7 @@
 <h2>Introduction<a class="headerlink" href="#introduction" title="Permalink to this headline">¶</a></h2>
 <p>In this section, we will discuss the Phoenix++ wordcount example in detail. You
 will need a basic knowledge of C/C++ to follow along with these concepts. You
-can download a copy of the Phoenix++ word count example <a class="reference external" href="phoenix++-wc.tar.gz">here</a>. We will start by looking at the file
+can download a copy of the Phoenix++ word count example <a class="reference external" href="http://d32ogoqmya1dw8.cloudfront.net/files/csinparallel/modules/code_data_phoenix_module.gz">here</a>. We will start by looking at the file
 <code class="docutils literal"><span class="pre">word_count.cpp</span></code>. At the top of the file, there are three structs we should
 pay attention to:</p>
 <div class="highlight-cpp"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
@@ -129,7 +129,9 @@ two &#8220;words&#8221;. At this point, you may be asking yourself, <em>but, how
 where a word ends?</em> Be patient; when we get to the main body of code, it will
 all become clear. The last struct contains only an operator definition for <code class="docutils literal"><span class="pre">()</span></code>,
 which requires a key of type <code class="docutils literal"><span class="pre">wc_count</span></code> as its single parameter. This is an
-implementation of the <a class="reference external" href="https://en.wikipedia.org/wiki/Fowler%E2%80%93Noll%E2%80%93Vo_hash_function">Fowler-Noll-Vo hash function</a>. While other hash functions
+implementation of the
+<a class="reference external" href="https://en.wikipedia.org/wiki/Fowler-Noll-Vo_hash_function">Fowler-Noll-Vo hash function</a>.</p>
+<p>While other hash functions
 can be used, it is best just to leave this code alone.</p>
 </div>
 <div class="section" id="wordsmr-the-word-count-class">
@@ -707,35 +709,35 @@ release at this link. The following instructions assume that you downloaded the
 </pre></div>
 </div>
 <p>Let&#8217;s look at this folder&#8217;s directory structure:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span>├── data
-│   ├── dickens.txt
-│   └── sherlock.txt
-├── Defines.mk
-├── docs
-│   └── 2011.phoenixplus.mapreduce.pdf
-├── include
-│   ├── atomic.h
-│   ├── combiner.h
-│   ├── container.h
-│   ├── locality.h
-│   ├── map_reduce.h
-│   ├── processor.h
-│   ├── scheduler.h
-│   ├── stddefines.h
-│   ├── synch.h
-│   ├── task_queue.h
-│   └── thread_pool.h
-├── lib
-├── Makefile
-├── README
-├── src
-│   ├── Makefile
-│   ├── task_queue.cpp
-│   └── thread_pool.cpp
-└── word_count
-    ├── Makefile
-    ├── README
-    ├── word_count.cpp
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="o">|--</span> <span class="n">data</span>
+<span class="o">|</span>   <span class="o">|--</span> <span class="n">dickens</span><span class="o">.</span><span class="n">txt</span>
+<span class="o">|</span>   <span class="o">|--</span> <span class="n">sherlock</span><span class="o">.</span><span class="n">txt</span>
+<span class="o">|--</span> <span class="n">Defines</span><span class="o">.</span><span class="n">mk</span>
+<span class="o">|--</span> <span class="n">docs</span>
+<span class="o">|</span>   <span class="o">|--</span> <span class="mf">2011.</span><span class="n">phoenixplus</span><span class="o">.</span><span class="n">mapreduce</span><span class="o">.</span><span class="n">pdf</span>
+<span class="o">|--</span> <span class="n">include</span>
+<span class="o">|</span>   <span class="o">|--</span> <span class="n">atomic</span><span class="o">.</span><span class="n">h</span>
+<span class="o">|</span>   <span class="o">|--</span> <span class="n">combiner</span><span class="o">.</span><span class="n">h</span>
+<span class="o">|</span>   <span class="o">|--</span> <span class="n">container</span><span class="o">.</span><span class="n">h</span>
+<span class="o">|</span>   <span class="o">|--</span> <span class="n">locality</span><span class="o">.</span><span class="n">h</span>
+<span class="o">|</span>   <span class="o">|--</span> <span class="n">map_reduce</span><span class="o">.</span><span class="n">h</span>
+<span class="o">|</span>   <span class="o">|--</span> <span class="n">processor</span><span class="o">.</span><span class="n">h</span>
+<span class="o">|</span>   <span class="o">|--</span> <span class="n">scheduler</span><span class="o">.</span><span class="n">h</span>
+<span class="o">|</span>   <span class="o">|--</span> <span class="n">stddefines</span><span class="o">.</span><span class="n">h</span>
+<span class="o">|</span>   <span class="o">|--</span> <span class="n">synch</span><span class="o">.</span><span class="n">h</span>
+<span class="o">|</span>   <span class="o">|--</span> <span class="n">task_queue</span><span class="o">.</span><span class="n">h</span>
+<span class="o">|</span>   <span class="o">|--</span> <span class="n">thread_pool</span><span class="o">.</span><span class="n">h</span>
+<span class="o">|--</span> <span class="n">lib</span>
+<span class="o">|--</span> <span class="n">Makefile</span>
+<span class="o">|--</span> <span class="n">README</span>
+<span class="o">|--</span> <span class="n">src</span>
+<span class="o">|</span>   <span class="o">|--</span> <span class="n">Makefile</span>
+<span class="o">|</span>   <span class="o">|--</span> <span class="n">task_queue</span><span class="o">.</span><span class="n">cpp</span>
+<span class="o">|</span>   <span class="o">|--</span> <span class="n">thread_pool</span><span class="o">.</span><span class="n">cpp</span>
+<span class="o">|--</span> <span class="n">word_count</span>
+    <span class="o">|--</span> <span class="n">Makefile</span>
+    <span class="o">|--</span> <span class="n">README</span>
+    <span class="o">|--</span> <span class="n">word_count</span><span class="o">.</span><span class="n">cpp</span>
 </pre></div>
 </div>
 <p>The folder <code class="docutils literal"><span class="pre">data</span></code> contains some sample data files for you to play with. The
@@ -837,7 +839,7 @@ A list of 321 common function words can be found at this link.</li>
     </div>
     <div class="footer" role="contentinfo">
         &copy; Copyright 2016, Suzanne J. Matthews.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.4.5.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.4.1.
     </div>
   </body>
 </html>
