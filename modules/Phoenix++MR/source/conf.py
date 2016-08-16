@@ -54,7 +54,7 @@ master_doc = 'index'
 
 # General information about the project.
 project = u'Introducing Students to MapReduce with Phoenix++'
-copyright = u'2016, Suzanne J. Matthews'
+copyright = u'This work is licensed under a Creative Commons Attribution-ShareAlike 3.0 Unported License'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
