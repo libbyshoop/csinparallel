@@ -426,19 +426,20 @@ the ``make`` command!
 - Run the word count program to print the top 20 words, the top 50 words, and 
   the top 100 words. How does the run-time change?
 
-- Most of the words that have been showing up are common short words, such as 
-  "and", "the", "of", "in", and "a". Modify the ``map()`` function to only 
-  print out words that are five characters or longer. What are the top ten 
-  words now? How does Charles Dickens' top 10 words differ from Arthur Conan 
-  Doyle's?
-
 - Use the setenv command to set the ``MR_NUMTHREADS`` environmental variable to 
   a user inutted number of threads in ``main.cpp``. Check the setenv 
   documentation for more details. 
 
 - Check the number of CPU cores on your machine by checking ``/proc/cpuinfo``. 
   Vary the number of threads from *1...c* where *c* is the number of CPU cores. 
-  Plot your timing results using Matplotlib.
+  Using ``sherlock.txt`` create files from sizes 100MB ... 500MB in increments
+  of 100MB. Plot your timing results using Matplotlib.
+
+- Most of the words that have been showing up are common short words, such as 
+  "and", "the", "of", "in", and "a". Modify the ``map()`` function to only 
+  print out words that are five characters or longer. What are the top ten 
+  words now? How does Charles Dickens' top 10 words differ from Arthur Conan 
+  Doyle's?
 
 - *Challenge*: The words that are showing up are still those that largely 
   reflect the grammar of an author's writing. These are known as function words. 
