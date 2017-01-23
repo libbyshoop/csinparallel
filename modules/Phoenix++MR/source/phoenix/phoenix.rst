@@ -433,7 +433,8 @@ the ``make`` command!
 - Check the number of CPU cores on your machine by checking ``/proc/cpuinfo``. 
   Vary the number of threads from *1...c* where *c* is the number of CPU cores. 
   Using ``sherlock.txt`` create files from sizes 100MB ... 500MB in increments
-  of 100MB. Plot your timing results using Matplotlib.
+  of 100MB. Calculate the speedup and the efficiency for each dataset on each 
+  core combination. Plot your results using Matplotlib.
 
 - Most of the words that have been showing up are common short words, such as 
   "and", "the", "of", "in", and "a". Modify the ``map()`` function to only 
