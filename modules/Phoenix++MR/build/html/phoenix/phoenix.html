@@ -776,17 +776,19 @@ the <code class="docutils literal"><span class="pre">make</span></code> command!
 <ul class="simple">
 <li>Run the word count program to print the top 20 words, the top 50 words, and
 the top 100 words. How does the run-time change?</li>
-<li>Most of the words that have been showing up are common short words, such as
-&#8220;and&#8221;, &#8220;the&#8221;, &#8220;of&#8221;, &#8220;in&#8221;, and &#8220;a&#8221;. Modify the <code class="docutils literal"><span class="pre">map()</span></code> function to only
-print out words that are five characters or longer. What are the top ten
-words now? How does Charles Dickens&#8217; top 10 words differ from Arthur Conan
-Doyle&#8217;s?</li>
 <li>Use the setenv command to set the <code class="docutils literal"><span class="pre">MR_NUMTHREADS</span></code> environmental variable to
 a user inutted number of threads in <code class="docutils literal"><span class="pre">main.cpp</span></code>. Check the setenv
 documentation for more details.</li>
 <li>Check the number of CPU cores on your machine by checking <code class="docutils literal"><span class="pre">/proc/cpuinfo</span></code>.
 Vary the number of threads from <em>1...c</em> where <em>c</em> is the number of CPU cores.
-Plot your timing results using Matplotlib.</li>
+Using <code class="docutils literal"><span class="pre">sherlock.txt</span></code> create files from sizes 100MB ... 500MB in increments
+of 100MB. Calculate the speedup and the efficiency for each dataset on each
+core combination. Plot your results using Matplotlib.</li>
+<li>Most of the words that have been showing up are common short words, such as
+&#8220;and&#8221;, &#8220;the&#8221;, &#8220;of&#8221;, &#8220;in&#8221;, and &#8220;a&#8221;. Modify the <code class="docutils literal"><span class="pre">map()</span></code> function to only
+print out words that are five characters or longer. What are the top ten
+words now? How does Charles Dickens&#8217; top 10 words differ from Arthur Conan
+Doyle&#8217;s?</li>
 <li><em>Challenge</em>: The words that are showing up are still those that largely
 reflect the grammar of an author&#8217;s writing. These are known as function words.
 Modify the <code class="docutils literal"><span class="pre">map()</span></code> function to <em>exclude</em> any words that are function words.
