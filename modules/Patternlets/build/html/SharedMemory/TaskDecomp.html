@@ -1,16 +1,14 @@
 
-
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-
 
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Task Decomposition Algorithm Strategies &mdash; Parallel Patternlets</title>
+    <title>Task Decomposition Algorithm Strategies &#8212; Parallel Patternlets</title>
     
-    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/csip.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     
     <script type="text/javascript">
@@ -19,20 +17,20 @@
         VERSION:     '',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
-        HAS_SOURCE:  true
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
       };
     </script>
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
     <link rel="shortcut icon" href="../_static/favicon.ico"/>
-    <link rel="top" title="Parallel Patternlets" href="../index.html" />
-    <link rel="up" title="Shared Memory Parallel Patternlets in OpenMP" href="OpenMP_Patternlets.html" />
+    <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="Categorizing Patterns" href="patterns_diagram.html" />
     <link rel="prev" title="Patterns used when threads share data values" href="MutualExclusion.html" /> 
   </head>
   <body>
-    <div class="related">
+    <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
@@ -41,15 +39,15 @@
         <li class="right" >
           <a href="MutualExclusion.html" title="Patterns used when threads share data values"
              accesskey="P">previous</a> |</li>
-        <li><a href="../index.html">Parallel Patternlets</a> &raquo;</li>
-          <li><a href="OpenMP_Patternlets.html" accesskey="U">Shared Memory Parallel Patternlets in OpenMP</a> &raquo;</li> 
+        <li class="nav-item nav-item-0"><a href="../index.html">Parallel Patternlets</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="OpenMP_Patternlets.html" accesskey="U">Shared Memory Parallel Patternlets in OpenMP</a> &#187;</li> 
       </ul>
     </div>  
 
     <div class="document">
       <div class="documentwrapper">
         <div class="bodywrapper">
-          <div class="body">
+          <div class="body" role="main">
             
   <div class="section" id="task-decomposition-algorithm-strategies">
 <h1>Task Decomposition Algorithm Strategies<a class="headerlink" href="#task-decomposition-algorithm-strategies" title="Permalink to this headline">¶</a></h1>
@@ -58,10 +56,12 @@
 <h2>16. Task Decomposition Algorithm Strategy using OpenMP section directive<a class="headerlink" href="#task-decomposition-algorithm-strategy-using-openmp-section-directive" title="Permalink to this headline">¶</a></h2>
 <p><em>file: openMP/16.sections/sections.c</em></p>
 <p><em>Build inside 16.sections directory:</em></p>
-<div class="highlight-python"><pre>make sections</pre>
+<div class="highlight-default"><div class="highlight"><pre><span class="n">make</span> <span class="n">sections</span>
+</pre></div>
 </div>
 <p><em>Execute on the command line inside 16.sections directory:</em></p>
-<div class="highlight-python"><pre>./sections</pre>
+<div class="highlight-default"><div class="highlight"><pre><span class="o">./</span><span class="n">sections</span>
+</pre></div>
 </div>
 <p>This example shows how to create a program with arbitrary separate tasks that run concurrently.  This is useful if you have tasks that are not dependent on one another.</p>
 <div class="highlight-c"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
@@ -110,7 +110,8 @@
 44
 45
 46
-47</pre></div></td><td class="code"><div class="highlight"><pre><span class="cm">/* sections.c</span>
+47
+48</pre></div></td><td class="code"><div class="highlight"><pre><span class="cm">/* sections.c</span>
 <span class="cm"> * ... illustrates the use of OpenMP&#39;s parallel section/sections directives,</span>
 <span class="cm"> *      which can be used for task parallelism...</span>
 <span class="cm"> *</span>
@@ -121,9 +122,9 @@
 <span class="cm"> * Exercise: Compile, run (several times), compare output to source code.</span>
 <span class="cm"> */</span>
 
-<span class="cp">#include &lt;stdio.h&gt;</span>
-<span class="cp">#include &lt;omp.h&gt;</span>
-<span class="cp">#include &lt;stdlib.h&gt;</span>
+<span class="cp">#include</span> <span class="cpf">&lt;stdio.h&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;omp.h&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;stdlib.h&gt;</span><span class="cp"></span>
 
 <span class="kt">int</span> <span class="nf">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span><span class="o">**</span> <span class="n">argv</span><span class="p">)</span> <span class="p">{</span>
 
@@ -157,6 +158,7 @@
 
     <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
 <span class="p">}</span>
+
 </pre></div>
 </td></tr></table></div>
 </div>
@@ -166,7 +168,7 @@
           </div>
         </div>
       </div>
-      <div class="sphinxsidebar">
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
             <p class="logo"><a href="../index.html">
               <img class="logo" src="../_static/CSInParallel200wide.png" alt="Logo"/>
@@ -189,7 +191,7 @@
       </div>
       <div class="clearer"></div>
     </div>
-    <div class="related">
+    <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
@@ -198,13 +200,13 @@
         <li class="right" >
           <a href="MutualExclusion.html" title="Patterns used when threads share data values"
              >previous</a> |</li>
-        <li><a href="../index.html">Parallel Patternlets</a> &raquo;</li>
-          <li><a href="OpenMP_Patternlets.html" >Shared Memory Parallel Patternlets in OpenMP</a> &raquo;</li> 
+        <li class="nav-item nav-item-0"><a href="../index.html">Parallel Patternlets</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="OpenMP_Patternlets.html" >Shared Memory Parallel Patternlets in OpenMP</a> &#187;</li> 
       </ul>
     </div>
-    <div class="footer">
-        &copy; Copyright This work is licensed under a Creative Commons Attribution-ShareAlike 3.0 Unported License.
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    <div class="footer" role="contentinfo">
+        &#169; Copyright This work is licensed under a Creative Commons Attribution-ShareAlike 3.0 Unported License.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.2.
     </div>
   </body>
 </html>

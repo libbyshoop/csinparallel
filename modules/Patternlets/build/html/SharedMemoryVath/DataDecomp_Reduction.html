@@ -1,0 +1,1168 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Data Decomposition Algorithm Strategies and Related Coordination Strategies &#8212; Parallel Patternlets</title>
+    
+    <link rel="stylesheet" href="../_static/csip.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Patterns used when threads share data values" href="MutualExclusion.html" />
+    <link rel="prev" title="Shared Memory Program Structure and Coordination Patterns" href="ProgStructure_Barrier.html" /> 
+  </head>
+  <body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="MutualExclusion.html" title="Patterns used when threads share data values"
+             accesskey="N">next</a></li>
+        <li class="right" >
+          <a href="ProgStructure_Barrier.html" title="Shared Memory Program Structure and Coordination Patterns"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Parallel Patternlets</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="Vath_pth_Patternlets.html" accesskey="U">Shared Memory Parallel Patternlets with Pthreads vath library</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="data-decomposition-algorithm-strategies-and-related-coordination-strategies">
+<h1>Data Decomposition Algorithm Strategies and Related Coordination Strategies<a class="headerlink" href="#data-decomposition-algorithm-strategies-and-related-coordination-strategies" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="shared-data-decomposition-algorithm-strategy-chunks-of-data-per-thread-using-a-parallel-for-loop-implementation-strategy">
+<h2>5. Shared Data Decomposition Algorithm Strategy:  chunks of data per thread using a parallel for loop implementation strategy<a class="headerlink" href="#shared-data-decomposition-algorithm-strategy-chunks-of-data-per-thread-using-a-parallel-for-loop-implementation-strategy" title="Permalink to this headline">¶</a></h2>
+<p><em>file: Vath_pth/05.parallelLoop-equalChunks/parallelLoopEqualChunks.C</em></p>
+<p><em>Build inside 05.parallelLoop-equalChunks directory:</em></p>
+<div class="highlight-default"><div class="highlight"><pre><span class="n">make</span> <span class="n">parallelLoopEqualChunks</span>
+</pre></div>
+</div>
+<p><em>Execute on the command line inside 05.parallelLoop-equalChunks directory:</em></p>
+<div class="highlight-default"><div class="highlight"><pre><span class="o">./</span><span class="n">parallelLoopEqualChunks</span> <span class="mi">4</span>
+<span class="n">Replace</span> <span class="mi">4</span> <span class="k">with</span> <span class="n">other</span> <span class="n">values</span> <span class="k">for</span> <span class="n">the</span> <span class="n">number</span> <span class="n">of</span> <span class="n">threads</span><span class="p">,</span> <span class="ow">or</span> <span class="n">leave</span> <span class="n">off</span>
+</pre></div>
+</div>
+<p>An iterative for loop is a remarkably common pattern in all programming, primarily used to
+perform a calculation N times, often over a set of data containing N elements, using each
+element in turn inside the for loop.  If there are no dependencies between the calculations
+(i.e. the order of them is not important), then the code inside the loop can be split
+between forked threads.  When doing this, a decision the programmer needs to make is to
+decide how to partition the work between the threads by answering this question:</p>
+<ul class="simple">
+<li>How many and which iterations of the loop will each thread complete on its own?</li>
+</ul>
+<p>We refer to this as the <strong>data decomposition</strong> pattern because we are decomposing the
+amount of work to be done (typically on a set of data) across multiple threads.
+In the following code, this is done in Pthreads by using the vath library function
+<em>ThreadRange()</em> inside of the thread function (line 39) in the following code.</p>
+<div class="highlight-c++"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60</pre></div></td><td class="code"><div class="highlight"><pre><span class="cm">/*</span>
+<span class="cm"> * Using Victor Alessandrini&#39;s vath_pth library.</span>
+<span class="cm"> *</span>
+<span class="cm"> * parallelLoopEqualChunks.C</span>
+<span class="cm"> * ... illustrates the use of parallel for loop in which</span>
+<span class="cm"> * 		threads iterate through equal sized chunks of the index range</span>
+<span class="cm"> * 		Ex.  thread 1 [0, 1, 2 ... 7], thread 2 [8, 9 ... 15]</span>
+<span class="cm"> *</span>
+<span class="cm"> * Modeled from code provided by Joel Adams, Calvin College, November 2009.</span>
+<span class="cm"> * Hannah Sonsalla, Macalester College, 2017.</span>
+<span class="cm"> *</span>
+<span class="cm"> * Usage: ./parallelLoopEqualChunks [numThreads]</span>
+<span class="cm"> *</span>
+<span class="cm"> * Exercise</span>
+<span class="cm"> * - Compile and run, comparing output to source code</span>
+<span class="cm"> * - try with different numbers of threads, e.g.: 2, 3, 4, 6, 8</span>
+<span class="cm"> */</span>
+
+<span class="cp">#include</span> <span class="cpf">&lt;stdlib.h&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;stdio.h&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;SPool.h&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;pthread.h&gt;</span><span class="cp"></span>
+
+<span class="n">SPool</span> <span class="o">*</span><span class="n">TH</span><span class="p">;</span>
+<span class="k">const</span> <span class="kt">int</span> <span class="n">REPS</span> <span class="o">=</span> <span class="mi">16</span><span class="p">;</span>
+
+<span class="c1">// -------------------</span>
+<span class="c1">// Worker threads code</span>
+<span class="c1">// -------------------</span>
+
+<span class="kt">void</span> <span class="nf">thread_fct</span><span class="p">(</span><span class="kt">void</span> <span class="o">*</span><span class="n">idp</span><span class="p">)</span>  <span class="p">{</span>
+    <span class="c1">// ThreadRange() computes index range for worker thread from index range.</span>
+    <span class="c1">// Function knows rank of worker thread and number of threads.</span>
+    <span class="kt">int</span> <span class="n">beg</span><span class="p">,</span> <span class="n">end</span><span class="p">;</span>
+    <span class="n">beg</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>                    <span class="c1">// initialize [beg, end) to global range</span>
+    <span class="n">end</span> <span class="o">=</span> <span class="n">REPS</span><span class="p">;</span>
+
+    <span class="n">TH</span><span class="o">-&gt;</span><span class="n">ThreadRange</span><span class="p">(</span><span class="n">beg</span><span class="p">,</span> <span class="n">end</span><span class="p">);</span>  <span class="c1">// now [beg, end) is sub-range for this thread</span>
+
+    <span class="kt">int</span> <span class="n">rank</span> <span class="o">=</span> <span class="n">TH</span><span class="o">-&gt;</span><span class="n">GetRank</span><span class="p">();</span>
+
+    <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="n">beg</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">end</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span>  <span class="p">{</span>
+        <span class="n">printf</span><span class="p">(</span><span class="s">&quot;Thread %d performed iteration %d</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">rank</span><span class="p">,</span> <span class="n">i</span><span class="p">);</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span> <span class="o">**</span><span class="n">argv</span><span class="p">)</span>  <span class="p">{</span>
+    <span class="kt">int</span> <span class="n">numThreads</span><span class="p">;</span>
+
+    <span class="k">if</span><span class="p">(</span><span class="n">argc</span><span class="o">==</span><span class="mi">2</span><span class="p">)</span> <span class="n">numThreads</span> <span class="o">=</span> <span class="n">atoi</span><span class="p">(</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">]);</span>
+    <span class="k">else</span> <span class="n">numThreads</span> <span class="o">=</span> <span class="mi">4</span><span class="p">;</span>
+
+    <span class="n">TH</span> <span class="o">=</span> <span class="k">new</span> <span class="n">SPool</span><span class="p">(</span><span class="n">numThreads</span><span class="p">);</span>
+    <span class="n">TH</span><span class="o">-&gt;</span><span class="n">Dispatch</span><span class="p">(</span><span class="n">thread_fct</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">);</span>
+    <span class="n">TH</span><span class="o">-&gt;</span><span class="n">WaitForIdle</span><span class="p">();</span>
+
+
+    <span class="k">delete</span> <span class="n">TH</span><span class="p">;</span>
+    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</td></tr></table></div>
+<p>Once you run this code, verify that the default behavior for this function is this
+sort of decomposition of iterations of the loop to threads, when you set the
+number of threads to 4 on the command line:</p>
+<img alt="../_images/ParalleFor_Chunks-4_threads-11.png" src="../_images/ParalleFor_Chunks-4_threads-11.png" />
+<p>What happens when the number of iterations (16 in this code) is not evenly divisible by the number of threads?
+Try several cases to be certain how the compiler splits up the work.
+This type of decomposition is commonly used when accessing data that is stored in
+consecutive memory locations (such as an array) that might be cached by each thread.</p>
+</div>
+<div class="section" id="shared-data-decomposition-algorithm-strategy-one-iteration-per-thread-in-a-parallel-for-loop-implementation-strategy">
+<h2>6. Shared Data Decomposition Algorithm Strategy:  one iteration per thread in a parallel for loop implementation strategy<a class="headerlink" href="#shared-data-decomposition-algorithm-strategy-one-iteration-per-thread-in-a-parallel-for-loop-implementation-strategy" title="Permalink to this headline">¶</a></h2>
+<p><em>file: Vath_pth/06.parallelLoop-ChunksOf1/parallelLoopChunksOf1.C</em></p>
+<p><em>Build inside 06.parallelLoop-ChunksOf1 directory:</em></p>
+<div class="highlight-default"><div class="highlight"><pre><span class="n">make</span> <span class="n">parallelLoopChunksOf1</span>
+</pre></div>
+</div>
+<p><em>Execute on the command line inside 06.parallelLoop-ChunksOf1 directory:</em></p>
+<div class="highlight-default"><div class="highlight"><pre><span class="o">./</span><span class="n">parallelLoopChunksOf1</span> <span class="mi">4</span>
+<span class="n">Replace</span> <span class="mi">4</span> <span class="k">with</span> <span class="n">other</span> <span class="n">values</span> <span class="k">for</span> <span class="n">the</span> <span class="n">number</span> <span class="n">of</span> <span class="n">threads</span>
+</pre></div>
+</div>
+<p>You can imagine other ways of assigning threads to iterations of a loop besides that
+shown above for four threads and 16 iterations.  A simple decomposition sometimes used
+when your loop is not accessing consecutive memory locations would be to let each
+thread do one iteration, up to N threads, then start again with thread 1 taking the next iteration.
+Section A in the code is an explicit way of doing it in Pthreads.</p>
+<div class="highlight-c++"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52</pre></div></td><td class="code"><div class="highlight"><pre><span class="cm">/*</span>
+<span class="cm"> * Using Victor Alessandrini&#39;s vath_pth library.</span>
+<span class="cm"> *</span>
+<span class="cm"> * parallelLoopChunksOf1.C</span>
+<span class="cm"> * ... illustrates the use of parallel for loop in which</span>
+<span class="cm"> * 		threads iterate through chunks of size 1 of the index range</span>
+<span class="cm"> * 		Ex.  thread 1 [0, 2, ... 14], thread 2 [1, 3 ... 15]</span>
+<span class="cm"> *</span>
+<span class="cm"> * Modeled from code provided by Joel Adams, Calvin College, November 2009.</span>
+<span class="cm"> * Hannah Sonsalla, Macalester College, 2017.</span>
+<span class="cm"> *</span>
+<span class="cm"> * Usage: ./parallelLoopChunksOf1 [numThreads]</span>
+<span class="cm"> *</span>
+<span class="cm"> * Exercise</span>
+<span class="cm"> * - Compile and run, comparing output to source code</span>
+<span class="cm"> * - try with different numbers of threads, e.g.: 2, 3, 4, 6, 8</span>
+<span class="cm"> */</span>
+
+<span class="cp">#include</span> <span class="cpf">&lt;stdlib.h&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;stdio.h&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;SPool.h&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;pthread.h&gt;</span><span class="cp"></span>
+
+<span class="n">SPool</span> <span class="o">*</span><span class="n">TH</span><span class="p">;</span>
+<span class="k">const</span> <span class="kt">int</span> <span class="n">REPS</span> <span class="o">=</span> <span class="mi">16</span><span class="p">;</span>
+<span class="kt">int</span> <span class="n">numThreads</span><span class="p">;</span>
+
+<span class="c1">// -------------------</span>
+<span class="c1">// Worker threads code</span>
+<span class="c1">// -------------------</span>
+
+<span class="kt">void</span> <span class="nf">thread_fct</span><span class="p">(</span><span class="kt">void</span> <span class="o">*</span><span class="n">idp</span><span class="p">)</span>  <span class="p">{</span>
+
+    <span class="kt">int</span> <span class="n">rank</span> <span class="o">=</span> <span class="n">TH</span><span class="o">-&gt;</span><span class="n">GetRank</span><span class="p">();</span>
+
+    <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="n">rank</span> <span class="o">-</span> <span class="mi">1</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">REPS</span><span class="p">;</span> <span class="n">i</span><span class="o">+=</span><span class="n">numThreads</span><span class="p">)</span>  <span class="p">{</span>         <span class="c1">//Section A</span>
+        <span class="n">printf</span><span class="p">(</span><span class="s">&quot;Thread %d performed iteration %d</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">rank</span><span class="p">,</span> <span class="n">i</span><span class="p">);</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span> <span class="o">**</span><span class="n">argv</span><span class="p">)</span>  <span class="p">{</span>
+
+    <span class="k">if</span><span class="p">(</span><span class="n">argc</span><span class="o">==</span><span class="mi">2</span><span class="p">)</span> <span class="n">numThreads</span> <span class="o">=</span> <span class="n">atoi</span><span class="p">(</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">]);</span>
+    <span class="k">else</span> <span class="n">numThreads</span> <span class="o">=</span> <span class="mi">4</span><span class="p">;</span>
+
+    <span class="n">TH</span> <span class="o">=</span> <span class="k">new</span> <span class="n">SPool</span><span class="p">(</span><span class="n">numThreads</span><span class="p">);</span>
+    <span class="n">TH</span><span class="o">-&gt;</span><span class="n">Dispatch</span><span class="p">(</span><span class="n">thread_fct</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">);</span>
+    <span class="n">TH</span><span class="o">-&gt;</span><span class="n">WaitForIdle</span><span class="p">();</span>
+
+    <span class="k">delete</span> <span class="n">TH</span><span class="p">;</span>
+    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</td></tr></table></div>
+</div>
+<div class="section" id="shared-data-decomposition-algorithm-strategy-revisited">
+<h2>7.  Shared Data Decomposition Algorithm Strategy: Revisited<a class="headerlink" href="#shared-data-decomposition-algorithm-strategy-revisited" title="Permalink to this headline">¶</a></h2>
+<p><em>file: Vath_pth/07.parallelLoop-Revisited/parallelLoopRevisited.C</em></p>
+<p><em>Build inside 07.parallelLoop-Revisited directory:</em></p>
+<div class="highlight-default"><div class="highlight"><pre><span class="n">make</span> <span class="n">parallelLoopRevisited</span>
+</pre></div>
+</div>
+<p><em>Execute on the command line inside 07.parallelLoop-Revisited directory:</em></p>
+<div class="highlight-default"><div class="highlight"><pre><span class="o">./</span><span class="n">parallelLoopRevisited</span> <span class="mi">4</span>
+<span class="n">Replace</span> <span class="mi">4</span> <span class="k">with</span> <span class="n">other</span> <span class="n">values</span> <span class="k">for</span> <span class="n">the</span> <span class="n">number</span> <span class="n">of</span> <span class="n">threads</span>
+</pre></div>
+</div>
+<p>The following example computes factorials for the numbers 2 through 1024, placing the result in an array.
+This array of results is the data in this data decomposition pattern. Since each number will
+take a different amount of time to compute, this is a case where not using consecutive iterations of the
+work improves the performance. Try the tasks listed in the header of the code shown below to see this.</p>
+<div class="highlight-c++"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>  1
+  2
+  3
+  4
+  5
+  6
+  7
+  8
+  9
+ 10
+ 11
+ 12
+ 13
+ 14
+ 15
+ 16
+ 17
+ 18
+ 19
+ 20
+ 21
+ 22
+ 23
+ 24
+ 25
+ 26
+ 27
+ 28
+ 29
+ 30
+ 31
+ 32
+ 33
+ 34
+ 35
+ 36
+ 37
+ 38
+ 39
+ 40
+ 41
+ 42
+ 43
+ 44
+ 45
+ 46
+ 47
+ 48
+ 49
+ 50
+ 51
+ 52
+ 53
+ 54
+ 55
+ 56
+ 57
+ 58
+ 59
+ 60
+ 61
+ 62
+ 63
+ 64
+ 65
+ 66
+ 67
+ 68
+ 69
+ 70
+ 71
+ 72
+ 73
+ 74
+ 75
+ 76
+ 77
+ 78
+ 79
+ 80
+ 81
+ 82
+ 83
+ 84
+ 85
+ 86
+ 87
+ 88
+ 89
+ 90
+ 91
+ 92
+ 93
+ 94
+ 95
+ 96
+ 97
+ 98
+ 99
+100
+101
+102
+103
+104
+105
+106
+107
+108
+109
+110
+111
+112
+113
+114
+115
+116
+117
+118
+119
+120
+121
+122
+123
+124
+125
+126
+127
+128
+129
+130
+131</pre></div></td><td class="code"><div class="highlight"><pre><span class="cm">/*</span>
+<span class="cm"> * parallelLoopRevisited.C</span>
+<span class="cm"> *</span>
+<span class="cm"> *  Using Victor Alessandrini&#39;s vath_pth library.</span>
+<span class="cm"> *  ... computes a table of factorial values,</span>
+<span class="cm"> *  using Owen Astrachan&#39;s BigInt class.</span>
+<span class="cm"> *</span>
+<span class="cm"> * Modeled from code provided by Joel Adams, Calvin College, November 2009.</span>
+<span class="cm"> * Hannah Sonsalla, Macalester College, 2017.</span>
+<span class="cm"> *</span>
+<span class="cm"> * Usage: ./parallelLoopRevisited [numThreads]</span>
+<span class="cm"> *</span>
+<span class="cm"> * Exercise:</span>
+<span class="cm"> *    Note: computing factorials on the left side of the table</span>
+<span class="cm"> *          will take less time than computing factorials on right side.</span>
+<span class="cm"> *          Ex.  5! should be computed faster than 1000!</span>
+<span class="cm"> *  - Build and run, record sequential run time in a spreadsheet</span>
+<span class="cm"> *  - Comment out line A and uncomment section B, rebuild,</span>
+<span class="cm"> *      run using 2, 4, 6, 8, ... threads, record run times.</span>
+<span class="cm"> *      Work is split evenly into sequential chunks.</span>
+<span class="cm"> *      Ex. [1....20][20 ... 40][40 ... 60] etc.</span>
+<span class="cm"> *  - Comment out section C and uncomment section D, rebuild,</span>
+<span class="cm"> *      run using 2, 4, 6, 8, ... threads, record run times.</span>
+<span class="cm"> *      Work is split evenly based on number of threads into chunks.</span>
+<span class="cm"> *      Ex.  4 threads: [1, 5, 9, 13 ...][2, 6, 10, 14 ...] etc.</span>
+<span class="cm"> *  - Create a line chart plotting run times vs # of threads.</span>
+<span class="cm"> *</span>
+<span class="cm"> */</span>
+
+<span class="cp">#include</span> <span class="cpf">&lt;stdlib.h&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;SPool.h&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;pthread.h&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;cassert&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;CpuTimer.h&gt;   // CPU timer</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&quot;BigInt.h&quot;</span><span class="cp"></span>
+
+<span class="c1">// global variables</span>
+<span class="n">SPool</span> <span class="o">*</span><span class="n">TH</span><span class="p">;</span>
+<span class="kt">int</span> <span class="n">numThreads</span><span class="p">;</span>
+<span class="cp">#define MAX  1024</span>
+<span class="n">BigInt</span> <span class="n">factorialTable</span><span class="p">[</span><span class="n">MAX</span><span class="o">+</span><span class="mi">1</span><span class="p">];</span>
+
+<span class="c1">// -------------------</span>
+<span class="c1">// Factorial function</span>
+<span class="c1">// -------------------</span>
+<span class="n">BigInt</span> <span class="nf">factorial</span><span class="p">(</span><span class="kt">unsigned</span> <span class="n">number</span><span class="p">)</span>  <span class="p">{</span>
+    <span class="n">BigInt</span> <span class="n">result</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>  <span class="c1">// 0! or 1!</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">number</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">)</span>  <span class="p">{</span>
+        <span class="k">for</span> <span class="p">(</span><span class="kt">unsigned</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">2</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;=</span> <span class="n">number</span><span class="p">;</span> <span class="n">i</span> <span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+            <span class="n">result</span> <span class="o">*=</span> <span class="n">i</span><span class="p">;</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="n">result</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="c1">// -------------------</span>
+<span class="c1">// Worker threads code for parallel factorial</span>
+<span class="c1">// -------------------</span>
+
+<span class="kt">void</span> <span class="nf">thread_fct</span><span class="p">(</span><span class="kt">void</span> <span class="o">*</span><span class="n">idp</span><span class="p">)</span>  <span class="p">{</span>
+
+    <span class="kt">int</span> <span class="n">beg</span><span class="p">,</span> <span class="n">end</span><span class="p">;</span>
+    <span class="n">beg</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>                                    <span class="c1">// Section C</span>
+    <span class="n">end</span> <span class="o">=</span> <span class="n">MAX</span><span class="p">;</span>
+    <span class="n">TH</span><span class="o">-&gt;</span><span class="n">ThreadRange</span><span class="p">(</span><span class="n">beg</span><span class="p">,</span> <span class="n">end</span><span class="p">);</span>
+
+    <span class="k">for</span> <span class="p">(</span><span class="kt">unsigned</span> <span class="n">i</span> <span class="o">=</span> <span class="n">beg</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">end</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+	<span class="n">factorialTable</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">factorial</span><span class="p">(</span><span class="n">i</span><span class="p">);</span>       <span class="c1">// Section C</span>
+    <span class="p">}</span>
+
+    <span class="cm">/*</span>
+<span class="cm">    unsigned rank = TH -&gt;GetRank();</span>
+<span class="cm">    for (unsigned i = rank - 1; i &lt; MAX; i+=numThreads) {    // Section D</span>
+<span class="cm">        factorialTable[i] = factorial(i);</span>
+<span class="cm">    }</span>
+<span class="cm">    */</span>
+<span class="p">}</span>
+
+<span class="c1">// -------------------</span>
+<span class="c1">// Sequential factorial</span>
+<span class="c1">// -------------------</span>
+<span class="kt">void</span> <span class="nf">seqFactorial</span><span class="p">(){</span>
+    <span class="k">for</span> <span class="p">(</span><span class="kt">unsigned</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;=</span> <span class="n">MAX</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">factorialTable</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">factorial</span><span class="p">(</span><span class="n">i</span><span class="p">);</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span> <span class="o">**</span><span class="n">argv</span><span class="p">)</span>  <span class="p">{</span>
+    <span class="n">CpuTimer</span> <span class="n">TR</span><span class="p">;</span>
+
+    <span class="k">if</span><span class="p">(</span><span class="n">argc</span><span class="o">==</span><span class="mi">2</span><span class="p">)</span> <span class="n">numThreads</span> <span class="o">=</span> <span class="n">atoi</span><span class="p">(</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">]);</span>
+    <span class="k">else</span> <span class="n">numThreads</span> <span class="o">=</span> <span class="mi">4</span><span class="p">;</span>
+
+    <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;</span><span class="se">\n</span><span class="s">Depending on the speed of your computer,&quot;</span>
+             <span class="o">&lt;&lt;</span> <span class="s">&quot;</span><span class="se">\n</span><span class="s">  this program may take a while to complete,&quot;</span>
+             <span class="o">&lt;&lt;</span> <span class="s">&quot;</span><span class="se">\n</span><span class="s">  so please wait patiently...</span><span class="se">\n</span><span class="s">&quot;</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+
+    <span class="cm">/* Calculate factorial */</span>
+    <span class="n">BigInt</span> <span class="n">result</span><span class="p">;</span>
+    <span class="n">TH</span> <span class="o">=</span> <span class="k">new</span> <span class="n">SPool</span><span class="p">(</span><span class="n">numThreads</span><span class="p">);</span>
+    <span class="n">TR</span><span class="p">.</span><span class="n">Start</span><span class="p">();</span>
+
+    <span class="n">seqFactorial</span><span class="p">();</span>   <span class="c1">// ~21 secs            // Line A</span>
+
+    <span class="cm">/*</span>
+<span class="cm">    TH-&gt;Dispatch(thread_fct, NULL);      // Section B</span>
+<span class="cm">    TH-&gt;WaitForIdle();</span>
+<span class="cm">    */</span>
+
+    <span class="n">TR</span><span class="p">.</span><span class="n">Stop</span><span class="p">();</span>
+    <span class="n">TR</span><span class="p">.</span><span class="n">Report</span><span class="p">();</span>
+
+    <span class="c1">// run a few tests to validate the results</span>
+    <span class="n">assert</span><span class="p">(</span> <span class="n">factorialTable</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="mi">1</span> <span class="p">);</span>
+    <span class="n">assert</span><span class="p">(</span> <span class="n">factorialTable</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="mi">1</span> <span class="p">);</span>
+    <span class="n">assert</span><span class="p">(</span> <span class="n">factorialTable</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">==</span> <span class="mi">2</span> <span class="p">);</span>
+    <span class="n">assert</span><span class="p">(</span> <span class="n">factorialTable</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="o">==</span> <span class="mi">6</span> <span class="p">);</span>
+    <span class="n">assert</span><span class="p">(</span> <span class="n">factorialTable</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span> <span class="o">==</span> <span class="mi">24</span> <span class="p">);</span>
+    <span class="n">assert</span><span class="p">(</span> <span class="n">factorialTable</span><span class="p">[</span><span class="mi">5</span><span class="p">]</span> <span class="o">==</span> <span class="mi">120</span> <span class="p">);</span>
+    <span class="n">assert</span><span class="p">(</span> <span class="n">factorialTable</span><span class="p">[</span><span class="mi">32</span><span class="p">]</span> <span class="o">==</span> <span class="n">BigInt</span><span class="p">(</span><span class="s">&quot;263130836933693530167218012160000000&quot;</span><span class="p">)</span> <span class="p">);</span>
+    <span class="n">assert</span><span class="p">(</span> <span class="n">factorialTable</span><span class="p">[</span><span class="mi">100</span><span class="p">]</span> <span class="o">==</span> <span class="n">BigInt</span><span class="p">(</span> <span class="n">string</span><span class="p">(</span><span class="s">&quot;9332621544394415268169923885&quot;</span><span class="p">)</span>
+			                            <span class="o">+</span> <span class="s">&quot;6266700490715968264381621468&quot;</span>
+						    <span class="o">+</span> <span class="s">&quot;5929638952175999932299156089&quot;</span>
+						    <span class="o">+</span> <span class="s">&quot;4146397615651828625369792082&quot;</span>
+						    <span class="o">+</span> <span class="s">&quot;7223758251185210916864000000&quot;</span>
+						    <span class="o">+</span> <span class="s">&quot;000000000000000000&quot;</span> <span class="p">)</span> <span class="p">);</span>
+
+    <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;All tests passed!</span><span class="se">\n</span><span class="s">&quot;</span> <span class="o">&lt;&lt;</span> <span class="n">flush</span><span class="p">;</span>
+    <span class="k">delete</span> <span class="n">TH</span><span class="p">;</span>
+    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</td></tr></table></div>
+</div>
+<div class="section" id="coordination-using-collective-communication-reduction">
+<h2>8. Coordination Using Collective Communication: Reduction<a class="headerlink" href="#coordination-using-collective-communication-reduction" title="Permalink to this headline">¶</a></h2>
+<p><em>file: Vath_pth/08.reduction/reduction.C</em></p>
+<p><em>Build inside 08.reduction directory:</em></p>
+<div class="highlight-default"><div class="highlight"><pre><span class="n">make</span> <span class="n">reduction</span>
+</pre></div>
+</div>
+<p><em>Execute on the command line inside 08.reduction directory:</em></p>
+<div class="highlight-default"><div class="highlight"><pre><span class="o">./</span><span class="n">reduction</span> <span class="mi">4</span>
+<span class="n">Replace</span> <span class="mi">4</span> <span class="k">with</span> <span class="n">other</span> <span class="n">values</span> <span class="k">for</span> <span class="n">the</span> <span class="n">number</span> <span class="n">of</span> <span class="n">threads</span><span class="p">,</span> <span class="ow">or</span> <span class="n">leave</span> <span class="n">off</span>
+</pre></div>
+</div>
+<p>Once threads have performed independent concurrent computations, possibly
+on some portion of decomposed data, it is quite common to then <em>reduce</em>
+those individual computations into one value. This type of operation is
+called a <strong>collective communication</strong> pattern because the threads must somehow
+work together to create the final desired single value.</p>
+<p>In this example, an array of randomly assigned doubles represents a set of shared data (a more
+realistic program would perform a computation that creates meaningful data values; this is just an example).
+Note the common sequential code pattern found in the function called <em>sequentialSum</em> in the code
+below (starting line 58): a for loop is used to sum up all the values in the array.</p>
+<p>Next let’s consider how this can be done in parallel with threads.
+Somehow the threads must <cite>communicate</cite> to keep the overall sum updated
+as each of them works on a portion of the array. The <em>Reduction &lt;T&gt;</em> utility
+from the vath library is used. This class contains a mutex that guards operations
+that are performed on the shared variable. A Reduction object is created on
+line 32 that can be used to accumulate the values in the array. In the thread worker
+function, line 52 shows how to sum partial results to a shared variable.
+Each thread has the shared variable accumulate their partial result. Therefore,
+at completion all values in the array are summed together.</p>
+<div class="highlight-c++"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73
+74
+75
+76
+77
+78
+79
+80
+81
+82
+83
+84
+85
+86
+87
+88
+89
+90
+91
+92
+93
+94
+95
+96
+97</pre></div></td><td class="code"><div class="highlight"><pre><span class="cm">/*</span>
+<span class="cm"> * reduction.C</span>
+<span class="cm"> *</span>
+<span class="cm"> * Using Victor Alessandrini&#39;s vath_pth library.</span>
+<span class="cm"> * ... illustrates use of reduction</span>
+<span class="cm"> *</span>
+<span class="cm"> * Modeled from code provided by Joel Adams, Calvin College, November 2009.</span>
+<span class="cm"> * Hannah Sonsalla, Macalester College, 2017.</span>
+<span class="cm"> *</span>
+<span class="cm"> * Usage: ./reduction [numThreads]</span>
+<span class="cm"> *</span>
+<span class="cm"> * Exercise:</span>
+<span class="cm"> * - Compile and run. Note that correct output is produced by</span>
+<span class="cm"> *	   sequential sum (sequentialSum) and parallel sum with reduction</span>
+<span class="cm"> * 	   (reductionSum &amp; RD). Incorrect output is obtained by parallel</span>
+<span class="cm"> *     sum without using reduction (noReduceSum).</span>
+<span class="cm"> */</span>
+
+<span class="cp">#include</span> <span class="cpf">&lt;stdlib.h&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;stdio.h&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;SPool.h&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;pthread.h&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;Rand.h&gt;  // random generator</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;Reduction.h&gt;  // reduction</span><span class="cp"></span>
+
+<span class="cp">#define SIZE 1000000</span>
+
+<span class="c1">// global variables</span>
+<span class="kt">double</span> <span class="n">array</span><span class="p">[</span><span class="n">SIZE</span><span class="p">];</span>
+<span class="kt">double</span> <span class="n">noReduceSum</span><span class="p">;</span>     <span class="c1">// used for parallel sum w/out reduction</span>
+<span class="n">Reduction</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span> <span class="n">RD</span><span class="p">;</span>   <span class="c1">// Reduction: accumulator of doubles</span>
+<span class="n">SPool</span> <span class="o">*</span><span class="n">TH</span><span class="p">;</span>
+
+<span class="c1">// -------------------</span>
+<span class="c1">// Worker threads code for parallel sum (with and without reduction)</span>
+<span class="c1">// -------------------</span>
+
+<span class="kt">void</span> <span class="nf">thread_fct</span><span class="p">(</span><span class="kt">void</span> <span class="o">*</span><span class="n">idp</span><span class="p">)</span>  <span class="p">{</span>
+    <span class="kt">double</span> <span class="n">reductionSum</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">;</span>
+
+    <span class="kt">int</span> <span class="n">beg</span><span class="p">,</span> <span class="n">end</span><span class="p">;</span>
+    <span class="n">beg</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="n">end</span> <span class="o">=</span> <span class="n">SIZE</span><span class="p">;</span>
+    <span class="n">TH</span><span class="o">-&gt;</span><span class="n">ThreadRange</span><span class="p">(</span><span class="n">beg</span><span class="p">,</span> <span class="n">end</span><span class="p">);</span>
+
+    <span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="n">beg</span><span class="p">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="n">end</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span>  <span class="p">{</span>
+        <span class="n">reductionSum</span> <span class="o">+=</span> <span class="n">array</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>   <span class="c1">// accumulate results in parallel reduction sum</span>
+	<span class="n">noReduceSum</span> <span class="o">+=</span> <span class="n">array</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>    <span class="c1">// and sum without reduction</span>
+    <span class="p">}</span>
+
+    <span class="n">RD</span><span class="p">.</span><span class="n">Accumulate</span><span class="p">(</span><span class="n">reductionSum</span><span class="p">);</span>   <span class="c1">// Reduction: accumulate double parallelSum indside RD</span>
+<span class="p">}</span>
+
+<span class="c1">// -------------------</span>
+<span class="c1">// Sequential sum</span>
+<span class="c1">// -------------------</span>
+<span class="kt">double</span> <span class="nf">seqSum</span><span class="p">(</span><span class="kt">double</span> <span class="o">*</span><span class="n">a</span><span class="p">,</span> <span class="kt">int</span> <span class="n">n</span><span class="p">)</span>  <span class="p">{</span>
+    <span class="kt">double</span> <span class="n">sum</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="n">n</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="n">sum</span> <span class="o">+=</span> <span class="n">array</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+    <span class="k">return</span> <span class="n">sum</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="c1">// -------------------</span>
+<span class="c1">// Initialize array with random values in [0, 1]</span>
+<span class="c1">// -------------------</span>
+<span class="kt">void</span> <span class="nf">initialize</span><span class="p">(</span><span class="kt">double</span> <span class="o">*</span><span class="n">a</span><span class="p">,</span> <span class="kt">int</span> <span class="n">n</span><span class="p">)</span>  <span class="p">{</span>
+    <span class="n">Rand</span> <span class="n">R</span><span class="p">(</span><span class="mi">999</span><span class="p">);</span>       <span class="c1">// random generator</span>
+    <span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="n">n</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="n">array</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">R</span><span class="p">.</span><span class="n">draw</span><span class="p">();</span>
+<span class="p">}</span>
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span> <span class="o">**</span><span class="n">argv</span><span class="p">)</span>  <span class="p">{</span>
+    <span class="kt">int</span> <span class="n">numThreads</span><span class="p">;</span>
+
+    <span class="kt">double</span> <span class="n">sequentialSum</span><span class="p">;</span>
+
+    <span class="k">if</span><span class="p">(</span><span class="n">argc</span><span class="o">==</span><span class="mi">2</span><span class="p">)</span> <span class="n">numThreads</span> <span class="o">=</span> <span class="n">atoi</span><span class="p">(</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">]);</span>
+    <span class="k">else</span> <span class="n">numThreads</span> <span class="o">=</span> <span class="mi">4</span><span class="p">;</span>
+
+    <span class="cm">/* Fill array with random numbers*/</span>
+    <span class="n">initialize</span><span class="p">(</span><span class="n">array</span><span class="p">,</span> <span class="n">SIZE</span><span class="p">);</span>
+
+    <span class="cm">/* Sum the array sequentially */</span>
+    <span class="n">sequentialSum</span> <span class="o">=</span> <span class="n">seqSum</span><span class="p">(</span><span class="n">array</span><span class="p">,</span> <span class="n">SIZE</span><span class="p">);</span>
+
+    <span class="cm">/* Sum array using multiple threads */</span>
+    <span class="n">TH</span> <span class="o">=</span> <span class="k">new</span> <span class="n">SPool</span><span class="p">(</span><span class="n">numThreads</span><span class="p">);</span>
+    <span class="n">TH</span><span class="o">-&gt;</span><span class="n">Dispatch</span><span class="p">(</span><span class="n">thread_fct</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">);</span>
+    <span class="n">TH</span><span class="o">-&gt;</span><span class="n">WaitForIdle</span><span class="p">();</span>
+
+    <span class="cm">/* Results */</span>
+    <span class="n">printf</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\n</span><span class="s"> Sequential sum = %.2f </span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">sequentialSum</span><span class="p">);</span>
+    <span class="n">printf</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\n</span><span class="s"> Parallel sum without reduction = %.2f </span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">noReduceSum</span><span class="p">);</span>
+    <span class="n">printf</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\n</span><span class="s"> Parallel sum with reduction = %.2f </span><span class="se">\n\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">RD</span><span class="p">.</span><span class="n">Data</span><span class="p">());</span>
+
+    <span class="k">delete</span> <span class="n">TH</span><span class="p">;</span>
+    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</td></tr></table></div>
+<div class="section" id="something-to-think-about">
+<h3>Something to think about<a class="headerlink" href="#something-to-think-about" title="Permalink to this headline">¶</a></h3>
+<p>Do you have an ideas about why the parallel version without reduction did not
+produce the correct result?  Later examples will hopefully shed some light on this.</p>
+</div>
+</div>
+<div class="section" id="coordination-using-collective-communication-reduction-revisited">
+<h2>9. Coordination Using Collective Communication: Reduction revisited<a class="headerlink" href="#coordination-using-collective-communication-reduction-revisited" title="Permalink to this headline">¶</a></h2>
+<p><em>file: Vath_pth/09.reduction2/reduction2.C</em></p>
+<p><em>Build inside 09.reduction2 directory:</em></p>
+<div class="highlight-default"><div class="highlight"><pre><span class="n">make</span> <span class="n">reduction2</span>
+</pre></div>
+</div>
+<p><em>Execute on the command line inside 09.reduction2 directory:</em></p>
+<div class="highlight-default"><div class="highlight"><pre><span class="o">./</span><span class="n">reduction2</span> <span class="mi">4</span> <span class="mi">8192</span>
+<span class="n">Replace</span> <span class="mi">4</span> <span class="k">with</span> <span class="n">other</span> <span class="n">values</span> <span class="k">for</span> <span class="n">the</span> <span class="n">number</span> <span class="n">of</span> <span class="n">threads</span>
+<span class="n">Replace</span> <span class="mi">8192</span> <span class="k">with</span> <span class="n">other</span> <span class="n">values</span> <span class="k">for</span> <span class="n">n</span> <span class="p">(</span><span class="n">computing</span> <span class="n">up</span> <span class="n">to</span> <span class="n">n</span> <span class="n">factorial</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The next example uses many threads to generate computations of factorials of n.
+Though there are likely other better ways to compute factorials, this
+example uses a very simple approach to illustrate how reduction can be used with the
+multiplication operation instead of addition in the previous example. This is shown
+on line 56 in the code below, which also makes use of an additional C++ file, BigInt.h:</p>
+<div class="highlight-c++"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>  1
+  2
+  3
+  4
+  5
+  6
+  7
+  8
+  9
+ 10
+ 11
+ 12
+ 13
+ 14
+ 15
+ 16
+ 17
+ 18
+ 19
+ 20
+ 21
+ 22
+ 23
+ 24
+ 25
+ 26
+ 27
+ 28
+ 29
+ 30
+ 31
+ 32
+ 33
+ 34
+ 35
+ 36
+ 37
+ 38
+ 39
+ 40
+ 41
+ 42
+ 43
+ 44
+ 45
+ 46
+ 47
+ 48
+ 49
+ 50
+ 51
+ 52
+ 53
+ 54
+ 55
+ 56
+ 57
+ 58
+ 59
+ 60
+ 61
+ 62
+ 63
+ 64
+ 65
+ 66
+ 67
+ 68
+ 69
+ 70
+ 71
+ 72
+ 73
+ 74
+ 75
+ 76
+ 77
+ 78
+ 79
+ 80
+ 81
+ 82
+ 83
+ 84
+ 85
+ 86
+ 87
+ 88
+ 89
+ 90
+ 91
+ 92
+ 93
+ 94
+ 95
+ 96
+ 97
+ 98
+ 99
+100
+101
+102
+103
+104
+105
+106
+107
+108
+109
+110
+111
+112
+113
+114
+115
+116
+117
+118
+119
+120
+121
+122
+123
+124
+125</pre></div></td><td class="code"><div class="highlight"><pre><span class="cm">/*</span>
+<span class="cm"> * reduction2.C</span>
+<span class="cm"> *</span>
+<span class="cm"> *  Using Victor Alessandrini&#39;s vath_pth library.</span>
+<span class="cm"> *  ... computes factorial values, using Owen Astrachan&#39;s</span>
+<span class="cm"> *  BigInt class to explore reductions</span>
+<span class="cm"> *</span>
+<span class="cm"> * Modeled from code provided by Joel Adams, Calvin College, November 2009.</span>
+<span class="cm"> * Hannah Sonsalla, Macalester College, 2017.</span>
+<span class="cm"> *</span>
+<span class="cm"> * Usage: ./reduction2 [numThreads] [n]</span>
+<span class="cm"> *</span>
+<span class="cm"> *  Exercise:</span>
+<span class="cm"> *  - Build and run, record sequential time in a spreadsheet.</span>
+<span class="cm"> *  - Uncomment line B and comment out line A. Rerun in parallel</span>
+<span class="cm"> *    noting the reduction for a BigInt using 2, 4, 6, 8, ... threads,</span>
+<span class="cm"> *    recording the wall times in the spreadsheet.</span>
+<span class="cm"> *  - Create a chart that plots the times vs the # of threads.</span>
+<span class="cm"> *  - Experiment with different n values</span>
+<span class="cm"> */</span>
+
+
+<span class="cp">#include</span> <span class="cpf">&lt;stdlib.h&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;SPool.h&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;pthread.h&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;cassert&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;CpuTimer.h&gt;   // CPU timer</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;Reduction.h&gt;  // reduction</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&quot;BigInt.h&quot;</span><span class="cp"></span>
+
+<span class="c1">// global variables</span>
+<span class="kt">unsigned</span> <span class="n">n</span><span class="p">;</span>
+<span class="kt">unsigned</span> <span class="n">numThreads</span><span class="p">;</span>
+<span class="n">Reduction</span><span class="o">&lt;</span><span class="n">BigInt</span><span class="o">&gt;</span> <span class="n">RD</span><span class="p">;</span>   <span class="c1">// Reduction</span>
+<span class="n">SPool</span> <span class="o">*</span><span class="n">TH</span><span class="p">;</span>
+
+<span class="c1">// -------------------</span>
+<span class="c1">// Worker threads code for parallel factorial</span>
+<span class="c1">// -------------------</span>
+
+<span class="kt">void</span> <span class="nf">thread_fct</span><span class="p">(</span><span class="kt">void</span> <span class="o">*</span><span class="n">idp</span><span class="p">)</span>  <span class="p">{</span>
+    <span class="kt">int</span> <span class="n">beg</span><span class="p">,</span> <span class="n">end</span><span class="p">;</span>
+    <span class="n">beg</span> <span class="o">=</span> <span class="mi">2</span><span class="p">;</span>
+    <span class="n">end</span> <span class="o">=</span> <span class="n">n</span><span class="p">;</span>
+    <span class="n">TH</span><span class="o">-&gt;</span><span class="n">ThreadRange</span><span class="p">(</span><span class="n">beg</span><span class="p">,</span> <span class="n">end</span><span class="p">);</span>   <span class="c1">// sub-range</span>
+
+    <span class="n">BigInt</span> <span class="n">result</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+    <span class="kt">int</span> <span class="n">rank</span> <span class="o">=</span> <span class="n">TH</span><span class="o">-&gt;</span><span class="n">GetRank</span><span class="p">();</span>
+
+    <span class="k">for</span><span class="p">(</span><span class="kt">unsigned</span> <span class="n">i</span><span class="o">=</span><span class="n">beg</span><span class="p">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="n">end</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span>  <span class="p">{</span>
+        <span class="n">result</span> <span class="o">*=</span> <span class="n">i</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="n">rank</span> <span class="o">==</span> <span class="n">numThreads</span><span class="p">)</span> <span class="n">result</span> <span class="o">*=</span> <span class="n">end</span><span class="p">;</span>  <span class="c1">// If last thread, multiply by n = end</span>
+    <span class="n">RD</span><span class="p">.</span><span class="n">Multiply</span><span class="p">(</span><span class="n">result</span><span class="p">);</span>   <span class="c1">// Reduction: multiply global reduction variable by result</span>
+<span class="p">}</span>
+
+<span class="c1">// -------------------</span>
+<span class="c1">// Factorial function for multithreading</span>
+<span class="c1">// -------------------</span>
+<span class="n">BigInt</span> <span class="nf">parFactorial</span><span class="p">(</span><span class="kt">unsigned</span> <span class="n">number</span><span class="p">){</span>
+    <span class="n">n</span> <span class="o">=</span> <span class="n">number</span><span class="p">;</span>
+    <span class="n">BigInt</span> <span class="n">result</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>    <span class="c1">// If 0! or 1! return 1</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">n</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">RD</span><span class="p">.</span><span class="n">Accumulate</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+	<span class="n">TH</span><span class="o">-&gt;</span><span class="n">Dispatch</span><span class="p">(</span><span class="n">thread_fct</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">);</span>
+	<span class="n">TH</span><span class="o">-&gt;</span><span class="n">WaitForIdle</span><span class="p">();</span>
+	<span class="n">result</span> <span class="o">=</span> <span class="n">RD</span><span class="p">.</span><span class="n">Data</span><span class="p">();</span>
+	<span class="n">RD</span><span class="p">.</span><span class="n">Reset</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="n">result</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="c1">// -------------------</span>
+<span class="c1">// Sequential factorial</span>
+<span class="c1">// -------------------</span>
+<span class="n">BigInt</span> <span class="nf">seqFactorial</span><span class="p">(</span><span class="kt">unsigned</span> <span class="n">number</span><span class="p">)</span>  <span class="p">{</span>
+    <span class="n">BigInt</span> <span class="n">result</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+    <span class="k">for</span> <span class="p">(</span><span class="kt">unsigned</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">2</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;=</span> <span class="n">number</span><span class="p">;</span> <span class="n">i</span> <span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">result</span> <span class="o">*=</span> <span class="n">i</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="n">result</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span> <span class="o">**</span><span class="n">argv</span><span class="p">)</span>  <span class="p">{</span>
+    <span class="n">n</span> <span class="o">=</span> <span class="mi">8192</span><span class="p">;</span>
+    <span class="n">numThreads</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+    <span class="n">CpuTimer</span> <span class="n">TR</span><span class="p">;</span>
+
+    <span class="k">switch</span> <span class="p">(</span><span class="n">argc</span><span class="p">)</span> <span class="p">{</span>
+	<span class="k">case</span> <span class="mi">3</span><span class="o">:</span> <span class="n">n</span> <span class="o">=</span> <span class="n">atoi</span><span class="p">(</span><span class="n">argv</span><span class="p">[</span><span class="mi">2</span><span class="p">]);</span>
+	<span class="k">case</span> <span class="mi">2</span><span class="o">:</span> <span class="n">numThreads</span> <span class="o">=</span> <span class="n">atoi</span><span class="p">(</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">]);</span>
+	<span class="k">case</span> <span class="mi">1</span><span class="o">:</span> <span class="k">break</span><span class="p">;</span>
+	<span class="k">default</span><span class="o">:</span> <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;</span><span class="se">\n</span><span class="s">Usage: ./reduction2 [numThreads] [n]</span><span class="se">\n\n</span><span class="s">&quot;</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="cm">/* Calculate factorial */</span>
+    <span class="n">BigInt</span> <span class="n">result</span><span class="p">;</span>
+    <span class="n">TH</span> <span class="o">=</span> <span class="k">new</span> <span class="n">SPool</span><span class="p">(</span><span class="n">numThreads</span><span class="p">);</span>
+    <span class="n">TR</span><span class="p">.</span><span class="n">Start</span><span class="p">();</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">seqFactorial</span><span class="p">(</span><span class="n">n</span><span class="p">);</span>       <span class="c1">// A</span>
+    <span class="c1">//result = parFactorial(n);     // B</span>
+    <span class="n">TR</span><span class="p">.</span><span class="n">Stop</span><span class="p">();</span>
+    <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;Computed &quot;</span> <span class="o">&lt;&lt;</span> <span class="n">n</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;! using &quot;</span> <span class="o">&lt;&lt;</span> <span class="n">numThreads</span> <span class="o">&lt;&lt;</span> <span class="s">&quot; thread &quot;</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+    <span class="n">TR</span><span class="p">.</span><span class="n">Report</span><span class="p">();</span>
+
+
+    <span class="c1">// run a few tests to validate the results</span>
+    <span class="n">assert</span><span class="p">(</span> <span class="n">parFactorial</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span> <span class="p">);</span>
+    <span class="n">assert</span><span class="p">(</span> <span class="n">parFactorial</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span> <span class="p">);</span>
+    <span class="n">assert</span><span class="p">(</span> <span class="n">parFactorial</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span> <span class="p">);</span>
+    <span class="n">assert</span><span class="p">(</span> <span class="n">parFactorial</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span> <span class="o">==</span> <span class="mi">6</span> <span class="p">);</span>
+    <span class="n">assert</span><span class="p">(</span> <span class="n">parFactorial</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span> <span class="o">==</span> <span class="mi">24</span> <span class="p">);</span>
+    <span class="n">assert</span><span class="p">(</span> <span class="n">parFactorial</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span> <span class="o">==</span> <span class="mi">120</span> <span class="p">);</span>
+    <span class="n">assert</span><span class="p">(</span> <span class="n">parFactorial</span><span class="p">(</span><span class="mi">32</span><span class="p">)</span> <span class="o">==</span> <span class="n">BigInt</span><span class="p">(</span><span class="s">&quot;263130836933693530167218012160000000&quot;</span><span class="p">)</span> <span class="p">);</span>
+    <span class="n">assert</span><span class="p">(</span> <span class="n">parFactorial</span><span class="p">(</span><span class="mi">100</span><span class="p">)</span> <span class="o">==</span> <span class="n">BigInt</span><span class="p">(</span> <span class="n">string</span><span class="p">(</span><span class="s">&quot;9332621544394415268169923885&quot;</span><span class="p">)</span>
+			                            <span class="o">+</span> <span class="s">&quot;6266700490715968264381621468&quot;</span>
+						    <span class="o">+</span> <span class="s">&quot;5929638952175999932299156089&quot;</span>
+						    <span class="o">+</span> <span class="s">&quot;4146397615651828625369792082&quot;</span>
+						    <span class="o">+</span> <span class="s">&quot;7223758251185210916864000000&quot;</span>
+						    <span class="o">+</span> <span class="s">&quot;000000000000000000&quot;</span> <span class="p">)</span> <span class="p">);</span>
+    <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;All tests passed!</span><span class="se">\n</span><span class="s">&quot;</span> <span class="o">&lt;&lt;</span> <span class="n">flush</span><span class="p">;</span>
+    <span class="k">delete</span> <span class="n">TH</span><span class="p">;</span>
+    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</td></tr></table></div>
+<p>With this code you can begin to explore the time it takes to execute the program when using increasing numbers of threads for various values of n. Follow the instructions at the top of the file.</p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../index.html">
+              <img class="logo" src="../_static/CSInParallel200wide.png" alt="Logo"/>
+            </a></p>
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Data Decomposition Algorithm Strategies and Related Coordination Strategies</a><ul>
+<li><a class="reference internal" href="#shared-data-decomposition-algorithm-strategy-chunks-of-data-per-thread-using-a-parallel-for-loop-implementation-strategy">5. Shared Data Decomposition Algorithm Strategy:  chunks of data per thread using a parallel for loop implementation strategy</a></li>
+<li><a class="reference internal" href="#shared-data-decomposition-algorithm-strategy-one-iteration-per-thread-in-a-parallel-for-loop-implementation-strategy">6. Shared Data Decomposition Algorithm Strategy:  one iteration per thread in a parallel for loop implementation strategy</a></li>
+<li><a class="reference internal" href="#shared-data-decomposition-algorithm-strategy-revisited">7.  Shared Data Decomposition Algorithm Strategy: Revisited</a></li>
+<li><a class="reference internal" href="#coordination-using-collective-communication-reduction">8. Coordination Using Collective Communication: Reduction</a><ul>
+<li><a class="reference internal" href="#something-to-think-about">Something to think about</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#coordination-using-collective-communication-reduction-revisited">9. Coordination Using Collective Communication: Reduction revisited</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="ProgStructure_Barrier.html"
+                        title="previous chapter">Shared Memory Program Structure and Coordination Patterns</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="MutualExclusion.html"
+                        title="next chapter">Patterns used when threads share data values</a></p>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="MutualExclusion.html" title="Patterns used when threads share data values"
+             >next</a></li>
+        <li class="right" >
+          <a href="ProgStructure_Barrier.html" title="Shared Memory Program Structure and Coordination Patterns"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Parallel Patternlets</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="Vath_pth_Patternlets.html" >Shared Memory Parallel Patternlets with Pthreads vath library</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright This work is licensed under a Creative Commons Attribution-ShareAlike 3.0 Unported License.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.2.
+    </div>
+  </body>
+</html>

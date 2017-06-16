@@ -1,16 +1,14 @@
 
-
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-
 
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Data Decomposition Algorithm Strategies and Related Coordination Strategies &mdash; Parallel Patternlets</title>
+    <title>Data Decomposition Algorithm Strategies and Related Coordination Strategies &#8212; Parallel Patternlets</title>
     
-    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/csip.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     
     <script type="text/javascript">
@@ -19,20 +17,20 @@
         VERSION:     '',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
-        HAS_SOURCE:  true
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
       };
     </script>
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
     <link rel="shortcut icon" href="../_static/favicon.ico"/>
-    <link rel="top" title="Parallel Patternlets" href="../index.html" />
-    <link rel="up" title="Shared Memory Parallel Patternlets in OpenMP" href="OpenMP_Patternlets.html" />
+    <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="Patterns used when threads share data values" href="MutualExclusion.html" />
     <link rel="prev" title="Shared Memory Program Structure and Coordination Patterns" href="ProgStructure_Barrier.html" /> 
   </head>
   <body>
-    <div class="related">
+    <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
@@ -41,15 +39,15 @@
         <li class="right" >
           <a href="ProgStructure_Barrier.html" title="Shared Memory Program Structure and Coordination Patterns"
              accesskey="P">previous</a> |</li>
-        <li><a href="../index.html">Parallel Patternlets</a> &raquo;</li>
-          <li><a href="OpenMP_Patternlets.html" accesskey="U">Shared Memory Parallel Patternlets in OpenMP</a> &raquo;</li> 
+        <li class="nav-item nav-item-0"><a href="../index.html">Parallel Patternlets</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="OpenMP_Patternlets.html" accesskey="U">Shared Memory Parallel Patternlets in OpenMP</a> &#187;</li> 
       </ul>
     </div>  
 
     <div class="document">
       <div class="documentwrapper">
         <div class="bodywrapper">
-          <div class="body">
+          <div class="body" role="main">
             
   <div class="section" id="data-decomposition-algorithm-strategies-and-related-coordination-strategies">
 <h1>Data Decomposition Algorithm Strategies and Related Coordination Strategies<a class="headerlink" href="#data-decomposition-algorithm-strategies-and-related-coordination-strategies" title="Permalink to this headline">¶</a></h1>
@@ -57,11 +55,13 @@
 <h2>6. Shared Data Decomposition Algorithm Strategy:  chunks of data per thread using a parallel for loop implementation strategy<a class="headerlink" href="#shared-data-decomposition-algorithm-strategy-chunks-of-data-per-thread-using-a-parallel-for-loop-implementation-strategy" title="Permalink to this headline">¶</a></h2>
 <p><em>file: openMP/06.parallelLoop-equalChunks/parallelLoopEqualChunks.c</em></p>
 <p><em>Build inside 06.parallelLoop-equalChunks directory:</em></p>
-<div class="highlight-python"><pre>make parallelLoopEqualChunks</pre>
+<div class="highlight-default"><div class="highlight"><pre><span class="n">make</span> <span class="n">parallelLoopEqualChunks</span>
+</pre></div>
 </div>
 <p><em>Execute on the command line inside 06.parallelLoop-equalChunks directory:</em></p>
-<div class="highlight-python"><pre>./parallelLoopEqualChunks 4
-Replace 4 with other values for the number of threads, or leave off</pre>
+<div class="highlight-default"><div class="highlight"><pre><span class="o">./</span><span class="n">parallelLoopEqualChunks</span> <span class="mi">4</span>
+<span class="n">Replace</span> <span class="mi">4</span> <span class="k">with</span> <span class="n">other</span> <span class="n">values</span> <span class="k">for</span> <span class="n">the</span> <span class="n">number</span> <span class="n">of</span> <span class="n">threads</span><span class="p">,</span> <span class="ow">or</span> <span class="n">leave</span> <span class="n">off</span>
+</pre></div>
 </div>
 <p>An iterative for loop is a remarkably common pattern in all programming, primarily used to
 perform a calculation N times, often over a set of data containing N elements, using each
@@ -111,7 +111,8 @@ just in front of the for statement (line 27) in the following code.</p>
 33
 34
 35
-36</pre></div></td><td class="code"><div class="highlight"><pre><span class="cm">/* parallelLoopEqualChunks.c</span>
+36
+37</pre></div></td><td class="code"><div class="highlight"><pre><span class="cm">/* parallelLoopEqualChunks.c</span>
 <span class="cm"> * ... illustrates the use of OpenMP&#39;s default parallel for loop in which</span>
 <span class="cm"> *  	threads iterate through equal sized chunks of the index range</span>
 <span class="cm"> *	(cache-beneficial when accessing adjacent memory locations).</span>
@@ -125,9 +126,9 @@ just in front of the for statement (line 27) in the following code.</p>
 <span class="cm"> * - try with different numbers of threads, e.g.: 2, 3, 4, 6, 8</span>
 <span class="cm"> */</span>
 
-<span class="cp">#include &lt;stdio.h&gt;    </span><span class="c1">// printf()</span>
-<span class="cp">#include &lt;stdlib.h&gt;   </span><span class="c1">// atoi()</span>
-<span class="cp">#include &lt;omp.h&gt;      </span><span class="c1">// OpenMP</span>
+<span class="cp">#include</span> <span class="cpf">&lt;stdio.h&gt;    // printf()</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;stdlib.h&gt;   // atoi()</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;omp.h&gt;      // OpenMP</span><span class="cp"></span>
 
 <span class="kt">int</span> <span class="nf">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span><span class="o">**</span> <span class="n">argv</span><span class="p">)</span> <span class="p">{</span>
     <span class="k">const</span> <span class="kt">int</span> <span class="n">REPS</span> <span class="o">=</span> <span class="mi">16</span><span class="p">;</span>
@@ -147,6 +148,7 @@ just in front of the for statement (line 27) in the following code.</p>
     <span class="n">printf</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">);</span>
     <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
 <span class="p">}</span>
+
 </pre></div>
 </td></tr></table></div>
 <p>Once you run this code, verify that the default behavior for this pragma is this
@@ -161,11 +163,13 @@ consecutive memory locations (such as an array) that might be cached by each thr
 <h2>7. Shared Data Decomposition Algorithm Strategy:  one iteration per thread in a parallel for loop implementation strategy<a class="headerlink" href="#shared-data-decomposition-algorithm-strategy-one-iteration-per-thread-in-a-parallel-for-loop-implementation-strategy" title="Permalink to this headline">¶</a></h2>
 <p><em>file: openMP/07.parallelLoop-chunksOf1/parallelLoopChunksOf1.c</em></p>
 <p><em>Build inside 07.parallelLoop-chunksOf1 directory:</em></p>
-<div class="highlight-python"><pre>make parallelLoopChunksOf1</pre>
+<div class="highlight-default"><div class="highlight"><pre><span class="n">make</span> <span class="n">parallelLoopChunksOf1</span>
+</pre></div>
 </div>
 <p><em>Execute on the command line inside 07.parallelLoop-chunksOf1 directory:</em></p>
-<div class="highlight-python"><pre>./parallelLoopChunksOf1 4
-Replace 4 with other values for the number of threads, or leave off</pre>
+<div class="highlight-default"><div class="highlight"><pre><span class="o">./</span><span class="n">parallelLoopChunksOf1</span> <span class="mi">4</span>
+<span class="n">Replace</span> <span class="mi">4</span> <span class="k">with</span> <span class="n">other</span> <span class="n">values</span> <span class="k">for</span> <span class="n">the</span> <span class="n">number</span> <span class="n">of</span> <span class="n">threads</span><span class="p">,</span> <span class="ow">or</span> <span class="n">leave</span> <span class="n">off</span>
+</pre></div>
 </div>
 <p>You can imagine other ways of assigning threads to iterations of a loop besides that
 shown above for four threads and 16 iterations.  A simple decomposition sometimes used
@@ -228,7 +232,8 @@ that each thread will work on.</p>
 50
 51
 52
-53</pre></div></td><td class="code"><div class="highlight"><pre><span class="cm">/* parallelLoopChunksOf1.c</span>
+53
+54</pre></div></td><td class="code"><div class="highlight"><pre><span class="cm">/* parallelLoopChunksOf1.c</span>
 <span class="cm"> * ... illustrates how to make OpenMP map threads to </span>
 <span class="cm"> *	parallel loop iterations in chunks of size 1</span>
 <span class="cm"> *	(use when not accesssing memory).</span>
@@ -246,9 +251,9 @@ that each thread will work on.</p>
 <span class="cm"> *    the second loop is more complex but less restrictive.</span>
 <span class="cm"> */</span>
 
-<span class="cp">#include &lt;stdio.h&gt;</span>
-<span class="cp">#include &lt;omp.h&gt;</span>
-<span class="cp">#include &lt;stdlib.h&gt;</span>
+<span class="cp">#include</span> <span class="cpf">&lt;stdio.h&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;omp.h&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;stdlib.h&gt;</span><span class="cp"></span>
 
 <span class="kt">int</span> <span class="nf">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span><span class="o">**</span> <span class="n">argv</span><span class="p">)</span> <span class="p">{</span>
     <span class="k">const</span> <span class="kt">int</span> <span class="n">REPS</span> <span class="o">=</span> <span class="mi">16</span><span class="p">;</span>
@@ -281,6 +286,7 @@ that each thread will work on.</p>
     <span class="n">printf</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">);</span>
     <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
 <span class="p">}</span>
+
 </pre></div>
 </td></tr></table></div>
 <p>This can be made even more
@@ -293,11 +299,13 @@ be greater than 1 inside the schedule clause.</p>
 <h2>8. Coordination Using Collective Communication: Reduction<a class="headerlink" href="#coordination-using-collective-communication-reduction" title="Permalink to this headline">¶</a></h2>
 <p><em>file: openMP/08.reduction/reduction.c</em></p>
 <p><em>Build inside 08.reduction directory:</em></p>
-<div class="highlight-python"><pre>make reduction</pre>
+<div class="highlight-default"><div class="highlight"><pre><span class="n">make</span> <span class="n">reduction</span>
+</pre></div>
 </div>
 <p><em>Execute on the command line inside 08.reduction directory:</em></p>
-<div class="highlight-python"><pre>./reduction 4
-Replace 4 with other values for the number of threads, or leave off</pre>
+<div class="highlight-default"><div class="highlight"><pre><span class="o">./</span><span class="n">reduction</span> <span class="mi">4</span>
+<span class="n">Replace</span> <span class="mi">4</span> <span class="k">with</span> <span class="n">other</span> <span class="n">values</span> <span class="k">for</span> <span class="n">the</span> <span class="n">number</span> <span class="n">of</span> <span class="n">threads</span><span class="p">,</span> <span class="ow">or</span> <span class="n">leave</span> <span class="n">off</span>
+</pre></div>
 </div>
 <p>Once threads have performed independent concurrent computations, possibly
 on some portion of decomposed data, it is quite common to then <em>reduce</em>
@@ -308,7 +316,7 @@ work together to create the final desired single value.</p>
 that creates meaningful data values; this is just an example).
 Note the common sequential code pattern found in the function called <em>sequentialSum</em> in the code
 below (starting line 51): a for loop is used to sum up all the values in the array.</p>
-<p>Next let&#8217;s consider how this can be done in parallel with threads.
+<p>Next let’s consider how this can be done in parallel with threads.
 Somehow the threads must implicitly <cite>communicate</cite> to keep the overall sum updated
 as each of them works on a portion of the array.
 In the <em>parallelSum</em> function, line 64 shows a special clause that
@@ -384,7 +392,8 @@ which is computed in line 66.</p>
 66
 67
 68
-69</pre></div></td><td class="code"><div class="highlight"><pre><span class="cm">/* reduction.c</span>
+69
+70</pre></div></td><td class="code"><div class="highlight"><pre><span class="cm">/* reduction.c</span>
 <span class="cm"> * ... illustrates the OpenMP parallel-for loop&#39;s reduction clause</span>
 <span class="cm"> *</span>
 <span class="cm"> * Joel Adams, Calvin College, November 2009.</span>
@@ -400,13 +409,13 @@ which is computed in line 66.</p>
 <span class="cm"> * - Recompile and rerun.  Note that correct output is produced again.</span>
 <span class="cm"> */</span>
 
-<span class="cp">#include &lt;stdio.h&gt;   </span><span class="c1">// printf()</span>
-<span class="cp">#include &lt;omp.h&gt;     </span><span class="c1">// OpenMP</span>
-<span class="cp">#include &lt;stdlib.h&gt;  </span><span class="c1">// rand()</span>
+<span class="cp">#include</span> <span class="cpf">&lt;stdio.h&gt;   // printf()</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;omp.h&gt;     // OpenMP</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;stdlib.h&gt;  // rand()</span><span class="cp"></span>
 
-<span class="kt">void</span> <span class="n">initialize</span><span class="p">(</span><span class="kt">int</span><span class="o">*</span> <span class="n">a</span><span class="p">,</span> <span class="kt">int</span> <span class="n">n</span><span class="p">);</span>
-<span class="kt">int</span> <span class="n">sequentialSum</span><span class="p">(</span><span class="kt">int</span><span class="o">*</span> <span class="n">a</span><span class="p">,</span> <span class="kt">int</span> <span class="n">n</span><span class="p">);</span>
-<span class="kt">int</span> <span class="n">parallelSum</span><span class="p">(</span><span class="kt">int</span><span class="o">*</span> <span class="n">a</span><span class="p">,</span> <span class="kt">int</span> <span class="n">n</span><span class="p">);</span>
+<span class="kt">void</span> <span class="nf">initialize</span><span class="p">(</span><span class="kt">int</span><span class="o">*</span> <span class="n">a</span><span class="p">,</span> <span class="kt">int</span> <span class="n">n</span><span class="p">);</span>
+<span class="kt">int</span> <span class="nf">sequentialSum</span><span class="p">(</span><span class="kt">int</span><span class="o">*</span> <span class="n">a</span><span class="p">,</span> <span class="kt">int</span> <span class="n">n</span><span class="p">);</span>
+<span class="kt">int</span> <span class="nf">parallelSum</span><span class="p">(</span><span class="kt">int</span><span class="o">*</span> <span class="n">a</span><span class="p">,</span> <span class="kt">int</span> <span class="n">n</span><span class="p">);</span>
 
 <span class="cp">#define SIZE 1000000</span>
 
@@ -453,6 +462,7 @@ which is computed in line 66.</p>
    <span class="p">}</span>
    <span class="k">return</span> <span class="n">sum</span><span class="p">;</span>
 <span class="p">}</span>
+
 </pre></div>
 </td></tr></table></div>
 <div class="section" id="something-to-think-about">
@@ -464,12 +474,14 @@ produce the correct result?  Later examples will hopefully shed some light on th
 <div class="section" id="coordination-using-collective-communication-reduction-revisited">
 <h2>9. Coordination Using Collective Communication: Reduction revisited<a class="headerlink" href="#coordination-using-collective-communication-reduction-revisited" title="Permalink to this headline">¶</a></h2>
 <p><em>Build inside 09.reduction-userDefined directory:</em></p>
-<div class="highlight-python"><pre>make reduction2</pre>
+<div class="highlight-default"><div class="highlight"><pre><span class="n">make</span> <span class="n">reduction2</span>
+</pre></div>
 </div>
 <p><em>Execute on the command line inside 09.reduction-userDefined directory:</em></p>
-<div class="highlight-python"><pre>./reduction  4 4096
-Replace 4 with other values for the number of threads
-Replace 4096 with other values for n (computing up to n factorial)</pre>
+<div class="highlight-default"><div class="highlight"><pre><span class="o">./</span><span class="n">reduction</span>  <span class="mi">4</span> <span class="mi">4096</span>
+<span class="n">Replace</span> <span class="mi">4</span> <span class="k">with</span> <span class="n">other</span> <span class="n">values</span> <span class="k">for</span> <span class="n">the</span> <span class="n">number</span> <span class="n">of</span> <span class="n">threads</span>
+<span class="n">Replace</span> <span class="mi">4096</span> <span class="k">with</span> <span class="n">other</span> <span class="n">values</span> <span class="k">for</span> <span class="n">n</span> <span class="p">(</span><span class="n">computing</span> <span class="n">up</span> <span class="n">to</span> <span class="n">n</span> <span class="n">factorial</span><span class="p">)</span>
+</pre></div>
 </div>
 <p>The next example uses many threads to generate computations of factorials of n. Though there are likely other better ways to compute factorials, this
 example uses a very simple approach to illustrate how reduction can be used with the
@@ -571,9 +583,9 @@ this is on line 34 in the code below, which also makes use of an additional C++ 
 <span class="cm"> *  - Experiment with different n values</span>
 <span class="cm"> */</span>
 
-<span class="cp">#include &quot;BigInt.h&quot;</span>
-<span class="cp">#include &lt;cassert&gt;</span>
-<span class="cp">#include &lt;omp.h&gt;</span>
+<span class="cp">#include</span> <span class="cpf">&quot;BigInt.h&quot;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;cassert&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;omp.h&gt;</span><span class="cp"></span>
 
 <span class="cm">/*</span>
 <span class="cm">#pragma omp declare reduction(*: BigInt: \</span>
@@ -581,7 +593,7 @@ this is on line 34 in the code below, which also makes use of an additional C++ 
 <span class="cm">				initializer( omp_priv=BigInt(1))</span>
 <span class="cm">*/</span>
 
-<span class="n">BigInt</span> <span class="n">factorial</span><span class="p">(</span><span class="kt">unsigned</span> <span class="n">n</span><span class="p">)</span> <span class="p">{</span>
+<span class="n">BigInt</span> <span class="nf">factorial</span><span class="p">(</span><span class="kt">unsigned</span> <span class="n">n</span><span class="p">)</span> <span class="p">{</span>
 	<span class="n">BigInt</span> <span class="n">result</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
 
 <span class="c1">//	#pragma omp parallel for reduction(*:result) </span>
@@ -592,7 +604,7 @@ this is on line 34 in the code below, which also makes use of an additional C++ 
 	<span class="k">return</span> <span class="n">result</span><span class="p">;</span>
 <span class="p">}</span>
 
-<span class="kt">int</span> <span class="n">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span><span class="o">**</span> <span class="n">argv</span><span class="p">)</span> <span class="p">{</span>  <span class="c1">// on a 2GHz i7 CPU:</span>
+<span class="kt">int</span> <span class="nf">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span><span class="o">**</span> <span class="n">argv</span><span class="p">)</span> <span class="p">{</span>  <span class="c1">// on a 2GHz i7 CPU:</span>
 	<span class="kt">unsigned</span> <span class="n">n</span> <span class="o">=</span> <span class="mi">4096</span><span class="p">;</span>         <span class="c1">// ~10 secs sequentially</span>
 	<span class="kt">unsigned</span> <span class="n">numThreads</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
 
@@ -635,11 +647,13 @@ this is on line 34 in the code below, which also makes use of an additional C++ 
 <div class="section" id="dynamic-data-decomposition">
 <h2>10. Dynamic Data Decomposition<a class="headerlink" href="#dynamic-data-decomposition" title="Permalink to this headline">¶</a></h2>
 <p><em>Build inside 10.parallelLoop-dynamicSchedule directory:</em></p>
-<div class="highlight-python"><pre>make dynamicScheduling</pre>
+<div class="highlight-default"><div class="highlight"><pre><span class="n">make</span> <span class="n">dynamicScheduling</span>
+</pre></div>
 </div>
 <p><em>Execute on the command line inside 10.parallelLoop-dynamicSchedule directory:</em></p>
-<div class="highlight-python"><pre>./dynamicScheduling 4
-Replace 4 with other values for the number of threads</pre>
+<div class="highlight-default"><div class="highlight"><pre><span class="o">./</span><span class="n">dynamicScheduling</span> <span class="mi">4</span>
+<span class="n">Replace</span> <span class="mi">4</span> <span class="k">with</span> <span class="n">other</span> <span class="n">values</span> <span class="k">for</span> <span class="n">the</span> <span class="n">number</span> <span class="n">of</span> <span class="n">threads</span>
+</pre></div>
 </div>
 <p>The following example computes factorials for the numbers 2 through 512, placing the result in an array. This array of results is the data in this data decomposition pattern. Since each number will take a different amount of time to compute, this is
 a case where using dynamic scheduling of the work improves the performance. Try the tasks lsited in the header of the code shown below to see this.</p>
@@ -731,15 +745,15 @@ a case where using dynamic scheduling of the work improves the performance. Try 
 <span class="cm"> *  - Create a line chart plotting run times vs # of threads.</span>
 <span class="cm"> */</span>
 
-<span class="cp">#include &quot;BigInt.h&quot;                 </span><span class="c1">// class BigInt</span>
-<span class="cp">#include &lt;omp.h&gt;                    </span><span class="c1">// OpenMP functions</span>
-<span class="cp">#include &lt;cassert&gt;                  </span><span class="c1">// assert()</span>
+<span class="cp">#include</span> <span class="cpf">&quot;BigInt.h&quot;                 // class BigInt</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;omp.h&gt;                    // OpenMP functions</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;cassert&gt;                  // assert()</span><span class="cp"></span>
 
 <span class="cm">/* factorial(n) computes n!</span>
 <span class="cm"> * @param: n, an unsigned int.</span>
 <span class="cm"> * @return: n!, a BigInt.</span>
 <span class="cm"> */</span>
-<span class="n">BigInt</span> <span class="n">factorial</span><span class="p">(</span><span class="kt">unsigned</span> <span class="n">n</span><span class="p">)</span> <span class="p">{</span>
+<span class="n">BigInt</span> <span class="nf">factorial</span><span class="p">(</span><span class="kt">unsigned</span> <span class="n">n</span><span class="p">)</span> <span class="p">{</span>
 	<span class="n">BigInt</span> <span class="n">result</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>              <span class="c1">// 0! or 1!</span>
 
 	<span class="k">for</span> <span class="p">(</span><span class="kt">unsigned</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">2</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;=</span> <span class="n">n</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
@@ -749,7 +763,7 @@ a case where using dynamic scheduling of the work improves the performance. Try 
 	<span class="k">return</span> <span class="n">result</span><span class="p">;</span>
 <span class="p">}</span>
 
-<span class="kt">int</span> <span class="n">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span><span class="o">**</span> <span class="n">argv</span><span class="p">)</span> <span class="p">{</span>            <span class="c1">// on a 2 GHz i7 CPU:</span>
+<span class="kt">int</span> <span class="nf">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span><span class="o">**</span> <span class="n">argv</span><span class="p">)</span> <span class="p">{</span>            <span class="c1">// on a 2 GHz i7 CPU:</span>
 	<span class="k">const</span> <span class="kt">unsigned</span> <span class="n">MAX</span> <span class="o">=</span> <span class="mi">512</span><span class="p">;</span>            <span class="c1">//  ~14 secs sequentially</span>
 <span class="c1">//	const unsigned MAX = 800;            //  ~60 secs sequentially</span>
 	<span class="n">BigInt</span> <span class="n">factorialTable</span><span class="p">[</span><span class="n">MAX</span><span class="o">+</span><span class="mi">1</span><span class="p">];</span>
@@ -795,7 +809,7 @@ a case where using dynamic scheduling of the work improves the performance. Try 
           </div>
         </div>
       </div>
-      <div class="sphinxsidebar">
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
             <p class="logo"><a href="../index.html">
               <img class="logo" src="../_static/CSInParallel200wide.png" alt="Logo"/>
@@ -825,7 +839,7 @@ a case where using dynamic scheduling of the work improves the performance. Try 
       </div>
       <div class="clearer"></div>
     </div>
-    <div class="related">
+    <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
@@ -834,13 +848,13 @@ a case where using dynamic scheduling of the work improves the performance. Try 
         <li class="right" >
           <a href="ProgStructure_Barrier.html" title="Shared Memory Program Structure and Coordination Patterns"
              >previous</a> |</li>
-        <li><a href="../index.html">Parallel Patternlets</a> &raquo;</li>
-          <li><a href="OpenMP_Patternlets.html" >Shared Memory Parallel Patternlets in OpenMP</a> &raquo;</li> 
+        <li class="nav-item nav-item-0"><a href="../index.html">Parallel Patternlets</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="OpenMP_Patternlets.html" >Shared Memory Parallel Patternlets in OpenMP</a> &#187;</li> 
       </ul>
     </div>
-    <div class="footer">
-        &copy; Copyright This work is licensed under a Creative Commons Attribution-ShareAlike 3.0 Unported License.
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    <div class="footer" role="contentinfo">
+        &#169; Copyright This work is licensed under a Creative Commons Attribution-ShareAlike 3.0 Unported License.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.2.
     </div>
   </body>
 </html>

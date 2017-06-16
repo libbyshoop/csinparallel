@@ -1,16 +1,14 @@
 
-
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-
 
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Message Passing Parallel Patternlets &mdash; Parallel Patternlets</title>
+    <title>Message Passing Parallel Patternlets &#8212; Parallel Patternlets</title>
     
-    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/csip.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     
     <script type="text/javascript">
@@ -19,19 +17,20 @@
         VERSION:     '',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
-        HAS_SOURCE:  true
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
       };
     </script>
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
     <link rel="shortcut icon" href="../_static/favicon.ico"/>
-    <link rel="top" title="Parallel Patternlets" href="../index.html" />
+    <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="Shared Memory Parallel Patternlets in OpenMP" href="../SharedMemory/OpenMP_Patternlets.html" />
     <link rel="prev" title="Parallel Programming Patterns" href="../PatternsIntro.html" /> 
   </head>
   <body>
-    <div class="related">
+    <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
@@ -40,14 +39,14 @@
         <li class="right" >
           <a href="../PatternsIntro.html" title="Parallel Programming Patterns"
              accesskey="P">previous</a> |</li>
-        <li><a href="../index.html">Parallel Patternlets</a> &raquo;</li> 
+        <li class="nav-item nav-item-0"><a href="../index.html">Parallel Patternlets</a> &#187;</li> 
       </ul>
     </div>  
 
     <div class="document">
       <div class="documentwrapper">
         <div class="bodywrapper">
-          <div class="body">
+          <div class="body" role="main">
             
   <div class="section" id="message-passing-parallel-patternlets">
 <h1>Message Passing Parallel Patternlets<a class="headerlink" href="#message-passing-parallel-patternlets" title="Permalink to this headline">¶</a></h1>
@@ -61,7 +60,7 @@ of machines.</p>
 <div class="section" id="source-code">
 <h2>Source Code<a class="headerlink" href="#source-code" title="Permalink to this headline">¶</a></h2>
 <p>Please download all examples from this tarball:
-<a class="reference download internal" href="../_downloads/MPI.tgz"><tt class="xref download docutils literal"><span class="pre">MPI.tgz</span></tt></a></p>
+<a class="reference download internal" href="../_downloads/MPI.tgz" download=""><code class="xref download docutils literal"><span class="pre">MPI.tgz</span></code></a></p>
 <p>A C code file for each example below can be found in subdirectories of the MPI directory,
 along with a makefile and an example of how to execute the program.</p>
 </div>
@@ -89,8 +88,8 @@ for its variables.  This is why we call it single program, multiple data.</p>
 <span class="cm"> *    &quot;single program&quot; is generating.</span>
 <span class="cm"> */</span>
 
-<span class="cp">#include &lt;stdio.h&gt;   </span><span class="c1">// printf()</span>
-<span class="cp">#include &lt;mpi.h&gt;     </span><span class="c1">// MPI functions</span>
+<span class="cp">#include</span> <span class="cpf">&lt;stdio.h&gt;   // printf()</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;mpi.h&gt;     // MPI functions</span><span class="cp"></span>
 
 <span class="kt">int</span> <span class="nf">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span><span class="o">**</span> <span class="n">argv</span><span class="p">)</span> <span class="p">{</span>
     <span class="kt">int</span> <span class="n">id</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">numProcesses</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">length</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span>
@@ -107,6 +106,7 @@ for its variables.  This is why we call it single program, multiple data.</p>
     <span class="n">MPI_Finalize</span><span class="p">();</span>
     <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
 <span class="p">}</span>
+
 </pre></div>
 </div>
 <p><em>file: patternlets/MPI/00.spmd/spmd.c</em></p>
@@ -125,8 +125,8 @@ for its variables.  This is why we call it single program, multiple data.</p>
 <span class="cm"> *    number of processes changes.</span>
 <span class="cm"> */</span>
 
-<span class="cp">#include &lt;stdio.h&gt;</span>
-<span class="cp">#include &lt;mpi.h&gt;</span>
+<span class="cp">#include</span> <span class="cpf">&lt;stdio.h&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;mpi.h&gt;</span><span class="cp"></span>
 
 <span class="kt">int</span> <span class="nf">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span><span class="o">**</span> <span class="n">argv</span><span class="p">)</span> <span class="p">{</span>
   <span class="kt">int</span> <span class="n">id</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">numWorkers</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">length</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span>
@@ -148,6 +148,7 @@ for its variables.  This is why we call it single program, multiple data.</p>
   <span class="n">MPI_Finalize</span><span class="p">();</span>
   <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
 <span class="p">}</span>
+
 </pre></div>
 </div>
 <p><em>file: patternlets/MPI/01.masterWorker/masterWorker.c</em></p>
@@ -170,9 +171,9 @@ for its variables.  This is why we call it single program, multiple data.</p>
 <span class="cm"> * -- outputs.</span>
 <span class="cm"> */</span>
 
-<span class="cp">#include &lt;stdio.h&gt;</span>
-<span class="cp">#include &lt;mpi.h&gt;</span>
-<span class="cp">#include &lt;math.h&gt;   </span><span class="c1">// sqrt()</span>
+<span class="cp">#include</span> <span class="cpf">&lt;stdio.h&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;mpi.h&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;math.h&gt;   // sqrt()</span><span class="cp"></span>
 
 <span class="kt">int</span> <span class="nf">odd</span><span class="p">(</span><span class="kt">int</span> <span class="n">number</span><span class="p">)</span> <span class="p">{</span> <span class="k">return</span> <span class="n">number</span> <span class="o">%</span> <span class="mi">2</span><span class="p">;</span> <span class="p">}</span>
 
@@ -206,6 +207,7 @@ for its variables.  This is why we call it single program, multiple data.</p>
     <span class="n">MPI_Finalize</span><span class="p">();</span>
     <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
 <span class="p">}</span>
+
 </pre></div>
 </div>
 <p><em>file: patternlets/MPI/02.messagePassing/messagePassing.c</em></p>
@@ -226,10 +228,10 @@ for its variables.  This is why we call it single program, multiple data.</p>
 <span class="cm"> * - Compare to messagePassing1.c; note send/receive differences.</span>
 <span class="cm"> */</span>
 
-<span class="cp">#include &lt;stdio.h&gt;   </span><span class="c1">// printf()</span>
-<span class="cp">#include &lt;mpi.h&gt;     </span><span class="c1">// MPI</span>
-<span class="cp">#include &lt;stdlib.h&gt;  </span><span class="c1">// malloc()</span>
-<span class="cp">#include &lt;string.h&gt;  </span><span class="c1">// strlen()</span>
+<span class="cp">#include</span> <span class="cpf">&lt;stdio.h&gt;   // printf()</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;mpi.h&gt;     // MPI</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;stdlib.h&gt;  // malloc()</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;string.h&gt;  // strlen()</span><span class="cp"></span>
 
 <span class="kt">int</span> <span class="nf">odd</span><span class="p">(</span><span class="kt">int</span> <span class="n">number</span><span class="p">)</span> <span class="p">{</span> <span class="k">return</span> <span class="n">number</span> <span class="o">%</span> <span class="mi">2</span><span class="p">;</span> <span class="p">}</span>
 
@@ -275,6 +277,7 @@ for its variables.  This is why we call it single program, multiple data.</p>
     <span class="n">MPI_Finalize</span><span class="p">();</span>
     <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
 <span class="p">}</span>
+
 </pre></div>
 </div>
 <p><em>file: patternlets/MPI/03.messagePassing2/messagePassing2.c</em></p>
@@ -294,9 +297,9 @@ for its variables.  This is why we call it single program, multiple data.</p>
 <span class="cm"> * - Explain the behavior you observe.</span>
 <span class="cm"> */</span>
 
-<span class="cp">#include &lt;stdio.h&gt;    </span><span class="c1">// printf()</span>
-<span class="cp">#include &lt;string.h&gt;   </span><span class="c1">// strlen()</span>
-<span class="cp">#include &lt;mpi.h&gt;      </span><span class="c1">// MPI</span>
+<span class="cp">#include</span> <span class="cpf">&lt;stdio.h&gt;    // printf()</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;string.h&gt;   // strlen()</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;mpi.h&gt;      // MPI</span><span class="cp"></span>
 
 <span class="cp">#define MAX 256</span>
 
@@ -357,6 +360,7 @@ for its variables.  This is why we call it single program, multiple data.</p>
     <span class="n">MPI_Finalize</span><span class="p">();</span>
     <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
 <span class="p">}</span>
+
 </pre></div>
 </div>
 <p><em>file: patternlets/MPI/04.messagePassing3/messagePassing3.c</em></p>
@@ -380,9 +384,9 @@ from zero to REPS * numProcesses, which are used in the for loop.</p>
 <span class="cm"> *    among the processes.</span>
 <span class="cm"> */</span>
 
-<span class="cp">#include &lt;stdio.h&gt; </span><span class="c1">// printf()</span>
-<span class="cp">#include &lt;mpi.h&gt;   </span><span class="c1">// MPI</span>
-<span class="cp">#include &lt;math.h&gt;  </span><span class="c1">// ceil()</span>
+<span class="cp">#include</span> <span class="cpf">&lt;stdio.h&gt; // printf()</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;mpi.h&gt;   // MPI</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;math.h&gt;  // ceil()</span><span class="cp"></span>
 
 <span class="kt">int</span> <span class="nf">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span><span class="o">**</span> <span class="n">argv</span><span class="p">)</span> <span class="p">{</span>
     <span class="k">const</span> <span class="kt">int</span> <span class="n">REPS</span> <span class="o">=</span> <span class="mi">8</span><span class="p">;</span>
@@ -409,6 +413,7 @@ from zero to REPS * numProcesses, which are used in the for loop.</p>
     <span class="n">MPI_Finalize</span><span class="p">();</span>
     <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
 <span class="p">}</span>
+
 </pre></div>
 </div>
 <p><em>file: patternlets/MPI/05.parallelLoop-equalChunks/parallelLoopEqualChunks.c</em></p>
@@ -435,8 +440,8 @@ of an array that could have been looped over in a sequential solution.</p>
 <span class="cm"> *    among the processes.</span>
 <span class="cm"> */</span>
 
-<span class="cp">#include &lt;stdio.h&gt;  </span><span class="c1">// printf()</span>
-<span class="cp">#include &lt;mpi.h&gt;    </span><span class="c1">// MPI</span>
+<span class="cp">#include</span> <span class="cpf">&lt;stdio.h&gt;  // printf()</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;mpi.h&gt;    // MPI</span><span class="cp"></span>
 
 <span class="kt">int</span> <span class="nf">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span><span class="o">**</span> <span class="n">argv</span><span class="p">)</span> <span class="p">{</span>
     <span class="k">const</span> <span class="kt">int</span> <span class="n">REPS</span> <span class="o">=</span> <span class="mi">8</span><span class="p">;</span>
@@ -453,6 +458,7 @@ of an array that could have been looped over in a sequential solution.</p>
     <span class="n">MPI_Finalize</span><span class="p">();</span>
     <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
 <span class="p">}</span>
+
 </pre></div>
 </div>
 <p><em>file: patternlets/MPI/06.parallelLoop-chunksOf1/parallelLoopChunksOf1.c</em></p>
@@ -475,10 +481,10 @@ of an array that could have been looped over in a sequential solution.</p>
 <span class="cm"> * - Explain behavior/effect of MPI_Bcast().</span>
 <span class="cm"> */</span>
 
-<span class="cp">#include &lt;mpi.h&gt;</span>
-<span class="cp">#include &lt;stdio.h&gt;</span>
-<span class="cp">#include &lt;stdlib.h&gt;</span>
-<span class="cp">#include &lt;assert.h&gt;</span>
+<span class="cp">#include</span> <span class="cpf">&lt;mpi.h&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;stdio.h&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;stdlib.h&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;assert.h&gt;</span><span class="cp"></span>
 
 <span class="kt">int</span> <span class="nf">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span><span class="o">**</span> <span class="n">argv</span><span class="p">)</span> <span class="p">{</span>
 	<span class="kt">int</span> <span class="n">answer</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
@@ -507,6 +513,7 @@ of an array that could have been looped over in a sequential solution.</p>
 
 	<span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
 <span class="p">}</span>
+
 </pre></div>
 </div>
 <p><em>file: patternlets/MPI/07.broadcast/broadcast.c</em></p>
@@ -527,9 +534,9 @@ created by a single <em>master</em> node.</p>
 <span class="cm"> * - Explain behavior/effect of MPI_Bcast().</span>
 <span class="cm"> */</span>
 
-<span class="cp">#include &lt;mpi.h&gt;</span>
-<span class="cp">#include &lt;stdio.h&gt;</span>
-<span class="cp">#include &lt;stdlib.h&gt;</span>
+<span class="cp">#include</span> <span class="cpf">&lt;mpi.h&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;stdio.h&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;stdlib.h&gt;</span><span class="cp"></span>
 
 <span class="cm">/* fill an array with some arbitrary values </span>
 <span class="cm"> * @param: a, an int*.</span>
@@ -582,6 +589,7 @@ created by a single <em>master</em> node.</p>
 
 	<span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
 <span class="p">}</span>
+
 </pre></div>
 </div>
 <p><em>file: patternlets/MPI/08.broadcast2/broadcast2.c</em></p>
@@ -605,9 +613,9 @@ MPI_MAX in the following code.</p>
 <span class="cm"> * - Explain behavior of MPI_Reduce().</span>
 <span class="cm"> */</span>
 
-<span class="cp">#include &lt;mpi.h&gt;</span>
-<span class="cp">#include &lt;stdio.h&gt;</span>
-<span class="cp">#include &lt;stdlib.h&gt;</span>
+<span class="cp">#include</span> <span class="cpf">&lt;mpi.h&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;stdio.h&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;stdlib.h&gt;</span><span class="cp"></span>
 
 <span class="kt">int</span> <span class="nf">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span><span class="o">**</span> <span class="n">argv</span><span class="p">)</span> <span class="p">{</span>
         <span class="kt">int</span> <span class="n">numProcs</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">myRank</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">square</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">max</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">sum</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
@@ -633,6 +641,7 @@ MPI_MAX in the following code.</p>
 
 	<span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
 <span class="p">}</span>
+
 </pre></div>
 </div>
 <p><em>file: patternlets/MPI/09.reduction/reduction.c</em></p>
@@ -654,12 +663,12 @@ MPI_MAX in the following code.</p>
 <span class="cm"> *     srcArr and destArr.</span>
 <span class="cm"> */</span>
 
-<span class="cp">#include &lt;mpi.h&gt;</span>
-<span class="cp">#include &lt;stdio.h&gt;</span>
+<span class="cp">#include</span> <span class="cpf">&lt;mpi.h&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;stdio.h&gt;</span><span class="cp"></span>
 
 <span class="cp">#define ARRAY_SIZE 5</span>
 
-<span class="kt">void</span> <span class="n">printArray</span><span class="p">(</span><span class="kt">int</span> <span class="n">id</span><span class="p">,</span> <span class="kt">char</span><span class="o">*</span> <span class="n">arrayName</span><span class="p">,</span> <span class="kt">int</span><span class="o">*</span> <span class="n">array</span><span class="p">,</span> <span class="kt">int</span> <span class="n">SIZE</span><span class="p">);</span>
+<span class="kt">void</span> <span class="nf">printArray</span><span class="p">(</span><span class="kt">int</span> <span class="n">id</span><span class="p">,</span> <span class="kt">char</span><span class="o">*</span> <span class="n">arrayName</span><span class="p">,</span> <span class="kt">int</span><span class="o">*</span> <span class="n">array</span><span class="p">,</span> <span class="kt">int</span> <span class="n">SIZE</span><span class="p">);</span>
 
 <span class="kt">int</span> <span class="nf">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span><span class="o">**</span> <span class="n">argv</span><span class="p">)</span> <span class="p">{</span>
     <span class="kt">int</span> <span class="n">myRank</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span>
@@ -709,6 +718,7 @@ MPI_MAX in the following code.</p>
     <span class="p">}</span>
     <span class="n">printf</span><span class="p">(</span><span class="s">&quot;]</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">);</span>
 <span class="p">}</span>
+
 </pre></div>
 </div>
 <p><em>file: patternlets/MPI/10.reduction2/reduction2.c</em></p>
@@ -731,11 +741,11 @@ a copy of its portion of the array.</p>
 <span class="cm"> * - Explain behavior/effect of MPI_Scatter().</span>
 <span class="cm"> */</span>
 
-<span class="cp">#include &lt;mpi.h&gt;      </span><span class="c1">// MPI</span>
-<span class="cp">#include &lt;stdio.h&gt;    </span><span class="c1">// printf(), etc.</span>
-<span class="cp">#include &lt;stdlib.h&gt;   </span><span class="c1">// malloc()</span>
+<span class="cp">#include</span> <span class="cpf">&lt;mpi.h&gt;      // MPI</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;stdio.h&gt;    // printf(), etc.</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;stdlib.h&gt;   // malloc()</span><span class="cp"></span>
 
-<span class="kt">void</span> <span class="n">print</span><span class="p">(</span><span class="kt">int</span> <span class="n">id</span><span class="p">,</span> <span class="kt">char</span><span class="o">*</span> <span class="n">arrName</span><span class="p">,</span> <span class="kt">int</span><span class="o">*</span> <span class="n">arr</span><span class="p">,</span> <span class="kt">int</span> <span class="n">arrSize</span><span class="p">);</span>
+<span class="kt">void</span> <span class="nf">print</span><span class="p">(</span><span class="kt">int</span> <span class="n">id</span><span class="p">,</span> <span class="kt">char</span><span class="o">*</span> <span class="n">arrName</span><span class="p">,</span> <span class="kt">int</span><span class="o">*</span> <span class="n">arr</span><span class="p">,</span> <span class="kt">int</span> <span class="n">arrSize</span><span class="p">);</span>
 
 <span class="kt">int</span> <span class="nf">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span><span class="o">**</span> <span class="n">argv</span><span class="p">)</span> <span class="p">{</span>
     <span class="k">const</span> <span class="kt">int</span> <span class="n">MAX</span> <span class="o">=</span> <span class="mi">8</span><span class="p">;</span>
@@ -776,6 +786,7 @@ a copy of its portion of the array.</p>
     <span class="p">}</span>
     <span class="n">printf</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">);</span>
 <span class="p">}</span>
+
 </pre></div>
 </div>
 <p><em>file: patternlets/MPI/11.scatter/scatter.c</em></p>
@@ -798,11 +809,11 @@ a copy of its portion of the array back to the root, or master process.</p>
 <span class="cm"> * - Explain behavior of MPI_Gather().</span>
 <span class="cm"> */</span>
 
-<span class="cp">#include &lt;mpi.h&gt;       </span><span class="c1">// MPI</span>
-<span class="cp">#include &lt;stdio.h&gt;     </span><span class="c1">// printf()</span>
-<span class="cp">#include &lt;stdlib.h&gt;    </span><span class="c1">// malloc()</span>
+<span class="cp">#include</span> <span class="cpf">&lt;mpi.h&gt;       // MPI</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;stdio.h&gt;     // printf()</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;stdlib.h&gt;    // malloc()</span><span class="cp"></span>
 
-<span class="kt">void</span> <span class="n">print</span><span class="p">(</span><span class="kt">int</span> <span class="n">id</span><span class="p">,</span> <span class="kt">char</span><span class="o">*</span> <span class="n">arrName</span><span class="p">,</span> <span class="kt">int</span><span class="o">*</span> <span class="n">arr</span><span class="p">,</span> <span class="kt">int</span> <span class="n">arrSize</span><span class="p">);</span>
+<span class="kt">void</span> <span class="nf">print</span><span class="p">(</span><span class="kt">int</span> <span class="n">id</span><span class="p">,</span> <span class="kt">char</span><span class="o">*</span> <span class="n">arrName</span><span class="p">,</span> <span class="kt">int</span><span class="o">*</span> <span class="n">arr</span><span class="p">,</span> <span class="kt">int</span> <span class="n">arrSize</span><span class="p">);</span>
 
 <span class="cp">#define SIZE 3</span>
 
@@ -849,6 +860,8 @@ a copy of its portion of the array back to the root, or master process.</p>
     <span class="p">}</span>
     <span class="n">printf</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">);</span>
 <span class="p">}</span>
+
+
 </pre></div>
 </div>
 <p><em>file: patternlets/MPI/12.gather/gather.c</em></p>
@@ -877,8 +890,8 @@ you add the call to the MPI_Barrier funtion.</p>
 <span class="cm"> *  - Explain what effect MPI_Barrier() has on process behavior.</span>
 <span class="cm"> */</span>
 
-<span class="cp">#include &lt;stdio.h&gt;   </span><span class="c1">// printf()</span>
-<span class="cp">#include &lt;mpi.h&gt;     </span><span class="c1">// MPI</span>
+<span class="cp">#include</span> <span class="cpf">&lt;stdio.h&gt;   // printf()</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;mpi.h&gt;     // MPI</span><span class="cp"></span>
 
 <span class="cm">/* Have workers send messages to the master, which prints them.</span>
 <span class="cm"> * @param: id, an int</span>
@@ -940,6 +953,7 @@ you add the call to the MPI_Barrier funtion.</p>
     <span class="n">MPI_Finalize</span><span class="p">();</span>
     <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
 <span class="p">}</span>
+
 </pre></div>
 </div>
 <p><em>file: patternlets/MPI/13.barrier/barrier.c</em></p>
@@ -971,9 +985,9 @@ recording the time using the master node.</p>
 <span class="cm"> *     produce the change you observed?</span>
 <span class="cm"> */</span>
 
-<span class="cp">#include &lt;stdio.h&gt;   </span><span class="c1">// printf()</span>
-<span class="cp">#include &lt;mpi.h&gt;     </span><span class="c1">// MPI</span>
-<span class="cp">#include &lt;unistd.h&gt;  </span><span class="c1">// sleep()</span>
+<span class="cp">#include</span> <span class="cpf">&lt;stdio.h&gt;   // printf()</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;mpi.h&gt;     // MPI</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;unistd.h&gt;  // sleep()</span><span class="cp"></span>
 
 <span class="cp">#define  MASTER 0</span>
 
@@ -1018,6 +1032,7 @@ recording the time using the master node.</p>
     <span class="n">MPI_Finalize</span><span class="p">();</span>
     <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
 <span class="p">}</span>
+
 </pre></div>
 </div>
 <p><em>file: patternlets/MPI/14.barrier+Timing/barrier+timing.c</em></p>
@@ -1047,8 +1062,8 @@ Using tags is an alternative form of simulating the barrier example in example 1
 <span class="cm"> *      in the program&#39;s behavior, and why?</span>
 <span class="cm"> */</span>
 
-<span class="cp">#include &lt;stdio.h&gt;   </span><span class="c1">// printf()</span>
-<span class="cp">#include &lt;mpi.h&gt;     </span><span class="c1">// MPI</span>
+<span class="cp">#include</span> <span class="cpf">&lt;stdio.h&gt;   // printf()</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;mpi.h&gt;     // MPI</span><span class="cp"></span>
 
 <span class="cm">/* Have workers send messages to the master, which prints them.</span>
 <span class="cm"> * @param: id, an int</span>
@@ -1116,6 +1131,7 @@ Using tags is an alternative form of simulating the barrier example in example 1
     <span class="n">MPI_Finalize</span><span class="p">();</span>
     <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
 <span class="p">}</span>
+
 </pre></div>
 </div>
 <p><em>file: patternlets/MPI/15.sequenceNumbers/sequenceNumbers.c</em></p>
@@ -1126,7 +1142,7 @@ Using tags is an alternative form of simulating the barrier example in example 1
           </div>
         </div>
       </div>
-      <div class="sphinxsidebar">
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
             <p class="logo"><a href="../index.html">
               <img class="logo" src="../_static/CSInParallel200wide.png" alt="Logo"/>
@@ -1165,7 +1181,7 @@ Using tags is an alternative form of simulating the barrier example in example 1
       </div>
       <div class="clearer"></div>
     </div>
-    <div class="related">
+    <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
@@ -1174,12 +1190,12 @@ Using tags is an alternative form of simulating the barrier example in example 1
         <li class="right" >
           <a href="../PatternsIntro.html" title="Parallel Programming Patterns"
              >previous</a> |</li>
-        <li><a href="../index.html">Parallel Patternlets</a> &raquo;</li> 
+        <li class="nav-item nav-item-0"><a href="../index.html">Parallel Patternlets</a> &#187;</li> 
       </ul>
     </div>
-    <div class="footer">
-        &copy; Copyright This work is licensed under a Creative Commons Attribution-ShareAlike 3.0 Unported License.
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    <div class="footer" role="contentinfo">
+        &#169; Copyright This work is licensed under a Creative Commons Attribution-ShareAlike 3.0 Unported License.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.2.
     </div>
   </body>
 </html>
