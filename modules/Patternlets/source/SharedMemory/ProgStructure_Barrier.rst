@@ -2,7 +2,7 @@
 Shared Memory Program Structure and Coordination Patterns
 *********************************************************
 
-0. Program Structure Implementation Strategy: The basic fork-join pattern 
+0. Program Structure Implementation Strategy: The basic fork-join pattern
 *************************************************************************
 
 
@@ -10,10 +10,12 @@ Shared Memory Program Structure and Coordination Patterns
 
 *Build inside 00.forkJoin directory:*
 ::
+
 	make forkjoin
 
 *Execute on the command line inside 00.forkJoin directory:*
 ::
+
 	./forkjoin
 
 The *omp parallel* pragma on line 21, when uncommented, tells the compiler to
@@ -22,8 +24,8 @@ fork a set of threads to execute the next line of code (later you will see how t
 .. image:: ForkJoin.png
 	:width: 800
 
-Observe what happens on the machine 
-where you are running this code, both when you have the pragma commented (no fork) and when you uncomment it (adding a fork).  
+Observe what happens on the machine
+where you are running this code, both when you have the pragma commented (no fork) and when you uncomment it (adding a fork).
 
 Note that in OpenMP the join is implicit and does not require a pragma directive.
 
@@ -40,21 +42,23 @@ Note that in OpenMP the join is implicit and does not require a pragma directive
 
 *Build inside 01.forkJoin2 directory:*
 ::
+
 	make forkjoin2
 
 *Execute on the command line inside 01.forkJoin2 directory:*
 ::
+
 	./forkjoin2
 
 This code illustrates that one program can fork and join more than once
 and that programmers can set the number of threads to use in the parallel forked code.
 
 Note on line 28 there is an OpenMP function called *omp_set_num_threads*
-for setting the number of threads to use for each 
+for setting the number of threads to use for each
 *fork*, which occur when the omp_parallel pragma is used.
 Also note on line 35 that you can set the number of threads for the very next
 fork indicated by an omp_parallel pragma by augmenting the pragma as shown in line 35.
-Follow the instructions in the header of the code file to understand the difference 
+Follow the instructions in the header of the code file to understand the difference
 between these.
 
 .. literalinclude::
@@ -71,10 +75,12 @@ between these.
 
 *Build inside 02.spmd directory:*
 ::
+
 	make spmd
 
 *Execute on the command line inside 02.spmd directory:*
 ::
+
 	./spmd
 
 Note how there are OpenMP functions to
@@ -102,11 +108,11 @@ concurrently on each thread.
 When you execute the parallel version containing the pragma (uncommenting line 20),
 what do you observe about the order of the printed lines?  Run the program multiple times--
 does the ordering change?  This illustrates an important point about threaded programs:
-*the ordering of execution of statements between threads is not guaranteed.*  This is also 
+*the ordering of execution of statements between threads is not guaranteed.*  This is also
 illustrated in the diagram above.
 
 
-.. literalinclude:: 
+.. literalinclude::
 	../patternlets/openMP/02.spmd/spmd.c
     :language: c
     :linenos:
@@ -119,10 +125,12 @@ illustrated in the diagram above.
 
 *Build inside 03.spmd2 directory:*
 ::
+
 	make spmd2
- 
+
 *Execute on the command line inside 03.spmd2 directory:*
 ::
+
 	./spmd2 4
 	Replace 4 with other values for the number of threads
 
@@ -141,10 +149,12 @@ make your code versatile so that you can use as many threads as you would like.
 
 *Build inside 04.barrier directory:*
 ::
+
 	make barrier
- 
+
 *Execute on the command line inside 04.barrier directory:*
 ::
+
 	./barrier 4
 	Replace 4 with other values for the number of threads
 
@@ -173,16 +183,18 @@ Note what happens with and without the commented pragma on line 31.
 
 *Build inside 05.masterWorker directory:*
 ::
+
 	make masterWorker
- 
+
 *Execute on the command line inside 05.masterWorker directory:*
 ::
+
 	./masterWorker 4
 	Replace 4 with other values for the number of threads
 
 
-Once you have mastered the notion of fork-join and single-program, multiple data, 
-the next common pattern that programmers use in association with these patterns 
+Once you have mastered the notion of fork-join and single-program, multiple data,
+the next common pattern that programmers use in association with these patterns
 is to have one thread, called the master, execute one block of code when it forks while the rest
 of the threads, called workers, execute a different block of code when they fork.
 This is illustrated in this simple example (useful code would be more complicated).

@@ -11,10 +11,12 @@ All threaded programs have some form of task decomposition, that is, delineating
 
 *Build inside 16.sections directory:*
 ::
+
 	make sections
 
 *Execute on the command line inside 16.sections directory:*
 ::
+
 	./sections
 
 This example shows how to create a program with arbitrary separate tasks that run concurrently.  This is useful if you have tasks that are not dependent on one another.
@@ -23,6 +25,3 @@ This example shows how to create a program with arbitrary separate tasks that ru
 	../patternlets/openMP/16.sections/sections.c
     :language: c
     :linenos:
-
-
-
