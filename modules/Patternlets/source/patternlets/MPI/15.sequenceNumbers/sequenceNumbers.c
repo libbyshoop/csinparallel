@@ -6,13 +6,13 @@
  *
  * Usage: mpirun -np 8 ./sequenceNumbers
  *
- * Exercise: 
- * 1. Compile; then run the program several times, 
+ * Exercise:
+ * 1. Compile; then run the program several times,
  *     noting the intermixed outputs
  * 2. Comment out the sendReceivePrint(..., "SECOND", 1); call;
  *      uncomment the sendReceivePrint(..., "SECOND", 2); call;
  *      then recompile and rerun, noting how the output changes.
- * 3. Uncomment the sendReceivePrint(..., "THIRD", 3); 
+ * 3. Uncomment the sendReceivePrint(..., "THIRD", 3);
  *      and sendReceivePrint(..., "FOURTH", 4); calls,
  *      then recompile and rerun, noting how the output changes.
  * 4. Explain the differences: what has caused the changes
@@ -29,18 +29,18 @@
  * @param: messageNum, a char*
  * @param: tagValue, an int
  *
- * Precondition: this routine is being called by an MPI process 
- *               && id is the MPI rank of that process 
- *               && numProcesses is the number of processes in the computation 
+ * Precondition: this routine is being called by an MPI process
+ *               && id is the MPI rank of that process
+ *               && numProcesses is the number of processes in the computation
  *               && hostName points to a char array containing the name of the
- *                    host on which this MPI process is running 
+ *                    host on which this MPI process is running
  *               && messageNum is "FIRST", "SECOND", "THIRD", ...
  *               && tagValue is the value for the tags of the message
  *                    being sent and received this invocation of the function.
  *
  * Postcondition: each process whose id > 0 has sent a message to process 0
  *                    containing id, numProcesses, hostName, messageNum,
- *                    and tagValue 
+ *                    and tagValue
  *                && process 0 has received and output each message.
  */
 
@@ -52,18 +52,18 @@ void sendReceivePrint(int id, int numProcesses, char* hostName,
     char buffer[BUFFER_SIZE] = {'\0'};;
     MPI_Status status;
 
-    if (id != MASTER) { 
+    if (id != MASTER) {
         // Worker: Build a message and send it to the Master
         int length = sprintf(buffer,
                               "This is the %s message from process #%d of %d on %s.\n",
-                                messageNum, id, numProcesses, hostName);       
+                                messageNum, id, numProcesses, hostName);
         MPI_Send(buffer, length+1, MPI_CHAR, 0, tagValue, MPI_COMM_WORLD);
     } else {
         // Master: Receive and print the messages from all Workers
         for(int i = 0; i < numProcesses-1; i++) {
            MPI_Recv(buffer, BUFFER_SIZE, MPI_CHAR, MPI_ANY_SOURCE,
                      tagValue, MPI_COMM_WORLD, &status);
-           printf(buffer);
+           printf("%s", buffer);
         }
     }
 }
@@ -88,4 +88,3 @@ int main(int argc, char** argv) {
     MPI_Finalize();
     return 0;
 }
-
