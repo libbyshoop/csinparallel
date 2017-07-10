@@ -14,7 +14,7 @@ Source Code
 ************
 
 Please download all examples from this tarball:
-:download:`MPI.tgz <../patternlets/MPI.tgz>`
+:download:`MPI.tar.gz <../patternlets/MPI.tar.gz>`
 
 A C code file for each example below can be found in subdirectories of the MPI directory,
 along with a makefile and an example of how to execute the program.

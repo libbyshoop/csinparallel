@@ -1,12 +1,12 @@
 /* messagePassing3.c
  * ... illustrates the use of MPI_Send() and MPI_Recv(),
- *      in combination with the master-worker pattern. 
+ *      in combination with the master-worker pattern.
  *
  * Joel Adams, Calvin College, November 2009.
  *
  * Usage: mpirun -np N ./messagePassing3
  *
- * Exercise: 
+ * Exercise:
  * - Run the program, varying the value of N from 1-8.
  * - Explain the behavior you observe.
  */
@@ -18,7 +18,7 @@
 #define MAX 256
 
 int main(int argc, char** argv) {
-    int id = -1, numProcesses = -1; 
+    int id = -1, numProcesses = -1;
     char sendBuffer[MAX] = {'\0'};
     char recvBuffer[MAX] = {'\0'};
     MPI_Status status;
@@ -45,6 +45,9 @@ int main(int argc, char** argv) {
                       1,                              //  tag
                       MPI_COMM_WORLD,                 //  communicator
                       &status);                       //  recv status
+
+            printf("Process #%d of %d received %s\n", // show msg
+                    id, numProcesses, recvBuffer);
         } else {                                      // workers:
             MPI_Recv(recvBuffer,                      //  msg received
                       MAX,                            //  buffer size
@@ -74,4 +77,3 @@ int main(int argc, char** argv) {
     MPI_Finalize();
     return 0;
 }
-
