@@ -34,10 +34,10 @@ There are a number of parallel code patterns that are closely related to the sys
 2. *Coordination* patterns, which set up how multiple concurrently running tasks on processing units coordinate to complete the parallel computation desired.
 
 In parallel processing, most software uses one of
-two major *coordination patterns*: 
-	
-	1. **message passing** between concurrent processes on either single multiprocessor machines or clusters of distributed computers, and 
-	2. **mutual exclusion** between threads executing concurrently on a single shared memory system.  
+two major *coordination patterns*:
+
+	1. **message passing** between concurrent processes on either single multiprocessor machines or clusters of distributed computers, and
+	2. **mutual exclusion** between threads executing concurrently on a single shared memory system.
 
 These two types of computation are often realized using two very popular C/C++ libraries:
 
@@ -49,7 +49,7 @@ OpenMP is built on a lower-level POSIX library called Pthreads, which can also b
 
 A third emerging type of parallel implementation involves a *hybrid computation* that uses both of the above patterns together, using a cluster of computers, each of which executes multiple threads.  This type of hybrid program often uses MPI and OpenMP together in one program, which runs on multiple computers in a cluster.
 
-This document is split into chapters of examples.  There are examples for message passing using MPI and shared memory using OpenMP.
+This document is split into chapters of examples.  There are examples for message passing using MPI, shared memory using OpenMP and shared memory using PThreads vath library.
 (In the future we will include shared memory examples using Pthreads, and hybrid computations using a combination of MPI and OpenMP.)
 
 Most of the examples are illustrated
@@ -58,13 +58,11 @@ is used to illustrate a particular difference in code execution between the two 
 
 There are many small examples that serve to illustrate a common pattern.  They are designed for you to try compiling and running on your own to see how they work.  For each example, there are comments within the code to guide you as you try them out.  In many cases, there may be code snippets that you can comment and/or uncomment to see how the execution of the code changes after you do so and re-compile it.
 
-Depending on you interest, you can now explore MPI Patternlets or OpenMP Patternlets.
+Depending on you interest, you can now explore MPI Patternlets, OpenMP Patternlets, or Pthreads Vath Library Patternlets.
 
 
 :doc:`MessagePassing/MPI_Patternlets`
 
 :doc:`SharedMemory/OpenMP_Patternlets`
 
-
-
-
+:doc:`SharedMemoryVath/Vath_pth_Patternlets`
