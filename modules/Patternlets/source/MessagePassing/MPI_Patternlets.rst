@@ -19,9 +19,11 @@ Please download all examples from this tarball:
 A C code file for each example below can be found in subdirectories of the MPI directory,
 along with a makefile and an example of how to execute the program.
 
-
 Patternlets Grouped By Type
 ***************************
+If you are working on these for the first time, you may want to visit them in
+order. If you are returning to review a particular patternlet or the pattern
+categorization diagram, you can refer to them individually.
 
 :doc:`MasterWorker_MessagePassing`
 

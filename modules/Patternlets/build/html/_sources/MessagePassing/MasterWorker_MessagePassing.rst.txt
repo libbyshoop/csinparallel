@@ -1,5 +1,5 @@
 *********************************************************
-Master Worker Pattern and Message Passing
+SPMD, Master Worker Pattern and Message Passing
 *********************************************************
 
 00. Single Program, Multiple Data
@@ -89,7 +89,7 @@ The message that is being passed is the rank of the current process.
 Conceptually, the running code is executing like this, where time is moving
 from top to bottom:
 
-.. image:: Deadlock.png
+.. image:: MPIImages/Deadlock.png
 	:width: 500
 
 .. topic:: To do:
@@ -123,7 +123,7 @@ pair and one send/receive pair. As shown in the diagram below, where time
 is moving from top to bottom, even processes are receive/send pairs and
 odd processes are send/receive pairs.
 
-.. image:: MessagePassing.png
+.. image:: MPIImages/MessagePassing.png
   :width: 700
 
 .. topic:: To do:
@@ -136,7 +136,7 @@ odd processes are send/receive pairs.
   *Hint:* See diagram below.
 
 
-.. image:: MessagePassingOdd.png
+.. image:: MPIImages/MessagePassingOdd.png
   :width: 700
 
 .. literalinclude:: ../patternlets/MPI/03.messagePassing/messagePassing.c
@@ -204,7 +204,7 @@ a 0. Next, process 1 adds its rank to the string and sends the string to process
 continues until process 0 receives the final string from the last process (process with the largest rank). Thus, process 0 is the beginning and ending
 location of the "ring". This type of circular dependency can be thought of like this:
 
-.. image:: CircularDependancy.png
+.. image:: MPIImages/CircularDependancy.png
   :width: 800
 
 .. topic:: To do:

@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Barrier Synchronization and Tags &#8212; Parallel Patternlets</title>
+    <title>Barrier Synchronization, Timing and Tags &#8212; Parallel Patternlets</title>
     
     <link rel="stylesheet" href="../_static/csip.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
@@ -27,7 +27,7 @@
     <link rel="shortcut icon" href="../_static/favicon.ico"/>
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="Shared Memory Parallel Patternlets in OpenMP" href="../SharedMemory/OpenMP_Patternlets.html" />
-    <link rel="prev" title="Data Decomposition, Reduction, Scatter and Gather" href="Reduction_Scatter_Gather.html" /> 
+    <link rel="prev" title="Reduction, Data Decomposition, Scatter and Gather" href="Reduction_Scatter_Gather.html" /> 
   </head>
   <body>
     <div class="related" role="navigation" aria-label="related navigation">
@@ -37,7 +37,7 @@
           <a href="../SharedMemory/OpenMP_Patternlets.html" title="Shared Memory Parallel Patternlets in OpenMP"
              accesskey="N">next</a></li>
         <li class="right" >
-          <a href="Reduction_Scatter_Gather.html" title="Data Decomposition, Reduction, Scatter and Gather"
+          <a href="Reduction_Scatter_Gather.html" title="Reduction, Data Decomposition, Scatter and Gather"
              accesskey="P">previous</a> |</li>
         <li class="nav-item nav-item-0"><a href="../index.html">Parallel Patternlets</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="MPI_Patternlets.html" accesskey="U">Message Passing Parallel Patternlets</a> &#187;</li> 
@@ -49,8 +49,8 @@
         <div class="bodywrapper">
           <div class="body" role="main">
             
-  <div class="section" id="barrier-synchronization-and-tags">
-<h1>Barrier Synchronization and Tags<a class="headerlink" href="#barrier-synchronization-and-tags" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="barrier-synchronization-timing-and-tags">
+<h1>Barrier Synchronization, Timing and Tags<a class="headerlink" href="#barrier-synchronization-timing-and-tags" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="the-barrier-coordination-pattern">
 <h2>16. The Barrier Coordination Pattern<a class="headerlink" href="#the-barrier-coordination-pattern" title="Permalink to this headline">¶</a></h2>
 <p><em>file: patternlets/MPI/16.barrier/barrier.c</em></p>
@@ -68,7 +68,7 @@ you add the call to the MPI_Barrier function. After adding the barrier call,
 the BEFORE strings should all be printed prior to all of the AFTER strings.
 You can visualize the execution of the program with the barrier function
 like this, with time moving from left to right:</p>
-<a class="reference internal image-reference" href="../_images/Barrier1.png"><img alt="../_images/Barrier1.png" src="../_images/Barrier1.png" style="width: 600px;" /></a>
+<a class="reference internal image-reference" href="../_images/Barrier.png"><img alt="../_images/Barrier.png" src="../_images/Barrier.png" style="width: 600px;" /></a>
 <div class="highlight-c"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
  2
  3
@@ -239,18 +239,27 @@ like this, with time moving from left to right:</p>
 <h2>17. Timing code using the Barrier Coordination Pattern<a class="headerlink" href="#timing-code-using-the-barrier-coordination-pattern" title="Permalink to this headline">¶</a></h2>
 <p><em>file: patternlets/MPI/17.barrier+Timing/barrier+timing.c</em></p>
 <p><em>Build inside 17.barrier+Timing directory:</em></p>
-<div class="highlight-default"><div class="highlight"><pre><span class="n">make</span> <span class="n">marrier</span><span class="o">+</span><span class="n">timing</span>
+<div class="highlight-default"><div class="highlight"><pre><span class="n">make</span> <span class="n">barrier</span><span class="o">+</span><span class="n">timing</span>
 </pre></div>
 </div>
 <p><em>Execute on the command line inside 17.barrier+Timing directory:</em></p>
 <div class="highlight-default"><div class="highlight"><pre><span class="n">mpirun</span> <span class="o">-</span><span class="n">np</span> <span class="o">&lt;</span><span class="n">number</span> <span class="n">of</span> <span class="n">processes</span><span class="o">&gt;</span> <span class="o">./</span><span class="n">barrier</span><span class="o">+</span><span class="n">timing</span>
 </pre></div>
 </div>
-<p>In this example you can run the code several times and determine the average, median, and minimum
-execution time when the code has a barrier and when it does not. The primary purpose of this exercise
-is to illustrate that one of the most useful uses of a barrier is to ensure that you are getting legitimate
-timings for your code examples. By using a barrier, you ensure that all processes have finished before
-recording the time using the master process.</p>
+<p>The primary purpose of this exercise is to illustrate that one of the most
+practical uses of a barrier is to ensure that you are getting legitimate timings
+for your code examples. By using a barrier, you ensure that all processes have
+finished before recording the time using the master process. If a process finishes
+before all processes have completed their portion, the process must wait as
+indicated in green in the diagram below. Thus, the parallel
+execution time is the time it took the longest process to finish.</p>
+<a class="reference internal image-reference" href="../_images/BarrierTiming.png"><img alt="../_images/BarrierTiming.png" src="../_images/BarrierTiming.png" style="width: 800px;" /></a>
+<div class="topic">
+<p class="topic-title first">To do:</p>
+<p>Run the code several times and determine the average, median, and minimum
+execution time when the code has a barrier and when it does not. Without
+the barrier, what process is being timed?</p>
+</div>
 <div class="highlight-c"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
  2
  3
@@ -389,20 +398,176 @@ recording the time using the master process.</p>
 </pre></div>
 </td></tr></table></div>
 </div>
+<div class="section" id="timing-code-using-the-reduction-pattern">
+<h2>18. Timing code using the Reduction pattern<a class="headerlink" href="#timing-code-using-the-reduction-pattern" title="Permalink to this headline">¶</a></h2>
+<p><em>file: patternlets/MPI/18.reduce+Timing/reduce+timing.c</em></p>
+<p><em>Build inside 18.reduce+Timing directory:</em></p>
+<div class="highlight-default"><div class="highlight"><pre><span class="n">make</span> <span class="n">reduce</span><span class="o">+</span><span class="n">timing</span>
+</pre></div>
+</div>
+<p><em>Execute on the command line inside 18.reduce+Timing directory:</em></p>
+<div class="highlight-default"><div class="highlight"><pre><span class="n">mpirun</span> <span class="o">-</span><span class="n">np</span> <span class="o">&lt;</span><span class="n">number</span> <span class="n">of</span> <span class="n">processes</span><span class="o">&gt;</span> <span class="o">./</span><span class="n">reduce</span><span class="o">+</span><span class="n">timing</span>
+</pre></div>
+</div>
+<p>We can also use reduction for obtaining the parallel execution time of a program.
+In this example, each process individually records how long it took to finish.
+Each of these local times is then reduced to a single time using the max operator.
+This allows us to find the largest of the input times to totalTime.</p>
+<a class="reference internal image-reference" href="../_images/ReduceTiming.png"><img alt="../_images/ReduceTiming.png" src="../_images/ReduceTiming.png" style="width: 600px;" /></a>
+<div class="highlight-c"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66</pre></div></td><td class="code"><div class="highlight"><pre><span class="cm">/* reduce+timing.c </span>
+<span class="cm"> *  ... illustrates the behavior of MPI_Barrier()</span>
+<span class="cm"> *       to coordinate process-timing.</span>
+<span class="cm"> *</span>
+<span class="cm"> * Code by Joel Adams, April 2016</span>
+<span class="cm"> * Modification to include MPI_Reduce() timing,</span>
+<span class="cm"> * Hannah Sonsalla, Macalester College 2017</span>
+<span class="cm"> *</span>
+<span class="cm"> * Usage: mpirun -np 8 ./barrier+timing2</span>
+<span class="cm"> *</span>
+<span class="cm"> * Exercise:</span>
+<span class="cm"> *  - Compile; then run the program five times,</span>
+<span class="cm"> *  - In a spreadsheet, compute the average,</span>
+<span class="cm"> *     median, and minimum of the five times.</span>
+<span class="cm"> *  - Explain behavior of MPI_Reduce() in terms</span>
+<span class="cm"> *    of localTime and totalTime.</span>
+<span class="cm"> *  - Compare results to results from barrier+timing</span>
+<span class="cm"> */</span>
+
+<span class="cp">#include</span> <span class="cpf">&lt;stdio.h&gt;   // printf()</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;mpi.h&gt;     // MPI</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;unistd.h&gt;  // sleep()</span><span class="cp"></span>
+
+<span class="cp">#define  MASTER 0</span>
+
+<span class="cm">/* answer the ultimate question of life, the universe,</span>
+<span class="cm"> *  and everything, based on id and numProcs.</span>
+<span class="cm"> * @param: id, an int</span>
+<span class="cm"> * @param: numProcs, an int</span>
+<span class="cm"> * Precondition: id is the MPI rank of this process</span>
+<span class="cm"> *             &amp;&amp; numProcs is the number of MPI processes.</span>
+<span class="cm"> * Postcondition: The return value is 42.</span>
+<span class="cm"> */</span>
+<span class="kt">int</span> <span class="nf">solveProblem</span><span class="p">(</span><span class="kt">int</span> <span class="n">id</span><span class="p">,</span> <span class="kt">int</span> <span class="n">numProcs</span><span class="p">)</span> <span class="p">{</span>
+
+    <span class="n">sleep</span><span class="p">(</span> <span class="p">((</span><span class="kt">double</span><span class="p">)</span><span class="n">id</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span> <span class="o">/</span> <span class="n">numProcs</span><span class="p">);</span>
+
+    <span class="k">return</span> <span class="mi">42</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span><span class="o">**</span> <span class="n">argv</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kt">int</span> <span class="n">id</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">numProcesses</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span>
+    <span class="kt">double</span> <span class="n">startTime</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span> <span class="n">localTime</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span> <span class="n">totalTime</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">;</span>
+    <span class="kt">int</span> <span class="n">answer</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">;</span>
+
+    <span class="n">MPI_Init</span><span class="p">(</span><span class="o">&amp;</span><span class="n">argc</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">argv</span><span class="p">);</span>
+    <span class="n">MPI_Comm_rank</span><span class="p">(</span><span class="n">MPI_COMM_WORLD</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">id</span><span class="p">);</span>
+    <span class="n">MPI_Comm_size</span><span class="p">(</span><span class="n">MPI_COMM_WORLD</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">numProcesses</span><span class="p">);</span>
+
+    <span class="n">MPI_Barrier</span><span class="p">(</span><span class="n">MPI_COMM_WORLD</span><span class="p">);</span>
+    <span class="n">startTime</span> <span class="o">=</span> <span class="n">MPI_Wtime</span><span class="p">();</span>
+
+    <span class="n">answer</span> <span class="o">=</span> <span class="n">solveProblem</span><span class="p">(</span><span class="n">id</span><span class="p">,</span> <span class="n">numProcesses</span><span class="p">);</span>
+
+    <span class="n">localTime</span> <span class="o">=</span> <span class="n">MPI_Wtime</span><span class="p">()</span> <span class="o">-</span> <span class="n">startTime</span><span class="p">;</span>
+    <span class="n">MPI_Reduce</span><span class="p">(</span><span class="o">&amp;</span><span class="n">localTime</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">totalTime</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">MPI_DOUBLE</span><span class="p">,</span>
+        <span class="n">MPI_MAX</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">MPI_COMM_WORLD</span><span class="p">);</span>
+
+    <span class="k">if</span> <span class="p">(</span> <span class="n">id</span> <span class="o">==</span> <span class="n">MASTER</span> <span class="p">)</span> <span class="p">{</span>
+        <span class="n">printf</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\n</span><span class="s">The answer is %d; computing it took %f secs.</span><span class="se">\n\n</span><span class="s">&quot;</span><span class="p">,</span>
+                   <span class="n">answer</span><span class="p">,</span> <span class="n">totalTime</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="n">MPI_Finalize</span><span class="p">();</span>
+    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</td></tr></table></div>
+</div>
 <div class="section" id="sequence-numbers">
-<h2>18. Sequence Numbers<a class="headerlink" href="#sequence-numbers" title="Permalink to this headline">¶</a></h2>
-<p><em>file: patternlets/MPI/18.sequenceNumbers/sequenceNumbers.c</em></p>
-<p><em>Build inside 18.sequenceNumbers directory:</em></p>
+<h2>19. Sequence Numbers<a class="headerlink" href="#sequence-numbers" title="Permalink to this headline">¶</a></h2>
+<p><em>file: patternlets/MPI/19.sequenceNumbers/sequenceNumbers.c</em></p>
+<p><em>Build inside 19.sequenceNumbers directory:</em></p>
 <div class="highlight-default"><div class="highlight"><pre><span class="n">make</span> <span class="n">sequenceNumbers</span>
 </pre></div>
 </div>
-<p><em>Execute on the command line inside 18.sequenceNumbers directory:</em></p>
+<p><em>Execute on the command line inside 19.sequenceNumbers directory:</em></p>
 <div class="highlight-default"><div class="highlight"><pre><span class="n">mpirun</span> <span class="o">-</span><span class="n">np</span> <span class="o">&lt;</span><span class="n">number</span> <span class="n">of</span> <span class="n">processes</span><span class="o">&gt;</span> <span class="o">./</span><span class="n">sequenceNumbers</span>
 </pre></div>
 </div>
 <p>Tags can be placed on messages that are sent from a non-master process and received
 by the master process. Using tags is an alternative form of simulating the barrier
 in example 16 above.</p>
+<div class="topic">
+<p class="topic-title first">To do:</p>
+<p>What has caused the changes in the program’s behavior and why has it changed?
+Can you figure out what the different tags represent and how the tags work in
+relation to the send and receive functions?</p>
+</div>
 <div class="highlight-c"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
  2
  3
@@ -598,17 +763,18 @@ in example 16 above.</p>
             </a></p>
   <h3><a href="../index.html">Table Of Contents</a></h3>
   <ul>
-<li><a class="reference internal" href="#">Barrier Synchronization and Tags</a><ul>
+<li><a class="reference internal" href="#">Barrier Synchronization, Timing and Tags</a><ul>
 <li><a class="reference internal" href="#the-barrier-coordination-pattern">16. The Barrier Coordination Pattern</a></li>
 <li><a class="reference internal" href="#timing-code-using-the-barrier-coordination-pattern">17. Timing code using the Barrier Coordination Pattern</a></li>
-<li><a class="reference internal" href="#sequence-numbers">18. Sequence Numbers</a></li>
+<li><a class="reference internal" href="#timing-code-using-the-reduction-pattern">18. Timing code using the Reduction pattern</a></li>
+<li><a class="reference internal" href="#sequence-numbers">19. Sequence Numbers</a></li>
 </ul>
 </li>
 </ul>
 
   <h4>Previous topic</h4>
   <p class="topless"><a href="Reduction_Scatter_Gather.html"
-                        title="previous chapter">Data Decomposition, Reduction, Scatter and Gather</a></p>
+                        title="previous chapter">Reduction, Data Decomposition, Scatter and Gather</a></p>
   <h4>Next topic</h4>
   <p class="topless"><a href="../SharedMemory/OpenMP_Patternlets.html"
                         title="next chapter">Shared Memory Parallel Patternlets in OpenMP</a></p>
@@ -623,7 +789,7 @@ in example 16 above.</p>
           <a href="../SharedMemory/OpenMP_Patternlets.html" title="Shared Memory Parallel Patternlets in OpenMP"
              >next</a></li>
         <li class="right" >
-          <a href="Reduction_Scatter_Gather.html" title="Data Decomposition, Reduction, Scatter and Gather"
+          <a href="Reduction_Scatter_Gather.html" title="Reduction, Data Decomposition, Scatter and Gather"
              >previous</a> |</li>
         <li class="nav-item nav-item-0"><a href="../index.html">Parallel Patternlets</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="MPI_Patternlets.html" >Message Passing Parallel Patternlets</a> &#187;</li> 

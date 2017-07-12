@@ -29,7 +29,7 @@ sends the same data to all of the processes. A common use of broadcasting is
 to send user input to all of the processes in a parallel program. In our example,
 the broadcast is sent from process 0 and looks like this:
 
-.. image:: Broadcast.png
+.. image:: MPIImages/Broadcast.png
 	:width: 700
 
 .. literalinclude:: ../patternlets/MPI/06.broadcast/broadcast.c

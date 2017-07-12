@@ -1,5 +1,5 @@
 *********************************************************
-Data Decomposition, Reduction, Scatter and Gather
+Reduction, Data Decomposition, Scatter and Gather
 *********************************************************
 
 09. Collective Communication: Reduction
@@ -25,7 +25,7 @@ In this example, MPI, has built-in computations, indicated by MPI_SUM and
 MPI_MAX in the following code. With four processes, the code is implemented
 like this:
 
-.. image:: Reduction.png
+.. image:: MPIImages/Reduction.png
 	:width: 800
 
 .. literalinclude:: ../patternlets/MPI/10.reduction/reduction.c
@@ -80,7 +80,7 @@ enforcing the *equal-sized chunks* pattern. This type of decomposition is
 commonly used when accessing data that is stored in consecutive memory locations
 (such as an array). Verify that the program behavior is:
 
-.. image:: EqualChunks.png
+.. image:: MPIImages/EqualChunks.png
   :width: 800
 
 .. literalinclude:: ../patternlets/MPI/12.parallelLoop-equalChunks/parallelLoopEqualChunks.c
@@ -107,7 +107,7 @@ memory locations would be to let each process do one iteration, up to N processe
 then start again with process 0 taking the next iteration. A for loop on line 29
 is used to implement this type of data decomposition.
 
-.. image:: ChunksOf1.png
+.. image:: MPIImages/ChunksOf1.png
   :width: 800
 
 This is a basic example that does not yet include a data array, though
@@ -170,7 +170,7 @@ the gather pattern can be used to ensure that each process sends
 a copy of its portion of the array back to the root, or master process.
 Thus, gather is the reverse of scatter. Here is the idea:
 
-.. image:: Gather.png
+.. image:: MPIImages/Gather.png
 	:width: 750
 
 .. literalinclude:: ../patternlets/MPI/15.gather/gather.c
