@@ -36,6 +36,47 @@ the broadcast is sent from process 0 and looks like this:
     :language: c
     :linenos:
 
+07. Broadcast: incorporating user input
+**************************************************
+
+*file: patternlets/MPI/07.broadcastUserInput/broadcastUserInput.c*
+
+*Build inside 07.broadcastUserInput directory:*
+::
+
+  make broadcastUserInput
+
+*Execute on the command line inside 07.broadcastUserInput directory:*
+::
+
+  mpirun -np <number of processes> ./broadcastUserInput <integer>
+
+We can use command line arguments to incorporate user input into a program.
+Command line arguments are taken care of by two functions in main(). The first
+of these functions is **argc** which is an integer referring to the number
+of arguments passed in on the command line. **argv** is the second function.
+It is an array of pointers that points to each argument passed in.
+argv[0] always holds the name of the program and in MPI argv[1] holds the
+number of processes.
+
+We modified the previous broadcast example to include an additional command line
+argument, an integer. Instead of reading a scalar value from a file, this
+allows a user to decide what value is broadcast in the program when it is
+executed.
+
+.. topic:: To do:
+
+  Try running the program without an argument for the number of processes.
+
+  **mpirun ./broadcastUserInput <integer>**
+
+  What is the default number of processes used when we do not provide a number?
+
+.. literalinclude:: ../patternlets/MPI/07.broadcastUserInput/broadcastUserInput.c
+    :language: c
+    :linenos:
+
+
 08. Broadcast: send receive equivalent
 **************************************************
 

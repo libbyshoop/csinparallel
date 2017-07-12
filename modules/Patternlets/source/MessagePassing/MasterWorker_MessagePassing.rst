@@ -159,14 +159,25 @@ odd processes are send/receive pairs.
   mpirun -np <number of processes> ./messagePassing2
 
 The messages sent and received by processes can be of types other than
-ints. Here the message that is being passed is a string (array of chars).
-The *sprintf* function is similar to *printf* except that it writes to a string
-instead of stdout. This example follows the previous message passing examples
-in that it passes strings between pairs of odd and even rank processes.
+integers. Here the message that is being passed is a string (array of chars).
+This example follows the previous message passing examples in that it
+passes strings between pairs of odd and even rank processes.
+
+We use dynamic memory allocation for the sendString and receivedString. Dynamic
+memory allocation lets a program obtain more memory space while running
+or release memory space if it is not needed. We can use this type of
+memory allocation to manually handle memory space. The function *malloc* on
+lines 36 and 37 allocates a block of SIZE bytes of memory for the
+sendString and receivedString.
+
+.. topic:: To do:
+
+  What is the free function doing on lines 56 and 57?
+  Why must we apply the free function to both sendString and receivedString?
 
 .. literalinclude:: ../patternlets/MPI/04.messagePassing2/messagePassing2.c
-    :language: c
-    :linenos:
+  :language: c
+  :linenos:
 
 05. Message passing 3, using Send-Receive with master-worker pattern
 *********************************************************************

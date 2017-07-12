@@ -56,7 +56,7 @@ int main(int argc, char** argv) {
 
 	MPI_Init(&argc, &argv);
 	MPI_Comm_rank(MPI_COMM_WORLD, &id);
-    MPI_Comm_size(MPI_COMM_WORLD, &numProcesses);
+    	MPI_Comm_size(MPI_COMM_WORLD, &numProcesses);
     
 	if (id == 0) fill(array, MAX);
      
@@ -65,15 +65,17 @@ int main(int argc, char** argv) {
 	// master process sends array to every process
 	if (id == 0) {
 		for (int i = 1; i < numProcesses; i++) {
-			MPI_Send(&array, MAX, MPI_INT, i, 1, MPI_COMM_WORLD);
+			MPI_Send(&array, MAX, MPI_INT, 
+			    i, 1, MPI_COMM_WORLD);
 	    }
 	}
 	
 	else {
-	    MPI_Recv(&array, MAX, MPI_INT, 0, 1, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+	    MPI_Recv(&array, MAX, MPI_INT, 0, 
+	        1, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
 	}
 	
-    print("AFTER", id, array);
+    	print("AFTER", id, array);
  	MPI_Finalize();
 
 	return 0;

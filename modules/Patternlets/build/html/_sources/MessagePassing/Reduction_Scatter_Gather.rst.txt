@@ -1,18 +1,18 @@
 *********************************************************
-Data Decomposition: Reduction, Scatter and Gather
+Data Decomposition, Reduction, Scatter and Gather
 *********************************************************
 
 09. Collective Communication: Reduction
 ***************************************
 
-*file: patternlets/MPI/09.reduction/reduction.c*
+*file: patternlets/MPI/10.reduction/reduction.c*
 
-*Build inside 09.reduction directory:*
+*Build inside 10.reduction directory:*
 ::
 
   make reduction
 
-*Execute on the command line inside 09.reduction directory:*
+*Execute on the command line inside 10.reduction directory:*
 ::
 
   mpirun -np <number of processes> ./reduction
@@ -28,21 +28,21 @@ like this:
 .. image:: Reduction.png
 	:width: 800
 
-.. literalinclude:: ../patternlets/MPI/09.reduction/reduction.c
+.. literalinclude:: ../patternlets/MPI/10.reduction/reduction.c
     :language: c
     :linenos:
 
-10. Collective Communication: Reduction
+11. Collective Communication: Reduction
 ****************************************
 
-*file: patternlets/MPI/10.reduction2/reduction2.c*
+*file: patternlets/MPI/11.reduction2/reduction2.c*
 
-*Build inside 10.reduction2 directory:*
+*Build inside 11.reduction2 directory:*
 ::
 
   make reduction2
 
-*Execute on the command line inside 10.reduction2 directory:*
+*Execute on the command line inside 11.reduction2 directory:*
 ::
 
   mpirun -np <number of processes> ./reduction2
@@ -54,21 +54,21 @@ Here is a second reduction example using arrays of data.
   Can you explain the behavior of the reduction, MPI_reduce(), in terms of
   srcArr and destArr?
 
-.. literalinclude:: ../patternlets/MPI/10.reduction2/reduction2.c
+.. literalinclude:: ../patternlets/MPI/11.reduction2/reduction2.c
     :language: c
     :linenos:
 
-11. Data Decomposition: on *equal-sized chunks* using parallel-for
+12. Data Decomposition: on *equal-sized chunks* using parallel-for
 ************************************************************************
 
-*file: patternlets/MPI/11.parallelLoop-equalChunks/parallelLoopEqualChunks.c*
+*file: patternlets/MPI/12.parallelLoop-equalChunks/parallelLoopEqualChunks.c*
 
-*Build inside 11.parallelLoop-equalChunks directory:*
+*Build inside 12.parallelLoop-equalChunks directory:*
 ::
 
   make parallelLoopEqualChunks
 
-*Execute on the command line inside 11.parallelLoop-equalChunks directory:*
+*Execute on the command line inside 12.parallelLoop-equalChunks directory:*
 ::
 
   mpirun -np <number of processes> ./parallelLoopEqualChunks
@@ -83,21 +83,21 @@ commonly used when accessing data that is stored in consecutive memory locations
 .. image:: EqualChunks.png
   :width: 800
 
-.. literalinclude:: ../patternlets/MPI/11.parallelLoop-equalChunks/parallelLoopEqualChunks.c
+.. literalinclude:: ../patternlets/MPI/12.parallelLoop-equalChunks/parallelLoopEqualChunks.c
     :language: c
     :linenos:
 
-12. Data Decomposition: on *chunks of size 1* using parallel-for
+13. Data Decomposition: on *chunks of size 1* using parallel-for
 **************************************************************************
 
-*file: patternlets/MPI/12.parallelLoop-chunksOf1/parallelLoopChunksOf1.c*
+*file: patternlets/MPI/13.parallelLoop-chunksOf1/parallelLoopChunksOf1.c*
 
-*Build inside 12.parallelLoop-chunksOf1 directory:*
+*Build inside 13.parallelLoop-chunksOf1 directory:*
 ::
 
   make parallelLoopChunksOf1
 
-*Execute on the command line inside 12.parallelLoop-chunksOf1 directory:*
+*Execute on the command line inside 13.parallelLoop-chunksOf1 directory:*
 ::
 
   mpirun -np <number of processes> ./parallelLoopChunksOf1
@@ -114,22 +114,22 @@ This is a basic example that does not yet include a data array, though
 it would typically be used when each process would be working on a portion
 of an array that could have been looped over in a sequential solution.
 
-.. literalinclude:: ../patternlets/MPI/12.parallelLoop-chunksOf1/parallelLoopChunksOf1.c
+.. literalinclude:: ../patternlets/MPI/13.parallelLoop-chunksOf1/parallelLoopChunksOf1.c
     :language: c
     :linenos:
 
 
-13. Collective communication: Scatter for message-passing data decomposition
+14. Collective communication: Scatter for message-passing data decomposition
 ****************************************************************************
 
-*file: patternlets/MPI/13.scatter/scatter.c*
+*file: patternlets/MPI/14.scatter/scatter.c*
 
-*Build inside 13.scatter directory:*
+*Build inside 14.scatter directory:*
 ::
 
   make scatter
 
-*Execute on the command line inside 13.scatter directory:*
+*Execute on the command line inside 14.scatter directory:*
 ::
 
   mpirun -np <number of processes> ./scatter
@@ -144,22 +144,22 @@ the entire array has been distributed.
 
   What previous data decomposition pattern is this similar to?
 
-.. literalinclude:: ../patternlets/MPI/13.scatter/scatter.c
+.. literalinclude:: ../patternlets/MPI/14.scatter/scatter.c
     :language: c
     :linenos:
 
 
-14. Collective communication: Gather for message-passing data decomposition
+15. Collective communication: Gather for message-passing data decomposition
 ***************************************************************************
 
-*file: patternlets/MPI/14.gather/gather.c*
+*file: patternlets/MPI/15.gather/gather.c*
 
-*Build inside 14.gather directory:*
+*Build inside 15.gather directory:*
 ::
 
   make gather
 
-*Execute on the command line inside 14.gather directory:*
+*Execute on the command line inside 15.gather directory:*
 ::
 
   mpirun -np <number of processes> ./gather
@@ -173,6 +173,6 @@ Thus, gather is the reverse of scatter. Here is the idea:
 .. image:: Gather.png
 	:width: 750
 
-.. literalinclude:: ../patternlets/MPI/14.gather/gather.c
+.. literalinclude:: ../patternlets/MPI/15.gather/gather.c
     :language: c
     :linenos:

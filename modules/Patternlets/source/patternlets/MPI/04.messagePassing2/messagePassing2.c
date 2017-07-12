@@ -20,7 +20,7 @@
 int odd(int number) { return number % 2; }
 
 int main(int argc, char** argv) {
-    int id = -1, numProcesses = -1, length = -1; 
+    int id = -1, numProcesses = -1, length = -1;
     char * sendString = NULL;
     char * receivedString = NULL;
     char hostName[MPI_MAX_PROCESSOR_NAME];
@@ -35,17 +35,18 @@ int main(int argc, char** argv) {
     if (numProcesses > 1 && !odd(numProcesses) ) {
         sendString = (char*) malloc( SIZE );
         receivedString = (char*) malloc( SIZE );
+        // sprintf: write to string
         sprintf(sendString, "Process %d is on host \"%s\"", id, hostName);
 
-        if ( odd(id) ) {  // odd processes send, then receive 
-            MPI_Send(sendString, strlen(sendString)+1, 
+        if ( odd(id) ) {  // odd processes send, then receive
+            MPI_Send(sendString, strlen(sendString)+1,
                        MPI_CHAR, id-1, 1, MPI_COMM_WORLD);
-            MPI_Recv(receivedString, SIZE, MPI_CHAR, id-1, 2, 
+            MPI_Recv(receivedString, SIZE, MPI_CHAR, id-1, 2,
                        MPI_COMM_WORLD, &status);
-        } else {          // even processes receive, then send 
-            MPI_Recv(receivedString, SIZE, MPI_CHAR, id+1, 1, 
+        } else {          // even processes receive, then send
+            MPI_Recv(receivedString, SIZE, MPI_CHAR, id+1, 1,
                        MPI_COMM_WORLD, &status);
-            MPI_Send(sendString, strlen(sendString)+1, 
+            MPI_Send(sendString, strlen(sendString)+1,
                        MPI_CHAR, id+1, 2, MPI_COMM_WORLD);
         }
 
@@ -54,11 +55,10 @@ int main(int argc, char** argv) {
 
         free(sendString);
         free(receivedString);
-    } else if ( !id) {  // only process 0 does this part 
+    } else if ( !id) {  // only process 0 does this part
         printf("\nPlease run this program using -np N where N is positive and even.\n\n");
     }
 
     MPI_Finalize();
     return 0;
 }
-

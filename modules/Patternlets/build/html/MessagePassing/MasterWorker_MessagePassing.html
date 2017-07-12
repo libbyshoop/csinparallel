@@ -26,7 +26,7 @@
     <script type="text/javascript" src="../_static/doctools.js"></script>
     <link rel="shortcut icon" href="../_static/favicon.ico"/>
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Broadcast" href="DataDecomp_Broadcast.html" />
+    <link rel="next" title="Broadcast" href="Broadcast.html" />
     <link rel="prev" title="Message Passing Parallel Patternlets" href="MPI_Patternlets.html" /> 
   </head>
   <body>
@@ -34,7 +34,7 @@
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
-          <a href="DataDecomp_Broadcast.html" title="Broadcast"
+          <a href="Broadcast.html" title="Broadcast"
              accesskey="N">next</a></li>
         <li class="right" >
           <a href="MPI_Patternlets.html" title="Message Passing Parallel Patternlets"
@@ -513,10 +513,20 @@ pairs allow us to avoid the deadlock situation all together?</p>
 </pre></div>
 </div>
 <p>The messages sent and received by processes can be of types other than
-ints. Here the message that is being passed is a string (array of chars).
-The <em>sprintf</em> function is similar to <em>printf</em> except that it writes to a string
-instead of stdout. This example follows the previous message passing examples
-in that it passes strings between pairs of odd and even rank processes.</p>
+integers. Here the message that is being passed is a string (array of chars).
+This example follows the previous message passing examples in that it
+passes strings between pairs of odd and even rank processes.</p>
+<p>We use dynamic memory allocation for the sendString and receivedString. Dynamic
+memory allocation lets a program obtain more memory space while running
+or release memory space if it is not needed. We can use this type of
+memory allocation to manually handle memory space. The function <em>malloc</em> on
+lines 36 and 37 allocates a block of SIZE bytes of memory for the
+sendString and receivedString.</p>
+<div class="topic">
+<p class="topic-title first">To do:</p>
+<p>What is the free function doing on lines 56 and 57?
+Why must we apply the free function to both sendString and receivedString?</p>
+</div>
 <div class="highlight-c"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
  2
  3
@@ -602,7 +612,7 @@ in that it passes strings between pairs of odd and even rank processes.</p>
 <span class="kt">int</span> <span class="nf">odd</span><span class="p">(</span><span class="kt">int</span> <span class="n">number</span><span class="p">)</span> <span class="p">{</span> <span class="k">return</span> <span class="n">number</span> <span class="o">%</span> <span class="mi">2</span><span class="p">;</span> <span class="p">}</span>
 
 <span class="kt">int</span> <span class="nf">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span><span class="o">**</span> <span class="n">argv</span><span class="p">)</span> <span class="p">{</span>
-    <span class="kt">int</span> <span class="n">id</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">numProcesses</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">length</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span> 
+    <span class="kt">int</span> <span class="n">id</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">numProcesses</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">length</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span>
     <span class="kt">char</span> <span class="o">*</span> <span class="n">sendString</span> <span class="o">=</span> <span class="nb">NULL</span><span class="p">;</span>
     <span class="kt">char</span> <span class="o">*</span> <span class="n">receivedString</span> <span class="o">=</span> <span class="nb">NULL</span><span class="p">;</span>
     <span class="kt">char</span> <span class="n">hostName</span><span class="p">[</span><span class="n">MPI_MAX_PROCESSOR_NAME</span><span class="p">];</span>
@@ -617,17 +627,18 @@ in that it passes strings between pairs of odd and even rank processes.</p>
     <span class="k">if</span> <span class="p">(</span><span class="n">numProcesses</span> <span class="o">&gt;</span> <span class="mi">1</span> <span class="o">&amp;&amp;</span> <span class="o">!</span><span class="n">odd</span><span class="p">(</span><span class="n">numProcesses</span><span class="p">)</span> <span class="p">)</span> <span class="p">{</span>
         <span class="n">sendString</span> <span class="o">=</span> <span class="p">(</span><span class="kt">char</span><span class="o">*</span><span class="p">)</span> <span class="n">malloc</span><span class="p">(</span> <span class="n">SIZE</span> <span class="p">);</span>
         <span class="n">receivedString</span> <span class="o">=</span> <span class="p">(</span><span class="kt">char</span><span class="o">*</span><span class="p">)</span> <span class="n">malloc</span><span class="p">(</span> <span class="n">SIZE</span> <span class="p">);</span>
+        <span class="c1">// sprintf: write to string</span>
         <span class="n">sprintf</span><span class="p">(</span><span class="n">sendString</span><span class="p">,</span> <span class="s">&quot;Process %d is on host </span><span class="se">\&quot;</span><span class="s">%s</span><span class="se">\&quot;</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">id</span><span class="p">,</span> <span class="n">hostName</span><span class="p">);</span>
 
-        <span class="k">if</span> <span class="p">(</span> <span class="n">odd</span><span class="p">(</span><span class="n">id</span><span class="p">)</span> <span class="p">)</span> <span class="p">{</span>  <span class="c1">// odd processes send, then receive </span>
-            <span class="n">MPI_Send</span><span class="p">(</span><span class="n">sendString</span><span class="p">,</span> <span class="n">strlen</span><span class="p">(</span><span class="n">sendString</span><span class="p">)</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> 
+        <span class="k">if</span> <span class="p">(</span> <span class="n">odd</span><span class="p">(</span><span class="n">id</span><span class="p">)</span> <span class="p">)</span> <span class="p">{</span>  <span class="c1">// odd processes send, then receive</span>
+            <span class="n">MPI_Send</span><span class="p">(</span><span class="n">sendString</span><span class="p">,</span> <span class="n">strlen</span><span class="p">(</span><span class="n">sendString</span><span class="p">)</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span>
                        <span class="n">MPI_CHAR</span><span class="p">,</span> <span class="n">id</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">MPI_COMM_WORLD</span><span class="p">);</span>
-            <span class="n">MPI_Recv</span><span class="p">(</span><span class="n">receivedString</span><span class="p">,</span> <span class="n">SIZE</span><span class="p">,</span> <span class="n">MPI_CHAR</span><span class="p">,</span> <span class="n">id</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> 
+            <span class="n">MPI_Recv</span><span class="p">(</span><span class="n">receivedString</span><span class="p">,</span> <span class="n">SIZE</span><span class="p">,</span> <span class="n">MPI_CHAR</span><span class="p">,</span> <span class="n">id</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span>
                        <span class="n">MPI_COMM_WORLD</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">status</span><span class="p">);</span>
-        <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>          <span class="c1">// even processes receive, then send </span>
-            <span class="n">MPI_Recv</span><span class="p">(</span><span class="n">receivedString</span><span class="p">,</span> <span class="n">SIZE</span><span class="p">,</span> <span class="n">MPI_CHAR</span><span class="p">,</span> <span class="n">id</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> 
+        <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>          <span class="c1">// even processes receive, then send</span>
+            <span class="n">MPI_Recv</span><span class="p">(</span><span class="n">receivedString</span><span class="p">,</span> <span class="n">SIZE</span><span class="p">,</span> <span class="n">MPI_CHAR</span><span class="p">,</span> <span class="n">id</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span>
                        <span class="n">MPI_COMM_WORLD</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">status</span><span class="p">);</span>
-            <span class="n">MPI_Send</span><span class="p">(</span><span class="n">sendString</span><span class="p">,</span> <span class="n">strlen</span><span class="p">(</span><span class="n">sendString</span><span class="p">)</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> 
+            <span class="n">MPI_Send</span><span class="p">(</span><span class="n">sendString</span><span class="p">,</span> <span class="n">strlen</span><span class="p">(</span><span class="n">sendString</span><span class="p">)</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span>
                        <span class="n">MPI_CHAR</span><span class="p">,</span> <span class="n">id</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">MPI_COMM_WORLD</span><span class="p">);</span>
         <span class="p">}</span>
 
@@ -636,14 +647,13 @@ in that it passes strings between pairs of odd and even rank processes.</p>
 
         <span class="n">free</span><span class="p">(</span><span class="n">sendString</span><span class="p">);</span>
         <span class="n">free</span><span class="p">(</span><span class="n">receivedString</span><span class="p">);</span>
-    <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span> <span class="o">!</span><span class="n">id</span><span class="p">)</span> <span class="p">{</span>  <span class="c1">// only process 0 does this part </span>
+    <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span> <span class="o">!</span><span class="n">id</span><span class="p">)</span> <span class="p">{</span>  <span class="c1">// only process 0 does this part</span>
         <span class="n">printf</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\n</span><span class="s">Please run this program using -np N where N is positive and even.</span><span class="se">\n\n</span><span class="s">&quot;</span><span class="p">);</span>
     <span class="p">}</span>
 
     <span class="n">MPI_Finalize</span><span class="p">();</span>
     <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
 <span class="p">}</span>
-
 </pre></div>
 </td></tr></table></div>
 </div>
@@ -861,7 +871,7 @@ and finish? What is needed to be able to guarantee completion?</p>
   <p class="topless"><a href="MPI_Patternlets.html"
                         title="previous chapter">Message Passing Parallel Patternlets</a></p>
   <h4>Next topic</h4>
-  <p class="topless"><a href="DataDecomp_Broadcast.html"
+  <p class="topless"><a href="Broadcast.html"
                         title="next chapter">Broadcast</a></p>
         </div>
       </div>
@@ -871,7 +881,7 @@ and finish? What is needed to be able to guarantee completion?</p>
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
-          <a href="DataDecomp_Broadcast.html" title="Broadcast"
+          <a href="Broadcast.html" title="Broadcast"
              >next</a></li>
         <li class="right" >
           <a href="MPI_Patternlets.html" title="Message Passing Parallel Patternlets"

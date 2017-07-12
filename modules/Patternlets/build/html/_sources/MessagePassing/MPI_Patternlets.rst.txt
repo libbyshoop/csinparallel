@@ -25,7 +25,7 @@ Patternlets Grouped By Type
 
 :doc:`MasterWorker_MessagePassing`
 
-:doc:`DataDecomp_Broadcast`
+:doc:`Broadcast`
 
 :doc:`Reduction_Scatter_Gather`
 
@@ -35,6 +35,6 @@ Patternlets Grouped By Type
 	:hidden:
 
 	MasterWorker_MessagePassing
-	DataDecomp_Broadcast
+	Broadcast
 	Reduction_Scatter_Gather
 	Barrier_Tags
