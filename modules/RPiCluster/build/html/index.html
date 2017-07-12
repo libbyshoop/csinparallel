@@ -1,0 +1,412 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Building a Raspberry Pi Cluster &#8212; Building a Raspberry Pi Cluster</title>
+    <link rel="stylesheet" href="_static/csip.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="shortcut icon" href="_static/favicon.ico"/>
+    <link rel="search" title="Search" href="search.html" /> 
+  </head>
+  <body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="nav-item nav-item-0"><a href="#">Building a Raspberry Pi Cluster</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="building-a-raspberry-pi-cluster">
+<h1>Building a Raspberry Pi Cluster<a class="headerlink" href="#building-a-raspberry-pi-cluster" title="Permalink to this headline">¶</a></h1>
+<p><strong>Last Updated:</strong> 2017-07-12</p>
+<p>This module acts as a tutorial to help users build a cluster of Raspberry Pis for Parallel Programming and Distributed Processing. The guide is a step by step procedure to build a simple 4-node Raspberry Pi 3 cluster with a shared network file system. Note that clusters can be of any length n≥2.</p>
+<div class="section" id="materials-needed">
+<h2>Materials Needed<a class="headerlink" href="#materials-needed" title="Permalink to this headline">¶</a></h2>
+<ol class="arabic simple">
+<li>4 x <a class="reference external" href="https://www.amazon.com/Raspberry-Model-A1-2GHz-64-bit-quad-core/dp/B01CD5VC92/ref=sr_1_3?s=pc&amp;ie=UTF8&amp;qid=1499808173&amp;sr=1-3&amp;keywords=raspberry+pi+3">Raspberry Pi 3</a></li>
+<li>4 x <a class="reference external" href="https://www.amazon.com/SanDisk-MicroSDHC-Standard-Packaging-SDSDQUAN-008G-G4A/dp/B00M55C0VU/ref=sr_1_5?s=electronics&amp;ie=UTF8&amp;qid=1499808284&amp;sr=1-5&amp;keywords=micro+sd+card+8+gb">Micro SD Card</a> and a <a class="reference external" href="https://www.amazon.com/Anker-Portable-Reader-RS-MMC-Micro/dp/B006T9B6R2/ref=sr_1_1?s=electronics&amp;ie=UTF8&amp;qid=1499808439&amp;sr=1-1-spons&amp;keywords=sd+card+reader&amp;psc=1">Card Reader</a></li>
+<li>4 x <a class="reference external" href="https://www.amazon.com/Cable-Matters-5-Pack-Snagless-Ethernet/dp/B00C4U030G/ref=sr_1_1?s=electronics&amp;ie=UTF8&amp;qid=1499808595&amp;sr=1-1&amp;keywords=ethernet+cable+1ft">Ethernet Cable</a> (Preferably 1 ft. long)</li>
+<li>4 x <a class="reference external" href="https://www.amazon.com/Sabrent-6-Pack-Premium-Cables-CB-UM61/dp/B011KMSNXM/ref=sr_1_3?s=electronics&amp;ie=UTF8&amp;qid=1499808702&amp;sr=1-3&amp;keywords=usb+to+micro+usb+cable+1ft">USB to Micro USB cable</a> for Raspberry Pi Power (Preferably 1 ft. long)</li>
+<li>1 x <a class="reference external" href="https://www.amazon.com/Anker-PowerPort-High-Speed-Charging-VoltageBoost/dp/B00P936188/ref=sr_1_1?s=electronics&amp;ie=UTF8&amp;qid=1499808936&amp;sr=1-1&amp;keywords=anker+6+port+usb+charger">6 Port USB Battery Charger</a> (60W 2.4 amps per port or 12 amps overall)</li>
+<li>1 x <a class="reference external" href="https://www.amazon.com/TRENDnet-Unmanaged-Gigabit-GREENnet-Desktop/dp/B002HH0W5W/ref=sr_1_4?s=electronics&amp;ie=UTF8&amp;qid=1499808983&amp;sr=1-4&amp;keywords=greennet+switch">5 Port Ethernet Switch</a></li>
+<li>1 x <a class="reference external" href="https://www.amazon.com/GeChic-2501C-Portable-Monitor-Inputs/dp/B00H4MWMWQ/ref=sr_1_1?s=electronics&amp;ie=UTF8&amp;qid=1499809271&amp;sr=1-1-spons&amp;keywords=portable+monitor&amp;psc=1">Monitor</a>, <a class="reference external" href="https://www.amazon.com/Keyboard-Jelly-Comb-Rechargeable-Wireless/dp/B01NCW2JR9/ref=sr_1_4?s=electronics&amp;ie=UTF8&amp;qid=1499809455&amp;sr=1-4&amp;keywords=jelly+comb+keyboard+mouse+combo">Keyboard and Mouse</a></li>
+<li>1 x <a class="reference external" href="https://www.amazon.com/LinkS-Switcher-Supports-Wireless-function/dp/B01FHILVX4/ref=sr_1_18?ie=UTF8&amp;qid=1499806934&amp;sr=8-18&amp;keywords=4+port+hdmi+switch+with+remote">4 Port HDMI Switch</a> (Optional, but recommended)</li>
+<li>1 x <a class="reference external" href="https://www.amazon.com/dp/B01CU4QD1I?psc=1">4 Port USB Switch</a> for Keyboard and Mouse (Optional, but recommended)</li>
+<li>1 x <a class="reference external" href="https://www.amazon.com/Raspberry-Pi-Complete-Stackable-Enclosure/dp/B01LVUVVOQ/ref=sr_1_12?ie=UTF8&amp;qid=1499805835&amp;sr=8-12&amp;keywords=acrylic+raspberry+pi+case">4 Node Acrylic Raspberry Pi Stand</a> (Optional, but recommended)</li>
+</ol>
+</div>
+<div class="section" id="overview">
+<h2>Overview:<a class="headerlink" href="#overview" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li>Set up Physical Cluster</li>
+<li>Set up Operating System</li>
+<li>Software Installation and Wireless Configuration</li>
+<li>SSH Remote Login Setup</li>
+<li>Set Up and Mount Network File System (NFS)</li>
+</ul>
+</div>
+<div class="section" id="setting-up-the-physical-cluster">
+<h2>Setting up the Physical Cluster<a class="headerlink" href="#setting-up-the-physical-cluster" title="Permalink to this headline">¶</a></h2>
+<p>An acrylic 4-node case can be used to stack the RPi’s on top of each other. For the display and input devices we will use a 4 Port HDMI switch and a 4 Port Keyboard/Mouse switch in order to make it convenient for us to switch between nodes as we work on each one of them. We use a monitor which has USB cable for power and an HDMI to Mini HDMI for the Input Signal. The RPi’s are then connected to a 5 port Ethernet Switch which will be used to set up a network between the cluster. A USB to Barrel connector will be needed to power the Ethernet Switch. Lastly, we will connect each of the RPi’s to power using USB to MicroUSB cables. All the components can be powered using a regular wall charger but in order for the cluster to be more compact and consisting of less wires we will use a 6 port USB Battery Charger to power the Monitor, Ethernet Switch and  the 4 RPi’s.</p>
+</div>
+<div class="section" id="setting-up-rasbian-os">
+<h2>Setting up Rasbian OS<a class="headerlink" href="#setting-up-rasbian-os" title="Permalink to this headline">¶</a></h2>
+<p>For this we require 4 MicroSD cards (preferably 8 GB or higher). These MicroSD Cards will need to be flashed with fresh Rasbian images. To do this we will require a PC and an SD Card reader.</p>
+<p>Our Cluster will have a head node on which all our files will be stored and mounted for the other nodes. Essentially this will be our primary work station throughout. Hence we will require a completely functional GUI and hence we will flash the MicroSd Card of the head node with the latest version of the Rasbian Pixel. Since we will be able to remotely login into the worker nodes, we will use Rasbian Lite so as to make things run faster. So we downloaded the two Rasbian images on our computer which can read a MicroSD card, and flashed each of the cards with it’s respective Rasbian images using a software called Etcher. Using Win32 Disk imager is also feasible.</p>
+<p>Each node will have a user ‘pi’ and a password ‘raspberry’.</p>
+</div>
+<div class="section" id="software-installation-and-wireless-setup">
+<h2>Software Installation and Wireless Setup<a class="headerlink" href="#software-installation-and-wireless-setup" title="Permalink to this headline">¶</a></h2>
+<p>Since head node is the only RPi with a GUI we will only need to access the internet on that. But before we disable the wifi on the worker nodes, we should connect the Ethernet switch to the wall so that each of the RPi’s have a wired internet connection temporarily in order to install software we will require later for SSH, NFS Mounting and MPI.</p>
+<p>Firstly, we will run updates and upgrades using the following commands:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">sudo</span> <span class="n">apt</span><span class="o">-</span><span class="n">get</span> <span class="n">update</span>
+<span class="n">sudo</span> <span class="n">apt</span><span class="o">-</span><span class="n">get</span> <span class="n">upgrade</span>
+</pre></div>
+</div>
+<p>Then we will install mpich2 which will help us run MPI code on the cluster and SSH which will be required for remote login.</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">sudo</span> <span class="n">apt</span><span class="o">-</span><span class="n">get</span> <span class="n">install</span> <span class="n">mpich2</span>
+<span class="n">sudo</span> <span class="n">apt</span><span class="o">-</span><span class="n">get</span> <span class="n">install</span> <span class="n">openssh</span><span class="o">-</span><span class="n">server</span>
+</pre></div>
+</div>
+<p>Next, on the head node we will be installing NFS kernel server.:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">sudo</span> <span class="n">apt</span><span class="o">-</span><span class="n">get</span> <span class="n">install</span> <span class="n">nfs</span><span class="o">-</span><span class="n">kernel</span><span class="o">-</span><span class="n">server</span>
+</pre></div>
+</div>
+<p>And on the worker nodes we will be installing NFS Common:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">sudo</span> <span class="n">apt</span><span class="o">-</span><span class="n">get</span> <span class="n">install</span> <span class="n">nfs</span><span class="o">-</span><span class="n">common</span>
+</pre></div>
+</div>
+<p>With this we have installed all the required software for us to run MPI Code on the cluster. If you wish to install any other software then you should install it now because we will be removing internet from the worker nodes and setting up wireless only on the head node.</p>
+<p>To set up wireless and we will need to edit two files using a terminal text editor (nano is simplest one) :
+/etc/network/interfaces and
+/etc/wpa_supplicant/wpa_supplicant.conf</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">cd</span> <span class="o">/</span><span class="n">etc</span><span class="o">/</span><span class="n">wpa_supplicant</span>
+<span class="n">sudo</span> <span class="n">nano</span> <span class="n">wpa_supplicant</span><span class="o">.</span><span class="n">conf</span>
+</pre></div>
+</div>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">ctrl_interface</span><span class="o">=</span><span class="n">DIR</span><span class="o">=/</span><span class="n">var</span><span class="o">/</span><span class="n">run</span><span class="o">/</span><span class="n">wpa_supplicant</span> <span class="n">GROUP</span><span class="o">=</span><span class="n">netdev</span>
+<span class="n">update_config</span><span class="o">=</span><span class="mi">1</span>
+<span class="n">country</span><span class="o">=</span><span class="n">US</span>
+
+<span class="n">network</span><span class="o">=</span><span class="p">{</span>
+        <span class="n">ssid</span><span class="o">=</span><span class="s2">&quot;Your SSID&quot;</span>
+        <span class="n">scan_ssid</span><span class="o">=</span><span class="mi">1</span>
+        <span class="n">psk</span><span class="o">=</span><span class="s2">&quot;Your Password&quot;</span>
+        <span class="n">key_mgmt</span><span class="o">=</span><span class="n">WPA</span><span class="o">-</span><span class="n">PSK</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>In order for us to establish a network between the cluster through ethernet cables we need static ip addresses. To do this, we edit the interfaces file on the head node. It is good practice to make a copy of the file before we make changes to it. This can be done by doing the following:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">cd</span><span class="o">/</span><span class="n">etc</span><span class="o">/</span><span class="n">network</span>
+<span class="n">sudo</span> <span class="n">cp</span> <span class="n">interfaces</span> <span class="n">interfaces</span><span class="o">.</span><span class="n">orig</span>
+</pre></div>
+</div>
+<p>Now, we will edit the interfaces file</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">cd</span> <span class="o">/</span><span class="n">etc</span><span class="o">/</span><span class="n">network</span>
+<span class="n">sudo</span> <span class="n">nano</span> <span class="n">interfaces</span>
+</pre></div>
+</div>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">auto</span> <span class="mi">1</span><span class="n">o</span>
+<span class="n">iface</span> <span class="mi">1</span><span class="n">o</span> <span class="n">inet</span> <span class="n">loopback</span>
+
+<span class="n">auto</span> <span class="n">eth0</span>
+<span class="n">allow</span><span class="o">-</span><span class="n">hotplug</span> <span class="n">eth0</span>
+<span class="n">iface</span> <span class="n">eth0</span> <span class="n">inet</span> <span class="n">static</span>
+<span class="n">address</span> <span class="mf">192.168</span><span class="o">.</span><span class="mf">1.10</span>
+<span class="c1">#gateway 192.168.1.1</span>
+<span class="n">netmask</span> <span class="mf">255.255</span><span class="o">.</span><span class="mf">255.0</span>
+<span class="c1">#network 192.168.1.0</span>
+<span class="c1">#broadcast 192.168.1.255</span>
+
+<span class="n">auto</span> <span class="n">wlan0</span>
+<span class="c1">#allow-hotplug wlan0</span>
+<span class="n">iface</span> <span class="n">wlan0</span> <span class="n">inet</span> <span class="n">manual</span>
+<span class="n">wpa</span><span class="o">-</span><span class="n">conf</span> <span class="o">/</span><span class="n">etc</span><span class="o">/</span><span class="n">wpa_supplicant</span><span class="o">/</span><span class="n">wpa_supplicant</span><span class="o">.</span><span class="n">conf</span>
+
+<span class="n">auto</span> <span class="n">wlan1</span>
+<span class="c1">#allow-hotplug wlan1</span>
+<span class="n">iface</span> <span class="n">wlan1</span> <span class="n">inet</span> <span class="n">manual</span>
+<span class="n">wpa</span><span class="o">-</span><span class="n">conf</span> <span class="o">/</span><span class="n">etc</span><span class="o">/</span><span class="n">wpa_supplicant</span><span class="o">/</span><span class="n">wpa_supplicant</span><span class="o">.</span><span class="n">conf</span>
+</pre></div>
+</div>
+<p>Next, we will have to edit the interfaces file (after making a copy like above) on each of the worker nodes to the following:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">auto</span> <span class="mi">1</span><span class="n">o</span>
+<span class="n">iface</span> <span class="mi">1</span><span class="n">o</span> <span class="n">inet</span> <span class="n">loopback</span>
+
+<span class="n">auto</span> <span class="n">eth0</span>
+<span class="n">allow</span><span class="o">-</span><span class="n">hotplug</span> <span class="n">eth0</span>
+<span class="n">iface</span> <span class="n">eth0</span> <span class="n">inet</span> <span class="n">static</span>
+<span class="n">address</span> <span class="mf">192.168</span><span class="o">.</span><span class="mf">1.11</span> <span class="c1">#12,13</span>
+<span class="c1">#gateway 192.168.1.1</span>
+<span class="n">netmask</span> <span class="mf">255.255</span><span class="o">.</span><span class="mf">255.0</span>
+<span class="c1">#network 192.168.1.0</span>
+<span class="c1">#broadcast 192.168.1.255</span>
+</pre></div>
+</div>
+<p>Note: the ip address below will change according to the order of the 4 nodes, i.e. the 2nd node will have the address 192.168.1.11, the 3rd will have 192.168.1.12 and the 4th will have 192.168.1.13 as its address.</p>
+</div>
+<div class="section" id="ssh-remote-login-setup">
+<h2>SSH Remote Login Setup<a class="headerlink" href="#ssh-remote-login-setup" title="Permalink to this headline">¶</a></h2>
+<p>Before we begin we want to assign names to each of the nodes. To do this we changed the hostname and hosts file.</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">sudo</span> <span class="n">nano</span> <span class="o">/</span><span class="n">etc</span><span class="o">/</span><span class="n">hostname</span>
+</pre></div>
+</div>
+<p>The hostname file will contain the name of the local host i.e. the name of that node. We called the head node “head” and the worker nodes ‘node1’, ‘node2’ and “node3’ respectively.</p>
+<p>Next,
+We add the static ip addresses of the nodes in the hosts file.</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">sudo</span> <span class="n">nano</span> <span class="o">/</span><span class="n">etc</span><span class="o">/</span><span class="n">hosts</span>
+</pre></div>
+</div>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="mf">192.168</span><span class="o">.</span><span class="mf">1.10</span> <span class="n">head</span>
+<span class="mf">192.168</span><span class="o">.</span><span class="mf">1.11</span> <span class="n">node1</span>
+<span class="mf">192.168</span><span class="o">.</span><span class="mf">1.12</span> <span class="n">node2</span>
+<span class="mf">192.168</span><span class="o">.</span><span class="mf">1.13</span> <span class="n">node3</span>
+</pre></div>
+</div>
+<p>The above process has to be repeated on all 4 nodes.</p>
+<p>Since we want the cluster nodes to communicate with each other without having to ask for permission each time we will set up SSH (Secure Shell) remote login. In order to do this, we will generate 2048 bit RSA key-pair on the head node and then copy the SSH ID in all 4 nodes.</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">ssh</span><span class="o">-</span><span class="n">keygen</span> <span class="o">-</span><span class="n">t</span> <span class="n">rsa</span> <span class="o">-</span><span class="n">b</span> <span class="mi">2048</span>
+</pre></div>
+</div>
+<p>Note: The ssh key should be stored in the .ssh folder and need not require a pass phrase. While generating the keys the user will be prompted for destination folder and a pass phrase. The user can just hit return thrice.</p>
+<p>Now, we will copy the SSH ID to all the nodes.</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">ssh</span><span class="o">-</span><span class="n">copy</span><span class="o">-</span><span class="nb">id</span> <span class="n">head</span><span class="o">.</span>
+<span class="n">ssh</span><span class="o">-</span><span class="n">copy</span><span class="o">-</span><span class="nb">id</span> <span class="n">node1</span>
+<span class="n">ssh</span><span class="o">-</span><span class="n">copy</span><span class="o">-</span><span class="nb">id</span> <span class="n">node2</span>
+<span class="n">ssh</span><span class="o">-</span><span class="n">copy</span><span class="o">-</span><span class="nb">id</span> <span class="n">node3</span>
+</pre></div>
+</div>
+<p>Next, we will need to SSH into all the nodes including itself. For the first time we will require a password (raspberry) when we try to do so.</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">ssh</span> <span class="n">head</span>
+</pre></div>
+</div>
+<p>We notice that we are re-logged in into the head node. We need to exit this connection before we SSH into all the other nodes i.e. ssh into node1, node2 and node3 from the head node and exit each time. This will update the known_hosts file in the .ssh directory. The known_hosts file keeps track of the cluster nodes which have permissions to ssh into nodes without a password.</p>
+<p>Our last step for this setup will be to copy known_hosts, id_rsa public and private keys from the .ssh folder in the head node to the .ssh folder of all the other nodes. We can do this using secure copy.</p>
+<p>We use the following steps on the head node to do this:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">cd</span> <span class="o">.</span><span class="n">ssh</span>
+</pre></div>
+</div>
+<p>Run the following commands:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">scp</span> <span class="n">known_hosts</span> <span class="n">pi</span><span class="nd">@node1</span><span class="p">:</span><span class="o">.</span><span class="n">ssh</span>
+<span class="n">scp</span> <span class="n">id_rsa</span> <span class="n">pi</span><span class="nd">@node1</span><span class="p">:</span><span class="o">.</span><span class="n">ssh</span>
+<span class="n">scp</span> <span class="n">id_rsa</span><span class="o">.</span><span class="n">pub</span> <span class="n">pi</span><span class="nd">@node1</span><span class="p">:</span><span class="o">.</span><span class="n">ssh</span>
+</pre></div>
+</div>
+<p>Repeat for node2 and node3</p>
+<p>After this we will be able SSH to and from any node in the Cluster.</p>
+</div>
+<div class="section" id="mount-network-file-system">
+<h2>Mount Network File System<a class="headerlink" href="#mount-network-file-system" title="Permalink to this headline">¶</a></h2>
+<p>The Network File System (NFS) mounting is crucial part of the cluster set up in order for all the nodes to have one common working directory. We will be taking advantage of the nfs-kernel-server and nfs-common which we had installed earlier. To begin we will create a directory called cluster_files on the head node. Essentially it can be named anything as long as it’s consistent throughout all the other nodes. We will make this directory in the home directory so that it is easily accessible.</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">cd</span>
+<span class="n">sudo</span> <span class="n">mkdir</span> <span class="n">cluster_files</span>
+</pre></div>
+</div>
+<p>Moving forward, we will have change the /etc/exports file on the head node in order for the above directory be accessible by the worker nodes</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">sudo</span> <span class="n">nano</span> <span class="o">/</span><span class="n">etc</span><span class="o">/</span><span class="n">exports</span>
+</pre></div>
+</div>
+<p>We will add the following line at the end of the above file</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="o">/</span><span class="n">home</span><span class="o">/</span><span class="n">pi</span><span class="o">/</span><span class="n">cluster_files</span> <span class="p">(</span><span class="n">rw</span><span class="p">,</span><span class="n">sync</span><span class="p">,</span><span class="n">no_root_squash</span><span class="p">,</span><span class="n">no_subtree_check</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Next we will be working on the worker nodes. Since we have SSH set up, we can simply ssh into each node instead of switching displays.</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">ssh</span> <span class="n">node1</span>
+</pre></div>
+</div>
+<p>On each node we will have to mount the cluster_files directory of the head node. For this to work first we will make the cluster_files directory in each of the worker nodes like we did for the head node. After this is done, we will add the following line to the fstab file in each node. This will assign the path to the cluster_files directory on the head node.</p>
+<p>Note:
+Please make sure that you do not alter anything in the rest of the fstab file because this might ruin your entire system. Again, for safety, we will make a copy of the original by doing the following:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">cd</span> <span class="o">/</span><span class="n">etc</span>
+<span class="n">sudo</span> <span class="n">cp</span> <span class="n">fstab</span> <span class="n">fstab</span><span class="o">.</span><span class="n">orig</span>
+</pre></div>
+</div>
+<p>Now, we can go forward and edit the fstab file.</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">sudo</span> <span class="n">nano</span> <span class="o">/</span><span class="n">etc</span><span class="o">/</span><span class="n">fstab</span>
+</pre></div>
+</div>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">head</span><span class="p">:</span><span class="o">/</span><span class="n">home</span><span class="o">/</span><span class="n">pi</span><span class="o">/</span><span class="n">cluster_files</span> <span class="o">/</span><span class="n">home</span><span class="o">/</span><span class="n">pi</span><span class="o">/</span><span class="n">cluster_files</span> <span class="n">nfs</span> <span class="n">defaults</span><span class="p">,</span> <span class="n">noatime</span><span class="p">,</span> <span class="n">noauto</span><span class="p">,</span> <span class="n">x</span><span class="o">-</span><span class="n">systemd</span><span class="o">.</span><span class="n">automount</span> <span class="mi">0</span> <span class="mi">0</span>
+</pre></div>
+</div>
+<p>Next up, we will be making a new shell script called rpcbindboot. This script will mount the NFS automatically each time the cluster is booted.
+This script will be have to be made and executed in the /etc/init.d directory.</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">cd</span> <span class="o">/</span><span class="n">etc</span><span class="o">/</span><span class="n">init</span><span class="o">.</span><span class="n">d</span>
+<span class="n">sudo</span> <span class="n">touch</span> <span class="n">rpcbindboot</span>
+<span class="n">sudo</span> <span class="n">nano</span> <span class="n">rpcbindboot</span>
+</pre></div>
+</div>
+<p>The file should be contain the following:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="ch">#! /bin/bash</span>
+<span class="c1">### BEGIN INIT INFO</span>
+<span class="c1"># Provides: 		rpcbindboot</span>
+<span class="c1"># Required-Start:	$remote_fs $syslog</span>
+<span class="c1"># Required-Stop:	$remote_fs $syslog</span>
+<span class="c1"># Default-Start:	2 3 4 5</span>
+<span class="c1"># Default-Stop: 	0 1 6</span>
+<span class="c1"># Short-description	simple script to start rpcbind at boot</span>
+<span class="c1"># Description 		Script to start / stop rpcbind at boot / shutdown. Also restarts nfs-kernel-server at boot restarts nfs-kernel-server at boot</span>
+<span class="c1">### END INIT INFO</span>
+
+<span class="n">case</span> <span class="s2">&quot;$1&quot;</span> <span class="ow">in</span>
+	<span class="n">start</span><span class="p">)</span>
+		<span class="n">echo</span> <span class="s2">&quot;Starting rpcbind&quot;</span>
+		<span class="n">sudo</span> <span class="n">rpcbind</span> <span class="n">start</span>
+		<span class="n">sudo</span> <span class="o">/</span><span class="n">etc</span><span class="o">/</span><span class="n">init</span><span class="o">.</span><span class="n">d</span><span class="o">/</span><span class="n">nfs</span><span class="o">-</span><span class="n">kernel</span><span class="o">-</span><span class="n">server</span> <span class="n">restart</span>
+		<span class="p">;;</span>
+	<span class="n">stop</span><span class="p">)</span>
+		<span class="n">echo</span> <span class="s2">&quot;Stopping rpcbind&quot;</span>
+		<span class="n">sudo</span> <span class="o">/</span><span class="n">etc</span><span class="o">/</span><span class="n">init</span><span class="o">.</span><span class="n">d</span><span class="o">/</span><span class="n">rpcbind</span> <span class="n">stop</span>
+		<span class="p">;;</span>
+	<span class="o">*</span><span class="p">)</span>
+		<span class="n">echo</span> <span class="s2">&quot;Usage /etc/init.d/rpcboot {start|stop}&quot;</span>
+		<span class="n">exit</span> <span class="mi">1</span>
+		<span class="p">;;</span>
+<span class="n">esac</span>
+</pre></div>
+</div>
+<p>After saving the file, we will need to execute this script.
+we run the following command to do so:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">chmod</span> <span class="o">+</span><span class="n">x</span> <span class="n">rpcbindboot</span>
+</pre></div>
+</div>
+<p>Our Last step is to make sure that the nfs-common and rpcbind have the same run level as nfs-kernel-server.
+We have a look into /etc/init.d/nfs-kernel-server and find its start level is <strong>2</strong> <strong>3</strong> <strong>4</strong> <strong>5</strong>. However, nfs-common and rpcbind have differenct run level.</p>
+<p>Have a look at these files’ runlevel</p>
+<p>/etc/init.d/nfs-kernel-server</p>
+<p>/etc/init.d/nfs-common</p>
+<p>/etc/init.d/rpcbind</p>
+<p>This is the runlevel of nfs-kernel-server</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="c1">### BEGIN INIT INFO</span>
+<span class="c1"># Provides:          nfs-kernel-server</span>
+<span class="c1"># Required-Start:    $remote_fs nfs-common $portmap $time</span>
+<span class="c1"># Required-Stop:     $remote_fs nfs-common $portmap $time</span>
+<span class="c1"># Should-Start:      $named</span>
+<span class="c1"># Default-Start:     2 3 4 5</span>
+<span class="c1"># Default-Stop:      0 1 6</span>
+<span class="c1"># Short-Description: Kernel NFS server support</span>
+<span class="c1"># Description:       NFS is a popular protocol for file sharing across</span>
+<span class="c1">#                    TCP/IP networks. This service provides NFS server</span>
+<span class="c1">#                    functionality, which is configured via the</span>
+<span class="c1">#                    /etc/exports file.</span>
+<span class="c1">### END INIT INFO</span>
+</pre></div>
+</div>
+<p>We need to change the Default-Start: in rpcbind and nfs-common to 2 3 4 5 as well. Again we will use nano to do this.</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">sudo</span> <span class="n">nano</span> <span class="o">/</span><span class="n">etc</span><span class="o">/</span><span class="n">init</span><span class="o">.</span><span class="n">d</span><span class="o">/</span><span class="n">nfs</span><span class="o">-</span><span class="n">common</span>
+<span class="n">sudo</span> <span class="n">nano</span> <span class="o">/</span><span class="n">etc</span><span class="o">/</span><span class="n">init</span><span class="o">.</span><span class="n">d</span><span class="o">/</span><span class="n">rpcbind</span>
+</pre></div>
+</div>
+<p>Next, we update-rc.d the changed init scripts with defaults. In order to do this we will need to remove and add them again.</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">update</span><span class="o">-</span><span class="n">rc</span><span class="o">.</span><span class="n">d</span> <span class="o">-</span><span class="n">f</span> <span class="n">rpcbind</span> <span class="n">remove</span>
+<span class="n">update</span><span class="o">-</span><span class="n">rc</span><span class="o">.</span><span class="n">d</span> <span class="n">rpcbind</span> <span class="n">defaults</span>
+
+<span class="n">update</span><span class="o">-</span><span class="n">rc</span><span class="o">.</span><span class="n">d</span> <span class="o">-</span><span class="n">f</span> <span class="n">nfs</span><span class="o">-</span><span class="n">common</span> <span class="n">remove</span>
+<span class="n">update</span><span class="o">-</span><span class="n">rc</span><span class="o">.</span><span class="n">d</span> <span class="n">nfs</span><span class="o">-</span><span class="n">common</span> <span class="n">defaults</span>
+
+<span class="n">update</span><span class="o">-</span><span class="n">rc</span><span class="o">.</span><span class="n">d</span> <span class="o">-</span><span class="n">f</span> <span class="n">nfs</span><span class="o">-</span><span class="n">kernel</span><span class="o">-</span><span class="n">server</span> <span class="n">remove</span>
+<span class="n">update</span><span class="o">-</span><span class="n">rc</span><span class="o">.</span><span class="n">d</span> <span class="n">nfs</span><span class="o">-</span><span class="n">kernel</span><span class="o">-</span><span class="n">server</span> <span class="n">defaults</span>
+</pre></div>
+</div>
+<p>Now our NFS mounting should be complete. In order to check this we will first restart our cluster. Once the cluster is restarted we will simply create a file using the touch command in the cluster_files directory and see if it can be accessed through the worker nodes. Follow the steps below to do this:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">cd</span> <span class="n">cluster_files</span>
+<span class="n">touch</span> <span class="n">foo</span>
+</pre></div>
+</div>
+<p>Now, we ssh into any worker node and see if the file ‘foo’ is present or not</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">ssh</span> <span class="n">node1</span>
+<span class="n">cd</span> <span class="n">cluster_files</span>
+<span class="n">ls</span>
+</pre></div>
+</div>
+<p>We notice that the file ‘foo’ is in fact present. Now if we remove the file in the cluster_files directory in node1, it should automatically be removed from the head node. Let’s try this:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">cd</span> <span class="n">cluster_files</span>
+<span class="n">rm</span> <span class="n">foo</span>
+<span class="n">exit</span>
+</pre></div>
+</div>
+<p>Now we are back to the head node. If we check the cluster_files directory on the head node now, the file ‘foo’ will not be there.</p>
+<p>Congratulations, you have a working Raspberry Pi Cluster!</p>
+</div>
+<div class="section" id="helpful-ideas-and-notes">
+<h2>Helpful Ideas and Notes<a class="headerlink" href="#helpful-ideas-and-notes" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li>If you intend on building a cluster containing many nodes you can use a pen drive to store all the files we have edited in the head and worker nodes and simply replace them in the rest of the nodes.</li>
+<li>If you intend on making multiple clusters of each of n nodes, a faster approach is to make images of each of the n nodes using Win32 Disk Imager and flash new Micro-SD cards with these working images. The Micro-SD cards with these images can simply be inserted into new Raspberry Pis without having to configure anything.</li>
+<li>The Rasbian Pixel can be used on all the nodes of the cluster if you wish to have GUI on each one of them. We recommend that you use Rasbian Lite for the worker nodes as you may not need to use its GUI and they will easily be accessible through SSH via the head node. This will help processes run faster on the worker nodes as the processor will not need to drive the GUI on that node.</li>
+<li>In order to access Pen drives you on Rasbian Lite, you will first need to create a mount point for it and then mount it. This can be done using the following commands after you have inserted the Pen Drive into the Pi:</li>
+</ul>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">sudo</span> <span class="n">mkdir</span> <span class="o">/</span><span class="n">media</span><span class="o">/</span><span class="n">usb</span>
+<span class="n">sudo</span> <span class="n">mount</span> <span class="o">/</span><span class="n">dev</span><span class="o">/</span><span class="n">sda1</span> <span class="o">/</span><span class="n">media</span><span class="o">/</span><span class="n">usb</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li>We recommend that you use the 4 Port HDMI and 4 Port USB switch because it makes it really convenient to switch to a different node without having to change the display HDMI or the USB jacks for the keyboard in the cluster. This is extremely helpful because we have to repeat several steps in each node of the cluster.</li>
+<li>The Raspberry Pi Boards act strangely when it comes to switching them on. If you want the board to connect to a display, you have to make sure that the HDMI is hooked up before you turn the power on. Otherwise you won’t be able to see desktop on the screen.</li>
+<li>If you already have data on your Pi and software installed, it is highly recommended that you not only back up your data but also create an image of the existing version of your Pi.</li>
+</ul>
+<div class="toctree-wrapper compound">
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="#">
+              <img class="logo" src="_static/CSInParallel200wide.png" alt="Logo"/>
+            </a></p>
+  <h3><a href="#">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Building a Raspberry Pi Cluster</a><ul>
+<li><a class="reference internal" href="#materials-needed">Materials Needed</a></li>
+<li><a class="reference internal" href="#overview">Overview:</a></li>
+<li><a class="reference internal" href="#setting-up-the-physical-cluster">Setting up the Physical Cluster</a></li>
+<li><a class="reference internal" href="#setting-up-rasbian-os">Setting up Rasbian OS</a></li>
+<li><a class="reference internal" href="#software-installation-and-wireless-setup">Software Installation and Wireless Setup</a></li>
+<li><a class="reference internal" href="#ssh-remote-login-setup">SSH Remote Login Setup</a></li>
+<li><a class="reference internal" href="#mount-network-file-system">Mount Network File System</a></li>
+<li><a class="reference internal" href="#helpful-ideas-and-notes">Helpful Ideas and Notes</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="nav-item nav-item-0"><a href="#">Building a Raspberry Pi Cluster</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright This work is licensed under a Creative Commons Attribution-ShareAlike 3.0 Unported License.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.3.
+    </div>
+  </body>
+</html>

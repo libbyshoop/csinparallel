@@ -1,0 +1,527 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Broadcast &#8212; Building a Raspberry Pi Cluster</title>
+    <link rel="stylesheet" href="../_static/csip.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+    <link rel="search" title="Search" href="../search.html" /> 
+  </head>
+  <body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="nav-item nav-item-0"><a href="../index.html">Building a Raspberry Pi Cluster</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="broadcast">
+<h1>Broadcast<a class="headerlink" href="#broadcast" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="broadcast-a-special-form-of-message-passing">
+<h2>06. Broadcast: a special form of message passing<a class="headerlink" href="#broadcast-a-special-form-of-message-passing" title="Permalink to this headline">¶</a></h2>
+<p><em>file: patternlets/MPI/06.broadcast/broadcast.c</em></p>
+<p><em>Build inside 06.broadcast directory:</em></p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">make</span> <span class="n">broadcast</span>
+</pre></div>
+</div>
+<p><em>Execute on the command line inside 06.broadcast directory:</em></p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">mpirun</span> <span class="o">-</span><span class="n">np</span> <span class="o">&lt;</span><span class="n">number</span> <span class="n">of</span> <span class="n">processes</span><span class="o">&gt;</span> <span class="o">./</span><span class="n">broadcast</span>
+</pre></div>
+</div>
+<p>This example shows how a data item read from a file can be sent to all the processes.
+Lines 29 through 34 demonstrate reading data from a file. After opening the file and
+asserting that the file is not empty, the file is read by the <em>fscanf</em> function.
+This function then stores the data from the file as an integer in the answer
+variable. Note that only process 0 has the data from the file stored in answer.</p>
+<p>In order to send the data from process 0 to all of the processes in the
+communicator, it is necessary to <em>broadcast</em>. During a broadcast, one process
+sends the same data to all of the processes. A common use of broadcasting is
+to send user input to all of the processes in a parallel program. In our example,
+the broadcast is sent from process 0 and looks like this:</p>
+<a class="reference internal image-reference" href="../_images/Broadcast.png"><img alt="../_images/Broadcast.png" src="../_images/Broadcast.png" style="width: 700px;" /></a>
+<div class="highlight-c"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="cm">/* broadcast.c</span>
+<span class="cm"> * ... illustrates the use of MPI_Bcast() with a scalar value...</span>
+<span class="cm"> *      (compare to array version).</span>
+<span class="cm"> * Joel Adams, Calvin College, April 2016.</span>
+<span class="cm"> *</span>
+<span class="cm"> * Usage: mpirun -np N ./broadcast</span>
+<span class="cm"> *</span>
+<span class="cm"> * Exercise:</span>
+<span class="cm"> * - Compile and run several times,</span>
+<span class="cm"> *     using 2, 4, and 8 processes</span>
+<span class="cm"> * - Use source code to trace execution and output</span>
+<span class="cm"> *     (noting contents of file &quot;data.txt&quot;);</span>
+<span class="cm"> * - Explain behavior/effect of MPI_Bcast().</span>
+<span class="cm"> */</span>
+
+<span class="cp">#include</span> <span class="cpf">&lt;mpi.h&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;stdio.h&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;stdlib.h&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;assert.h&gt;</span><span class="cp"></span>
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span><span class="o">**</span> <span class="n">argv</span><span class="p">)</span> <span class="p">{</span>
+	<span class="kt">int</span> <span class="n">answer</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+        <span class="kt">int</span> <span class="n">numProcs</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">myRank</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+
+	<span class="n">MPI_Init</span><span class="p">(</span><span class="o">&amp;</span><span class="n">argc</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">argv</span><span class="p">);</span>
+        <span class="n">MPI_Comm_size</span><span class="p">(</span><span class="n">MPI_COMM_WORLD</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">numProcs</span><span class="p">);</span>
+        <span class="n">MPI_Comm_rank</span><span class="p">(</span><span class="n">MPI_COMM_WORLD</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">myRank</span><span class="p">);</span>
+
+	<span class="k">if</span> <span class="p">(</span><span class="n">myRank</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+               <span class="kt">FILE</span> <span class="o">*</span><span class="n">filePtr</span> <span class="o">=</span> <span class="n">fopen</span><span class="p">(</span><span class="s">&quot;data.txt&quot;</span><span class="p">,</span> <span class="s">&quot;r&quot;</span><span class="p">);</span> 
+               <span class="n">assert</span><span class="p">(</span> <span class="n">filePtr</span> <span class="o">!=</span> <span class="nb">NULL</span> <span class="p">);</span>
+               <span class="n">fscanf</span><span class="p">(</span><span class="n">filePtr</span><span class="p">,</span> <span class="s">&quot; %d&quot;</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">answer</span><span class="p">);</span>
+               <span class="n">fclose</span><span class="p">(</span><span class="n">filePtr</span><span class="p">);</span>
+        <span class="p">}</span>
+
+	<span class="n">printf</span><span class="p">(</span><span class="s">&quot;BEFORE the broadcast, process %d&#39;s answer = %d</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span>
+                 <span class="n">myRank</span><span class="p">,</span> <span class="n">answer</span><span class="p">);</span>
+
+        <span class="n">MPI_Bcast</span><span class="p">(</span><span class="o">&amp;</span><span class="n">answer</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">MPI_INT</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">MPI_COMM_WORLD</span><span class="p">);</span>
+
+	<span class="n">printf</span><span class="p">(</span><span class="s">&quot;AFTER the broadcast, process %d&#39;s answer = %d</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span>
+                 <span class="n">myRank</span><span class="p">,</span> <span class="n">answer</span><span class="p">);</span>
+
+ 	<span class="n">MPI_Finalize</span><span class="p">();</span>
+
+	<span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+
+</pre></div>
+</td></tr></table></div>
+</div>
+<div class="section" id="broadcast-send-receive-equivalent">
+<h2>07. Broadcast: send receive equivalent<a class="headerlink" href="#broadcast-send-receive-equivalent" title="Permalink to this headline">¶</a></h2>
+<p>file: patternlets/MPI/07.broadcastSendReceive/broadcastSendReceive.c*</p>
+<p><em>Build inside 07.broadcastSendReceive directory:</em></p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">make</span> <span class="n">broadcastSendReceive</span>
+</pre></div>
+</div>
+<p><em>Execute on the command line inside 06.broadcastSendReceive directory:</em></p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">mpirun</span> <span class="o">-</span><span class="n">np</span> <span class="o">&lt;</span><span class="n">number</span> <span class="n">of</span> <span class="n">processes</span><span class="o">&gt;</span> <span class="o">./</span><span class="n">broadcastSendReceive</span>
+</pre></div>
+</div>
+<p>This example shows how to ensure that all processes have a copy of an array
+created by a single <em>master</em> process. Master process 0 sends the array to each process,
+all of which receive the modified array.</p>
+<div class="highlight-c"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73
+74
+75
+76
+77
+78
+79
+80</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="cm">/*</span>
+<span class="cm"> * broadcastSendReceive.c</span>
+<span class="cm"> * ... illustrates basic send receive functions.</span>
+<span class="cm"> * Master process sends filled array to each process.</span>
+<span class="cm"> *</span>
+<span class="cm"> * Hannah Sonsalla, Macalester College 2017</span>
+<span class="cm"> * fill and print function from code by Joel Adams, Calvin College</span>
+<span class="cm"> *</span>
+<span class="cm"> * Usage: mpirun -np N ./broadcastSendReceive</span>
+<span class="cm"> *</span>
+<span class="cm"> * Exercise:</span>
+<span class="cm"> * - Compile and run, using 2, 4, and 8 processes</span>
+<span class="cm"> * - Use source code to trace execution and output</span>
+<span class="cm"> * </span>
+<span class="cm"> */</span>
+
+<span class="cp">#include</span> <span class="cpf">&lt;mpi.h&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;stdio.h&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;stdlib.h&gt;</span><span class="cp"></span>
+
+<span class="cm">/* fill an array with some arbitrary values </span>
+<span class="cm"> * @param: a, an int*.</span>
+<span class="cm"> * @param: size, an int.</span>
+<span class="cm"> * Precondition: a is the address of an array of ints.</span>
+<span class="cm"> *              &amp;&amp; size is the number of ints a can hold.</span>
+<span class="cm"> * Postcondition: a has been filled with arbitrary values </span>
+<span class="cm"> *                { 11, 12, 13, ... }.</span>
+<span class="cm"> */</span>
+<span class="kt">void</span> <span class="nf">fill</span><span class="p">(</span><span class="kt">int</span><span class="o">*</span> <span class="n">a</span><span class="p">,</span> <span class="kt">int</span> <span class="n">size</span><span class="p">)</span> <span class="p">{</span>
+	<span class="kt">int</span> <span class="n">i</span><span class="p">;</span>
+	<span class="k">for</span> <span class="p">(</span><span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">size</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+		<span class="n">a</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">i</span><span class="o">+</span><span class="mi">11</span><span class="p">;</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+
+<span class="cm">/* display a string, a process id, and its array values </span>
+<span class="cm"> * @param: str, a char*</span>
+<span class="cm"> * @param: id, an int</span>
+<span class="cm"> * @param: a, an int*.</span>
+<span class="cm"> * Precondition: str points to either &quot;BEFORE&quot; or &quot;AFTER&quot;</span>
+<span class="cm"> *              &amp;&amp; id is the rank of this MPI process</span>
+<span class="cm"> *              &amp;&amp; a is the address of an 8-element int array.</span>
+<span class="cm"> * Postcondition: str, id, and a have all been written to stdout.</span>
+<span class="cm"> */</span>
+<span class="kt">void</span> <span class="nf">print</span><span class="p">(</span><span class="kt">char</span><span class="o">*</span> <span class="n">str</span><span class="p">,</span> <span class="kt">int</span> <span class="n">id</span><span class="p">,</span> <span class="kt">int</span><span class="o">*</span> <span class="n">a</span><span class="p">)</span> <span class="p">{</span>
+	<span class="n">printf</span><span class="p">(</span><span class="s">&quot;%s array sent, process %d has: {%d, %d, %d, %d, %d, %d, %d, %d}</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span>
+	   <span class="n">str</span><span class="p">,</span> <span class="n">id</span><span class="p">,</span> <span class="n">a</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">a</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">a</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">a</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span> <span class="n">a</span><span class="p">[</span><span class="mi">4</span><span class="p">],</span> <span class="n">a</span><span class="p">[</span><span class="mi">5</span><span class="p">],</span> <span class="n">a</span><span class="p">[</span><span class="mi">6</span><span class="p">],</span> <span class="n">a</span><span class="p">[</span><span class="mi">7</span><span class="p">]);</span>
+<span class="p">}</span>
+
+<span class="cp">#define MAX 8</span>
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span><span class="o">**</span> <span class="n">argv</span><span class="p">)</span> <span class="p">{</span>
+	<span class="kt">int</span> <span class="n">id</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">numProcesses</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span>
+	<span class="kt">int</span> <span class="n">array</span><span class="p">[</span><span class="n">MAX</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="mi">0</span><span class="p">};</span>
+    
+
+	<span class="n">MPI_Init</span><span class="p">(</span><span class="o">&amp;</span><span class="n">argc</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">argv</span><span class="p">);</span>
+	<span class="n">MPI_Comm_rank</span><span class="p">(</span><span class="n">MPI_COMM_WORLD</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">id</span><span class="p">);</span>
+    <span class="n">MPI_Comm_size</span><span class="p">(</span><span class="n">MPI_COMM_WORLD</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">numProcesses</span><span class="p">);</span>
+    
+	<span class="k">if</span> <span class="p">(</span><span class="n">id</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="n">fill</span><span class="p">(</span><span class="n">array</span><span class="p">,</span> <span class="n">MAX</span><span class="p">);</span>
+     
+	<span class="n">print</span><span class="p">(</span><span class="s">&quot;BEFORE&quot;</span><span class="p">,</span> <span class="n">id</span><span class="p">,</span> <span class="n">array</span><span class="p">);</span>
+	
+	<span class="c1">// master process sends array to every process</span>
+	<span class="k">if</span> <span class="p">(</span><span class="n">id</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+		<span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">numProcesses</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+			<span class="n">MPI_Send</span><span class="p">(</span><span class="o">&amp;</span><span class="n">array</span><span class="p">,</span> <span class="n">MAX</span><span class="p">,</span> <span class="n">MPI_INT</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">MPI_COMM_WORLD</span><span class="p">);</span>
+	    <span class="p">}</span>
+	<span class="p">}</span>
+	
+	<span class="k">else</span> <span class="p">{</span>
+	    <span class="n">MPI_Recv</span><span class="p">(</span><span class="o">&amp;</span><span class="n">array</span><span class="p">,</span> <span class="n">MAX</span><span class="p">,</span> <span class="n">MPI_INT</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">MPI_COMM_WORLD</span><span class="p">,</span> <span class="n">MPI_STATUS_IGNORE</span><span class="p">);</span>
+	<span class="p">}</span>
+	
+    <span class="n">print</span><span class="p">(</span><span class="s">&quot;AFTER&quot;</span><span class="p">,</span> <span class="n">id</span><span class="p">,</span> <span class="n">array</span><span class="p">);</span>
+ 	<span class="n">MPI_Finalize</span><span class="p">();</span>
+
+	<span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</td></tr></table></div>
+</div>
+<div class="section" id="broadcast-send-data-to-all-processes">
+<h2>08. Broadcast: send data to all processes<a class="headerlink" href="#broadcast-send-data-to-all-processes" title="Permalink to this headline">¶</a></h2>
+<p><em>file: patternlets/MPI/08.broadcast2/broadcast2.c</em></p>
+<p><em>Build inside 08.broadcast2 directory:</em></p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">make</span> <span class="n">broadcast2</span>
+</pre></div>
+</div>
+<p><em>Execute on the command line inside 08.broadcast2 directory:</em></p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">mpirun</span> <span class="o">-</span><span class="n">np</span> <span class="o">&lt;</span><span class="n">number</span> <span class="n">of</span> <span class="n">processes</span><span class="o">&gt;</span> <span class="o">./</span><span class="n">broadcast2</span>
+</pre></div>
+</div>
+<p>The send and receive pattern where one process sends the same data to all
+processes is used frequently. Broadcast was created for this purpose. This example
+is the same as the previous example except that we send the modified array
+using broadcast.</p>
+<div class="highlight-c"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="cm">/* broadcast2.c</span>
+<span class="cm"> * ... illustrates the use of MPI_Bcast() for arrays...</span>
+<span class="cm"> * Joel Adams, Calvin College, November 2009.</span>
+<span class="cm"> *</span>
+<span class="cm"> * Usage: mpirun -np N ./broadcast</span>
+<span class="cm"> *</span>
+<span class="cm"> * Exercise:</span>
+<span class="cm"> * - Compile and run, using 2, 4, and 8 processes</span>
+<span class="cm"> * - Use source code to trace execution and output</span>
+<span class="cm"> * - Explain behavior/effect of MPI_Bcast().</span>
+<span class="cm"> */</span>
+
+<span class="cp">#include</span> <span class="cpf">&lt;mpi.h&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;stdio.h&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;stdlib.h&gt;</span><span class="cp"></span>
+
+<span class="cm">/* fill an array with some arbitrary values </span>
+<span class="cm"> * @param: a, an int*.</span>
+<span class="cm"> * @param: size, an int.</span>
+<span class="cm"> * Precondition: a is the address of an array of ints.</span>
+<span class="cm"> *              &amp;&amp; size is the number of ints a can hold.</span>
+<span class="cm"> * Postcondition: a has been filled with arbitrary values </span>
+<span class="cm"> *                { 11, 12, 13, ... }.</span>
+<span class="cm"> */</span>
+<span class="kt">void</span> <span class="nf">fill</span><span class="p">(</span><span class="kt">int</span><span class="o">*</span> <span class="n">a</span><span class="p">,</span> <span class="kt">int</span> <span class="n">size</span><span class="p">)</span> <span class="p">{</span>
+	<span class="kt">int</span> <span class="n">i</span><span class="p">;</span>
+	<span class="k">for</span> <span class="p">(</span><span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">size</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+		<span class="n">a</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">i</span><span class="o">+</span><span class="mi">11</span><span class="p">;</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+
+<span class="cm">/* display a string, a process id, and its array values </span>
+<span class="cm"> * @param: str, a char*</span>
+<span class="cm"> * @param: id, an int</span>
+<span class="cm"> * @param: a, an int*.</span>
+<span class="cm"> * Precondition: str points to either &quot;BEFORE&quot; or &quot;AFTER&quot;</span>
+<span class="cm"> *              &amp;&amp; id is the rank of this MPI process</span>
+<span class="cm"> *              &amp;&amp; a is the address of an 8-element int array.</span>
+<span class="cm"> * Postcondition: str, id, and a have all been written to stdout.</span>
+<span class="cm"> */</span>
+<span class="kt">void</span> <span class="nf">print</span><span class="p">(</span><span class="kt">char</span><span class="o">*</span> <span class="n">str</span><span class="p">,</span> <span class="kt">int</span> <span class="n">id</span><span class="p">,</span> <span class="kt">int</span><span class="o">*</span> <span class="n">a</span><span class="p">)</span> <span class="p">{</span>
+	<span class="n">printf</span><span class="p">(</span><span class="s">&quot;%s broadcast, process %d has: {%d, %d, %d, %d, %d, %d, %d, %d}</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span>
+	   <span class="n">str</span><span class="p">,</span> <span class="n">id</span><span class="p">,</span> <span class="n">a</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">a</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">a</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">a</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span> <span class="n">a</span><span class="p">[</span><span class="mi">4</span><span class="p">],</span> <span class="n">a</span><span class="p">[</span><span class="mi">5</span><span class="p">],</span> <span class="n">a</span><span class="p">[</span><span class="mi">6</span><span class="p">],</span> <span class="n">a</span><span class="p">[</span><span class="mi">7</span><span class="p">]);</span>
+<span class="p">}</span>
+
+<span class="cp">#define MAX 8</span>
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span><span class="o">**</span> <span class="n">argv</span><span class="p">)</span> <span class="p">{</span>
+	<span class="kt">int</span> <span class="n">array</span><span class="p">[</span><span class="n">MAX</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="mi">0</span><span class="p">};</span>
+        <span class="kt">int</span> <span class="n">numProcs</span><span class="p">,</span> <span class="n">myRank</span><span class="p">;</span>
+
+	<span class="n">MPI_Init</span><span class="p">(</span><span class="o">&amp;</span><span class="n">argc</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">argv</span><span class="p">);</span>
+        <span class="n">MPI_Comm_size</span><span class="p">(</span><span class="n">MPI_COMM_WORLD</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">numProcs</span><span class="p">);</span>
+        <span class="n">MPI_Comm_rank</span><span class="p">(</span><span class="n">MPI_COMM_WORLD</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">myRank</span><span class="p">);</span>
+
+	<span class="k">if</span> <span class="p">(</span><span class="n">myRank</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="n">fill</span><span class="p">(</span><span class="n">array</span><span class="p">,</span> <span class="n">MAX</span><span class="p">);</span>
+     
+	<span class="n">print</span><span class="p">(</span><span class="s">&quot;BEFORE&quot;</span><span class="p">,</span> <span class="n">myRank</span><span class="p">,</span> <span class="n">array</span><span class="p">);</span>
+
+        <span class="n">MPI_Bcast</span><span class="p">(</span><span class="n">array</span><span class="p">,</span> <span class="n">MAX</span><span class="p">,</span> <span class="n">MPI_INT</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">MPI_COMM_WORLD</span><span class="p">);</span>
+
+	<span class="n">print</span><span class="p">(</span><span class="s">&quot;AFTER&quot;</span><span class="p">,</span> <span class="n">myRank</span><span class="p">,</span> <span class="n">array</span><span class="p">);</span>
+
+ 	<span class="n">MPI_Finalize</span><span class="p">();</span>
+
+	<span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+
+</pre></div>
+</td></tr></table></div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../index.html">
+              <img class="logo" src="../_static/CSInParallel200wide.png" alt="Logo"/>
+            </a></p>
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Broadcast</a><ul>
+<li><a class="reference internal" href="#broadcast-a-special-form-of-message-passing">06. Broadcast: a special form of message passing</a></li>
+<li><a class="reference internal" href="#broadcast-send-receive-equivalent">07. Broadcast: send receive equivalent</a></li>
+<li><a class="reference internal" href="#broadcast-send-data-to-all-processes">08. Broadcast: send data to all processes</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="nav-item nav-item-0"><a href="../index.html">Building a Raspberry Pi Cluster</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright This work is licensed under a Creative Commons Attribution-ShareAlike 3.0 Unported License.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.3.
+    </div>
+  </body>
+</html>

@@ -1,0 +1,1 @@
+head:/home/pi/cluster_files /home/pi/cluster_files nfs defaults, noatime, noauto, x-systemd.automount 0 0

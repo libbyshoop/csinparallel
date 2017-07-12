@@ -1,0 +1,608 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Barrier Synchronization and Tags &#8212; Building a Raspberry Pi Cluster</title>
+    <link rel="stylesheet" href="../_static/csip.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+    <link rel="search" title="Search" href="../search.html" /> 
+  </head>
+  <body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="nav-item nav-item-0"><a href="../index.html">Building a Raspberry Pi Cluster</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="barrier-synchronization-and-tags">
+<h1>Barrier Synchronization and Tags<a class="headerlink" href="#barrier-synchronization-and-tags" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="the-barrier-coordination-pattern">
+<h2>15. The Barrier Coordination Pattern<a class="headerlink" href="#the-barrier-coordination-pattern" title="Permalink to this headline">¶</a></h2>
+<p><em>file: patternlets/MPI/15.barrier/barrier.c</em></p>
+<p><em>Build inside 15.barrier directory:</em></p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">make</span> <span class="n">barrier</span>
+</pre></div>
+</div>
+<p><em>Execute on the command line inside 15.barrier directory:</em></p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">mpirun</span> <span class="o">-</span><span class="n">np</span> <span class="o">&lt;</span><span class="n">number</span> <span class="n">of</span> <span class="n">processes</span><span class="o">&gt;</span> <span class="o">./</span><span class="n">barrier</span>
+</pre></div>
+</div>
+<p>A barrier is used when you want all the processes to complete a portion of
+code before continuing. Use this exercise to verify that it is occurring when
+you add the call to the MPI_Barrier function.</p>
+<div class="highlight-c"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73
+74
+75
+76
+77
+78
+79
+80
+81
+82</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="cm">/* barrier.c</span>
+<span class="cm"> *  ... illustrates the behavior of MPI_Barrier() ...</span>
+<span class="cm"> *</span>
+<span class="cm"> * Joel Adams, Calvin College, May 2013.</span>
+<span class="cm"> * Bill Siever, April 2016</span>
+<span class="cm"> *   (Converted to master/worker pattern).</span>
+<span class="cm"> * Joel Adams, April 2016</span>
+<span class="cm"> *   (Refactored code so that just one barrier needed).</span>
+<span class="cm"> *</span>
+<span class="cm"> * Usage: mpirun -np 8 ./barrier</span>
+<span class="cm"> *</span>
+<span class="cm"> * Exercise:</span>
+<span class="cm"> *  - Compile; then run the program several times,</span>
+<span class="cm"> *     noting the interleaved outputs.</span>
+<span class="cm"> *  - Uncomment the MPI_Barrier() call; then recompile and rerun,</span>
+<span class="cm"> *     noting how the output changes.</span>
+<span class="cm"> *  - Explain what effect MPI_Barrier() has on process behavior.</span>
+<span class="cm"> */</span>
+
+<span class="cp">#include</span> <span class="cpf">&lt;stdio.h&gt;   // printf()</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;mpi.h&gt;     // MPI</span><span class="cp"></span>
+
+<span class="cm">/* Have workers send messages to the master, which prints them.</span>
+<span class="cm"> * @param: id, an int</span>
+<span class="cm"> * @param: numProcesses, an int</span>
+<span class="cm"> * @param: hostName, a char*</span>
+<span class="cm"> * @param: position, a char*</span>
+<span class="cm"> *</span>
+<span class="cm"> * Precondition: this function is being called by an MPI process</span>
+<span class="cm"> *               &amp;&amp; id is the MPI rank of that process</span>
+<span class="cm"> *               &amp;&amp; numProcesses is the number of processes in the computation</span>
+<span class="cm"> *               &amp;&amp; hostName points to a char array containing the name of the</span>
+<span class="cm"> *                    host on which this MPI process is running</span>
+<span class="cm"> *               &amp;&amp; position points to &quot;BEFORE&quot; or &quot;AFTER&quot;.</span>
+<span class="cm"> *</span>
+<span class="cm"> * Postcondition: each process whose id &gt; 0 has sent a message to process 0</span>
+<span class="cm"> *                     containing id, numProcesses, hostName, and position</span>
+<span class="cm"> *                &amp;&amp; process 0 has received and output each message.</span>
+<span class="cm"> */</span>
+
+<span class="cp">#define BUFFER_SIZE 200</span>
+<span class="cp">#define MASTER      0</span>
+
+<span class="kt">void</span> <span class="nf">sendReceivePrint</span><span class="p">(</span><span class="kt">int</span> <span class="n">id</span><span class="p">,</span> <span class="kt">int</span> <span class="n">numProcesses</span><span class="p">,</span> <span class="kt">char</span><span class="o">*</span> <span class="n">hostName</span><span class="p">,</span> <span class="kt">char</span><span class="o">*</span> <span class="n">position</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kt">char</span> <span class="n">buffer</span><span class="p">[</span><span class="n">BUFFER_SIZE</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="sc">&#39;\0&#39;</span><span class="p">};;</span>
+    <span class="n">MPI_Status</span> <span class="n">status</span><span class="p">;</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="n">id</span> <span class="o">!=</span> <span class="n">MASTER</span><span class="p">)</span> <span class="p">{</span>
+        <span class="c1">// Worker: Build a message and send it to the Master</span>
+        <span class="kt">int</span> <span class="n">length</span> <span class="o">=</span> <span class="n">sprintf</span><span class="p">(</span><span class="n">buffer</span><span class="p">,</span>
+                              <span class="s">&quot;Process #%d of %d on %s is %s the barrier.</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span>
+                                <span class="n">id</span><span class="p">,</span> <span class="n">numProcesses</span><span class="p">,</span> <span class="n">hostName</span><span class="p">,</span> <span class="n">position</span><span class="p">);</span>
+        <span class="n">MPI_Send</span><span class="p">(</span><span class="n">buffer</span><span class="p">,</span> <span class="n">length</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="n">MPI_CHAR</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">MPI_COMM_WORLD</span><span class="p">);</span>
+    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+        <span class="c1">// Master: Receive and print the messages from all Workers</span>
+        <span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">numProcesses</span><span class="o">-</span><span class="mi">1</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+           <span class="n">MPI_Recv</span><span class="p">(</span><span class="n">buffer</span><span class="p">,</span> <span class="n">BUFFER_SIZE</span><span class="p">,</span> <span class="n">MPI_CHAR</span><span class="p">,</span> <span class="n">MPI_ANY_SOURCE</span><span class="p">,</span>
+                     <span class="n">MPI_ANY_TAG</span><span class="p">,</span> <span class="n">MPI_COMM_WORLD</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">status</span><span class="p">);</span>
+           <span class="n">printf</span><span class="p">(</span><span class="s">&quot;%s&quot;</span><span class="p">,</span> <span class="n">buffer</span><span class="p">);</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span><span class="o">**</span> <span class="n">argv</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kt">int</span> <span class="n">id</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">numProcesses</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">length</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span>
+    <span class="kt">char</span> <span class="n">myHostName</span><span class="p">[</span><span class="n">MPI_MAX_PROCESSOR_NAME</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="sc">&#39;\0&#39;</span><span class="p">};</span>
+
+    <span class="n">MPI_Init</span><span class="p">(</span><span class="o">&amp;</span><span class="n">argc</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">argv</span><span class="p">);</span>
+    <span class="n">MPI_Comm_rank</span><span class="p">(</span><span class="n">MPI_COMM_WORLD</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">id</span><span class="p">);</span>
+    <span class="n">MPI_Comm_size</span><span class="p">(</span><span class="n">MPI_COMM_WORLD</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">numProcesses</span><span class="p">);</span>
+    <span class="n">MPI_Get_processor_name</span> <span class="p">(</span><span class="n">myHostName</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">length</span><span class="p">);</span>
+
+    <span class="n">sendReceivePrint</span><span class="p">(</span><span class="n">id</span><span class="p">,</span> <span class="n">numProcesses</span><span class="p">,</span> <span class="n">myHostName</span><span class="p">,</span> <span class="s">&quot;BEFORE&quot;</span><span class="p">);</span>
+
+<span class="c1">//    MPI_Barrier(MPI_COMM_WORLD);</span>
+
+    <span class="n">sendReceivePrint</span><span class="p">(</span><span class="n">id</span><span class="p">,</span> <span class="n">numProcesses</span><span class="p">,</span> <span class="n">myHostName</span><span class="p">,</span> <span class="s">&quot;AFTER&quot;</span><span class="p">);</span>
+
+    <span class="n">MPI_Finalize</span><span class="p">();</span>
+    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</td></tr></table></div>
+</div>
+<div class="section" id="timing-code-using-the-barrier-coordination-pattern">
+<h2>16. Timing code using the Barrier Coordination Pattern<a class="headerlink" href="#timing-code-using-the-barrier-coordination-pattern" title="Permalink to this headline">¶</a></h2>
+<p><em>file: patternlets/MPI/16.barrier+Timing/barrier+timing.c</em></p>
+<p><em>Build inside 16.barrier+Timing directory:</em></p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">make</span> <span class="n">marrier</span><span class="o">+</span><span class="n">timing</span>
+</pre></div>
+</div>
+<p><em>Execute on the command line inside 16.barrier+Timing directory:</em></p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">mpirun</span> <span class="o">-</span><span class="n">np</span> <span class="o">&lt;</span><span class="n">number</span> <span class="n">of</span> <span class="n">processes</span><span class="o">&gt;</span> <span class="o">./</span><span class="n">barrier</span><span class="o">+</span><span class="n">timing</span>
+</pre></div>
+</div>
+<p>In this example you can run the code several times and determine the average, median, and minimum
+execution time when the code has a barrier and when it does not. The primary purpose of this exercise
+is to illustrate that one of the most useful uses of a barrier is to ensure that you are getting legitimate
+timings for your code examples. By using a barrier, you ensure that all processes have finished before
+recording the time using the master process.</p>
+<div class="highlight-c"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="cm">/* barrier+timing.c </span>
+<span class="cm"> *  ... illustrates the behavior of MPI_Barrier() </span>
+<span class="cm"> *       to coordinate process-timing.</span>
+<span class="cm"> *</span>
+<span class="cm"> * Joel Adams, April 2016</span>
+<span class="cm"> *</span>
+<span class="cm"> * Usage: mpirun -np 8 ./barrier+timing</span>
+<span class="cm"> *</span>
+<span class="cm"> * Exercise: </span>
+<span class="cm"> *  - Compile; then run the program five times, </span>
+<span class="cm"> *  - In a spreadsheet, compute the average,</span>
+<span class="cm"> *     median, and minimum of the five times.</span>
+<span class="cm"> *  - Uncomment the two MPI_Barrier() calls;</span>
+<span class="cm"> *     then recompile, rerun five times, and</span>
+<span class="cm"> *     compute the new average, median, and min</span>
+<span class="cm"> *     times.</span>
+<span class="cm"> *  - Why did uncommenting the barrier calls</span>
+<span class="cm"> *     produce the change you observed?</span>
+<span class="cm"> */</span>
+
+<span class="cp">#include</span> <span class="cpf">&lt;stdio.h&gt;   // printf()</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;mpi.h&gt;     // MPI</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;unistd.h&gt;  // sleep()</span><span class="cp"></span>
+
+<span class="cp">#define  MASTER 0</span>
+
+<span class="cm">/* answer the ultimate question of life, the universe, </span>
+<span class="cm"> *  and everything, based on id and numProcs.</span>
+<span class="cm"> * @param: id, an int</span>
+<span class="cm"> * @param: numProcs, an int</span>
+<span class="cm"> * Precondition: id is the MPI rank of this process</span>
+<span class="cm"> *             &amp;&amp; numProcs is the number of MPI processes.</span>
+<span class="cm"> * Postcondition: The return value is 42.</span>
+<span class="cm"> */</span>
+<span class="kt">int</span> <span class="nf">solveProblem</span><span class="p">(</span><span class="kt">int</span> <span class="n">id</span><span class="p">,</span> <span class="kt">int</span> <span class="n">numProcs</span><span class="p">)</span> <span class="p">{</span>
+
+    <span class="n">sleep</span><span class="p">(</span> <span class="p">((</span><span class="kt">double</span><span class="p">)</span><span class="n">id</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span> <span class="o">/</span> <span class="n">numProcs</span><span class="p">);</span>
+
+    <span class="k">return</span> <span class="mi">42</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span><span class="o">**</span> <span class="n">argv</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kt">int</span> <span class="n">id</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">numProcesses</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span>
+    <span class="kt">double</span> <span class="n">startTime</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span> <span class="n">totalTime</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">;</span>
+    <span class="kt">int</span> <span class="n">answer</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">;</span>
+
+    <span class="n">MPI_Init</span><span class="p">(</span><span class="o">&amp;</span><span class="n">argc</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">argv</span><span class="p">);</span>
+    <span class="n">MPI_Comm_rank</span><span class="p">(</span><span class="n">MPI_COMM_WORLD</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">id</span><span class="p">);</span>
+    <span class="n">MPI_Comm_size</span><span class="p">(</span><span class="n">MPI_COMM_WORLD</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">numProcesses</span><span class="p">);</span>
+
+<span class="c1">//    MPI_Barrier(MPI_COMM_WORLD);</span>
+    <span class="k">if</span> <span class="p">(</span> <span class="n">id</span> <span class="o">==</span> <span class="n">MASTER</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">startTime</span> <span class="o">=</span> <span class="n">MPI_Wtime</span><span class="p">();</span>
+    <span class="p">}</span>
+
+    <span class="n">answer</span> <span class="o">=</span> <span class="n">solveProblem</span><span class="p">(</span><span class="n">id</span><span class="p">,</span> <span class="n">numProcesses</span><span class="p">);</span>
+
+<span class="c1">//    MPI_Barrier(MPI_COMM_WORLD);</span>
+    <span class="k">if</span> <span class="p">(</span> <span class="n">id</span> <span class="o">==</span> <span class="n">MASTER</span> <span class="p">)</span> <span class="p">{</span>
+        <span class="n">totalTime</span> <span class="o">=</span> <span class="n">MPI_Wtime</span><span class="p">()</span> <span class="o">-</span> <span class="n">startTime</span><span class="p">;</span>
+        <span class="n">printf</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\n</span><span class="s">The answer is %d; computing it took %f secs.</span><span class="se">\n\n</span><span class="s">&quot;</span><span class="p">,</span>
+                   <span class="n">answer</span><span class="p">,</span> <span class="n">totalTime</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="n">MPI_Finalize</span><span class="p">();</span>
+    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+
+</pre></div>
+</td></tr></table></div>
+</div>
+<div class="section" id="sequence-numbers">
+<h2>17. Sequence Numbers<a class="headerlink" href="#sequence-numbers" title="Permalink to this headline">¶</a></h2>
+<p><em>file: patternlets/MPI/17.sequenceNumbers/sequenceNumbers.c</em></p>
+<p><em>Build inside 17.sequenceNumbers directory:</em></p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">make</span> <span class="n">sequenceNumbers</span>
+</pre></div>
+</div>
+<p><em>Execute on the command line inside 17.sequenceNumbers directory:</em></p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">mpirun</span> <span class="o">-</span><span class="n">np</span> <span class="o">&lt;</span><span class="n">number</span> <span class="n">of</span> <span class="n">processes</span><span class="o">&gt;</span> <span class="o">./</span><span class="n">sequenceNumbers</span>
+</pre></div>
+</div>
+<p>Tags can be placed on messages that are sent from a non-master process and received
+by the master process. Using tags is an alternative form of simulating the barrier
+in example 15 above.</p>
+<div class="highlight-c"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73
+74
+75
+76
+77
+78
+79
+80
+81
+82
+83
+84
+85
+86
+87
+88
+89
+90</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="cm">/* sequenceNumbers.c</span>
+<span class="cm"> *  ... shows how to acheive barrier-like behavior</span>
+<span class="cm"> *      by using MPI message tags as sequence numbers.</span>
+<span class="cm"> *</span>
+<span class="cm"> * Joel Adams, Calvin College, April 2016.</span>
+<span class="cm"> *</span>
+<span class="cm"> * Usage: mpirun -np 8 ./sequenceNumbers</span>
+<span class="cm"> *</span>
+<span class="cm"> * Exercise:</span>
+<span class="cm"> * 1. Compile; then run the program several times,</span>
+<span class="cm"> *     noting the intermixed outputs</span>
+<span class="cm"> * 2. Comment out the sendReceivePrint(..., &quot;SECOND&quot;, 1); call;</span>
+<span class="cm"> *      uncomment the sendReceivePrint(..., &quot;SECOND&quot;, 2); call;</span>
+<span class="cm"> *      then recompile and rerun, noting how the output changes.</span>
+<span class="cm"> * 3. Uncomment the sendReceivePrint(..., &quot;THIRD&quot;, 3);</span>
+<span class="cm"> *      and sendReceivePrint(..., &quot;FOURTH&quot;, 4); calls,</span>
+<span class="cm"> *      then recompile and rerun, noting how the output changes.</span>
+<span class="cm"> * 4. Explain the differences: what has caused the changes</span>
+<span class="cm"> *      in the program&#39;s behavior, and why?</span>
+<span class="cm"> */</span>
+
+<span class="cp">#include</span> <span class="cpf">&lt;stdio.h&gt;   // printf()</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;mpi.h&gt;     // MPI</span><span class="cp"></span>
+
+<span class="cm">/* Have workers send messages to the master, which prints them.</span>
+<span class="cm"> * @param: id, an int</span>
+<span class="cm"> * @param: numProcesses, an int</span>
+<span class="cm"> * @param: hostName, a char*</span>
+<span class="cm"> * @param: messageNum, a char*</span>
+<span class="cm"> * @param: tagValue, an int</span>
+<span class="cm"> *</span>
+<span class="cm"> * Precondition: this routine is being called by an MPI process</span>
+<span class="cm"> *               &amp;&amp; id is the MPI rank of that process</span>
+<span class="cm"> *               &amp;&amp; numProcesses is the number of processes in the computation</span>
+<span class="cm"> *               &amp;&amp; hostName points to a char array containing the name of the</span>
+<span class="cm"> *                    host on which this MPI process is running</span>
+<span class="cm"> *               &amp;&amp; messageNum is &quot;FIRST&quot;, &quot;SECOND&quot;, &quot;THIRD&quot;, ...</span>
+<span class="cm"> *               &amp;&amp; tagValue is the value for the tags of the message</span>
+<span class="cm"> *                    being sent and received this invocation of the function.</span>
+<span class="cm"> *</span>
+<span class="cm"> * Postcondition: each process whose id &gt; 0 has sent a message to process 0</span>
+<span class="cm"> *                    containing id, numProcesses, hostName, messageNum,</span>
+<span class="cm"> *                    and tagValue</span>
+<span class="cm"> *                &amp;&amp; process 0 has received and output each message.</span>
+<span class="cm"> */</span>
+
+<span class="cp">#define BUFFER_SIZE 200</span>
+<span class="cp">#define MASTER      0</span>
+
+<span class="kt">void</span> <span class="nf">sendReceivePrint</span><span class="p">(</span><span class="kt">int</span> <span class="n">id</span><span class="p">,</span> <span class="kt">int</span> <span class="n">numProcesses</span><span class="p">,</span> <span class="kt">char</span><span class="o">*</span> <span class="n">hostName</span><span class="p">,</span>
+                        <span class="kt">char</span><span class="o">*</span> <span class="n">messageNum</span><span class="p">,</span> <span class="kt">int</span> <span class="n">tagValue</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kt">char</span> <span class="n">buffer</span><span class="p">[</span><span class="n">BUFFER_SIZE</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="sc">&#39;\0&#39;</span><span class="p">};;</span>
+    <span class="n">MPI_Status</span> <span class="n">status</span><span class="p">;</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="n">id</span> <span class="o">!=</span> <span class="n">MASTER</span><span class="p">)</span> <span class="p">{</span>
+        <span class="c1">// Worker: Build a message and send it to the Master</span>
+        <span class="kt">int</span> <span class="n">length</span> <span class="o">=</span> <span class="n">sprintf</span><span class="p">(</span><span class="n">buffer</span><span class="p">,</span>
+                              <span class="s">&quot;This is the %s message from process #%d of %d on %s.</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span>
+                                <span class="n">messageNum</span><span class="p">,</span> <span class="n">id</span><span class="p">,</span> <span class="n">numProcesses</span><span class="p">,</span> <span class="n">hostName</span><span class="p">);</span>
+        <span class="n">MPI_Send</span><span class="p">(</span><span class="n">buffer</span><span class="p">,</span> <span class="n">length</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="n">MPI_CHAR</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">tagValue</span><span class="p">,</span> <span class="n">MPI_COMM_WORLD</span><span class="p">);</span>
+    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+        <span class="c1">// Master: Receive and print the messages from all Workers</span>
+        <span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">numProcesses</span><span class="o">-</span><span class="mi">1</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+           <span class="n">MPI_Recv</span><span class="p">(</span><span class="n">buffer</span><span class="p">,</span> <span class="n">BUFFER_SIZE</span><span class="p">,</span> <span class="n">MPI_CHAR</span><span class="p">,</span> <span class="n">MPI_ANY_SOURCE</span><span class="p">,</span>
+                     <span class="n">tagValue</span><span class="p">,</span> <span class="n">MPI_COMM_WORLD</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">status</span><span class="p">);</span>
+           <span class="n">printf</span><span class="p">(</span><span class="s">&quot;%s&quot;</span><span class="p">,</span> <span class="n">buffer</span><span class="p">);</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span><span class="o">**</span> <span class="n">argv</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kt">int</span> <span class="n">id</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">numProcesses</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">length</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span>
+    <span class="kt">char</span> <span class="n">myHostName</span><span class="p">[</span><span class="n">MPI_MAX_PROCESSOR_NAME</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="sc">&#39;\0&#39;</span><span class="p">};</span>
+
+    <span class="n">MPI_Init</span><span class="p">(</span><span class="o">&amp;</span><span class="n">argc</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">argv</span><span class="p">);</span>
+    <span class="n">MPI_Comm_rank</span><span class="p">(</span><span class="n">MPI_COMM_WORLD</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">id</span><span class="p">);</span>
+    <span class="n">MPI_Comm_size</span><span class="p">(</span><span class="n">MPI_COMM_WORLD</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">numProcesses</span><span class="p">);</span>
+    <span class="n">MPI_Get_processor_name</span> <span class="p">(</span><span class="n">myHostName</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">length</span><span class="p">);</span>
+
+    <span class="n">sendReceivePrint</span><span class="p">(</span><span class="n">id</span><span class="p">,</span> <span class="n">numProcesses</span><span class="p">,</span> <span class="n">myHostName</span><span class="p">,</span> <span class="s">&quot;FIRST&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">);</span>
+
+    <span class="n">sendReceivePrint</span><span class="p">(</span><span class="n">id</span><span class="p">,</span> <span class="n">numProcesses</span><span class="p">,</span> <span class="n">myHostName</span><span class="p">,</span> <span class="s">&quot;SECOND&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">);</span>
+<span class="c1">//    sendReceivePrint(id, numProcesses, myHostName, &quot;SECOND&quot;, 2);</span>
+<span class="c1">//    sendReceivePrint(id, numProcesses, myHostName, &quot;THIRD&quot;, 3);</span>
+<span class="c1">//    sendReceivePrint(id, numProcesses, myHostName, &quot;FOURTH&quot;, 4);</span>
+
+    <span class="n">MPI_Finalize</span><span class="p">();</span>
+    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</td></tr></table></div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../index.html">
+              <img class="logo" src="../_static/CSInParallel200wide.png" alt="Logo"/>
+            </a></p>
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Barrier Synchronization and Tags</a><ul>
+<li><a class="reference internal" href="#the-barrier-coordination-pattern">15. The Barrier Coordination Pattern</a></li>
+<li><a class="reference internal" href="#timing-code-using-the-barrier-coordination-pattern">16. Timing code using the Barrier Coordination Pattern</a></li>
+<li><a class="reference internal" href="#sequence-numbers">17. Sequence Numbers</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="nav-item nav-item-0"><a href="../index.html">Building a Raspberry Pi Cluster</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright This work is licensed under a Creative Commons Attribution-ShareAlike 3.0 Unported License.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.3.
+    </div>
+  </body>
+</html>

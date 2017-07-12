@@ -1,0 +1,100 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Message Passing Parallel Patternlets &#8212; Building a Raspberry Pi Cluster</title>
+    <link rel="stylesheet" href="../_static/csip.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+    <link rel="search" title="Search" href="../search.html" /> 
+  </head>
+  <body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="nav-item nav-item-0"><a href="../index.html">Building a Raspberry Pi Cluster</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="message-passing-parallel-patternlets">
+<h1>Message Passing Parallel Patternlets<a class="headerlink" href="#message-passing-parallel-patternlets" title="Permalink to this headline">¶</a></h1>
+<p>Parallel programs contain <em>patterns</em>:  code that recurs over and over again
+in solutions to many problems.  The following examples show very simple
+examples of small portions of
+these patterns that can be combined to solve a problem.  These C code examples use the
+Message Passing Interface (MPI) library, which is suitable for use on either a
+single multiprocessor machine or a cluster
+of machines.</p>
+<div class="section" id="source-code">
+<h2>Source Code<a class="headerlink" href="#source-code" title="Permalink to this headline">¶</a></h2>
+<p>Please download all examples from this tarball:
+<a class="reference download internal" href="../_downloads/MPI.tar.gz" download=""><code class="xref download docutils literal"><span class="pre">MPI.tar.gz</span></code></a></p>
+<p>A C code file for each example below can be found in subdirectories of the MPI directory,
+along with a makefile and an example of how to execute the program.</p>
+</div>
+<div class="section" id="patternlets-grouped-by-type">
+<h2>Patternlets Grouped By Type<a class="headerlink" href="#patternlets-grouped-by-type" title="Permalink to this headline">¶</a></h2>
+<p><a class="reference internal" href="MasterWorker_MessagePassing.html"><span class="doc">Master Worker Pattern and Message Passing</span></a></p>
+<p><a class="reference internal" href="DataDecomp_Broadcast.html"><span class="doc">Broadcast</span></a></p>
+<p><a class="reference internal" href="Reduction_Scatter_Gather.html"><span class="doc">Data Decomposition: Reduction, Scatter and Gather</span></a></p>
+<p><a class="reference internal" href="Barrier_Tags.html"><span class="doc">Barrier Synchronization and Tags</span></a></p>
+<div class="toctree-wrapper compound">
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../index.html">
+              <img class="logo" src="../_static/CSInParallel200wide.png" alt="Logo"/>
+            </a></p>
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Message Passing Parallel Patternlets</a><ul>
+<li><a class="reference internal" href="#source-code">Source Code</a></li>
+<li><a class="reference internal" href="#patternlets-grouped-by-type">Patternlets Grouped By Type</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="nav-item nav-item-0"><a href="../index.html">Building a Raspberry Pi Cluster</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright This work is licensed under a Creative Commons Attribution-ShareAlike 3.0 Unported License.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.3.
+    </div>
+  </body>
+</html>

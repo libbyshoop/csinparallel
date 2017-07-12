@@ -1,0 +1,26 @@
+#! /bin/bash
+### BEGIN INIT INFO
+# Provides: 		rpcbindboot
+# Required-Start:	$remote_fs $syslog
+# Required-Stop:	$remote_fs $syslog
+# Default-Start:	2 3 4 5
+# Default-Stop: 	0 1 6
+# Short-description	simple script to start rpcbind at boot
+# Description 		Script to start / stop rpcbind at boot / shutdown. Also restarts nfs-kernel-server at boot restarts nfs-kernel-server at boot
+### END INIT INFO
+
+case "$1" in
+	start)
+		echo "Starting rpcbind"
+		sudo rpcbind start
+		sudo /etc/init.d/nfs-kernel-server restart
+		;;
+	stop)
+		echo "Stopping rpcbind"
+		sudo /etc/init.d/rpcbind stop
+		;;
+	*)
+		echo "Usage /etc/init.d/rpcboot {start|stop}"
+		exit 1
+		;;
+esac
