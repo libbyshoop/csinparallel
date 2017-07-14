@@ -13,7 +13,7 @@ This module acts as a tutorial to help users build a cluster of Raspberry Pis fo
 Materials Needed
 #################
 1.  4 x `Raspberry Pi 3`_
-2.  4 x `Micro SD Card`_ and a `Card Reader`_
+2.  4 x `Micro SD Card`_ (Preferably 8GB or higher) and a `Card Reader`_
 3.  4 x `Ethernet Cable`_ (Preferably 1 ft. long)
 4.  4 x `USB to Micro USB cable`_ for Raspberry Pi Power (Preferably 1 ft. long)
 5.  1 x `6 Port USB Battery Charger`_ (60W 2.4 amps per port or 12 amps overall)
@@ -50,37 +50,53 @@ Materials Needed
 
 Overview:
 ##########
+Before you begin please read Helpful Ideas and Notes so that you can configure this cluster as you want it to be.
+
 * Set up Physical Cluster
 * Set up Operating System
 * Software Installation and Wireless Configuration
 * SSH Remote Login Setup
 * Set Up and Mount Network File System (NFS)
+* Broadcasting and Shutting Down
+* Time and Date Synchronization
+* Helpful Ideas and Notes
 
 Setting up the Physical Cluster
 ###############################
-An acrylic 4-node case can be used to stack the RPi’s on top of each other. For the display and input devices we will use a 4 Port HDMI switch and a 4 Port Keyboard/Mouse switch in order to make it convenient for us to switch between nodes as we work on each one of them. We use a monitor which has USB cable for power and an HDMI to Mini HDMI for the Input Signal. The RPi’s are then connected to a 5 port Ethernet Switch which will be used to set up a network between the cluster. A USB to Barrel connector will be needed to power the Ethernet Switch. Lastly, we will connect each of the RPi’s to power using USB to MicroUSB cables. All the components can be powered using a regular wall charger but in order for the cluster to be more compact and consisting of less wires we will use a 6 port USB Battery Charger to power the Monitor, Ethernet Switch and  the 4 RPi’s.
+An acrylic 4-node case can be used to stack the RPi’s on top of each other. For the display and input devices we will use a 4 Port HDMI switch and a 4 Port Keyboard/Mouse switch in order to make it convenient for us to switch between nodes as we work on each one of them. We use a monitor which has USB cable for power and an HDMI to Mini-HDMI for the Input Signal. The RPi’s are then connected to a 5 port Ethernet Switch which will be used to set up a network between the cluster. A USB to Barrel connector will be needed to power the Ethernet Switch. Lastly, we will connect each of the RPi’s to power using USB to Micro-USB cables. All the components can be powered using a regular wall charger but in order for the cluster to be more compact and consisting of less wires we will use a 6 port USB Battery Charger to power the Monitor, Ethernet Switch and  the 4 RPi’s.
 
 Setting up Rasbian OS
 #########################
-For this we require 4 MicroSD cards (preferably 8 GB or higher). These MicroSD Cards will need to be flashed with fresh Rasbian images. To do this we will require a PC and an SD Card reader.
+**Please Note that these following set of instructions were made on Rasbian GNU/Linux 8.0 (jessie) and may or may not work on previous versions of Rasbian**
 
-Our Cluster will have a head node on which all our files will be stored and mounted for the other nodes. Essentially this will be our primary work station throughout. Hence we will require a completely functional GUI and hence we will flash the MicroSd Card of the head node with the latest version of the Rasbian Pixel. Since we will be able to remotely login into the worker nodes, we will use Rasbian Lite so as to make things run faster. So we downloaded the two Rasbian images on our computer which can read a MicroSD card, and flashed each of the cards with it’s respective Rasbian images using a software called Etcher. Using Win32 Disk imager is also feasible.
+To set up the OS we will need 4 MicroSD cards (preferably 8 GB or higher). These Micro-SD Cards will need to be flashed with fresh Rasbian images. To do this we will require a PC and an SD Card reader.
+
+Our Cluster will have a head node on which all our files will be stored and mounted for the other nodes. Essentially this will be our primary work station throughout. Hence we will require a completely functional GUI and hence we will flash the Micro-SD Card of the head node with the latest version of the Rasbian Pixel. Since we will be able to remotely login into the worker nodes, we will use Rasbian Lite so as to make things run faster. So we will download the `two Rasbian images`_ on our computer which can read a Micro-SD card, and flash each of the cards with it’s respective Rasbian images using a software called `Etcher`_. Using `Win32 Disk Imager`_ is also feasible.
+
+.. _two Rasbian images: https://www.raspberrypi.org/downloads/raspbian/
+
+.. _Etcher: https://etcher.io/
+
+.. _Win32 Disk Imager: https://sourceforge.net/projects/win32diskimager/
+
+
 
 Each node will have a user ‘pi’ and a password ‘raspberry’.
 
 Software Installation and Wireless Setup
 #########################################
-Since head node is the only RPi with a GUI we will only need to access the internet on that. But before we disable the wifi on the worker nodes, we should connect the Ethernet switch to the wall so that each of the RPi’s have a wired internet connection temporarily in order to install software we will require later for SSH, NFS Mounting and MPI.
+Since head node is the only RPi with a GUI we will only need to access the Internet on that. But before we disable the Wifi on the worker nodes, we should connect the Ethernet switch to the wall so that each of the RPi’s have a wired Internet connection temporarily in order to install software we will require later for SSH, NFS Mounting and MPI.
 
 Firstly, we will run updates and upgrades using the following commands::
 
   sudo apt-get update
   sudo apt-get upgrade
 
-Then we will install mpich2 which will help us run MPI code on the cluster and SSH which will be required for remote login. ::
+Then we will install mpich2 which will help us run MPI (Message Passing Interface) code on the cluster, SSH (Secure Shell) which will be required for remote login and NTP (Network Time Protocol) which we will need to synchronize date and time across the cluster::
 
   sudo apt-get install mpich2
   sudo apt-get install openssh-server
+  sudo apt-get install ntp
 
 Next, on the head node we will be installing NFS kernel server.::
 
@@ -92,7 +108,7 @@ And on the worker nodes we will be installing NFS Common::
 
 With this we have installed all the required software for us to run MPI Code on the cluster. If you wish to install any other software then you should install it now because we will be removing internet from the worker nodes and setting up wireless only on the head node.
 
-To set up wireless and we will need to edit two files using a terminal text editor (nano is simplest one) :
+To set up wireless and we will need to edit two files using a terminal text editor (nano is the simplest one) :
 /etc/network/interfaces and
 /etc/wpa_supplicant/wpa_supplicant.conf
 
@@ -324,26 +340,146 @@ Now we are back to the head node. If we check the cluster_files directory on the
 
 Congratulations, you have a working Raspberry Pi Cluster!
 
+Broadcasting and Shutting Down
+##############################
+
+If you wish to run a specific command to all the nodes without having to type it on each node individually, we can create a simple shell script for broadcasting commands to all the nodes.
+
+::
+
+  cd
+  sudo nano bcast.sh
+
+.. literalinclude:: ../source/bcast.sh
+
+We save this file and then make it executable.
+::
+
+  chmod +x bcast.sh
+
+Now we can simply use this script by running the following command:
+
+::
+
+  ./bcast.sh #YourCommand
+
+For example, "./bcast.sh date" will give you the date and time across all the nodes of the cluster.
+
+Unfortunately, you cannot shutdown the cluster using this command because the Raspberry Pi shuts down so quickly that it cannot communicate back to the head node that it actually did shut down. To solve this you can make another similar shell script for shutting down the cluster.
+
+::
+
+  cd
+  sudo nano shutdown_cluster
+
+.. literalinclude:: ../source/shutdown_cluster
+
+Again, we save this file and then make it executable.
+::
+
+  chmod +x bcast.sh
+
+Now, to shutdown we can simply type the following:
+::
+
+  ./shutdown_cluster
+
+Time and Date Synchronization
+###############################
+
+We can synchronize the date and time across each node of the cluster to the head node. To do this first, we will need to reconfigure timezone data on each node
+To do this run the following:
+::
+
+  sudo dpkg-reconfigure tzdata
+
+Follow the instructions to select your timezone on each node.
+
+Next, we will need to edit the ntp.conf file on the head node which will act as our server node:
+
+::
+
+  sudo nano /etc/ntp.conf
+
+Once the file is open, add the following line to the end of the file.
+
+::
+
+  server 127.127.1.0
+  fudge 127.127.1.0 stratum 10
+
+Now, restart NTP:
+::
+
+  sudo /etc/init.d/ntp restart
+
+Now on each of the worker nodes, we will set the time server as the head node. To do this you simply SSH into each of the worker nodes and edit the ntp configuration file as follows:
+
+::
+
+  sudo nano /etc/ntp.conf
+
+Now add the following line to the end of the file:
+
+::
+
+    server head iburst
+
+Now remove the following lines from the above file by commenting out with a # character at the beginning of the line as follows:
+
+::
+
+  #server 0.debian.pool.ntp.org iburst
+  #server 1.debian.pool.ntp.org iburst
+  #server 2.debian.pool.ntp.org iburst
+  #server 3.debian.pool.ntp.org iburst
+
+Lastly, we will need to restart the NTP like we did for the head node:
+::
+
+  sudo /etc/init.d/ntp restart
+
+
+Now you should have the time synchronized across all the nodes.
+
 Helpful Ideas and Notes
 ##############################
 
-* If you intend on building a cluster containing many nodes you can use a pen drive to store all the files we have edited in the head and worker nodes and simply replace them in the rest of the nodes.
+* If you intend on building a cluster containing many nodes you can use a pen drive to store all the files we have edited in the head and one of the worker nodes and simply copy and replace them in the rest of the nodes making sure to change the static ip address and the hostname.
 
-* If you intend on making multiple clusters of each of n nodes, a faster approach is to make images of each of the n nodes using Win32 Disk Imager and flash new Micro-SD cards with these working images. The Micro-SD cards with these images can simply be inserted into new Raspberry Pis without having to configure anything.
+* If you intend on making multiple clusters of each of n nodes, a faster approach is to make images of each of the n nodes in one cluster using `Win32 Disk Imager`_ and flash new Micro-SD cards with these working images. The Micro-SD cards with these images can simply be inserted into a new cluster of Raspberry Pis without having to configure anything.
 
-* The Rasbian Pixel can be used on all the nodes of the cluster if you wish to have GUI on each one of them. We recommend that you use Rasbian Lite for the worker nodes as you may not need to use its GUI and they will easily be accessible through SSH via the head node. This will help processes run faster on the worker nodes as the processor will not need to drive the GUI on that node.
+* The Rasbian Pixel can be used on all of the nodes of the cluster if you wish to have GUI on each one of them. We recommend that you use Rasbian Lite for the worker nodes as you may not need to use its GUI and they can be easily accessed through SSH via the head node. This will help processes run faster on the worker nodes as the processors will not need to drive the GUI on them.
 
-* In order to access Pen drives you on Rasbian Lite, you will first need to create a mount point for it and then mount it. This can be done using the following commands after you have inserted the Pen Drive into the Pi:
+* External drives are automatically mounted on Rasbian Pixel but in order to access an external drive on Rasbian Lite, you will first need to create a mount point for it and then mount it. This can be done using the following commands after you have inserted the Pen Drive into the Pi:
 ::
 
     sudo mkdir /media/usb
     sudo mount /dev/sda1 /media/usb
+
+* If you wish to mount an external hard disk/pen drive with a higher storage capacity as your network file system it is possible to do that too. Since the head node will have GUI on it you simply insert the drive and find it's path and then edit the exports file on the head node. Since the NFS will be an external drive the exports file will be a bit different. We will have to specify the access for each of the nodes:
+
+::
+
+  sudo nano /etc/exports
+
+If you had already edited the exports file as we had shown above then remove the line you had added then replace it with the following lines at the end of the file. If not, then simply add these:
+
+::
+
+  /media/usb node1(rw,sync,no_root_squash,no_subtree_check)
+  /media/usb node2(rw,sync,no_root_squash,no_subtree_check)
+  /media/usb node3(rw,sync,no_root_squash,no_subtree_check)
+
+Note: You may need to format the external drive so that it is compatible with Linux systems before you are able to mount it.
 
 * We recommend that you use the 4 Port HDMI and 4 Port USB switch because it makes it really convenient to switch to a different node without having to change the display HDMI or the USB jacks for the keyboard in the cluster. This is extremely helpful because we have to repeat several steps in each node of the cluster.
 
 * The Raspberry Pi Boards act strangely when it comes to switching them on. If you want the board to connect to a display, you have to make sure that the HDMI is hooked up before you turn the power on. Otherwise you won't be able to see desktop on the screen.
 
 * If you already have data on your Pi and software installed, it is highly recommended that you not only back up your data but also create an image of the existing version of your Pi.
+
+* While building this cluster, the reason why we did not set up Wifi on each node is because the issue we faced where we had to register the MAC Hardware Address of each node our college gadgets' wifi portal. Hence we decided just to have the head node access to the Internet. In the long run this might not be a good idea for those who will want install software in the future as the worker nodes will not have access to Internet. If your Wireless Network allows you to simply connect to a network using a username and password then you should go ahead and connect each of the nodes to the network. You will then be able to run updates and upgrades regularly and install software anytime you want. To do this you will have to follow the same wireless setup as we did for the head node i.e. you will need to edit the wpa_supplicant.conf file. One other thing you will need to do is to have the worker nodes contain the same interfaces file as the head node but with their respective static IP addresses of course. Basically, add the wlan0 and wlan1 interface to the interfaces file.
 
 
 .. toctree::

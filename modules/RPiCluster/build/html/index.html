@@ -39,13 +39,13 @@
             
   <div class="section" id="building-a-raspberry-pi-cluster">
 <h1>Building a Raspberry Pi Cluster<a class="headerlink" href="#building-a-raspberry-pi-cluster" title="Permalink to this headline">¶</a></h1>
-<p><strong>Last Updated:</strong> 2017-07-12</p>
+<p><strong>Last Updated:</strong> 2017-07-14</p>
 <p>This module acts as a tutorial to help users build a cluster of Raspberry Pis for Parallel Programming and Distributed Processing. The guide is a step by step procedure to build a simple 4-node Raspberry Pi 3 cluster with a shared network file system. Note that clusters can be of any length n≥2.</p>
 <div class="section" id="materials-needed">
 <h2>Materials Needed<a class="headerlink" href="#materials-needed" title="Permalink to this headline">¶</a></h2>
 <ol class="arabic simple">
 <li>4 x <a class="reference external" href="https://www.amazon.com/Raspberry-Model-A1-2GHz-64-bit-quad-core/dp/B01CD5VC92/ref=sr_1_3?s=pc&amp;ie=UTF8&amp;qid=1499808173&amp;sr=1-3&amp;keywords=raspberry+pi+3">Raspberry Pi 3</a></li>
-<li>4 x <a class="reference external" href="https://www.amazon.com/SanDisk-MicroSDHC-Standard-Packaging-SDSDQUAN-008G-G4A/dp/B00M55C0VU/ref=sr_1_5?s=electronics&amp;ie=UTF8&amp;qid=1499808284&amp;sr=1-5&amp;keywords=micro+sd+card+8+gb">Micro SD Card</a> and a <a class="reference external" href="https://www.amazon.com/Anker-Portable-Reader-RS-MMC-Micro/dp/B006T9B6R2/ref=sr_1_1?s=electronics&amp;ie=UTF8&amp;qid=1499808439&amp;sr=1-1-spons&amp;keywords=sd+card+reader&amp;psc=1">Card Reader</a></li>
+<li>4 x <a class="reference external" href="https://www.amazon.com/SanDisk-MicroSDHC-Standard-Packaging-SDSDQUAN-008G-G4A/dp/B00M55C0VU/ref=sr_1_5?s=electronics&amp;ie=UTF8&amp;qid=1499808284&amp;sr=1-5&amp;keywords=micro+sd+card+8+gb">Micro SD Card</a> (Preferably 8GB or higher) and a <a class="reference external" href="https://www.amazon.com/Anker-Portable-Reader-RS-MMC-Micro/dp/B006T9B6R2/ref=sr_1_1?s=electronics&amp;ie=UTF8&amp;qid=1499808439&amp;sr=1-1-spons&amp;keywords=sd+card+reader&amp;psc=1">Card Reader</a></li>
 <li>4 x <a class="reference external" href="https://www.amazon.com/Cable-Matters-5-Pack-Snagless-Ethernet/dp/B00C4U030G/ref=sr_1_1?s=electronics&amp;ie=UTF8&amp;qid=1499808595&amp;sr=1-1&amp;keywords=ethernet+cable+1ft">Ethernet Cable</a> (Preferably 1 ft. long)</li>
 <li>4 x <a class="reference external" href="https://www.amazon.com/Sabrent-6-Pack-Premium-Cables-CB-UM61/dp/B011KMSNXM/ref=sr_1_3?s=electronics&amp;ie=UTF8&amp;qid=1499808702&amp;sr=1-3&amp;keywords=usb+to+micro+usb+cable+1ft">USB to Micro USB cable</a> for Raspberry Pi Power (Preferably 1 ft. long)</li>
 <li>1 x <a class="reference external" href="https://www.amazon.com/Anker-PowerPort-High-Speed-Charging-VoltageBoost/dp/B00P936188/ref=sr_1_1?s=electronics&amp;ie=UTF8&amp;qid=1499808936&amp;sr=1-1&amp;keywords=anker+6+port+usb+charger">6 Port USB Battery Charger</a> (60W 2.4 amps per port or 12 amps overall)</li>
@@ -58,35 +58,41 @@
 </div>
 <div class="section" id="overview">
 <h2>Overview:<a class="headerlink" href="#overview" title="Permalink to this headline">¶</a></h2>
+<p>Before you begin please read Helpful Ideas and Notes so that you can configure this cluster as you want it to be.</p>
 <ul class="simple">
 <li>Set up Physical Cluster</li>
 <li>Set up Operating System</li>
 <li>Software Installation and Wireless Configuration</li>
 <li>SSH Remote Login Setup</li>
 <li>Set Up and Mount Network File System (NFS)</li>
+<li>Broadcasting and Shutting Down</li>
+<li>Time and Date Synchronization</li>
+<li>Helpful Ideas and Notes</li>
 </ul>
 </div>
 <div class="section" id="setting-up-the-physical-cluster">
 <h2>Setting up the Physical Cluster<a class="headerlink" href="#setting-up-the-physical-cluster" title="Permalink to this headline">¶</a></h2>
-<p>An acrylic 4-node case can be used to stack the RPi’s on top of each other. For the display and input devices we will use a 4 Port HDMI switch and a 4 Port Keyboard/Mouse switch in order to make it convenient for us to switch between nodes as we work on each one of them. We use a monitor which has USB cable for power and an HDMI to Mini HDMI for the Input Signal. The RPi’s are then connected to a 5 port Ethernet Switch which will be used to set up a network between the cluster. A USB to Barrel connector will be needed to power the Ethernet Switch. Lastly, we will connect each of the RPi’s to power using USB to MicroUSB cables. All the components can be powered using a regular wall charger but in order for the cluster to be more compact and consisting of less wires we will use a 6 port USB Battery Charger to power the Monitor, Ethernet Switch and  the 4 RPi’s.</p>
+<p>An acrylic 4-node case can be used to stack the RPi’s on top of each other. For the display and input devices we will use a 4 Port HDMI switch and a 4 Port Keyboard/Mouse switch in order to make it convenient for us to switch between nodes as we work on each one of them. We use a monitor which has USB cable for power and an HDMI to Mini-HDMI for the Input Signal. The RPi’s are then connected to a 5 port Ethernet Switch which will be used to set up a network between the cluster. A USB to Barrel connector will be needed to power the Ethernet Switch. Lastly, we will connect each of the RPi’s to power using USB to Micro-USB cables. All the components can be powered using a regular wall charger but in order for the cluster to be more compact and consisting of less wires we will use a 6 port USB Battery Charger to power the Monitor, Ethernet Switch and  the 4 RPi’s.</p>
 </div>
 <div class="section" id="setting-up-rasbian-os">
 <h2>Setting up Rasbian OS<a class="headerlink" href="#setting-up-rasbian-os" title="Permalink to this headline">¶</a></h2>
-<p>For this we require 4 MicroSD cards (preferably 8 GB or higher). These MicroSD Cards will need to be flashed with fresh Rasbian images. To do this we will require a PC and an SD Card reader.</p>
-<p>Our Cluster will have a head node on which all our files will be stored and mounted for the other nodes. Essentially this will be our primary work station throughout. Hence we will require a completely functional GUI and hence we will flash the MicroSd Card of the head node with the latest version of the Rasbian Pixel. Since we will be able to remotely login into the worker nodes, we will use Rasbian Lite so as to make things run faster. So we downloaded the two Rasbian images on our computer which can read a MicroSD card, and flashed each of the cards with it’s respective Rasbian images using a software called Etcher. Using Win32 Disk imager is also feasible.</p>
+<p><strong>Please Note that these following set of instructions were made on Rasbian GNU/Linux 8.0 (jessie) and may or may not work on previous versions of Rasbian</strong></p>
+<p>To set up the OS we will need 4 MicroSD cards (preferably 8 GB or higher). These Micro-SD Cards will need to be flashed with fresh Rasbian images. To do this we will require a PC and an SD Card reader.</p>
+<p>Our Cluster will have a head node on which all our files will be stored and mounted for the other nodes. Essentially this will be our primary work station throughout. Hence we will require a completely functional GUI and hence we will flash the Micro-SD Card of the head node with the latest version of the Rasbian Pixel. Since we will be able to remotely login into the worker nodes, we will use Rasbian Lite so as to make things run faster. So we will download the <a class="reference external" href="https://www.raspberrypi.org/downloads/raspbian/">two Rasbian images</a> on our computer which can read a Micro-SD card, and flash each of the cards with it’s respective Rasbian images using a software called <a class="reference external" href="https://etcher.io/">Etcher</a>. Using <a class="reference external" href="https://sourceforge.net/projects/win32diskimager/">Win32 Disk Imager</a> is also feasible.</p>
 <p>Each node will have a user ‘pi’ and a password ‘raspberry’.</p>
 </div>
 <div class="section" id="software-installation-and-wireless-setup">
 <h2>Software Installation and Wireless Setup<a class="headerlink" href="#software-installation-and-wireless-setup" title="Permalink to this headline">¶</a></h2>
-<p>Since head node is the only RPi with a GUI we will only need to access the internet on that. But before we disable the wifi on the worker nodes, we should connect the Ethernet switch to the wall so that each of the RPi’s have a wired internet connection temporarily in order to install software we will require later for SSH, NFS Mounting and MPI.</p>
+<p>Since head node is the only RPi with a GUI we will only need to access the Internet on that. But before we disable the Wifi on the worker nodes, we should connect the Ethernet switch to the wall so that each of the RPi’s have a wired Internet connection temporarily in order to install software we will require later for SSH, NFS Mounting and MPI.</p>
 <p>Firstly, we will run updates and upgrades using the following commands:</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">sudo</span> <span class="n">apt</span><span class="o">-</span><span class="n">get</span> <span class="n">update</span>
 <span class="n">sudo</span> <span class="n">apt</span><span class="o">-</span><span class="n">get</span> <span class="n">upgrade</span>
 </pre></div>
 </div>
-<p>Then we will install mpich2 which will help us run MPI code on the cluster and SSH which will be required for remote login.</p>
+<p>Then we will install mpich2 which will help us run MPI (Message Passing Interface) code on the cluster, SSH (Secure Shell) which will be required for remote login and NTP (Network Time Protocol) which we will need to synchronize date and time across the cluster:</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">sudo</span> <span class="n">apt</span><span class="o">-</span><span class="n">get</span> <span class="n">install</span> <span class="n">mpich2</span>
 <span class="n">sudo</span> <span class="n">apt</span><span class="o">-</span><span class="n">get</span> <span class="n">install</span> <span class="n">openssh</span><span class="o">-</span><span class="n">server</span>
+<span class="n">sudo</span> <span class="n">apt</span><span class="o">-</span><span class="n">get</span> <span class="n">install</span> <span class="n">ntp</span>
 </pre></div>
 </div>
 <p>Next, on the head node we will be installing NFS kernel server.:</p>
@@ -98,7 +104,7 @@
 </pre></div>
 </div>
 <p>With this we have installed all the required software for us to run MPI Code on the cluster. If you wish to install any other software then you should install it now because we will be removing internet from the worker nodes and setting up wireless only on the head node.</p>
-<p>To set up wireless and we will need to edit two files using a terminal text editor (nano is simplest one) :
+<p>To set up wireless and we will need to edit two files using a terminal text editor (nano is the simplest one) :
 /etc/network/interfaces and
 /etc/wpa_supplicant/wpa_supplicant.conf</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">cd</span> <span class="o">/</span><span class="n">etc</span><span class="o">/</span><span class="n">wpa_supplicant</span>
@@ -348,22 +354,133 @@ We have a look into /etc/init.d/nfs-kernel-server and find its start level is <s
 <p>Now we are back to the head node. If we check the cluster_files directory on the head node now, the file ‘foo’ will not be there.</p>
 <p>Congratulations, you have a working Raspberry Pi Cluster!</p>
 </div>
+<div class="section" id="broadcasting-and-shutting-down">
+<h2>Broadcasting and Shutting Down<a class="headerlink" href="#broadcasting-and-shutting-down" title="Permalink to this headline">¶</a></h2>
+<p>If you wish to run a specific command to all the nodes without having to type it on each node individually, we can create a simple shell script for broadcasting commands to all the nodes.</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">cd</span>
+<span class="n">sudo</span> <span class="n">nano</span> <span class="n">bcast</span><span class="o">.</span><span class="n">sh</span>
+</pre></div>
+</div>
+<div class="highlight-default"><div class="highlight"><pre><span></span>#!/bin/bash
+#
+# This script helps me send commands to all nodes in the system
+DHOSTS=&quot;node3 node2 node1 head&quot;;
+
+for DHOST in $DHOSTS;
+do
+	echo &quot;Sending &#39;&quot;$@&quot;&#39; to $DHOST&quot;; 
+	ssh $DHOST &quot;$@&quot;;
+done
+</pre></div>
+</div>
+<p>We save this file and then make it executable.</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">chmod</span> <span class="o">+</span><span class="n">x</span> <span class="n">bcast</span><span class="o">.</span><span class="n">sh</span>
+</pre></div>
+</div>
+<p>Now we can simply use this script by running the following command:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="o">./</span><span class="n">bcast</span><span class="o">.</span><span class="n">sh</span> <span class="c1">#YourCommand</span>
+</pre></div>
+</div>
+<p>For example, “./bcast.sh date” will give you the date and time across all the nodes of the cluster.</p>
+<p>Unfortunately, you cannot shutdown the cluster using this command because the Raspberry Pi shuts down so quickly that it cannot communicate back to the head node that it actually did shut down. To solve this you can make another similar shell script for shutting down the cluster.</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">cd</span>
+<span class="n">sudo</span> <span class="n">nano</span> <span class="n">shutdown_cluster</span>
+</pre></div>
+</div>
+<div class="highlight-default"><div class="highlight"><pre><span></span>#!/bin/bash
+#
+# This script helps me shutdown all the nodes of the cluster
+DHOSTS=&quot;node3 node2 node1 head&quot;;
+
+for DHOST in $DHOSTS;
+do
+	echo Shutting Down $DHOST&quot;;
+	echo &quot;Hit Ctrl-c to  do it on the next host&quot;; 
+	ssh $DHOST sudo shutdown -h now;
+done
+</pre></div>
+</div>
+<p>Again, we save this file and then make it executable.</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">chmod</span> <span class="o">+</span><span class="n">x</span> <span class="n">bcast</span><span class="o">.</span><span class="n">sh</span>
+</pre></div>
+</div>
+<p>Now, to shutdown we can simply type the following:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="o">./</span><span class="n">shutdown_cluster</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="time-and-date-synchronization">
+<h2>Time and Date Synchronization<a class="headerlink" href="#time-and-date-synchronization" title="Permalink to this headline">¶</a></h2>
+<p>We can synchronize the date and time across each node of the cluster to the head node. To do this first, we will need to reconfigure timezone data on each node
+To do this run the following:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">sudo</span> <span class="n">dpkg</span><span class="o">-</span><span class="n">reconfigure</span> <span class="n">tzdata</span>
+</pre></div>
+</div>
+<p>Follow the instructions to select your timezone on each node.</p>
+<p>Next, we will need to edit the ntp.conf file on the head node which will act as our server node:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">sudo</span> <span class="n">nano</span> <span class="o">/</span><span class="n">etc</span><span class="o">/</span><span class="n">ntp</span><span class="o">.</span><span class="n">conf</span>
+</pre></div>
+</div>
+<p>Once the file is open, add the following line to the end of the file.</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">server</span> <span class="mf">127.127</span><span class="o">.</span><span class="mf">1.0</span>
+<span class="n">fudge</span> <span class="mf">127.127</span><span class="o">.</span><span class="mf">1.0</span> <span class="n">stratum</span> <span class="mi">10</span>
+</pre></div>
+</div>
+<p>Now, restart NTP:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">sudo</span> <span class="o">/</span><span class="n">etc</span><span class="o">/</span><span class="n">init</span><span class="o">.</span><span class="n">d</span><span class="o">/</span><span class="n">ntp</span> <span class="n">restart</span>
+</pre></div>
+</div>
+<p>Now on each of the worker nodes, we will set the time server as the head node. To do this you simply SSH into each of the worker nodes and edit the ntp configuration file as follows:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">sudo</span> <span class="n">nano</span> <span class="o">/</span><span class="n">etc</span><span class="o">/</span><span class="n">ntp</span><span class="o">.</span><span class="n">conf</span>
+</pre></div>
+</div>
+<p>Now add the following line to the end of the file:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">server</span> <span class="n">head</span> <span class="n">iburst</span>
+</pre></div>
+</div>
+<p>Now remove the following lines from the above file by commenting out with a # character at the beginning of the line as follows:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="c1">#server 0.debian.pool.ntp.org iburst</span>
+<span class="c1">#server 1.debian.pool.ntp.org iburst</span>
+<span class="c1">#server 2.debian.pool.ntp.org iburst</span>
+<span class="c1">#server 3.debian.pool.ntp.org iburst</span>
+</pre></div>
+</div>
+<p>Lastly, we will need to restart the NTP like we did for the head node:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">sudo</span> <span class="o">/</span><span class="n">etc</span><span class="o">/</span><span class="n">init</span><span class="o">.</span><span class="n">d</span><span class="o">/</span><span class="n">ntp</span> <span class="n">restart</span>
+</pre></div>
+</div>
+<p>Now you should have the time synchronized across all the nodes.</p>
+</div>
 <div class="section" id="helpful-ideas-and-notes">
 <h2>Helpful Ideas and Notes<a class="headerlink" href="#helpful-ideas-and-notes" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
-<li>If you intend on building a cluster containing many nodes you can use a pen drive to store all the files we have edited in the head and worker nodes and simply replace them in the rest of the nodes.</li>
-<li>If you intend on making multiple clusters of each of n nodes, a faster approach is to make images of each of the n nodes using Win32 Disk Imager and flash new Micro-SD cards with these working images. The Micro-SD cards with these images can simply be inserted into new Raspberry Pis without having to configure anything.</li>
-<li>The Rasbian Pixel can be used on all the nodes of the cluster if you wish to have GUI on each one of them. We recommend that you use Rasbian Lite for the worker nodes as you may not need to use its GUI and they will easily be accessible through SSH via the head node. This will help processes run faster on the worker nodes as the processor will not need to drive the GUI on that node.</li>
-<li>In order to access Pen drives you on Rasbian Lite, you will first need to create a mount point for it and then mount it. This can be done using the following commands after you have inserted the Pen Drive into the Pi:</li>
+<li>If you intend on building a cluster containing many nodes you can use a pen drive to store all the files we have edited in the head and one of the worker nodes and simply copy and replace them in the rest of the nodes making sure to change the static ip address and the hostname.</li>
+<li>If you intend on making multiple clusters of each of n nodes, a faster approach is to make images of each of the n nodes in one cluster using Win32 Disk Imager and flash new Micro-SD cards with these working images. The Micro-SD cards with these images can simply be inserted into a new cluster of Raspberry Pis without having to configure anything.</li>
+<li>The Rasbian Pixel can be used on all of the nodes of the cluster if you wish to have GUI on each one of them. We recommend that you use Rasbian Lite for the worker nodes as you may not need to use its GUI and they can be easily accessed through SSH via the head node. This will help processes run faster on the worker nodes as the processors will not need to drive the GUI on them.</li>
+<li>External drives are automatically mounted on Rasbian Pixel but in order to access an external drive on Rasbian Lite, you will first need to create a mount point for it and then mount it. This can be done using the following commands after you have inserted the Pen Drive into the Pi:</li>
 </ul>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">sudo</span> <span class="n">mkdir</span> <span class="o">/</span><span class="n">media</span><span class="o">/</span><span class="n">usb</span>
 <span class="n">sudo</span> <span class="n">mount</span> <span class="o">/</span><span class="n">dev</span><span class="o">/</span><span class="n">sda1</span> <span class="o">/</span><span class="n">media</span><span class="o">/</span><span class="n">usb</span>
 </pre></div>
 </div>
 <ul class="simple">
+<li>If you wish to mount an external hard disk/pen drive with a higher storage capacity as your network file system it is possible to do that too. Since the head node will have GUI on it you simply insert the drive and find it’s path and then edit the exports file on the head node. Since the NFS will be an external drive the exports file will be a bit different. We will have to specify the access for each of the nodes:</li>
+</ul>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">sudo</span> <span class="n">nano</span> <span class="o">/</span><span class="n">etc</span><span class="o">/</span><span class="n">exports</span>
+</pre></div>
+</div>
+<p>If you had already edited the exports file as we had shown above then remove the line you had added then replace it with the following lines at the end of the file. If not, then simply add these:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="o">/</span><span class="n">media</span><span class="o">/</span><span class="n">usb</span> <span class="n">node1</span><span class="p">(</span><span class="n">rw</span><span class="p">,</span><span class="n">sync</span><span class="p">,</span><span class="n">no_root_squash</span><span class="p">,</span><span class="n">no_subtree_check</span><span class="p">)</span>
+<span class="o">/</span><span class="n">media</span><span class="o">/</span><span class="n">usb</span> <span class="n">node2</span><span class="p">(</span><span class="n">rw</span><span class="p">,</span><span class="n">sync</span><span class="p">,</span><span class="n">no_root_squash</span><span class="p">,</span><span class="n">no_subtree_check</span><span class="p">)</span>
+<span class="o">/</span><span class="n">media</span><span class="o">/</span><span class="n">usb</span> <span class="n">node3</span><span class="p">(</span><span class="n">rw</span><span class="p">,</span><span class="n">sync</span><span class="p">,</span><span class="n">no_root_squash</span><span class="p">,</span><span class="n">no_subtree_check</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Note: You may need to format the external drive so that it is compatible with Linux systems before you are able to mount it.</p>
+<ul class="simple">
 <li>We recommend that you use the 4 Port HDMI and 4 Port USB switch because it makes it really convenient to switch to a different node without having to change the display HDMI or the USB jacks for the keyboard in the cluster. This is extremely helpful because we have to repeat several steps in each node of the cluster.</li>
 <li>The Raspberry Pi Boards act strangely when it comes to switching them on. If you want the board to connect to a display, you have to make sure that the HDMI is hooked up before you turn the power on. Otherwise you won’t be able to see desktop on the screen.</li>
 <li>If you already have data on your Pi and software installed, it is highly recommended that you not only back up your data but also create an image of the existing version of your Pi.</li>
+<li>While building this cluster, the reason why we did not set up Wifi on each node is because the issue we faced where we had to register the MAC Hardware Address of each node our college gadgets’ wifi portal. Hence we decided just to have the head node access to the Internet. In the long run this might not be a good idea for those who will want install software in the future as the worker nodes will not have access to Internet. If your Wireless Network allows you to simply connect to a network using a username and password then you should go ahead and connect each of the nodes to the network. You will then be able to run updates and upgrades regularly and install software anytime you want. To do this you will have to follow the same wireless setup as we did for the head node i.e. you will need to edit the wpa_supplicant.conf file. One other thing you will need to do is to have the worker nodes contain the same interfaces file as the head node but with their respective static IP addresses of course. Basically, add the wlan0 and wlan1 interface to the interfaces file.</li>
 </ul>
 <div class="toctree-wrapper compound">
 </div>
@@ -389,6 +506,8 @@ We have a look into /etc/init.d/nfs-kernel-server and find its start level is <s
 <li><a class="reference internal" href="#software-installation-and-wireless-setup">Software Installation and Wireless Setup</a></li>
 <li><a class="reference internal" href="#ssh-remote-login-setup">SSH Remote Login Setup</a></li>
 <li><a class="reference internal" href="#mount-network-file-system">Mount Network File System</a></li>
+<li><a class="reference internal" href="#broadcasting-and-shutting-down">Broadcasting and Shutting Down</a></li>
+<li><a class="reference internal" href="#time-and-date-synchronization">Time and Date Synchronization</a></li>
 <li><a class="reference internal" href="#helpful-ideas-and-notes">Helpful Ideas and Notes</a></li>
 </ul>
 </li>

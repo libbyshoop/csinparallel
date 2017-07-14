@@ -1,0 +1,11 @@
+#!/bin/bash
+#
+# This script helps me shutdown all the nodes of the cluster
+DHOSTS="node3 node2 node1 head";
+
+for DHOST in $DHOSTS;
+do
+	echo Shutting Down $DHOST";
+	echo "Hit Ctrl-c to  do it on the next host"; 
+	ssh $DHOST sudo shutdown -h now;
+done
