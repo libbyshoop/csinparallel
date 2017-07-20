@@ -10,6 +10,8 @@ Building a Raspberry Pi Cluster
 
 This module acts as a tutorial to help users build a cluster of Raspberry Pis for Parallel Programming and Distributed Processing. The guide is a step by step procedure to build a simple 4-node Raspberry Pi 3 cluster with a shared network file system. Note that clusters can be of any length n≥2.
 
+.. image:: images/RPiCluster.jpg
+  :width: 1200
 Materials Needed
 #################
 1.  4 x `Raspberry Pi 3`_
@@ -50,26 +52,31 @@ Materials Needed
 
 Overview:
 ##########
-Before you begin please read Helpful Ideas and Notes so that you can configure this cluster as you want it to be.
+Before you begin please read :ref:`Ideas-and-notes` so that you can configure this cluster as you want it to be.
 
-* Set up Physical Cluster
-* Set up Operating System
-* Software Installation and Wireless Configuration
-* SSH Remote Login Setup
-* Set Up and Mount Network File System (NFS)
-* Broadcasting and Shutting Down
-* Time and Date Synchronization
-* Helpful Ideas and Notes
+* :ref:`physical-cluster-set-up`
+* :ref:`Rasbian-OS-Setup`
+* :ref:`Software-and-Wifi`
+* :ref:`SSH`
+* :ref:`NFS`
+* :ref:`bcast.sh-and-shutdown`
+* :ref:`time-sync`
+* :ref:`Ideas-and-notes`
+* :ref:`References`
+
+.. _physical-cluster-set-up:
 
 Setting up the Physical Cluster
 ###############################
 An acrylic 4-node case can be used to stack the RPi’s on top of each other. For the display and input devices we will use a 4 Port HDMI switch and a 4 Port Keyboard/Mouse switch in order to make it convenient for us to switch between nodes as we work on each one of them. We use a monitor which has USB cable for power and an HDMI to Mini-HDMI for the Input Signal. The RPi’s are then connected to a 5 port Ethernet Switch which will be used to set up a network between the cluster. A USB to Barrel connector will be needed to power the Ethernet Switch. Lastly, we will connect each of the RPi’s to power using USB to Micro-USB cables. All the components can be powered using a regular wall charger but in order for the cluster to be more compact and consisting of less wires we will use a 6 port USB Battery Charger to power the Monitor, Ethernet Switch and  the 4 RPi’s.
 
+.. _Rasbian-OS-Setup:
+
 Setting up Rasbian OS
 #########################
 **Please Note that these following set of instructions were made on Rasbian GNU/Linux 8.0 (jessie) and may or may not work on previous versions of Rasbian**
 
-To set up the OS we will need 4 MicroSD cards (preferably 8 GB or higher). These Micro-SD Cards will need to be flashed with fresh Rasbian images. To do this we will require a PC and an SD Card reader.
+To set up the OS we will need 4 MicroSD cards (preferably 8 GB or higher). If you are planning on having an external drive as your Network File System, then you can get Micro-SD cards of smaller capacity but I would recommend using one's with at least 4GB capacity. These Micro-SD Cards will need to be flashed with fresh Rasbian images. To do this we will require a PC and an SD Card reader.
 
 Our Cluster will have a head node on which all our files will be stored and mounted for the other nodes. Essentially this will be our primary work station throughout. Hence we will require a completely functional GUI and hence we will flash the Micro-SD Card of the head node with the latest version of the Rasbian Pixel. Since we will be able to remotely login into the worker nodes, we will use Rasbian Lite so as to make things run faster. So we will download the `two Rasbian images`_ on our computer which can read a Micro-SD card, and flash each of the cards with it’s respective Rasbian images using a software called `Etcher`_. Using `Win32 Disk Imager`_ is also feasible.
 
@@ -82,6 +89,8 @@ Our Cluster will have a head node on which all our files will be stored and moun
 
 
 Each node will have a user ‘pi’ and a password ‘raspberry’.
+
+.. _Software-and-Wifi:
 
 Software Installation and Wireless Setup
 #########################################
@@ -98,8 +107,9 @@ Then we will install mpich2 which will help us run MPI (Message Passing Interfac
   sudo apt-get install openssh-server
   sudo apt-get install ntp
 
-Next, on the head node we will be installing NFS kernel server.::
+Next, on the head node we will need to purge rpcbind, nfs-kernel-server, nfs-common and re-install NFS kernel server.::
 
+  sudo apt-get purge rpcbind nfs-kernel-server nfs-common
   sudo apt-get install nfs-kernel-server
 
 And on the worker nodes we will be installing NFS Common::
@@ -123,7 +133,7 @@ In order for us to establish a network between the cluster through ethernet cabl
 
 ::
 
-  cd/etc/network
+  cd/etc/networkNikola: The Raspberry Pi Cluster
   sudo cp interfaces interfaces.orig
 
 Now, we will edit the interfaces file
@@ -141,8 +151,12 @@ Next, we will have to edit the interfaces file (after making a copy like above) 
 
 Note: the ip address below will change according to the order of the 4 nodes, i.e. the 2nd node will have the address 192.168.1.11, the 3rd will have 192.168.1.12 and the 4th will have 192.168.1.13 as its address.
 
+.. _SSH:
+
 SSH Remote Login Setup
 #######################
+
+Secure Shell Remote Login is service that provides a secure channel to establish a client-server relationship, and helps a client access a server remotely.
 Before we begin we want to assign names to each of the nodes. To do this we changed the hostname and hosts file.
 
 ::
@@ -152,14 +166,23 @@ Before we begin we want to assign names to each of the nodes. To do this we chan
 The hostname file will contain the name of the local host i.e. the name of that node. We called the head node “head” and the worker nodes ‘node1’, ‘node2’ and “node3’ respectively.
 
 Next,
-We add the static ip addresses of the nodes in the hosts file.
+In the hosts file we will be removing the IPv6 confiurations by commenting them out using the # sign. We will then add the static IP addresses of the nodes in the hosts file.
 ::
 
   sudo nano /etc/hosts
 
 .. literalinclude:: ../source/hosts
 
-The above process has to be repeated on all 4 nodes.
+Next, we will have to enable ssh. To do this follow the steps below:
+* Enter sudo raspi-config in a terminal window
+* Select Interfacing Options
+* Navigate to and select SSH
+* Choose Yes
+* Select Ok
+* Choose Finish
+
+
+All of the above processes has to be repeated on all 4 nodes.
 
 Since we want the cluster nodes to communicate with each other without having to ask for permission each time we will set up SSH (Secure Shell) remote login. In order to do this, we will generate 2048 bit RSA key-pair on the head node and then copy the SSH ID in all 4 nodes.
 ::
@@ -177,7 +200,7 @@ Now, we will copy the SSH ID to all the nodes.
   ssh-copy-id node2
   ssh-copy-id node3
 
-Next, we will need to SSH into all the nodes including itself. For the first time we will require a password (raspberry) when we try to do so.
+Next, we will need to SSH into all the nodes from the head node including itself. For the first time we will require a password (raspberry) when we try to do so.
 
 ::
 
@@ -202,10 +225,15 @@ Repeat for node2 and node3
 
 After this we will be able SSH to and from any node in the Cluster.
 
+.. _NFS:
+
 Mount Network File System
 ##########################
 
-The Network File System (NFS) mounting is crucial part of the cluster set up in order for all the nodes to have one common working directory. We will be taking advantage of the nfs-kernel-server and nfs-common which we had installed earlier. To begin we will create a directory called cluster_files on the head node. Essentially it can be named anything as long as it's consistent throughout all the other nodes. We will make this directory in the home directory so that it is easily accessible.
+The Network File System (NFS) mounting is crucial part of the cluster set up in order for all the nodes to have one common working directory. We will be taking advantage of the nfs-kernel-server and nfs-common which we had installed earlier. To begin we will create a directory called cluster_files on the head node. Essentially it can be named anything and placed anywhere as long as it's name and path is used consistently throughout all the other nodes. We will make this directory in the home directory so that it is easily accessible.
+
+Note:
+If you wish to mount an external drive as your file system please have a look at the :ref:`Ideas-and-notes` section.
 
 ::
 
@@ -245,7 +273,7 @@ Now, we can go forward and edit the fstab file.
 
 .. literalinclude:: ../source/fstab
 
-Next up, we will be making a new shell script called rpcbindboot. This script will mount the NFS automatically each time the cluster is booted.
+Next up, we will be making a new shell script called rpcbindboot on the head node. This script will mount the NFS automatically each time the cluster is booted.
 This script will be have to be made and executed in the /etc/init.d directory.
 
 ::
@@ -258,23 +286,22 @@ The file should be contain the following:
 
 .. literalinclude:: ../source/rpcbindboot
 
-After saving the file, we will need to execute this script.
+After saving the file, we will need to convert this file into an executable.
 we run the following command to do so:
 
 ::
 
-  chmod +x rpcbindboot
+  sudo chmod +x rpcbindboot
 
-Our Last step is to make sure that the nfs-common and rpcbind have the same run level as nfs-kernel-server.
-We have a look into /etc/init.d/nfs-kernel-server and find its start level is **2** **3** **4** **5**. However, nfs-common and rpcbind have differenct run level.
+Our Last step is to make sure that the nfs-common and rpcbind have the same start level as nfs-kernel-server.
+We have a look into /etc/init.d/nfs-kernel-server and find its start level is **2** **3** **4** **5**. However, nfs-common and rpcbind have different start level.
 
-Have a look at these files' runlevel
+Have a look at these files' start level
+::
 
-/etc/init.d/nfs-kernel-server
-
-/etc/init.d/nfs-common
-
-/etc/init.d/rpcbind
+  sudo cat /etc/init.d/nfs-kernel-server
+  sudo cat /etc/init.d/nfs-common
+  sudo cat /etc/init.d/rpcbind
 
 This is the runlevel of nfs-kernel-server
 
@@ -294,26 +321,28 @@ This is the runlevel of nfs-kernel-server
   #                    /etc/exports file.
   ### END INIT INFO
 
-We need to change the Default-Start: in rpcbind and nfs-common to 2 3 4 5 as well. Again we will use nano to do this.
+We need to change the Default-Start: in rpcbind and nfs-common to 2 3 4 5 as well.
 
 ::
 
   sudo nano /etc/init.d/nfs-common
   sudo nano /etc/init.d/rpcbind
 
-Next, we update-rc.d the changed init scripts with defaults. In order to do this we will need to remove and add them again.
+Next, we will update the changed init scripts with defaults. In order to do this we will need to remove and add them again.
 ::
 
-  update-rc.d -f rpcbind remove
-  update-rc.d rpcbind defaults
+  sudo update-rc.d -f rpcbind remove
+  sudo update-rc.d rpcbind defaults
 
-  update-rc.d -f nfs-common remove
-  update-rc.d nfs-common defaults
+  sudo update-rc.d -f nfs-common remove
+  sudo update-rc.d nfs-common defaults
 
-  update-rc.d -f nfs-kernel-server remove
-  update-rc.d nfs-kernel-server defaults
+  sudo update-rc.d -f nfs-kernel-server remove
+  sudo update-rc.d nfs-kernel-server defaults
 
 Now our NFS mounting should be complete. In order to check this we will first restart our cluster. Once the cluster is restarted we will simply create a file using the touch command in the cluster_files directory and see if it can be accessed through the worker nodes. Follow the steps below to do this:
+
+Note: If you mounted an external drive then the path will be /media/cluster_files or the path you chose to mount the external drive.
 
 ::
 
@@ -340,6 +369,8 @@ Now we are back to the head node. If we check the cluster_files directory on the
 
 Congratulations, you have a working Raspberry Pi Cluster!
 
+.. _bcast.sh-and-shutdown:
+
 Broadcasting and Shutting Down
 ##############################
 
@@ -355,7 +386,7 @@ If you wish to run a specific command to all the nodes without having to type it
 We save this file and then make it executable.
 ::
 
-  chmod +x bcast.sh
+  sudo chmod +x bcast.sh
 
 Now we can simply use this script by running the following command:
 
@@ -377,15 +408,17 @@ Unfortunately, you cannot shutdown the cluster using this command because the Ra
 Again, we save this file and then make it executable.
 ::
 
-  chmod +x bcast.sh
+  sudo chmod +x shutdown_cluster
 
 Now, to shutdown we can simply type the following:
 ::
 
   ./shutdown_cluster
 
+.. _time-sync:
+
 Time and Date Synchronization
-###############################
+##############################
 
 We can synchronize the date and time across each node of the cluster to the head node. To do this first, we will need to reconfigure timezone data on each node
 To do this run the following:
@@ -442,34 +475,72 @@ Lastly, we will need to restart the NTP like we did for the head node:
 
 Now you should have the time synchronized across all the nodes.
 
+.. _Ideas-and-notes:
+
 Helpful Ideas and Notes
 ##############################
 
+* If you already have data on your Pi and software installed, it is highly recommended that you not only back up your data but also create an image of the existing version of your Pi. This can be done using `Win32 Disk Imager`_. You will simply need to use a card reader to read the image on using this software.
+
 * If you intend on building a cluster containing many nodes you can use a pen drive to store all the files we have edited in the head and one of the worker nodes and simply copy and replace them in the rest of the nodes making sure to change the static ip address and the hostname.
 
-* If you intend on making multiple clusters of each of n nodes, a faster approach is to make images of each of the n nodes in one cluster using Win32 Disk Imager and flash new Micro-SD cards with these working images. The Micro-SD cards with these images can simply be inserted into a new cluster of Raspberry Pis without having to configure anything.
+* If you intend on making multiple clusters of each of n nodes, a faster approach is to make images of each of the n nodes in one cluster using `Win32 Disk Imager`_ and flash new Micro-SD cards with these working images. The Micro-SD cards with these images can simply be inserted into a new cluster of Raspberry Pis without having to configure anything.
 
 * The Rasbian Pixel can be used on all of the nodes of the cluster if you wish to have GUI on each one of them. We recommend that you use Rasbian Lite for the worker nodes as you may not need to use its GUI and they can be easily accessed through SSH via the head node. This will help processes run faster on the worker nodes as the processors will not need to drive the GUI on them.
 
-* External drives are automatically mounted on Rasbian Pixel but in order to access an external drive on Rasbian Lite, you will first need to create a mount point for it and then mount it. This can be done using the following commands after you have inserted the Pen Drive into the Pi:
+* External drives are automatically mounted on Rasbian Pixel but in order to access an external drive on Rasbian Lite, you will first need to create a mount point for it. This can be done by simply making a directory at the location you want it to mount. Usually an external drive is mounted in the /media directory:
 ::
 
     sudo mkdir /media/usb
     sudo mount /dev/sda1 /media/usb
 
-* If you wish to mount an external hard disk/pen drive with a higher storage capacity as your network file system it is possible to do that too. Since the head node will have GUI on it you simply insert the drive and find it's path and then edit the exports file on the head node. Since the NFS will be an external drive the exports file will be a bit different. We will have to specify the access for each of the nodes:
+* If you wish to mount an external hard disk/pen drive with a higher storage capacity as your network file system it is possible to do that too. In order to do this we will need to create the mount point on the head node. Make sure that the mount point is not in the home directory of the user.
+
+::
+
+  sudo mkdir /media/cluster_files
+
+Since the NFS will be an external drive, the exports file will be a bit different. We will have to specify the access for each of the nodes:
+
+Note: If you had already edited the exports file as we had shown above then remove the line you had added and then replace it with the following lines at the end of the file. If not, then simply add these to the end of the file:
 
 ::
 
   sudo nano /etc/exports
 
-If you had already edited the exports file as we had shown above then remove the line you had added then replace it with the following lines at the end of the file. If not, then simply add these:
+::
+
+  /media/cluster_files node1(rw,sync,no_root_squash,no_subtree_check)
+  /media/cluster_files node2(rw,sync,no_root_squash,no_subtree_check)
+  /media/cluster_files node3(rw,sync,no_root_squash,no_subtree_check)
+
+Next, we will need to permanently mount the external drive on the head node so that it automatically mounts itself in /media/cluster_files when the system is rebooted. To do this the fstab file on the head node will have the following line at the end:
 
 ::
 
-  /media/usb node1(rw,sync,no_root_squash,no_subtree_check)
-  /media/usb node2(rw,sync,no_root_squash,no_subtree_check)
-  /media/usb node3(rw,sync,no_root_squash,no_subtree_check)
+  sudo nano /etc/fstab
+
+::
+
+  /dev/sda1 /media/cluster_files vfat defaults 0 0
+
+Now we are ready to actually mount the external drive on the head node.
+
+::
+
+  sudo mount /dev/sda1 /media/cluster_files
+
+The worker nodes will now need to mount this external drive and we will need to edit the fstab file on each of the worker nodes:
+
+::
+
+  sudo nano /etc/fstab
+
+::
+
+  head:/media/cluster_files /home/pi/cluster_files nfs rsize=8192,wsize=8192,timeo=14,intr
+
+After the above steps you should now have the NFS mounted on the external drive. Please follow the rest of the steps in the :ref:`NFS` section to complete the mounting.
 
 Note: You may need to format the external drive so that it is compatible with Linux systems before you are able to mount it.
 
@@ -477,10 +548,27 @@ Note: You may need to format the external drive so that it is compatible with Li
 
 * The Raspberry Pi Boards act strangely when it comes to switching them on. If you want the board to connect to a display, you have to make sure that the HDMI is hooked up before you turn the power on. Otherwise you won't be able to see desktop on the screen.
 
-* If you already have data on your Pi and software installed, it is highly recommended that you not only back up your data but also create an image of the existing version of your Pi.
 
 * While building this cluster, the reason why we did not set up Wifi on each node is because the issue we faced where we had to register the MAC Hardware Address of each node our college gadgets' wifi portal. Hence we decided just to have the head node access to the Internet. In the long run this might not be a good idea for those who will want install software in the future as the worker nodes will not have access to Internet. If your Wireless Network allows you to simply connect to a network using a username and password then you should go ahead and connect each of the nodes to the network. You will then be able to run updates and upgrades regularly and install software anytime you want. To do this you will have to follow the same wireless setup as we did for the head node i.e. you will need to edit the wpa_supplicant.conf file. One other thing you will need to do is to have the worker nodes contain the same interfaces file as the head node but with their respective static IP addresses of course. Basically, add the wlan0 and wlan1 interface to the interfaces file.
 
+.. _References:
+
+References
+###################
+
+To build and understand the entire procedure of configuring the above cluster I had to do a lot of research and received help and support from my Professor Libby Shoop. I faced a lot of issues and errors in almost each of the above sections and had to experiment a lot of things in order to understand how the Linux operating system works.
+
+`Nikola\: The Raspberry Pi Cluster`_ by a Maclester College alum, Guillermo Vera, is a paper that helped me understand basic procedures for building and configuring a cluster.
+
+.. _Nikola\: The Raspberry Pi Cluster: https://drive.google.com/file/d/0B0XIvAg85dhhN3JydWo2R3dNSE0/view
+
+While configuring the Network File System on the cluster, we had not realized that the start levels of the rpcbind nfs-common and nfs-kernel-server had to be the same. We spent days trying to figure out how to mount the NFS until we came across this `solution on stackexchange`_.
+
+.. _solution on stackexchange: https://raspberrypi.stackexchange.com/questions/10403/nfs-server-not-starting-portmapper-is-not-running/46887#46887
+
+This `Raspberry Pi project`_ helped me understand the procedure to mount an external drive as the Network File System.
+
+.. _Raspberry Pi project: http://makezine.com/projects/build-a-compact-4-node-raspberry-pi-cluster/
 
 .. toctree::
   :caption: Table of Contents
