@@ -200,13 +200,25 @@ Now, we will copy the SSH ID to all the nodes.
   ssh-copy-id node2
   ssh-copy-id node3
 
-Next, we will need to SSH into all the nodes from the head node including itself. For the first time we will require a password (raspberry) when we try to do so.
+Next, we will need to build the known_hosts file in the .ssh directory. The known_hosts holds id of all the nodes in the cluster and allows password-less access to and from all the nodes in the cluster. To do this we will need to create file with the name of all nodes in the .ssh folder and then use ssh keyscan to generate the known_hosts file.
+::
+  cd .ssh
+  sudo nano name_of_hosts
+
+.. literalinclude:: ../source/name_of_hosts
+
+
+We will save this file and then change its permissions in order for ssh-keyscan to be able to read the file.
 
 ::
 
-  ssh head
+  chmod 666 /.ssh/name_of_hosts
 
-We notice that we are re-logged in into the head node. We need to exit this connection before we SSH into all the other nodes i.e. ssh into node1, node2 and node3 from the head node and exit each time. This will update the known_hosts file in the .ssh directory. The known_hosts file keeps track of the cluster nodes which have permissions to ssh into nodes without a password.
+The following command will then generate the known_hosts file:
+
+::
+
+  ssh-keyscan -t rsa -f/.ssh/name_of_hosts >~/.ssh/known_hosts
 
 Our last step for this setup will be to copy known_hosts, id_rsa public and private keys from the .ssh folder in the head node to the .ssh folder of all the other nodes. We can do this using secure copy.
 
@@ -488,7 +500,8 @@ Helpful Ideas and Notes
 
 * The Rasbian Pixel can be used on all of the nodes of the cluster if you wish to have GUI on each one of them. We recommend that you use Rasbian Lite for the worker nodes as you may not need to use its GUI and they can be easily accessed through SSH via the head node. This will help processes run faster on the worker nodes as the processors will not need to drive the GUI on them.
 
-* External drives are automatically mounted on Rasbian Pixel but in order to access an external drive on Rasbian Lite, you will first need to create a mount point for it. This can be done by simply making a directory at the location you want it to mount. Usually an external drive is mounted in the /media directory:
+*
+External drives are automatically mounted on Rasbian Pixel but in order to access an external drive on Rasbian Lite, you will first need to create a mount point for it. This can be done by simply making a directory at the location you want it to mount. Usually an external drive is mounted in the /media directory:
 ::
 
     sudo mkdir /media/usb
@@ -499,6 +512,12 @@ Helpful Ideas and Notes
 ::
 
   sudo mkdir /media/cluster_files
+
+Note: You will need to format the external drive so that it is compatible with Linux systems before you are able to mount it.
+::
+
+  sudo mkfs.ext4 /dev/sda1 -L cluster_files
+
 
 Since the NFS will be an external drive, the exports file will be a bit different. We will have to specify the access for each of the nodes:
 
@@ -522,7 +541,7 @@ Next, we will need to permanently mount the external drive on the head node so t
 
 ::
 
-  /dev/sda1 /media/cluster_files vfat defaults 0 0
+  /dev/sda1 /media/cluster_files ext4 defaults 0 0
 
 Now we are ready to actually mount the external drive on the head node.
 
@@ -542,14 +561,13 @@ The worker nodes will now need to mount this external drive and we will need to 
 
 After the above steps you should now have the NFS mounted on the external drive. Please follow the rest of the steps in the :ref:`NFS` section to complete the mounting.
 
-Note: You may need to format the external drive so that it is compatible with Linux systems before you are able to mount it.
 
 * We recommend that you use the 4 Port HDMI and 4 Port USB switch because it makes it really convenient to switch to a different node without having to change the display HDMI or the USB jacks for the keyboard in the cluster. This is extremely helpful because we have to repeat several steps in each node of the cluster.
 
 * The Raspberry Pi Boards act strangely when it comes to switching them on. If you want the board to connect to a display, you have to make sure that the HDMI is hooked up before you turn the power on. Otherwise you won't be able to see desktop on the screen.
 
 
-* While building this cluster, the reason why we did not set up Wifi on each node is because the issue we faced where we had to register the MAC Hardware Address of each node our college gadgets' wifi portal. Hence we decided just to have the head node access to the Internet. In the long run this might not be a good idea for those who will want install software in the future as the worker nodes will not have access to Internet. If your Wireless Network allows you to simply connect to a network using a username and password then you should go ahead and connect each of the nodes to the network. You will then be able to run updates and upgrades regularly and install software anytime you want. To do this you will have to follow the same wireless setup as we did for the head node i.e. you will need to edit the wpa_supplicant.conf file. One other thing you will need to do is to have the worker nodes contain the same interfaces file as the head node but with their respective static IP addresses of course. Basically, add the wlan0 and wlan1 interface to the interfaces file.
+* While building this cluster, the reason why we did not set up Wifi on each node is because the issue we faced where we had to register the MAC Hardware Address of each node our college gadgets' Wifi portal. Hence we decided just to have the head node access to the Internet. In the long run this might not be a good idea for those who will want install software in the future as the worker nodes will not have access to Internet. If your Wireless Network allows you to simply connect to a network using a username and password then you should go ahead and connect each of the nodes to the network. You will then be able to run updates and upgrades regularly and install software anytime you want. To do this you will have to follow the same wireless setup as we did for the head node i.e. you will need to edit the wpa_supplicant.conf file. One other thing you will need to do is to have the worker nodes contain the same interfaces file as the head node but with their respective static IP addresses of course. Basically, add the wlan0 and wlan1 interface to the interfaces file.
 
 .. _References:
 

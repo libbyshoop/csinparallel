@@ -39,7 +39,7 @@
             
   <div class="section" id="building-a-raspberry-pi-cluster">
 <h1>Building a Raspberry Pi Cluster<a class="headerlink" href="#building-a-raspberry-pi-cluster" title="Permalink to this headline">¶</a></h1>
-<p><strong>Last Updated:</strong> 2017-07-20</p>
+<p><strong>Last Updated:</strong> 2017-07-21</p>
 <p>This module acts as a tutorial to help users build a cluster of Raspberry Pis for Parallel Programming and Distributed Processing. The guide is a step by step procedure to build a simple 4-node Raspberry Pi 3 cluster with a shared network file system. Note that clusters can be of any length n≥2.</p>
 <a class="reference internal image-reference" href="_images/RPiCluster.jpg"><img alt="_images/RPiCluster.jpg" src="_images/RPiCluster.jpg" style="width: 1200px;" /></a>
 <div class="section" id="materials-needed">
@@ -219,11 +219,25 @@ In the hosts file we will be removing the IPv6 confiurations by commenting them 
 <span class="n">ssh</span><span class="o">-</span><span class="n">copy</span><span class="o">-</span><span class="nb">id</span> <span class="n">node3</span>
 </pre></div>
 </div>
-<p>Next, we will need to SSH into all the nodes from the head node including itself. For the first time we will require a password (raspberry) when we try to do so.</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">ssh</span> <span class="n">head</span>
+<p>Next, we will need to build the known_hosts file in the .ssh directory. The known_hosts holds id of all the nodes in the cluster and allows password-less access to and from all the nodes in the cluster. To do this we will need to create file with the name of all nodes in the .ssh folder and then use ssh keyscan to generate the known_hosts file.</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">cd</span> <span class="o">.</span><span class="n">ssh</span>
+<span class="n">sudo</span> <span class="n">nano</span> <span class="n">name_of_hosts</span>
 </pre></div>
 </div>
-<p>We notice that we are re-logged in into the head node. We need to exit this connection before we SSH into all the other nodes i.e. ssh into node1, node2 and node3 from the head node and exit each time. This will update the known_hosts file in the .ssh directory. The known_hosts file keeps track of the cluster nodes which have permissions to ssh into nodes without a password.</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">head</span>
+<span class="n">node1</span>
+<span class="n">node2</span>
+<span class="n">node3</span>
+</pre></div>
+</div>
+<p>We will save this file and then change its permissions in order for ssh-keyscan to be able to read the file.</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">chmod</span> <span class="mi">666</span> <span class="o">/.</span><span class="n">ssh</span><span class="o">/</span><span class="n">name_of_hosts</span>
+</pre></div>
+</div>
+<p>The following command will then generate the known_hosts file:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">ssh</span><span class="o">-</span><span class="n">keyscan</span> <span class="o">-</span><span class="n">t</span> <span class="n">rsa</span> <span class="o">-</span><span class="n">f</span><span class="o">/.</span><span class="n">ssh</span><span class="o">/</span><span class="n">name_of_hosts</span> <span class="o">&gt;~/.</span><span class="n">ssh</span><span class="o">/</span><span class="n">known_hosts</span>
+</pre></div>
+</div>
 <p>Our last step for this setup will be to copy known_hosts, id_rsa public and private keys from the .ssh folder in the head node to the .ssh folder of all the other nodes. We can do this using secure copy.</p>
 <p>We use the following steps on the head node to do this:</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">cd</span> <span class="o">.</span><span class="n">ssh</span>
@@ -479,8 +493,9 @@ To do this run the following:</p>
 <li>If you intend on building a cluster containing many nodes you can use a pen drive to store all the files we have edited in the head and one of the worker nodes and simply copy and replace them in the rest of the nodes making sure to change the static ip address and the hostname.</li>
 <li>If you intend on making multiple clusters of each of n nodes, a faster approach is to make images of each of the n nodes in one cluster using <a class="reference external" href="https://sourceforge.net/projects/win32diskimager/">Win32 Disk Imager</a> and flash new Micro-SD cards with these working images. The Micro-SD cards with these images can simply be inserted into a new cluster of Raspberry Pis without having to configure anything.</li>
 <li>The Rasbian Pixel can be used on all of the nodes of the cluster if you wish to have GUI on each one of them. We recommend that you use Rasbian Lite for the worker nodes as you may not need to use its GUI and they can be easily accessed through SSH via the head node. This will help processes run faster on the worker nodes as the processors will not need to drive the GUI on them.</li>
-<li>External drives are automatically mounted on Rasbian Pixel but in order to access an external drive on Rasbian Lite, you will first need to create a mount point for it. This can be done by simply making a directory at the location you want it to mount. Usually an external drive is mounted in the /media directory:</li>
+<li></li>
 </ul>
+<p>External drives are automatically mounted on Rasbian Pixel but in order to access an external drive on Rasbian Lite, you will first need to create a mount point for it. This can be done by simply making a directory at the location you want it to mount. Usually an external drive is mounted in the /media directory:</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">sudo</span> <span class="n">mkdir</span> <span class="o">/</span><span class="n">media</span><span class="o">/</span><span class="n">usb</span>
 <span class="n">sudo</span> <span class="n">mount</span> <span class="o">/</span><span class="n">dev</span><span class="o">/</span><span class="n">sda1</span> <span class="o">/</span><span class="n">media</span><span class="o">/</span><span class="n">usb</span>
 </pre></div>
@@ -489,6 +504,10 @@ To do this run the following:</p>
 <li>If you wish to mount an external hard disk/pen drive with a higher storage capacity as your network file system it is possible to do that too. In order to do this we will need to create the mount point on the head node. Make sure that the mount point is not in the home directory of the user.</li>
 </ul>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">sudo</span> <span class="n">mkdir</span> <span class="o">/</span><span class="n">media</span><span class="o">/</span><span class="n">cluster_files</span>
+</pre></div>
+</div>
+<p>Note: You will need to format the external drive so that it is compatible with Linux systems before you are able to mount it.</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">sudo</span> <span class="n">mkfs</span><span class="o">.</span><span class="n">ext4</span> <span class="o">/</span><span class="n">dev</span><span class="o">/</span><span class="n">sda1</span> <span class="o">-</span><span class="n">L</span> <span class="n">cluster_files</span>
 </pre></div>
 </div>
 <p>Since the NFS will be an external drive, the exports file will be a bit different. We will have to specify the access for each of the nodes:</p>
@@ -505,7 +524,7 @@ To do this run the following:</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">sudo</span> <span class="n">nano</span> <span class="o">/</span><span class="n">etc</span><span class="o">/</span><span class="n">fstab</span>
 </pre></div>
 </div>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="o">/</span><span class="n">dev</span><span class="o">/</span><span class="n">sda1</span> <span class="o">/</span><span class="n">media</span><span class="o">/</span><span class="n">cluster_files</span> <span class="n">vfat</span> <span class="n">defaults</span> <span class="mi">0</span> <span class="mi">0</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="o">/</span><span class="n">dev</span><span class="o">/</span><span class="n">sda1</span> <span class="o">/</span><span class="n">media</span><span class="o">/</span><span class="n">cluster_files</span> <span class="n">ext4</span> <span class="n">defaults</span> <span class="mi">0</span> <span class="mi">0</span>
 </pre></div>
 </div>
 <p>Now we are ready to actually mount the external drive on the head node.</p>
@@ -520,11 +539,10 @@ To do this run the following:</p>
 </pre></div>
 </div>
 <p>After the above steps you should now have the NFS mounted on the external drive. Please follow the rest of the steps in the <a class="reference internal" href="#nfs"><span class="std std-ref">Mount Network File System</span></a> section to complete the mounting.</p>
-<p>Note: You may need to format the external drive so that it is compatible with Linux systems before you are able to mount it.</p>
 <ul class="simple">
 <li>We recommend that you use the 4 Port HDMI and 4 Port USB switch because it makes it really convenient to switch to a different node without having to change the display HDMI or the USB jacks for the keyboard in the cluster. This is extremely helpful because we have to repeat several steps in each node of the cluster.</li>
 <li>The Raspberry Pi Boards act strangely when it comes to switching them on. If you want the board to connect to a display, you have to make sure that the HDMI is hooked up before you turn the power on. Otherwise you won’t be able to see desktop on the screen.</li>
-<li>While building this cluster, the reason why we did not set up Wifi on each node is because the issue we faced where we had to register the MAC Hardware Address of each node our college gadgets’ wifi portal. Hence we decided just to have the head node access to the Internet. In the long run this might not be a good idea for those who will want install software in the future as the worker nodes will not have access to Internet. If your Wireless Network allows you to simply connect to a network using a username and password then you should go ahead and connect each of the nodes to the network. You will then be able to run updates and upgrades regularly and install software anytime you want. To do this you will have to follow the same wireless setup as we did for the head node i.e. you will need to edit the wpa_supplicant.conf file. One other thing you will need to do is to have the worker nodes contain the same interfaces file as the head node but with their respective static IP addresses of course. Basically, add the wlan0 and wlan1 interface to the interfaces file.</li>
+<li>While building this cluster, the reason why we did not set up Wifi on each node is because the issue we faced where we had to register the MAC Hardware Address of each node our college gadgets’ Wifi portal. Hence we decided just to have the head node access to the Internet. In the long run this might not be a good idea for those who will want install software in the future as the worker nodes will not have access to Internet. If your Wireless Network allows you to simply connect to a network using a username and password then you should go ahead and connect each of the nodes to the network. You will then be able to run updates and upgrades regularly and install software anytime you want. To do this you will have to follow the same wireless setup as we did for the head node i.e. you will need to edit the wpa_supplicant.conf file. One other thing you will need to do is to have the worker nodes contain the same interfaces file as the head node but with their respective static IP addresses of course. Basically, add the wlan0 and wlan1 interface to the interfaces file.</li>
 </ul>
 </div>
 <div class="section" id="references">
