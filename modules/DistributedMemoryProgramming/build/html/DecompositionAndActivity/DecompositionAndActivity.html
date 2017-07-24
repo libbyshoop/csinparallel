@@ -1,16 +1,14 @@
 
-
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-
 
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Decomposition and Two Advanced Activities &mdash; Distributed Computing Fundamentals</title>
+    <title>Decomposition and Two Advanced Activities &#8212; Distributed Computing Fundamentals</title>
     
-    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/csip.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     
     <script type="text/javascript">
@@ -19,38 +17,39 @@
         VERSION:     '',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
-        HAS_SOURCE:  true
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
       };
     </script>
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
     <link rel="shortcut icon" href="../_static/favicon.ico"/>
-    <link rel="top" title="Distributed Computing Fundamentals" href="../index.html" />
+    <link rel="search" title="Search" href="../search.html" />
     <link rel="prev" title="Compiling and First Two Activites" href="../CompileAndActivity/compileandactivity.html" /> 
   </head>
   <body>
-    <div class="related">
+    <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
           <a href="../CompileAndActivity/compileandactivity.html" title="Compiling and First Two Activites"
              accesskey="P">previous</a></li>
-        <li><a href="../index.html">Distributed Computing Fundamentals</a> &raquo;</li> 
+        <li class="nav-item nav-item-0"><a href="../index.html">Distributed Computing Fundamentals</a> &#187;</li> 
       </ul>
     </div>  
 
     <div class="document">
       <div class="documentwrapper">
         <div class="bodywrapper">
-          <div class="body">
+          <div class="body" role="main">
             
   <div class="section" id="decomposition-and-two-advanced-activities">
 <h1>Decomposition and Two Advanced Activities<a class="headerlink" href="#decomposition-and-two-advanced-activities" title="Permalink to this headline">¶</a></h1>
 <p>Decomposition is a very important aspect of many parallel programs. Decomposition is a way to divide up the taske fairly across the data you need to compute over or the computation to be performed; thus, each task can be distributed to each process. There are many ways to break up a large task into smaller tasks, and you should choose the way that the best suits your problem. For instance, you might guess that splitting your matrix by rows and having each process work on a set of rows will work best for matrix multiplication. Below is an example of a decomposition method. You will see this type of pattern very often in parallel code.</p>
 <div class="section" id="example-3-decompose-the-matrix-by-row">
 <h2>Example 3: Decompose the matrix by row<a class="headerlink" href="#example-3-decompose-the-matrix-by-row" title="Permalink to this headline">¶</a></h2>
-<div class="highlight-c"><div class="highlight"><pre><span class="n">averow</span> <span class="o">=</span> <span class="n">ROW</span><span class="o">/</span><span class="n">numworkers</span><span class="p">;</span>
+<div class="highlight-c"><div class="highlight"><pre><span></span><span class="n">averow</span> <span class="o">=</span> <span class="n">ROW</span><span class="o">/</span><span class="n">numworkers</span><span class="p">;</span>
 <span class="n">extra</span> <span class="o">=</span> <span class="n">ROW</span><span class="o">%</span><span class="n">numworkers</span><span class="p">;</span>
 <span class="n">offset</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
 <span class="n">mtype</span> <span class="o">=</span> <span class="n">FROM_MASTER</span><span class="p">;</span>
@@ -75,7 +74,7 @@
 <div class="section" id="activity-3-vector-matrix-multiplication-improved-version">
 <h3>Activity 3: Vector Matrix Multiplication Improved Version<a class="headerlink" href="#activity-3-vector-matrix-multiplication-improved-version" title="Permalink to this headline">¶</a></h3>
 <p>To download the source code to do this activity:
-<a class="reference download internal" href="../_downloads/vector_matrix_mpi_todo1.c"><tt class="xref download docutils literal"><span class="pre">download</span> <span class="pre">vector_matrix_mpi_todo.c</span></tt></a></p>
+<a class="reference download internal" href="../_downloads/vector_matrix_mpi_todo.c" download=""><code class="xref download docutils literal"><span class="pre">download</span> <span class="pre">vector_matrix_mpi_todo.c</span></code></a></p>
 <p>Have it open in an editor so that you can work on it.  Or at a minimum use your browser and right-click on the link above and choose to open it in a new browser window.</p>
 <p>In this activity, we will be using decomposition technique, MPI_Send, and MPI_Recv to
 improve the efficiency and accuracy of vector matrix multiplication. We already seen that by using
@@ -89,8 +88,8 @@ back to the master. Finally the master will receive results from workers, and co
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Comments:</th><td class="field-body"><ul class="first last">
-<li><p class="first">Let&#8217;s walk through the code step by step. First, we will need to initialize the MPI environment, define the size of the communicator, and give a rank to each process. This should be straight forward to you because you have seen this many times already.</p>
-<div class="highlight-c"><div class="highlight"><pre><span class="cm">/* Initialize MPI execution environment */</span>
+<li><p class="first">Let’s walk through the code step by step. First, we will need to initialize the MPI environment, define the size of the communicator, and give a rank to each process. This should be straight forward to you because you have seen this many times already.</p>
+<div class="highlight-c"><div class="highlight"><pre><span></span><span class="cm">/* Initialize MPI execution environment */</span>
 <span class="n">MPI_Init</span><span class="p">(</span> <span class="o">&amp;</span><span class="n">argc</span><span class="p">,</span><span class="o">&amp;</span><span class="n">argv</span><span class="p">);</span>
 <span class="n">MPI_Comm_rank</span><span class="p">(</span> <span class="n">MPI_COMM_WORLD</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">rank</span><span class="p">);</span>
 <span class="n">MPI_Comm_size</span><span class="p">(</span> <span class="n">MPI_COMM_WORLD</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">nprocs</span><span class="p">);</span>
@@ -98,7 +97,7 @@ back to the master. Finally the master will receive results from workers, and co
 </div>
 </li>
 <li><p class="first">Then we want to initialize the vector and matrix on master node. This can be done by:</p>
-<div class="highlight-c"><div class="highlight"><pre><span class="k">if</span> <span class="p">(</span><span class="n">rank</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+<div class="highlight-c"><div class="highlight"><pre><span></span><span class="k">if</span> <span class="p">(</span><span class="n">rank</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
     <span class="cm">/* Initialize Matrix and Vector */</span>
     <span class="k">for</span><span class="p">(</span><span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">WIDTH</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
     <span class="n">vector</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
@@ -114,10 +113,10 @@ back to the master. Finally the master will receive results from workers, and co
 </li>
 <li><div class="first admonition note">
 <p class="first admonition-title">Note</p>
-<p class="last">You should use MPI_Send to send the starting rows, and number of rows, and some rows of matrix, and the vector to the workers. Moreover, when you send some rows of matrix, you should use MPI_Send(&amp;matrix[starting row][0], number of elements, ...). This will send the rows of matrix, which contain the number of elements, and it starts from the first element in that row.</p>
+<p class="last">You should use MPI_Send to send the starting rows, and number of rows, and some rows of matrix, and the vector to the workers. Moreover, when you send some rows of matrix, you should use MPI_Send(&amp;matrix[starting row][0], number of elements, …). This will send the rows of matrix, which contain the number of elements, and it starts from the first element in that row.</p>
 </div>
 </li>
-<li><div class="first highlight-c"><div class="highlight"><pre><span class="n">averow</span> <span class="o">=</span> <span class="n">ROW</span><span class="o">/</span><span class="n">numworkers</span><span class="p">;</span>
+<li><div class="first highlight-c"><div class="highlight"><pre><span></span><span class="n">averow</span> <span class="o">=</span> <span class="n">ROW</span><span class="o">/</span><span class="n">numworkers</span><span class="p">;</span>
 <span class="n">extra</span> <span class="o">=</span> <span class="n">ROW</span><span class="o">%</span><span class="n">numworkers</span><span class="p">;</span>
 <span class="n">offset</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
 <span class="n">mtype</span> <span class="o">=</span> <span class="n">FROM_MASTER</span><span class="p">;</span>
@@ -132,7 +131,7 @@ back to the master. Finally the master will receive results from workers, and co
 </div>
 </li>
 <li><p class="first">After having sent the messages to all workers, we need to ask workers to receive the messages from the master. We check if the process is not the master, we will use MPI_Recv to receive the messages sent from the master. You are asked complete this task.</p>
-<div class="highlight-c"><div class="highlight"><pre><span class="k">if</span> <span class="p">(</span><span class="n">rank</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+<div class="highlight-c"><div class="highlight"><pre><span></span><span class="k">if</span> <span class="p">(</span><span class="n">rank</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
     <span class="n">mtype</span> <span class="o">=</span> <span class="n">FROM_MASTER</span><span class="p">;</span>
     <span class="cm">/* Receive the task from master */</span>
     <span class="c1">// TO DO:</span>
@@ -143,7 +142,7 @@ back to the master. Finally the master will receive results from workers, and co
 </div>
 </li>
 <li><p class="first">Each worker now can compute their task, and then we have to send the results back to the master. Sending results back to master should not be difficult. Since result is just a vector, we can send the starting rows, number of rows, and entire result vector to the master. You are asked to complete this part.</p>
-<div class="highlight-c"><div class="highlight"><pre><span class="cm">/* Each worker works on their computation */</span>
+<div class="highlight-c"><div class="highlight"><pre><span></span><span class="cm">/* Each worker works on their computation */</span>
 <span class="k">for</span><span class="p">(</span><span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">rows</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
     <span class="n">result</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
     <span class="k">for</span><span class="p">(</span><span class="n">j</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">j</span> <span class="o">&lt;</span> <span class="n">WIDTH</span><span class="p">;</span> <span class="n">j</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
@@ -160,7 +159,7 @@ back to the master. Finally the master will receive results from workers, and co
 </div>
 </li>
 <li><p class="first">Finally, the master has to receive the results from all workers. You are asked to complete this task.</p>
-<div class="highlight-c"><div class="highlight"><pre><span class="cm">/* Receiving the work from each worker */</span>
+<div class="highlight-c"><div class="highlight"><pre><span></span><span class="cm">/* Receiving the work from each worker */</span>
 <span class="n">mtype</span> <span class="o">=</span> <span class="n">FROM_WORKER</span><span class="p">;</span>
 <span class="k">for</span> <span class="p">(</span><span class="n">i</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;=</span> <span class="n">numworkers</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
     <span class="n">source</span> <span class="o">=</span> <span class="n">i</span><span class="p">;</span>
@@ -178,12 +177,12 @@ back to the master. Finally the master will receive results from workers, and co
 </tbody>
 </table>
 <p>To download the entire source code (if you get stuck):
-<a class="reference download internal" href="../_downloads/vector_matrix_mpi1.c"><tt class="xref download docutils literal"><span class="pre">download</span> <span class="pre">vector_matrix_done.c</span></tt></a></p>
+<a class="reference download internal" href="../_downloads/vector_matrix_mpi.c" download=""><code class="xref download docutils literal"><span class="pre">download</span> <span class="pre">vector_matrix_done.c</span></code></a></p>
 </div>
 <div class="section" id="activity-4-matrix-multiplication">
 <h3>Activity 4: Matrix Multiplication<a class="headerlink" href="#activity-4-matrix-multiplication" title="Permalink to this headline">¶</a></h3>
 <p>Download the source code to do this activity:
-<a class="reference download internal" href="../_downloads/matrix_multiplication_todo.c"><tt class="xref download docutils literal"><span class="pre">download</span> <span class="pre">matrix_multiplication_todo.c</span></tt></a></p>
+<a class="reference download internal" href="../_downloads/matrix_multiplication_todo.c" download=""><code class="xref download docutils literal"><span class="pre">download</span> <span class="pre">matrix_multiplication_todo.c</span></code></a></p>
 <p>Have it open in an editor so that you can work on it.  Or at a minimum use your browser and right-click on the link above and choose to open it in a new browser window.</p>
 <p>In this activity, we want you to use decomposition technique, MPI_Send, and MPI_Recv in previous activities to complete the matrix multiplication program. If you have not seen matrix multiplication before, please click on <a class="reference external" href="http://mathworld.wolfram.com/MatrixMultiplication.html">matrix multiplication</a> to read how matrix multiplication works.</p>
 <table class="docutils field-list" frame="void" rules="none">
@@ -192,7 +191,7 @@ back to the master. Finally the master will receive results from workers, and co
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Comments:</th><td class="field-body"><ul class="first last">
 <li><p class="first">This activity is not much different from the previous activity. First, we use the decomposition method in the previous activity. Then we want to send some rows from the first matrix, and entire second matrix to each worker. Note that this is not the most efficient method of doing matrix multiplication because when the second matrix gets really large, we might not be able to send entire matrix to each worker. We use this method because of its simplicity.</p>
-<div class="highlight-c"><div class="highlight"><pre><span class="cm">/* Computing the row and extra row */</span>
+<div class="highlight-c"><div class="highlight"><pre><span></span><span class="cm">/* Computing the row and extra row */</span>
 <span class="n">averow</span> <span class="o">=</span> <span class="n">ROWA</span><span class="o">/</span><span class="n">numworkers</span><span class="p">;</span>
 <span class="n">extra</span> <span class="o">=</span> <span class="n">ROWA</span><span class="o">%</span><span class="n">numworkers</span><span class="p">;</span>
 <span class="n">offset</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
@@ -211,7 +210,7 @@ back to the master. Finally the master will receive results from workers, and co
 </div>
 </li>
 <li><p class="first">Next we want each worker to receive messages sent from the master, and then we can use these matrices to do matrix multiplication on each worker. The result is then stored in matrix <strong>c</strong>. Your task is to receive the messages sent from the master.</p>
-<div class="highlight-c"><div class="highlight"><pre><span class="k">if</span> <span class="p">(</span><span class="n">taskid</span> <span class="o">&gt;</span> <span class="n">MASTER</span><span class="p">)</span> <span class="p">{</span>
+<div class="highlight-c"><div class="highlight"><pre><span></span><span class="k">if</span> <span class="p">(</span><span class="n">taskid</span> <span class="o">&gt;</span> <span class="n">MASTER</span><span class="p">)</span> <span class="p">{</span>
     <span class="n">mtype</span> <span class="o">=</span> <span class="n">FROM_MASTER</span><span class="p">;</span>
 
     <span class="cm">/* Each worker receive task from master */</span>
@@ -232,7 +231,7 @@ back to the master. Finally the master will receive results from workers, and co
 </div>
 </li>
 <li><p class="first">After each worker has computed the matrix multiplication, all workers have to send the results back to the master. Each worker needs to send their matrix <strong>c</strong> to master. You are asked to complete this task.</p>
-<div class="highlight-c"><div class="highlight"><pre><span class="cm">/* Each worker sends the output back to master */</span>
+<div class="highlight-c"><div class="highlight"><pre><span></span><span class="cm">/* Each worker sends the output back to master */</span>
 <span class="n">mtype</span> <span class="o">=</span> <span class="n">FROM_WORKER</span><span class="p">;</span>
 <span class="c1">// TO DO</span>
 <span class="c1">// ...........</span>
@@ -241,7 +240,7 @@ back to the master. Finally the master will receive results from workers, and co
 </div>
 </li>
 <li><p class="first">Then master can receive the results from all workers, and combine them into a single result matrix. You are asked to complete this task.</p>
-<div class="highlight-c"><div class="highlight"><pre><span class="cm">/* Receive results from worker tasks */</span>
+<div class="highlight-c"><div class="highlight"><pre><span></span><span class="cm">/* Receive results from worker tasks */</span>
 <span class="n">mtype</span> <span class="o">=</span> <span class="n">FROM_WORKER</span><span class="p">;</span> <span class="cm">/* message comes from workers */</span>
 <span class="k">for</span> <span class="p">(</span><span class="n">i</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;=</span> <span class="n">numworkers</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
     <span class="n">source</span> <span class="o">=</span> <span class="n">i</span><span class="p">;</span> <span class="cm">/* Specifying where it is coming from */</span>
@@ -259,7 +258,7 @@ back to the master. Finally the master will receive results from workers, and co
 </tbody>
 </table>
 <p>To download the entire source code from computing.llnl.gov [1]:
-<a class="reference download internal" href="../_downloads/matrix_multiplication.c"><tt class="xref download docutils literal"><span class="pre">download</span> <span class="pre">matrix_multiplication.c</span></tt></a></p>
+<a class="reference download internal" href="../_downloads/matrix_multiplication.c" download=""><code class="xref download docutils literal"><span class="pre">download</span> <span class="pre">matrix_multiplication.c</span></code></a></p>
 <p class="rubric">References</p>
 <table class="docutils footnote" frame="void" id="id1" rules="none">
 <colgroup><col class="label" /><col /></colgroup>
@@ -275,7 +274,7 @@ back to the master. Finally the master will receive results from workers, and co
           </div>
         </div>
       </div>
-      <div class="sphinxsidebar">
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
             <p class="logo"><a href="../index.html">
               <img class="logo" src="../_static/CSInParallel200wide.png" alt="Logo"/>
@@ -299,18 +298,18 @@ back to the master. Finally the master will receive results from workers, and co
       </div>
       <div class="clearer"></div>
     </div>
-    <div class="related">
+    <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
           <a href="../CompileAndActivity/compileandactivity.html" title="Compiling and First Two Activites"
              >previous</a></li>
-        <li><a href="../index.html">Distributed Computing Fundamentals</a> &raquo;</li> 
+        <li class="nav-item nav-item-0"><a href="../index.html">Distributed Computing Fundamentals</a> &#187;</li> 
       </ul>
     </div>
-    <div class="footer">
-        &copy; Copyright This work is licensed under a Creative Commons Attribution-ShareAlike 3.0 Unported License.
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    <div class="footer" role="contentinfo">
+        &#169; Copyright This work is licensed under a Creative Commons Attribution-ShareAlike 3.0 Unported License.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.2.
     </div>
   </body>
 </html>

@@ -1,16 +1,14 @@
 
-
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-
 
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>MPI Communications &mdash; Distributed Computing Fundamentals</title>
+    <title>MPI Communications &#8212; Distributed Computing Fundamentals</title>
     
-    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/csip.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     
     <script type="text/javascript">
@@ -19,19 +17,20 @@
         VERSION:     '',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
-        HAS_SOURCE:  true
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
       };
     </script>
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
     <link rel="shortcut icon" href="../_static/favicon.ico"/>
-    <link rel="top" title="Distributed Computing Fundamentals" href="../index.html" />
+    <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="Compiling and First Two Activites" href="../CompileAndActivity/compileandactivity.html" />
     <link rel="prev" title="Introduction to MPI" href="../introMPI/introMPI.html" /> 
   </head>
   <body>
-    <div class="related">
+    <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
@@ -40,33 +39,34 @@
         <li class="right" >
           <a href="../introMPI/introMPI.html" title="Introduction to MPI"
              accesskey="P">previous</a> |</li>
-        <li><a href="../index.html">Distributed Computing Fundamentals</a> &raquo;</li> 
+        <li class="nav-item nav-item-0"><a href="../index.html">Distributed Computing Fundamentals</a> &#187;</li> 
       </ul>
     </div>  
 
     <div class="document">
       <div class="documentwrapper">
         <div class="bodywrapper">
-          <div class="body">
+          <div class="body" role="main">
             
   <div class="section" id="mpi-communications">
 <h1>MPI Communications<a class="headerlink" href="#mpi-communications" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="point-to-point-communication">
 <h2>Point-to-point Communication<a class="headerlink" href="#point-to-point-communication" title="Permalink to this headline">¶</a></h2>
 <p>Point-to-point communication is a way that pair of processors transmits the data between one another, one processor sending, and the other receiving. MPI provides SEND(MPI_Send) and RECEIVE(MPI_Recv) functions that allow point-to-point communication taking place in a communicator.</p>
-<div class="highlight-python"><pre>MPI_Send(void* message, int count, MPI_Datatype datatype, int destination, int tag, MPI_Comm comm)
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">MPI_Send</span><span class="p">(</span><span class="n">void</span><span class="o">*</span> <span class="n">message</span><span class="p">,</span> <span class="nb">int</span> <span class="n">count</span><span class="p">,</span> <span class="n">MPI_Datatype</span> <span class="n">datatype</span><span class="p">,</span> <span class="nb">int</span> <span class="n">destination</span><span class="p">,</span> <span class="nb">int</span> <span class="n">tag</span><span class="p">,</span> <span class="n">MPI_Comm</span> <span class="n">comm</span><span class="p">)</span>
 
-        - message:      initial address of the message
-        - count:        number of entries to send
-        - datatype:     type of each entry
-        - destination:  rank of the receiving process
-        - tag:          message tag is a way to identify the type of a message
-        - comm:         communicator (MPI_COMM_WORLD)
+        <span class="o">-</span> <span class="n">message</span><span class="p">:</span>      <span class="n">initial</span> <span class="n">address</span> <span class="n">of</span> <span class="n">the</span> <span class="n">message</span>
+        <span class="o">-</span> <span class="n">count</span><span class="p">:</span>        <span class="n">number</span> <span class="n">of</span> <span class="n">entries</span> <span class="n">to</span> <span class="n">send</span>
+        <span class="o">-</span> <span class="n">datatype</span><span class="p">:</span>     <span class="nb">type</span> <span class="n">of</span> <span class="n">each</span> <span class="n">entry</span>
+        <span class="o">-</span> <span class="n">destination</span><span class="p">:</span>  <span class="n">rank</span> <span class="n">of</span> <span class="n">the</span> <span class="n">receiving</span> <span class="n">process</span>
+        <span class="o">-</span> <span class="n">tag</span><span class="p">:</span>          <span class="n">message</span> <span class="n">tag</span> <span class="ow">is</span> <span class="n">a</span> <span class="n">way</span> <span class="n">to</span> <span class="n">identify</span> <span class="n">the</span> <span class="nb">type</span> <span class="n">of</span> <span class="n">a</span> <span class="n">message</span>
+        <span class="o">-</span> <span class="n">comm</span><span class="p">:</span>         <span class="n">communicator</span> <span class="p">(</span><span class="n">MPI_COMM_WORLD</span><span class="p">)</span>
 
-MPI_Recv(void* message, int count, MPI_Datatype datatype, int source, int tag, MPI_Comm comm, MPI_Status *status)
+<span class="n">MPI_Recv</span><span class="p">(</span><span class="n">void</span><span class="o">*</span> <span class="n">message</span><span class="p">,</span> <span class="nb">int</span> <span class="n">count</span><span class="p">,</span> <span class="n">MPI_Datatype</span> <span class="n">datatype</span><span class="p">,</span> <span class="nb">int</span> <span class="n">source</span><span class="p">,</span> <span class="nb">int</span> <span class="n">tag</span><span class="p">,</span> <span class="n">MPI_Comm</span> <span class="n">comm</span><span class="p">,</span> <span class="n">MPI_Status</span> <span class="o">*</span><span class="n">status</span><span class="p">)</span>
 
-        - source:       rank of the sending process
-        - status:       return status</pre>
+        <span class="o">-</span> <span class="n">source</span><span class="p">:</span>       <span class="n">rank</span> <span class="n">of</span> <span class="n">the</span> <span class="n">sending</span> <span class="n">process</span>
+        <span class="o">-</span> <span class="n">status</span><span class="p">:</span>       <span class="k">return</span> <span class="n">status</span>
+</pre></div>
 </div>
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
@@ -160,8 +160,8 @@ MPI_Recv(void* message, int count, MPI_Datatype datatype, int source, int tag, M
 33
 34
 35
-36</pre></div></td><td class="code"><div class="highlight"><pre><span class="cp">#include &lt;stdio.h&gt;</span>
-<span class="cp">#include &quot;mpi.h&quot;</span>
+36</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="cp">#include</span> <span class="cpf">&lt;stdio.h&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&quot;mpi.h&quot;</span><span class="cp"></span>
 
 <span class="cp">#define FROM_MASTER 1</span>
 
@@ -211,17 +211,17 @@ MPI_Recv(void* message, int count, MPI_Datatype datatype, int source, int tag, M
 <div class="section" id="collective-communication">
 <h2>Collective Communication<a class="headerlink" href="#collective-communication" title="Permalink to this headline">¶</a></h2>
 <p>Collective communication is a communication that must have all processes involved in the scope of a communicator. We will be using MPI_COMM_WORLD as our communicator; therefore, the collective communication will include all processes.</p>
-<img alt="MPI_COMM_WORLD" class="align-center" src="../_images/collective.png" style="width: 450px; height: 350px;" />
+<a class="reference internal image-reference" href="../_images/collective.png"><img alt="MPI_COMM_WORLD" class="align-center" src="../_images/collective.png" style="width: 450px; height: 350px;" /></a>
 <p class="centered">
-<strong>Figure 5: Collective Communications Obtained from computing.llnl.gov [1]</strong></p><div class="highlight-c"><div class="highlight"><pre><span class="n">MPI_Barrier</span><span class="p">(</span><span class="n">comm</span><span class="p">)</span>
+<strong>Figure 5: Collective Communications Obtained from computing.llnl.gov [1]</strong></p><div class="highlight-c"><div class="highlight"><pre><span></span><span class="n">MPI_Barrier</span><span class="p">(</span><span class="n">comm</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>This function creates a barrier synchronization in a commmunicator(MPI_COMM_WORLD). Each task waits at MPI_Barrier call until all other tasks in the communicator reach the same MPI_Barrier call.</p>
-<div class="highlight-c"><div class="highlight"><pre><span class="n">MPI_Bcast</span><span class="p">(</span><span class="o">&amp;</span><span class="n">message</span><span class="p">,</span> <span class="kt">int</span> <span class="n">count</span><span class="p">,</span> <span class="n">MPI_Datatype</span> <span class="n">datatype</span><span class="p">,</span> <span class="kt">int</span> <span class="n">root</span><span class="p">,</span> <span class="n">comm</span><span class="p">)</span>
+<div class="highlight-c"><div class="highlight"><pre><span></span><span class="n">MPI_Bcast</span><span class="p">(</span><span class="o">&amp;</span><span class="n">message</span><span class="p">,</span> <span class="kt">int</span> <span class="n">count</span><span class="p">,</span> <span class="n">MPI_Datatype</span> <span class="n">datatype</span><span class="p">,</span> <span class="kt">int</span> <span class="n">root</span><span class="p">,</span> <span class="n">comm</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>This function displays the message to all other processes in MPI_COMM_WORLD from the process whose rank is root.</p>
-<div class="highlight-c"><div class="highlight"><pre><span class="n">MPI_Reduce</span><span class="p">(</span><span class="o">&amp;</span><span class="n">message</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">receivemessage</span><span class="p">,</span> <span class="kt">int</span> <span class="n">count</span><span class="p">,</span> <span class="n">MPI_Datatype</span> <span class="n">datatype</span><span class="p">,</span> <span class="n">MPI_Op</span> <span class="n">op</span><span class="p">,</span> <span class="kt">int</span> <span class="n">root</span><span class="p">,</span> <span class="n">comm</span><span class="p">)</span>
+<div class="highlight-c"><div class="highlight"><pre><span></span><span class="n">MPI_Reduce</span><span class="p">(</span><span class="o">&amp;</span><span class="n">message</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">receivemessage</span><span class="p">,</span> <span class="kt">int</span> <span class="n">count</span><span class="p">,</span> <span class="n">MPI_Datatype</span> <span class="n">datatype</span><span class="p">,</span> <span class="n">MPI_Op</span> <span class="n">op</span><span class="p">,</span> <span class="kt">int</span> <span class="n">root</span><span class="p">,</span> <span class="n">comm</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>This function applies a reduction operation on all tasks in MPI_COMM_WORLD and reduces results from each process into one value. MPI_Op includes for example, MPI_MAX, MPI_MIN, MPI_PROD, and MPI_SUM, etc.</p>
@@ -231,17 +231,17 @@ MPI_Recv(void* message, int count, MPI_Datatype datatype, int source, int tag, M
 <p class="last">To read more on MPI_Op, please read <a class="reference external" href="http://www.mpi-forum.org/docs/mpi-11-html/node78.html#Node78">MPI_Op</a>.</p>
 </div>
 </div></blockquote>
-<div class="highlight-c"><div class="highlight"><pre><span class="n">MPI_Scatter</span><span class="p">(</span><span class="o">&amp;</span><span class="n">message</span><span class="p">,</span> <span class="kt">int</span> <span class="n">count</span><span class="p">,</span> <span class="n">MPI_Datatype</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">receivemessage</span><span class="p">,</span> <span class="kt">int</span> <span class="n">count</span><span class="p">,</span> <span class="n">MPI_Datatype</span><span class="p">,</span> <span class="kt">int</span> <span class="n">root</span><span class="p">,</span> <span class="n">comm</span><span class="p">)</span>
+<div class="highlight-c"><div class="highlight"><pre><span></span><span class="n">MPI_Scatter</span><span class="p">(</span><span class="o">&amp;</span><span class="n">message</span><span class="p">,</span> <span class="kt">int</span> <span class="n">count</span><span class="p">,</span> <span class="n">MPI_Datatype</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">receivemessage</span><span class="p">,</span> <span class="kt">int</span> <span class="n">count</span><span class="p">,</span> <span class="n">MPI_Datatype</span><span class="p">,</span> <span class="kt">int</span> <span class="n">root</span><span class="p">,</span> <span class="n">comm</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>This function divides a message into equal contiguous parts and sends each part to each node. The master gets the first part, and the process whose rank is 1 gets the second part, and so on. The number of elements get sent to each worker is specified by count.</p>
-<div class="highlight-c"><div class="highlight"><pre><span class="n">MPI_Gather</span><span class="p">(</span><span class="o">&amp;</span><span class="n">message</span><span class="p">,</span> <span class="kt">int</span> <span class="n">count</span><span class="p">,</span> <span class="n">MPI_Datatype</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">receivemessage</span><span class="p">,</span> <span class="kt">int</span> <span class="n">count</span><span class="p">,</span> <span class="n">MPI_Datatype</span><span class="p">,</span> <span class="kt">int</span> <span class="n">root</span><span class="p">,</span> <span class="n">comm</span><span class="p">)</span>
+<div class="highlight-c"><div class="highlight"><pre><span></span><span class="n">MPI_Gather</span><span class="p">(</span><span class="o">&amp;</span><span class="n">message</span><span class="p">,</span> <span class="kt">int</span> <span class="n">count</span><span class="p">,</span> <span class="n">MPI_Datatype</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">receivemessage</span><span class="p">,</span> <span class="kt">int</span> <span class="n">count</span><span class="p">,</span> <span class="n">MPI_Datatype</span><span class="p">,</span> <span class="kt">int</span> <span class="n">root</span><span class="p">,</span> <span class="n">comm</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>This function collects distinct messages from each task in the communicator to a single task. This function is the reverse operation of MPI_Scatter.</p>
 </div>
 <div class="section" id="let-s-try-it">
-<h2>Let&#8217;s Try It<a class="headerlink" href="#let-s-try-it" title="Permalink to this headline">¶</a></h2>
+<h2>Let’s Try It<a class="headerlink" href="#let-s-try-it" title="Permalink to this headline">¶</a></h2>
 <p>In the next section we will describe how to compile and run these examples so that you can try them.</p>
 <p class="rubric">References</p>
 <table class="docutils footnote" frame="void" id="id1" rules="none">
@@ -257,7 +257,7 @@ MPI_Recv(void* message, int count, MPI_Datatype datatype, int source, int tag, M
           </div>
         </div>
       </div>
-      <div class="sphinxsidebar">
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
             <p class="logo"><a href="../index.html">
               <img class="logo" src="../_static/CSInParallel200wide.png" alt="Logo"/>
@@ -271,7 +271,7 @@ MPI_Recv(void* message, int count, MPI_Datatype datatype, int source, int tag, M
 </ul>
 </li>
 <li><a class="reference internal" href="#collective-communication">Collective Communication</a></li>
-<li><a class="reference internal" href="#let-s-try-it">Let&#8217;s Try It</a></li>
+<li><a class="reference internal" href="#let-s-try-it">Let’s Try It</a></li>
 </ul>
 </li>
 </ul>
@@ -286,7 +286,7 @@ MPI_Recv(void* message, int count, MPI_Datatype datatype, int source, int tag, M
       </div>
       <div class="clearer"></div>
     </div>
-    <div class="related">
+    <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
@@ -295,12 +295,12 @@ MPI_Recv(void* message, int count, MPI_Datatype datatype, int source, int tag, M
         <li class="right" >
           <a href="../introMPI/introMPI.html" title="Introduction to MPI"
              >previous</a> |</li>
-        <li><a href="../index.html">Distributed Computing Fundamentals</a> &raquo;</li> 
+        <li class="nav-item nav-item-0"><a href="../index.html">Distributed Computing Fundamentals</a> &#187;</li> 
       </ul>
     </div>
-    <div class="footer">
-        &copy; Copyright This work is licensed under a Creative Commons Attribution-ShareAlike 3.0 Unported License.
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    <div class="footer" role="contentinfo">
+        &#169; Copyright This work is licensed under a Creative Commons Attribution-ShareAlike 3.0 Unported License.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.2.
     </div>
   </body>
 </html>

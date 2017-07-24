@@ -1,16 +1,14 @@
 
-
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-
 
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Compiling and First Two Activites &mdash; Distributed Computing Fundamentals</title>
+    <title>Compiling and First Two Activites &#8212; Distributed Computing Fundamentals</title>
     
-    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/csip.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     
     <script type="text/javascript">
@@ -19,19 +17,20 @@
         VERSION:     '',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
-        HAS_SOURCE:  true
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
       };
     </script>
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
     <link rel="shortcut icon" href="../_static/favicon.ico"/>
-    <link rel="top" title="Distributed Computing Fundamentals" href="../index.html" />
+    <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="Decomposition and Two Advanced Activities" href="../DecompositionAndActivity/DecompositionAndActivity.html" />
     <link rel="prev" title="MPI Communications" href="../MPICommunication/MPICommunication.html" /> 
   </head>
   <body>
-    <div class="related">
+    <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
@@ -40,14 +39,14 @@
         <li class="right" >
           <a href="../MPICommunication/MPICommunication.html" title="MPI Communications"
              accesskey="P">previous</a> |</li>
-        <li><a href="../index.html">Distributed Computing Fundamentals</a> &raquo;</li> 
+        <li class="nav-item nav-item-0"><a href="../index.html">Distributed Computing Fundamentals</a> &#187;</li> 
       </ul>
     </div>  
 
     <div class="document">
       <div class="documentwrapper">
         <div class="bodywrapper">
-          <div class="body">
+          <div class="body" role="main">
             
   <div class="section" id="compiling-and-first-two-activites">
 <h1>Compiling and First Two Activites<a class="headerlink" href="#compiling-and-first-two-activites" title="Permalink to this headline">¶</a></h1>
@@ -55,11 +54,12 @@
 <h2>Compiling an MPI program<a class="headerlink" href="#compiling-an-mpi-program" title="Permalink to this headline">¶</a></h2>
 <p>To compile an MPI program on your local cluster, you can enter the following commands in the terminal:</p>
 <p>First, we need to make an executable file from the MPI program by using <strong>mpicc</strong>:</p>
-<div class="highlight-c"><div class="highlight"><pre><span class="n">mpicc</span> <span class="o">-</span><span class="n">o</span> <span class="n">filename</span> <span class="n">filename</span><span class="p">.</span><span class="n">c</span>
+<div class="highlight-c"><div class="highlight"><pre><span></span><span class="n">mpicc</span> <span class="o">-</span><span class="n">o</span> <span class="n">filename</span> <span class="n">filename</span><span class="p">.</span><span class="n">c</span>
 </pre></div>
 </div>
 <p>Then you are able to execute it using <strong>mpirun</strong> :</p>
-<div class="highlight-c"><pre>mpirun -machinefile machines -np #processes ./filename</pre>
+<div class="highlight-c"><div class="highlight"><pre><span></span>mpirun -machinefile machines -np #processes ./filename
+</pre></div>
 </div>
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
@@ -74,7 +74,8 @@
 </ul>
 </div>
 <p>Moreover, you can also compile an MPI program without using <strong>machines</strong>, you can use the following command to run only on the master node:</p>
-<div class="highlight-c"><pre>mpirun -np #processes ./filename</pre>
+<div class="highlight-c"><div class="highlight"><pre><span></span>mpirun -np #processes ./filename
+</pre></div>
 </div>
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
@@ -85,16 +86,16 @@
 <h2>Try the simple examples<a class="headerlink" href="#try-the-simple-examples" title="Permalink to this headline">¶</a></h2>
 <p>Log into your cluster and make sure that you have the following example files in your account:</p>
 <p>Simplest Hello World Example:
-<a class="reference download internal" href="../_downloads/hellompi.c"><tt class="xref download docutils literal"><span class="pre">download</span> <span class="pre">hellompi.c</span></tt></a></p>
+<a class="reference download internal" href="../_downloads/hellompi.c" download=""><code class="xref download docutils literal"><span class="pre">download</span> <span class="pre">hellompi.c</span></code></a></p>
 <p>Hello World by Sending messages:
-<a class="reference download internal" href="../_downloads/example2.c"><tt class="xref download docutils literal"><span class="pre">download</span> <span class="pre">example2.c</span></tt></a></p>
+<a class="reference download internal" href="../_downloads/example2.c" download=""><code class="xref download docutils literal"><span class="pre">download</span> <span class="pre">example2.c</span></code></a></p>
 <p>You can specifically compile the simplest example like this:</p>
-<div class="highlight-c"><div class="highlight"><pre><span class="n">mpicc</span> <span class="o">-</span><span class="n">o</span> <span class="n">hellompi</span> <span class="n">hellompi</span><span class="p">.</span><span class="n">c</span>
+<div class="highlight-c"><div class="highlight"><pre><span></span><span class="n">mpicc</span> <span class="o">-</span><span class="n">o</span> <span class="n">hellompi</span> <span class="n">hellompi</span><span class="p">.</span><span class="n">c</span>
 </pre></div>
 </div>
 <p>To run it on your cluster using 3 processes, you can do this, assuming you also have a
 file called machines that describes your system:</p>
-<div class="highlight-c"><div class="highlight"><pre><span class="n">mpirun</span> <span class="o">-</span><span class="n">machinefile</span> <span class="n">machines</span> <span class="o">-</span><span class="n">np</span> <span class="mi">3</span> <span class="p">.</span><span class="o">/</span><span class="n">hellompi</span>
+<div class="highlight-c"><div class="highlight"><pre><span></span><span class="n">mpirun</span> <span class="o">-</span><span class="n">machinefile</span> <span class="n">machines</span> <span class="o">-</span><span class="n">np</span> <span class="mi">3</span> <span class="p">.</span><span class="o">/</span><span class="n">hellompi</span>
 </pre></div>
 </div>
 <p>Depending on how many other people are using your cluster and how big it is, you can try
@@ -106,15 +107,15 @@ different numbers of processes by changing the 3 above.</p>
 </div>
 </div>
 <div class="section" id="activity-1-computing">
-<h2>Activity 1: Computing <img class="math" src="../_images/math/186d9d976137aae10566722f246f64338c4bba0f.png" alt="{\pi}"/> ?<a class="headerlink" href="#activity-1-computing" title="Permalink to this headline">¶</a></h2>
+<h2>Activity 1: Computing <img class="math" src="../_images/math/da689decc8cdc781c5175e2efefa73c1226bc56b.png" alt="{\pi}"/> ?<a class="headerlink" href="#activity-1-computing" title="Permalink to this headline">¶</a></h2>
 <p>Download the source code to do this activity:
-<a class="reference download internal" href="../_downloads/mpi_pi_todo.c"><tt class="xref download docutils literal"><span class="pre">download</span> <span class="pre">mpi_pi_todo.c</span></tt></a></p>
+<a class="reference download internal" href="../_downloads/mpi_pi_todo.c" download=""><code class="xref download docutils literal"><span class="pre">download</span> <span class="pre">mpi_pi_todo.c</span></code></a></p>
 <p>Have it open in an editor so that you can work on it.  Or at a minimum use your browser and right-click on the link above and choose to open it in a new browser window.</p>
-<p>In this activity, we are going to compute <img class="math" src="../_images/math/186d9d976137aae10566722f246f64338c4bba0f.png" alt="{\pi}"/> using integration. We have formula:</p>
+<p>In this activity, we are going to compute <img class="math" src="../_images/math/da689decc8cdc781c5175e2efefa73c1226bc56b.png" alt="{\pi}"/> using integration. We have formula:</p>
 <div class="math">
-<p><img src="../_images/math/c866da7aec308a4f735d6db2e0f244bfbc806f94.png" alt="\int_0^1 \frac{4}{1 + x^2} dx = {\pi}"/></p>
+<p><img src="../_images/math/63c8d34992aa78d0b76be721c376542efc7cd73a.png" alt="\int_0^1 \frac{4}{1 + x^2} dx = {\pi}"/></p>
 </div><p>Therefore, we can compute the area under the curve to get the value of the integral.</p>
-<img alt="graph" class="align-center" src="../_images/graph.png" style="width: 300px; height: 150px;" />
+<a class="reference internal image-reference" href="../_images/graph.png"><img alt="graph" class="align-center" src="../_images/graph.png" style="width: 300px; height: 150px;" /></a>
 <p class="centered">
 <strong>Figure 4: Graph for function</strong></p><table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -129,8 +130,8 @@ different numbers of processes by changing the 3 above.</p>
 </li>
 <li><p class="first">Then you want to let each process know the <strong>number of bins</strong> you are using. Therefore, you need to broadcast the <strong>number of bins</strong> to all processes in our MPI_COMM_WORLD. You should use <strong>MPI_Bcast</strong> to broadcast the <strong>number of bins</strong>. You are asked to complete this part of the code.</p>
 </li>
-<li><p class="first">Now we are ready to ask each process compute their task. We want to evaluate the integral of <img class="math" src="../_images/math/97e7dc8cab2aaeafad5b9ab9b02e7ed2eb0f4dad.png" alt="\frac {4}{1 + x^2}"/> from <em>0</em> to <em>1</em>, and we can do so by finding the sum of all bins from <em>0</em> to <em>1</em>. Each bin is approximately <img class="math" src="../_images/math/c87576c3f1fb23b1ea9c3d278a6fd0b12dfd1e06.png" alt="\frac {1}{n} * \frac {4}{1 + x^2}"/> (<strong>n</strong> is the number of bins). We are iterating over the number of bins, and we start from <em>0</em>; therefore, to find the center of each bin, we need to add <em>+ 0.5</em> to variable <em>i</em>. Moreover, in the <strong>for loop</strong>, we ask the rank <em>0</em> to compute the first bin, the (nprocs) bin, and so on, rank <em>1</em> to compute the second bin, the (nprocs + 1) bin, and so on, ..., as long as value of <em>i</em> is less than <strong>n</strong>. Suppose that there are <em>p</em> processes, then these <em>p</em> processes will take the first <em>p</em> bins, where process whose rank is 0 takes <em>1st</em> bin, process whose rank is 1 takes <em>2nd</em> bin, and so on. If there are any bins left, process whose rank is 1 takes <em>pth</em> bin, and so on. This can be done by using the following piece of code:</p>
-<div class="highlight-c"><div class="highlight"><pre><span class="cm">/* Calculating for each process */</span>
+<li><p class="first">Now we are ready to ask each process compute their task. We want to evaluate the integral of <img class="math" src="../_images/math/71722ba9289cb139de3dd24164601e5f0612c3d9.png" alt="\frac {4}{1 + x^2}"/> from <em>0</em> to <em>1</em>, and we can do so by finding the sum of all bins from <em>0</em> to <em>1</em>. Each bin is approximately <img class="math" src="../_images/math/6309dca75044198a23f6dc3d3508d83f782cc37f.png" alt="\frac {1}{n} * \frac {4}{1 + x^2}"/> (<strong>n</strong> is the number of bins). We are iterating over the number of bins, and we start from <em>0</em>; therefore, to find the center of each bin, we need to add <em>+ 0.5</em> to variable <em>i</em>. Moreover, in the <strong>for loop</strong>, we ask the rank <em>0</em> to compute the first bin, the (nprocs) bin, and so on, rank <em>1</em> to compute the second bin, the (nprocs + 1) bin, and so on, …, as long as value of <em>i</em> is less than <strong>n</strong>. Suppose that there are <em>p</em> processes, then these <em>p</em> processes will take the first <em>p</em> bins, where process whose rank is 0 takes <em>1st</em> bin, process whose rank is 1 takes <em>2nd</em> bin, and so on. If there are any bins left, process whose rank is 1 takes <em>pth</em> bin, and so on. This can be done by using the following piece of code:</p>
+<div class="highlight-c"><div class="highlight"><pre><span></span><span class="cm">/* Calculating for each process */</span>
 <span class="n">step</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">/</span> <span class="p">(</span><span class="kt">double</span><span class="p">)</span> <span class="n">n</span><span class="p">;</span>
 <span class="n">sum</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">;</span>
 <span class="k">for</span> <span class="p">(</span><span class="n">i</span> <span class="o">=</span> <span class="n">rank</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">n</span><span class="p">;</span> <span class="n">i</span> <span class="o">+=</span> <span class="n">nprocs</span><span class="p">)</span> <span class="p">{</span>
@@ -142,7 +143,7 @@ different numbers of processes by changing the 3 above.</p>
 </pre></div>
 </div>
 </li>
-<li><p class="first">When all processes have finished their computations, their results are stored in <strong>mypi</strong>. Therefore, we can reduce all their results into one result, which is the value of <img class="math" src="../_images/math/186d9d976137aae10566722f246f64338c4bba0f.png" alt="{\pi}"/>. Your task is to complete this part by using MPI_Reduce.</p>
+<li><p class="first">When all processes have finished their computations, their results are stored in <strong>mypi</strong>. Therefore, we can reduce all their results into one result, which is the value of <img class="math" src="../_images/math/da689decc8cdc781c5175e2efefa73c1226bc56b.png" alt="{\pi}"/>. Your task is to complete this part by using MPI_Reduce.</p>
 </li>
 </ul>
 </td>
@@ -150,16 +151,16 @@ different numbers of processes by changing the 3 above.</p>
 </tbody>
 </table>
 <p>If you get stuck and want to move on, download the entire source code (originally from www.mcs.anl.gov [1]):
-<a class="reference download internal" href="../_downloads/mpi_pi_done.c"><tt class="xref download docutils literal"><span class="pre">download</span> <span class="pre">mpi_pi_done.c</span></tt></a></p>
+<a class="reference download internal" href="../_downloads/mpi_pi_done.c" download=""><code class="xref download docutils literal"><span class="pre">download</span> <span class="pre">mpi_pi_done.c</span></code></a></p>
 </div>
 <div class="section" id="activity-2-vector-matrix-multiplication">
 <h2>Activity 2: Vector Matrix Multiplication<a class="headerlink" href="#activity-2-vector-matrix-multiplication" title="Permalink to this headline">¶</a></h2>
 <p>To download the source code to do this activity:
-<a class="reference download internal" href="../_downloads/vector_matrix_buggy_todo.c"><tt class="xref download docutils literal"><span class="pre">download</span> <span class="pre">vector_matrix_todo.c</span></tt></a></p>
+<a class="reference download internal" href="../_downloads/vector_matrix_buggy_todo.c" download=""><code class="xref download docutils literal"><span class="pre">download</span> <span class="pre">vector_matrix_todo.c</span></code></a></p>
 <p>Have it open in an editor so that you can work on it.  Or at a minimum use your browser and right-click on the link above and choose to open it in a new browser window.</p>
 <p>In this activity, we are going to compute vector matrix multiplication. This activity illustrates the use of MPI_Bcast, MPI_Scatter, and MPI_Gather to do this multiplication. First, we want you to complete this MPI program by filling codes at <strong>TO DO</strong>. After having completed this task, try to run this MPI program by using different number of processes. Try to explain to yourself what is happening !</p>
-<p>Here is how the vector matrix multiplication works. First, let&#8217;s say we have a matrix <em>A</em>, and a vector <em>x</em> as below:</p>
-<img alt="MPI Structure" class="align-center" src="../_images/vector_matrix_multi.png" style="width: 500px; height: 300px;" />
+<p>Here is how the vector matrix multiplication works. First, let’s say we have a matrix <em>A</em>, and a vector <em>x</em> as below:</p>
+<a class="reference internal image-reference" href="../_images/vector_matrix_multi.png"><img alt="MPI Structure" class="align-center" src="../_images/vector_matrix_multi.png" style="width: 500px; height: 300px;" /></a>
 <p class="centered">
 <strong>Figure 5: vector matrix multiplication Obtained from cms.uni-konstanz.de [2]</strong></p><p>This multiplication produces a new vector whose length is the number of rows of matrix <em>A</em>. The multiplication is very simple. We take a row of matrix <em>A</em> dot product with vector <em>x</em>, and this produces an element of the result vector. For instance, the first row of matrix <em>A</em> dot products with vector <em>x</em> will produce the first element in vector <em>y</em>.</p>
 <table class="docutils field-list" frame="void" rules="none">
@@ -170,7 +171,7 @@ different numbers of processes by changing the 3 above.</p>
 <li><p class="first">We will step you through this activity step by step. Since this is an MPI program, we need to create the MPI execution environment, define the size of the communicator, and give each process a unique rank. You are asked to completed this part of the code.</p>
 </li>
 <li><p class="first">After having initialized the MPI environment, we want to ask the master to initialize the vector and matrix we are going to multiply. In order to do that, we check if the process is master. If so, we initialize the matrix and vector. We initialize every entry to 1 because of its simplicity.</p>
-<div class="highlight-c"><div class="highlight"><pre><span class="k">if</span> <span class="p">(</span><span class="n">rank</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+<div class="highlight-c"><div class="highlight"><pre><span></span><span class="k">if</span> <span class="p">(</span><span class="n">rank</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
     <span class="cm">/* Initialize the matrix and vector */</span>
     <span class="k">for</span><span class="p">(</span><span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">WIDTH</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
         <span class="n">vector</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
@@ -185,7 +186,7 @@ different numbers of processes by changing the 3 above.</p>
 <li><p class="first">Since the vector is not very large and all processes must have this vector to do the multiplication, we will broadcast the entire vector to all processes. We do this by using MPI_Bcast. In addition, we want to distribute the matrix to each process in the MPI_COMM_WORLD. We would do this using MPI_Scatter. You are asked to complete this task.</p>
 </li>
 <li><p class="first">When all processes can see the vector and some rows of matrix, they are now able to do the multiplication. We need to store their result in the result vector.</p>
-<div class="highlight-c"><div class="highlight"><pre><span class="k">for</span><span class="p">(</span><span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">chunk_size</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+<div class="highlight-c"><div class="highlight"><pre><span></span><span class="k">for</span><span class="p">(</span><span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">chunk_size</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
     <span class="n">result</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
     <span class="k">for</span><span class="p">(</span><span class="n">j</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">j</span> <span class="o">&lt;</span> <span class="n">WIDTH</span><span class="p">;</span> <span class="n">j</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
         <span class="n">result</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">+=</span> <span class="n">local_matrix</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span> <span class="o">*</span> <span class="n">vector</span><span class="p">[</span><span class="n">j</span><span class="p">];</span>
@@ -202,7 +203,7 @@ different numbers of processes by changing the 3 above.</p>
 </tbody>
 </table>
 <p>If you get stuck and wanto move on, download the entire source code (originally from www.public.asu.edu/~dstanzoi [3]):
-<a class="reference download internal" href="../_downloads/vector_matrix_buggy_done.c"><tt class="xref download docutils literal"><span class="pre">download</span> <span class="pre">vector_matrix_done.c</span></tt></a></p>
+<a class="reference download internal" href="../_downloads/vector_matrix_buggy_done.c" download=""><code class="xref download docutils literal"><span class="pre">download</span> <span class="pre">vector_matrix_done.c</span></code></a></p>
 <p class="rubric">References</p>
 <table class="docutils footnote" frame="void" id="id1" rules="none">
 <colgroup><col class="label" /><col /></colgroup>
@@ -229,7 +230,7 @@ different numbers of processes by changing the 3 above.</p>
           </div>
         </div>
       </div>
-      <div class="sphinxsidebar">
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
             <p class="logo"><a href="../index.html">
               <img class="logo" src="../_static/CSInParallel200wide.png" alt="Logo"/>
@@ -239,7 +240,7 @@ different numbers of processes by changing the 3 above.</p>
 <li><a class="reference internal" href="#">Compiling and First Two Activites</a><ul>
 <li><a class="reference internal" href="#compiling-an-mpi-program">Compiling an MPI program</a></li>
 <li><a class="reference internal" href="#try-the-simple-examples">Try the simple examples</a></li>
-<li><a class="reference internal" href="#activity-1-computing">Activity 1: Computing <img class="math" src="../_images/math/186d9d976137aae10566722f246f64338c4bba0f.png" alt="{\pi}"/> ?</a></li>
+<li><a class="reference internal" href="#activity-1-computing">Activity 1: Computing <img class="math" src="../_images/math/da689decc8cdc781c5175e2efefa73c1226bc56b.png" alt="{\pi}"/> ?</a></li>
 <li><a class="reference internal" href="#activity-2-vector-matrix-multiplication">Activity 2: Vector Matrix Multiplication</a></li>
 </ul>
 </li>
@@ -255,7 +256,7 @@ different numbers of processes by changing the 3 above.</p>
       </div>
       <div class="clearer"></div>
     </div>
-    <div class="related">
+    <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
@@ -264,12 +265,12 @@ different numbers of processes by changing the 3 above.</p>
         <li class="right" >
           <a href="../MPICommunication/MPICommunication.html" title="MPI Communications"
              >previous</a> |</li>
-        <li><a href="../index.html">Distributed Computing Fundamentals</a> &raquo;</li> 
+        <li class="nav-item nav-item-0"><a href="../index.html">Distributed Computing Fundamentals</a> &#187;</li> 
       </ul>
     </div>
-    <div class="footer">
-        &copy; Copyright This work is licensed under a Creative Commons Attribution-ShareAlike 3.0 Unported License.
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    <div class="footer" role="contentinfo">
+        &#169; Copyright This work is licensed under a Creative Commons Attribution-ShareAlike 3.0 Unported License.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.2.
     </div>
   </body>
 </html>

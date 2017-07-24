@@ -18,6 +18,9 @@ import sys, os, platform
 # documentation root, use os.path.abspath to make it absolute, like shown here.
 #sys.path.insert(0, os.path.abspath('.'))
 
+# to be able to include files from the ../../common directory
+sys.path.insert(0, os.path.abspath('../common/IntroCluster'))
+
 # -- General configuration -----------------------------------------------------
 
 # If your documentation needs a minimal Sphinx version, state it here.
@@ -25,7 +28,7 @@ import sys, os, platform
 
 # Add any Sphinx extension module names here, as strings. They can be extensions
 # coming with Sphinx (named 'sphinx.ext.*') or your custom ones.
-extensions = ['sphinx.ext.pngmath']
+extensions = ['sphinx.ext.imgmath']
 
 if 'Darwin' in platform.uname()[0]:
 	pngmath_latex = '/usr/local/texlive/2011/bin/x86_64-darwin/latex'
@@ -36,6 +39,8 @@ elif 'Linux' in platform.uname()[0]:
 elif 'Windows' in platform.uname()[0]:
 	pngmath_latex = ''
 	pngmath_dvipng = ''
+
+
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']
@@ -131,6 +136,7 @@ html_favicon = '../../../images/favicon.ico'
 # relative to this directory. They are copied after the builtin static files,
 # so a file named "default.css" will overwrite the builtin "default.css".
 html_static_path = ['_static']
+html_style = 'csip.css'
 
 # If not '', a 'Last updated on:' timestamp is inserted at every page bottom,
 # using the given strftime format.

@@ -1,16 +1,14 @@
 
-
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-
 
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Instructor/Student Notes &mdash; Distributed Computing Fundamentals</title>
+    <title>Instructor/Student Notes &#8212; Distributed Computing Fundamentals</title>
     
-    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/csip.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     
     <script type="text/javascript">
@@ -19,40 +17,41 @@
         VERSION:     '',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
-        HAS_SOURCE:  true
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
       };
     </script>
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
     <link rel="shortcut icon" href="../_static/favicon.ico"/>
-    <link rel="top" title="Distributed Computing Fundamentals" href="../index.html" />
-    <link rel="next" title="Introduction to Cluster Computing" href="../IntroCluster/IntroCluster.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="title" href="../IntroCluster/IntroCluster.html" />
     <link rel="prev" title="Distributed Computing Fundamentals" href="../index.html" /> 
   </head>
   <body>
-    <div class="related">
+    <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
-          <a href="../IntroCluster/IntroCluster.html" title="Introduction to Cluster Computing"
+          <a href="../IntroCluster/IntroCluster.html" title="title"
              accesskey="N">next</a></li>
         <li class="right" >
           <a href="../index.html" title="Distributed Computing Fundamentals"
              accesskey="P">previous</a> |</li>
-        <li><a href="../index.html">Distributed Computing Fundamentals</a> &raquo;</li> 
+        <li class="nav-item nav-item-0"><a href="../index.html">Distributed Computing Fundamentals</a> &#187;</li> 
       </ul>
     </div>  
 
     <div class="document">
       <div class="documentwrapper">
         <div class="bodywrapper">
-          <div class="body">
+          <div class="body" role="main">
             
   <div class="section" id="instructor-student-notes">
 <h1>Instructor/Student Notes<a class="headerlink" href="#instructor-student-notes" title="Permalink to this headline">¶</a></h1>
 <p>Before getting started with this module, please keep in mind that we assume you have <strong>some grasp of C programming</strong>.</p>
-<p>In the section called &#8216;Local Cluster Configuration&#8217; we provide some information about two types of clusters that are available at Macalester College.  If you are using this course module at your own institution, you will need to change this information to refer to your own cluster.</p>
+<p>In the section called ‘Local Cluster Configuration’ we provide some information about two types of clusters that are available at Macalester College.  If you are using this course module at your own institution, you will need to change this information to refer to your own cluster.</p>
 <p>This module contains both background information and several activities for students to try using Message Passing Interface (MPI) programs on a cluster
 of machines.  The examples and activities follow from simple introductory examples to activities, each of which increases in difficulty as you proceed.</p>
 <p><strong>For the four activities, we recommend having the example code open in one window while you go through the explanation of the code.</strong>  You can download them all here first, or there will be ways to dowload or look at each one in your browser as you go along.</p>
@@ -61,23 +60,23 @@ of machines.  The examples and activities follow from simple introductory exampl
 <p>The following examples are used in the next few pages of this module.  You can download each one (right-click and save) and eventually use a client such as scp to copy them up to a cluster machine.  <em>However, they may already be available on your cluster. Check with your instructor.</em></p>
 <p>The first one is a complete tar and gzipped archive file of all of them. The rest are each individual files.</p>
 <p>Zip File:
-<a class="reference download internal" href="../_downloads/dist_example_code.tgz"><tt class="xref download docutils literal"><span class="pre">download</span> <span class="pre">dist_example_code.tgz</span></tt></a></p>
+<a class="reference download internal" href="../_downloads/dist_example_code.tgz" download=""><code class="xref download docutils literal"><span class="pre">download</span> <span class="pre">dist_example_code.tgz</span></code></a></p>
 <p>Simplest Hello World Example:
-<a class="reference download internal" href="../_downloads/hellompi1.c"><tt class="xref download docutils literal"><span class="pre">download</span> <span class="pre">hellompi.c</span></tt></a></p>
+<a class="reference download internal" href="../_downloads/hellompi1.c" download=""><code class="xref download docutils literal"><span class="pre">download</span> <span class="pre">hellompi.c</span></code></a></p>
 <p>Hello World by Sending messages:
-<a class="reference download internal" href="../_downloads/example21.c"><tt class="xref download docutils literal"><span class="pre">download</span> <span class="pre">example2.c</span></tt></a></p>
+<a class="reference download internal" href="../_downloads/example21.c" download=""><code class="xref download docutils literal"><span class="pre">download</span> <span class="pre">example2.c</span></code></a></p>
 <p><strong>Activity 1, Computing pi as area under the curve:</strong></p>
-<p><a class="reference download internal" href="../_downloads/mpi_pi_todo1.c"><tt class="xref download docutils literal"><span class="pre">download</span> <span class="pre">mpi_pi_todo.c</span></tt></a></p>
-<p><a class="reference download internal" href="../_downloads/mpi_pi_done1.c"><tt class="xref download docutils literal"><span class="pre">download</span> <span class="pre">mpi_pi_done.c</span></tt></a></p>
+<p><a class="reference download internal" href="../_downloads/mpi_pi_todo1.c" download=""><code class="xref download docutils literal"><span class="pre">download</span> <span class="pre">mpi_pi_todo.c</span></code></a></p>
+<p><a class="reference download internal" href="../_downloads/mpi_pi_done1.c" download=""><code class="xref download docutils literal"><span class="pre">download</span> <span class="pre">mpi_pi_done.c</span></code></a></p>
 <p><strong>Activity 2, Vector-Matrix Multiplication:</strong></p>
-<p><a class="reference download internal" href="../_downloads/vector_matrix_buggy_todo1.c"><tt class="xref download docutils literal"><span class="pre">download</span> <span class="pre">vector_matrix_buggy_todo.c</span></tt></a></p>
-<p><a class="reference download internal" href="../_downloads/vector_matrix_buggy_done1.c"><tt class="xref download docutils literal"><span class="pre">download</span> <span class="pre">vector_matrix_buggy_done.c</span></tt></a></p>
+<p><a class="reference download internal" href="../_downloads/vector_matrix_buggy_todo1.c" download=""><code class="xref download docutils literal"><span class="pre">download</span> <span class="pre">vector_matrix_buggy_todo.c</span></code></a></p>
+<p><a class="reference download internal" href="../_downloads/vector_matrix_buggy_done1.c" download=""><code class="xref download docutils literal"><span class="pre">download</span> <span class="pre">vector_matrix_buggy_done.c</span></code></a></p>
 <p><strong>Activity 3, Improved Vector-Matrix Multiplication</strong></p>
-<p><a class="reference download internal" href="../_downloads/vector_matrix_mpi_todo.c"><tt class="xref download docutils literal"><span class="pre">download</span> <span class="pre">vector_matrix_mpi_todo.c</span></tt></a></p>
-<p><a class="reference download internal" href="../_downloads/vector_matrix_mpi.c"><tt class="xref download docutils literal"><span class="pre">download</span> <span class="pre">vector_matrix_mpi.c</span></tt></a></p>
+<p><a class="reference download internal" href="../_downloads/vector_matrix_mpi_todo1.c" download=""><code class="xref download docutils literal"><span class="pre">download</span> <span class="pre">vector_matrix_mpi_todo.c</span></code></a></p>
+<p><a class="reference download internal" href="../_downloads/vector_matrix_mpi1.c" download=""><code class="xref download docutils literal"><span class="pre">download</span> <span class="pre">vector_matrix_mpi.c</span></code></a></p>
 <p><strong>Activity 4, Matrix-Matrix Multiplication</strong></p>
-<p><a class="reference download internal" href="../_downloads/matrix_multiplication_todo1.c"><tt class="xref download docutils literal"><span class="pre">download</span> <span class="pre">matrix_multiplication_todo.c</span></tt></a></p>
-<p><a class="reference download internal" href="../_downloads/matrix_multiplication1.c"><tt class="xref download docutils literal"><span class="pre">download</span> <span class="pre">matrix_multiplication.c</span></tt></a></p>
+<p><a class="reference download internal" href="../_downloads/matrix_multiplication_todo1.c" download=""><code class="xref download docutils literal"><span class="pre">download</span> <span class="pre">matrix_multiplication_todo.c</span></code></a></p>
+<p><a class="reference download internal" href="../_downloads/matrix_multiplication1.c" download=""><code class="xref download docutils literal"><span class="pre">download</span> <span class="pre">matrix_multiplication.c</span></code></a></p>
 </div>
 </div>
 
@@ -85,7 +84,7 @@ of machines.  The examples and activities follow from simple introductory exampl
           </div>
         </div>
       </div>
-      <div class="sphinxsidebar">
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
             <p class="logo"><a href="../index.html">
               <img class="logo" src="../_static/CSInParallel200wide.png" alt="Logo"/>
@@ -103,26 +102,26 @@ of machines.  The examples and activities follow from simple introductory exampl
                         title="previous chapter">Distributed Computing Fundamentals</a></p>
   <h4>Next topic</h4>
   <p class="topless"><a href="../IntroCluster/IntroCluster.html"
-                        title="next chapter">Introduction to Cluster Computing</a></p>
+                        title="next chapter">title</a></p>
         </div>
       </div>
       <div class="clearer"></div>
     </div>
-    <div class="related">
+    <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
-          <a href="../IntroCluster/IntroCluster.html" title="Introduction to Cluster Computing"
+          <a href="../IntroCluster/IntroCluster.html" title="title"
              >next</a></li>
         <li class="right" >
           <a href="../index.html" title="Distributed Computing Fundamentals"
              >previous</a> |</li>
-        <li><a href="../index.html">Distributed Computing Fundamentals</a> &raquo;</li> 
+        <li class="nav-item nav-item-0"><a href="../index.html">Distributed Computing Fundamentals</a> &#187;</li> 
       </ul>
     </div>
-    <div class="footer">
-        &copy; Copyright This work is licensed under a Creative Commons Attribution-ShareAlike 3.0 Unported License.
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    <div class="footer" role="contentinfo">
+        &#169; Copyright This work is licensed under a Creative Commons Attribution-ShareAlike 3.0 Unported License.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.2.
     </div>
   </body>
 </html>
