@@ -25,7 +25,7 @@ import sys, os, platform
 
 # Add any Sphinx extension module names here, as strings. They can be extensions
 # coming with Sphinx (named 'sphinx.ext.*') or your custom ones.
-extensions = ['sphinx.ext.pngmath']
+extensions = ['sphinx.ext.imgmath']
 
 if 'Darwin' in platform.uname()[0]:
         pngmath_latex = '/usr/local/texlive/2011/bin/x86_64-darwin/latex'

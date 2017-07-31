@@ -1,18 +1,24 @@
 *********************************************************
-Reduction, Data Decomposition, Scatter and Gather
+Collective Communication
 *********************************************************
 
-09. Collective Communication: Reduction
+With independent, often distributed processes, there is a need in many
+program situations to have all the processes communicating with each other,
+usually by sharing data, either before or after independent simultaneous
+computations that each process performs. Here we see simple examples of these
+collective communication patterns.
+
+12. Collective Communication: Reduction
 ***************************************
 
-*file: patternlets/MPI/10.reduction/reduction.c*
+*file: patternlets/MPI/12.reduction/reduction.c*
 
-*Build inside 10.reduction directory:*
+*Build inside 12.reduction directory:*
 ::
 
   make reduction
 
-*Execute on the command line inside 10.reduction directory:*
+*Execute on the command line inside 12.reduction directory:*
 ::
 
   mpirun -np <number of processes> ./reduction
@@ -28,21 +34,21 @@ like this:
 .. image:: MPIImages/Reduction.png
 	:width: 800
 
-.. literalinclude:: ../patternlets/MPI/10.reduction/reduction.c
+.. literalinclude:: ../patternlets/MPI/12.reduction/reduction.c
     :language: c
     :linenos:
 
-11. Collective Communication: Reduction
+13. Collective Communication: Reduction
 ****************************************
 
-*file: patternlets/MPI/11.reduction2/reduction2.c*
+*file: patternlets/MPI/13.reduction2/reduction2.c*
 
-*Build inside 11.reduction2 directory:*
+*Build inside 13.reduction2 directory:*
 ::
 
   make reduction2
 
-*Execute on the command line inside 11.reduction2 directory:*
+*Execute on the command line inside 13.reduction2 directory:*
 ::
 
   mpirun -np <number of processes> ./reduction2
@@ -51,72 +57,18 @@ Here is a second reduction example using arrays of data.
 
 .. topic:: To do:
 
-  Can you explain the behavior of the reduction, MPI_reduce(), in terms of
-  srcArr and destArr?
+  Can you explain the reduction, `MPI_reduce`, in terms of srcArr and destArr?
 
-.. literalinclude:: ../patternlets/MPI/11.reduction2/reduction2.c
+.. literalinclude:: ../patternlets/MPI/13.reduction2/reduction2.c
     :language: c
     :linenos:
 
-12. Data Decomposition: on *equal-sized chunks* using parallel-for
-************************************************************************
+.. topic:: Further Exploration:
 
-*file: patternlets/MPI/12.parallelLoop-equalChunks/parallelLoopEqualChunks.c*
-
-*Build inside 12.parallelLoop-equalChunks directory:*
-::
-
-  make parallelLoopEqualChunks
-
-*Execute on the command line inside 12.parallelLoop-equalChunks directory:*
-::
-
-  mpirun -np <number of processes> ./parallelLoopEqualChunks
-
-In this example, the data being decomposed is simply the set of integers
-from zero to REPS * numProcesses, which are used in the for loop. Thus,
-each process receives REPS / numProcesses iterations to perform, thereby
-enforcing the *equal-sized chunks* pattern. This type of decomposition is
-commonly used when accessing data that is stored in consecutive memory locations
-(such as an array). Verify that the program behavior is:
-
-.. image:: MPIImages/EqualChunks.png
-  :width: 800
-
-.. literalinclude:: ../patternlets/MPI/12.parallelLoop-equalChunks/parallelLoopEqualChunks.c
-    :language: c
-    :linenos:
-
-13. Data Decomposition: on *chunks of size 1* using parallel-for
-**************************************************************************
-
-*file: patternlets/MPI/13.parallelLoop-chunksOf1/parallelLoopChunksOf1.c*
-
-*Build inside 13.parallelLoop-chunksOf1 directory:*
-::
-
-  make parallelLoopChunksOf1
-
-*Execute on the command line inside 13.parallelLoop-chunksOf1 directory:*
-::
-
-  mpirun -np <number of processes> ./parallelLoopChunksOf1
-
-A simple decomposition sometimes used when your loop is not accessing consecutive
-memory locations would be to let each process do one iteration, up to N processes,
-then start again with process 0 taking the next iteration. A for loop on line 29
-is used to implement this type of data decomposition.
-
-.. image:: MPIImages/ChunksOf1.png
-  :width: 800
-
-This is a basic example that does not yet include a data array, though
-it would typically be used when each process would be working on a portion
-of an array that could have been looped over in a sequential solution.
-
-.. literalinclude:: ../patternlets/MPI/13.parallelLoop-chunksOf1/parallelLoopChunksOf1.c
-    :language: c
-    :linenos:
+  This useful `MPI tutorial
+  <http://mpitutorial.com/tutorials/mpi-reduce-and-allreduce/>`_ explains other
+  reduction operations that can be performed. You could use the above code or
+  the previous examples to experiment with some of these.
 
 
 14. Collective communication: Scatter for message-passing data decomposition

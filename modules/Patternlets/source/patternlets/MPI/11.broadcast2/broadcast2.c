@@ -2,7 +2,7 @@
  * ... illustrates the use of MPI_Bcast() for arrays...
  * Joel Adams, Calvin College, November 2009.
  *
- * Usage: mpirun -np N ./broadcast
+ * Usage: mpirun -np N ./broadcast2
  *
  * Exercise:
  * - Compile and run, using 2, 4, and 8 processes
@@ -14,12 +14,12 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-/* fill an array with some arbitrary values 
+/* fill an array with some arbitrary values
  * @param: a, an int*.
  * @param: size, an int.
  * Precondition: a is the address of an array of ints.
  *              && size is the number of ints a can hold.
- * Postcondition: a has been filled with arbitrary values 
+ * Postcondition: a has been filled with arbitrary values
  *                { 11, 12, 13, ... }.
  */
 void fill(int* a, int size) {
@@ -29,7 +29,7 @@ void fill(int* a, int size) {
 	}
 }
 
-/* display a string, a process id, and its array values 
+/* display a string, a process id, and its array values
  * @param: str, a char*
  * @param: id, an int
  * @param: a, an int*.
@@ -47,22 +47,21 @@ void print(char* str, int id, int* a) {
 
 int main(int argc, char** argv) {
 	int array[MAX] = {0};
-        int numProcs, myRank;
+	int numProcs, myRank;
 
 	MPI_Init(&argc, &argv);
-        MPI_Comm_size(MPI_COMM_WORLD, &numProcs);
-        MPI_Comm_rank(MPI_COMM_WORLD, &myRank);
+	MPI_Comm_size(MPI_COMM_WORLD, &numProcs);
+	MPI_Comm_rank(MPI_COMM_WORLD, &myRank);
 
 	if (myRank == 0) fill(array, MAX);
-     
+
 	print("BEFORE", myRank, array);
 
-        MPI_Bcast(array, MAX, MPI_INT, 0, MPI_COMM_WORLD);
+	MPI_Bcast(array, MAX, MPI_INT, 0, MPI_COMM_WORLD);
 
 	print("AFTER", myRank, array);
 
- 	MPI_Finalize();
+	MPI_Finalize();
 
 	return 0;
 }
-

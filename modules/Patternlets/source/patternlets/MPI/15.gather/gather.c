@@ -21,7 +21,7 @@ void print(int id, char* arrName, int* arr, int arrSize);
 int main(int argc, char** argv) {
    int  computeArray[SIZE];                          // array1
    int* gatherArray = NULL;                          // array2
-   int  numProcs = -1, myRank = -1, 
+   int  numProcs = -1, myRank = -1,
         totalGatheredVals = -1;
 
    MPI_Init(&argc, &argv);                           // initialize
@@ -42,14 +42,15 @@ int main(int argc, char** argv) {
 
    MPI_Gather(computeArray, SIZE, MPI_INT,           //  gather array1 vals
                gatherArray, SIZE, MPI_INT,           //   into array2
-               0, MPI_COMM_WORLD);                   //   at master process               
+               0, MPI_COMM_WORLD);                   //   at master process
 
    if (myRank == 0) {                                // master process:
       print(myRank, "gatherArray",                   //  show array2
-             gatherArray, totalGatheredVals); 
+             gatherArray, totalGatheredVals);
+      free(gatherArray);                             // clean up
    }
 
-   free(gatherArray);                                // clean up
+
    MPI_Finalize();
    return 0;
 }
@@ -61,5 +62,3 @@ void print(int id, char* arrName, int* arr, int arrSize) {
     }
     printf("\n");
 }
-
-

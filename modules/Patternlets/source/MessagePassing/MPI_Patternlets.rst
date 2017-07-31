@@ -25,7 +25,11 @@ If you are working on these for the first time, you may want to visit them in
 order. If you are returning to review a particular patternlet or the pattern
 categorization diagram, you can refer to them individually.
 
-:doc:`MasterWorker_MessagePassing`
+:doc:`RunningMPI`
+
+:doc:`ProgramStructure`
+
+:doc:`Communication`
 
 :doc:`Broadcast`
 
@@ -36,7 +40,9 @@ categorization diagram, you can refer to them individually.
 .. toctree::
 	:hidden:
 
-	MasterWorker_MessagePassing
+	RunningMPI
+	ProgramStructure
+	Communication
 	Broadcast
 	Reduction_Scatter_Gather
 	Barrier_Tags

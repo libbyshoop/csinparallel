@@ -20,29 +20,28 @@
 
 int main(int argc, char** argv) {
 	int answer = 0;
-        int numProcs = 0, myRank = 0;
+	int numProcs = 0, myRank = 0;
 
 	MPI_Init(&argc, &argv);
-        MPI_Comm_size(MPI_COMM_WORLD, &numProcs);
-        MPI_Comm_rank(MPI_COMM_WORLD, &myRank);
+	MPI_Comm_size(MPI_COMM_WORLD, &numProcs);
+	MPI_Comm_rank(MPI_COMM_WORLD, &myRank);
 
 	if (myRank == 0) {
-               FILE *filePtr = fopen("data.txt", "r"); 
-               assert( filePtr != NULL );
-               fscanf(filePtr, " %d", &answer);
-               fclose(filePtr);
-        }
+		FILE *filePtr = fopen("data.txt", "r");
+		assert( filePtr != NULL );
+		fscanf(filePtr, " %d", &answer);
+		fclose(filePtr);
+	}
 
 	printf("BEFORE the broadcast, process %d's answer = %d\n",
-                 myRank, answer);
+	myRank, answer);
 
-        MPI_Bcast(&answer, 1, MPI_INT, 0, MPI_COMM_WORLD);
+	MPI_Bcast(&answer, 1, MPI_INT, 0, MPI_COMM_WORLD);
 
 	printf("AFTER the broadcast, process %d's answer = %d\n",
-                 myRank, answer);
+	myRank, answer);
 
- 	MPI_Finalize();
+	MPI_Finalize();
 
 	return 0;
 }
-

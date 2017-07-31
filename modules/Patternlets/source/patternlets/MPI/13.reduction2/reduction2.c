@@ -8,7 +8,7 @@
  * - Compile and run, comparing output to source code.
  * - Uncomment the 'commented out' call to printArray.
  * - Save, recompile, rerun, comparing output to source code.
- * - Explain behavior of MPI_Reduce() in terms of 
+ * - Explain behavior of MPI_Reduce() in terms of
  *     srcArr and destArr.
  */
 
@@ -30,13 +30,13 @@ int main(int argc, char** argv) {
     if (myRank == 0) {
         printf("\nBefore reduction: ");
         printArray(myRank, "destArr", destArr, ARRAY_SIZE);
-    } 
+    }
 
     for (unsigned i = 0; i < ARRAY_SIZE; i++) {
         srcArr[i] = myRank * i;
     }
 
-//    printArray(myRank, "srcArr", srcArr, ARRAY_SIZE);
+   printArray(myRank, "srcArr", srcArr, ARRAY_SIZE);
 
     MPI_Reduce(srcArr, destArr, ARRAY_SIZE, MPI_INT, MPI_SUM, 0, MPI_COMM_WORLD);
 
@@ -44,7 +44,7 @@ int main(int argc, char** argv) {
         printf("\nAfter reduction:  ");
         printArray(myRank, "destArr", destArr, ARRAY_SIZE);
         printf("\n");
-    } 
+    }
 
     MPI_Finalize();
 
@@ -67,4 +67,3 @@ void printArray(int id, char* arrayName, int * array, int SIZE) {
     }
     printf("]\n");
 }
-

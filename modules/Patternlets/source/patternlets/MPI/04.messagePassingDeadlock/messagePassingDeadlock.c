@@ -3,7 +3,7 @@
  *
  * Joel Adams, Calvin College, November 2009.
  * Modified by Hannah Sonsalla, Macalester College 2017.
- * 
+ *
  * Usage: mpirun -np N ./messagePassing
  *
  * Exercise:
@@ -28,12 +28,12 @@ int main(int argc, char** argv) {
 
     if (numProcesses > 1) {
         sendValue = id;
-        if ( odd(id) ) {  // odd processors send, then receive
+        if ( odd(id) ) {  // odd processors receive from their 'left neighbor', then send
             MPI_Recv(&receivedValue, 1, MPI_INT, id-1, 2,
                        MPI_COMM_WORLD, &status);
             MPI_Send(&sendValue, 1, MPI_INT, id-1, 1, MPI_COMM_WORLD);
-            
-        } else {          // even processors receive, then send
+
+        } else {          // even processors receive from their 'right neighbor', then send
             MPI_Recv(&receivedValue, 1, MPI_INT, id+1, 1,
                        MPI_COMM_WORLD, &status);
             MPI_Send(&sendValue, 1, MPI_INT, id+1, 2, MPI_COMM_WORLD);

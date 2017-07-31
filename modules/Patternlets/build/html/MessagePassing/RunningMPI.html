@@ -1,0 +1,170 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Running the examples on your cluster &#8212; Parallel Patternlets</title>
+    <link rel="stylesheet" href="../_static/csip.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Program Structure: SPMD, Master Worker, and Parallel Loops" href="ProgramStructure.html" />
+    <link rel="prev" title="Message Passing Parallel Patternlets" href="MPI_Patternlets.html" /> 
+  </head>
+  <body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="ProgramStructure.html" title="Program Structure: SPMD, Master Worker, and Parallel Loops"
+             accesskey="N">next</a></li>
+        <li class="right" >
+          <a href="MPI_Patternlets.html" title="Message Passing Parallel Patternlets"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Parallel Patternlets</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="MPI_Patternlets.html" accesskey="U">Message Passing Parallel Patternlets</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="running-the-examples-on-your-cluster">
+<h1>Running the examples on your cluster<a class="headerlink" href="#running-the-examples-on-your-cluster" title="Permalink to this headline">¶</a></h1>
+<p>The MPI examples given in the next few chapters show how to compile and run the
+code examples. Running an MPI job on a cluster can vary depending on the system
+(multicore or cluster) and particular MPI package that is installed on the system.
+Here are a few pointers about running them for your particular system.
+You will have to know what type of system and which MPI package is installed
+to know what will work for you for these examples.</p>
+<div class="section" id="typical-ways-to-run-your-mpi-jobs-on-a-cluster">
+<h2>Typical ways to run your MPI jobs on a cluster<a class="headerlink" href="#typical-ways-to-run-your-mpi-jobs-on-a-cluster" title="Permalink to this headline">¶</a></h2>
+<p>There are two variations of the MPI (Message Passing Interface) standard that
+are typically installed on most clusters:</p>
+<ul class="simple">
+<li>MPICH</li>
+<li>OpenMPI</li>
+</ul>
+<p>Though developed to match the same standard, they are slightly different.
+This means that there will be some variation in just exactly how to run
+your code on your cluster (or your multicore machine).
+This document provides some basic instructions for unix machines.</p>
+<p>You should note that you will need information specific to your cluster-
+a file that lists the names of the nodes in your particular cluster, and that its format
+will be different depending on whether you have MPICH or OpenMPI installed.
+You can also run MPI on a multicore machine; in this case you will not need
+the aforementioned file of nodes, since you are not running on a cluster.</p>
+</div>
+<div class="section" id="basic-command-for-running-mpi-programs-multicore-system">
+<h2>Basic command for running MPI programs : multicore system<a class="headerlink" href="#basic-command-for-running-mpi-programs-multicore-system" title="Permalink to this headline">¶</a></h2>
+<p>The program to run MPI programs is called either <cite>mpirun</cite> or <cite>mpiexec</cite>.
+On most installations, these two programs are the same- one is an alias to the other.
+We will use <cite>mpirun</cite> in our examples below.</p>
+<p>On a <em>multicore machine</em>, you can run <cite>your_program</cite>, an executable file created from
+the mpicc compiler, as follows:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">mpirun</span> <span class="o">-</span><span class="n">np</span> <span class="o">&lt;</span><span class="n">number</span> <span class="n">of</span> <span class="n">processes</span><span class="o">&gt;</span> <span class="o">./</span><span class="n">your_program</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="running-mpi-on-a-cluster-of-computers">
+<h2>Running MPI on a cluster of computers<a class="headerlink" href="#running-mpi-on-a-cluster-of-computers" title="Permalink to this headline">¶</a></h2>
+<p>Running MPI jobs on a cluster of computers requires an additional command-line flag
+so that you can specify the names of the nodes to run the processes on. The format
+for running your MPI executable called <cite>your_program</cite> becomes:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">mpirun</span> <span class="o">-</span><span class="n">np</span> <span class="o">&lt;</span><span class="n">number</span> <span class="n">of</span> <span class="n">processes</span><span class="o">&gt;</span> <span class="o">-</span><span class="n">hostfile</span> <span class="o">&lt;</span><span class="n">path</span> <span class="n">to</span> <span class="n">file</span> <span class="n">of</span> <span class="n">hosts</span><span class="o">&gt;</span> <span class="o">./</span><span class="n">your_program</span>
+</pre></div>
+</div>
+<div class="section" id="the-hostfile-mpich">
+<h3>The hostfile: MPICH<a class="headerlink" href="#the-hostfile-mpich" title="Permalink to this headline">¶</a></h3>
+<p>If you have MPICH installed, the format of the hostfile listing your nodes
+most commonly will look like this, with simply the names of the machines
+in your cluster that you want to use:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">head</span>
+<span class="n">node1</span>
+<span class="n">node2</span>
+<span class="n">node3</span>
+</pre></div>
+</div>
+<p>Where each line contains the name of a machine in your cluster.
+In this example were are assuming we have a cluster with a machine called head, and three more
+called node1, node2, and node3.</p>
+<p>Using a file like this with the -hostfile option, mpirun will start processes
+in a round-robin fashion, one
+process per node, using each node once, then starting again, until a total of the
+number of processes given with the -np flag have been started.</p>
+</div>
+<div class="section" id="the-hostfile-openmpi">
+<h3>The hostfile: OpenMPI<a class="headerlink" href="#the-hostfile-openmpi" title="Permalink to this headline">¶</a></h3>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../index.html">
+              <img class="logo" src="../_static/CSInParallel200wide.png" alt="Logo"/>
+            </a></p>
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Running the examples on your cluster</a><ul>
+<li><a class="reference internal" href="#typical-ways-to-run-your-mpi-jobs-on-a-cluster">Typical ways to run your MPI jobs on a cluster</a></li>
+<li><a class="reference internal" href="#basic-command-for-running-mpi-programs-multicore-system">Basic command for running MPI programs : multicore system</a></li>
+<li><a class="reference internal" href="#running-mpi-on-a-cluster-of-computers">Running MPI on a cluster of computers</a><ul>
+<li><a class="reference internal" href="#the-hostfile-mpich">The hostfile: MPICH</a></li>
+<li><a class="reference internal" href="#the-hostfile-openmpi">The hostfile: OpenMPI</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="MPI_Patternlets.html"
+                        title="previous chapter">Message Passing Parallel Patternlets</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="ProgramStructure.html"
+                        title="next chapter">Program Structure: SPMD, Master Worker, and Parallel Loops</a></p>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="ProgramStructure.html" title="Program Structure: SPMD, Master Worker, and Parallel Loops"
+             >next</a></li>
+        <li class="right" >
+          <a href="MPI_Patternlets.html" title="Message Passing Parallel Patternlets"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Parallel Patternlets</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="MPI_Patternlets.html" >Message Passing Parallel Patternlets</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright This work is licensed under a Creative Commons Attribution-ShareAlike 3.0 Unported License.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.3.
+    </div>
+  </body>
+</html>
