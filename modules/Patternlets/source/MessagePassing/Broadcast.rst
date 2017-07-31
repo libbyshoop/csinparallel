@@ -59,7 +59,7 @@ the broadcast is sent from process 0 and looks like this:
 
 .. topic:: To do:
 
-  Run this code with several processes (8 -12). What do you observe about the
+  Run this code with several processes (8 - 12). What do you observe about the
   order in which the printing occurs among the processes? Is it repeatable or
   does it change each time you run it?
 

@@ -1,0 +1,580 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Advanced Topics &#8212; Parallel Patternlets</title>
+    
+    <link rel="stylesheet" href="../_static/csip.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Shared Memory Parallel Patternlets in OpenMP" href="../SharedMemory/OpenMP_Patternlets.html" />
+    <link rel="prev" title="Barrier Synchronization, Timing and Tags" href="Barrier_Tags.html" /> 
+  </head>
+  <body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../SharedMemory/OpenMP_Patternlets.html" title="Shared Memory Parallel Patternlets in OpenMP"
+             accesskey="N">next</a></li>
+        <li class="right" >
+          <a href="Barrier_Tags.html" title="Barrier Synchronization, Timing and Tags"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Parallel Patternlets</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="MPI_Patternlets.html" accesskey="U">Message Passing Parallel Patternlets</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="advanced-topics">
+<h1>Advanced Topics<a class="headerlink" href="#advanced-topics" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="advanced-data-decomposition-on-equal-sized-chunks-using-parallel-for">
+<h2>20. Advanced Data Decomposition: on <em>equal-sized chunks</em> using parallel-for<a class="headerlink" href="#advanced-data-decomposition-on-equal-sized-chunks-using-parallel-for" title="Permalink to this headline">¶</a></h2>
+<p><em>file: patternlets/MPI/20.parallelLoopAdvanced/parallelLoopChunks.c</em></p>
+<p><em>Build inside 20.parallelLoopAdvanced directory:</em></p>
+<div class="highlight-default"><div class="highlight"><pre><span class="n">make</span> <span class="n">parallelLoopChunks</span>
+</pre></div>
+</div>
+<p><em>Execute on the command line inside 20.parallelLoopAdvanced directory:</em></p>
+<div class="highlight-default"><div class="highlight"><pre><span class="n">mpirun</span> <span class="o">-</span><span class="n">np</span> <span class="o">&lt;</span><span class="n">number</span> <span class="n">of</span> <span class="n">processes</span><span class="o">&gt;</span> <span class="o">./</span><span class="n">parallelLoopChunks</span>
+</pre></div>
+</div>
+<p>This example is a continuation of example 2 which showed data decomposition on
+<em>equal-sized chunks</em> using parallel-for. Recall that the program only ran
+correctly when the work was equally divisible among the processes.
+We will delve into how to approach situations in which the chunks of work are not
+always the same size. We are able to do this by equally distributing chunks of work
+that differ by no more than one in size among the processes. The diagram below
+illustrates this concept with 8 iterations assigned to 3 processes.</p>
+<a class="reference internal image-reference" href="../_images/AdvancedParallelLoop.png"><img alt="../_images/AdvancedParallelLoop.png" src="../_images/AdvancedParallelLoop.png" style="width: 600px;" /></a>
+<div class="topic">
+<p class="topic-title first">To do:</p>
+<p>Compile and run the code varying the number of processes from 1 through 8.
+What do you notice about the how the iterations of the loop are divided among
+the processes? Can you explain this in terms of chunkSize1 and chunkSize2?</p>
+</div>
+<div class="highlight-c"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64</pre></div></td><td class="code"><div class="highlight"><pre><span class="cm">/* parallelLoopChunks.c</span>
+<span class="cm"> *</span>
+<span class="cm"> *  illustrates the parallel for loop pattern in MPI</span>
+<span class="cm"> *	in which processes perform the loop&#39;s iterations in &#39;chunks&#39;</span>
+<span class="cm"> *  whose size differs by at most 1 (useful when iterations is not divisible</span>
+<span class="cm"> *  by the number of processes)</span>
+<span class="cm"> *</span>
+<span class="cm"> *   by Libby Shoop, Macalester College, July 2017</span>
+<span class="cm"> *</span>
+<span class="cm"> * Usage: mpirun -np N ./parallelForChunks</span>
+<span class="cm"> *</span>
+<span class="cm"> * Exercise:</span>
+<span class="cm"> * - Compile and run, varying N: 1, 2, 3, 4, 5, 6, 7, 8</span>
+<span class="cm"> * - Change REPS to 16, save, recompile, rerun, varying N again.</span>
+<span class="cm"> * - Explain how this pattern divides the iterations of the loop</span>
+<span class="cm"> *    among the processes.</span>
+<span class="cm"> */</span>
+
+<span class="cp">#include</span> <span class="cpf">&lt;stdio.h&gt; // printf()</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;mpi.h&gt;   // MPI</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;math.h&gt;  // ceil()</span><span class="cp"></span>
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span><span class="o">**</span> <span class="n">argv</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">const</span> <span class="kt">int</span> <span class="n">REPS</span> <span class="o">=</span> <span class="mi">8</span><span class="p">;</span>
+    <span class="kt">int</span> <span class="n">id</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">numProcesses</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span>
+        <span class="n">start</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">stop</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span>
+
+    <span class="n">MPI_Init</span><span class="p">(</span><span class="o">&amp;</span><span class="n">argc</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">argv</span><span class="p">);</span>
+    <span class="n">MPI_Comm_rank</span><span class="p">(</span><span class="n">MPI_COMM_WORLD</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">id</span><span class="p">);</span>
+    <span class="n">MPI_Comm_size</span><span class="p">(</span><span class="n">MPI_COMM_WORLD</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">numProcesses</span><span class="p">);</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="n">numProcesses</span> <span class="o">&gt;</span> <span class="n">REPS</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">if</span> <span class="p">(</span><span class="n">id</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+          <span class="n">printf</span><span class="p">(</span><span class="s">&quot;Please run with -np less than or equal to %d</span><span class="se">\n</span><span class="s">.&quot;</span><span class="p">,</span> <span class="n">REPS</span><span class="p">);</span>
+      <span class="p">}</span>
+    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+
+      <span class="c1">// find chunk size for part of processes</span>
+      <span class="kt">int</span> <span class="n">chunkSize1</span> <span class="o">=</span> <span class="p">(</span><span class="kt">int</span><span class="p">)</span><span class="n">ceil</span><span class="p">(((</span><span class="kt">double</span><span class="p">)</span><span class="n">REPS</span><span class="p">)</span> <span class="o">/</span> <span class="n">numProcesses</span><span class="p">);</span>
+      <span class="c1">// chunk size to spread among rest of processes</span>
+      <span class="kt">int</span> <span class="n">chunkSize2</span> <span class="o">=</span> <span class="n">chunkSize1</span> <span class="o">-</span> <span class="mi">1</span><span class="p">;</span>
+      <span class="kt">int</span> <span class="n">remainder</span> <span class="o">=</span> <span class="n">REPS</span> <span class="o">%</span> <span class="n">numProcesses</span><span class="p">;</span>
+
+      <span class="c1">// When remainder is 0, we have equal-sized chunks for all processes.</span>
+      <span class="c1">// When remainder is not zero and the process id  is lower than remainder,</span>
+      <span class="c1">// we use the higher chunk size.</span>
+      <span class="k">if</span> <span class="p">(</span><span class="n">remainder</span> <span class="o">==</span> <span class="mi">0</span> <span class="o">||</span> <span class="p">(</span><span class="n">remainder</span> <span class="o">!=</span><span class="mi">0</span> <span class="o">&amp;&amp;</span> <span class="n">id</span> <span class="o">&lt;</span> <span class="n">remainder</span><span class="p">))</span> <span class="p">{</span>
+        <span class="n">start</span> <span class="o">=</span> <span class="n">id</span> <span class="o">*</span> <span class="n">chunkSize1</span><span class="p">;</span>
+        <span class="n">stop</span> <span class="o">=</span> <span class="n">start</span> <span class="o">+</span> <span class="n">chunkSize1</span><span class="p">;</span>
+      <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+        <span class="c1">// decrease chunk size by one to spread out across remaining</span>
+        <span class="c1">// processes whose id is &gt;= remainder</span>
+        <span class="n">start</span> <span class="o">=</span> <span class="p">(</span><span class="n">remainder</span> <span class="o">*</span> <span class="n">chunkSize1</span><span class="p">)</span> <span class="o">+</span> <span class="p">(</span><span class="n">chunkSize2</span> <span class="o">*</span> <span class="p">(</span><span class="n">id</span> <span class="o">-</span> <span class="n">remainder</span><span class="p">));</span>
+        <span class="n">stop</span> <span class="o">=</span> <span class="n">start</span> <span class="o">+</span> <span class="n">chunkSize2</span><span class="p">;</span>
+      <span class="p">}</span>
+
+      <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="n">start</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">stop</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>     <span class="c1">// iterate through our range</span>
+          <span class="n">printf</span><span class="p">(</span><span class="s">&quot;Process %d is performing iteration %d</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">id</span><span class="p">,</span> <span class="n">i</span><span class="p">);</span>
+      <span class="p">}</span>
+      
+    <span class="p">}</span>
+    <span class="n">MPI_Finalize</span><span class="p">();</span>
+    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</td></tr></table></div>
+</div>
+<div class="section" id="advanced-broadcast-and-data-decomposition">
+<h2>21. Advanced Broadcast and Data Decomposition<a class="headerlink" href="#advanced-broadcast-and-data-decomposition" title="Permalink to this headline">¶</a></h2>
+<p><em>file: patternlets/MPI/21.broadcast+ParallelLoop/broadcastLoop.c</em></p>
+<p><em>Build inside 21.broadcast+ParallelLoop directory:</em></p>
+<div class="highlight-default"><div class="highlight"><pre><span class="n">make</span> <span class="n">broadcastLoop</span>
+</pre></div>
+</div>
+<p><em>Execute on the command line inside 21.broadcast+ParallelLoop directory:</em></p>
+<div class="highlight-default"><div class="highlight"><pre><span class="n">mpirun</span> <span class="o">-</span><span class="n">np</span> <span class="o">&lt;</span><span class="n">number</span> <span class="n">of</span> <span class="n">processes</span><span class="o">&gt;</span> <span class="o">./</span><span class="n">broadcastLoop</span>
+</pre></div>
+</div>
+<p>We once again expand upon example 2 on data decomposition using parallel-for
+loop with <em>equal-sized chunks</em> to incorporate broadcast and gather.
+We begin by filling an array with values and broadcasting this array to all processes.
+Afterwards, each process works on their portion of the array which has been determined
+by the equal sized chunks data decomposition pattern. Lastly, all of the worked
+on portions of the array are gathered into an array containing the final result.
+Below is a diagram of the code executing using 4 processes. The diagram assumes that
+we have already broadcast the filled array to all processes.</p>
+<a class="reference internal image-reference" href="../_images/AdvancedBroadcastParallelLoop.png"><img alt="../_images/AdvancedBroadcastParallelLoop.png" src="../_images/AdvancedBroadcastParallelLoop.png" style="width: 700px;" /></a>
+<p>Note that we chose to keep the original array, <em>array</em>, intact.
+Each process allocates memory, <em>myChunk</em> to store their worked on portion of
+the array. Later, the worked on portions from all processes are gathered into a
+final result array, <em>gatherArray</em>. This way of working on array is useful in
+instances in which we want to be able to access the initial array after working on it.</p>
+<div class="highlight-c"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>  1
+  2
+  3
+  4
+  5
+  6
+  7
+  8
+  9
+ 10
+ 11
+ 12
+ 13
+ 14
+ 15
+ 16
+ 17
+ 18
+ 19
+ 20
+ 21
+ 22
+ 23
+ 24
+ 25
+ 26
+ 27
+ 28
+ 29
+ 30
+ 31
+ 32
+ 33
+ 34
+ 35
+ 36
+ 37
+ 38
+ 39
+ 40
+ 41
+ 42
+ 43
+ 44
+ 45
+ 46
+ 47
+ 48
+ 49
+ 50
+ 51
+ 52
+ 53
+ 54
+ 55
+ 56
+ 57
+ 58
+ 59
+ 60
+ 61
+ 62
+ 63
+ 64
+ 65
+ 66
+ 67
+ 68
+ 69
+ 70
+ 71
+ 72
+ 73
+ 74
+ 75
+ 76
+ 77
+ 78
+ 79
+ 80
+ 81
+ 82
+ 83
+ 84
+ 85
+ 86
+ 87
+ 88
+ 89
+ 90
+ 91
+ 92
+ 93
+ 94
+ 95
+ 96
+ 97
+ 98
+ 99
+100
+101
+102
+103
+104
+105
+106
+107
+108
+109
+110
+111
+112
+113
+114
+115
+116
+117
+118
+119
+120
+121
+122
+123
+124
+125
+126
+127
+128
+129
+130
+131
+132
+133
+134
+135
+136
+137
+138
+139
+140
+141
+142
+143
+144
+145
+146
+147
+148</pre></div></td><td class="code"><div class="highlight"><pre><span class="cm">/* broadcastLoop.c</span>
+<span class="cm">* ... illustrates the use of MPI_Bcast() for arrays</span>
+<span class="cm">* combined with data decomposition pattern using a parallel-for loop with</span>
+<span class="cm">* equal chunks. Wraps up with a gather so that completed work is back in</span>
+<span class="cm">* master process.</span>
+<span class="cm">*</span>
+<span class="cm">* Libby Shoop, Macalester College, July, 2017</span>
+<span class="cm">*</span>
+<span class="cm">* Usage: mpirun -np N ./broadcastLoop</span>
+<span class="cm">*</span>
+<span class="cm">* Exercise:</span>
+<span class="cm">* - Compile and run, using 2, 4, and 8 processes</span>
+<span class="cm">* - Use source code to trace execution and output</span>
+<span class="cm">* - Explain behavior/effect of MPI_Bcast(), MPI_Gather().</span>
+<span class="cm">* - optional: change MAX to be another multiple of 8, such as 16</span>
+<span class="cm">*/</span>
+
+<span class="cp">#include</span> <span class="cpf">&lt;mpi.h&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;stdio.h&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;stdlib.h&gt;</span><span class="cp"></span>
+
+<span class="cm">/* fill an array with some arbitrary values</span>
+<span class="cm">* @param: a, an int*.</span>
+<span class="cm">* @param: size, an int.</span>
+<span class="cm">* Precondition: a is the address of an array of ints.</span>
+<span class="cm">*              &amp;&amp; size is the number of ints a can hold.</span>
+<span class="cm">* Postcondition: a has been filled with arbitrary values</span>
+<span class="cm">*                { 11, 12, 13, ... }.</span>
+<span class="cm">*/</span>
+<span class="kt">void</span> <span class="nf">fill</span><span class="p">(</span><span class="kt">int</span><span class="o">*</span> <span class="n">a</span><span class="p">,</span> <span class="kt">int</span> <span class="n">size</span><span class="p">)</span> <span class="p">{</span>
+	<span class="kt">int</span> <span class="n">i</span><span class="p">;</span>
+	<span class="k">for</span> <span class="p">(</span><span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">size</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+		<span class="n">a</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">i</span><span class="o">+</span><span class="mi">11</span><span class="p">;</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+
+<span class="cm">/*</span>
+<span class="cm">* Perform the data decomposition pattern on chunk of the array.</span>
+<span class="cm">*</span>
+<span class="cm">* @param: reps, number of repetions to traverse array</span>
+<span class="cm">* @param: numProcesses, total number of processes being used</span>
+<span class="cm">* @param: id, the rank, or id of current process executing this function</span>
+<span class="cm">* @param: array, the array of integers whose chunk this process will work on.</span>
+<span class="cm">* @param: myChunk, a smaller array that will contain the complated work</span>
+<span class="cm">*</span>
+<span class="cm">* This function will work on a portion of the array by doubling the value</span>
+<span class="cm">* at each index in the array that this process id is responsible for.</span>
+<span class="cm">* The original array is intact and the work done is stored in a smaller</span>
+<span class="cm">* array, myChunk.</span>
+<span class="cm">*</span>
+<span class="cm">* preconditions:</span>
+<span class="cm">*        reps is divisible by numProcesses to ensure equal chunks</span>
+<span class="cm">*        size of myChunk is reps/numProcesses</span>
+<span class="cm">* postconditions:</span>
+<span class="cm">*        array is unchanged</span>
+<span class="cm">*        myChunk contains completed work</span>
+<span class="cm">*/</span>
+<span class="kt">void</span> <span class="nf">workOnChunk</span><span class="p">(</span><span class="kt">int</span> <span class="n">reps</span><span class="p">,</span> <span class="kt">int</span> <span class="n">numProcesses</span><span class="p">,</span> <span class="kt">int</span> <span class="n">id</span><span class="p">,</span> <span class="kt">int</span><span class="o">*</span> <span class="n">array</span><span class="p">,</span> <span class="kt">int</span><span class="o">*</span> <span class="n">myChunk</span><span class="p">)</span> <span class="p">{</span>
+
+	<span class="kt">int</span> <span class="n">chunkSize</span> <span class="o">=</span> <span class="n">reps</span> <span class="o">/</span> <span class="n">numProcesses</span><span class="p">;</span>      <span class="c1">// find chunk size</span>
+	<span class="kt">int</span> <span class="n">start</span> <span class="o">=</span> <span class="n">id</span> <span class="o">*</span> <span class="n">chunkSize</span><span class="p">;</span>               <span class="c1">// find starting index</span>
+	<span class="kt">int</span> <span class="n">stop</span> <span class="o">=</span> <span class="n">start</span> <span class="o">+</span> <span class="n">chunkSize</span><span class="p">;</span>             <span class="c1">// find stopping index</span>
+
+	<span class="kt">int</span> <span class="n">chunkIndex</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+	<span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="n">start</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">stop</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>     <span class="c1">// iterate through our range</span>
+		<span class="n">printf</span><span class="p">(</span><span class="s">&quot;Process %d is performing iteration %d</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">id</span><span class="p">,</span> <span class="n">i</span><span class="p">);</span>
+		<span class="c1">// perform calculation, leaving original array intact and updating</span>
+		<span class="c1">// local chunk with result.</span>
+		<span class="n">myChunk</span><span class="p">[</span><span class="n">chunkIndex</span><span class="p">]</span> <span class="o">=</span> <span class="n">array</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">*</span><span class="mi">2</span><span class="p">;</span>
+		<span class="n">chunkIndex</span><span class="o">++</span><span class="p">;</span>
+	<span class="p">}</span>
+
+<span class="p">}</span>
+
+
+<span class="cm">/* display a string, a process id, and its array values</span>
+<span class="cm">* @param: str, a char*</span>
+<span class="cm">* @param: id, an int</span>
+<span class="cm">* @param: a, an int*.</span>
+<span class="cm">* Precondition: str points to a string to describe this array being printed</span>
+<span class="cm">*              &amp;&amp; id is the rank of this MPI process</span>
+<span class="cm">*              &amp;&amp; a is the address of an int array with numElements.</span>
+<span class="cm">* Postcondition: str, id, and a have all been written to stdout.</span>
+<span class="cm">*/</span>
+<span class="kt">void</span> <span class="nf">print</span><span class="p">(</span><span class="kt">char</span><span class="o">*</span> <span class="n">str</span><span class="p">,</span> <span class="kt">int</span> <span class="n">id</span><span class="p">,</span> <span class="kt">int</span><span class="o">*</span> <span class="n">a</span><span class="p">,</span> <span class="kt">int</span> <span class="n">numElements</span><span class="p">)</span> <span class="p">{</span>
+	<span class="n">printf</span><span class="p">(</span><span class="s">&quot;%s , process %d has: {&quot;</span><span class="p">,</span> <span class="n">str</span><span class="p">,</span> <span class="n">id</span><span class="p">);</span>
+	<span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">numElements</span> <span class="o">-</span> <span class="mi">1</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+		<span class="n">printf</span><span class="p">(</span><span class="s">&quot;%d, &quot;</span><span class="p">,</span> <span class="n">a</span><span class="p">[</span><span class="n">i</span><span class="p">]);</span>
+	<span class="p">}</span>
+	<span class="n">printf</span><span class="p">(</span><span class="s">&quot;%d}</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">a</span><span class="p">[</span><span class="n">numElements</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]);</span>
+<span class="p">}</span>
+
+<span class="cp">#define MAX 8</span>
+
+<span class="cm">/*</span>
+<span class="cm">*  Main program that double the values in an array by dividing the work</span>
+<span class="cm">*  equally among processes.</span>
+<span class="cm">*/</span>
+<span class="kt">int</span> <span class="nf">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span><span class="o">**</span> <span class="n">argv</span><span class="p">)</span> <span class="p">{</span>
+	<span class="kt">int</span> <span class="n">array</span><span class="p">[</span><span class="n">MAX</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="mi">0</span><span class="p">};</span>
+	<span class="kt">int</span><span class="o">*</span> <span class="n">myChunk</span><span class="p">;</span>
+	<span class="kt">int</span><span class="o">*</span> <span class="n">gatherArray</span><span class="p">;</span>
+	<span class="kt">int</span> <span class="n">numProcs</span><span class="p">,</span> <span class="n">myRank</span><span class="p">;</span>
+
+	<span class="n">MPI_Init</span><span class="p">(</span><span class="o">&amp;</span><span class="n">argc</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">argv</span><span class="p">);</span>
+	<span class="n">MPI_Comm_size</span><span class="p">(</span><span class="n">MPI_COMM_WORLD</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">numProcs</span><span class="p">);</span>
+	<span class="n">MPI_Comm_rank</span><span class="p">(</span><span class="n">MPI_COMM_WORLD</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">myRank</span><span class="p">);</span>
+
+	<span class="c1">// need conditions for  equal-sized chunks</span>
+	<span class="k">if</span> <span class="p">((</span><span class="n">MAX</span> <span class="o">%</span> <span class="n">numProcs</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span> <span class="o">&amp;&amp;</span> <span class="n">numProcs</span> <span class="o">&lt;=</span> <span class="n">MAX</span><span class="p">)</span> <span class="p">{</span>
+
+		<span class="k">if</span> <span class="p">(</span><span class="n">myRank</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>     <span class="c1">// master:</span>
+			<span class="n">fill</span><span class="p">(</span><span class="n">array</span><span class="p">,</span> <span class="n">MAX</span><span class="p">);</span>                              <span class="c1">// populates original array</span>
+			<span class="n">gatherArray</span> <span class="o">=</span> <span class="p">(</span><span class="kt">int</span><span class="o">*</span><span class="p">)</span> <span class="n">malloc</span><span class="p">(</span> <span class="n">MAX</span> <span class="o">*</span> <span class="k">sizeof</span><span class="p">(</span><span class="kt">int</span><span class="p">)</span> <span class="p">);</span> <span class="c1">// allocates result array</span>
+		<span class="p">}</span>
+
+		<span class="n">print</span><span class="p">(</span><span class="s">&quot;BEFORE Bcast&quot;</span><span class="p">,</span> <span class="n">myRank</span><span class="p">,</span> <span class="n">array</span><span class="p">,</span> <span class="n">MAX</span><span class="p">);</span>
+
+		<span class="n">MPI_Bcast</span><span class="p">(</span><span class="n">array</span><span class="p">,</span> <span class="n">MAX</span><span class="p">,</span> <span class="n">MPI_INT</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">MPI_COMM_WORLD</span><span class="p">);</span>
+
+		<span class="n">print</span><span class="p">(</span><span class="s">&quot;AFTER Bcast&quot;</span><span class="p">,</span> <span class="n">myRank</span><span class="p">,</span> <span class="n">array</span><span class="p">,</span> <span class="n">MAX</span><span class="p">);</span>
+
+		<span class="n">myChunk</span> <span class="o">=</span> <span class="p">(</span><span class="kt">int</span><span class="o">*</span><span class="p">)</span> <span class="n">malloc</span><span class="p">(</span><span class="n">MAX</span><span class="o">/</span><span class="n">numProcs</span> <span class="o">*</span> <span class="k">sizeof</span><span class="p">(</span><span class="kt">int</span><span class="p">));</span>  <span class="c1">// holds my work</span>
+		<span class="n">workOnChunk</span><span class="p">(</span><span class="n">MAX</span><span class="p">,</span> <span class="n">numProcs</span><span class="p">,</span> <span class="n">myRank</span><span class="p">,</span> <span class="n">array</span><span class="p">,</span> <span class="n">myChunk</span><span class="p">);</span>
+
+		<span class="n">print</span><span class="p">(</span><span class="s">&quot;AFTER doubling&quot;</span><span class="p">,</span> <span class="n">myRank</span><span class="p">,</span> <span class="n">array</span><span class="p">,</span> <span class="n">MAX</span><span class="p">);</span>          <span class="c1">//array should not change</span>
+
+		<span class="n">MPI_Barrier</span><span class="p">(</span><span class="n">MPI_COMM_WORLD</span><span class="p">);</span>                     <span class="c1">// ensure all are finished</span>
+
+		<span class="n">MPI_Gather</span><span class="p">(</span><span class="n">myChunk</span><span class="p">,</span> <span class="n">MAX</span><span class="o">/</span><span class="n">numProcs</span><span class="p">,</span> <span class="n">MPI_INT</span><span class="p">,</span>         <span class="c1">//  gather chunk vals</span>
+			<span class="n">gatherArray</span><span class="p">,</span> <span class="n">MAX</span><span class="o">/</span><span class="n">numProcs</span><span class="p">,</span> <span class="n">MPI_INT</span><span class="p">,</span>    <span class="c1">//   into gatherArray</span>
+			<span class="mi">0</span><span class="p">,</span> <span class="n">MPI_COMM_WORLD</span><span class="p">);</span>
+
+			<span class="k">if</span> <span class="p">(</span><span class="n">myRank</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>  <span class="c1">// master has all completed work after gather:</span>
+				<span class="n">print</span><span class="p">(</span><span class="s">&quot;in gatherArray, AFTER gather&quot;</span><span class="p">,</span> <span class="n">myRank</span><span class="p">,</span> <span class="n">gatherArray</span><span class="p">,</span> <span class="n">MAX</span><span class="p">);</span>
+				<span class="n">free</span><span class="p">(</span><span class="n">gatherArray</span><span class="p">);</span>  <span class="c1">//clean up</span>
+			<span class="p">}</span>
+
+		<span class="p">}</span> <span class="k">else</span> <span class="p">{</span>   <span class="c1">// bail if not equal-sized chunks</span>
+			<span class="k">if</span> <span class="p">(</span><span class="n">myRank</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+				<span class="n">printf</span><span class="p">(</span><span class="s">&quot;Please run with -np divisible by and less than or equal to %d</span><span class="se">\n</span><span class="s">.&quot;</span><span class="p">,</span> <span class="n">MAX</span><span class="p">);</span>
+			<span class="p">}</span>
+		<span class="p">}</span>
+
+		<span class="n">free</span><span class="p">(</span><span class="n">myChunk</span><span class="p">);</span>  <span class="c1">// clean up</span>
+		<span class="n">MPI_Finalize</span><span class="p">();</span>
+		<span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+	<span class="p">}</span>
+</pre></div>
+</td></tr></table></div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../index.html">
+              <img class="logo" src="../_static/CSInParallel200wide.png" alt="Logo"/>
+            </a></p>
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Advanced Topics</a><ul>
+<li><a class="reference internal" href="#advanced-data-decomposition-on-equal-sized-chunks-using-parallel-for">20. Advanced Data Decomposition: on <em>equal-sized chunks</em> using parallel-for</a></li>
+<li><a class="reference internal" href="#advanced-broadcast-and-data-decomposition">21. Advanced Broadcast and Data Decomposition</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="Barrier_Tags.html"
+                        title="previous chapter">Barrier Synchronization, Timing and Tags</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="../SharedMemory/OpenMP_Patternlets.html"
+                        title="next chapter">Shared Memory Parallel Patternlets in OpenMP</a></p>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../SharedMemory/OpenMP_Patternlets.html" title="Shared Memory Parallel Patternlets in OpenMP"
+             >next</a></li>
+        <li class="right" >
+          <a href="Barrier_Tags.html" title="Barrier Synchronization, Timing and Tags"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Parallel Patternlets</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="MPI_Patternlets.html" >Message Passing Parallel Patternlets</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright This work is licensed under a Creative Commons Attribution-ShareAlike 3.0 Unported License.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.2.
+    </div>
+  </body>
+</html>

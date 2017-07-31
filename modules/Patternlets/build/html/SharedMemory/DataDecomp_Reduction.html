@@ -5,9 +5,12 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
     <title>Data Decomposition Algorithm Strategies and Related Coordination Strategies &#8212; Parallel Patternlets</title>
+    
     <link rel="stylesheet" href="../_static/csip.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
@@ -52,11 +55,11 @@
 <h2>6. Shared Data Decomposition Algorithm Strategy:  chunks of data per thread using a parallel for loop implementation strategy<a class="headerlink" href="#shared-data-decomposition-algorithm-strategy-chunks-of-data-per-thread-using-a-parallel-for-loop-implementation-strategy" title="Permalink to this headline">¶</a></h2>
 <p><em>file: openMP/06.parallelLoop-equalChunks/parallelLoopEqualChunks.c</em></p>
 <p><em>Build inside 06.parallelLoop-equalChunks directory:</em></p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">make</span> <span class="n">parallelLoopEqualChunks</span>
+<div class="highlight-default"><div class="highlight"><pre><span class="n">make</span> <span class="n">parallelLoopEqualChunks</span>
 </pre></div>
 </div>
 <p><em>Execute on the command line inside 06.parallelLoop-equalChunks directory:</em></p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="o">./</span><span class="n">parallelLoopEqualChunks</span> <span class="mi">4</span>
+<div class="highlight-default"><div class="highlight"><pre><span class="o">./</span><span class="n">parallelLoopEqualChunks</span> <span class="mi">4</span>
 <span class="n">Replace</span> <span class="mi">4</span> <span class="k">with</span> <span class="n">other</span> <span class="n">values</span> <span class="k">for</span> <span class="n">the</span> <span class="n">number</span> <span class="n">of</span> <span class="n">threads</span><span class="p">,</span> <span class="ow">or</span> <span class="n">leave</span> <span class="n">off</span>
 </pre></div>
 </div>
@@ -109,7 +112,7 @@ just in front of the for statement (line 27) in the following code.</p>
 34
 35
 36
-37</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="cm">/* parallelLoopEqualChunks.c</span>
+37</pre></div></td><td class="code"><div class="highlight"><pre><span class="cm">/* parallelLoopEqualChunks.c</span>
 <span class="cm"> * ... illustrates the use of OpenMP&#39;s default parallel for loop in which</span>
 <span class="cm"> *  	threads iterate through equal sized chunks of the index range</span>
 <span class="cm"> *	(cache-beneficial when accessing adjacent memory locations).</span>
@@ -160,11 +163,11 @@ consecutive memory locations (such as an array) that might be cached by each thr
 <h2>7. Shared Data Decomposition Algorithm Strategy:  one iteration per thread in a parallel for loop implementation strategy<a class="headerlink" href="#shared-data-decomposition-algorithm-strategy-one-iteration-per-thread-in-a-parallel-for-loop-implementation-strategy" title="Permalink to this headline">¶</a></h2>
 <p><em>file: openMP/07.parallelLoop-chunksOf1/parallelLoopChunksOf1.c</em></p>
 <p><em>Build inside 07.parallelLoop-chunksOf1 directory:</em></p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">make</span> <span class="n">parallelLoopChunksOf1</span>
+<div class="highlight-default"><div class="highlight"><pre><span class="n">make</span> <span class="n">parallelLoopChunksOf1</span>
 </pre></div>
 </div>
 <p><em>Execute on the command line inside 07.parallelLoop-chunksOf1 directory:</em></p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="o">./</span><span class="n">parallelLoopChunksOf1</span> <span class="mi">4</span>
+<div class="highlight-default"><div class="highlight"><pre><span class="o">./</span><span class="n">parallelLoopChunksOf1</span> <span class="mi">4</span>
 <span class="n">Replace</span> <span class="mi">4</span> <span class="k">with</span> <span class="n">other</span> <span class="n">values</span> <span class="k">for</span> <span class="n">the</span> <span class="n">number</span> <span class="n">of</span> <span class="n">threads</span><span class="p">,</span> <span class="ow">or</span> <span class="n">leave</span> <span class="n">off</span>
 </pre></div>
 </div>
@@ -230,7 +233,7 @@ that each thread will work on.</p>
 51
 52
 53
-54</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="cm">/* parallelLoopChunksOf1.c</span>
+54</pre></div></td><td class="code"><div class="highlight"><pre><span class="cm">/* parallelLoopChunksOf1.c</span>
 <span class="cm"> * ... illustrates how to make OpenMP map threads to </span>
 <span class="cm"> *	parallel loop iterations in chunks of size 1</span>
 <span class="cm"> *	(use when not accesssing memory).</span>
@@ -296,11 +299,11 @@ be greater than 1 inside the schedule clause.</p>
 <h2>8. Coordination Using Collective Communication: Reduction<a class="headerlink" href="#coordination-using-collective-communication-reduction" title="Permalink to this headline">¶</a></h2>
 <p><em>file: openMP/08.reduction/reduction.c</em></p>
 <p><em>Build inside 08.reduction directory:</em></p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">make</span> <span class="n">reduction</span>
+<div class="highlight-default"><div class="highlight"><pre><span class="n">make</span> <span class="n">reduction</span>
 </pre></div>
 </div>
 <p><em>Execute on the command line inside 08.reduction directory:</em></p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="o">./</span><span class="n">reduction</span> <span class="mi">4</span>
+<div class="highlight-default"><div class="highlight"><pre><span class="o">./</span><span class="n">reduction</span> <span class="mi">4</span>
 <span class="n">Replace</span> <span class="mi">4</span> <span class="k">with</span> <span class="n">other</span> <span class="n">values</span> <span class="k">for</span> <span class="n">the</span> <span class="n">number</span> <span class="n">of</span> <span class="n">threads</span><span class="p">,</span> <span class="ow">or</span> <span class="n">leave</span> <span class="n">off</span>
 </pre></div>
 </div>
@@ -390,7 +393,7 @@ which is computed in line 66.</p>
 67
 68
 69
-70</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="cm">/* reduction.c</span>
+70</pre></div></td><td class="code"><div class="highlight"><pre><span class="cm">/* reduction.c</span>
 <span class="cm"> * ... illustrates the OpenMP parallel-for loop&#39;s reduction clause</span>
 <span class="cm"> *</span>
 <span class="cm"> * Joel Adams, Calvin College, November 2009.</span>
@@ -471,11 +474,11 @@ produce the correct result?  Later examples will hopefully shed some light on th
 <div class="section" id="coordination-using-collective-communication-reduction-revisited">
 <h2>9. Coordination Using Collective Communication: Reduction revisited<a class="headerlink" href="#coordination-using-collective-communication-reduction-revisited" title="Permalink to this headline">¶</a></h2>
 <p><em>Build inside 09.reduction-userDefined directory:</em></p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">make</span> <span class="n">reduction2</span>
+<div class="highlight-default"><div class="highlight"><pre><span class="n">make</span> <span class="n">reduction2</span>
 </pre></div>
 </div>
 <p><em>Execute on the command line inside 09.reduction-userDefined directory:</em></p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="o">./</span><span class="n">reduction</span>  <span class="mi">4</span> <span class="mi">4096</span>
+<div class="highlight-default"><div class="highlight"><pre><span class="o">./</span><span class="n">reduction</span>  <span class="mi">4</span> <span class="mi">4096</span>
 <span class="n">Replace</span> <span class="mi">4</span> <span class="k">with</span> <span class="n">other</span> <span class="n">values</span> <span class="k">for</span> <span class="n">the</span> <span class="n">number</span> <span class="n">of</span> <span class="n">threads</span>
 <span class="n">Replace</span> <span class="mi">4096</span> <span class="k">with</span> <span class="n">other</span> <span class="n">values</span> <span class="k">for</span> <span class="n">n</span> <span class="p">(</span><span class="n">computing</span> <span class="n">up</span> <span class="n">to</span> <span class="n">n</span> <span class="n">factorial</span><span class="p">)</span>
 </pre></div>
@@ -560,7 +563,7 @@ this is on line 34 in the code below, which also makes use of an additional C++ 
 74
 75
 76
-77</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="cm">/* reduction2.cpp computes a table of factorial values,</span>
+77</pre></div></td><td class="code"><div class="highlight"><pre><span class="cm">/* reduction2.cpp computes a table of factorial values,</span>
 <span class="cm"> *  using Owen Astrachan&#39;s BigInt class to explore</span>
 <span class="cm"> *  OpenMP&#39;s user-defined reductions.</span>
 <span class="cm"> *</span>
@@ -644,11 +647,11 @@ this is on line 34 in the code below, which also makes use of an additional C++ 
 <div class="section" id="dynamic-data-decomposition">
 <h2>10. Dynamic Data Decomposition<a class="headerlink" href="#dynamic-data-decomposition" title="Permalink to this headline">¶</a></h2>
 <p><em>Build inside 10.parallelLoop-dynamicSchedule directory:</em></p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">make</span> <span class="n">dynamicScheduling</span>
+<div class="highlight-default"><div class="highlight"><pre><span class="n">make</span> <span class="n">dynamicScheduling</span>
 </pre></div>
 </div>
 <p><em>Execute on the command line inside 10.parallelLoop-dynamicSchedule directory:</em></p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="o">./</span><span class="n">dynamicScheduling</span> <span class="mi">4</span>
+<div class="highlight-default"><div class="highlight"><pre><span class="o">./</span><span class="n">dynamicScheduling</span> <span class="mi">4</span>
 <span class="n">Replace</span> <span class="mi">4</span> <span class="k">with</span> <span class="n">other</span> <span class="n">values</span> <span class="k">for</span> <span class="n">the</span> <span class="n">number</span> <span class="n">of</span> <span class="n">threads</span>
 </pre></div>
 </div>
@@ -725,7 +728,7 @@ a case where using dynamic scheduling of the work improves the performance. Try 
 69
 70
 71
-72</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="cm">/* dynamicScheduling.cpp computes a table of factorial values,</span>
+72</pre></div></td><td class="code"><div class="highlight"><pre><span class="cm">/* dynamicScheduling.cpp computes a table of factorial values,</span>
 <span class="cm"> *  using Owen Astrachan&#39;s BigInt class to explore</span>
 <span class="cm"> *  OpenMP&#39;s schedule() clause.</span>
 <span class="cm"> *</span>
@@ -851,7 +854,7 @@ a case where using dynamic scheduling of the work improves the performance. Try 
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright This work is licensed under a Creative Commons Attribution-ShareAlike 3.0 Unported License.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.3.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.2.
     </div>
   </body>
 </html>

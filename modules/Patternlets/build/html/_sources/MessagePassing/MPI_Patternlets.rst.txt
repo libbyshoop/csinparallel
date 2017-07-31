@@ -37,6 +37,8 @@ categorization diagram, you can refer to them individually.
 
 :doc:`Barrier_Tags`
 
+:doc:`AdvancedTopics`
+
 .. toctree::
 	:hidden:
 
@@ -46,3 +48,4 @@ categorization diagram, you can refer to them individually.
 	Broadcast
 	Reduction_Scatter_Gather
 	Barrier_Tags
+	AdvancedTopics

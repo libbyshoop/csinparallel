@@ -5,9 +5,12 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
     <title>Patterns used when threads share data values &#8212; Parallel Patternlets</title>
+    
     <link rel="stylesheet" href="../_static/csip.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
@@ -48,11 +51,11 @@
 <h2>10. Shared Data Algorithm Strategy: Parallel-for-loop pattern needs non-shared, private variables<a class="headerlink" href="#shared-data-algorithm-strategy-parallel-for-loop-pattern-needs-non-shared-private-variables" title="Permalink to this headline">¶</a></h2>
 <p><em>file: Vath_pth/10.private/private.C</em></p>
 <p><em>Build inside 10.private directory:</em></p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">make</span> <span class="n">private</span>
+<div class="highlight-default"><div class="highlight"><pre><span class="n">make</span> <span class="n">private</span>
 </pre></div>
 </div>
 <p><em>Execute on the command line inside 09.private directory:</em></p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="o">./</span><span class="n">private</span>
+<div class="highlight-default"><div class="highlight"><pre><span class="o">./</span><span class="n">private</span>
 </pre></div>
 </div>
 <p>In this example, you will try a parallel for loop where variables (beg, end in the code)
@@ -144,7 +147,7 @@ beginning of the program, by default these variables are shared by all the threa
 80
 81
 82
-83</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="cm">/* private.C</span>
+83</pre></div></td><td class="code"><div class="highlight"><pre><span class="cm">/* private.C</span>
 <span class="cm"> *</span>
 <span class="cm"> * Using Victor Alessandrini&#39;s vath_pth library.</span>
 <span class="cm"> *  ... illustrates why private variables are needed in parallel for loop</span>
@@ -234,11 +237,11 @@ beginning of the program, by default these variables are shared by all the threa
 <h2>11. Race Condition: missing the mutual exclusion coordination pattern<a class="headerlink" href="#race-condition-missing-the-mutual-exclusion-coordination-pattern" title="Permalink to this headline">¶</a></h2>
 <p><em>file: Vath_pth/11.raceCondition/raceCondition.C</em></p>
 <p><em>Build inside 11.raceCondition directory:</em></p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">make</span> <span class="n">raceCondition</span>
+<div class="highlight-default"><div class="highlight"><pre><span class="n">make</span> <span class="n">raceCondition</span>
 </pre></div>
 </div>
 <p><em>Execute on the command line inside 11.raceCondition directory:</em></p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="o">./</span><span class="n">raceCondition</span>
+<div class="highlight-default"><div class="highlight"><pre><span class="o">./</span><span class="n">raceCondition</span>
 </pre></div>
 </div>
 <p>When a variable must be shared by all the threads, as in this example below, an issue
@@ -330,7 +333,7 @@ with lock reduction.</p>
 74
 75
 76
-77</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="cm">/* raceCondition.C</span>
+77</pre></div></td><td class="code"><div class="highlight"><pre><span class="cm">/* raceCondition.C</span>
 <span class="cm"> *</span>
 <span class="cm"> * Using Victor Alessandrini&#39;s vath_pth library.</span>
 <span class="cm"> * ... illustrates a race condition when multiple threads read from and</span>
@@ -414,11 +417,11 @@ with lock reduction.</p>
 <h2>12.  Mutual Exclusion Coordination Pattern: language difference<a class="headerlink" href="#mutual-exclusion-coordination-pattern-language-difference" title="Permalink to this headline">¶</a></h2>
 <p><em>file: Vath_pth/12.languageDiff/languageDiff.C</em></p>
 <p><em>Build inside 12.languageDiff:</em></p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">make</span> <span class="n">languageDiff</span>
+<div class="highlight-default"><div class="highlight"><pre><span class="n">make</span> <span class="n">languageDiff</span>
 </pre></div>
 </div>
 <p><em>Execute on the command line inside 12.languageDiff directory:</em></p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="o">./</span><span class="n">languageDiff</span>
+<div class="highlight-default"><div class="highlight"><pre><span class="o">./</span><span class="n">languageDiff</span>
 </pre></div>
 </div>
 <p>The following is a C++ code example to illustrate some language differences between C and C++.</p>
@@ -485,7 +488,7 @@ Try the exercises described in the code below.</p>
 54
 55
 56
-57</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="cm">/*</span>
+57</pre></div></td><td class="code"><div class="highlight"><pre><span class="cm">/*</span>
 <span class="cm"> * languageDiff.c</span>
 <span class="cm"> *</span>
 <span class="cm"> * Using Victor Alessandrini&#39;s vath_pth library.</span>
@@ -585,7 +588,7 @@ Try the exercises described in the code below.</p>
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright This work is licensed under a Creative Commons Attribution-ShareAlike 3.0 Unported License.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.3.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.2.
     </div>
   </body>
 </html>

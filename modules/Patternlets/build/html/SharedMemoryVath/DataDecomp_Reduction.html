@@ -5,9 +5,12 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
     <title>Data Decomposition Algorithm Strategies and Related Coordination Strategies &#8212; Parallel Patternlets</title>
+    
     <link rel="stylesheet" href="../_static/csip.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
@@ -52,11 +55,11 @@
 <h2>5. Shared Data Decomposition Algorithm Strategy:  chunks of data per thread using a parallel for loop implementation strategy<a class="headerlink" href="#shared-data-decomposition-algorithm-strategy-chunks-of-data-per-thread-using-a-parallel-for-loop-implementation-strategy" title="Permalink to this headline">¶</a></h2>
 <p><em>file: Vath_pth/05.parallelLoop-equalChunks/parallelLoopEqualChunks.C</em></p>
 <p><em>Build inside 05.parallelLoop-equalChunks directory:</em></p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">make</span> <span class="n">parallelLoopEqualChunks</span>
+<div class="highlight-default"><div class="highlight"><pre><span class="n">make</span> <span class="n">parallelLoopEqualChunks</span>
 </pre></div>
 </div>
 <p><em>Execute on the command line inside 05.parallelLoop-equalChunks directory:</em></p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="o">./</span><span class="n">parallelLoopEqualChunks</span> <span class="mi">4</span>
+<div class="highlight-default"><div class="highlight"><pre><span class="o">./</span><span class="n">parallelLoopEqualChunks</span> <span class="mi">4</span>
 <span class="n">Replace</span> <span class="mi">4</span> <span class="k">with</span> <span class="n">other</span> <span class="n">values</span> <span class="k">for</span> <span class="n">the</span> <span class="n">number</span> <span class="n">of</span> <span class="n">threads</span><span class="p">,</span> <span class="ow">or</span> <span class="n">leave</span> <span class="n">off</span>
 </pre></div>
 </div>
@@ -132,7 +135,7 @@ In the following code, this is done in Pthreads by using the vath library functi
 57
 58
 59
-60</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="cm">/*</span>
+60</pre></div></td><td class="code"><div class="highlight"><pre><span class="cm">/*</span>
 <span class="cm"> * Using Victor Alessandrini&#39;s vath_pth library.</span>
 <span class="cm"> *</span>
 <span class="cm"> * parallelLoopEqualChunks.C</span>
@@ -207,11 +210,11 @@ consecutive memory locations (such as an array) that might be cached by each thr
 <h2>6. Shared Data Decomposition Algorithm Strategy:  one iteration per thread in a parallel for loop implementation strategy<a class="headerlink" href="#shared-data-decomposition-algorithm-strategy-one-iteration-per-thread-in-a-parallel-for-loop-implementation-strategy" title="Permalink to this headline">¶</a></h2>
 <p><em>file: Vath_pth/06.parallelLoop-ChunksOf1/parallelLoopChunksOf1.C</em></p>
 <p><em>Build inside 06.parallelLoop-ChunksOf1 directory:</em></p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">make</span> <span class="n">parallelLoopChunksOf1</span>
+<div class="highlight-default"><div class="highlight"><pre><span class="n">make</span> <span class="n">parallelLoopChunksOf1</span>
 </pre></div>
 </div>
 <p><em>Execute on the command line inside 06.parallelLoop-ChunksOf1 directory:</em></p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="o">./</span><span class="n">parallelLoopChunksOf1</span> <span class="mi">4</span>
+<div class="highlight-default"><div class="highlight"><pre><span class="o">./</span><span class="n">parallelLoopChunksOf1</span> <span class="mi">4</span>
 <span class="n">Replace</span> <span class="mi">4</span> <span class="k">with</span> <span class="n">other</span> <span class="n">values</span> <span class="k">for</span> <span class="n">the</span> <span class="n">number</span> <span class="n">of</span> <span class="n">threads</span>
 </pre></div>
 </div>
@@ -271,7 +274,7 @@ Section A in the code is an explicit way of doing it in Pthreads.</p>
 49
 50
 51
-52</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="cm">/*</span>
+52</pre></div></td><td class="code"><div class="highlight"><pre><span class="cm">/*</span>
 <span class="cm"> * Using Victor Alessandrini&#39;s vath_pth library.</span>
 <span class="cm"> *</span>
 <span class="cm"> * parallelLoopChunksOf1.C</span>
@@ -330,11 +333,11 @@ Section A in the code is an explicit way of doing it in Pthreads.</p>
 <h2>7.  Shared Data Decomposition Algorithm Strategy: Revisited<a class="headerlink" href="#shared-data-decomposition-algorithm-strategy-revisited" title="Permalink to this headline">¶</a></h2>
 <p><em>file: Vath_pth/07.parallelLoop-Revisited/parallelLoopRevisited.C</em></p>
 <p><em>Build inside 07.parallelLoop-Revisited directory:</em></p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">make</span> <span class="n">parallelLoopRevisited</span>
+<div class="highlight-default"><div class="highlight"><pre><span class="n">make</span> <span class="n">parallelLoopRevisited</span>
 </pre></div>
 </div>
 <p><em>Execute on the command line inside 07.parallelLoop-Revisited directory:</em></p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="o">./</span><span class="n">parallelLoopRevisited</span> <span class="mi">4</span>
+<div class="highlight-default"><div class="highlight"><pre><span class="o">./</span><span class="n">parallelLoopRevisited</span> <span class="mi">4</span>
 <span class="n">Replace</span> <span class="mi">4</span> <span class="k">with</span> <span class="n">other</span> <span class="n">values</span> <span class="k">for</span> <span class="n">the</span> <span class="n">number</span> <span class="n">of</span> <span class="n">threads</span>
 </pre></div>
 </div>
@@ -472,7 +475,7 @@ work improves the performance. Try the tasks listed in the header of the code sh
 128
 129
 130
-131</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="cm">/*</span>
+131</pre></div></td><td class="code"><div class="highlight"><pre><span class="cm">/*</span>
 <span class="cm"> * parallelLoopRevisited.C</span>
 <span class="cm"> *</span>
 <span class="cm"> *  Using Victor Alessandrini&#39;s vath_pth library.</span>
@@ -610,11 +613,11 @@ work improves the performance. Try the tasks listed in the header of the code sh
 <h2>8. Coordination Using Collective Communication: Reduction<a class="headerlink" href="#coordination-using-collective-communication-reduction" title="Permalink to this headline">¶</a></h2>
 <p><em>file: Vath_pth/08.reduction/reduction.C</em></p>
 <p><em>Build inside 08.reduction directory:</em></p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">make</span> <span class="n">reduction</span>
+<div class="highlight-default"><div class="highlight"><pre><span class="n">make</span> <span class="n">reduction</span>
 </pre></div>
 </div>
 <p><em>Execute on the command line inside 08.reduction directory:</em></p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="o">./</span><span class="n">reduction</span> <span class="mi">4</span>
+<div class="highlight-default"><div class="highlight"><pre><span class="o">./</span><span class="n">reduction</span> <span class="mi">4</span>
 <span class="n">Replace</span> <span class="mi">4</span> <span class="k">with</span> <span class="n">other</span> <span class="n">values</span> <span class="k">for</span> <span class="n">the</span> <span class="n">number</span> <span class="n">of</span> <span class="n">threads</span><span class="p">,</span> <span class="ow">or</span> <span class="n">leave</span> <span class="n">off</span>
 </pre></div>
 </div>
@@ -732,7 +735,7 @@ at completion all values in the array are summed together.</p>
 94
 95
 96
-97</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="cm">/*</span>
+97</pre></div></td><td class="code"><div class="highlight"><pre><span class="cm">/*</span>
 <span class="cm"> * reduction.C</span>
 <span class="cm"> *</span>
 <span class="cm"> * Using Victor Alessandrini&#39;s vath_pth library.</span>
@@ -841,11 +844,11 @@ produce the correct result?  Later examples will hopefully shed some light on th
 <h2>9. Coordination Using Collective Communication: Reduction revisited<a class="headerlink" href="#coordination-using-collective-communication-reduction-revisited" title="Permalink to this headline">¶</a></h2>
 <p><em>file: Vath_pth/09.reduction2/reduction2.C</em></p>
 <p><em>Build inside 09.reduction2 directory:</em></p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">make</span> <span class="n">reduction2</span>
+<div class="highlight-default"><div class="highlight"><pre><span class="n">make</span> <span class="n">reduction2</span>
 </pre></div>
 </div>
 <p><em>Execute on the command line inside 09.reduction2 directory:</em></p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="o">./</span><span class="n">reduction2</span> <span class="mi">4</span> <span class="mi">8192</span>
+<div class="highlight-default"><div class="highlight"><pre><span class="o">./</span><span class="n">reduction2</span> <span class="mi">4</span> <span class="mi">8192</span>
 <span class="n">Replace</span> <span class="mi">4</span> <span class="k">with</span> <span class="n">other</span> <span class="n">values</span> <span class="k">for</span> <span class="n">the</span> <span class="n">number</span> <span class="n">of</span> <span class="n">threads</span>
 <span class="n">Replace</span> <span class="mi">8192</span> <span class="k">with</span> <span class="n">other</span> <span class="n">values</span> <span class="k">for</span> <span class="n">n</span> <span class="p">(</span><span class="n">computing</span> <span class="n">up</span> <span class="n">to</span> <span class="n">n</span> <span class="n">factorial</span><span class="p">)</span>
 </pre></div>
@@ -979,7 +982,7 @@ on line 56 in the code below, which also makes use of an additional C++ file, Bi
 122
 123
 124
-125</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="cm">/*</span>
+125</pre></div></td><td class="code"><div class="highlight"><pre><span class="cm">/*</span>
 <span class="cm"> * reduction2.C</span>
 <span class="cm"> *</span>
 <span class="cm"> *  Using Victor Alessandrini&#39;s vath_pth library.</span>
@@ -1159,7 +1162,7 @@ on line 56 in the code below, which also makes use of an additional C++ file, Bi
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright This work is licensed under a Creative Commons Attribution-ShareAlike 3.0 Unported License.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.3.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.2.
     </div>
   </body>
 </html>

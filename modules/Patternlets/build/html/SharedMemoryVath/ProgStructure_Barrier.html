@@ -5,9 +5,12 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
     <title>Shared Memory Program Structure and Coordination Patterns &#8212; Parallel Patternlets</title>
+    
     <link rel="stylesheet" href="../_static/csip.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
@@ -52,11 +55,11 @@
 <h2>0. Program Structure Implementation Strategy: The basic fork-join pattern<a class="headerlink" href="#program-structure-implementation-strategy-the-basic-fork-join-pattern" title="Permalink to this headline">¶</a></h2>
 <p><em>file: Vath_pth/00.forkJoin/forkJoin.C</em></p>
 <p><em>Build inside 00.forkJoin directory:</em></p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">make</span> <span class="n">forkJoin</span>
+<div class="highlight-default"><div class="highlight"><pre><span class="n">make</span> <span class="n">forkJoin</span>
 </pre></div>
 </div>
 <p><em>Execute on the command line inside 00.forkJoin directory:</em></p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="o">./</span><span class="n">forkJoin</span>
+<div class="highlight-default"><div class="highlight"><pre><span class="o">./</span><span class="n">forkJoin</span>
 </pre></div>
 </div>
 <p>The <em>SPool TH()</em> constructor on line 20, tells the compiler to create a team of two worker threads.
@@ -101,7 +104,7 @@ where time is moving from left to right:</p>
 33
 34
 35
-36</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="cm">/*</span>
+36</pre></div></td><td class="code"><div class="highlight"><pre><span class="cm">/*</span>
 <span class="cm"> * forkJoin.C</span>
 <span class="cm"> *</span>
 <span class="cm"> * Using Victor Alessandrini&#39;s vath_pth library</span>
@@ -144,11 +147,11 @@ where time is moving from left to right:</p>
 <h2>1. Program Structure Implementation Strategy: Fork-join with setting the number of threads<a class="headerlink" href="#program-structure-implementation-strategy-fork-join-with-setting-the-number-of-threads" title="Permalink to this headline">¶</a></h2>
 <p><em>file Vath_pth/01.forkJoin2/forkJoin2.C</em></p>
 <p><em>Build inside 01.forkJoin2 directory:</em></p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">make</span> <span class="n">forkJoin2</span>
+<div class="highlight-default"><div class="highlight"><pre><span class="n">make</span> <span class="n">forkJoin2</span>
 </pre></div>
 </div>
 <p><em>Execute on the command line inside 01.forkJoin2 directory:</em></p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="o">./</span><span class="n">forkJoin2</span>
+<div class="highlight-default"><div class="highlight"><pre><span class="o">./</span><span class="n">forkJoin2</span>
 </pre></div>
 </div>
 <p>This code illustrates that one program can fork and join more than once.
@@ -205,7 +208,7 @@ code file to understand how constructing SPool objects, and forking and joining 
 47
 48
 49
-50</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="cm">/*</span>
+50</pre></div></td><td class="code"><div class="highlight"><pre><span class="cm">/*</span>
 <span class="cm"> * forkJoin2.C</span>
 <span class="cm"> *</span>
 <span class="cm"> * Using Victor Alessandrini&#39;s vath_pth library.</span>
@@ -262,11 +265,11 @@ code file to understand how constructing SPool objects, and forking and joining 
 <h2>2. Program Structure Implementation Strategy: Single Program, multiple data<a class="headerlink" href="#program-structure-implementation-strategy-single-program-multiple-data" title="Permalink to this headline">¶</a></h2>
 <p><em>file: Vath_pth/02.spmd/spmd.C</em></p>
 <p><em>Build inside 02.spmd directory:</em></p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">make</span> <span class="n">spmd</span>
+<div class="highlight-default"><div class="highlight"><pre><span class="n">make</span> <span class="n">spmd</span>
 </pre></div>
 </div>
 <p><em>Execute on the command line inside 02.spmd directory:</em></p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="o">./</span><span class="n">spmd</span>
+<div class="highlight-default"><div class="highlight"><pre><span class="o">./</span><span class="n">spmd</span>
 </pre></div>
 </div>
 <p>Note how there is a SPool utility function <em>GetRank()</em> to
@@ -320,7 +323,7 @@ between threads is not guaranteed.</em> This is also illustrated in the diagram 
 33
 34
 35
-36</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="cm">/*</span>
+36</pre></div></td><td class="code"><div class="highlight"><pre><span class="cm">/*</span>
 <span class="cm"> * spmd.C</span>
 <span class="cm"> *</span>
 <span class="cm"> * Using Victor Alessandrini&#39;s vath_pth library.</span>
@@ -363,11 +366,11 @@ between threads is not guaranteed.</em> This is also illustrated in the diagram 
 <h2>3. Program Structure Implementation Strategy: Single Program, multiple data with user-defined number of threads<a class="headerlink" href="#program-structure-implementation-strategy-single-program-multiple-data-with-user-defined-number-of-threads" title="Permalink to this headline">¶</a></h2>
 <p><em>file: Vath_pth/03.spmd2/spmd2.C</em></p>
 <p><em>Build inside 03.spmd2 directory:</em></p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">make</span> <span class="n">spmd2</span>
+<div class="highlight-default"><div class="highlight"><pre><span class="n">make</span> <span class="n">spmd2</span>
 </pre></div>
 </div>
 <p><em>Execute on the command line inside 03.spmd2 directory:</em></p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="o">./</span><span class="n">spmd2</span> <span class="mi">4</span>
+<div class="highlight-default"><div class="highlight"><pre><span class="o">./</span><span class="n">spmd2</span> <span class="mi">4</span>
 <span class="n">Replace</span> <span class="mi">4</span> <span class="k">with</span> <span class="n">other</span> <span class="n">values</span> <span class="k">for</span> <span class="n">the</span> <span class="n">number</span> <span class="n">of</span> <span class="n">threads</span>
 </pre></div>
 </div>
@@ -423,7 +426,7 @@ a global pointer to a SPool object is declared and it is later initialized by ma
 47
 48
 49
-50</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="cm">/*</span>
+50</pre></div></td><td class="code"><div class="highlight"><pre><span class="cm">/*</span>
 <span class="cm"> * spmd2.C</span>
 <span class="cm"> *</span>
 <span class="cm"> * Using Victor Alessandrini&#39;s vath_pth library.</span>
@@ -480,11 +483,11 @@ a global pointer to a SPool object is declared and it is later initialized by ma
 <h2>4. Coordination: Synchronization with a Barrier<a class="headerlink" href="#coordination-synchronization-with-a-barrier" title="Permalink to this headline">¶</a></h2>
 <p><em>file: Vath_pth/04.barrier/barrier.C</em></p>
 <p><em>Build inside 04.barrier directory:</em></p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">make</span> <span class="n">barrier</span>
+<div class="highlight-default"><div class="highlight"><pre><span class="n">make</span> <span class="n">barrier</span>
 </pre></div>
 </div>
 <p><em>Execute on the command line inside 04.barrier directory:</em></p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="o">./</span><span class="n">barrier</span> <span class="mi">4</span>
+<div class="highlight-default"><div class="highlight"><pre><span class="o">./</span><span class="n">barrier</span> <span class="mi">4</span>
 <span class="n">Replace</span> <span class="mi">4</span> <span class="k">with</span> <span class="n">other</span> <span class="n">values</span> <span class="k">for</span> <span class="n">the</span> <span class="n">number</span> <span class="n">of</span> <span class="n">threads</span>
 </pre></div>
 </div>
@@ -556,7 +559,7 @@ completed for use in another computation.</p>
 59
 60
 61
-62</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="cm">/*</span>
+62</pre></div></td><td class="code"><div class="highlight"><pre><span class="cm">/*</span>
 <span class="cm"> * barrier.c</span>
 <span class="cm"> *</span>
 <span class="cm"> * AUTHOR: Victor Alessandrini, 2015</span>
@@ -669,7 +672,7 @@ completed for use in another computation.</p>
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright This work is licensed under a Creative Commons Attribution-ShareAlike 3.0 Unported License.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.3.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.2.
     </div>
   </body>
 </html>

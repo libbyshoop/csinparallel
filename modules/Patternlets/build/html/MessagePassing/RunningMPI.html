@@ -5,9 +5,12 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
     <title>Running the examples on your cluster &#8212; Parallel Patternlets</title>
+    
     <link rel="stylesheet" href="../_static/csip.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
@@ -79,7 +82,7 @@ On most installations, these two programs are the same- one is an alias to the o
 We will use <cite>mpirun</cite> in our examples below.</p>
 <p>On a <em>multicore machine</em>, you can run <cite>your_program</cite>, an executable file created from
 the mpicc compiler, as follows:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">mpirun</span> <span class="o">-</span><span class="n">np</span> <span class="o">&lt;</span><span class="n">number</span> <span class="n">of</span> <span class="n">processes</span><span class="o">&gt;</span> <span class="o">./</span><span class="n">your_program</span>
+<div class="highlight-default"><div class="highlight"><pre><span class="n">mpirun</span> <span class="o">-</span><span class="n">np</span> <span class="o">&lt;</span><span class="n">number</span> <span class="n">of</span> <span class="n">processes</span><span class="o">&gt;</span> <span class="o">./</span><span class="n">your_program</span>
 </pre></div>
 </div>
 </div>
@@ -88,7 +91,7 @@ the mpicc compiler, as follows:</p>
 <p>Running MPI jobs on a cluster of computers requires an additional command-line flag
 so that you can specify the names of the nodes to run the processes on. The format
 for running your MPI executable called <cite>your_program</cite> becomes:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">mpirun</span> <span class="o">-</span><span class="n">np</span> <span class="o">&lt;</span><span class="n">number</span> <span class="n">of</span> <span class="n">processes</span><span class="o">&gt;</span> <span class="o">-</span><span class="n">hostfile</span> <span class="o">&lt;</span><span class="n">path</span> <span class="n">to</span> <span class="n">file</span> <span class="n">of</span> <span class="n">hosts</span><span class="o">&gt;</span> <span class="o">./</span><span class="n">your_program</span>
+<div class="highlight-default"><div class="highlight"><pre><span class="n">mpirun</span> <span class="o">-</span><span class="n">np</span> <span class="o">&lt;</span><span class="n">number</span> <span class="n">of</span> <span class="n">processes</span><span class="o">&gt;</span> <span class="o">-</span><span class="n">hostfile</span> <span class="o">&lt;</span><span class="n">path</span> <span class="n">to</span> <span class="n">file</span> <span class="n">of</span> <span class="n">hosts</span><span class="o">&gt;</span> <span class="o">./</span><span class="n">your_program</span>
 </pre></div>
 </div>
 <div class="section" id="the-hostfile-mpich">
@@ -96,7 +99,7 @@ for running your MPI executable called <cite>your_program</cite> becomes:</p>
 <p>If you have MPICH installed, the format of the hostfile listing your nodes
 most commonly will look like this, with simply the names of the machines
 in your cluster that you want to use:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">head</span>
+<div class="highlight-default"><div class="highlight"><pre><span class="n">head</span>
 <span class="n">node1</span>
 <span class="n">node2</span>
 <span class="n">node3</span>
@@ -164,7 +167,7 @@ number of processes given with the -np flag have been started.</p>
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright This work is licensed under a Creative Commons Attribution-ShareAlike 3.0 Unported License.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.3.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.2.
     </div>
   </body>
 </html>

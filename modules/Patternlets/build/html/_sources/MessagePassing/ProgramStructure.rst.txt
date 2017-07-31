@@ -150,7 +150,7 @@ array).
 
 A simple decomposition sometimes used when your loop is not accessing consecutive
 memory locations would be to let each process do one iteration, up to N processes,
-then start again with process 0 taking the next iteration. A for loop on line 29
+then start again with process 0 taking the next iteration. A for loop on line 35
 is used to implement this type of data decomposition.
 
 .. image:: MPIImages/ChunksOf1.png

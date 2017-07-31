@@ -5,9 +5,12 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
     <title>Collective Communication &#8212; Parallel Patternlets</title>
+    
     <link rel="stylesheet" href="../_static/csip.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
@@ -57,11 +60,11 @@ collective communication patterns.</p>
 <h2>12. Collective Communication: Reduction<a class="headerlink" href="#collective-communication-reduction" title="Permalink to this headline">¶</a></h2>
 <p><em>file: patternlets/MPI/12.reduction/reduction.c</em></p>
 <p><em>Build inside 12.reduction directory:</em></p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">make</span> <span class="n">reduction</span>
+<div class="highlight-default"><div class="highlight"><pre><span class="n">make</span> <span class="n">reduction</span>
 </pre></div>
 </div>
 <p><em>Execute on the command line inside 12.reduction directory:</em></p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">mpirun</span> <span class="o">-</span><span class="n">np</span> <span class="o">&lt;</span><span class="n">number</span> <span class="n">of</span> <span class="n">processes</span><span class="o">&gt;</span> <span class="o">./</span><span class="n">reduction</span>
+<div class="highlight-default"><div class="highlight"><pre><span class="n">mpirun</span> <span class="o">-</span><span class="n">np</span> <span class="o">&lt;</span><span class="n">number</span> <span class="n">of</span> <span class="n">processes</span><span class="o">&gt;</span> <span class="o">./</span><span class="n">reduction</span>
 </pre></div>
 </div>
 <p>Once processes have performed independent concurrent computations, possibly
@@ -110,7 +113,7 @@ like this:</p>
 36
 37
 38
-39</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="cm">/* reduction.c</span>
+39</pre></div></td><td class="code"><div class="highlight"><pre><span class="cm">/* reduction.c</span>
 <span class="cm">* ... illustrates the use of MPI_Reduce()...</span>
 <span class="cm">* Joel Adams, Calvin College, November 2009.</span>
 <span class="cm">*</span>
@@ -156,11 +159,11 @@ like this:</p>
 <h2>13. Collective Communication: Reduction<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
 <p><em>file: patternlets/MPI/13.reduction2/reduction2.c</em></p>
 <p><em>Build inside 13.reduction2 directory:</em></p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">make</span> <span class="n">reduction2</span>
+<div class="highlight-default"><div class="highlight"><pre><span class="n">make</span> <span class="n">reduction2</span>
 </pre></div>
 </div>
 <p><em>Execute on the command line inside 13.reduction2 directory:</em></p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">mpirun</span> <span class="o">-</span><span class="n">np</span> <span class="o">&lt;</span><span class="n">number</span> <span class="n">of</span> <span class="n">processes</span><span class="o">&gt;</span> <span class="o">./</span><span class="n">reduction2</span>
+<div class="highlight-default"><div class="highlight"><pre><span class="n">mpirun</span> <span class="o">-</span><span class="n">np</span> <span class="o">&lt;</span><span class="n">number</span> <span class="n">of</span> <span class="n">processes</span><span class="o">&gt;</span> <span class="o">./</span><span class="n">reduction2</span>
 </pre></div>
 </div>
 <p>Here is a second reduction example using arrays of data.</p>
@@ -236,7 +239,7 @@ like this:</p>
 66
 67
 68
-69</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="cm">/* reduction2.c</span>
+69</pre></div></td><td class="code"><div class="highlight"><pre><span class="cm">/* reduction2.c</span>
 <span class="cm"> * ... illustrates the use of MPI_Reduce() using arrays...</span>
 <span class="cm"> * Joel Adams, Calvin College, January 2015.</span>
 <span class="cm"> *</span>
@@ -318,11 +321,11 @@ the previous examples to experiment with some of these.</p>
 <h2>14. Collective communication: Scatter for message-passing data decomposition<a class="headerlink" href="#collective-communication-scatter-for-message-passing-data-decomposition" title="Permalink to this headline">¶</a></h2>
 <p><em>file: patternlets/MPI/14.scatter/scatter.c</em></p>
 <p><em>Build inside 14.scatter directory:</em></p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">make</span> <span class="n">scatter</span>
+<div class="highlight-default"><div class="highlight"><pre><span class="n">make</span> <span class="n">scatter</span>
 </pre></div>
 </div>
 <p><em>Execute on the command line inside 14.scatter directory:</em></p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">mpirun</span> <span class="o">-</span><span class="n">np</span> <span class="o">&lt;</span><span class="n">number</span> <span class="n">of</span> <span class="n">processes</span><span class="o">&gt;</span> <span class="o">./</span><span class="n">scatter</span>
+<div class="highlight-default"><div class="highlight"><pre><span class="n">mpirun</span> <span class="o">-</span><span class="n">np</span> <span class="o">&lt;</span><span class="n">number</span> <span class="n">of</span> <span class="n">processes</span><span class="o">&gt;</span> <span class="o">./</span><span class="n">scatter</span>
 </pre></div>
 </div>
 <p>If processes can independently work on portions of a larger data array
@@ -330,6 +333,7 @@ using the geometric data decomposition pattern, the scatter pattern can be
 used to ensure that each process receives a copy of its portion of the array.
 Process 0 gets the first chunk, process 1 gets the second chunk and so on until
 the entire array has been distributed.</p>
+<a class="reference internal image-reference" href="../_images/Scatter.png"><img alt="../_images/Scatter.png" src="../_images/Scatter.png" style="width: 700px;" /></a>
 <div class="topic">
 <p class="topic-title first">To do:</p>
 <p>What previous data decomposition pattern is this similar to?</p>
@@ -391,7 +395,7 @@ the entire array has been distributed.</p>
 55
 56
 57
-58</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="cm">/* scatter.c</span>
+58</pre></div></td><td class="code"><div class="highlight"><pre><span class="cm">/* scatter.c</span>
 <span class="cm"> * ... illustrates the use of MPI_Scatter()...</span>
 <span class="cm"> * Joel Adams, Calvin College, November 2009.</span>
 <span class="cm"> *</span>
@@ -456,11 +460,11 @@ the entire array has been distributed.</p>
 <h2>15. Collective communication: Gather for message-passing data decomposition<a class="headerlink" href="#collective-communication-gather-for-message-passing-data-decomposition" title="Permalink to this headline">¶</a></h2>
 <p><em>file: patternlets/MPI/15.gather/gather.c</em></p>
 <p><em>Build inside 15.gather directory:</em></p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">make</span> <span class="n">gather</span>
+<div class="highlight-default"><div class="highlight"><pre><span class="n">make</span> <span class="n">gather</span>
 </pre></div>
 </div>
 <p><em>Execute on the command line inside 15.gather directory:</em></p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">mpirun</span> <span class="o">-</span><span class="n">np</span> <span class="o">&lt;</span><span class="n">number</span> <span class="n">of</span> <span class="n">processes</span><span class="o">&gt;</span> <span class="o">./</span><span class="n">gather</span>
+<div class="highlight-default"><div class="highlight"><pre><span class="n">mpirun</span> <span class="o">-</span><span class="n">np</span> <span class="o">&lt;</span><span class="n">number</span> <span class="n">of</span> <span class="n">processes</span><span class="o">&gt;</span> <span class="o">./</span><span class="n">gather</span>
 </pre></div>
 </div>
 <p>If processes can independently work on portions of a larger data array
@@ -469,6 +473,14 @@ the gather pattern can be used to ensure that each process sends
 a copy of its portion of the array back to the root, or master process.
 Thus, gather is the reverse of scatter. Here is the idea:</p>
 <a class="reference internal image-reference" href="../_images/Gather.png"><img alt="../_images/Gather.png" src="../_images/Gather.png" style="width: 750px;" /></a>
+<div class="topic">
+<p class="topic-title first">To do:</p>
+<p>Find documentation for the MPI function MPI_Gather.
+Make sure that you know what each parameter is for.
+Why are the second and fourth parameters in our example
+both SIZE? Can you explain what this means in terms of
+MPI_Gather?</p>
+</div>
 <div class="highlight-c"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
  2
  3
@@ -532,7 +544,7 @@ Thus, gather is the reverse of scatter. Here is the idea:</p>
 61
 62
 63
-64</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="cm">/* gather.c</span>
+64</pre></div></td><td class="code"><div class="highlight"><pre><span class="cm">/* gather.c</span>
 <span class="cm"> * ... illustrates the use of MPI_Gather()...</span>
 <span class="cm"> * Joel Adams, Calvin College, November 2009.</span>
 <span class="cm"> *</span>
@@ -646,7 +658,7 @@ Thus, gather is the reverse of scatter. Here is the idea:</p>
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright This work is licensed under a Creative Commons Attribution-ShareAlike 3.0 Unported License.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.3.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.2.
     </div>
   </body>
 </html>

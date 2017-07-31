@@ -92,6 +92,9 @@ used to ensure that each process receives a copy of its portion of the array.
 Process 0 gets the first chunk, process 1 gets the second chunk and so on until
 the entire array has been distributed.
 
+.. image:: MPIImages/Scatter.png
+	:width: 700
+
 .. topic:: To do:
 
   What previous data decomposition pattern is this similar to?
@@ -124,6 +127,14 @@ Thus, gather is the reverse of scatter. Here is the idea:
 
 .. image:: MPIImages/Gather.png
 	:width: 750
+
+.. topic:: To do:
+
+  Find documentation for the MPI function MPI_Gather.
+  Make sure that you know what each parameter is for.
+  Why are the second and fourth parameters in our example
+  both SIZE? Can you explain what this means in terms of
+  MPI_Gather?
 
 .. literalinclude:: ../patternlets/MPI/15.gather/gather.c
     :language: c

@@ -5,9 +5,12 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
     <title>Program Structure: SPMD, Master Worker, and Parallel Loops &#8212; Parallel Patternlets</title>
+    
     <link rel="stylesheet" href="../_static/csip.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
@@ -58,11 +61,11 @@ in no particular guaranteed order.</p>
 <h2>00. Single Program, Multiple Data<a class="headerlink" href="#single-program-multiple-data" title="Permalink to this headline">¶</a></h2>
 <p><em>file: patternlets/MPI/00.spmd/spmd.c</em></p>
 <p><em>Build inside 00.spmd directory:</em></p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">make</span> <span class="n">spmd</span>
+<div class="highlight-default"><div class="highlight"><pre><span class="n">make</span> <span class="n">spmd</span>
 </pre></div>
 </div>
 <p><em>Execute on the command line inside 00.spmd directory:</em></p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">mpirun</span> <span class="o">-</span><span class="n">np</span> <span class="o">&lt;</span><span class="n">number</span> <span class="n">of</span> <span class="n">processes</span><span class="o">&gt;</span> <span class="o">./</span><span class="n">spmd</span>
+<div class="highlight-default"><div class="highlight"><pre><span class="n">mpirun</span> <span class="o">-</span><span class="n">np</span> <span class="o">&lt;</span><span class="n">number</span> <span class="n">of</span> <span class="n">processes</span><span class="o">&gt;</span> <span class="o">./</span><span class="n">spmd</span>
 </pre></div>
 </div>
 <div class="admonition note">
@@ -124,7 +127,7 @@ tells the MPI system that we are finished and it deallocates MPI resources.</p>
 33
 34
 35
-36</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="cm">/* spmd.c</span>
+36</pre></div></td><td class="code"><div class="highlight"><pre><span class="cm">/* spmd.c</span>
 <span class="cm"> * ... illustrates the single program multiple data</span>
 <span class="cm"> *      (SPMD) pattern using basic MPI commands.</span>
 <span class="cm"> *</span>
@@ -167,11 +170,11 @@ tells the MPI system that we are finished and it deallocates MPI resources.</p>
 <h2>01. The Master-Worker Implementation Strategy Pattern<a class="headerlink" href="#the-master-worker-implementation-strategy-pattern" title="Permalink to this headline">¶</a></h2>
 <p><em>file: patternlets/MPI/01.masterWorker/masterWorker.c</em></p>
 <p><em>Build inside 01.masterWorker directory:</em></p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">make</span> <span class="n">masterWorker</span>
+<div class="highlight-default"><div class="highlight"><pre><span class="n">make</span> <span class="n">masterWorker</span>
 </pre></div>
 </div>
 <p><em>Execute on the command line inside 01.masterWorker directory:</em></p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">mpirun</span> <span class="o">-</span><span class="n">np</span> <span class="o">&lt;</span><span class="n">number</span> <span class="n">of</span> <span class="n">processes</span><span class="o">&gt;</span> <span class="o">./</span><span class="n">masterWorker</span>
+<div class="highlight-default"><div class="highlight"><pre><span class="n">mpirun</span> <span class="o">-</span><span class="n">np</span> <span class="o">&lt;</span><span class="n">number</span> <span class="n">of</span> <span class="n">processes</span><span class="o">&gt;</span> <span class="o">./</span><span class="n">masterWorker</span>
 </pre></div>
 </div>
 <p>The master worker pattern is illustrated in this simple example.  The pattern
@@ -212,7 +215,7 @@ the rest of the processes, called workers, are executing a different block of co
 33
 34
 35
-36</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="cm">/* masterWorker.c</span>
+36</pre></div></td><td class="code"><div class="highlight"><pre><span class="cm">/* masterWorker.c</span>
 <span class="cm"> * ... illustrates the basic master-worker pattern in MPI ...</span>
 <span class="cm"> * Joel Adams, Calvin College, November 2009.</span>
 <span class="cm"> *</span>
@@ -255,11 +258,11 @@ the rest of the processes, called workers, are executing a different block of co
 <h2>02. Data Decomposition: on <em>equal-sized chunks</em> using parallel-for<a class="headerlink" href="#data-decomposition-on-equal-sized-chunks-using-parallel-for" title="Permalink to this headline">¶</a></h2>
 <p><em>file: patternlets/MPI/02.parallelLoop-equalChunks/parallelLoopEqualChunks.c</em></p>
 <p><em>Build inside 02.parallelLoop-equalChunks directory:</em></p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">make</span> <span class="n">parallelLoopEqualChunks</span>
+<div class="highlight-default"><div class="highlight"><pre><span class="n">make</span> <span class="n">parallelLoopEqualChunks</span>
 </pre></div>
 </div>
 <p><em>Execute on the command line inside 02.parallelLoop-equalChunks directory:</em></p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">mpirun</span> <span class="o">-</span><span class="n">np</span> <span class="o">&lt;</span><span class="n">number</span> <span class="n">of</span> <span class="n">processes</span><span class="o">&gt;</span> <span class="o">./</span><span class="n">parallelLoopEqualChunks</span>
+<div class="highlight-default"><div class="highlight"><pre><span class="n">mpirun</span> <span class="o">-</span><span class="n">np</span> <span class="o">&lt;</span><span class="n">number</span> <span class="n">of</span> <span class="n">processes</span><span class="o">&gt;</span> <span class="o">./</span><span class="n">parallelLoopEqualChunks</span>
 </pre></div>
 </div>
 <p>The <strong>data decomposition</strong> pattern occurs in code in two ways:</p>
@@ -341,7 +344,7 @@ What happens when this is not the case (3, 5, 6, 7 processes)?</p>
 46
 47
 48
-49</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="cm">/* parallelLoopEqualChunks.c</span>
+49</pre></div></td><td class="code"><div class="highlight"><pre><span class="cm">/* parallelLoopEqualChunks.c</span>
 <span class="cm"> * ... illustrates the parallel for loop pattern in MPI</span>
 <span class="cm"> *	in which processes perform the loop&#39;s iterations in equal-sized &#39;chunks&#39;</span>
 <span class="cm"> *	(preferable when loop iterations access memory/cache locations) ...</span>
@@ -397,16 +400,16 @@ What happens when this is not the case (3, 5, 6, 7 processes)?</p>
 <h2>03. Data Decomposition: on <em>chunks of size 1</em> using parallel-for<a class="headerlink" href="#data-decomposition-on-chunks-of-size-1-using-parallel-for" title="Permalink to this headline">¶</a></h2>
 <p><em>file: patternlets/MPI/03.parallelLoop-chunksOf1/parallelLoopChunksOf1.c</em></p>
 <p><em>Build inside 03.parallelLoop-chunksOf1 directory:</em></p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">make</span> <span class="n">parallelLoopChunksOf1</span>
+<div class="highlight-default"><div class="highlight"><pre><span class="n">make</span> <span class="n">parallelLoopChunksOf1</span>
 </pre></div>
 </div>
 <p><em>Execute on the command line inside 03.parallelLoop-chunksOf1 directory:</em></p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">mpirun</span> <span class="o">-</span><span class="n">np</span> <span class="o">&lt;</span><span class="n">number</span> <span class="n">of</span> <span class="n">processes</span><span class="o">&gt;</span> <span class="o">./</span><span class="n">parallelLoopChunksOf1</span>
+<div class="highlight-default"><div class="highlight"><pre><span class="n">mpirun</span> <span class="o">-</span><span class="n">np</span> <span class="o">&lt;</span><span class="n">number</span> <span class="n">of</span> <span class="n">processes</span><span class="o">&gt;</span> <span class="o">./</span><span class="n">parallelLoopChunksOf1</span>
 </pre></div>
 </div>
 <p>A simple decomposition sometimes used when your loop is not accessing consecutive
 memory locations would be to let each process do one iteration, up to N processes,
-then start again with process 0 taking the next iteration. A for loop on line 29
+then start again with process 0 taking the next iteration. A for loop on line 35
 is used to implement this type of data decomposition.</p>
 <a class="reference internal image-reference" href="../_images/ChunksOf1.png"><img alt="../_images/ChunksOf1.png" src="../_images/ChunksOf1.png" style="width: 800px;" /></a>
 <p>This is a basic example that does not yet include a data array, though
@@ -453,7 +456,7 @@ of an array that could have been looped over in a sequential solution.</p>
 39
 40
 41
-42</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="cm">/* parallelLoopChunksOf1.c</span>
+42</pre></div></td><td class="code"><div class="highlight"><pre><span class="cm">/* parallelLoopChunksOf1.c</span>
 <span class="cm"> * ... illustrates the parallel for loop pattern in MPI</span>
 <span class="cm"> *	in which processes perform the loop&#39;s iterations in &#39;chunks&#39;</span>
 <span class="cm"> *      of size 1 (simple, and useful when loop iterations</span>
@@ -545,7 +548,7 @@ of an array that could have been looped over in a sequential solution.</p>
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright This work is licensed under a Creative Commons Attribution-ShareAlike 3.0 Unported License.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.3.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.2.
     </div>
   </body>
 </html>

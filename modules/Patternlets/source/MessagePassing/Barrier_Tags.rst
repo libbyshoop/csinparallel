@@ -25,7 +25,7 @@ You can visualize the execution of the program with the barrier function
 like this, with time moving from left to right:
 
 .. image:: MPIImages/Barrier.png
-	:width: 600
+	:width: 700
 
 .. literalinclude:: ../patternlets/MPI/16.barrier/barrier.c
     :language: c
@@ -85,10 +85,10 @@ execution time is the time it took the longest process to finish.
 We can also use reduction for obtaining the parallel execution time of a program.
 In this example, each process individually records how long it took to finish.
 Each of these local times is then reduced to a single time using the max operator.
-This allows us to find the largest of the input times to totalTime.
+This allows us to find the largest local time from all processes.
 
 .. image:: MPIImages/ReduceTiming.png
-	:width: 600
+	:width: 700
 
 .. literalinclude:: ../patternlets/MPI/18.reduce+Timing/reduce+timing.c
     :language: c
@@ -112,7 +112,7 @@ This allows us to find the largest of the input times to totalTime.
 
 Tags can be placed on messages that are sent from a non-master process and received
 by the master process. Using tags is an alternative form of simulating the barrier
-in example 16 above.
+in example 17 above.
 
 .. topic:: To do:
 

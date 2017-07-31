@@ -1,7 +1,7 @@
 /* broadcastLoop.c
 * ... illustrates the use of MPI_Bcast() for arrays
-* combined with data decomposition pattern using a paralel for loop with
-* equal chunks. Wraps up with a gather so that completed wor is back in
+* combined with data decomposition pattern using a parallel-for loop with
+* equal chunks. Wraps up with a gather so that completed work is back in
 * master process.
 *
 * Libby Shoop, Macalester College, July, 2017

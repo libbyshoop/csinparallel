@@ -5,9 +5,12 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
     <title>Communication Patterns in MPI: Basic message passing &#8212; Parallel Patternlets</title>
+    
     <link rel="stylesheet" href="../_static/csip.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
@@ -56,11 +59,11 @@ to see the message passing part of the of name MPI (Message Passing Interface)!<
 <h2>04. Message passing deadlock, using Send-Receive of a single value<a class="headerlink" href="#message-passing-deadlock-using-send-receive-of-a-single-value" title="Permalink to this headline">¶</a></h2>
 <p><em>file: patternlets/MPI/04.messagePassingDeadlock/messagePassingDeadlock.c</em></p>
 <p><em>Build inside 04.messagePassingDeadlock directory:</em></p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">make</span> <span class="n">messagePassingDeadlock</span>
+<div class="highlight-default"><div class="highlight"><pre><span class="n">make</span> <span class="n">messagePassingDeadlock</span>
 </pre></div>
 </div>
 <p><em>Execute on the command line inside 04.messagePassingDeadlock directory:</em></p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">mpirun</span> <span class="o">-</span><span class="n">np</span> <span class="o">&lt;</span><span class="n">number</span> <span class="n">of</span> <span class="n">processes</span><span class="o">&gt;</span> <span class="o">./</span><span class="n">messagePassingDeadlock</span>
+<div class="highlight-default"><div class="highlight"><pre><span class="n">mpirun</span> <span class="o">-</span><span class="n">np</span> <span class="o">&lt;</span><span class="n">number</span> <span class="n">of</span> <span class="n">processes</span><span class="o">&gt;</span> <span class="o">./</span><span class="n">messagePassingDeadlock</span>
 </pre></div>
 </div>
 <p>This example shows the pattern of sending and receiving messages between
@@ -129,7 +132,7 @@ from top to bottom:</p>
 47
 48
 49
-50</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="cm">/* messagePassingDeadlock.c</span>
+50</pre></div></td><td class="code"><div class="highlight"><pre><span class="cm">/* messagePassingDeadlock.c</span>
 <span class="cm"> * ... illustrates deadlock with MPI_Send() and MPI_Recv() commands...</span>
 <span class="cm"> *</span>
 <span class="cm"> * Joel Adams, Calvin College, November 2009.</span>
@@ -193,11 +196,11 @@ situation?</p>
 <h2>05. Message passing 1, using Send-Receive of a single value<a class="headerlink" href="#message-passing-1-using-send-receive-of-a-single-value" title="Permalink to this headline">¶</a></h2>
 <p><em>file: patternlets/MPI/05.messagePassing/messagePassing.c</em></p>
 <p><em>Build inside 05.messagePassing directory:</em></p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">make</span> <span class="n">messagePassing</span>
+<div class="highlight-default"><div class="highlight"><pre><span class="n">make</span> <span class="n">messagePassing</span>
 </pre></div>
 </div>
 <p><em>Execute on the command line inside 05.messagePassing directory:</em></p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">mpirun</span> <span class="o">-</span><span class="n">np</span> <span class="o">&lt;</span><span class="n">number</span> <span class="n">of</span> <span class="n">processes</span><span class="o">&gt;</span> <span class="o">./</span><span class="n">messagePassing</span>
+<div class="highlight-default"><div class="highlight"><pre><span class="n">mpirun</span> <span class="o">-</span><span class="n">np</span> <span class="o">&lt;</span><span class="n">number</span> <span class="n">of</span> <span class="n">processes</span><span class="o">&gt;</span> <span class="o">./</span><span class="n">messagePassing</span>
 </pre></div>
 </div>
 <p>The previous example highlights how a deadlock
@@ -269,7 +272,7 @@ pairs allow us to avoid the deadlock situation all together?</p>
 49
 50
 51
-52</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="cm">/* messagePassing.c</span>
+52</pre></div></td><td class="code"><div class="highlight"><pre><span class="cm">/* messagePassing.c</span>
 <span class="cm"> * ... illustrates the use of the MPI_Send() and MPI_Recv() commands...</span>
 <span class="cm"> * Joel Adams, Calvin College, November 2009.</span>
 <span class="cm"> * Modified by Hannah Sonsalla, Macalester College 2017.</span>
@@ -336,11 +339,11 @@ when pairs of processes need to exchange information.</p>
 <h2>06. Message passing 2,  using Send-Receive of an array of values<a class="headerlink" href="#message-passing-2-using-send-receive-of-an-array-of-values" title="Permalink to this headline">¶</a></h2>
 <p><em>file: patternlets/MPI/06.messagePassing2/messagePassing2.c</em></p>
 <p><em>Build inside 06.messagePassing2 directory:</em></p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">make</span> <span class="n">messagePassing2</span>
+<div class="highlight-default"><div class="highlight"><pre><span class="n">make</span> <span class="n">messagePassing2</span>
 </pre></div>
 </div>
 <p><em>Execute on the command line inside 06.messagePassing2 directory:</em></p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">mpirun</span> <span class="o">-</span><span class="n">np</span> <span class="o">&lt;</span><span class="n">number</span> <span class="n">of</span> <span class="n">processes</span><span class="o">&gt;</span> <span class="o">./</span><span class="n">messagePassing2</span>
+<div class="highlight-default"><div class="highlight"><pre><span class="n">mpirun</span> <span class="o">-</span><span class="n">np</span> <span class="o">&lt;</span><span class="n">number</span> <span class="n">of</span> <span class="n">processes</span><span class="o">&gt;</span> <span class="o">./</span><span class="n">messagePassing2</span>
 </pre></div>
 </div>
 <p>The messages sent and received by processes can be of types other than
@@ -424,7 +427,7 @@ Why must we apply the free function to both sendString and receivedString?</p>
 61
 62
 63
-64</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="cm">/* messagePassing2.c</span>
+64</pre></div></td><td class="code"><div class="highlight"><pre><span class="cm">/* messagePassing2.c</span>
 <span class="cm"> * ... illustrates using MPI_Send() and MPI_Recv() commands on arrays...</span>
 <span class="cm"> * While this example sends and receives char arrays (strings),</span>
 <span class="cm"> *  the same approach works on arrays of numbers or other types.</span>
@@ -495,11 +498,11 @@ Why must we apply the free function to both sendString and receivedString?</p>
 <h2>07. Message passing 3, using Send-Receive with master-worker pattern<a class="headerlink" href="#message-passing-3-using-send-receive-with-master-worker-pattern" title="Permalink to this headline">¶</a></h2>
 <p><em>file: patternlets/MPI/07.messagePassing3/messagePassing3.c</em></p>
 <p><em>Build inside 07.messagePassing3 directory:</em></p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">make</span> <span class="n">messagePassing3</span>
+<div class="highlight-default"><div class="highlight"><pre><span class="n">make</span> <span class="n">messagePassing3</span>
 </pre></div>
 </div>
 <p><em>Execute on the command line inside 07.messagePassing3 directory:</em></p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">mpirun</span> <span class="o">-</span><span class="n">np</span> <span class="o">&lt;</span><span class="n">number</span> <span class="n">of</span> <span class="n">processes</span><span class="o">&gt;</span> <span class="o">./</span><span class="n">messagePassing3</span>
+<div class="highlight-default"><div class="highlight"><pre><span class="n">mpirun</span> <span class="o">-</span><span class="n">np</span> <span class="o">&lt;</span><span class="n">number</span> <span class="n">of</span> <span class="n">processes</span><span class="o">&gt;</span> <span class="o">./</span><span class="n">messagePassing3</span>
 </pre></div>
 </div>
 <p>Sending and receiving often occurs in pairs. We will investigate a scenario
@@ -596,7 +599,7 @@ and finish? What is needed to be able to guarantee completion?</p>
 76
 77
 78
-79</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="cm">/* messagePassing3.c</span>
+79</pre></div></td><td class="code"><div class="highlight"><pre><span class="cm">/* messagePassing3.c</span>
 <span class="cm"> * ... illustrates the use of MPI_Send() and MPI_Recv(),</span>
 <span class="cm"> *      in combination with the master-worker pattern.</span>
 <span class="cm"> *</span>
@@ -735,7 +738,7 @@ to the next process in line for further processing.</p>
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright This work is licensed under a Creative Commons Attribution-ShareAlike 3.0 Unported License.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.3.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.2.
     </div>
   </body>
 </html>

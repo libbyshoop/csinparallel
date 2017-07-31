@@ -5,9 +5,12 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
     <title>Patterns used when threads share data values &#8212; Parallel Patternlets</title>
+    
     <link rel="stylesheet" href="../_static/csip.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
@@ -52,11 +55,11 @@
 <h2>11. Shared Data Algorithm Strategy: Parallel-for-loop pattern needs non-shared, private variables<a class="headerlink" href="#shared-data-algorithm-strategy-parallel-for-loop-pattern-needs-non-shared-private-variables" title="Permalink to this headline">¶</a></h2>
 <p><em>file: openMP/11.private/private.c</em></p>
 <p><em>Build inside 11.private directory:</em></p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">make</span> <span class="n">private</span>
+<div class="highlight-default"><div class="highlight"><pre><span class="n">make</span> <span class="n">private</span>
 </pre></div>
 </div>
 <p><em>Execute on the command line inside 11.private directory:</em></p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="o">./</span><span class="n">private</span>
+<div class="highlight-default"><div class="highlight"><pre><span class="o">./</span><span class="n">private</span>
 </pre></div>
 </div>
 <p>In this example, you will try a parallel for loop where additional variables (i, j in the code) cannot be shared by all of the threads, but must instead be <em>private</em> to each thread, which means that each thread has its own copy of that variable.  In this case, the outer loop is being split into chunks and given to each thread, but the inner loop is being executed by each thread for each of the elements in its chunk.  The loop counting variables must be maintained separately by each thread.  Because they were initially declared outside the loops at the begininning of the program, by default these variables are shared by all the threads.</p>
@@ -109,7 +112,7 @@
 47
 48
 49
-50</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="cm">/* private.c</span>
+50</pre></div></td><td class="code"><div class="highlight"><pre><span class="cm">/* private.c</span>
 <span class="cm"> * ... illustrates why private variables are needed with OpenMP&#39;s parallel for loop</span>
 <span class="cm"> *</span>
 <span class="cm"> * Joel Adams, Calvin College, November 2009.</span>
@@ -166,11 +169,11 @@
 <h2>12. Race Condition: missing the mutual exclusion coordination pattern<a class="headerlink" href="#race-condition-missing-the-mutual-exclusion-coordination-pattern" title="Permalink to this headline">¶</a></h2>
 <p><em>file: openMP/12.mutualExclusion-atomic/atomic.c</em></p>
 <p><em>Build inside 12.mutualExclusion-atomic directory:</em></p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">make</span> <span class="n">atomic</span>
+<div class="highlight-default"><div class="highlight"><pre><span class="n">make</span> <span class="n">atomic</span>
 </pre></div>
 </div>
 <p><em>Execute on the command line inside 12.mutualExclusion-atomic directory:</em></p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="o">./</span><span class="n">atomic</span>
+<div class="highlight-default"><div class="highlight"><pre><span class="o">./</span><span class="n">atomic</span>
 </pre></div>
 </div>
 <p>When a variable must be shared by all the threads, as in this example below, an issue called a <em>race condition</em> can occur when the threads are updating that variable concurrently.  This happens because there are multiple underlying machine instructions needed to complete the update of the memory location and each thread must execute all of them atomically before another thread does so, thus ensuring <strong>mutual exclusion</strong> between the threads when updating a shared variable.  This is done using the OpenMP pragma shown in this code.</p>
@@ -211,7 +214,7 @@
 35
 36
 37
-38</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="cm">/* atomic.c</span>
+38</pre></div></td><td class="code"><div class="highlight"><pre><span class="cm">/* atomic.c</span>
 <span class="cm"> * ... illustrates a race condition when multiple threads read from / </span>
 <span class="cm"> *  write to a shared variable (and explores OpenMP atomic operations).</span>
 <span class="cm"> *</span>
@@ -256,11 +259,11 @@
 <h2>13. The Mutual Exclusion Coordination Pattern: two ways to ensure<a class="headerlink" href="#the-mutual-exclusion-coordination-pattern-two-ways-to-ensure" title="Permalink to this headline">¶</a></h2>
 <p><em>file: openMP/13.mutualExclusion-critical/critical.c</em></p>
 <p><em>Build inside 13.mutualExclusion-critical directory:</em></p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">make</span> <span class="n">critical</span>
+<div class="highlight-default"><div class="highlight"><pre><span class="n">make</span> <span class="n">critical</span>
 </pre></div>
 </div>
 <p><em>Execute on the command line inside 13.mutualExclusion-critical directory:</em></p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="o">./</span><span class="n">critical</span>
+<div class="highlight-default"><div class="highlight"><pre><span class="o">./</span><span class="n">critical</span>
 </pre></div>
 </div>
 <p>Here is another way to ensure <strong>mutual exclusion</strong> in OpenMP.</p>
@@ -303,7 +306,7 @@
 37
 38
 39
-40</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="cm">/* critical.c</span>
+40</pre></div></td><td class="code"><div class="highlight"><pre><span class="cm">/* critical.c</span>
 <span class="cm"> * ... fixes a race condition when multiple threads read from / </span>
 <span class="cm"> *  write to a shared variable	using the OpenMP critical directive.</span>
 <span class="cm"> *</span>
@@ -350,11 +353,11 @@
 <h2>14.  Mutual Exclusion Coordination Pattern: compare performance<a class="headerlink" href="#mutual-exclusion-coordination-pattern-compare-performance" title="Permalink to this headline">¶</a></h2>
 <p><em>file: openMP/14.mutualExclusion-critical2/critical2.c</em></p>
 <p><em>Build inside 14.mutualExclusion-critical2 directory:</em></p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">make</span> <span class="n">critical2</span>
+<div class="highlight-default"><div class="highlight"><pre><span class="n">make</span> <span class="n">critical2</span>
 </pre></div>
 </div>
 <p><em>Execute on the command line inside 14.mutualExclusion-critical2 directory:</em></p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="o">./</span><span class="n">critical2</span>
+<div class="highlight-default"><div class="highlight"><pre><span class="o">./</span><span class="n">critical2</span>
 </pre></div>
 </div>
 <p>Here is an example of how to compare the performance of using the atomic pragma directive and the critical pragma directive.  Note that there is a function in OpenMP that lets you obtain the current time, which enables us to determine how long it took to run a particular section of our program.</p>
@@ -425,7 +428,7 @@
 65
 66
 67
-68</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="cm">/* critical2.c</span>
+68</pre></div></td><td class="code"><div class="highlight"><pre><span class="cm">/* critical2.c</span>
 <span class="cm"> * ... compares the performance of OpenMP&#39;s critical and atomic directives</span>
 <span class="cm"> *</span>
 <span class="cm"> * Joel Adams, Calvin College, November 2009.</span>
@@ -500,11 +503,11 @@
 <h2>15.  Mutual Exclusion Coordination Pattern: language difference<a class="headerlink" href="#mutual-exclusion-coordination-pattern-language-difference" title="Permalink to this headline">¶</a></h2>
 <p><em>file: openMP/15.mutualExclusion-critical3/critical3.c</em></p>
 <p><em>Build inside 15.mutualExclusion-critical3 directory:</em></p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">make</span> <span class="n">critical3</span>
+<div class="highlight-default"><div class="highlight"><pre><span class="n">make</span> <span class="n">critical3</span>
 </pre></div>
 </div>
 <p><em>Execute on the command line inside 15.mutualExclusion-critical3 directory:</em></p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="o">./</span><span class="n">critical3</span>
+<div class="highlight-default"><div class="highlight"><pre><span class="o">./</span><span class="n">critical3</span>
 </pre></div>
 </div>
 <p>The following is a C++ code example to illustrate some language differences between C and C++.  Try the exercises described in the code below.</p>
@@ -546,7 +549,7 @@
 36
 37
 38
-39</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="cm">/* critical3.c</span>
+39</pre></div></td><td class="code"><div class="highlight"><pre><span class="cm">/* critical3.c</span>
 <span class="cm"> * ... a simple case where OpenMP&#39;s critical works but atomic does not.</span>
 <span class="cm"> *</span>
 <span class="cm"> * Joel Adams, Calvin College, November 2009.</span>
@@ -593,7 +596,7 @@
 <blockquote>
 <div>printf(“Hello from thread #%d of %dn”, id, numThreads);</div></blockquote>
 <p>is a single function call that is pretty much performed atomically, so you get pretty good output like.</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">Hello</span> <span class="kn">from</span> <span class="nn">thread</span> <span class="c1">#0 of 4</span>
+<div class="highlight-default"><div class="highlight"><pre><span class="n">Hello</span> <span class="kn">from</span> <span class="nn">thread</span> <span class="c1">#0 of 4</span>
 <span class="n">Hello</span> <span class="kn">from</span> <span class="nn">thread</span> <span class="c1">#2 of 4</span>
 <span class="n">Hello</span> <span class="kn">from</span> <span class="nn">thread</span> <span class="c1">#3 of 4</span>
 <span class="n">Hello</span> <span class="kn">from</span> <span class="nn">thread</span> <span class="c1">#1 of 4</span>
@@ -662,7 +665,7 @@
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright This work is licensed under a Creative Commons Attribution-ShareAlike 3.0 Unported License.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.3.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.2.
     </div>
   </body>
 </html>
