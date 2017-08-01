@@ -19,6 +19,7 @@ This document contains simple examples of basic elements that are combined to fo
   MessagePassing/MPI_Patternlets
   SharedMemory/OpenMP_Patternlets
   SharedMemoryVath/Vath_pth_Patternlets
+  Hybrid/Hybrid_Patternlets
 
 
 

@@ -1,0 +1,143 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Hybrid Patternlets in MPI and OpenMP &#8212; Parallel Patternlets</title>
+    
+    <link rel="stylesheet" href="../_static/csip.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Hybrid Program Structure: SPMD" href="Spmd.html" />
+    <link rel="prev" title="Patterns used when threads share data values" href="../SharedMemoryVath/MutualExclusion.html" /> 
+  </head>
+  <body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="Spmd.html" title="Hybrid Program Structure: SPMD"
+             accesskey="N">next</a></li>
+        <li class="right" >
+          <a href="../SharedMemoryVath/MutualExclusion.html" title="Patterns used when threads share data values"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Parallel Patternlets</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="hybrid-patternlets-in-mpi-and-openmp">
+<h1>Hybrid Patternlets in MPI and OpenMP<a class="headerlink" href="#hybrid-patternlets-in-mpi-and-openmp" title="Permalink to this headline">¶</a></h1>
+<p>Hybrid programming techniques are becoming more popular as larger clusters become
+available. Such techniques are particularly useful when running very large problem
+sizes. We will program in a hybrid environment, using MPI and OpenMP. This environment
+will rely on both distributed memory from MPI and shared memory from OpenMP.</p>
+<p>Pure MPI essentially has one MPI process on each core. A programming model
+that combines MPI and OpenMP uses MPI to distribute work among cores, each
+of which uses OpenMP to work on its task. In other words, MPI describes
+parallelism between processes and the thread parallelism in OpenMP provides
+a shared-memory model within a process. Conceptually, a program with 3 processes
+with 2 threads each looks like this:</p>
+<a class="reference internal image-reference" href="../_images/Hybrid.png"><img alt="../_images/Hybrid.png" src="../_images/Hybrid.png" style="width: 800px;" /></a>
+<div class="section" id="hybrid-program-model">
+<h2>Hybrid Program Model<a class="headerlink" href="#hybrid-program-model" title="Permalink to this headline">¶</a></h2>
+<p>The MPI + OpenMP model generally includes these steps:</p>
+<ol class="arabic simple">
+<li>MPI Initialization</li>
+<li>OMP parallel regions within MPI process</li>
+<li>Finalize MPI</li>
+</ol>
+<a class="reference internal image-reference" href="../_images/HybridModel.png"><img alt="../_images/HybridModel.png" src="../_images/HybridModel.png" style="width: 600px;" /></a>
+<div class="section" id="source-code">
+<h3>Source Code<a class="headerlink" href="#source-code" title="Permalink to this headline">¶</a></h3>
+<p>Please download all examples from this tarball:
+<a class="reference download internal" href="../_downloads/hybrid-MPI+OpenMP.tar.gz" download=""><code class="xref download docutils literal"><span class="pre">hybrid-MPI+OpenMP.tar.gz</span></code></a></p>
+<p>These C code examples use the Message Passing Interface (MPI) library and
+OpenMP pragmas. MPI is suitable for use on either a single multicore
+machine or a cluster of machines. See <a class="reference internal" href="../MessagePassing/RunningMPI.html"><span class="doc">Running the examples on your cluster</span></a> for more information
+about running the code on a cluster of machines. You will need a C compiler
+with OpenMP in order to compile and run the following examples.</p>
+<p>A C code file for each example below can be
+found in subdirectories of the hybrid-MPI+OpenMP directory, along with a makefile
+and an example of how to execute the program.</p>
+</div>
+<div class="section" id="patternlets">
+<h3>Patternlets<a class="headerlink" href="#patternlets" title="Permalink to this headline">¶</a></h3>
+<p><a class="reference internal" href="Spmd.html"><span class="doc">Hybrid Program Structure: SPMD</span></a></p>
+<div class="toctree-wrapper compound">
+</div>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../index.html">
+              <img class="logo" src="../_static/CSInParallel200wide.png" alt="Logo"/>
+            </a></p>
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Hybrid Patternlets in MPI and OpenMP</a><ul>
+<li><a class="reference internal" href="#hybrid-program-model">Hybrid Program Model</a><ul>
+<li><a class="reference internal" href="#source-code">Source Code</a></li>
+<li><a class="reference internal" href="#patternlets">Patternlets</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="../SharedMemoryVath/MutualExclusion.html"
+                        title="previous chapter">Patterns used when threads share data values</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="Spmd.html"
+                        title="next chapter">Hybrid Program Structure: SPMD</a></p>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="Spmd.html" title="Hybrid Program Structure: SPMD"
+             >next</a></li>
+        <li class="right" >
+          <a href="../SharedMemoryVath/MutualExclusion.html" title="Patterns used when threads share data values"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Parallel Patternlets</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright This work is licensed under a Creative Commons Attribution-ShareAlike 3.0 Unported License.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.2.
+    </div>
+  </body>
+</html>

@@ -66,3 +66,5 @@ Depending on you interest, you can now explore MPI Patternlets, OpenMP Patternle
 :doc:`SharedMemory/OpenMP_Patternlets`
 
 :doc:`SharedMemoryVath/Vath_pth_Patternlets`
+
+:doc:`Hybrid/Hybrid_Patternlets`

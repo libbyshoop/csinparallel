@@ -6,7 +6,7 @@
  *
  * Joel Adams, Calvin College, November 2009.
  *
- * Usage: mpirun -np N ./spmd [numThreads]
+ * Usage: mpirun -np N ./spmd2 [numThreads]
  *
  * Exercise:
  * - Build and run, varying N = 1, 2, 3, 4, ...
@@ -56,4 +56,3 @@ int main(int argc, char** argv) {
 	MPI_Finalize();
 	return 0;
 }
-
