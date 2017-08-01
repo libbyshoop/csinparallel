@@ -1,0 +1,137 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Getting Started with Message Passing using MPI &#8212; MPI Programming</title>
+    
+    <link rel="stylesheet" href="_static/csip.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="shortcut icon" href="_static/favicon.ico"/>
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Monte Carlo Estimate Pi" href="calculatePi/Pi.html" />
+    <link rel="prev" title="Message Passing with MPI" href="index.html" /> 
+  </head>
+  <body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="calculatePi/Pi.html" title="Monte Carlo Estimate Pi"
+             accesskey="N">next</a></li>
+        <li class="right" >
+          <a href="index.html" title="Message Passing with MPI"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">MPI Programming</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="getting-started-with-message-passing-using-mpi">
+<h1>Getting Started with Message Passing using MPI<a class="headerlink" href="#getting-started-with-message-passing-using-mpi" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="multiprocessor-machines-and-distributed-memory">
+<h2>Multiprocessor Machines and Distributed Memory<a class="headerlink" href="#multiprocessor-machines-and-distributed-memory" title="Permalink to this headline">¶</a></h2>
+<p>A single system that uses two or more central processing units (CPUs) is considered
+multiprocessing. A multiprocessor computer system with distributed memory contains
+core-memory pairs that are connected by a network. Each core has its own private
+memory that is only accessible to that core. It is important to note that a process
+is essentially one core-memory pair. Thus, two processes can communicate by sending and
+receiving messages (functions). In the examples, we will learn how
+to use a library called MPI to enable us to write programs that can use multicore
+processors and distributed memory to write programs that can complete a task
+faster by taking advantage of message-passing.</p>
+<p>The key idea for programming distributed memory systems is to determine how to
+allocate the tasks across processes. Unlike shared memory systems, race conditions
+are not present in distributed memory systems. Throughout the examples, we will
+see how we can use “task parallelism” to execute the same task on different
+parts of a desired computation in processes and gather the results when each
+process is finished.</p>
+<div class="section" id="getting-started-with-mpi">
+<h3>Getting Started with MPI<a class="headerlink" href="#getting-started-with-mpi" title="Permalink to this headline">¶</a></h3>
+<p>We will use a standard message-passing system for parallel programming
+called MPI (Message-Passing Interface). The functions defined by the MPI
+library are callable from C, C++ and Fortran. This interface is a useful
+tool for helping to facilitate synchronization and communication between
+processes. MPI communications fall under two categories: point-to-point
+and collective. Point-to-point functions involve communication between
+two specific processes whereas collective communication functions involve
+communication among all processes. Typically, each CPU or core in a
+multicore machine is assigned only one process in an MPI program.</p>
+<p>Depending on your interest, you can now explore the below examples.</p>
+<p><a class="reference internal" href="calculatePi/Pi.html"><span class="doc">Monte Carlo Estimate Pi</span></a></p>
+<p><a class="reference internal" href="trapezoidIntegration/trapezoid.html"><span class="doc">Trapezoidal Rule Integration</span></a></p>
+<p><a class="reference internal" href="oddEvenSort/oddEven.html"><span class="doc">Odd Even Transposition Sort</span></a></p>
+<p><a class="reference internal" href="mergeSort/mergeSort.html"><span class="doc">Merge Sort</span></a></p>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="index.html">
+              <img class="logo" src="_static/CSInParallel200wide.png" alt="Logo"/>
+            </a></p>
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Getting Started with Message Passing using MPI</a><ul>
+<li><a class="reference internal" href="#multiprocessor-machines-and-distributed-memory">Multiprocessor Machines and Distributed Memory</a><ul>
+<li><a class="reference internal" href="#getting-started-with-mpi">Getting Started with MPI</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="index.html"
+                        title="previous chapter">Message Passing with MPI</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="calculatePi/Pi.html"
+                        title="next chapter">Monte Carlo Estimate Pi</a></p>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="calculatePi/Pi.html" title="Monte Carlo Estimate Pi"
+             >next</a></li>
+        <li class="right" >
+          <a href="index.html" title="Message Passing with MPI"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">MPI Programming</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright This work is licensed under a Creative Commons Attribution-ShareAlike 3.0 Unported License.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.2.
+    </div>
+  </body>
+</html>

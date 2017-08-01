@@ -1,0 +1,499 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Odd Even Transposition Sort &#8212; MPI Programming</title>
+    
+    <link rel="stylesheet" href="../_static/csip.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Merge Sort" href="../mergeSort/mergeSort.html" />
+    <link rel="prev" title="Trapezoidal Rule Integration" href="../trapezoidIntegration/trapezoid.html" /> 
+  </head>
+  <body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../mergeSort/mergeSort.html" title="Merge Sort"
+             accesskey="N">next</a></li>
+        <li class="right" >
+          <a href="../trapezoidIntegration/trapezoid.html" title="Trapezoidal Rule Integration"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">MPI Programming</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="odd-even-transposition-sort">
+<h1>Odd Even Transposition Sort<a class="headerlink" href="#odd-even-transposition-sort" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="algorithm">
+<h2>Algorithm<a class="headerlink" href="#algorithm" title="Permalink to this headline">¶</a></h2>
+<p>The odd even transposition sort is a variation of bubble sort. Like in bubble sort,
+elements of a list are compared pairwise and swapped when necessary. However, these
+compare-swaps are done in two phases: odd and even. Suppose that <em>a</em> is a list of
+integers. The compare-swaps for the phases are as follows</p>
+<p><strong>Odd phase:</strong> (a[1], a[2]),(a[3], a[4]), (a[5],a[6]), …</p>
+<p><strong>Even phase:</strong> (a[0], a[1]),(a[2], a[3]), (a[4],a[5]), …</p>
+<p>The algorithm guarantees that for a list with n elements, after n phases the
+list will be sorted. the list may be sorted with fewer phases, but it will
+always be sorted after n phases. Below is a simple example for reference.</p>
+<p>List: 6, 2, 7, 4</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="22%" />
+<col width="55%" />
+<col width="23%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Phase</th>
+<th class="head">Compare-Swap</th>
+<th class="head">Resulting List</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>Odd</td>
+<td><div class="first last line-block">
+<div class="line">Compare-swap (2,7)</div>
+</div>
+</td>
+<td><div class="first last line-block">
+<div class="line">6, 2, 7, 4</div>
+</div>
+</td>
+</tr>
+<tr class="row-odd"><td>Even</td>
+<td><div class="first last line-block">
+<div class="line">Compare-swap (6,2) and (7,4)</div>
+</div>
+</td>
+<td><div class="first last line-block">
+<div class="line">2, 6, 4, 7</div>
+</div>
+</td>
+</tr>
+<tr class="row-even"><td>Odd</td>
+<td><div class="first last line-block">
+<div class="line">Compare-swap (6,4)</div>
+</div>
+</td>
+<td><div class="first last line-block">
+<div class="line">2, 4, 6, 7</div>
+</div>
+</td>
+</tr>
+<tr class="row-odd"><td>Even</td>
+<td><div class="first last line-block">
+<div class="line">Compare-swap (2,4) and (6,7)</div>
+</div>
+</td>
+<td><div class="first last line-block">
+<div class="line">2, 4, 6, 7</div>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="parallelization">
+<h2>Parallelization<a class="headerlink" href="#parallelization" title="Permalink to this headline">¶</a></h2>
+<p>We begin by deciding how to split up the work of sorting list <em>a</em>. If we have
+<em>n</em> elements in the list and <em>p</em> processes, then naturally each process should
+receive <em>n/p</em> elements. To sort the local elements in each process, we can use a fast
+serial sorting algorithm like quicksort (qsort). Now we are left with independent
+processes that each contain a local portion of sorted elements. If each process
+had only one element, we could go about the odd even sort easily. Processes 1
+and 2 would exchange their elements for an odd phase and so on. We will apply this
+logic to our parallel version. We will have process 1 and 2 exchange all of
+their elements with process 1 keeping the smallest half of the elements. Continuing
+this for all n phases will result in sorted elements stored in processes
+of increasing rank.</p>
+<p>The parallel odd even transposition sort depends on the number of process to
+guarantee a sorted list. If a sort is run on p processes, then after p phases
+the list will be sorted. Example below.</p>
+<p>List: 5, 3, 7, 8, 2, 1, 6, 9, 4</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="34%" />
+<col width="22%" />
+<col width="22%" />
+<col width="22%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Phase</th>
+<th class="head">Process 0</th>
+<th class="head">Process 1</th>
+<th class="head">Process 2</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>Begin</td>
+<td>5, 3, 7</td>
+<td>8, 2, 1</td>
+<td>6, 9, 4</td>
+</tr>
+<tr class="row-odd"><td>After Local Sort</td>
+<td>3, 5, 7</td>
+<td>1, 2, 8</td>
+<td>4, 6, 9</td>
+</tr>
+<tr class="row-even"><td>Odd</td>
+<td>3, 5, 7</td>
+<td>1, 2, 4</td>
+<td>6, 8, 9</td>
+</tr>
+<tr class="row-odd"><td>Even</td>
+<td>1, 2, 3</td>
+<td>4, 5, 7</td>
+<td>6, 8, 9</td>
+</tr>
+<tr class="row-even"><td>Odd</td>
+<td>1, 2, 3</td>
+<td>4, 5, 6</td>
+<td>7, 8, 9</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="code">
+<h2>Code<a class="headerlink" href="#code" title="Permalink to this headline">¶</a></h2>
+<p><em>file: MPI_examples/oddEvenSort/mpi_odd_even.c</em></p>
+<p>The code for this example is from Peter Pacheco’s book, An Introduction to Parallel Programming.
+For further implementations and reading corresponding to this example, refer
+to his book which is listed below.</p>
+<ul class="simple">
+<li><strong>Book:</strong> <em>An Introduction to Parallel Programming</em>, Peter Pacheco, Morgan Kaufmann Publishers, 2011</li>
+</ul>
+<p><em>Build inside mpi_odd_even directory:</em></p>
+<div class="highlight-default"><div class="highlight"><pre><span class="n">make</span> <span class="n">oddEvenSort</span>
+</pre></div>
+</div>
+<p><em>Execute on the command line inside oddEvenSort directory:</em></p>
+<div class="highlight-default"><div class="highlight"><pre><span class="n">mpirun</span> <span class="o">-</span><span class="n">np</span> <span class="o">&lt;</span><span class="n">number</span> <span class="n">of</span> <span class="n">processes</span><span class="o">&gt;</span> <span class="o">./</span><span class="n">mpi_odd_even</span>
+</pre></div>
+</div>
+<p><strong>Main Function</strong></p>
+<div class="highlight-c"><div class="highlight"><pre><span class="kt">int</span> <span class="nf">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span><span class="o">*</span> <span class="n">argv</span><span class="p">[])</span> <span class="p">{</span>
+   <span class="kt">int</span> <span class="n">my_rank</span><span class="p">,</span> <span class="n">p</span><span class="p">;</span>   <span class="c1">// rank, number processes</span>
+   <span class="kt">char</span> <span class="n">g_i</span><span class="p">;</span>         <span class="c1">// holds either g or i depending on user input</span>
+   <span class="kt">int</span> <span class="o">*</span><span class="n">local_A</span><span class="p">;</span>     <span class="c1">// local list: size of local number of elements * size of int</span>
+   <span class="kt">int</span> <span class="n">global_n</span><span class="p">;</span>     <span class="c1">// number of elements in global list</span>
+   <span class="kt">int</span> <span class="n">local_n</span><span class="p">;</span>      <span class="c1">// number of elements in local list (process list)</span>
+   <span class="n">MPI_Comm</span> <span class="n">comm</span><span class="p">;</span>
+   <span class="kt">double</span> <span class="n">start</span><span class="p">,</span> <span class="n">finish</span><span class="p">,</span> <span class="n">loc_elapsed</span><span class="p">,</span> <span class="n">elapsed</span><span class="p">;</span>
+
+   <span class="n">MPI_Init</span><span class="p">(</span><span class="o">&amp;</span><span class="n">argc</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">argv</span><span class="p">);</span>
+   <span class="n">comm</span> <span class="o">=</span> <span class="n">MPI_COMM_WORLD</span><span class="p">;</span>
+   <span class="n">MPI_Comm_size</span><span class="p">(</span><span class="n">comm</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">p</span><span class="p">);</span>
+   <span class="n">MPI_Comm_rank</span><span class="p">(</span><span class="n">comm</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">my_rank</span><span class="p">);</span>
+
+   <span class="n">Get_args</span><span class="p">(</span><span class="n">argc</span><span class="p">,</span> <span class="n">argv</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">global_n</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">local_n</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">g_i</span><span class="p">,</span> <span class="n">my_rank</span><span class="p">,</span> <span class="n">p</span><span class="p">,</span> <span class="n">comm</span><span class="p">);</span>
+   <span class="n">local_A</span> <span class="o">=</span> <span class="p">(</span><span class="kt">int</span><span class="o">*</span><span class="p">)</span> <span class="n">malloc</span><span class="p">(</span><span class="n">local_n</span><span class="o">*</span><span class="k">sizeof</span><span class="p">(</span><span class="kt">int</span><span class="p">));</span>
+
+   <span class="c1">// generate random list based on user input</span>
+   <span class="k">if</span> <span class="p">(</span><span class="n">g_i</span> <span class="o">==</span> <span class="sc">&#39;g&#39;</span><span class="p">)</span> <span class="p">{</span>
+      <span class="n">Generate_list</span><span class="p">(</span><span class="n">local_A</span><span class="p">,</span> <span class="n">local_n</span><span class="p">,</span> <span class="n">my_rank</span><span class="p">);</span>
+      <span class="n">Print_local_lists</span><span class="p">(</span><span class="n">local_A</span><span class="p">,</span> <span class="n">local_n</span><span class="p">,</span> <span class="n">my_rank</span><span class="p">,</span> <span class="n">p</span><span class="p">,</span> <span class="n">comm</span><span class="p">);</span>
+   <span class="p">}</span>
+   <span class="c1">// read in user defined list from command line</span>
+   <span class="k">else</span> <span class="p">{</span>
+      <span class="n">Read_list</span><span class="p">(</span><span class="n">local_A</span><span class="p">,</span> <span class="n">local_n</span><span class="p">,</span> <span class="n">my_rank</span><span class="p">,</span> <span class="n">p</span><span class="p">,</span> <span class="n">comm</span><span class="p">);</span>
+<span class="c1">//#     ifdef DEBUG</span>
+      <span class="n">Print_local_lists</span><span class="p">(</span><span class="n">local_A</span><span class="p">,</span> <span class="n">local_n</span><span class="p">,</span> <span class="n">my_rank</span><span class="p">,</span> <span class="n">p</span><span class="p">,</span> <span class="n">comm</span><span class="p">);</span>
+<span class="c1">//#     endif</span>
+   <span class="p">}</span>
+
+<span class="cp">#  ifdef DEBUG</span>
+   <span class="n">printf</span><span class="p">(</span><span class="s">&quot;Proc %d &gt; Before Sort</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">my_rank</span><span class="p">);</span>
+   <span class="n">fflush</span><span class="p">(</span><span class="n">stdout</span><span class="p">);</span>
+<span class="cp">#  endif</span>
+
+   <span class="n">MPI_Barrier</span><span class="p">(</span><span class="n">comm</span><span class="p">);</span>
+   <span class="n">start</span> <span class="o">=</span> <span class="n">MPI_Wtime</span><span class="p">();</span>
+   <span class="n">Sort</span><span class="p">(</span><span class="n">local_A</span><span class="p">,</span> <span class="n">local_n</span><span class="p">,</span> <span class="n">my_rank</span><span class="p">,</span> <span class="n">p</span><span class="p">,</span> <span class="n">comm</span><span class="p">);</span>
+   <span class="n">finish</span> <span class="o">=</span> <span class="n">MPI_Wtime</span><span class="p">();</span>
+   <span class="n">loc_elapsed</span> <span class="o">=</span> <span class="n">finish</span><span class="o">-</span><span class="n">start</span><span class="p">;</span>
+   <span class="n">MPI_Reduce</span><span class="p">(</span><span class="o">&amp;</span><span class="n">loc_elapsed</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">elapsed</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">MPI_DOUBLE</span><span class="p">,</span> <span class="n">MPI_MAX</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">comm</span><span class="p">);</span>
+
+<span class="cp">#  ifdef DEBUG</span>
+   <span class="n">Print_local_lists</span><span class="p">(</span><span class="n">local_A</span><span class="p">,</span> <span class="n">local_n</span><span class="p">,</span> <span class="n">my_rank</span><span class="p">,</span> <span class="n">p</span><span class="p">,</span> <span class="n">comm</span><span class="p">);</span>
+   <span class="n">fflush</span><span class="p">(</span><span class="n">stdout</span><span class="p">);</span>
+<span class="cp">#  endif</span>
+
+   <span class="n">Print_global_list</span><span class="p">(</span><span class="n">local_A</span><span class="p">,</span> <span class="n">local_n</span><span class="p">,</span> <span class="n">my_rank</span><span class="p">,</span> <span class="n">p</span><span class="p">,</span> <span class="n">comm</span><span class="p">);</span>
+
+   <span class="n">free</span><span class="p">(</span><span class="n">local_A</span><span class="p">);</span>  <span class="c1">// deallocate memory</span>
+
+   <span class="k">if</span> <span class="p">(</span><span class="n">my_rank</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="n">printf</span><span class="p">(</span><span class="s">&quot;Sorting took %f milliseconds </span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">loc_elapsed</span><span class="o">*</span><span class="mi">1000</span><span class="p">);</span>
+
+   <span class="n">MPI_Finalize</span><span class="p">();</span>
+
+   <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>  <span class="cm">/* main */</span>
+</pre></div>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Comments:</th><td class="field-body"><ul class="first last simple">
+<li><strong>Debug statements:</strong> In C, we can debug code by adding the directives
+<strong>#ifdef DEBUG</strong> and <strong>#endif</strong> around code. There are multiple instances of
+this in the main function. The print statements located between these directives
+are only printed if a problem arises.</li>
+<li><strong>Free function:</strong> The free function in C deallocates the memory that has
+been distributed using calls to malloc. Note that at the end of the
+main function, variable <em>local_a</em> is deallocated as we no longer need to store
+the entire list.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="user-input">
+<h2>User Input<a class="headerlink" href="#user-input" title="Permalink to this headline">¶</a></h2>
+<p>The following command is entered on the command line for running the executable.</p>
+<p><strong>usage:</strong>  mpirun -np &lt;p&gt; mpi_odd_even &lt;g|i&gt; &lt;global_n&gt;</p>
+<p>For this example, users must enter the number of processes (<em>p</em>) as well as the
+number of elements for the list (<em>global_n</em>) as command line arguments. Users also
+have a choice of whether to have the program sort a randomly generated list (<em>g</em>)
+or an input list (<em>i</em>). For our purposes, we will stick to using randomly generated
+lists.</p>
+</div>
+<div class="section" id="odd-even-sorting">
+<h2>Odd Even Sorting<a class="headerlink" href="#odd-even-sorting" title="Permalink to this headline">¶</a></h2>
+<p>There are several functions that play an integral role in sorting including Sort,
+Compare, Odd_even_iter, Merge_low and Merge_high. We will walk through each
+function and describe what is being done. The following diagrams follow from a
+starting list of 5, 3, 7, 8, 2, 1, 6, 9, 4.</p>
+<div class="section" id="sort">
+<h3><strong>Sort</strong><a class="headerlink" href="#sort" title="Permalink to this headline">¶</a></h3>
+<p>From main, each process calls and sends the appropriate arguments to
+Sort. In the Sort function, we begin by allocating some memory needed later on for
+merging the local lists. Then, we determine the odd and even phase partner of the
+current process which has rank <em>my_rank</em>. We will need to know this in order to
+do the odd-even phase swaps. If we have a process whose rank is odd,
+it has two possible partners. Its even phase partner will have a rank of
+<em>my_rank - 1</em> where as its odd phase partner will have a rank of <em>my_rank + 1</em>.
+Similarly, a process whose rank is even will have an even phase partner with
+rank <em>my_rank + 1</em> and an odd phase partner of rank <em>my_rank + 1</em>.</p>
+<p>Even phase: An even rank will have a partner of rank <em>my_rank + 1</em>.
+An odd rank will a partner of rank <em>my_rank - 1</em>.</p>
+<a class="reference internal image-reference" href="../_images/EvenPhase.png"><img alt="../_images/EvenPhase.png" src="../_images/EvenPhase.png" style="width: 500px;" /></a>
+<p>Odd phase: An even rank will a partner of rank <em>my_rank - 1</em>.
+An odd rank will have a partner of rank <em>my_rank + 1</em>.</p>
+<a class="reference internal image-reference" href="../_images/OddPhase.png"><img alt="../_images/OddPhase.png" src="../_images/OddPhase.png" style="width: 500px;" /></a>
+<p>Next, we sort the local list using qsort with the basic Compare function.
+Lastly, we loop through all possible phases (<em>p</em> phases). For each phase,
+the function Odd_even_iter is called which performs one iteration of the
+odd-even transposition between local lists. Lastly, all temporary memory is deallocated.</p>
+<a class="reference internal image-reference" href="../_images/LocalSorting.png"><img alt="../_images/LocalSorting.png" src="../_images/LocalSorting.png" style="width: 500px;" /></a>
+<div class="highlight-c"><div class="highlight"><pre><span class="kt">void</span> <span class="nf">Sort</span><span class="p">(</span><span class="kt">int</span> <span class="n">local_A</span><span class="p">[],</span> <span class="kt">int</span> <span class="n">local_n</span><span class="p">,</span> <span class="kt">int</span> <span class="n">my_rank</span><span class="p">,</span>
+         <span class="kt">int</span> <span class="n">p</span><span class="p">,</span> <span class="n">MPI_Comm</span> <span class="n">comm</span><span class="p">)</span> <span class="p">{</span>
+   <span class="kt">int</span> <span class="n">phase</span><span class="p">;</span>
+   <span class="kt">int</span> <span class="o">*</span><span class="n">temp_B</span><span class="p">,</span> <span class="o">*</span><span class="n">temp_C</span><span class="p">;</span>
+   <span class="kt">int</span> <span class="n">even_partner</span><span class="p">;</span>  <span class="cm">/* phase is even or left-looking */</span>
+   <span class="kt">int</span> <span class="n">odd_partner</span><span class="p">;</span>   <span class="cm">/* phase is odd or right-looking */</span>
+
+   <span class="cm">/* Temporary storage used in merge-split */</span>
+   <span class="n">temp_B</span> <span class="o">=</span> <span class="p">(</span><span class="kt">int</span><span class="o">*</span><span class="p">)</span> <span class="n">malloc</span><span class="p">(</span><span class="n">local_n</span><span class="o">*</span><span class="k">sizeof</span><span class="p">(</span><span class="kt">int</span><span class="p">));</span>
+   <span class="n">temp_C</span> <span class="o">=</span> <span class="p">(</span><span class="kt">int</span><span class="o">*</span><span class="p">)</span> <span class="n">malloc</span><span class="p">(</span><span class="n">local_n</span><span class="o">*</span><span class="k">sizeof</span><span class="p">(</span><span class="kt">int</span><span class="p">));</span>
+
+   <span class="cm">/* Find partners:  negative rank =&gt; do nothing during phase */</span>
+   <span class="k">if</span> <span class="p">(</span><span class="n">my_rank</span> <span class="o">%</span> <span class="mi">2</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>   <span class="cm">/* odd rank */</span>
+      <span class="n">even_partner</span> <span class="o">=</span> <span class="n">my_rank</span> <span class="o">-</span> <span class="mi">1</span><span class="p">;</span>
+      <span class="n">odd_partner</span> <span class="o">=</span> <span class="n">my_rank</span> <span class="o">+</span> <span class="mi">1</span><span class="p">;</span>
+      <span class="k">if</span> <span class="p">(</span><span class="n">odd_partner</span> <span class="o">==</span> <span class="n">p</span><span class="p">)</span> <span class="n">odd_partner</span> <span class="o">=</span> <span class="n">MPI_PROC_NULL</span><span class="p">;</span>  <span class="c1">// Idle during odd phase</span>
+   <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>                   <span class="cm">/* even rank */</span>
+      <span class="n">even_partner</span> <span class="o">=</span> <span class="n">my_rank</span> <span class="o">+</span> <span class="mi">1</span><span class="p">;</span>
+      <span class="k">if</span> <span class="p">(</span><span class="n">even_partner</span> <span class="o">==</span> <span class="n">p</span><span class="p">)</span> <span class="n">even_partner</span> <span class="o">=</span> <span class="n">MPI_PROC_NULL</span><span class="p">;</span>  <span class="c1">// Idle during even phase</span>
+      <span class="n">odd_partner</span> <span class="o">=</span> <span class="n">my_rank</span><span class="o">-</span><span class="mi">1</span><span class="p">;</span>
+   <span class="p">}</span>
+
+   <span class="cm">/* Sort local list using built-in quick sort */</span>
+   <span class="n">qsort</span><span class="p">(</span><span class="n">local_A</span><span class="p">,</span> <span class="n">local_n</span><span class="p">,</span> <span class="k">sizeof</span><span class="p">(</span><span class="kt">int</span><span class="p">),</span> <span class="n">Compare</span><span class="p">);</span>
+
+<span class="cp">#  ifdef DEBUG</span>
+   <span class="n">printf</span><span class="p">(</span><span class="s">&quot;Proc %d &gt; before loop in sort</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">my_rank</span><span class="p">);</span>
+   <span class="n">fflush</span><span class="p">(</span><span class="n">stdout</span><span class="p">);</span>
+<span class="cp">#  endif</span>
+
+   <span class="k">for</span> <span class="p">(</span><span class="n">phase</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">phase</span> <span class="o">&lt;</span> <span class="n">p</span><span class="p">;</span> <span class="n">phase</span><span class="o">++</span><span class="p">)</span>
+      <span class="n">Odd_even_iter</span><span class="p">(</span><span class="n">local_A</span><span class="p">,</span> <span class="n">temp_B</span><span class="p">,</span> <span class="n">temp_C</span><span class="p">,</span> <span class="n">local_n</span><span class="p">,</span> <span class="n">phase</span><span class="p">,</span>
+             <span class="n">even_partner</span><span class="p">,</span> <span class="n">odd_partner</span><span class="p">,</span> <span class="n">my_rank</span><span class="p">,</span> <span class="n">p</span><span class="p">,</span> <span class="n">comm</span><span class="p">);</span>
+
+   <span class="c1">// deallocate memory</span>
+   <span class="n">free</span><span class="p">(</span><span class="n">temp_B</span><span class="p">);</span>
+   <span class="n">free</span><span class="p">(</span><span class="n">temp_C</span><span class="p">);</span>
+<span class="p">}</span>  <span class="cm">/* Sort */</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="compare">
+<h3>Compare<a class="headerlink" href="#compare" title="Permalink to this headline">¶</a></h3>
+<p>The compare function is very simple. It compares two integers
+and is used solely by qsort to sort each local list.</p>
+</div>
+<div class="section" id="odd-even-iter">
+<h3>Odd_even_iter<a class="headerlink" href="#odd-even-iter" title="Permalink to this headline">¶</a></h3>
+<p>We will discuss this function in two parts: even phase and odd phase. In both
+cases, we check to make sure that the current process has the necessary partner
+needed for the swap. If there are an odd number of processes, there is a chance
+that one process will not have a partner to swap with. This check ensures that
+we will not run into an error in this situation.</p>
+<div class="highlight-c"><div class="highlight"><pre><span class="kt">void</span> <span class="nf">Odd_even_iter</span><span class="p">(</span><span class="kt">int</span> <span class="n">local_A</span><span class="p">[],</span> <span class="kt">int</span> <span class="n">temp_B</span><span class="p">[],</span> <span class="kt">int</span> <span class="n">temp_C</span><span class="p">[],</span>
+        <span class="kt">int</span> <span class="n">local_n</span><span class="p">,</span> <span class="kt">int</span> <span class="n">phase</span><span class="p">,</span> <span class="kt">int</span> <span class="n">even_partner</span><span class="p">,</span> <span class="kt">int</span> <span class="n">odd_partner</span><span class="p">,</span>
+        <span class="kt">int</span> <span class="n">my_rank</span><span class="p">,</span> <span class="kt">int</span> <span class="n">p</span><span class="p">,</span> <span class="n">MPI_Comm</span> <span class="n">comm</span><span class="p">)</span> <span class="p">{</span>
+   <span class="n">MPI_Status</span> <span class="n">status</span><span class="p">;</span>
+
+   <span class="k">if</span> <span class="p">(</span><span class="n">phase</span> <span class="o">%</span> <span class="mi">2</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span> <span class="cm">/* even phase */</span>
+      <span class="k">if</span> <span class="p">(</span><span class="n">even_partner</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span> <span class="cm">/* check for even partner */</span>
+         <span class="n">MPI_Sendrecv</span><span class="p">(</span><span class="n">local_A</span><span class="p">,</span> <span class="n">local_n</span><span class="p">,</span> <span class="n">MPI_INT</span><span class="p">,</span> <span class="n">even_partner</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span>
+            <span class="n">temp_B</span><span class="p">,</span> <span class="n">local_n</span><span class="p">,</span> <span class="n">MPI_INT</span><span class="p">,</span> <span class="n">even_partner</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">comm</span><span class="p">,</span>
+            <span class="o">&amp;</span><span class="n">status</span><span class="p">);</span>
+         <span class="k">if</span> <span class="p">(</span><span class="n">my_rank</span> <span class="o">%</span> <span class="mi">2</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">)</span> <span class="cm">/* odd rank */</span>
+            <span class="c1">// local_A have largest local_n ints from local_A and even_partner</span>
+            <span class="n">Merge_high</span><span class="p">(</span><span class="n">local_A</span><span class="p">,</span> <span class="n">temp_B</span><span class="p">,</span> <span class="n">temp_C</span><span class="p">,</span> <span class="n">local_n</span><span class="p">);</span>
+         <span class="k">else</span> <span class="cm">/* even rank */</span>
+            <span class="c1">// local_A have smallest local_n ints from local_A and even_partner</span>
+            <span class="n">Merge_low</span><span class="p">(</span><span class="n">local_A</span><span class="p">,</span> <span class="n">temp_B</span><span class="p">,</span> <span class="n">temp_C</span><span class="p">,</span> <span class="n">local_n</span><span class="p">);</span>
+      <span class="p">}</span>
+   <span class="p">}</span> <span class="k">else</span> <span class="p">{</span> <span class="cm">/* odd phase */</span>
+      <span class="k">if</span> <span class="p">(</span><span class="n">odd_partner</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>  <span class="cm">/* check for odd partner */</span>
+         <span class="n">MPI_Sendrecv</span><span class="p">(</span><span class="n">local_A</span><span class="p">,</span> <span class="n">local_n</span><span class="p">,</span> <span class="n">MPI_INT</span><span class="p">,</span> <span class="n">odd_partner</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span>
+            <span class="n">temp_B</span><span class="p">,</span> <span class="n">local_n</span><span class="p">,</span> <span class="n">MPI_INT</span><span class="p">,</span> <span class="n">odd_partner</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">comm</span><span class="p">,</span>
+            <span class="o">&amp;</span><span class="n">status</span><span class="p">);</span>
+         <span class="k">if</span> <span class="p">(</span><span class="n">my_rank</span> <span class="o">%</span> <span class="mi">2</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">)</span> <span class="cm">/* odd rank */</span>
+            <span class="n">Merge_low</span><span class="p">(</span><span class="n">local_A</span><span class="p">,</span> <span class="n">temp_B</span><span class="p">,</span> <span class="n">temp_C</span><span class="p">,</span> <span class="n">local_n</span><span class="p">);</span>
+         <span class="k">else</span> <span class="cm">/* even rank */</span>
+            <span class="n">Merge_high</span><span class="p">(</span><span class="n">local_A</span><span class="p">,</span> <span class="n">temp_B</span><span class="p">,</span> <span class="n">temp_C</span><span class="p">,</span> <span class="n">local_n</span><span class="p">);</span>
+      <span class="p">}</span>
+   <span class="p">}</span>
+<span class="p">}</span>  <span class="cm">/* Odd_even_iter */</span>
+</pre></div>
+</div>
+<p>Even phase: As long as the process has an even partner, we can proceed.
+The <em>even_partner</em> is sent and received by previously allocated
+memory, <em>temp_B</em>. <em>temp_B</em> is needed for merging. This is done using the
+MPI function MPI_Sendrecv. MPI_Sendrecv  is a thread-safe function to send and
+receive a message in a single call. If we have an odd rank process, we want the
+local list for this process to merge with its <em>even_partner</em> so that
+it will contain the largest elements between the two. Otherwise, the process has
+an even rank and we will merge the smallest elements between the current
+process and its <em>even_partner</em> to the current process’local list.
+Below is a diagram following from the above list.</p>
+<a class="reference internal image-reference" href="../_images/EvenPhaseMerge.png"><img alt="../_images/EvenPhaseMerge.png" src="../_images/EvenPhaseMerge.png" style="width: 500px;" /></a>
+<p>Odd Phase: Once again, if we have an odd phase and the process has an odd partner,
+the <em>odd_partner</em> is sent and received by previously allocated memory, <em>temp_B</em>.
+An odd rank process will merge with its <em>odd_partner</em> so that its local list will
+have the smallest elements between the two. Similarly, the local list of an
+even rank process will contain the largest elements.</p>
+<a class="reference internal image-reference" href="../_images/OddPhaseMerge.png"><img alt="../_images/OddPhaseMerge.png" src="../_images/OddPhaseMerge.png" style="width: 500px;" /></a>
+</div>
+<div class="section" id="merge-low-and-merge-high">
+<h3>Merge_low and Merge_high<a class="headerlink" href="#merge-low-and-merge-high" title="Permalink to this headline">¶</a></h3>
+<p>The Merge_low and Merge_high functions take part in the comparison swap between
+the local lists of processes. Temporary allocated memory is necessary for a
+merge to take place. We fill temporary storage variable <em>temp_C</em>
+with the smallest or highest elements respectively from both the local list and
+<em>temp_B</em> (partner) of a process. The elements from <em>temp_C</em> are then copied into the local list.</p>
+</div>
+</div>
+<div class="section" id="print-functions">
+<h2>Print Functions<a class="headerlink" href="#print-functions" title="Permalink to this headline">¶</a></h2>
+<p>There are several print functions that serve to make printing various lists
+easier. The two main printing functions include Print_global_list and
+Print_local_list.</p>
+<ul class="simple">
+<li>Print_global_list function: Prints a global list of all elements by gathering
+together elements from each local list. The master process uses the MPI function
+MPI_Gather to collect each <em>local_A</em> list from all processes. It then stores
+the components in global list <em>A</em>.</li>
+<li>Print_local_lists: Prints a local list for each process using helper function
+Print_list. The master process begins by printing its local list of elements.
+Next, the master process alternates between receiving a local list from another
+process and printing it until all processes have had their lists printed.</li>
+</ul>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../index.html">
+              <img class="logo" src="../_static/CSInParallel200wide.png" alt="Logo"/>
+            </a></p>
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Odd Even Transposition Sort</a><ul>
+<li><a class="reference internal" href="#algorithm">Algorithm</a></li>
+<li><a class="reference internal" href="#parallelization">Parallelization</a></li>
+<li><a class="reference internal" href="#code">Code</a></li>
+<li><a class="reference internal" href="#user-input">User Input</a></li>
+<li><a class="reference internal" href="#odd-even-sorting">Odd Even Sorting</a><ul>
+<li><a class="reference internal" href="#sort"><strong>Sort</strong></a></li>
+<li><a class="reference internal" href="#compare">Compare</a></li>
+<li><a class="reference internal" href="#odd-even-iter">Odd_even_iter</a></li>
+<li><a class="reference internal" href="#merge-low-and-merge-high">Merge_low and Merge_high</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#print-functions">Print Functions</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="../trapezoidIntegration/trapezoid.html"
+                        title="previous chapter">Trapezoidal Rule Integration</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="../mergeSort/mergeSort.html"
+                        title="next chapter">Merge Sort</a></p>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../mergeSort/mergeSort.html" title="Merge Sort"
+             >next</a></li>
+        <li class="right" >
+          <a href="../trapezoidIntegration/trapezoid.html" title="Trapezoidal Rule Integration"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">MPI Programming</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright This work is licensed under a Creative Commons Attribution-ShareAlike 3.0 Unported License.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.2.
+    </div>
+  </body>
+</html>

@@ -1,0 +1,383 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Merge Sort &#8212; MPI Programming</title>
+    
+    <link rel="stylesheet" href="../_static/csip.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="prev" title="Odd Even Transposition Sort" href="../oddEvenSort/oddEven.html" /> 
+  </head>
+  <body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../oddEvenSort/oddEven.html" title="Odd Even Transposition Sort"
+             accesskey="P">previous</a></li>
+        <li class="nav-item nav-item-0"><a href="../index.html">MPI Programming</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="merge-sort">
+<h1>Merge Sort<a class="headerlink" href="#merge-sort" title="Permalink to this headline">¶</a></h1>
+<p>The idea of merge sort is to divide an unsorted listed into sublists
+until each sublist contains only one element. These one element sublists
+are then merged together to produce new sorted sublists. When we have one
+sublist remaining, we are done and the list has been sorted. Conceptually,
+the algorithm works like this:</p>
+<a class="reference internal image-reference" href="../_images/mergeSort.png"><img alt="../_images/mergeSort.png" src="../_images/mergeSort.png" style="width: 600px;" /></a>
+<div class="section" id="parallel-algorithm">
+<h2>Parallel Algorithm<a class="headerlink" href="#parallel-algorithm" title="Permalink to this headline">¶</a></h2>
+<p>To parallelize this algorithm, we will use a mixed strategy in which the
+sublists are sorted by a sequential sorting algorithm and the merging
+of sublists is done in parallel between processes. We chose to stick
+with cases in which the number of processes is a power of two so that
+all processes are doing roughly the same amount of work.</p>
+<p><strong>Part I: Divide list into unsorted sublists</strong></p>
+<p>For this portion of the problem, we begin with a single unsorted list. This
+list is scattered to all of the processes such that each process has an
+equal chunk of the list. Suppose we have 4 processes and a list containing
+8 integers. The code is executing as follows:</p>
+<a class="reference internal image-reference" href="../_images/scatter.png"><img alt="../_images/scatter.png" src="../_images/scatter.png" style="width: 800px;" /></a>
+<p><strong>Part II: Sort sublists</strong></p>
+<p>We can sort these sublists by applying a serial sorting algorithm. We use
+the C library function qsort on each process to sort the local sublist.
+After sorting the processes have the following sorted sublists:</p>
+<a class="reference internal image-reference" href="../_images/sort.png"><img alt="../_images/sort.png" src="../_images/sort.png" style="width: 800px;" /></a>
+<p><strong>Part III: Merge sublists</strong></p>
+<p>The merging of the sublists to form a single list is done by sending
+and receiving sublists between processes and merging them together. Each
+initial sorted sublist (with a size of 2) provides the sorted result to the
+parent process. That process combines the two sublists to generate a list
+of size 4, and then sends that result to its parent process. Lastly, the
+root process merges the two lists to obtain a list of size 8 that is fully
+sorted.</p>
+<a class="reference internal image-reference" href="../_images/merge.png"><img alt="../_images/merge.png" src="../_images/merge.png" style="width: 800px;" /></a>
+</div>
+<div class="section" id="code">
+<h2>Code<a class="headerlink" href="#code" title="Permalink to this headline">¶</a></h2>
+<p><em>file: MPI_examples/mergeSort/mergeSortMPI/mergeSortMPI.c</em></p>
+<p><em>Build insidemergeSortMPI directory:</em></p>
+<div class="highlight-default"><div class="highlight"><pre><span class="n">make</span> <span class="n">mergeSort</span>
+</pre></div>
+</div>
+<p><em>Execute on the command line inside mergeSortMPI directory:</em></p>
+<div class="highlight-default"><div class="highlight"><pre><span class="n">mpirun</span> <span class="o">-</span><span class="n">np</span> <span class="o">&lt;</span><span class="n">number</span> <span class="n">of</span> <span class="n">processes</span><span class="o">&gt;</span> <span class="o">./</span><span class="n">mergeSort</span> <span class="o">&lt;</span> <span class="nb">list</span> <span class="n">size</span> <span class="o">&gt;</span>
+</pre></div>
+</div>
+<div class="section" id="main-function">
+<h3>Main Function<a class="headerlink" href="#main-function" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-c"><div class="highlight"><pre><span class="kt">int</span> <span class="nf">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span><span class="o">**</span> <span class="n">argv</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kt">int</span> <span class="n">numProcs</span><span class="p">,</span> <span class="n">id</span><span class="p">,</span> <span class="n">globalArraySize</span><span class="p">,</span> <span class="n">localArraySize</span><span class="p">,</span> <span class="n">height</span><span class="p">;</span>
+    <span class="kt">int</span> <span class="o">*</span><span class="n">localArray</span><span class="p">,</span> <span class="o">*</span><span class="n">globalArray</span><span class="p">;</span>
+    <span class="kt">double</span> <span class="n">startTime</span><span class="p">,</span> <span class="n">localTime</span><span class="p">,</span> <span class="n">totalTime</span><span class="p">;</span>
+    <span class="kt">double</span> <span class="n">zeroStartTime</span><span class="p">,</span> <span class="n">zeroTotalTime</span><span class="p">,</span> <span class="n">processStartTime</span><span class="p">,</span> <span class="n">processTotalTime</span><span class="p">;;</span>
+    <span class="kt">int</span> <span class="n">length</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span>
+    <span class="kt">char</span> <span class="n">myHostName</span><span class="p">[</span><span class="n">MPI_MAX_PROCESSOR_NAME</span><span class="p">];</span>
+
+    <span class="n">MPI_Init</span><span class="p">(</span><span class="o">&amp;</span><span class="n">argc</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">argv</span><span class="p">);</span>
+    <span class="n">MPI_Comm_size</span><span class="p">(</span><span class="n">MPI_COMM_WORLD</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">numProcs</span><span class="p">);</span>
+    <span class="n">MPI_Comm_rank</span><span class="p">(</span><span class="n">MPI_COMM_WORLD</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">id</span><span class="p">);</span>
+
+    <span class="n">MPI_Get_processor_name</span> <span class="p">(</span><span class="n">myHostName</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">length</span><span class="p">);</span> 
+
+    <span class="c1">// check for odd processes</span>
+    <span class="n">powerOfTwo</span><span class="p">(</span><span class="n">id</span><span class="p">,</span> <span class="n">numProcs</span><span class="p">);</span>
+
+    <span class="c1">// get size of global array</span>
+    <span class="n">getInput</span><span class="p">(</span><span class="n">argc</span><span class="p">,</span> <span class="n">argv</span><span class="p">,</span> <span class="n">id</span><span class="p">,</span> <span class="n">numProcs</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">globalArraySize</span><span class="p">);</span>
+
+    <span class="c1">// calculate total height of tree</span>
+    <span class="n">height</span> <span class="o">=</span> <span class="n">log2</span><span class="p">(</span><span class="n">numProcs</span><span class="p">);</span>
+
+    <span class="c1">// if process 0, allocate memory for global array and fill with values</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">id</span><span class="o">==</span><span class="mi">0</span><span class="p">){</span>
+		<span class="n">globalArray</span> <span class="o">=</span> <span class="p">(</span><span class="kt">int</span><span class="o">*</span><span class="p">)</span> <span class="n">malloc</span> <span class="p">(</span><span class="n">globalArraySize</span> <span class="o">*</span> <span class="k">sizeof</span><span class="p">(</span><span class="kt">int</span><span class="p">));</span>
+		<span class="n">fillArray</span><span class="p">(</span><span class="n">globalArray</span><span class="p">,</span> <span class="n">globalArraySize</span><span class="p">,</span> <span class="n">id</span><span class="p">);</span>
+		<span class="c1">//printList(id, &quot;UNSORTED ARRAY&quot;, globalArray, globalArraySize);  // Line A</span>
+	<span class="p">}</span>
+	
+    <span class="c1">// allocate memory for local array, scatter to fill with values and print</span>
+    <span class="n">localArraySize</span> <span class="o">=</span> <span class="n">globalArraySize</span> <span class="o">/</span> <span class="n">numProcs</span><span class="p">;</span>
+    <span class="n">localArray</span> <span class="o">=</span> <span class="p">(</span><span class="kt">int</span><span class="o">*</span><span class="p">)</span> <span class="n">malloc</span> <span class="p">(</span><span class="n">localArraySize</span> <span class="o">*</span> <span class="k">sizeof</span><span class="p">(</span><span class="kt">int</span><span class="p">));</span>
+    <span class="n">MPI_Scatter</span><span class="p">(</span><span class="n">globalArray</span><span class="p">,</span> <span class="n">localArraySize</span><span class="p">,</span> <span class="n">MPI_INT</span><span class="p">,</span> <span class="n">localArray</span><span class="p">,</span> 
+		<span class="n">localArraySize</span><span class="p">,</span> <span class="n">MPI_INT</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">MPI_COMM_WORLD</span><span class="p">);</span>
+    <span class="c1">//printList(id, &quot;localArray&quot;, localArray, localArraySize);   // Line B </span>
+    
+    <span class="c1">//Start timing</span>
+    <span class="n">startTime</span> <span class="o">=</span> <span class="n">MPI_Wtime</span><span class="p">();</span>
+    <span class="c1">//Merge sort</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">id</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+		<span class="n">zeroStartTime</span> <span class="o">=</span> <span class="n">MPI_Wtime</span><span class="p">();</span>
+		<span class="n">globalArray</span> <span class="o">=</span> <span class="n">mergeSort</span><span class="p">(</span><span class="n">height</span><span class="p">,</span> <span class="n">id</span><span class="p">,</span> <span class="n">localArray</span><span class="p">,</span> <span class="n">localArraySize</span><span class="p">,</span> <span class="n">MPI_COMM_WORLD</span><span class="p">,</span> <span class="n">globalArray</span><span class="p">);</span>
+		<span class="n">zeroTotalTime</span> <span class="o">=</span> <span class="n">MPI_Wtime</span><span class="p">()</span> <span class="o">-</span> <span class="n">zeroStartTime</span><span class="p">;</span>
+		<span class="n">printf</span><span class="p">(</span><span class="s">&quot;Process #%d of %d on %s took %f seconds </span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> 
+			<span class="n">id</span><span class="p">,</span> <span class="n">numProcs</span><span class="p">,</span> <span class="n">myHostName</span><span class="p">,</span> <span class="n">zeroTotalTime</span><span class="p">);</span>
+	<span class="p">}</span>
+	<span class="k">else</span> <span class="p">{</span>
+		<span class="n">processStartTime</span> <span class="o">=</span> <span class="n">MPI_Wtime</span><span class="p">();</span>
+	        <span class="n">mergeSort</span><span class="p">(</span><span class="n">height</span><span class="p">,</span> <span class="n">id</span><span class="p">,</span> <span class="n">localArray</span><span class="p">,</span> <span class="n">localArraySize</span><span class="p">,</span> <span class="n">MPI_COMM_WORLD</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">);</span>
+		<span class="n">processTotalTime</span> <span class="o">=</span> <span class="n">MPI_Wtime</span><span class="p">()</span> <span class="o">-</span> <span class="n">processStartTime</span><span class="p">;</span>
+		<span class="n">printf</span><span class="p">(</span><span class="s">&quot;Process #%d of %d on %s took %f seconds </span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> 
+			<span class="n">id</span><span class="p">,</span> <span class="n">numProcs</span><span class="p">,</span> <span class="n">myHostName</span><span class="p">,</span> <span class="n">processTotalTime</span><span class="p">);</span>
+	<span class="p">}</span>
+    <span class="c1">//End timing</span>
+    <span class="n">localTime</span> <span class="o">=</span> <span class="n">MPI_Wtime</span><span class="p">()</span> <span class="o">-</span> <span class="n">startTime</span><span class="p">;</span>
+    <span class="n">MPI_Reduce</span><span class="p">(</span><span class="o">&amp;</span><span class="n">localTime</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">totalTime</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">MPI_DOUBLE</span><span class="p">,</span>
+        <span class="n">MPI_MAX</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">MPI_COMM_WORLD</span><span class="p">);</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="n">id</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+		<span class="c1">//printList(0, &quot;FINAL SORTED ARRAY&quot;, globalArray, globalArraySize);  // Line C</span>
+		<span class="n">printf</span><span class="p">(</span><span class="s">&quot;Sorting %d integers took %f seconds </span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">globalArraySize</span><span class="p">,</span><span class="n">totalTime</span><span class="p">);</span>
+		<span class="n">free</span><span class="p">(</span><span class="n">globalArray</span><span class="p">);</span>
+	<span class="p">}</span>
+
+    <span class="n">free</span><span class="p">(</span><span class="n">localArray</span><span class="p">);</span>  
+    <span class="n">MPI_Finalize</span><span class="p">();</span>
+    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Comments:</th><td class="field-body"><ul class="first last simple">
+<li><strong>Get Processor Name:</strong> When running this code on a cluster, obtaining the
+processor name allows us to check how the processes are being distributed.</li>
+<li><strong>Height:</strong> Height represents the number of levels needed to ensure we obtain a single sorted list. In the example above with 4 processes and a list of 8 integers, we need 3 levels (0, 1, 2).</li>
+<li><strong>Timing:</strong> The parallel time as well as the individual time of each process
+is determined. This should demonstrate that the root process (process 0) accounts for most of the parallel time.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<div class="topic">
+<p class="topic-title first">To do:</p>
+<dl class="docutils">
+<dt><strong>Test code:</strong> Uncomment lines A, B and C. Run and compile the code using a small integer</dt>
+<dd>for the size of the list to insure that the list is being sorted correctly.
+Once you are confident that the final list is sorted the right way, recomment
+the lines.</dd>
+<dt><strong>Analysis:</strong> Compile and run the sequential version of merge sort located in the</dt>
+<dd>mergeSort/mergeSortSeq directory using 4, 8, 16, 32, 64 million for the list size.
+Record sequential time. Next, try running the parallel program with 2, 4, 8 processes
+and 4, 8, 16, 32, 64 million for the list size. Record parallel time for each.
+Can you answer whether merge sort displays good scalability, speedup and efficiency?
+Explain your answer.</dd>
+</dl>
+</div>
+</div>
+</div>
+<div class="section" id="merging-sublists">
+<h2>Merging Sublists<a class="headerlink" href="#merging-sublists" title="Permalink to this headline">¶</a></h2>
+<p>There are several functions that play an integral role in merging including
+mergeSort, Compare and merge. We will walk through the mergeSort function and
+explain how it works.</p>
+<div class="section" id="mergesort-function">
+<h3>mergeSort Function<a class="headerlink" href="#mergesort-function" title="Permalink to this headline">¶</a></h3>
+<p><strong>Setup</strong></p>
+<p>Each process calls and sends the appropriate arguments to mergeSort from main.
+In the mergeSort function, we begin by setting the process’ individual height
+to 0 and sorting its portion of the list using qsort with the simple Compare
+function. We assign a pointer, <em>half1</em>, to the process’ sublist that was just
+sorted.</p>
+<p><strong>Loop</strong></p>
+<p>Next, we enter a loop that will continue until we have reached the
+total number of levels needed to have a single sorted list. Within the loop, we
+find the parent of the current process. This will determine whether or not
+the current process is a left child or right child of the parent. Note that a
+left child and its parent will be same process. The diagram below shows how
+children and parents are related. For example, process 0 is the left
+child and process 1 is the right child (as indicated by its orange outline)
+of parent process 0.</p>
+<a class="reference internal image-reference" href="../_images/parentChildren.png"><img alt="../_images/parentChildren.png" src="../_images/parentChildren.png" style="width: 700px;" /></a>
+<p>Depending on the child status of the process, the process will do the following:</p>
+<p><strong>Left Child:</strong></p>
+<ul class="simple">
+<li>Find right child</li>
+<li>Allocate memory needed for storing right child’s list in <em>half2</em></li>
+<li>Receive right child’s list in <em>half2</em></li>
+<li>Allocate memory needed for result of merging lists in <em>mergeResult</em></li>
+<li>Merge <em>half1</em> and <em>half2</em> into <em>mergeResult</em> with merge function</li>
+<li>Reassign <em>half1</em> to point to <em>mergeResult</em></li>
+<li>Free memory for <em>half2</em></li>
+<li>Set <em>mergeResult</em> to NULL</li>
+<li>Increase process height by 1</li>
+</ul>
+<p><strong>Right Child:</strong></p>
+<ul class="simple">
+<li>Send current process’ portion of list to parent</li>
+<li>Set process height to overall height - DONE!</li>
+</ul>
+<p>The left child is the process that is actually taking part in the merging.
+In comparison, the right child simply sends its list portion to its parent (left child).
+Once it has done this, the process is now finished - it has nothing else to do!
+This loop continues until each process’ individual height reaches the overall
+height required to guarantee that we have a single sorted list.</p>
+</div>
+<div class="section" id="visual-example">
+<h3>Visual Example<a class="headerlink" href="#visual-example" title="Permalink to this headline">¶</a></h3>
+<p>This simple example follows the mergeSort algorithm.
+Assume each colored box represents a single process’ current sorted sublist, <em>localArray</em>.</p>
+<div class="section" id="setup">
+<h4>Setup<a class="headerlink" href="#setup" title="Permalink to this headline">¶</a></h4>
+<p>With four processes, the setup looks like this:</p>
+<a class="reference internal image-reference" href="../_images/mergeSort1.png"><img alt="../_images/mergeSort1.png" src="../_images/mergeSort1.png" style="width: 800px;" /></a>
+<p>Each process has <em>half1</em> initially pointing to its sorted portion of the list.</p>
+</div>
+<div class="section" id="loop-at-height-0">
+<h4>Loop at Height 0<a class="headerlink" href="#loop-at-height-0" title="Permalink to this headline">¶</a></h4>
+<a class="reference internal image-reference" href="../_images/mergeSort2.png"><img alt="../_images/mergeSort2.png" src="../_images/mergeSort2.png" style="width: 800px;" /></a>
+<p>Notice that <em>half1</em> is reassigned to point to the result of the merge.
+Let’s take a closer look at part of the communication process between Process 0 and
+Process 1 at height 0. These two processes are executing at the same time. In the
+diagram below time is moving from top to bottom.</p>
+<a class="reference internal image-reference" href="../_images/communication.png"><img alt="../_images/communication.png" src="../_images/communication.png" style="width: 600px;" /></a>
+<p>For the next height, height 1, Process 0 has access to the merged array
+through <em>half1</em>.</p>
+</div>
+<div class="section" id="loop-at-height-1">
+<h4>Loop at Height 1<a class="headerlink" href="#loop-at-height-1" title="Permalink to this headline">¶</a></h4>
+<a class="reference internal image-reference" href="../_images/mergeSort3.png"><img alt="../_images/mergeSort3.png" src="../_images/mergeSort3.png" style="width: 800px;" /></a>
+</div>
+<div class="section" id="end-at-height-2">
+<h4>End at Height 2<a class="headerlink" href="#end-at-height-2" title="Permalink to this headline">¶</a></h4>
+<a class="reference internal image-reference" href="../_images/mergeSort4.png"><img alt="../_images/mergeSort4.png" src="../_images/mergeSort4.png" style="width: 700px;" /></a>
+</div>
+</div>
+<div class="section" id="id1">
+<h3>Code<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-c"><div class="highlight"><pre><span class="kt">int</span><span class="o">*</span> <span class="nf">mergeSort</span><span class="p">(</span><span class="kt">int</span> <span class="n">height</span><span class="p">,</span> <span class="kt">int</span> <span class="n">id</span><span class="p">,</span> <span class="kt">int</span> <span class="n">localArray</span><span class="p">[],</span> <span class="kt">int</span> <span class="n">size</span><span class="p">,</span> <span class="n">MPI_Comm</span> <span class="n">comm</span><span class="p">,</span> <span class="kt">int</span> <span class="n">globalArray</span><span class="p">[]){</span>
+    <span class="kt">int</span> <span class="n">parent</span><span class="p">,</span> <span class="n">rightChild</span><span class="p">,</span> <span class="n">myHeight</span><span class="p">;</span>
+    <span class="kt">int</span> <span class="o">*</span><span class="n">half1</span><span class="p">,</span> <span class="o">*</span><span class="n">half2</span><span class="p">,</span> <span class="o">*</span><span class="n">mergeResult</span><span class="p">;</span>
+
+    <span class="n">myHeight</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="n">qsort</span><span class="p">(</span><span class="n">localArray</span><span class="p">,</span> <span class="n">size</span><span class="p">,</span> <span class="k">sizeof</span><span class="p">(</span><span class="kt">int</span><span class="p">),</span> <span class="n">compare</span><span class="p">);</span> <span class="c1">// sort local array</span>
+    <span class="n">half1</span> <span class="o">=</span> <span class="n">localArray</span><span class="p">;</span>  <span class="c1">// assign half1 to localArray</span>
+	
+    <span class="k">while</span> <span class="p">(</span><span class="n">myHeight</span> <span class="o">&lt;</span> <span class="n">height</span><span class="p">)</span> <span class="p">{</span> <span class="c1">// not yet at top</span>
+        <span class="n">parent</span> <span class="o">=</span> <span class="p">(</span><span class="n">id</span> <span class="o">&amp;</span> <span class="p">(</span><span class="o">~</span><span class="p">(</span><span class="mi">1</span> <span class="o">&lt;&lt;</span> <span class="n">myHeight</span><span class="p">)));</span>
+
+        <span class="k">if</span> <span class="p">(</span><span class="n">parent</span> <span class="o">==</span> <span class="n">id</span><span class="p">)</span> <span class="p">{</span> <span class="c1">// left child</span>
+		    <span class="n">rightChild</span> <span class="o">=</span> <span class="p">(</span><span class="n">id</span> <span class="o">|</span> <span class="p">(</span><span class="mi">1</span> <span class="o">&lt;&lt;</span> <span class="n">myHeight</span><span class="p">));</span>
+
+  		    <span class="c1">// allocate memory and receive array of right child</span>
+  		    <span class="n">half2</span> <span class="o">=</span> <span class="p">(</span><span class="kt">int</span><span class="o">*</span><span class="p">)</span> <span class="n">malloc</span> <span class="p">(</span><span class="n">size</span> <span class="o">*</span> <span class="k">sizeof</span><span class="p">(</span><span class="kt">int</span><span class="p">));</span>
+  		    <span class="n">MPI_Recv</span><span class="p">(</span><span class="n">half2</span><span class="p">,</span> <span class="n">size</span><span class="p">,</span> <span class="n">MPI_INT</span><span class="p">,</span> <span class="n">rightChild</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span>
+				<span class="n">MPI_COMM_WORLD</span><span class="p">,</span> <span class="n">MPI_STATUS_IGNORE</span><span class="p">);</span>
+
+  		    <span class="c1">// allocate memory for result of merge</span>
+  		    <span class="n">mergeResult</span> <span class="o">=</span> <span class="p">(</span><span class="kt">int</span><span class="o">*</span><span class="p">)</span> <span class="n">malloc</span> <span class="p">(</span><span class="n">size</span> <span class="o">*</span> <span class="mi">2</span> <span class="o">*</span> <span class="k">sizeof</span><span class="p">(</span><span class="kt">int</span><span class="p">));</span>
+  		    <span class="c1">// merge half1 and half2 into mergeResult</span>
+  		    <span class="n">mergeResult</span> <span class="o">=</span> <span class="n">merge</span><span class="p">(</span><span class="n">half1</span><span class="p">,</span> <span class="n">half2</span><span class="p">,</span> <span class="n">mergeResult</span><span class="p">,</span> <span class="n">size</span><span class="p">);</span>
+  		    <span class="c1">// reassign half1 to merge result</span>
+            <span class="n">half1</span> <span class="o">=</span> <span class="n">mergeResult</span><span class="p">;</span>
+			<span class="n">size</span> <span class="o">=</span> <span class="n">size</span> <span class="o">*</span> <span class="mi">2</span><span class="p">;</span>  <span class="c1">// double size</span>
+			
+			<span class="n">free</span><span class="p">(</span><span class="n">half2</span><span class="p">);</span> 
+			<span class="n">mergeResult</span> <span class="o">=</span> <span class="nb">NULL</span><span class="p">;</span>
+
+            <span class="n">myHeight</span><span class="o">++</span><span class="p">;</span>
+
+        <span class="p">}</span> <span class="k">else</span> <span class="p">{</span> <span class="c1">// right child</span>
+			  <span class="c1">// send local array to parent</span>
+              <span class="n">MPI_Send</span><span class="p">(</span><span class="n">half1</span><span class="p">,</span> <span class="n">size</span><span class="p">,</span> <span class="n">MPI_INT</span><span class="p">,</span> <span class="n">parent</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">MPI_COMM_WORLD</span><span class="p">);</span>
+              <span class="k">if</span><span class="p">(</span><span class="n">myHeight</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">)</span> <span class="n">free</span><span class="p">(</span><span class="n">half1</span><span class="p">);</span>  
+              <span class="n">myHeight</span> <span class="o">=</span> <span class="n">height</span><span class="p">;</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+
+    <span class="k">if</span><span class="p">(</span><span class="n">id</span> <span class="o">==</span> <span class="mi">0</span><span class="p">){</span>
+		<span class="n">globalArray</span> <span class="o">=</span> <span class="n">half1</span><span class="p">;</span>   <span class="c1">// reassign globalArray to half1</span>
+	<span class="p">}</span>
+	<span class="k">return</span> <span class="n">globalArray</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../index.html">
+              <img class="logo" src="../_static/CSInParallel200wide.png" alt="Logo"/>
+            </a></p>
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Merge Sort</a><ul>
+<li><a class="reference internal" href="#parallel-algorithm">Parallel Algorithm</a></li>
+<li><a class="reference internal" href="#code">Code</a><ul>
+<li><a class="reference internal" href="#main-function">Main Function</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#merging-sublists">Merging Sublists</a><ul>
+<li><a class="reference internal" href="#mergesort-function">mergeSort Function</a></li>
+<li><a class="reference internal" href="#visual-example">Visual Example</a><ul>
+<li><a class="reference internal" href="#setup">Setup</a></li>
+<li><a class="reference internal" href="#loop-at-height-0">Loop at Height 0</a></li>
+<li><a class="reference internal" href="#loop-at-height-1">Loop at Height 1</a></li>
+<li><a class="reference internal" href="#end-at-height-2">End at Height 2</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#id1">Code</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="../oddEvenSort/oddEven.html"
+                        title="previous chapter">Odd Even Transposition Sort</a></p>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../oddEvenSort/oddEven.html" title="Odd Even Transposition Sort"
+             >previous</a></li>
+        <li class="nav-item nav-item-0"><a href="../index.html">MPI Programming</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright This work is licensed under a Creative Commons Attribution-ShareAlike 3.0 Unported License.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.2.
+    </div>
+  </body>
+</html>

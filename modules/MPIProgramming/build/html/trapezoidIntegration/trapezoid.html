@@ -1,0 +1,516 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Trapezoidal Rule Integration &#8212; MPI Programming</title>
+    
+    <link rel="stylesheet" href="../_static/csip.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Odd Even Transposition Sort" href="../oddEvenSort/oddEven.html" />
+    <link rel="prev" title="Monte Carlo Estimate Pi" href="../calculatePi/Pi.html" /> 
+  </head>
+  <body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../oddEvenSort/oddEven.html" title="Odd Even Transposition Sort"
+             accesskey="N">next</a></li>
+        <li class="right" >
+          <a href="../calculatePi/Pi.html" title="Monte Carlo Estimate Pi"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">MPI Programming</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="trapezoidal-rule-integration">
+<h1>Trapezoidal Rule Integration<a class="headerlink" href="#trapezoidal-rule-integration" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="trapezoidal-rule">
+<h2>Trapezoidal Rule<a class="headerlink" href="#trapezoidal-rule" title="Permalink to this headline">¶</a></h2>
+<p>The trapezoidal rule is a technique for approximating the region under a
+function, <img class="math" src="../_images/math/e58d8325fbb7099cdd0e6023f6302a352d3714ae.png" alt="y = f(x)"/>, using trapezoids to calculate area. The process is quite
+simple. Let a and b represent the left and right endpoints of the function.
+The interval [a,b] is divided into subintervals. For each subinterval,
+the function is approximated with a straight line between the function
+values at both ends of the subinterval. Each subinterval is now a trapezoid.
+Lastly, the area of each trapezoid is calculated and all areas are
+summed to get an approximation of the area under the function.</p>
+</div>
+<div class="section" id="parallelization">
+<h2>Parallelization<a class="headerlink" href="#parallelization" title="Permalink to this headline">¶</a></h2>
+<p>In order to parallelize this rule, we must identify the necessary tasks and
+decide how to map the tasks to the processes. Tasks include finding the area of
+many single trapezoids and then summing these areas together. Intuitively,
+as we increase the number of trapezoids, we will receive a more accurate
+prediction for the area under the curve. Thus, we will be using more
+trapezoids than cores in this problem and we will need to split up the computations
+for calculating the areas of the trapezoids. We choose to do this by assigning
+each process a subinterval that contains the number of trapezoids obtained
+from the calculation of the total number of trapezoids divided by number of processes.
+This assumes that the total number of trapezoids is evenly divisible by the number
+of processes. Each process will apply the trapezoidal rule to its subinterval.
+Lastly, the master process adds together the estimates.</p>
+<a class="reference internal image-reference" href="../_images/TrapComputeArea.png"><img alt="../_images/TrapComputeArea.png" src="../_images/TrapComputeArea.png" style="width: 600px;" /></a>
+</div>
+<div class="section" id="code">
+<h2>Code<a class="headerlink" href="#code" title="Permalink to this headline">¶</a></h2>
+<p><em>file: MPI_examples/trapIntegration/mpi_trap/mpi_trap.c</em></p>
+<p>The code for this example is from Peter Pacheco’s book, An Introduction to Parallel Programming.
+For further implementations and reading corresponding to this example, refer
+to his book which is listed below.</p>
+<ul class="simple">
+<li><strong>Book:</strong> <em>An Introduction to Parallel Programming</em>, Peter Pacheco, Morgan Kaufmann Publishers, 2011</li>
+</ul>
+<p><em>Build inside mpi_trap directory:</em></p>
+<div class="highlight-default"><div class="highlight"><pre><span class="n">make</span> <span class="n">mpi_trap</span>
+</pre></div>
+</div>
+<p><em>Execute on the command line inside mpi_trap directory:</em></p>
+<div class="highlight-default"><div class="highlight"><pre><span class="n">mpirun</span> <span class="o">-</span><span class="n">np</span> <span class="o">&lt;</span><span class="n">number</span> <span class="n">of</span> <span class="n">processes</span><span class="o">&gt;</span> <span class="o">./</span><span class="n">mpi_trap</span>
+</pre></div>
+</div>
+<div class="highlight-c"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>  1
+  2
+  3
+  4
+  5
+  6
+  7
+  8
+  9
+ 10
+ 11
+ 12
+ 13
+ 14
+ 15
+ 16
+ 17
+ 18
+ 19
+ 20
+ 21
+ 22
+ 23
+ 24
+ 25
+ 26
+ 27
+ 28
+ 29
+ 30
+ 31
+ 32
+ 33
+ 34
+ 35
+ 36
+ 37
+ 38
+ 39
+ 40
+ 41
+ 42
+ 43
+ 44
+ 45
+ 46
+ 47
+ 48
+ 49
+ 50
+ 51
+ 52
+ 53
+ 54
+ 55
+ 56
+ 57
+ 58
+ 59
+ 60
+ 61
+ 62
+ 63
+ 64
+ 65
+ 66
+ 67
+ 68
+ 69
+ 70
+ 71
+ 72
+ 73
+ 74
+ 75
+ 76
+ 77
+ 78
+ 79
+ 80
+ 81
+ 82
+ 83
+ 84
+ 85
+ 86
+ 87
+ 88
+ 89
+ 90
+ 91
+ 92
+ 93
+ 94
+ 95
+ 96
+ 97
+ 98
+ 99
+100
+101
+102
+103
+104
+105
+106
+107
+108
+109
+110
+111
+112
+113
+114
+115
+116
+117
+118
+119
+120
+121
+122
+123
+124
+125
+126
+127
+128
+129
+130
+131
+132
+133
+134
+135
+136
+137
+138
+139
+140
+141
+142
+143
+144
+145
+146
+147
+148
+149
+150
+151
+152
+153</pre></div></td><td class="code"><div class="highlight"><pre><span class="cm">/*</span>
+<span class="cm"> * Peter S. Pacheco, An Introduction to Parallel Programming,</span>
+<span class="cm"> * Morgan Kaufmann Publishers, 2011</span>
+<span class="cm"> * IPP:   Section 3.4.2 (pp. 104 and ff.)</span>
+<span class="cm"> * Timing and command line argument added by Hannah Sonsalla, </span>
+<span class="cm"> * Macalester College, 2017</span>
+<span class="cm"> *</span>
+<span class="cm"> * mpi_trap.c</span>
+<span class="cm"> *</span>
+<span class="cm"> * ... Use MPI to implement a parallel version of the trapezoidal</span>
+<span class="cm"> *     rule.  Uses collective communications to distribute the</span>
+<span class="cm"> *     input data and compute the global sum.</span>
+<span class="cm"> *</span>
+<span class="cm"> * Input:    Number of trapezoids</span>
+<span class="cm"> * Output:   Estimate of the integral from a to b of f(x)</span>
+<span class="cm"> *           using the trapezoidal rule and n trapezoids.</span>
+<span class="cm"> *</span>
+<span class="cm"> * Usage:    mpirun -np &lt;number of processes&gt; ./mpi_trap &lt; number of trapezoids&gt;</span>
+<span class="cm"> *</span>
+<span class="cm"> * Algorithm:</span>
+<span class="cm"> *    1.  Each process calculates &quot;its&quot; interval of</span>
+<span class="cm"> *        integration.</span>
+<span class="cm"> *    2.  Each process estimates the integral of f(x)</span>
+<span class="cm"> *        over its interval using the trapezoidal rule.</span>
+<span class="cm"> *    3a. Each process != 0 sends its integral to 0.</span>
+<span class="cm"> *    3b. Process 0 sums the calculations received from</span>
+<span class="cm"> *        the individual processes and prints the result.</span>
+<span class="cm"> *</span>
+<span class="cm"> * Note:  f(x) is all hardwired to x*x.</span>
+<span class="cm"> *</span>
+<span class="cm"> */</span>
+<span class="cp">#include</span> <span class="cpf">&lt;stdio.h&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;stdlib.h&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;string.h&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;mpi.h&gt;</span><span class="cp"></span>
+
+<span class="k">const</span> <span class="kt">double</span> <span class="n">a</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+<span class="k">const</span> <span class="kt">double</span> <span class="n">b</span> <span class="o">=</span> <span class="mi">2000000000</span><span class="p">;</span>
+
+<span class="cm">/* Function declarations */</span>
+<span class="kt">void</span> <span class="nf">Get_input</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span><span class="o">*</span> <span class="n">argv</span><span class="p">[],</span> <span class="kt">int</span> <span class="n">my_rank</span><span class="p">,</span> <span class="kt">double</span><span class="o">*</span> <span class="n">n_p</span><span class="p">);</span>
+<span class="kt">double</span> <span class="nf">Trap</span><span class="p">(</span><span class="kt">double</span> <span class="n">left_endpt</span><span class="p">,</span> <span class="kt">double</span> <span class="n">right_endpt</span><span class="p">,</span> <span class="kt">int</span> <span class="n">trap_count</span><span class="p">,</span>
+   <span class="kt">double</span> <span class="n">base_len</span><span class="p">);</span>
+<span class="kt">double</span> <span class="nf">f</span><span class="p">(</span><span class="kt">double</span> <span class="n">x</span><span class="p">);</span>
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span><span class="o">**</span> <span class="n">argv</span><span class="p">)</span> <span class="p">{</span>
+   <span class="kt">int</span> <span class="n">my_rank</span><span class="p">,</span> <span class="n">comm_sz</span><span class="p">,</span> <span class="n">local_n</span><span class="p">;</span>
+   <span class="kt">double</span> <span class="n">n</span><span class="p">,</span> <span class="n">h</span><span class="p">,</span> <span class="n">local_a</span><span class="p">,</span> <span class="n">local_b</span><span class="p">;</span>
+   <span class="kt">double</span> <span class="n">local_int</span><span class="p">,</span> <span class="n">total_int</span><span class="p">;</span>
+   <span class="kt">double</span> <span class="n">start</span><span class="p">,</span> <span class="n">finish</span><span class="p">,</span> <span class="n">loc_elapsed</span><span class="p">,</span> <span class="n">elapsed</span><span class="p">;</span>
+
+   <span class="n">MPI_Init</span><span class="p">(</span><span class="nb">NULL</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">);</span>
+   <span class="n">MPI_Comm_rank</span><span class="p">(</span><span class="n">MPI_COMM_WORLD</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">my_rank</span><span class="p">);</span>
+   <span class="n">MPI_Comm_size</span><span class="p">(</span><span class="n">MPI_COMM_WORLD</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">comm_sz</span><span class="p">);</span>
+
+   <span class="n">Get_input</span><span class="p">(</span><span class="n">argc</span><span class="p">,</span> <span class="n">argv</span><span class="p">,</span> <span class="n">my_rank</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">n</span><span class="p">);</span> <span class="cm">/*Read user input */</span>
+
+   <span class="cm">/*Note: h and local_n are the same for all processes*/</span>
+   <span class="n">h</span> <span class="o">=</span> <span class="p">(</span><span class="n">b</span><span class="o">-</span><span class="n">a</span><span class="p">)</span><span class="o">/</span><span class="n">n</span><span class="p">;</span>          <span class="cm">/* length of each trapezoid */</span>
+   <span class="n">local_n</span> <span class="o">=</span> <span class="n">n</span><span class="o">/</span><span class="n">comm_sz</span><span class="p">;</span>  <span class="cm">/* number of trapezoids per process */</span>
+
+   <span class="cm">/* Length of each process&#39; interval of integration = local_n*h. */</span>
+   <span class="n">local_a</span> <span class="o">=</span> <span class="n">a</span> <span class="o">+</span> <span class="n">my_rank</span><span class="o">*</span><span class="n">local_n</span><span class="o">*</span><span class="n">h</span><span class="p">;</span>
+   <span class="n">local_b</span> <span class="o">=</span> <span class="n">local_a</span> <span class="o">+</span> <span class="n">local_n</span><span class="o">*</span><span class="n">h</span><span class="p">;</span>
+
+   <span class="n">MPI_Barrier</span><span class="p">(</span><span class="n">MPI_COMM_WORLD</span><span class="p">);</span>
+   <span class="n">start</span> <span class="o">=</span> <span class="n">MPI_Wtime</span><span class="p">();</span>
+   <span class="cm">/* Calculate each process&#39; local integral using local endpoints*/</span>
+   <span class="n">local_int</span> <span class="o">=</span> <span class="n">Trap</span><span class="p">(</span><span class="n">local_a</span><span class="p">,</span> <span class="n">local_b</span><span class="p">,</span> <span class="n">local_n</span><span class="p">,</span> <span class="n">h</span><span class="p">);</span>
+   <span class="n">finish</span> <span class="o">=</span> <span class="n">MPI_Wtime</span><span class="p">();</span>
+   <span class="n">loc_elapsed</span> <span class="o">=</span> <span class="n">finish</span><span class="o">-</span><span class="n">start</span><span class="p">;</span>
+   <span class="n">MPI_Reduce</span><span class="p">(</span><span class="o">&amp;</span><span class="n">loc_elapsed</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">elapsed</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">MPI_DOUBLE</span><span class="p">,</span> <span class="n">MPI_MAX</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">MPI_COMM_WORLD</span><span class="p">);</span>
+
+   <span class="cm">/* Add up the integrals calculated by each process */</span>
+   <span class="n">MPI_Reduce</span><span class="p">(</span><span class="o">&amp;</span><span class="n">local_int</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">total_int</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">MPI_DOUBLE</span><span class="p">,</span> <span class="n">MPI_SUM</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span>
+         <span class="n">MPI_COMM_WORLD</span><span class="p">);</span>
+
+
+   <span class="k">if</span> <span class="p">(</span><span class="n">my_rank</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+      <span class="n">printf</span><span class="p">(</span><span class="s">&quot;With n = %.0f trapezoids, our estimate</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">n</span><span class="p">);</span>
+      <span class="n">printf</span><span class="p">(</span><span class="s">&quot;of the integral from %.0f to %.0f = %.0f</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span>
+          <span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">total_int</span><span class="p">);</span>
+      <span class="n">printf</span><span class="p">(</span><span class="s">&quot;Elapsed time = %f milliseconds </span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">elapsed</span> <span class="o">*</span> <span class="mi">1000</span><span class="p">);</span>
+   <span class="p">}</span>
+
+   <span class="cm">/* Shut down MPI */</span>
+   <span class="n">MPI_Finalize</span><span class="p">();</span>
+
+   <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span> <span class="cm">/*  main  */</span>
+
+<span class="cm">/*------------------------------------------------------------------</span>
+<span class="cm"> * Function:     Get_input</span>
+<span class="cm"> * Purpose:      Get the user input: the number of trapezoids</span>
+<span class="cm"> * Input args:   my_rank:  process rank in MPI_COMM_WORLD</span>
+<span class="cm"> *               comm_sz:  number of processes in MPI_COMM_WORLD</span>
+<span class="cm"> * Output args:  n_p:  pointer to number of trapezoids</span>
+<span class="cm"> */</span>
+<span class="kt">void</span> <span class="nf">Get_input</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span><span class="o">*</span> <span class="n">argv</span><span class="p">[],</span> <span class="kt">int</span> <span class="n">my_rank</span><span class="p">,</span> <span class="kt">double</span><span class="o">*</span> <span class="n">n_p</span><span class="p">){</span>
+	<span class="k">if</span> <span class="p">(</span><span class="n">my_rank</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+		<span class="k">if</span> <span class="p">(</span><span class="n">argc</span><span class="o">!=</span> <span class="mi">2</span><span class="p">){</span>
+		    <span class="n">fprintf</span><span class="p">(</span><span class="n">stderr</span><span class="p">,</span> <span class="s">&quot;usage: mpirun -np &lt;N&gt; %s &lt;number of trapezoids&gt; </span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">argv</span><span class="p">[</span><span class="mi">0</span><span class="p">]);</span>
+            <span class="n">fflush</span><span class="p">(</span><span class="n">stderr</span><span class="p">);</span>
+            <span class="o">*</span><span class="n">n_p</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span>
+		<span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+			<span class="o">*</span><span class="n">n_p</span> <span class="o">=</span> <span class="n">atoi</span><span class="p">(</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">]);</span>
+		<span class="p">}</span>
+	<span class="p">}</span>
+	<span class="c1">// Broadcasts value of n to each process</span>
+	<span class="n">MPI_Bcast</span><span class="p">(</span><span class="n">n_p</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">MPI_DOUBLE</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">MPI_COMM_WORLD</span><span class="p">);</span>
+	
+	<span class="c1">// negative n ends the program</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">*</span><span class="n">n_p</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">MPI_Finalize</span><span class="p">();</span>
+        <span class="n">exit</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">);</span>
+    <span class="p">}</span>
+<span class="p">}</span>  <span class="cm">/* Get_input */</span>
+
+<span class="cm">/*------------------------------------------------------------------</span>
+<span class="cm"> * Function:     Trap</span>
+<span class="cm"> * Purpose:      Serial function for estimating a definite integral</span>
+<span class="cm"> *               using the trapezoidal rule</span>
+<span class="cm"> * Input args:   left_endpt</span>
+<span class="cm"> *               right_endpt</span>
+<span class="cm"> *               trap_count</span>
+<span class="cm"> *               base_len</span>
+<span class="cm"> * Return val:   Trapezoidal rule estimate of integral from</span>
+<span class="cm"> *               left_endpt to right_endpt using trap_count</span>
+<span class="cm"> *               trapezoids</span>
+<span class="cm"> */</span>
+<span class="kt">double</span> <span class="nf">Trap</span><span class="p">(</span><span class="kt">double</span> <span class="n">left_endpt</span><span class="p">,</span> <span class="kt">double</span> <span class="n">right_endpt</span><span class="p">,</span> <span class="kt">int</span> <span class="n">trap_count</span><span class="p">,</span> <span class="kt">double</span> <span class="n">base_len</span><span class="p">)</span> <span class="p">{</span>
+   <span class="kt">double</span> <span class="n">estimate</span><span class="p">,</span> <span class="n">x</span><span class="p">;</span>
+   <span class="kt">int</span> <span class="n">i</span><span class="p">;</span>
+
+   <span class="n">estimate</span> <span class="o">=</span> <span class="p">(</span><span class="n">f</span><span class="p">(</span><span class="n">left_endpt</span><span class="p">)</span> <span class="o">+</span> <span class="n">f</span><span class="p">(</span><span class="n">right_endpt</span><span class="p">))</span><span class="o">/</span><span class="mf">2.0</span><span class="p">;</span>
+   <span class="k">for</span> <span class="p">(</span><span class="n">i</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;=</span> <span class="n">trap_count</span><span class="o">-</span><span class="mi">1</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+      <span class="n">x</span> <span class="o">=</span> <span class="n">left_endpt</span> <span class="o">+</span> <span class="n">i</span><span class="o">*</span><span class="n">base_len</span><span class="p">;</span>
+      <span class="n">estimate</span> <span class="o">+=</span> <span class="n">f</span><span class="p">(</span><span class="n">x</span><span class="p">);</span>
+   <span class="p">}</span>
+   <span class="n">estimate</span> <span class="o">=</span> <span class="n">estimate</span><span class="o">*</span><span class="n">base_len</span><span class="p">;</span>
+
+   <span class="k">return</span> <span class="n">estimate</span><span class="p">;</span>
+<span class="p">}</span> <span class="cm">/*  Trap  */</span>
+
+
+<span class="cm">/*------------------------------------------------------------------</span>
+<span class="cm"> * Function:    f</span>
+<span class="cm"> * Purpose:     Compute value of function to be integrated</span>
+<span class="cm"> * Input args:  x</span>
+<span class="cm"> */</span>
+<span class="kt">double</span> <span class="nf">f</span><span class="p">(</span><span class="kt">double</span> <span class="n">x</span><span class="p">)</span> <span class="p">{</span>
+   <span class="k">return</span> <span class="n">x</span><span class="o">*</span><span class="n">x</span><span class="p">;</span>
+<span class="p">}</span> <span class="cm">/* f */</span>
+</pre></div>
+</td></tr></table></div>
+</div>
+<div class="section" id="global-and-local-variables">
+<h2>Global and Local Variables<a class="headerlink" href="#global-and-local-variables" title="Permalink to this headline">¶</a></h2>
+<p>In MPI, local variables only are important only to the process using them.
+Local variables in this problem include <em>local_a</em>, <em>local_b</em>, and <em>local_n</em>.
+Note that the values of <em>local_a</em> and <em>local_b</em> are completely dependent
+upon process rank. They must be specifically calculated for each process
+to ensure that each process receives a different subinterval. The variable
+<em>local_n</em> remains the same for every process.</p>
+<p>In contrast, variables that are important to all processes are global
+variables. Variables <em>a</em>, <em>b</em> and <em>n</em> are some global variables in this
+example. These variables do not change values during the duration of the program.</p>
+</div>
+<div class="section" id="trap-function">
+<h2>Trap Function<a class="headerlink" href="#trap-function" title="Permalink to this headline">¶</a></h2>
+<p>This function implements the trapezoidal rule for the interval given as input.</p>
+<p>To calculate the area of a single trapezoid, we need to know the left and right
+endpoints, and the length of the trapezoid.  Let <em>a</em>, <em>b</em> and <em>h</em> represent the left
+endpoint, right endpoint and length respectively. The function values at these
+endpoints are <em>f(a)</em> and <em>f(b)</em>. The area of the trapezoid is as follows:</p>
+<p><strong>Area of one trapezoid</strong> =</p>
+<div class="math">
+<p><img src="../_images/math/3f4fa5d77625be96b47e3a2c49d65ed8157616d0.png" alt="\frac{h}{2} [f(a) + f(b)]"/></p>
+</div><p>However, in our problem there are many subintervals and each subinterval may
+contain multiple trapezoids. Now we have <em>a</em> and <em>b</em> representing the left
+and right endpoint of function. The <em>n</em> trapezoids are of equal length, <em>h</em> where
+<em>h</em> = <img class="math" src="../_images/math/0e8eef28ad07b437076d845fa570360ac42a81f9.png" alt="\frac{b-a}{n}"/>. Let’s focus on a single subinterval whose left endpoint is
+<em>local_a</em> and right endpoint is <em>local_b</em>. Then the trapezoids within the interval
+have the following endpoints:</p>
+<p>[local_a, local_a + h], [local_a + h, local_a + 2h], … , [local_a, local_a + (n-1)h, b]</p>
+<p>The sum of the areas of the trapezoids (estimate of area of the subinterval) is:</p>
+<p><strong>Subinterval area</strong> =</p>
+<div class="math">
+<p><img src="../_images/math/81d873eb69d48553c33149432c8e5e18b1062c78.png" alt="\frac{h}{2}[f(local \textunderscore a) + f(local \textunderscore a + h) * 2 +
+      f(local \textunderscore  a + 2h) * 2 + ... + f(local \textunderscore  a + (n-1)h)*2
+      + f(local \textunderscore  b)] ="/></p>
+</div><div class="math">
+<p><img src="../_images/math/80aed1b91c467231c322c50ff47c672c4a399fb4.png" alt="\frac{h}{2}[f(local \textunderscore a)/2 + f(local \textunderscore a + h) +
+f(local \textunderscore a + 2h) + ... + f(local \textunderscore a + (n-1)h) +
+f(local \textunderscore b)/2]"/></p>
+</div><p>The Trap function follows this logic closely. The function takes both left and
+right endpoints, number of trapezoids within the subinterval and trapezoid
+length. A for loop is used to loop through the endpoints of all of the trapezoids
+within the subinterval. The function value at each of these points is accumulated
+to <img class="math" src="../_images/math/18aadd55062308a6a345f9a02e7e162bc654d110.png" alt="\frac{f(left \textunderscore endpt) + f(right \textunderscore endpt)}{2}"/>.
+Lastly, this sum is multiplied by trapezoid length to get the total area of the subinterval.</p>
+<div class="highlight-c"><div class="highlight"><pre><span class="kt">double</span> <span class="nf">Trap</span><span class="p">(</span><span class="kt">double</span> <span class="n">left_endpt</span><span class="p">,</span> <span class="kt">double</span> <span class="n">right_endpt</span><span class="p">,</span> <span class="kt">int</span> <span class="n">trap_count</span><span class="p">,</span> <span class="kt">double</span> <span class="n">base_len</span><span class="p">)</span> <span class="p">{</span>
+   <span class="kt">double</span> <span class="n">estimate</span><span class="p">,</span> <span class="n">x</span><span class="p">;</span>
+   <span class="kt">int</span> <span class="n">i</span><span class="p">;</span>
+
+   <span class="n">estimate</span> <span class="o">=</span> <span class="p">(</span><span class="n">f</span><span class="p">(</span><span class="n">left_endpt</span><span class="p">)</span> <span class="o">+</span> <span class="n">f</span><span class="p">(</span><span class="n">right_endpt</span><span class="p">))</span><span class="o">/</span><span class="mf">2.0</span><span class="p">;</span>
+   <span class="k">for</span> <span class="p">(</span><span class="n">i</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;=</span> <span class="n">trap_count</span><span class="o">-</span><span class="mi">1</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+      <span class="n">x</span> <span class="o">=</span> <span class="n">left_endpt</span> <span class="o">+</span> <span class="n">i</span><span class="o">*</span><span class="n">base_len</span><span class="p">;</span>
+      <span class="n">estimate</span> <span class="o">+=</span> <span class="n">f</span><span class="p">(</span><span class="n">x</span><span class="p">);</span>
+   <span class="p">}</span>
+   <span class="n">estimate</span> <span class="o">=</span> <span class="n">estimate</span><span class="o">*</span><span class="n">base_len</span><span class="p">;</span>
+
+   <span class="k">return</span> <span class="n">estimate</span><span class="p">;</span>
+<span class="p">}</span> <span class="cm">/*  Trap  */</span>
+</pre></div>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../index.html">
+              <img class="logo" src="../_static/CSInParallel200wide.png" alt="Logo"/>
+            </a></p>
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Trapezoidal Rule Integration</a><ul>
+<li><a class="reference internal" href="#trapezoidal-rule">Trapezoidal Rule</a></li>
+<li><a class="reference internal" href="#parallelization">Parallelization</a></li>
+<li><a class="reference internal" href="#code">Code</a></li>
+<li><a class="reference internal" href="#global-and-local-variables">Global and Local Variables</a></li>
+<li><a class="reference internal" href="#trap-function">Trap Function</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="../calculatePi/Pi.html"
+                        title="previous chapter">Monte Carlo Estimate Pi</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="../oddEvenSort/oddEven.html"
+                        title="next chapter">Odd Even Transposition Sort</a></p>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../oddEvenSort/oddEven.html" title="Odd Even Transposition Sort"
+             >next</a></li>
+        <li class="right" >
+          <a href="../calculatePi/Pi.html" title="Monte Carlo Estimate Pi"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">MPI Programming</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright This work is licensed under a Creative Commons Attribution-ShareAlike 3.0 Unported License.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.2.
+    </div>
+  </body>
+</html>
