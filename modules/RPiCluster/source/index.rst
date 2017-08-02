@@ -133,7 +133,7 @@ In order for us to establish a network between the cluster through ethernet cabl
 
 ::
 
-  cd/etc/networkNikola: The Raspberry Pi Cluster
+  cd/etc/network
   sudo cp interfaces interfaces.orig
 
 Now, we will edit the interfaces file
