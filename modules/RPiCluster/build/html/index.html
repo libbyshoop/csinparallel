@@ -39,7 +39,7 @@
             
   <div class="section" id="building-a-raspberry-pi-cluster">
 <h1>Building a Raspberry Pi Cluster<a class="headerlink" href="#building-a-raspberry-pi-cluster" title="Permalink to this headline">¶</a></h1>
-<p><strong>Last Updated:</strong> 2017-07-21</p>
+<p><strong>Last Updated:</strong> 2017-08-02</p>
 <p>This module acts as a tutorial to help users build a cluster of Raspberry Pis for Parallel Programming and Distributed Processing. The guide is a step by step procedure to build a simple 4-node Raspberry Pi 3 cluster with a shared network file system. Note that clusters can be of any length n≥2.</p>
 <a class="reference internal image-reference" href="_images/RPiCluster.jpg"><img alt="_images/RPiCluster.jpg" src="_images/RPiCluster.jpg" style="width: 1200px;" /></a>
 <div class="section" id="materials-needed">
@@ -231,11 +231,12 @@ In the hosts file we will be removing the IPv6 confiurations by commenting them 
 </pre></div>
 </div>
 <p>We will save this file and then change its permissions in order for ssh-keyscan to be able to read the file.</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">chmod</span> <span class="mi">666</span> <span class="o">/.</span><span class="n">ssh</span><span class="o">/</span><span class="n">name_of_hosts</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">cd</span>
+<span class="n">sudo</span> <span class="n">chmod</span> <span class="mi">666</span> <span class="o">~/.</span><span class="n">ssh</span><span class="o">/</span><span class="n">name_of_hosts</span>
 </pre></div>
 </div>
 <p>The following command will then generate the known_hosts file:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">ssh</span><span class="o">-</span><span class="n">keyscan</span> <span class="o">-</span><span class="n">t</span> <span class="n">rsa</span> <span class="o">-</span><span class="n">f</span><span class="o">/.</span><span class="n">ssh</span><span class="o">/</span><span class="n">name_of_hosts</span> <span class="o">&gt;~/.</span><span class="n">ssh</span><span class="o">/</span><span class="n">known_hosts</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">ssh</span><span class="o">-</span><span class="n">keyscan</span> <span class="o">-</span><span class="n">t</span> <span class="n">rsa</span> <span class="o">-</span><span class="n">f</span> <span class="o">~/.</span><span class="n">ssh</span><span class="o">/</span><span class="n">name_of_hosts</span> <span class="o">&gt;~/.</span><span class="n">ssh</span><span class="o">/</span><span class="n">known_hosts</span>
 </pre></div>
 </div>
 <p>Our last step for this setup will be to copy known_hosts, id_rsa public and private keys from the .ssh folder in the head node to the .ssh folder of all the other nodes. We can do this using secure copy.</p>

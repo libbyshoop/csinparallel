@@ -212,13 +212,14 @@ We will save this file and then change its permissions in order for ssh-keyscan 
 
 ::
 
-  chmod 666 /.ssh/name_of_hosts
+  cd
+  sudo chmod 666 ~/.ssh/name_of_hosts
 
 The following command will then generate the known_hosts file:
 
 ::
 
-  ssh-keyscan -t rsa -f/.ssh/name_of_hosts >~/.ssh/known_hosts
+  ssh-keyscan -t rsa -f ~/.ssh/name_of_hosts >~/.ssh/known_hosts
 
 Our last step for this setup will be to copy known_hosts, id_rsa public and private keys from the .ssh folder in the head node to the .ssh folder of all the other nodes. We can do this using secure copy.
 
