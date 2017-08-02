@@ -501,8 +501,7 @@ Helpful Ideas and Notes
 
 * The Rasbian Pixel can be used on all of the nodes of the cluster if you wish to have GUI on each one of them. We recommend that you use Rasbian Lite for the worker nodes as you may not need to use its GUI and they can be easily accessed through SSH via the head node. This will help processes run faster on the worker nodes as the processors will not need to drive the GUI on them.
 
-*
-External drives are automatically mounted on Rasbian Pixel but in order to access an external drive on Rasbian Lite, you will first need to create a mount point for it. This can be done by simply making a directory at the location you want it to mount. Usually an external drive is mounted in the /media directory:
+* External drives are automatically mounted on Rasbian Pixel but in order to access an external drive on Rasbian Lite, you will first need to create a mount point for it. This can be done by simply making a directory at the location you want it to mount. Usually an external drive is mounted in the /media directory:
 ::
 
     sudo mkdir /media/usb
@@ -522,7 +521,7 @@ Note: You will need to format the external drive so that it is compatible with L
 
 Since the NFS will be an external drive, the exports file will be a bit different. We will have to specify the access for each of the nodes:
 
-Note: If you had already edited the exports file as we had shown above then remove the line you had added and then replace it with the following lines at the end of the file. If not, then simply add these to the end of the file:
+Note: If you had already edited the exports file as we had shown in the :ref:`NFS` section then remove the line you had added and then replace it with the following lines at the end of the file. If not, then simply add these to the end of the file:
 
 ::
 
@@ -534,7 +533,7 @@ Note: If you had already edited the exports file as we had shown above then remo
   /media/cluster_files node2(rw,sync,no_root_squash,no_subtree_check)
   /media/cluster_files node3(rw,sync,no_root_squash,no_subtree_check)
 
-Next, we will need to permanently mount the external drive on the head node so that it automatically mounts itself in /media/cluster_files when the system is rebooted. To do this the fstab file on the head node will have the following line at the end:
+Next, we will need to permanently mount the external drive on the head node so that it automatically mounts itself in /media/cluster_files when the system is rebooted. To do this we will eject the pen drive and then edit the fstab file on the head node by adding the following line at the end:
 
 ::
 
@@ -544,7 +543,7 @@ Next, we will need to permanently mount the external drive on the head node so t
 
   /dev/sda1 /media/cluster_files ext4 defaults 0 0
 
-Now we are ready to actually mount the external drive on the head node.
+Now we are ready to insert and actually mount the external drive on the head node permanently.
 
 ::
 

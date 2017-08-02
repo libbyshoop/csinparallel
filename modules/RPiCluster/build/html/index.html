@@ -512,7 +512,7 @@ To do this run the following:</p>
 </pre></div>
 </div>
 <p>Since the NFS will be an external drive, the exports file will be a bit different. We will have to specify the access for each of the nodes:</p>
-<p>Note: If you had already edited the exports file as we had shown above then remove the line you had added and then replace it with the following lines at the end of the file. If not, then simply add these to the end of the file:</p>
+<p>Note: If you had already edited the exports file as we had shown in the <a class="reference internal" href="#nfs"><span class="std std-ref">Mount Network File System</span></a> section then remove the line you had added and then replace it with the following lines at the end of the file. If not, then simply add these to the end of the file:</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">sudo</span> <span class="n">nano</span> <span class="o">/</span><span class="n">etc</span><span class="o">/</span><span class="n">exports</span>
 </pre></div>
 </div>
@@ -521,14 +521,14 @@ To do this run the following:</p>
 <span class="o">/</span><span class="n">media</span><span class="o">/</span><span class="n">cluster_files</span> <span class="n">node3</span><span class="p">(</span><span class="n">rw</span><span class="p">,</span><span class="n">sync</span><span class="p">,</span><span class="n">no_root_squash</span><span class="p">,</span><span class="n">no_subtree_check</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>Next, we will need to permanently mount the external drive on the head node so that it automatically mounts itself in /media/cluster_files when the system is rebooted. To do this the fstab file on the head node will have the following line at the end:</p>
+<p>Next, we will need to permanently mount the external drive on the head node so that it automatically mounts itself in /media/cluster_files when the system is rebooted. To do this we will eject the pen drive and then edit the fstab file on the head node by adding the following line at the end:</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">sudo</span> <span class="n">nano</span> <span class="o">/</span><span class="n">etc</span><span class="o">/</span><span class="n">fstab</span>
 </pre></div>
 </div>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="o">/</span><span class="n">dev</span><span class="o">/</span><span class="n">sda1</span> <span class="o">/</span><span class="n">media</span><span class="o">/</span><span class="n">cluster_files</span> <span class="n">ext4</span> <span class="n">defaults</span> <span class="mi">0</span> <span class="mi">0</span>
 </pre></div>
 </div>
-<p>Now we are ready to actually mount the external drive on the head node.</p>
+<p>Now we are ready to insert and actually mount the external drive on the head node permanently.</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">sudo</span> <span class="n">mount</span> <span class="o">/</span><span class="n">dev</span><span class="o">/</span><span class="n">sda1</span> <span class="o">/</span><span class="n">media</span><span class="o">/</span><span class="n">cluster_files</span>
 </pre></div>
 </div>
