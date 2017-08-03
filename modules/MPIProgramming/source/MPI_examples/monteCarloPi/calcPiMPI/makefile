@@ -1,5 +1,5 @@
-PROG = calcPiSeq
-CC = g++
+PROG = calcPiMPI
+CC = mpicxx
 CFLAGS = -Wall -ansi -pedantic -std=c++11
 LFLAGS = -o $(PROG)
 
@@ -7,4 +7,5 @@ $(PROG): $(PROG).C
 	$(CC) $(CFLAGS) $(PROG).C $(LFLAGS)
 
 clean:
-	rm -f $(PROG) *.o *~ *#
+	rm -f $(PROG) a.out *~ *# *.o
+

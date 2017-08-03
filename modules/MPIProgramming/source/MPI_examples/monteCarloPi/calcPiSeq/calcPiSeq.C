@@ -1,12 +1,12 @@
 /*
  * Hannah Sonsalla, Macalester College, 2017
  *
- *  calculatePiSeq.c
+ *  calcPiSeqRandR.C
  *
  *   ...sequential program to calculate the value of Pi using
  *       Monte Carlo Method.
  *
- * Usage:  ./calculatePiSeq <number of tosses>
+ * Usage:  ./calcPiSeqRandR <number of tosses>
  *
  */
 
@@ -57,10 +57,11 @@ void Get_input(int argc, char* argv[], long* numTosses_p){
 long Toss (long numTosses){
 	long toss, numInCircle = 0;
 	double x,y;
-	srand(time(0));
+  	unsigned int seed = (unsigned) time(NULL);
+	srand(seed);
 	for (toss = 0; toss < numTosses; toss++) {
-	   x = rand()/(double)RAND_MAX;
-	   y = rand()/(double)RAND_MAX;
+	   x = rand_r(&seed)/(double)RAND_MAX;
+	   y = rand_r(&seed)/(double)RAND_MAX;
 	   if((x*x+y*y) <= 1.0 ) numInCircle++;
     }
     return numInCircle;

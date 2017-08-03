@@ -80,13 +80,13 @@ between 0 and 1. Then, we determine how many of these points fall inside of
 the circle and take the ratio of the areas.</p>
 <div class="section" id="code">
 <h2>Code<a class="headerlink" href="#code" title="Permalink to this headline">¶</a></h2>
-<p><em>file: MPI_examples/monteCarloPi/calcPi/calcPi.c</em></p>
-<p><em>Build inside calcPi directory:</em></p>
-<div class="highlight-default"><div class="highlight"><pre><span class="n">make</span> <span class="n">calcPi</span>
+<p><em>file: MPI_examples/monteCarloPi/calcPiMPI/calcPiMPI.C</em></p>
+<p><em>Build inside calcPiMPI directory:</em></p>
+<div class="highlight-default"><div class="highlight"><pre><span class="n">make</span> <span class="n">calcPiMPI</span>
 </pre></div>
 </div>
-<p><em>Execute on the command line inside calcPi directory:</em></p>
-<div class="highlight-default"><div class="highlight"><pre><span class="n">mpirun</span> <span class="o">-</span><span class="n">np</span> <span class="o">&lt;</span><span class="n">N</span><span class="o">&gt;</span> <span class="o">./</span><span class="n">calcPi</span> <span class="o">&lt;</span><span class="n">number</span> <span class="n">of</span> <span class="n">tosses</span><span class="o">&gt;</span>
+<p><em>Execute on the command line inside calcPiMPI directory:</em></p>
+<div class="highlight-default"><div class="highlight"><pre><span class="n">mpirun</span> <span class="o">-</span><span class="n">np</span> <span class="o">&lt;</span><span class="n">N</span><span class="o">&gt;</span> <span class="o">./</span><span class="n">calcPiMPI</span> <span class="o">&lt;</span><span class="n">number</span> <span class="n">of</span> <span class="n">tosses</span><span class="o">&gt;</span>
 </pre></div>
 </div>
 <div class="topic">
@@ -101,7 +101,7 @@ MPI_examples/monteCarloPi/calcPiSeq directory.</p>
 speedup and efficiency of each combination and make corresponding speedup
 and efficiency graphs.</p>
 </div>
-<div class="highlight-c"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+<div class="highlight-C++"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
  2
  3
  4
@@ -185,21 +185,24 @@ and efficiency graphs.</p>
 82
 83
 84
-85</pre></div></td><td class="code"><div class="highlight"><pre><span class="cm">/*</span>
+85
+86
+87</pre></div></td><td class="code"><div class="highlight"><pre> <span class="cm">/*   </span>
 <span class="cm"> * Hannah Sonsalla, Macalester College, 2017</span>
-<span class="cm"> *</span>
-<span class="cm"> *  calcPi.c</span>
+<span class="cm"> * </span>
+<span class="cm"> *  calcPiMPI.C</span>
 <span class="cm"> *</span>
 <span class="cm"> *   ...program uses MPI to calculate the value of Pi</span>
 <span class="cm"> *</span>
-<span class="cm"> * Usage:  mpirun -np N ./calcPi &lt;number of tosses&gt;</span>
+<span class="cm"> * Usage:  mpirun -np N ./calcPiMPI &lt;number of tosses&gt;</span>
 <span class="cm"> *</span>
 <span class="cm"> */</span>
-
-<span class="cp">#include</span> <span class="cpf">&lt;mpi.h&gt;</span><span class="cp"></span>
+ 
+<span class="cp">#include</span> <span class="cpf">&lt;mpi.h&gt;  </span><span class="cp"></span>
 <span class="cp">#include</span> <span class="cpf">&lt;math.h&gt;</span><span class="cp"></span>
 <span class="cp">#include</span> <span class="cpf">&lt;stdio.h&gt;</span><span class="cp"></span>
 <span class="cp">#include</span> <span class="cpf">&lt;stdlib.h&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;time.h&gt;</span><span class="cp"></span>
 
 <span class="kt">void</span> <span class="nf">Get_input</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span><span class="o">*</span> <span class="n">argv</span><span class="p">[],</span> <span class="kt">int</span> <span class="n">myRank</span><span class="p">,</span> <span class="kt">long</span><span class="o">*</span> <span class="n">totalNumTosses_p</span><span class="p">);</span>
 <span class="kt">long</span> <span class="nf">Toss</span> <span class="p">(</span><span class="kt">long</span> <span class="n">numProcessTosses</span><span class="p">,</span> <span class="kt">int</span> <span class="n">myRank</span><span class="p">);</span>
@@ -209,33 +212,33 @@ and efficiency graphs.</p>
    <span class="kt">long</span> <span class="n">totalNumTosses</span><span class="p">,</span> <span class="n">numProcessTosses</span><span class="p">,</span> <span class="n">processNumberInCircle</span><span class="p">,</span> <span class="n">totalNumberInCircle</span><span class="p">;</span>
    <span class="kt">double</span> <span class="n">start</span><span class="p">,</span> <span class="n">finish</span><span class="p">,</span> <span class="n">loc_elapsed</span><span class="p">,</span> <span class="n">elapsed</span><span class="p">,</span> <span class="n">piEstimate</span><span class="p">;</span>
    <span class="kt">double</span> <span class="n">PI25DT</span> <span class="o">=</span> <span class="mf">3.141592653589793238462643</span><span class="p">;</span>         <span class="cm">/* 25-digit-PI*/</span>
-
+   
    <span class="n">MPI_Init</span><span class="p">(</span><span class="o">&amp;</span><span class="n">argc</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">argv</span><span class="p">);</span>
    <span class="n">MPI_Comm_size</span><span class="p">(</span><span class="n">MPI_COMM_WORLD</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">numProcs</span><span class="p">);</span>
    <span class="n">MPI_Comm_rank</span><span class="p">(</span><span class="n">MPI_COMM_WORLD</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">myRank</span><span class="p">);</span>
-
-
+  
+   
    <span class="n">Get_input</span><span class="p">(</span><span class="n">argc</span><span class="p">,</span> <span class="n">argv</span><span class="p">,</span> <span class="n">myRank</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">totalNumTosses</span><span class="p">);</span>  <span class="c1">// Read total number of tosses from command line</span>
-
-   <span class="n">numProcessTosses</span> <span class="o">=</span> <span class="n">totalNumTosses</span><span class="o">/</span><span class="n">numProcs</span><span class="p">;</span>
-
+   
+   <span class="n">numProcessTosses</span> <span class="o">=</span> <span class="n">totalNumTosses</span><span class="o">/</span><span class="n">numProcs</span><span class="p">;</span> 
+   
    <span class="n">MPI_Barrier</span><span class="p">(</span><span class="n">MPI_COMM_WORLD</span><span class="p">);</span>
    <span class="n">start</span> <span class="o">=</span> <span class="n">MPI_Wtime</span><span class="p">();</span>
    <span class="n">processNumberInCircle</span> <span class="o">=</span> <span class="n">Toss</span><span class="p">(</span><span class="n">numProcessTosses</span><span class="p">,</span> <span class="n">myRank</span><span class="p">);</span>
    <span class="n">finish</span> <span class="o">=</span> <span class="n">MPI_Wtime</span><span class="p">();</span>
    <span class="n">loc_elapsed</span> <span class="o">=</span> <span class="n">finish</span><span class="o">-</span><span class="n">start</span><span class="p">;</span>
-   <span class="n">MPI_Reduce</span><span class="p">(</span><span class="o">&amp;</span><span class="n">loc_elapsed</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">elapsed</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">MPI_DOUBLE</span><span class="p">,</span> <span class="n">MPI_MAX</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">MPI_COMM_WORLD</span><span class="p">);</span>
-
+   <span class="n">MPI_Reduce</span><span class="p">(</span><span class="o">&amp;</span><span class="n">loc_elapsed</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">elapsed</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">MPI_DOUBLE</span><span class="p">,</span> <span class="n">MPI_MAX</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">MPI_COMM_WORLD</span><span class="p">);</span> 
+ 
    <span class="n">MPI_Reduce</span><span class="p">(</span><span class="o">&amp;</span><span class="n">processNumberInCircle</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">totalNumberInCircle</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">MPI_LONG</span><span class="p">,</span> <span class="n">MPI_SUM</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">MPI_COMM_WORLD</span><span class="p">);</span>
-
+   
    <span class="k">if</span> <span class="p">(</span><span class="n">myRank</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
 	   <span class="n">piEstimate</span> <span class="o">=</span> <span class="p">(</span><span class="mi">4</span><span class="o">*</span><span class="n">totalNumberInCircle</span><span class="p">)</span><span class="o">/</span><span class="p">((</span><span class="kt">double</span><span class="p">)</span> <span class="n">totalNumTosses</span><span class="p">);</span>
 	   <span class="n">printf</span><span class="p">(</span><span class="s">&quot;Elapsed time = %f seconds </span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">elapsed</span><span class="p">);</span>
 	   <span class="n">printf</span><span class="p">(</span><span class="s">&quot;Pi is approximately %.16f, Error is %.16f</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">piEstimate</span><span class="p">,</span> <span class="n">fabs</span><span class="p">(</span><span class="n">piEstimate</span> <span class="o">-</span> <span class="n">PI25DT</span><span class="p">));</span>
    <span class="p">}</span>
-   <span class="n">MPI_Finalize</span><span class="p">();</span>
+   <span class="n">MPI_Finalize</span><span class="p">();</span> 
    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
-<span class="p">}</span>
+<span class="p">}</span>  
 
 <span class="cm">/* Function gets input from command line for totalNumTosses */</span>
 <span class="kt">void</span> <span class="nf">Get_input</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span><span class="o">*</span> <span class="n">argv</span><span class="p">[],</span> <span class="kt">int</span> <span class="n">myRank</span><span class="p">,</span> <span class="kt">long</span><span class="o">*</span> <span class="n">totalNumTosses_p</span><span class="p">){</span>
@@ -250,7 +253,7 @@ and efficiency graphs.</p>
 	<span class="p">}</span>
 	<span class="c1">// Broadcasts value of totalNumTosses to each process</span>
 	<span class="n">MPI_Bcast</span><span class="p">(</span><span class="n">totalNumTosses_p</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">MPI_LONG</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">MPI_COMM_WORLD</span><span class="p">);</span>
-
+	
 	<span class="c1">// 0 totalNumTosses ends the program</span>
     <span class="k">if</span> <span class="p">(</span><span class="o">*</span><span class="n">totalNumTosses_p</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
         <span class="n">MPI_Finalize</span><span class="p">();</span>
@@ -260,12 +263,13 @@ and efficiency graphs.</p>
 
 <span class="cm">/* Function implements Monte Carlo version of tossing darts at a board */</span>
 <span class="kt">long</span> <span class="nf">Toss</span> <span class="p">(</span><span class="kt">long</span> <span class="n">processTosses</span><span class="p">,</span> <span class="kt">int</span> <span class="n">myRank</span><span class="p">){</span>
-	<span class="kt">long</span> <span class="n">toss</span><span class="p">,</span> <span class="n">numberInCircle</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+	<span class="kt">long</span> <span class="n">toss</span><span class="p">,</span> <span class="n">numberInCircle</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>        
 	<span class="kt">double</span> <span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">;</span>
-	<span class="n">srand</span><span class="p">(</span><span class="n">myRank</span><span class="p">);</span>
+	<span class="kt">unsigned</span> <span class="kt">int</span> <span class="n">seed</span> <span class="o">=</span> <span class="p">(</span><span class="kt">unsigned</span><span class="p">)</span> <span class="n">time</span><span class="p">(</span><span class="nb">NULL</span><span class="p">);</span>
+	<span class="n">srand</span><span class="p">(</span><span class="n">seed</span> <span class="o">+</span> <span class="n">myRank</span><span class="p">);</span>
 	<span class="k">for</span> <span class="p">(</span><span class="n">toss</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">toss</span> <span class="o">&lt;</span> <span class="n">processTosses</span><span class="p">;</span> <span class="n">toss</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
-	   <span class="n">x</span> <span class="o">=</span> <span class="n">rand</span><span class="p">()</span><span class="o">/</span><span class="p">(</span><span class="kt">double</span><span class="p">)</span><span class="n">RAND_MAX</span><span class="p">;</span>
-	   <span class="n">y</span> <span class="o">=</span> <span class="n">rand</span><span class="p">()</span><span class="o">/</span><span class="p">(</span><span class="kt">double</span><span class="p">)</span><span class="n">RAND_MAX</span><span class="p">;</span>
+	   <span class="n">x</span> <span class="o">=</span> <span class="n">rand_r</span><span class="p">(</span><span class="o">&amp;</span><span class="n">seed</span><span class="p">)</span><span class="o">/</span><span class="p">(</span><span class="kt">double</span><span class="p">)</span><span class="n">RAND_MAX</span><span class="p">;</span>
+	   <span class="n">y</span> <span class="o">=</span> <span class="n">rand_r</span><span class="p">(</span><span class="o">&amp;</span><span class="n">seed</span><span class="p">)</span><span class="o">/</span><span class="p">(</span><span class="kt">double</span><span class="p">)</span><span class="n">RAND_MAX</span><span class="p">;</span>
 	   <span class="k">if</span><span class="p">((</span><span class="n">x</span><span class="o">*</span><span class="n">x</span><span class="o">+</span><span class="n">y</span><span class="o">*</span><span class="n">y</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="mf">1.0</span> <span class="p">)</span> <span class="n">numberInCircle</span><span class="o">++</span><span class="p">;</span>
     <span class="p">}</span>
     <span class="k">return</span> <span class="n">numberInCircle</span><span class="p">;</span>
@@ -301,7 +305,7 @@ of arguments. Otherwise, totalNumTosses variable is set to point to argument two
 In order to send the data from the master to all of the processes in the
 communicator, it is necessary to <em>broadcast</em>. During a broadcast, one process
 sends the same data to all of the processes.</p>
-<div class="highlight-c"><div class="highlight"><pre><span class="cm">/* Function gets input from command line for totalNumTosses */</span>
+<div class="highlight-C++"><div class="highlight"><pre><span class="cm">/* Function gets input from command line for totalNumTosses */</span>
 <span class="kt">void</span> <span class="nf">Get_input</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span><span class="o">*</span> <span class="n">argv</span><span class="p">[],</span> <span class="kt">int</span> <span class="n">myRank</span><span class="p">,</span> <span class="kt">long</span><span class="o">*</span> <span class="n">totalNumTosses_p</span><span class="p">){</span>
 	<span class="k">if</span> <span class="p">(</span><span class="n">myRank</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
 		<span class="k">if</span> <span class="p">(</span><span class="n">argc</span><span class="o">!=</span> <span class="mi">2</span><span class="p">){</span>
@@ -314,13 +318,12 @@ sends the same data to all of the processes.</p>
 	<span class="p">}</span>
 	<span class="c1">// Broadcasts value of totalNumTosses to each process</span>
 	<span class="n">MPI_Bcast</span><span class="p">(</span><span class="n">totalNumTosses_p</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">MPI_LONG</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">MPI_COMM_WORLD</span><span class="p">);</span>
-
+	
 	<span class="c1">// 0 totalNumTosses ends the program</span>
     <span class="k">if</span> <span class="p">(</span><span class="o">*</span><span class="n">totalNumTosses_p</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
         <span class="n">MPI_Finalize</span><span class="p">();</span>
         <span class="n">exit</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">);</span>
     <span class="p">}</span>
-<span class="p">}</span>
 </pre></div>
 </div>
 </div>
@@ -336,12 +339,12 @@ When timing, we want a single time - the time that elapsed when the last process
 finished. To do so, <em>MPI_Reduce</em> is called on line 41 using the <em>MPI_MAX</em>
 operator. Thus, the largest process time in the loc_elapsed variable will
 be stored in the elapsed variable.</p>
-<div class="highlight-c"><div class="highlight"><pre>   <span class="n">MPI_Barrier</span><span class="p">(</span><span class="n">MPI_COMM_WORLD</span><span class="p">);</span>
+<div class="highlight-C++"><div class="highlight"><pre>   <span class="n">MPI_Barrier</span><span class="p">(</span><span class="n">MPI_COMM_WORLD</span><span class="p">);</span>
    <span class="n">start</span> <span class="o">=</span> <span class="n">MPI_Wtime</span><span class="p">();</span>
    <span class="n">processNumberInCircle</span> <span class="o">=</span> <span class="n">Toss</span><span class="p">(</span><span class="n">numProcessTosses</span><span class="p">,</span> <span class="n">myRank</span><span class="p">);</span>
    <span class="n">finish</span> <span class="o">=</span> <span class="n">MPI_Wtime</span><span class="p">();</span>
    <span class="n">loc_elapsed</span> <span class="o">=</span> <span class="n">finish</span><span class="o">-</span><span class="n">start</span><span class="p">;</span>
-   <span class="n">MPI_Reduce</span><span class="p">(</span><span class="o">&amp;</span><span class="n">loc_elapsed</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">elapsed</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">MPI_DOUBLE</span><span class="p">,</span> <span class="n">MPI_MAX</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">MPI_COMM_WORLD</span><span class="p">);</span>
+   <span class="n">MPI_Reduce</span><span class="p">(</span><span class="o">&amp;</span><span class="n">loc_elapsed</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">elapsed</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">MPI_DOUBLE</span><span class="p">,</span> <span class="n">MPI_MAX</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">MPI_COMM_WORLD</span><span class="p">);</span> 
 </pre></div>
 </div>
 </div>
@@ -357,7 +360,7 @@ built-in computations including MPI_MAX, MPI_SUM, MPI_PROD, etc. Below is the
 line of code in which we reduce the number of points that landed in the circle
 in each process to a single value representing the total number of points that
 landed in the circle.</p>
-<div class="highlight-c"><div class="highlight"><pre>   <span class="n">MPI_Reduce</span><span class="p">(</span><span class="o">&amp;</span><span class="n">processNumberInCircle</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">totalNumberInCircle</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">MPI_LONG</span><span class="p">,</span> <span class="n">MPI_SUM</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">MPI_COMM_WORLD</span><span class="p">);</span>
+<div class="highlight-C++"><div class="highlight"><pre>   <span class="n">MPI_Reduce</span><span class="p">(</span><span class="o">&amp;</span><span class="n">processNumberInCircle</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">totalNumberInCircle</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">MPI_LONG</span><span class="p">,</span> <span class="n">MPI_SUM</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">MPI_COMM_WORLD</span><span class="p">);</span>
 </pre></div>
 </div>
 </div>

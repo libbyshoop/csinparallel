@@ -17,10 +17,12 @@ Source Code
 ************
 
 Please download all examples from this tarball:
-:download:`MPI_examples.tar.gz <MPI_examples/MPI_examples.tar.gz>`
+:download:`MPI_examples.tgz <MPI_examples/MPI_examples.tgz>`
 
 A C code file for each example below can be found in subdirectories of the MPI_examples
-directory, along with a makefile and an example of how to execute the program.
+directory, along with a makefile and an example of how to execute the program with the
+exception of the Monte Carlo Pi example. This example contains a C++ file and makefile.
+This was necessary as we needed a reentrant function for random number generation.
 
 **Hardware and Software Needed**
 
