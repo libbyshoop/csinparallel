@@ -1,24 +1,47 @@
-/************************************************************
+/****************************************************************************
 * Program: Pi Calculation
 * MPI_Bcast and MPI_Reduce
 * This PI program was taken from Argonne National Laboratory.
-*************************************************************/
+* Modified for command line argument by Hannah Sonsalla, Macalester College
+****************************************************************************/
 
-#include "mpi.h"
+#include <mpi.h>
 #include <math.h>
 #include <stdio.h>
+#include <stdlib.h>
 
 #define MAX_NAME 80   /* length of characters for naming a process */
-#define MASTER 0      /* rank of the master */
+
+void getInput(int argc, char* argv[], int rank, int* n);
+
+void getInput(int argc, char* argv[], int rank, int* n){
+    if (rank == 0){
+        if(argc != 2){
+            fprintf(stderr, "usage: mpirun -n %s <number of bins> \n", argv[0]);
+            fflush(stderr);
+            *n = -1;
+        } else {
+            *n = atoi(argv[1]);
+        }
+    }
+    
+    MPI_Bcast(n, 1, MPI_INT, 0, MPI_COMM_WORLD);
+
+    if (*n <= 0) {
+        MPI_Finalize();
+        exit(-1);
+    }
+}
+
 
 int main(int argc, char *argv[]) {
 
     int rank,                                           /* rank variable to identify the process */
         nprocs,                                         /* number of processes */
         i,
-        len;                                            /* variable for storing name of processes */
+        len,                                            /* variable for storing name of processes */
+        n;                                              /* the number of bins */
 
-    int n = 10000;                                      /* the number of bins */
     double PI25DT = 3.141592653589793238462643;         /* 25-digit-PI*/
     double mypi,                                        /* value from each process */
            pi,                                          /* value of PI in total*/
@@ -32,23 +55,15 @@ int main(int argc, char *argv[]) {
            end_time,            /* ending time */
            computation_time;    /* time for computing value of PI */
 
-    // TO DO
     /*Initialize MPI execution environment */
     MPI_Init(&argc, &argv);
     MPI_Comm_size(MPI_COMM_WORLD, &nprocs);
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
-
     MPI_Get_processor_name(name, &len);
 
-    start_time = MPI_Wtime();
+    getInput(argc, argv, rank, &n);
 
-    /* Broadcast the number of bins to all processes */
-    /* This broadcasts an integer which is n, from the master to all processes
-     * and
-     */
-
-    // TO DO:
-    MPI_Bcast(&n, 1, MPI_INT, MASTER, MPI_COMM_WORLD);
+    start_time = MPI_Wtime();;
 
     /* Calculating for each process */
     step = 1.0 / (double) n;
@@ -63,14 +78,13 @@ int main(int argc, char *argv[]) {
     printf("This is my sum: %.16f from rank: %d name: %s\n", mypi, rank, name);
 
     /* Now we can reduce all those sums to one value which is Pi */
-    // TO DO:
     MPI_Reduce(&mypi, &pi, 1, MPI_DOUBLE, MPI_SUM, 0, MPI_COMM_WORLD);
 
     if (rank == 0) {
         printf("Pi is approximately %.16f, Error is %.16f\n", pi, fabs(pi - PI25DT));
         end_time = MPI_Wtime();
         computation_time = end_time - start_time;
-        printf("Time of calculating PI is: %f\n", computation_time);
+        printf("Time of calculating PI is: %f seconds \n", computation_time);
     }
     /* Terminate MPI execution environment */
     MPI_Finalize();
