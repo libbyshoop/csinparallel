@@ -105,7 +105,7 @@ sends the same data to all of the processes.
 
 .. literalinclude:: ../MPI_examples/monteCarloPi/calcPi/calcPi.c
     :language: c
-    :lines: 57-76
+    :lines: 53-72
 
 Timing
 ==================
@@ -123,7 +123,7 @@ be stored in the elapsed variable.
 
 .. literalinclude:: ../MPI_examples/monteCarloPi/calcPi/calcPi.c
     :language: c
-    :lines: 39-44
+    :lines: 35-40
 
 MPI Reduce
 =======================
@@ -140,4 +140,4 @@ landed in the circle.
 
 .. literalinclude:: ../MPI_examples/monteCarloPi/calcPi/calcPi.c
     :language: c
-    :lines: 46
+    :lines: 42

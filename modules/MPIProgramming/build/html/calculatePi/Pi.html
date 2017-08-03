@@ -301,7 +301,11 @@ of arguments. Otherwise, totalNumTosses variable is set to point to argument two
 In order to send the data from the master to all of the processes in the
 communicator, it is necessary to <em>broadcast</em>. During a broadcast, one process
 sends the same data to all of the processes.</p>
-<div class="highlight-c"><div class="highlight"><pre>		    <span class="n">fprintf</span><span class="p">(</span><span class="n">stderr</span><span class="p">,</span> <span class="s">&quot;usage: mpirun -np &lt;N&gt; %s &lt;number of tosses&gt; </span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">argv</span><span class="p">[</span><span class="mi">0</span><span class="p">]);</span>
+<div class="highlight-c"><div class="highlight"><pre><span class="cm">/* Function gets input from command line for totalNumTosses */</span>
+<span class="kt">void</span> <span class="nf">Get_input</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span><span class="o">*</span> <span class="n">argv</span><span class="p">[],</span> <span class="kt">int</span> <span class="n">myRank</span><span class="p">,</span> <span class="kt">long</span><span class="o">*</span> <span class="n">totalNumTosses_p</span><span class="p">){</span>
+	<span class="k">if</span> <span class="p">(</span><span class="n">myRank</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+		<span class="k">if</span> <span class="p">(</span><span class="n">argc</span><span class="o">!=</span> <span class="mi">2</span><span class="p">){</span>
+		    <span class="n">fprintf</span><span class="p">(</span><span class="n">stderr</span><span class="p">,</span> <span class="s">&quot;usage: mpirun -np &lt;N&gt; %s &lt;number of tosses&gt; </span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">argv</span><span class="p">[</span><span class="mi">0</span><span class="p">]);</span>
             <span class="n">fflush</span><span class="p">(</span><span class="n">stderr</span><span class="p">);</span>
             <span class="o">*</span><span class="n">totalNumTosses_p</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
 		<span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
@@ -317,10 +321,6 @@ sends the same data to all of the processes.</p>
         <span class="n">exit</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">);</span>
     <span class="p">}</span>
 <span class="p">}</span>
-
-<span class="cm">/* Function implements Monte Carlo version of tossing darts at a board */</span>
-<span class="kt">long</span> <span class="n">Toss</span> <span class="p">(</span><span class="kt">long</span> <span class="n">processTosses</span><span class="p">,</span> <span class="kt">int</span> <span class="n">myRank</span><span class="p">){</span>
-	<span class="kt">long</span> <span class="n">toss</span><span class="p">,</span> <span class="n">numberInCircle</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
 </pre></div>
 </div>
 </div>
@@ -336,12 +336,12 @@ When timing, we want a single time - the time that elapsed when the last process
 finished. To do so, <em>MPI_Reduce</em> is called on line 41 using the <em>MPI_MAX</em>
 operator. Thus, the largest process time in the loc_elapsed variable will
 be stored in the elapsed variable.</p>
-<div class="highlight-c"><div class="highlight"><pre>   <span class="n">loc_elapsed</span> <span class="o">=</span> <span class="n">finish</span><span class="o">-</span><span class="n">start</span><span class="p">;</span>
+<div class="highlight-c"><div class="highlight"><pre>   <span class="n">MPI_Barrier</span><span class="p">(</span><span class="n">MPI_COMM_WORLD</span><span class="p">);</span>
+   <span class="n">start</span> <span class="o">=</span> <span class="n">MPI_Wtime</span><span class="p">();</span>
+   <span class="n">processNumberInCircle</span> <span class="o">=</span> <span class="n">Toss</span><span class="p">(</span><span class="n">numProcessTosses</span><span class="p">,</span> <span class="n">myRank</span><span class="p">);</span>
+   <span class="n">finish</span> <span class="o">=</span> <span class="n">MPI_Wtime</span><span class="p">();</span>
+   <span class="n">loc_elapsed</span> <span class="o">=</span> <span class="n">finish</span><span class="o">-</span><span class="n">start</span><span class="p">;</span>
    <span class="n">MPI_Reduce</span><span class="p">(</span><span class="o">&amp;</span><span class="n">loc_elapsed</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">elapsed</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">MPI_DOUBLE</span><span class="p">,</span> <span class="n">MPI_MAX</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">MPI_COMM_WORLD</span><span class="p">);</span>
-
-   <span class="n">MPI_Reduce</span><span class="p">(</span><span class="o">&amp;</span><span class="n">processNumberInCircle</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">totalNumberInCircle</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">MPI_LONG</span><span class="p">,</span> <span class="n">MPI_SUM</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">MPI_COMM_WORLD</span><span class="p">);</span>
-
-   <span class="k">if</span> <span class="p">(</span><span class="n">myRank</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
 </pre></div>
 </div>
 </div>
@@ -357,7 +357,7 @@ built-in computations including MPI_MAX, MPI_SUM, MPI_PROD, etc. Below is the
 line of code in which we reduce the number of points that landed in the circle
 in each process to a single value representing the total number of points that
 landed in the circle.</p>
-<div class="highlight-c"><div class="highlight"><pre>	   <span class="n">printf</span><span class="p">(</span><span class="s">&quot;Elapsed time = %f seconds </span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">elapsed</span><span class="p">);</span>
+<div class="highlight-c"><div class="highlight"><pre>   <span class="n">MPI_Reduce</span><span class="p">(</span><span class="o">&amp;</span><span class="n">processNumberInCircle</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">totalNumberInCircle</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">MPI_LONG</span><span class="p">,</span> <span class="n">MPI_SUM</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">MPI_COMM_WORLD</span><span class="p">);</span>
 </pre></div>
 </div>
 </div>

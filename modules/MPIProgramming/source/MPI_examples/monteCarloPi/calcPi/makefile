@@ -1,6 +1,6 @@
 PROG = calcPi
 CC = mpicc
-CFLAGS = -Wall
+CFLAGS = -Wall -ansi -pedantic -std=c99 
 LFLAGS = -o $(PROG)
 
 $(PROG): $(PROG).c
@@ -8,4 +8,3 @@ $(PROG): $(PROG).c
 
 clean:
 	rm -f $(PROG) a.out *~ *# *.o
-
