@@ -1,0 +1,318 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Estimating Pi by Calculating Area Under the Curve &#8212; Cross Platform Parallel Programming</title>
+    
+    <link rel="stylesheet" href="../_static/csip.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="prev" title="Estimating Pi using Monte Carlo Method" href="../MonteCarloPi/Pi.html" /> 
+  </head>
+  <body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../MonteCarloPi/Pi.html" title="Estimating Pi using Monte Carlo Method"
+             accesskey="P">previous</a></li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Cross Platform Parallel Programming</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="estimating-pi-by-calculating-area-under-the-curve">
+<h1>Estimating Pi by Calculating Area Under the Curve<a class="headerlink" href="#estimating-pi-by-calculating-area-under-the-curve" title="Permalink to this headline">¶</a></h1>
+<p>Problem Write-up</p>
+<div class="section" id="sequential-code">
+<h2>Sequential Code<a class="headerlink" href="#sequential-code" title="Permalink to this headline">¶</a></h2>
+<p><em>file: cross_platform_examples/piIntegration/seq_pi_done/seq_pi_done.c</em></p>
+<p><em>Build inside seq_pi_done directory:</em></p>
+<div class="highlight-default"><div class="highlight"><pre><span class="n">make</span> <span class="n">seq_pi_done</span>
+</pre></div>
+</div>
+<p><em>Execute on the command line inside seq_pi_done directory:</em></p>
+<div class="highlight-default"><div class="highlight"><pre><span class="o">./</span><span class="n">seq_pi_done</span> <span class="o">&lt;</span><span class="n">number</span> <span class="n">of</span> <span class="n">bins</span><span class="o">&gt;</span>
+</pre></div>
+</div>
+<div class="topic">
+<p class="topic-title first">To do:</p>
+<p>Run and compile the code experimenting with the number of bins. Compare
+the source code to the output. What do you notice about the accuracy of
+our estimation of pi as the number of bins increase?</p>
+<p>Record execution times using 125 million, 250 million, 500 million, 1 billion,
+and 2 billion for the number of bins.</p>
+</div>
+<div class="highlight-c"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61</pre></div></td><td class="code"><div class="highlight"><pre><span class="cm">/****************************************************************************</span>
+<span class="cm">* Program: Sequential Pi Calculation</span>
+<span class="cm">* This PI program was taken from Argonne National Laboratory.</span>
+<span class="cm">* Sequential version made by Hannah Sonsalla, Macalester College</span>
+<span class="cm">****************************************************************************/</span>
+
+<span class="cp">#include</span> <span class="cpf">&lt;math.h&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;stdio.h&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;stdlib.h&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;time.h&gt;</span><span class="cp"></span>
+
+<span class="kt">void</span> <span class="nf">getInput</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span><span class="o">*</span> <span class="n">argv</span><span class="p">[],</span> <span class="kt">int</span><span class="o">*</span> <span class="n">n</span><span class="p">);</span>
+
+<span class="kt">void</span> <span class="nf">getInput</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span><span class="o">*</span> <span class="n">argv</span><span class="p">[],</span> <span class="kt">int</span><span class="o">*</span> <span class="n">n</span><span class="p">){</span>
+	<span class="k">if</span><span class="p">(</span><span class="n">argc</span> <span class="o">!=</span> <span class="mi">2</span><span class="p">){</span>
+		<span class="n">fprintf</span><span class="p">(</span><span class="n">stderr</span><span class="p">,</span> <span class="s">&quot;usage: %s &lt;number of bins&gt; </span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">argv</span><span class="p">[</span><span class="mi">0</span><span class="p">]);</span>
+        <span class="n">fflush</span><span class="p">(</span><span class="n">stderr</span><span class="p">);</span>
+        <span class="o">*</span><span class="n">n</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span>
+	<span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+		<span class="o">*</span><span class="n">n</span> <span class="o">=</span> <span class="n">atoi</span><span class="p">(</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">]);</span>
+	<span class="p">}</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="o">*</span><span class="n">n</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">exit</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">);</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span> <span class="o">*</span><span class="n">argv</span><span class="p">[])</span> <span class="p">{</span>
+
+   <span class="kt">int</span>  <span class="n">i</span><span class="p">,</span>
+        <span class="n">n</span><span class="p">;</span>                                              <span class="cm">/* the number of bins */</span>
+
+    <span class="kt">double</span> <span class="n">PI25DT</span> <span class="o">=</span> <span class="mf">3.141592653589793238462643</span><span class="p">;</span>         <span class="cm">/* 25-digit-PI*/</span>
+  
+    <span class="kt">double</span> <span class="n">pi</span><span class="p">,</span>                                          <span class="cm">/* value of PI in total*/</span>
+           <span class="n">step</span><span class="p">,</span>                                        <span class="cm">/* the step */</span>
+           <span class="n">sum</span><span class="p">,</span>                                         <span class="cm">/* sum of area under the curve */</span>
+           <span class="n">x</span><span class="p">;</span>
+
+    <span class="kt">clock_t</span> <span class="n">start_time</span><span class="p">,</span>          <span class="cm">/* starting time */</span>
+           <span class="n">end_time</span><span class="p">;</span>            <span class="cm">/* ending time */</span>
+
+    <span class="n">getInput</span><span class="p">(</span><span class="n">argc</span><span class="p">,</span> <span class="n">argv</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">n</span><span class="p">);</span>
+    <span class="n">printf</span><span class="p">(</span><span class="s">&quot;number of bins is %d</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">n</span><span class="p">);</span>
+    <span class="n">start_time</span> <span class="o">=</span> <span class="n">clock</span><span class="p">();</span>
+
+    <span class="n">step</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">/</span> <span class="p">(</span><span class="kt">double</span><span class="p">)</span> <span class="n">n</span><span class="p">;</span>
+    <span class="n">sum</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">;</span>
+    <span class="k">for</span> <span class="p">(</span><span class="n">i</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;=</span> <span class="n">n</span><span class="p">;</span> <span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">step</span> <span class="o">*</span> <span class="p">((</span><span class="kt">double</span><span class="p">)</span><span class="n">i</span> <span class="o">-</span> <span class="mf">0.5</span><span class="p">);</span>
+        <span class="n">sum</span> <span class="o">+=</span> <span class="p">(</span><span class="mf">4.0</span><span class="o">/</span><span class="p">(</span><span class="mf">1.0</span> <span class="o">+</span> <span class="n">x</span><span class="o">*</span><span class="n">x</span><span class="p">));</span>
+    <span class="p">}</span>
+
+    <span class="n">pi</span> <span class="o">=</span> <span class="n">step</span> <span class="o">*</span> <span class="n">sum</span><span class="p">;</span>
+
+    <span class="n">printf</span><span class="p">(</span><span class="s">&quot;Pi is approximately %.16f, Error is %.16f</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">pi</span><span class="p">,</span> <span class="n">fabs</span><span class="p">(</span><span class="n">pi</span> <span class="o">-</span> <span class="n">PI25DT</span><span class="p">));</span>
+    <span class="n">end_time</span> <span class="o">=</span> <span class="n">clock</span><span class="p">();</span>
+    <span class="n">printf</span><span class="p">(</span><span class="s">&quot;Time of calculating PI is: %f seconds </span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="p">(</span><span class="kt">double</span><span class="p">)(</span><span class="n">end_time</span><span class="o">-</span><span class="n">start_time</span><span class="p">)</span><span class="o">/</span><span class="n">CLOCKS_PER_SEC</span><span class="p">);</span>
+   
+    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</td></tr></table></div>
+</div>
+<div class="section" id="openmp-code">
+<h2>OpenMP Code<a class="headerlink" href="#openmp-code" title="Permalink to this headline">¶</a></h2>
+<p><em>file: cross_platform_examples/piIntegration/omp_pi_done/omp_pi_done.c</em></p>
+<p><em>Build inside omp_pi_done directory:</em></p>
+<div class="highlight-default"><div class="highlight"><pre><span class="n">make</span> <span class="n">omp_pi_done</span>
+</pre></div>
+</div>
+<p><em>Execute on the command line inside omp_pi_done directory:</em></p>
+<div class="highlight-default"><div class="highlight"><pre><span class="o">./</span><span class="n">omp_pi_done</span> <span class="o">&lt;</span><span class="n">number</span> <span class="n">of</span> <span class="n">threads</span><span class="o">&gt;</span> <span class="o">&lt;</span><span class="n">number</span> <span class="n">of</span> <span class="n">bins</span><span class="o">&gt;</span>
+</pre></div>
+</div>
+<div class="topic">
+<p class="topic-title first">To do:</p>
+<p>Find the speedup and efficiency of this program. To do so, you will
+need your execution times above from the sequential version of calculating pi
+using the Monte Carlo method.</p>
+<p>Use 2, 4, 8, 12, 14, and 16 for the number of processes and 125 million, 250 million,
+500 million, 1 billion, and 2 billion for the number of bins.</p>
+<p>Make a copy of the template provided at
+<a class="reference external" href="https://docs.google.com/spreadsheets/d/1GBgyDzKhQIh_BVFJOi1LHbEtputyEh5rQ5ETn1ZRi9U/edit?usp=sharing.">this link</a> and
+record the execution times from each combination in the execution time table.
+The speedup and efficiency of each combination will automatically be calculated
+and corresponding speedup and efficiency graphs will be made.</p>
+</div>
+</div>
+<div class="section" id="mpi-code">
+<h2>MPI Code<a class="headerlink" href="#mpi-code" title="Permalink to this headline">¶</a></h2>
+<p><em>file: cross_platform_examples/piIntegration/mpi_pi_done/mpi_pi_done.c</em></p>
+<p><em>Build inside mpi_pi_done directory:</em></p>
+<div class="highlight-default"><div class="highlight"><pre><span class="n">make</span> <span class="n">mpi_pi_done</span>
+</pre></div>
+</div>
+<p><em>Execute on the command line inside mpi_pi_done directory:</em></p>
+<div class="highlight-default"><div class="highlight"><pre><span class="n">mpirun</span> <span class="o">-</span><span class="n">np</span> <span class="o">&lt;</span><span class="n">N</span><span class="o">&gt;</span> <span class="o">./</span><span class="n">mpi_pi_done</span> <span class="o">&lt;</span><span class="n">number</span> <span class="n">of</span> <span class="n">bins</span><span class="o">&gt;</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">This command is going to run all processes on the machine on which you
+type it. You will need a separate machines file for running the code
+on a cluster of machines. This note applies for all examples utilizing MPI.</p>
+</div>
+<div class="topic">
+<p class="topic-title first">To do:</p>
+<p>Find the speedup and efficiency of this program the same way you did previously
+for the OpenMP version. To do so, you will need your execution times from the sequential
+version of calculating pi using the Monte Carlo method above.</p>
+<p>Use 2, 4, 8, 12, 14, and 16 for the number of processes and 125 million, 250 million,
+500 million, 1 billion, and 2 billion for the number of bins.</p>
+<p>Make a copy of the template provided
+<a class="reference external" href="https://docs.google.com/spreadsheets/d/1ff1yFkz4cMheYPaZIiA29J_GzCFNW4tKAMoDjPQu130/edit?usp=sharing.">here</a> and
+record the execution times from each combination in the execution time table.
+The speedup and efficiency of each combination will automatically be calculated
+and corresponding speedup and efficiency graphs will be made.</p>
+<p>Compare the speedup and efficiency of this program to the speedup and efficiency
+of the OpenMP program. What do you observe?</p>
+</div>
+</div>
+<div class="section" id="mpi-openmp-hybrid-code">
+<h2>MPI+OpenMP Hybrid Code<a class="headerlink" href="#mpi-openmp-hybrid-code" title="Permalink to this headline">¶</a></h2>
+<p><em>file: cross_platform_examples/piIntegration/hybrid_pi_done/hybrid_pi_done.c</em></p>
+<p><em>Build inside hybrid_pi_done directory:</em></p>
+<div class="highlight-default"><div class="highlight"><pre><span class="n">make</span> <span class="n">hybrid_pi_done</span>
+</pre></div>
+</div>
+<p><em>Execute on the command line inside hybrid_pi_done directory:</em></p>
+<div class="highlight-default"><div class="highlight"><pre><span class="n">mpirun</span> <span class="o">-</span><span class="n">np</span> <span class="o">&lt;</span><span class="n">N</span><span class="o">&gt;</span> <span class="o">./</span><span class="n">hybrid_pi_done</span> <span class="o">&lt;</span><span class="n">number</span> <span class="n">of</span> <span class="n">threads</span><span class="o">&gt;</span> <span class="o">&lt;</span><span class="n">number</span> <span class="n">of</span> <span class="n">bins</span><span class="o">&gt;</span>
+</pre></div>
+</div>
+<div class="topic">
+<p class="topic-title first">To do:</p>
+<p>Try the hybrid program with different number of processes and different number
+of threads. What combinations of processes and threads seem to run faster?
+Why might this be the case?</p>
+<p>Run the program using 4 processes, 4 threads and 500,000,000 bins.
+Compare the execution time to the time it took to run the MPI program using
+4 processes and 125,000,000 bins. How do the times compare?</p>
+<p>Run the program using 4 processes, 4 threads and 2,000,000,000 bins.
+Compare the execution time to the time it took to run the MPI program using
+4 processes and 500,000,000 bins. Can you explain this behavior?</p>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../index.html">
+              <img class="logo" src="../_static/CSInParallel200wide.png" alt="Logo"/>
+            </a></p>
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Estimating Pi by Calculating Area Under the Curve</a><ul>
+<li><a class="reference internal" href="#sequential-code">Sequential Code</a></li>
+<li><a class="reference internal" href="#openmp-code">OpenMP Code</a></li>
+<li><a class="reference internal" href="#mpi-code">MPI Code</a></li>
+<li><a class="reference internal" href="#mpi-openmp-hybrid-code">MPI+OpenMP Hybrid Code</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="../MonteCarloPi/Pi.html"
+                        title="previous chapter">Estimating Pi using Monte Carlo Method</a></p>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../MonteCarloPi/Pi.html" title="Estimating Pi using Monte Carlo Method"
+             >previous</a></li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Cross Platform Parallel Programming</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright This work is licensed under a Creative Commons Attribution-ShareAlike 3.0 Unported License.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.2.
+    </div>
+  </body>
+</html>

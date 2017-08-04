@@ -1,0 +1,436 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Estimating Pi using Monte Carlo Method &#8212; Cross Platform Parallel Programming</title>
+    
+    <link rel="stylesheet" href="../_static/csip.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Estimating Pi by Calculating Area Under the Curve" href="../UnderCurvePi/Pi2.html" />
+    <link rel="prev" title="Cross Platform Programming" href="../CrossPlatform.html" /> 
+  </head>
+  <body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../UnderCurvePi/Pi2.html" title="Estimating Pi by Calculating Area Under the Curve"
+             accesskey="N">next</a></li>
+        <li class="right" >
+          <a href="../CrossPlatform.html" title="Cross Platform Programming"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Cross Platform Parallel Programming</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="estimating-pi-using-monte-carlo-method">
+<h1>Estimating Pi using Monte Carlo Method<a class="headerlink" href="#estimating-pi-using-monte-carlo-method" title="Permalink to this headline">¶</a></h1>
+<p>This example demonstrates the Monte Carlo method for estimating the value of
+<img class="math" src="../_images/math/b7793e4f08d00aca47e272dcdfeb70f933dac222.png" alt="\pi"/>. Monte Carlo methods rely on repeated independent and random sampling.
+Such methods work well with parallel shared systems and distributed systems as
+the work can be split among many threads or processes.</p>
+<p>The problem can be imagined in terms of playing darts. Let the
+dartboard consist of a square target with a circular target inside of it.
+To solve this by means of using a ‘Monte Carlo Simulation’, you would simply
+throw a bunch of darts at the target and record the percentage
+that land in the inner circular target.</p>
+<p>We can extend this idea to approximate <img class="math" src="../_images/math/b7793e4f08d00aca47e272dcdfeb70f933dac222.png" alt="\pi"/> quite easily.
+Suppose the square target has a length of two feet and the circular target
+has a radius of one foot.</p>
+<a class="reference internal image-reference" href="../_images/PiBoard.png"><img alt="../_images/PiBoard.png" src="../_images/PiBoard.png" style="width: 400px;" /></a>
+<p>Based on the dimensions of the board, we have that the ratio of the area
+of the circle to the area of the square is</p>
+<div class="math">
+<p><img src="../_images/math/3c9f464c158dfa24a96ae521b7a394315deed6cb.png" alt="\frac{\pi {1}^2}{2^2} = \frac{\pi}{4}"/></p>
+</div><p>As it happens, we can calculate a value for the ratio of the area of the circle
+to the area of the square with a Monte Carlo simulation. We pick random
+points in the square and find the ratio of the number of points inside the circle
+to the total number of points. This ratio should approach <img class="math" src="../_images/math/fb7f188c45278a5bed905995588f97b1e90850d6.png" alt="\frac{\pi}{4}"/>.
+We multiply this by 4 to get our estimate of <img class="math" src="../_images/math/b7793e4f08d00aca47e272dcdfeb70f933dac222.png" alt="\pi"/>.</p>
+<p>This can be simplified by using only a quarter of the board. The ratio of the
+area of the circle to the area of the square is still <img class="math" src="../_images/math/b7793e4f08d00aca47e272dcdfeb70f933dac222.png" alt="\pi"/>/4. To
+simulate the throw of a dart, we generate a number of random points with
+coordinates (x,y). These coordinates are uniformly distributed random numbers
+between 0 and 1. Then, we determine how many of these points fall inside of
+the circle and take the ratio of the areas.</p>
+<div class="section" id="sequential-code">
+<h2>Sequential Code<a class="headerlink" href="#sequential-code" title="Permalink to this headline">¶</a></h2>
+<p><em>file: cross_platform_examples/monteCarloPi/calcPiSeq/calcPiSeq.C</em></p>
+<p><em>Build inside calcPiSeq directory:</em></p>
+<div class="highlight-default"><div class="highlight"><pre><span class="n">make</span> <span class="n">calcPiSeq</span>
+</pre></div>
+</div>
+<p><em>Execute on the command line inside calcPiSeq directory:</em></p>
+<div class="highlight-default"><div class="highlight"><pre><span class="o">./</span><span class="n">calcPiSeq</span> <span class="o">&lt;</span><span class="n">number</span> <span class="n">of</span> <span class="n">tosses</span><span class="o">&gt;</span>
+</pre></div>
+</div>
+<p>The code follows from the description of the problem. One thing to point out is
+the use of random generator <em>rand_r</em>. <em>rand_r</em> is a reentrant and thread-safe
+function that allows us to get reproducible behavior. This is the reason behind
+using C++ for coding this problem.</p>
+<div class="topic">
+<p class="topic-title first">To do:</p>
+<p>Run and compile the code experimenting with the number of tosses. Compare
+the source code to the output. What do you notice about the accuracy of
+our estimation of pi as the number of tosses increase?</p>
+<p>Record execution times using 16 million, 32 million, 64 million, 128 million,
+and 256 million for the number of tosses.</p>
+</div>
+<div class="highlight-C++"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68</pre></div></td><td class="code"><div class="highlight"><pre><span class="cm">/*</span>
+<span class="cm"> * Hannah Sonsalla, Macalester College, 2017</span>
+<span class="cm"> *</span>
+<span class="cm"> *  calcPiSeq.C</span>
+<span class="cm"> *</span>
+<span class="cm"> *   ...sequential program to calculate the value of Pi using</span>
+<span class="cm"> *       Monte Carlo Method.</span>
+<span class="cm"> *</span>
+<span class="cm"> * Usage:  ./calcPiSeq &lt;number of tosses&gt;</span>
+<span class="cm"> *</span>
+<span class="cm"> */</span>
+
+<span class="cp">#include</span> <span class="cpf">&lt;stdio.h&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;stdlib.h&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;math.h&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;time.h&gt;</span><span class="cp"></span>
+
+<span class="kt">void</span> <span class="nf">Get_input</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span><span class="o">*</span> <span class="n">argv</span><span class="p">[],</span> <span class="kt">long</span><span class="o">*</span> <span class="n">totalNumTosses_p</span><span class="p">);</span>
+<span class="kt">long</span> <span class="nf">Toss</span> <span class="p">(</span><span class="kt">long</span> <span class="n">numProcessTosses</span><span class="p">);</span>
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span><span class="o">**</span> <span class="n">argv</span><span class="p">)</span> <span class="p">{</span>
+	<span class="kt">long</span> <span class="n">numTosses</span><span class="p">,</span> <span class="n">numInCircle</span><span class="p">;</span>
+	<span class="kt">double</span> <span class="n">piEstimate</span><span class="p">;</span>
+	<span class="kt">clock_t</span> <span class="n">start</span><span class="p">,</span> <span class="n">finish</span><span class="p">;</span>
+	<span class="kt">double</span> <span class="n">PI25DT</span> <span class="o">=</span> <span class="mf">3.141592653589793238462643</span><span class="p">;</span>         <span class="cm">/* 25-digit-PI*/</span>
+
+	<span class="n">Get_input</span><span class="p">(</span><span class="n">argc</span><span class="p">,</span> <span class="n">argv</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">numTosses</span><span class="p">);</span>  <span class="c1">// Read total number of tosses from command line</span>
+
+	<span class="n">start</span> <span class="o">=</span> <span class="n">clock</span><span class="p">();</span>
+	<span class="n">numInCircle</span> <span class="o">=</span> <span class="n">Toss</span><span class="p">(</span><span class="n">numTosses</span><span class="p">);</span>
+	<span class="n">finish</span> <span class="o">=</span> <span class="n">clock</span><span class="p">();</span>
+
+	<span class="n">piEstimate</span> <span class="o">=</span> <span class="p">(</span><span class="mi">4</span><span class="o">*</span><span class="n">numInCircle</span><span class="p">)</span><span class="o">/</span><span class="p">((</span><span class="kt">double</span><span class="p">)</span> <span class="n">numTosses</span><span class="p">);</span>
+	<span class="n">printf</span><span class="p">(</span><span class="s">&quot;Elapsed time = %f seconds </span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="p">(</span><span class="kt">double</span><span class="p">)(</span><span class="n">finish</span><span class="o">-</span><span class="n">start</span><span class="p">)</span><span class="o">/</span><span class="n">CLOCKS_PER_SEC</span><span class="p">);</span>
+	<span class="n">printf</span><span class="p">(</span><span class="s">&quot;Pi is approximately %.16f, Error is %.16f</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">piEstimate</span><span class="p">,</span> <span class="n">fabs</span><span class="p">(</span><span class="n">piEstimate</span> <span class="o">-</span> <span class="n">PI25DT</span><span class="p">));</span>
+
+	<span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="cm">/* Function gets input from command line for totalNumTosses */</span>
+<span class="kt">void</span> <span class="nf">Get_input</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span><span class="o">*</span> <span class="n">argv</span><span class="p">[],</span> <span class="kt">long</span><span class="o">*</span> <span class="n">numTosses_p</span><span class="p">){</span>
+	<span class="k">if</span> <span class="p">(</span><span class="n">argc</span><span class="o">!=</span> <span class="mi">2</span><span class="p">){</span>
+		<span class="n">fprintf</span><span class="p">(</span><span class="n">stderr</span><span class="p">,</span> <span class="s">&quot;usage:  %s &lt;number of tosses&gt; </span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">argv</span><span class="p">[</span><span class="mi">0</span><span class="p">]);</span>
+	  <span class="n">fflush</span><span class="p">(</span><span class="n">stderr</span><span class="p">);</span>
+	  <span class="o">*</span><span class="n">numTosses_p</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+	<span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+		<span class="o">*</span><span class="n">numTosses_p</span> <span class="o">=</span> <span class="n">atoi</span><span class="p">(</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">]);</span>
+	<span class="p">}</span>
+
+	<span class="c1">// 0 totalNumTosses ends the program</span>
+	<span class="k">if</span> <span class="p">(</span><span class="o">*</span><span class="n">numTosses_p</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+		<span class="n">exit</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">);</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+
+<span class="cm">/* Function implements Monte Carlo version of tossing darts at a board */</span>
+<span class="kt">long</span> <span class="nf">Toss</span> <span class="p">(</span><span class="kt">long</span> <span class="n">numTosses</span><span class="p">){</span>
+	<span class="kt">long</span> <span class="n">toss</span><span class="p">,</span> <span class="n">numInCircle</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+	<span class="kt">double</span> <span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">;</span>
+	<span class="kt">unsigned</span> <span class="kt">int</span> <span class="n">seed</span> <span class="o">=</span> <span class="p">(</span><span class="kt">unsigned</span><span class="p">)</span> <span class="n">time</span><span class="p">(</span><span class="nb">NULL</span><span class="p">);</span>
+	<span class="n">srand</span><span class="p">(</span><span class="n">seed</span><span class="p">);</span>
+	<span class="k">for</span> <span class="p">(</span><span class="n">toss</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">toss</span> <span class="o">&lt;</span> <span class="n">numTosses</span><span class="p">;</span> <span class="n">toss</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+		<span class="n">x</span> <span class="o">=</span> <span class="n">rand_r</span><span class="p">(</span><span class="o">&amp;</span><span class="n">seed</span><span class="p">)</span><span class="o">/</span><span class="p">(</span><span class="kt">double</span><span class="p">)</span><span class="n">RAND_MAX</span><span class="p">;</span>
+	  <span class="n">y</span> <span class="o">=</span> <span class="n">rand_r</span><span class="p">(</span><span class="o">&amp;</span><span class="n">seed</span><span class="p">)</span><span class="o">/</span><span class="p">(</span><span class="kt">double</span><span class="p">)</span><span class="n">RAND_MAX</span><span class="p">;</span>
+	  <span class="k">if</span><span class="p">((</span><span class="n">x</span><span class="o">*</span><span class="n">x</span><span class="o">+</span><span class="n">y</span><span class="o">*</span><span class="n">y</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="mf">1.0</span> <span class="p">)</span> <span class="n">numInCircle</span><span class="o">++</span><span class="p">;</span>
+	<span class="p">}</span>
+	<span class="k">return</span> <span class="n">numInCircle</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</td></tr></table></div>
+</div>
+<div class="section" id="openmp-code">
+<h2>OpenMP Code<a class="headerlink" href="#openmp-code" title="Permalink to this headline">¶</a></h2>
+<p><em>file: cross_platform_examples/monteCarloPi/calcPiOMP/calcPiOMP.C</em></p>
+<p><em>Build inside calcPiOMP directory:</em></p>
+<div class="highlight-default"><div class="highlight"><pre><span class="n">make</span> <span class="n">calcPiOMP</span>
+</pre></div>
+</div>
+<p><em>Execute on the command line inside calcPiOMP directory:</em></p>
+<div class="highlight-default"><div class="highlight"><pre><span class="o">./</span><span class="n">calcPiOMP</span> <span class="o">&lt;</span><span class="n">number</span> <span class="n">of</span> <span class="n">threads</span><span class="o">&gt;</span> <span class="o">&lt;</span><span class="n">number</span> <span class="n">of</span> <span class="n">tosses</span><span class="o">&gt;</span>
+</pre></div>
+</div>
+<p>The shared memory version of the code begins by setting the number of threads for
+the program. We then calculate the number of tosses each thread will simulate.
+The block of code beneath the #pragma omp parallel is run by each individual thread.
+To get the total number of tosses that land in the circle, we reduce each thread’s
+relevant tosses to a single value.</p>
+<div class="highlight-C++"><div class="highlight"><pre>  <span class="n">omp_set_num_threads</span><span class="p">(</span><span class="n">numThreads</span><span class="p">);</span> <span class="c1">// Set number of threads</span>
+  <span class="n">numThreadTosses</span> <span class="o">=</span> <span class="n">totalNumTosses</span><span class="o">/</span><span class="n">numThreads</span><span class="p">;</span>  <span class="c1">// Calculate number of tosses per thread</span>
+
+  <span class="n">start</span> <span class="o">=</span> <span class="n">omp_get_wtime</span><span class="p">();</span>
+
+  <span class="cp">#pragma omp parallel reduction(+:numberInCircle)</span>
+	<span class="p">{</span>
+		<span class="n">my_thread_id</span> <span class="o">=</span> <span class="n">omp_get_thread_num</span><span class="p">();</span>
+		<span class="n">numberInCircle</span> <span class="o">=</span> <span class="n">Toss</span><span class="p">(</span><span class="n">numThreadTosses</span><span class="p">,</span> <span class="n">my_thread_id</span><span class="p">);</span>
+  <span class="p">}</span>
+
+	<span class="n">finish</span> <span class="o">=</span> <span class="n">omp_get_wtime</span><span class="p">();</span>
+</pre></div>
+</div>
+<div class="topic">
+<p class="topic-title first">To do:</p>
+<p>Find the speedup and efficiency of this program. To do so, you will
+need your execution times above from the sequential version of calculating pi
+using the Monte Carlo method.</p>
+<p>Use 2, 4, 8, 12, 14, and 16 for the number of processes and 16 million,
+32 million, 64 million, 128 million, and 256 million for the number of tosses.</p>
+<p>Make a copy of the template provided
+<a class="reference external" href="https://docs.google.com/spreadsheets/d/1GBgyDzKhQIh_BVFJOi1LHbEtputyEh5rQ5ETn1ZRi9U/edit?usp=sharing.">here</a> and
+record the execution times from each combination in the execution time table.
+The speedup and efficiency of each combination will automatically be calculated
+and corresponding speedup and efficiency graphs will be made.</p>
+</div>
+</div>
+<div class="section" id="mpi-code">
+<h2>MPI Code<a class="headerlink" href="#mpi-code" title="Permalink to this headline">¶</a></h2>
+<p><em>file: cross_platform_examples/monteCarloPi/calcPiMPI/calcPiMPI.C</em></p>
+<p><em>Build inside calcPiMPI directory:</em></p>
+<div class="highlight-default"><div class="highlight"><pre><span class="n">make</span> <span class="n">calcPiMPI</span>
+</pre></div>
+</div>
+<p><em>Execute on the command line inside calcPiMPI directory:</em></p>
+<div class="highlight-default"><div class="highlight"><pre><span class="n">mpirun</span> <span class="o">-</span><span class="n">np</span> <span class="o">&lt;</span><span class="n">N</span><span class="o">&gt;</span> <span class="o">./</span><span class="n">calcPiMPI</span> <span class="o">&lt;</span><span class="n">number</span> <span class="n">of</span> <span class="n">tosses</span><span class="o">&gt;</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">This command is going to run all processes on the machine on which you
+type it. You will need a separate machines file for running the code
+on a cluster of machines. This note applies for all examples utilizing MPI.</p>
+</div>
+<p>The distributed memory version starts with initializing the execution environment
+and assigning a unique rank to each process. Next, we calculate the number of
+tosses that each process will sample. All processes sample their predetermined
+number of tosses and determine whether or not they fall inside the circle. The
+local values for tosses that land inside the circle are reduced to a single value.</p>
+<div class="highlight-C++"><div class="highlight"><pre>   <span class="n">numProcessTosses</span> <span class="o">=</span> <span class="n">totalNumTosses</span><span class="o">/</span><span class="n">numProcs</span><span class="p">;</span> 
+   
+   <span class="n">MPI_Barrier</span><span class="p">(</span><span class="n">MPI_COMM_WORLD</span><span class="p">);</span>
+   <span class="n">start</span> <span class="o">=</span> <span class="n">MPI_Wtime</span><span class="p">();</span>
+   <span class="n">processNumberInCircle</span> <span class="o">=</span> <span class="n">Toss</span><span class="p">(</span><span class="n">numProcessTosses</span><span class="p">,</span> <span class="n">myRank</span><span class="p">);</span>
+   <span class="n">finish</span> <span class="o">=</span> <span class="n">MPI_Wtime</span><span class="p">();</span>
+   <span class="n">loc_elapsed</span> <span class="o">=</span> <span class="n">finish</span><span class="o">-</span><span class="n">start</span><span class="p">;</span>
+   <span class="n">MPI_Reduce</span><span class="p">(</span><span class="o">&amp;</span><span class="n">loc_elapsed</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">elapsed</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">MPI_DOUBLE</span><span class="p">,</span> <span class="n">MPI_MAX</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">MPI_COMM_WORLD</span><span class="p">);</span> 
+ 
+   <span class="n">MPI_Reduce</span><span class="p">(</span><span class="o">&amp;</span><span class="n">processNumberInCircle</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">totalNumberInCircle</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">MPI_LONG</span><span class="p">,</span> <span class="n">MPI_SUM</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">MPI_COMM_WORLD</span><span class="p">);</span>
+</pre></div>
+</div>
+<div class="topic">
+<p class="topic-title first">To do:</p>
+<p>Find the speedup and efficiency of this program the same way you did previously
+for the OpenMP version. To do so, you will need your execution times from the sequential
+version of calculating pi using the Monte Carlo method above.</p>
+<p>Use 2, 4, 8, 12, 14, and 16 for the number of processes and 16 million,
+32 million, 64 million, 128 million, and 256 million for the number of tosses.</p>
+<p>Make a copy of the template provided at
+<a class="reference external" href="https://docs.google.com/spreadsheets/d/1ff1yFkz4cMheYPaZIiA29J_GzCFNW4tKAMoDjPQu130/edit?usp=sharing.">this link</a> and
+record the execution times from each combination in the execution time table.
+The speedup and efficiency of each combination will automatically be calculated
+and corresponding speedup and efficiency graphs will be made.</p>
+<p>Compare the speedup and efficiency of this program to the speedup and efficiency
+of the OpenMP program. What do you observe?</p>
+</div>
+</div>
+<div class="section" id="mpi-openmp-hybrid-code">
+<h2>MPI+OpenMP Hybrid Code<a class="headerlink" href="#mpi-openmp-hybrid-code" title="Permalink to this headline">¶</a></h2>
+<p><em>file: cross_platform_examples/monteCarloPi/calcPiHybrid/calcPiHybrid.C</em></p>
+<p><em>Build inside calcPiHybrid directory:</em></p>
+<div class="highlight-default"><div class="highlight"><pre><span class="n">make</span> <span class="n">calcPiHybrid</span>
+</pre></div>
+</div>
+<p><em>Execute on the command line inside calcPiHybrid directory:</em></p>
+<div class="highlight-default"><div class="highlight"><pre><span class="n">mpirun</span> <span class="o">-</span><span class="n">np</span> <span class="o">&lt;</span><span class="n">N</span><span class="o">&gt;</span> <span class="o">./</span><span class="n">calcPiHybrid</span> <span class="o">&lt;</span><span class="n">number</span> <span class="n">of</span> <span class="n">threads</span><span class="o">&gt;</span> <span class="o">&lt;</span><span class="n">number</span> <span class="n">of</span> <span class="n">tosses</span><span class="o">&gt;</span>
+</pre></div>
+</div>
+<p>This hybrid version relies on both distributed memory from MPI and shared
+memory from OpenMP. A programming model that combines MPI and OpenMP uses
+MPI to distribute work among processes, each of which uses OpenMP to assign
+threads to its task. First, we calculate the number of tosses that each process’
+threads will sample. Then, each process initializes its threads. Every thread
+simulates the predetermined number of tosses and counts how many land in circle.
+The local values for tosses that land inside the circle from threads are reduced
+before each process’ local values are reduced.</p>
+<div class="highlight-C++"><div class="highlight"><pre>  <span class="n">localNumTosses</span> <span class="o">=</span> <span class="n">totalNumTosses</span><span class="o">/</span><span class="p">(</span><span class="n">numProcs</span> <span class="o">*</span> <span class="n">numThreads</span><span class="p">);</span>
+  <span class="n">MPI_Barrier</span><span class="p">(</span><span class="n">MPI_COMM_WORLD</span><span class="p">);</span>
+  <span class="n">start</span> <span class="o">=</span> <span class="n">MPI_Wtime</span><span class="p">();</span>
+
+  <span class="cp">#pragma omp parallel num_threads(numThreads) reduction(+:processThreadNumberInCircle)</span>
+  <span class="p">{</span>
+    <span class="kt">int</span> <span class="n">threadID</span> <span class="o">=</span> <span class="n">omp_get_thread_num</span><span class="p">();</span>
+    <span class="n">processThreadNumberInCircle</span> <span class="o">=</span> <span class="n">Toss</span><span class="p">(</span><span class="n">localNumTosses</span><span class="p">,</span><span class="n">myRank</span><span class="p">,</span> <span class="n">threadID</span><span class="p">);</span>
+    <span class="n">printf</span><span class="p">(</span><span class="s">&quot;Thread %d of %d from process %d of %d on %s has %ld in circle</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">threadID</span><span class="p">,</span> <span class="n">numThreads</span><span class="p">,</span>
+    <span class="n">myRank</span><span class="p">,</span> <span class="n">numProcs</span><span class="p">,</span> <span class="n">hostName</span><span class="p">,</span> <span class="n">processThreadNumberInCircle</span><span class="p">);</span>
+  <span class="p">}</span>
+
+  <span class="n">finish</span> <span class="o">=</span> <span class="n">MPI_Wtime</span><span class="p">();</span>
+  <span class="n">loc_elapsed</span> <span class="o">=</span> <span class="n">finish</span><span class="o">-</span><span class="n">start</span><span class="p">;</span>
+  <span class="n">MPI_Reduce</span><span class="p">(</span><span class="o">&amp;</span><span class="n">loc_elapsed</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">elapsed</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">MPI_DOUBLE</span><span class="p">,</span> <span class="n">MPI_MAX</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">MPI_COMM_WORLD</span><span class="p">);</span>
+
+  <span class="n">MPI_Reduce</span><span class="p">(</span><span class="o">&amp;</span><span class="n">processThreadNumberInCircle</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">totalNumberInCircle</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">MPI_LONG</span><span class="p">,</span> <span class="n">MPI_SUM</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">MPI_COMM_WORLD</span><span class="p">);</span>
+</pre></div>
+</div>
+<div class="topic">
+<p class="topic-title first">To do:</p>
+<p>Try the hybrid program with different number of processes and different number
+of threads. What combinations of processes and threads seem to run faster?
+Why might this be the case?</p>
+<p>Run the program using 4 processes, 4 threads and 64,000,000 tosses.
+Compare the execution time to the time it took to run the MPI program using
+4 processes and 16,000,000 tosses. How do the times compare?</p>
+<p>Run the program using 4 processes, 4 threads and 256,000,000 tosses.
+Compare the execution time to the time it took to run the MPI program using
+4 processes and 64,000,000 tosses. Can you explain this behavior?</p>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../index.html">
+              <img class="logo" src="../_static/CSInParallel200wide.png" alt="Logo"/>
+            </a></p>
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Estimating Pi using Monte Carlo Method</a><ul>
+<li><a class="reference internal" href="#sequential-code">Sequential Code</a></li>
+<li><a class="reference internal" href="#openmp-code">OpenMP Code</a></li>
+<li><a class="reference internal" href="#mpi-code">MPI Code</a></li>
+<li><a class="reference internal" href="#mpi-openmp-hybrid-code">MPI+OpenMP Hybrid Code</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="../CrossPlatform.html"
+                        title="previous chapter">Cross Platform Programming</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="../UnderCurvePi/Pi2.html"
+                        title="next chapter">Estimating Pi by Calculating Area Under the Curve</a></p>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../UnderCurvePi/Pi2.html" title="Estimating Pi by Calculating Area Under the Curve"
+             >next</a></li>
+        <li class="right" >
+          <a href="../CrossPlatform.html" title="Cross Platform Programming"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Cross Platform Parallel Programming</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright This work is licensed under a Creative Commons Attribution-ShareAlike 3.0 Unported License.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.2.
+    </div>
+  </body>
+</html>

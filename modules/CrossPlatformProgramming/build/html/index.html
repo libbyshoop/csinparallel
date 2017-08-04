@@ -1,0 +1,126 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Cross Platform Parallel Programming &#8212; Cross Platform Parallel Programming</title>
+    
+    <link rel="stylesheet" href="_static/csip.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="shortcut icon" href="_static/favicon.ico"/>
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Cross Platform Programming" href="CrossPlatform.html" /> 
+  </head>
+  <body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="CrossPlatform.html" title="Cross Platform Programming"
+             accesskey="N">next</a></li>
+        <li class="nav-item nav-item-0"><a href="#">Cross Platform Parallel Programming</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="cross-platform-parallel-programming">
+<h1>Cross Platform Parallel Programming<a class="headerlink" href="#cross-platform-parallel-programming" title="Permalink to this headline">¶</a></h1>
+<p>This module illustrates how problems can be written across different platforms.
+The document is split into various examples, each of which has a sequential version,
+OpenMP version, MPI verison and MPI+OpenMP hybrid version. Code examples include
+estimating pi using a Monte Carlo method and estimating pi using integration. Before
+diving into the examples, there will be some background on shared memory,
+distributed memory and hybrid systems. The examples are illustrated with
+either C or C++ programming languages, using standard popular available libraries.</p>
+<div class="section" id="source-code">
+<h2>Source Code<a class="headerlink" href="#source-code" title="Permalink to this headline">¶</a></h2>
+<p>Please download all examples from this tarball:
+<a class="reference download internal" href="_downloads/cross_platform_examples.tgz" download=""><code class="xref download docutils literal"><span class="pre">cross_platform_examples.tgz</span></code></a></p>
+<p>A C code file for each example below can be found in subdirectories of the
+cross_platform_examples directory, along with a makefile and an example of how
+to execute the program with the exception of the Monte Carlo Pi example. This
+example contains a C++ file and makefile. This was necessary as we needed a
+reentrant function for random number generation.</p>
+<p><strong>Hardware and Software Needed</strong></p>
+<p><em>OpenMP</em>: To compile and run the OpenMP and hybrid versions, you will need a C
+compiler with OpenMP. The GNU C compiler is OpenMP compliant. We assume you are
+building and executing these on a Unix command line.</p>
+<p><em>MPI</em>: For MPI and hybrid versions, you will either need access to a cluster of
+computers or a multiprocessor machine with an MPI library installed in order
+to be able to try the examples. If using a cluster of computers, you will need
+a machine file specific to your cluster.</p>
+</div>
+<div class="section" id="examples">
+<h2>Examples<a class="headerlink" href="#examples" title="Permalink to this headline">¶</a></h2>
+<div class="toctree-wrapper compound">
+<p class="caption"><span class="caption-text">Table of Contents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="CrossPlatform.html">Cross Platform Programming</a></li>
+<li class="toctree-l1"><a class="reference internal" href="MonteCarloPi/Pi.html">Estimating Pi using Monte Carlo Method</a></li>
+<li class="toctree-l1"><a class="reference internal" href="UnderCurvePi/Pi2.html">Estimating Pi by Calculating Area Under the Curve</a></li>
+</ul>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="#">
+              <img class="logo" src="_static/CSInParallel200wide.png" alt="Logo"/>
+            </a></p>
+  <h3><a href="#">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Cross Platform Parallel Programming</a><ul>
+<li><a class="reference internal" href="#source-code">Source Code</a></li>
+<li><a class="reference internal" href="#examples">Examples</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Next topic</h4>
+  <p class="topless"><a href="CrossPlatform.html"
+                        title="next chapter">Cross Platform Programming</a></p>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="CrossPlatform.html" title="Cross Platform Programming"
+             >next</a></li>
+        <li class="nav-item nav-item-0"><a href="#">Cross Platform Parallel Programming</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright This work is licensed under a Creative Commons Attribution-ShareAlike 3.0 Unported License.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.2.
+    </div>
+  </body>
+</html>
