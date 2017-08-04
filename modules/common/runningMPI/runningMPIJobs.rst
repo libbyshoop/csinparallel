@@ -79,6 +79,8 @@ The hostfile: OpenMPI
 The hostfile for OpenMPI's version of mpirun needs a different format. A
 typical file will look something like this:
 
+::
+
     head slots=3 max-slots=3
     node1 slots=4 max-slots=4
     node2 slots=4 max-slots=4
@@ -95,10 +97,14 @@ not want to oversubscribe any of the nodes beyond the cores available on them.
 The default mode of running OpenMPI jobs is `by slot` on each node. For example,
 using the above hostfile called *cluster_nodes* and running this command:
 
+::
+
     mpirun -np 4 --hostfile cluster_nodes hostanme
 
 Would result in output that would look like this (though the ordering may be
 different):
+
+::
 
     head
     head
@@ -109,6 +115,8 @@ In this `by slot` mode, the maximum number of slots on the first node  listed
 in the file were used before a slot in the next node was used to assign a
 process. To use the `by node`, round-robin behavior you can run OpenMPI
 programs like this:
+
+::
 
     mpirun -np 4 --map-by node --hostfile cluster_hosts hostname
 

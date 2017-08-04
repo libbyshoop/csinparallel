@@ -5,12 +5,9 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    
     <title>Broadcast &#8212; Parallel Patternlets</title>
-    
     <link rel="stylesheet" href="../_static/csip.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-    
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
@@ -59,11 +56,11 @@ a <em>broadcast</em> from the master to all of the worker processes.</p>
 <h2>08. Broadcast: a special form of message passing<a class="headerlink" href="#broadcast-a-special-form-of-message-passing" title="Permalink to this headline">¶</a></h2>
 <p><em>file: patternlets/MPI/08.broadcast/broadcast.c</em></p>
 <p><em>Build inside 08.broadcast directory:</em></p>
-<div class="highlight-default"><div class="highlight"><pre><span class="n">make</span> <span class="n">broadcast</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">make</span> <span class="n">broadcast</span>
 </pre></div>
 </div>
 <p><em>Execute on the command line inside 08.broadcast directory:</em></p>
-<div class="highlight-default"><div class="highlight"><pre><span class="n">mpirun</span> <span class="o">-</span><span class="n">np</span> <span class="o">&lt;</span><span class="n">number</span> <span class="n">of</span> <span class="n">processes</span><span class="o">&gt;</span> <span class="o">./</span><span class="n">broadcast</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">mpirun</span> <span class="o">-</span><span class="n">np</span> <span class="o">&lt;</span><span class="n">number</span> <span class="n">of</span> <span class="n">processes</span><span class="o">&gt;</span> <span class="o">./</span><span class="n">broadcast</span>
 </pre></div>
 </div>
 <p>This example shows how a data item read from a file can be sent to all the processes.
@@ -123,7 +120,7 @@ the broadcast is sent from process 0 and looks like this:</p>
 44
 45
 46
-47</pre></div></td><td class="code"><div class="highlight"><pre><span class="cm">/* broadcast.c</span>
+47</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="cm">/* broadcast.c</span>
 <span class="cm"> * ... illustrates the use of MPI_Bcast() with a scalar value...</span>
 <span class="cm"> *      (compare to array version).</span>
 <span class="cm"> * Joel Adams, Calvin College, April 2016.</span>
@@ -199,11 +196,11 @@ does it change each time you run it?</p>
 <h2>09. Broadcast: incorporating user input<a class="headerlink" href="#broadcast-incorporating-user-input" title="Permalink to this headline">¶</a></h2>
 <p><em>file: patternlets/MPI/09.broadcastUserInput/broadcastUserInput.c</em></p>
 <p><em>Build inside 09.broadcastUserInput directory:</em></p>
-<div class="highlight-default"><div class="highlight"><pre><span class="n">make</span> <span class="n">broadcastUserInput</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">make</span> <span class="n">broadcastUserInput</span>
 </pre></div>
 </div>
 <p><em>Execute on the command line inside 09.broadcastUserInput directory:</em></p>
-<div class="highlight-default"><div class="highlight"><pre><span class="n">mpirun</span> <span class="o">-</span><span class="n">np</span> <span class="o">&lt;</span><span class="n">number</span> <span class="n">of</span> <span class="n">processes</span><span class="o">&gt;</span> <span class="o">./</span><span class="n">broadcastUserInput</span> <span class="o">&lt;</span><span class="n">integer</span><span class="o">&gt;</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">mpirun</span> <span class="o">-</span><span class="n">np</span> <span class="o">&lt;</span><span class="n">number</span> <span class="n">of</span> <span class="n">processes</span><span class="o">&gt;</span> <span class="o">./</span><span class="n">broadcastUserInput</span> <span class="o">&lt;</span><span class="n">integer</span><span class="o">&gt;</span>
 </pre></div>
 </div>
 <p>We can use command line arguments to incorporate user input into a program.
@@ -293,7 +290,7 @@ provide a number?</p>
 63
 64
 65
-66</pre></div></td><td class="code"><div class="highlight"><pre><span class="cm">/* broadcastUserInput.c</span>
+66</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="cm">/* broadcastUserInput.c</span>
 <span class="cm"> * ... illustrates the use of MPI_Bcast() with a scalar value</span>
 <span class="cm"> *     obtained via a command line argument.</span>
 <span class="cm"> *</span>
@@ -366,11 +363,11 @@ provide a number?</p>
 <h2>10. Broadcast: send receive equivalent<a class="headerlink" href="#broadcast-send-receive-equivalent" title="Permalink to this headline">¶</a></h2>
 <p>file: patternlets/MPI/10.broadcastSendReceive/broadcastSendReceive.c*</p>
 <p><em>Build inside 10.broadcastSendReceive directory:</em></p>
-<div class="highlight-default"><div class="highlight"><pre><span class="n">make</span> <span class="n">broadcastSendReceive</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">make</span> <span class="n">broadcastSendReceive</span>
 </pre></div>
 </div>
 <p><em>Execute on the command line inside 10.broadcastSendReceive directory:</em></p>
-<div class="highlight-default"><div class="highlight"><pre><span class="n">mpirun</span> <span class="o">-</span><span class="n">np</span> <span class="o">&lt;</span><span class="n">number</span> <span class="n">of</span> <span class="n">processes</span><span class="o">&gt;</span> <span class="o">./</span><span class="n">broadcastSendReceive</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">mpirun</span> <span class="o">-</span><span class="n">np</span> <span class="o">&lt;</span><span class="n">number</span> <span class="n">of</span> <span class="n">processes</span><span class="o">&gt;</span> <span class="o">./</span><span class="n">broadcastSendReceive</span>
 </pre></div>
 </div>
 <p>This example shows how to ensure that all processes have a copy of an array
@@ -464,7 +461,7 @@ function.</p>
 79
 80
 81
-82</pre></div></td><td class="code"><div class="highlight"><pre><span class="cm">/*</span>
+82</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="cm">/*</span>
 <span class="cm"> * broadcastSendReceive.c</span>
 <span class="cm"> * ... illustrates basic send receive functions.</span>
 <span class="cm"> * Master process sends filled array to each process.</span>
@@ -553,11 +550,11 @@ function.</p>
 <h2>11. Broadcast: send data to all processes<a class="headerlink" href="#broadcast-send-data-to-all-processes" title="Permalink to this headline">¶</a></h2>
 <p><em>file: patternlets/MPI/11.broadcast2/broadcast2.c</em></p>
 <p><em>Build inside 11.broadcast2 directory:</em></p>
-<div class="highlight-default"><div class="highlight"><pre><span class="n">make</span> <span class="n">broadcast2</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">make</span> <span class="n">broadcast2</span>
 </pre></div>
 </div>
 <p><em>Execute on the command line inside 11.broadcast2 directory:</em></p>
-<div class="highlight-default"><div class="highlight"><pre><span class="n">mpirun</span> <span class="o">-</span><span class="n">np</span> <span class="o">&lt;</span><span class="n">number</span> <span class="n">of</span> <span class="n">processes</span><span class="o">&gt;</span> <span class="o">./</span><span class="n">broadcast2</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">mpirun</span> <span class="o">-</span><span class="n">np</span> <span class="o">&lt;</span><span class="n">number</span> <span class="n">of</span> <span class="n">processes</span><span class="o">&gt;</span> <span class="o">./</span><span class="n">broadcast2</span>
 </pre></div>
 </div>
 <p>The send and receive pattern where one process sends the same data to all
@@ -630,7 +627,7 @@ using broadcast.</p>
 64
 65
 66
-67</pre></div></td><td class="code"><div class="highlight"><pre><span class="cm">/* broadcast2.c</span>
+67</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="cm">/* broadcast2.c</span>
 <span class="cm"> * ... illustrates the use of MPI_Bcast() for arrays...</span>
 <span class="cm"> * Joel Adams, Calvin College, November 2009.</span>
 <span class="cm"> *</span>
@@ -747,7 +744,7 @@ using broadcast.</p>
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright This work is licensed under a Creative Commons Attribution-ShareAlike 3.0 Unported License.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.2.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.3.
     </div>
   </body>
 </html>

@@ -5,12 +5,9 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    
     <title>Hybrid Program Structure: SPMD &#8212; Parallel Patternlets</title>
-    
     <link rel="stylesheet" href="../_static/csip.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-    
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
@@ -51,11 +48,11 @@
 <h2>0.Program Structure Implementation Strategy: Single Program, multiple data¶<a class="headerlink" href="#program-structure-implementation-strategy-single-program-multiple-data" title="Permalink to this headline">¶</a></h2>
 <p><em>file: hybrid-MPI+OpenMP/00.spmd/spmd.c</em></p>
 <p><em>Build inside 00.spmd directory:</em></p>
-<div class="highlight-default"><div class="highlight"><pre><span class="n">make</span> <span class="n">spmd</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">make</span> <span class="n">spmd</span>
 </pre></div>
 </div>
 <p><em>Execute on the command line inside 00.spmd directory:</em></p>
-<div class="highlight-default"><div class="highlight"><pre><span class="n">mpirun</span> <span class="o">-</span><span class="n">np</span> <span class="o">&lt;</span><span class="n">number</span> <span class="n">of</span> <span class="n">processes</span><span class="o">&gt;</span> <span class="o">./</span><span class="n">spmd</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">mpirun</span> <span class="o">-</span><span class="n">np</span> <span class="o">&lt;</span><span class="n">number</span> <span class="n">of</span> <span class="n">processes</span><span class="o">&gt;</span> <span class="o">./</span><span class="n">spmd</span>
 </pre></div>
 </div>
 <div class="admonition note">
@@ -124,7 +121,7 @@ behavior of the program in terms of processes and threads?</p>
 42
 43
 44
-45</pre></div></td><td class="code"><div class="highlight"><pre><span class="cm">/* spmd.c</span>
+45</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="cm">/* spmd.c</span>
 <span class="cm"> * ... illustrates the single program multiple data</span>
 <span class="cm"> *      (SPMD) pattern using MPI and OpenMP commands.</span>
 <span class="cm"> *</span>
@@ -176,11 +173,11 @@ behavior of the program in terms of processes and threads?</p>
 <h2>1.Program Structure Implementation Strategy: Single Program, multiple data with user-defined number of threads¶<a class="headerlink" href="#program-structure-implementation-strategy-single-program-multiple-data-with-user-defined-number-of-threads" title="Permalink to this headline">¶</a></h2>
 <p><em>file: hybrid-MPI+OpenMP/01.spmd2/spmd.c</em></p>
 <p><em>Build inside 01.spmd2 directory:</em></p>
-<div class="highlight-default"><div class="highlight"><pre><span class="n">make</span> <span class="n">spmd2</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">make</span> <span class="n">spmd2</span>
 </pre></div>
 </div>
 <p><em>Execute on the command line inside 01.spmd2 directory:</em></p>
-<div class="highlight-default"><div class="highlight"><pre><span class="n">mpirun</span> <span class="o">-</span><span class="n">np</span> <span class="o">&lt;</span><span class="n">number</span> <span class="n">of</span> <span class="n">processes</span><span class="o">&gt;</span> <span class="o">./</span><span class="n">spmd2</span> <span class="p">[</span><span class="n">numThreads</span><span class="p">]</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">mpirun</span> <span class="o">-</span><span class="n">np</span> <span class="o">&lt;</span><span class="n">number</span> <span class="n">of</span> <span class="n">processes</span><span class="o">&gt;</span> <span class="o">./</span><span class="n">spmd2</span> <span class="p">[</span><span class="n">numThreads</span><span class="p">]</span>
 </pre></div>
 </div>
 <p>Here is a second SPMD example with user-defined number of threads.
@@ -248,7 +245,7 @@ Compare the behavior of the program to the source code.</p>
 55
 56
 57
-58</pre></div></td><td class="code"><div class="highlight"><pre><span class="cm">/* spmd2.c</span>
+58</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="cm">/* spmd2.c</span>
 <span class="cm"> * ... illustrates the single program multiple data</span>
 <span class="cm"> *      (SPMD) pattern using MPI and OpenMP commands</span>
 <span class="cm"> *      with the user controlling numThreads</span>
@@ -348,7 +345,7 @@ Compare the behavior of the program to the source code.</p>
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright This work is licensed under a Creative Commons Attribution-ShareAlike 3.0 Unported License.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.2.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.3.
     </div>
   </body>
 </html>
