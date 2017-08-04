@@ -5,12 +5,9 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    
     <title>Introduction to MPI &#8212; Distributed Computing Fundamentals</title>
-    
     <link rel="stylesheet" href="../_static/csip.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-    
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
@@ -85,27 +82,27 @@
 <div class="section" id="some-common-functions">
 <h3>Some Common Functions:<a class="headerlink" href="#some-common-functions" title="Permalink to this headline">¶</a></h3>
 <p>The following functions are the functions that are commonly used in MPI programs:</p>
-<div class="highlight-default"><div class="highlight"><pre><span class="n">MPI_Init</span><span class="p">(</span><span class="o">&amp;</span><span class="n">argc</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">argv</span><span class="p">)</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">MPI_Init</span><span class="p">(</span><span class="o">&amp;</span><span class="n">argc</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">argv</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>This function has to be called in every MPI program. It is used to initialize the MPI execution environment.</p>
-<div class="highlight-default"><div class="highlight"><pre><span class="n">MPI_Comm_size</span><span class="p">(</span><span class="n">comm</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">size</span><span class="p">)</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">MPI_Comm_size</span><span class="p">(</span><span class="n">comm</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">size</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>This function determines the number of processes in the communicator. The number of processes get store in the variable <em>size</em>. All processes in a communicator have the same value of <em>size</em>.</p>
-<div class="highlight-default"><div class="highlight"><pre><span class="n">MPI_Comm_rank</span><span class="p">(</span><span class="n">comm</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">rank</span><span class="p">)</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">MPI_Comm_rank</span><span class="p">(</span><span class="n">comm</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">rank</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>This function determines the rank of the calling process within the communicator. Each process is assigned uniquely by integer rank from <em>0</em> to <em>number of processes - 1</em>, and its rank gets stored in the variable <em>rank</em>.</p>
-<div class="highlight-default"><div class="highlight"><pre><span class="n">MPI_Get_processor_name</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="o">&amp;</span><span class="nb">len</span><span class="p">)</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">MPI_Get_processor_name</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="o">&amp;</span><span class="nb">len</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>This function returns the unique processor name. Variable <em>name</em> is the array of char for storing the name, and <em>len</em> is the length of the name.</p>
-<div class="highlight-default"><div class="highlight"><pre><span class="n">MPI_Wtime</span><span class="p">()</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">MPI_Wtime</span><span class="p">()</span>
 </pre></div>
 </div>
 <p>This function returns an elapsed wall clock time in seconds on the calling processor. This function is often used to measure the running time of an MPI program. There is no defined starting point; therefore, in order to measure the running time, a programmer needs to call two different MPI_Wtime(), and find the difference.</p>
-<div class="highlight-default"><div class="highlight"><pre><span class="n">MPI_Finalize</span><span class="p">()</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">MPI_Finalize</span><span class="p">()</span>
 </pre></div>
 </div>
 <p>This function terminates the MPI execution environment. MPI_Finalize() has to be called by all processes before exiting.</p>
@@ -123,7 +120,7 @@
 10
 11
 12
-13</pre></div></td><td class="code"><div class="highlight"><pre><span class="cp">#include</span> <span class="cpf">&lt;stdio.h&gt;</span><span class="cp"></span>
+13</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="cp">#include</span> <span class="cpf">&lt;stdio.h&gt;</span><span class="cp"></span>
 <span class="cp">#include</span> <span class="cpf">&lt;mpi.h&gt;</span><span class="cp"></span>
 
 <span class="kt">int</span> <span class="nf">main</span> <span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span> <span class="o">*</span><span class="n">argv</span><span class="p">[])</span> <span class="p">{</span>
@@ -215,7 +212,7 @@
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright This work is licensed under a Creative Commons Attribution-ShareAlike 3.0 Unported License.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.2.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.3.
     </div>
   </body>
 </html>

@@ -23,7 +23,7 @@ General Characteristics of Shared Memory Model:
 	:width: 350px
 	:align: center
 	:height: 250px
-	:alt: MPI Structure
+	:alt: Shared Memory architecture
 
 .. centered:: Figure 1: Shared Memory: Uniform Memory Access Obtained from www.computing.llnl.gov [3]_
 
