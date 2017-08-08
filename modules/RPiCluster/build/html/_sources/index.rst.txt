@@ -50,7 +50,7 @@ Materials Needed
 
 .. _4 Node Acrylic Raspberry Pi Stand: https://www.amazon.com/Raspberry-Pi-Complete-Stackable-Enclosure/dp/B01LVUVVOQ/ref=sr_1_12?ie=UTF8&qid=1499805835&sr=8-12&keywords=acrylic+raspberry+pi+case
 
-Overview:
+Overview
 ##########
 Before you begin please read :ref:`Ideas-and-notes` so that you can configure this cluster as you want it to be.
 
@@ -118,7 +118,7 @@ And on the worker nodes we will be installing NFS Common::
 
 With this we have installed all the required software for us to run MPI Code on the cluster. If you wish to install any other software then you should install it now because we will be removing internet from the worker nodes and setting up wireless only on the head node.
 
-To set up wireless and we will need to edit two files using a terminal text editor (nano is the simplest one) :
+To set up wireless we will need to edit two files using a terminal text editor (nano is the simplest one) :
 /etc/network/interfaces and
 /etc/wpa_supplicant/wpa_supplicant.conf
 
@@ -133,7 +133,7 @@ In order for us to establish a network between the cluster through ethernet cabl
 
 ::
 
-  cd/etc/networkNikola: The Raspberry Pi Cluster
+  cd/etc/network
   sudo cp interfaces interfaces.orig
 
 Now, we will edit the interfaces file
@@ -174,6 +174,7 @@ In the hosts file we will be removing the IPv6 confiurations by commenting them 
 .. literalinclude:: ../source/hosts
 
 Next, we will have to enable ssh. To do this follow the steps below:
+
 * Enter sudo raspi-config in a terminal window
 * Select Interfacing Options
 * Navigate to and select SSH
@@ -230,11 +231,9 @@ We use the following steps on the head node to do this:
 
 Run the following commands: ::
 
-    scp known_hosts pi@node1:.ssh
-    scp id_rsa pi@node1:.ssh
-    scp id_rsa.pub pi@node1:.ssh
-
-Repeat for node2 and node3
+    scp known_hosts id_rsa id_rsa.pub pi@node1:.ssh
+    scp known_hosts id_rsa id_rsa.pub pi@node2:.ssh
+    scp known_hosts id_rsa id_rsa.pub pi@node3:.ssh
 
 After this we will be able SSH to and from any node in the Cluster.
 
@@ -401,15 +400,24 @@ We save this file and then make it executable.
 
   sudo chmod +x bcast.sh
 
-Now we can simply use this script by running the following command:
+Now we can simpusely use this script by running the following command:
 
 ::
 
   ./bcast.sh #YourCommand
 
-For example, "./bcast.sh date" will give you the date and time across all the nodes of the cluster.
+For example, "./bcast.sh date" will give you the date and time across all the nodes of the cluster. But in order to run sudo commands we will need to edit the sudoers file on each node. To do this we will need to run the following command:
 
-Unfortunately, you cannot shutdown the cluster using this command because the Raspberry Pi shuts down so quickly that it cannot communicate back to the head node that it actually did shut down. To solve this you can make another similar shell script for shutting down the cluster.
+::
+
+  sudo visudo
+
+and add the following line:
+::
+
+  pi ALL=(ALL) NOPASSWD: ALL
+
+Unfortunately, you cannot shutdown the cluster using the ./bcast.sh command because the Raspberry Pi shuts down so quickly that it cannot communicate back to the head node that it actually did shut down. To solve this you can make another similar shell script for shutting down the cluster.
 
 ::
 
@@ -501,72 +509,106 @@ Helpful Ideas and Notes
 
 * The Rasbian Pixel can be used on all of the nodes of the cluster if you wish to have GUI on each one of them. We recommend that you use Rasbian Lite for the worker nodes as you may not need to use its GUI and they can be easily accessed through SSH via the head node. This will help processes run faster on the worker nodes as the processors will not need to drive the GUI on them.
 
-*
-External drives are automatically mounted on Rasbian Pixel but in order to access an external drive on Rasbian Lite, you will first need to create a mount point for it. This can be done by simply making a directory at the location you want it to mount. Usually an external drive is mounted in the /media directory:
-::
+* Having 'raspberry' as the password for the 'pi' user is not safe. Hence , it is recommended that you should it to a password of your choice. This can be done using the following command.
+  ::
+
+    sudo passwd pi
+
+  This will prompt you for a new password for you to choose.
+
+* If you wish to have another user altogether then you can do that too. you will need to run the command given below on each node:
+
+  ::
+
+    sudo adduser #username
+
+  After you enter your password and set up the new account You will need to make this new user a sudo user. This can be done by running the following command on an existing sudo user i.e. the 'pi' user.
+
+  ::
+
+    sudo usermod -aG sudo #username
+
+  After this is done we will need to repeat two things for the new user that we did for the 'pi' user.
+
+  #. Repeat :ref:`SSH`
+     Note: You will only need to begin this from the step where we generate the ssh public and private key pair.
+  #. Repeat :ref:`bcast.sh-and-shutdown`
+     Note: You can simply copy the bcast.sh and shutdown_cluster file instead of typing it over. This can be done by running the following command on the new user.
+     ::
+
+        cd
+        sudo cp /home/pi/bcast.sh .
+        sudo cp /home/pi/shutdown_cluster .
+        sudo chmod +x bcast.sh shutdown_cluster
+
+    Lastly, while adding this user to the sudoers list make sure to change the username from 'pi' to whatever your new username is.
+    ::
+
+      #username ALL=(ALL) NOPASSWD: ALL
+
+* External drives are automatically mounted on Rasbian Pixel but in order to access an external drive on Rasbian Lite, you will first need to create a mount point for it. This can be done by simply making a directory at the location you want it to mount. Usually an external drive is mounted in the /media directory:
+  ::
 
     sudo mkdir /media/usb
     sudo mount /dev/sda1 /media/usb
 
 * If you wish to mount an external hard disk/pen drive with a higher storage capacity as your network file system it is possible to do that too. In order to do this we will need to create the mount point on the head node. Make sure that the mount point is not in the home directory of the user.
 
-::
+  ::
 
-  sudo mkdir /media/cluster_files
+    sudo mkdir /media/cluster_files
 
-Note: You will need to format the external drive so that it is compatible with Linux systems before you are able to mount it.
-::
+    Note: You will need to format the external drive so that it is compatible with Linux systems before you are able to mount it.
+  ::
 
-  sudo mkfs.ext4 /dev/sda1 -L cluster_files
+    sudo mkfs.ext4 /dev/sda1 -L cluster_files
 
 
-Since the NFS will be an external drive, the exports file will be a bit different. We will have to specify the access for each of the nodes:
+  Since the NFS will be an external drive, the exports file will be a bit different. We will have to specify the access for each of the nodes:
 
 Note: If you had already edited the exports file as we had shown in the :ref:`NFS` section then remove the line you had added and then replace it with the following lines at the end of the file. If not, then simply add these to the end of the file:
 
-::
+  ::
 
-  sudo nano /etc/exports
+    sudo nano /etc/exports
 
-::
+  ::
 
-  /media/cluster_files node1(rw,sync,no_root_squash,no_subtree_check)
-  /media/cluster_files node2(rw,sync,no_root_squash,no_subtree_check)
-  /media/cluster_files node3(rw,sync,no_root_squash,no_subtree_check)
+    /media/cluster_files node1(rw,sync,no_root_squash,no_subtree_check)
+    /media/cluster_files node2(rw,sync,no_root_squash,no_subtree_check)
+    /media/cluster_files node3(rw,sync,no_root_squash,no_subtree_check)
 
-Next, we will need to permanently mount the external drive on the head node so that it automatically mounts itself in /media/cluster_files when the system is rebooted. To do this we will eject the pen drive and then edit the fstab file on the head node by adding the following line at the end:
+  Next, we will need to permanently mount the external drive on the head node so that it automatically mounts itself in /media/cluster_files when the system is rebooted. To do this we will eject the pen drive and then edit the fstab file on the head node by adding the following line at the end:
 
-::
+  ::
 
-  sudo nano /etc/fstab
+    sudo nano /etc/fstab
 
-::
+  ::
 
-  /dev/sda1 /media/cluster_files ext4 defaults 0 0
+    /dev/sda1 /media/cluster_files ext4 defaults 0 0
 
-Now we are ready to insert and actually mount the external drive on the head node permanently.
+  Now we are ready to insert and actually mount the external drive on the head node permanently.
 
-::
+  ::
 
-  sudo mount /dev/sda1 /media/cluster_files
+    sudo mount /dev/sda1 /media/cluster_files
 
-The worker nodes will now need to mount this external drive and we will need to edit the fstab file on each of the worker nodes:
+  The worker nodes will now need to mount this external drive and we will need to edit the fstab file on each of the worker nodes:
 
-::
+  ::
 
-  sudo nano /etc/fstab
+    sudo nano /etc/fstab
 
-::
+  ::
 
-  head:/media/cluster_files /home/pi/cluster_files nfs rsize=8192,wsize=8192,timeo=14,intr
+    head:/media/cluster_files /home/pi/cluster_files nfs rsize=8192,wsize=8192,timeo=14,intr
 
-After the above steps you should now have the NFS mounted on the external drive. Please follow the rest of the steps in the :ref:`NFS` section to complete the mounting.
-
+  After the above steps you should now have the NFS mounted on the external drive. Please follow the rest of the steps in the :ref:`NFS` section to complete the mounting.
 
 * We recommend that you use the 4 Port HDMI and 4 Port USB switch because it makes it really convenient to switch to a different node without having to change the display HDMI or the USB jacks for the keyboard in the cluster. This is extremely helpful because we have to repeat several steps in each node of the cluster.
 
 * The Raspberry Pi Boards act strangely when it comes to switching them on. If you want the board to connect to a display, you have to make sure that the HDMI is hooked up before you turn the power on. Otherwise you won't be able to see desktop on the screen.
-
 
 * While building this cluster, the reason why we did not set up Wifi on each node is because the issue we faced where we had to register the MAC Hardware Address of each node our college gadgets' Wifi portal. Hence we decided just to have the head node access to the Internet. In the long run this might not be a good idea for those who will want install software in the future as the worker nodes will not have access to Internet. If your Wireless Network allows you to simply connect to a network using a username and password then you should go ahead and connect each of the nodes to the network. You will then be able to run updates and upgrades regularly and install software anytime you want. To do this you will have to follow the same wireless setup as we did for the head node i.e. you will need to edit the wpa_supplicant.conf file. One other thing you will need to do is to have the worker nodes contain the same interfaces file as the head node but with their respective static IP addresses of course. Basically, add the wlan0 and wlan1 interface to the interfaces file.
 

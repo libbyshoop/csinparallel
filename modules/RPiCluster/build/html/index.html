@@ -39,7 +39,7 @@
             
   <div class="section" id="building-a-raspberry-pi-cluster">
 <h1>Building a Raspberry Pi Cluster<a class="headerlink" href="#building-a-raspberry-pi-cluster" title="Permalink to this headline">¶</a></h1>
-<p><strong>Last Updated:</strong> 2017-08-02</p>
+<p><strong>Last Updated:</strong> 2017-08-08</p>
 <p>This module acts as a tutorial to help users build a cluster of Raspberry Pis for Parallel Programming and Distributed Processing. The guide is a step by step procedure to build a simple 4-node Raspberry Pi 3 cluster with a shared network file system. Note that clusters can be of any length n≥2.</p>
 <a class="reference internal image-reference" href="_images/RPiCluster.jpg"><img alt="_images/RPiCluster.jpg" src="_images/RPiCluster.jpg" style="width: 1200px;" /></a>
 <div class="section" id="materials-needed">
@@ -58,7 +58,7 @@
 </ol>
 </div>
 <div class="section" id="overview">
-<h2>Overview:<a class="headerlink" href="#overview" title="Permalink to this headline">¶</a></h2>
+<h2>Overview<a class="headerlink" href="#overview" title="Permalink to this headline">¶</a></h2>
 <p>Before you begin please read <a class="reference internal" href="#ideas-and-notes"><span class="std std-ref">Helpful Ideas and Notes</span></a> so that you can configure this cluster as you want it to be.</p>
 <ul class="simple">
 <li><a class="reference internal" href="#physical-cluster-set-up"><span class="std std-ref">Setting up the Physical Cluster</span></a></li>
@@ -107,7 +107,7 @@
 </pre></div>
 </div>
 <p>With this we have installed all the required software for us to run MPI Code on the cluster. If you wish to install any other software then you should install it now because we will be removing internet from the worker nodes and setting up wireless only on the head node.</p>
-<p>To set up wireless and we will need to edit two files using a terminal text editor (nano is the simplest one) :
+<p>To set up wireless we will need to edit two files using a terminal text editor (nano is the simplest one) :
 /etc/network/interfaces and
 /etc/wpa_supplicant/wpa_supplicant.conf</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">cd</span> <span class="o">/</span><span class="n">etc</span><span class="o">/</span><span class="n">wpa_supplicant</span>
@@ -127,7 +127,7 @@
 </pre></div>
 </div>
 <p>In order for us to establish a network between the cluster through ethernet cables we need static ip addresses. To do this, we edit the interfaces file on the head node. It is good practice to make a copy of the file before we make changes to it. This can be done by doing the following:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">cd</span><span class="o">/</span><span class="n">etc</span><span class="o">/</span><span class="n">networkNikola</span><span class="p">:</span> <span class="n">The</span> <span class="n">Raspberry</span> <span class="n">Pi</span> <span class="n">Cluster</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">cd</span><span class="o">/</span><span class="n">etc</span><span class="o">/</span><span class="n">network</span>
 <span class="n">sudo</span> <span class="n">cp</span> <span class="n">interfaces</span> <span class="n">interfaces</span><span class="o">.</span><span class="n">orig</span>
 </pre></div>
 </div>
@@ -199,13 +199,15 @@ In the hosts file we will be removing the IPv6 confiurations by commenting them 
 <span class="mf">192.168</span><span class="o">.</span><span class="mf">1.13</span> <span class="n">node3</span>
 </pre></div>
 </div>
-<p>Next, we will have to enable ssh. To do this follow the steps below:
-* Enter sudo raspi-config in a terminal window
-* Select Interfacing Options
-* Navigate to and select SSH
-* Choose Yes
-* Select Ok
-* Choose Finish</p>
+<p>Next, we will have to enable ssh. To do this follow the steps below:</p>
+<ul class="simple">
+<li>Enter sudo raspi-config in a terminal window</li>
+<li>Select Interfacing Options</li>
+<li>Navigate to and select SSH</li>
+<li>Choose Yes</li>
+<li>Select Ok</li>
+<li>Choose Finish</li>
+</ul>
 <p>All of the above processes has to be repeated on all 4 nodes.</p>
 <p>Since we want the cluster nodes to communicate with each other without having to ask for permission each time we will set up SSH (Secure Shell) remote login. In order to do this, we will generate 2048 bit RSA key-pair on the head node and then copy the SSH ID in all 4 nodes.</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">ssh</span><span class="o">-</span><span class="n">keygen</span> <span class="o">-</span><span class="n">t</span> <span class="n">rsa</span> <span class="o">-</span><span class="n">b</span> <span class="mi">2048</span>
@@ -245,12 +247,11 @@ In the hosts file we will be removing the IPv6 confiurations by commenting them 
 </pre></div>
 </div>
 <p>Run the following commands:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">scp</span> <span class="n">known_hosts</span> <span class="n">pi</span><span class="nd">@node1</span><span class="p">:</span><span class="o">.</span><span class="n">ssh</span>
-<span class="n">scp</span> <span class="n">id_rsa</span> <span class="n">pi</span><span class="nd">@node1</span><span class="p">:</span><span class="o">.</span><span class="n">ssh</span>
-<span class="n">scp</span> <span class="n">id_rsa</span><span class="o">.</span><span class="n">pub</span> <span class="n">pi</span><span class="nd">@node1</span><span class="p">:</span><span class="o">.</span><span class="n">ssh</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">scp</span> <span class="n">known_hosts</span> <span class="n">id_rsa</span> <span class="n">id_rsa</span><span class="o">.</span><span class="n">pub</span> <span class="n">pi</span><span class="nd">@node1</span><span class="p">:</span><span class="o">.</span><span class="n">ssh</span>
+<span class="n">scp</span> <span class="n">known_hosts</span> <span class="n">id_rsa</span> <span class="n">id_rsa</span><span class="o">.</span><span class="n">pub</span> <span class="n">pi</span><span class="nd">@node2</span><span class="p">:</span><span class="o">.</span><span class="n">ssh</span>
+<span class="n">scp</span> <span class="n">known_hosts</span> <span class="n">id_rsa</span> <span class="n">id_rsa</span><span class="o">.</span><span class="n">pub</span> <span class="n">pi</span><span class="nd">@node3</span><span class="p">:</span><span class="o">.</span><span class="n">ssh</span>
 </pre></div>
 </div>
-<p>Repeat for node2 and node3</p>
 <p>After this we will be able SSH to and from any node in the Cluster.</p>
 </div>
 <div class="section" id="mount-network-file-system">
@@ -413,12 +414,19 @@ done
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">sudo</span> <span class="n">chmod</span> <span class="o">+</span><span class="n">x</span> <span class="n">bcast</span><span class="o">.</span><span class="n">sh</span>
 </pre></div>
 </div>
-<p>Now we can simply use this script by running the following command:</p>
+<p>Now we can simpusely use this script by running the following command:</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="o">./</span><span class="n">bcast</span><span class="o">.</span><span class="n">sh</span> <span class="c1">#YourCommand</span>
 </pre></div>
 </div>
-<p>For example, “./bcast.sh date” will give you the date and time across all the nodes of the cluster.</p>
-<p>Unfortunately, you cannot shutdown the cluster using this command because the Raspberry Pi shuts down so quickly that it cannot communicate back to the head node that it actually did shut down. To solve this you can make another similar shell script for shutting down the cluster.</p>
+<p>For example, “./bcast.sh date” will give you the date and time across all the nodes of the cluster. But in order to run sudo commands we will need to edit the sudoers file on each node. To do this we will need to run the following command:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">sudo</span> <span class="n">visudo</span>
+</pre></div>
+</div>
+<p>and add the following line:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">pi</span> <span class="n">ALL</span><span class="o">=</span><span class="p">(</span><span class="n">ALL</span><span class="p">)</span> <span class="n">NOPASSWD</span><span class="p">:</span> <span class="n">ALL</span>
+</pre></div>
+</div>
+<p>Unfortunately, you cannot shutdown the cluster using the ./bcast.sh command because the Raspberry Pi shuts down so quickly that it cannot communicate back to the head node that it actually did shut down. To solve this you can make another similar shell script for shutting down the cluster.</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">cd</span>
 <span class="n">sudo</span> <span class="n">nano</span> <span class="n">shutdown_cluster</span>
 </pre></div>
@@ -489,31 +497,72 @@ To do this run the following:</p>
 </div>
 <div class="section" id="helpful-ideas-and-notes">
 <span id="ideas-and-notes"></span><h2>Helpful Ideas and Notes<a class="headerlink" href="#helpful-ideas-and-notes" title="Permalink to this headline">¶</a></h2>
-<ul class="simple">
-<li>If you already have data on your Pi and software installed, it is highly recommended that you not only back up your data but also create an image of the existing version of your Pi. This can be done using <a class="reference external" href="https://sourceforge.net/projects/win32diskimager/">Win32 Disk Imager</a>. You will simply need to use a card reader to read the image on using this software.</li>
-<li>If you intend on building a cluster containing many nodes you can use a pen drive to store all the files we have edited in the head and one of the worker nodes and simply copy and replace them in the rest of the nodes making sure to change the static ip address and the hostname.</li>
-<li>If you intend on making multiple clusters of each of n nodes, a faster approach is to make images of each of the n nodes in one cluster using <a class="reference external" href="https://sourceforge.net/projects/win32diskimager/">Win32 Disk Imager</a> and flash new Micro-SD cards with these working images. The Micro-SD cards with these images can simply be inserted into a new cluster of Raspberry Pis without having to configure anything.</li>
-<li>The Rasbian Pixel can be used on all of the nodes of the cluster if you wish to have GUI on each one of them. We recommend that you use Rasbian Lite for the worker nodes as you may not need to use its GUI and they can be easily accessed through SSH via the head node. This will help processes run faster on the worker nodes as the processors will not need to drive the GUI on them.</li>
-<li></li>
-</ul>
-<p>External drives are automatically mounted on Rasbian Pixel but in order to access an external drive on Rasbian Lite, you will first need to create a mount point for it. This can be done by simply making a directory at the location you want it to mount. Usually an external drive is mounted in the /media directory:</p>
+<ul>
+<li><p class="first">If you already have data on your Pi and software installed, it is highly recommended that you not only back up your data but also create an image of the existing version of your Pi. This can be done using <a class="reference external" href="https://sourceforge.net/projects/win32diskimager/">Win32 Disk Imager</a>. You will simply need to use a card reader to read the image on using this software.</p>
+</li>
+<li><p class="first">If you intend on building a cluster containing many nodes you can use a pen drive to store all the files we have edited in the head and one of the worker nodes and simply copy and replace them in the rest of the nodes making sure to change the static ip address and the hostname.</p>
+</li>
+<li><p class="first">If you intend on making multiple clusters of each of n nodes, a faster approach is to make images of each of the n nodes in one cluster using <a class="reference external" href="https://sourceforge.net/projects/win32diskimager/">Win32 Disk Imager</a> and flash new Micro-SD cards with these working images. The Micro-SD cards with these images can simply be inserted into a new cluster of Raspberry Pis without having to configure anything.</p>
+</li>
+<li><p class="first">The Rasbian Pixel can be used on all of the nodes of the cluster if you wish to have GUI on each one of them. We recommend that you use Rasbian Lite for the worker nodes as you may not need to use its GUI and they can be easily accessed through SSH via the head node. This will help processes run faster on the worker nodes as the processors will not need to drive the GUI on them.</p>
+</li>
+<li><p class="first">Having ‘raspberry’ as the password for the ‘pi’ user is not safe. Hence , it is recommended that you should it to a password of your choice. This can be done using the following command.</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">sudo</span> <span class="n">passwd</span> <span class="n">pi</span>
+</pre></div>
+</div>
+<p>This will prompt you for a new password for you to choose.</p>
+</li>
+<li><p class="first">If you wish to have another user altogether then you can do that too. you will need to run the command given below on each node:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">sudo</span> <span class="n">adduser</span> <span class="c1">#username</span>
+</pre></div>
+</div>
+<p>After you enter your password and set up the new account You will need to make this new user a sudo user. This can be done by running the following command on an existing sudo user i.e. the ‘pi’ user.</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">sudo</span> <span class="n">usermod</span> <span class="o">-</span><span class="n">aG</span> <span class="n">sudo</span> <span class="c1">#username</span>
+</pre></div>
+</div>
+<p>After this is done we will need to repeat two things for the new user that we did for the ‘pi’ user.</p>
+<ol class="arabic">
+<li><p class="first">Repeat <a class="reference internal" href="#ssh"><span class="std std-ref">SSH Remote Login Setup</span></a>
+Note: You will only need to begin this from the step where we generate the ssh public and private key pair.</p>
+</li>
+<li><p class="first">Repeat <a class="reference internal" href="#bcast-sh-and-shutdown"><span class="std std-ref">Broadcasting and Shutting Down</span></a>
+Note: You can simply copy the bcast.sh and shutdown_cluster file instead of typing it over. This can be done by running the following command on the new user.</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">cd</span>
+<span class="n">sudo</span> <span class="n">cp</span> <span class="o">/</span><span class="n">home</span><span class="o">/</span><span class="n">pi</span><span class="o">/</span><span class="n">bcast</span><span class="o">.</span><span class="n">sh</span> <span class="o">.</span>
+<span class="n">sudo</span> <span class="n">cp</span> <span class="o">/</span><span class="n">home</span><span class="o">/</span><span class="n">pi</span><span class="o">/</span><span class="n">shutdown_cluster</span> <span class="o">.</span>
+<span class="n">sudo</span> <span class="n">chmod</span> <span class="o">+</span><span class="n">x</span> <span class="n">bcast</span><span class="o">.</span><span class="n">sh</span> <span class="n">shutdown_cluster</span>
+</pre></div>
+</div>
+</li>
+</ol>
+<blockquote>
+<div><p>Lastly, while adding this user to the sudoers list make sure to change the username from ‘pi’ to whatever your new username is.</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="c1">#username ALL=(ALL) NOPASSWD: ALL</span>
+</pre></div>
+</div>
+</div></blockquote>
+</li>
+<li><p class="first">External drives are automatically mounted on Rasbian Pixel but in order to access an external drive on Rasbian Lite, you will first need to create a mount point for it. This can be done by simply making a directory at the location you want it to mount. Usually an external drive is mounted in the /media directory:</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">sudo</span> <span class="n">mkdir</span> <span class="o">/</span><span class="n">media</span><span class="o">/</span><span class="n">usb</span>
 <span class="n">sudo</span> <span class="n">mount</span> <span class="o">/</span><span class="n">dev</span><span class="o">/</span><span class="n">sda1</span> <span class="o">/</span><span class="n">media</span><span class="o">/</span><span class="n">usb</span>
 </pre></div>
 </div>
-<ul class="simple">
-<li>If you wish to mount an external hard disk/pen drive with a higher storage capacity as your network file system it is possible to do that too. In order to do this we will need to create the mount point on the head node. Make sure that the mount point is not in the home directory of the user.</li>
-</ul>
+</li>
+<li><p class="first">If you wish to mount an external hard disk/pen drive with a higher storage capacity as your network file system it is possible to do that too. In order to do this we will need to create the mount point on the head node. Make sure that the mount point is not in the home directory of the user.</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">sudo</span> <span class="n">mkdir</span> <span class="o">/</span><span class="n">media</span><span class="o">/</span><span class="n">cluster_files</span>
+
+<span class="n">Note</span><span class="p">:</span> <span class="n">You</span> <span class="n">will</span> <span class="n">need</span> <span class="n">to</span> <span class="nb">format</span> <span class="n">the</span> <span class="n">external</span> <span class="n">drive</span> <span class="n">so</span> <span class="n">that</span> <span class="n">it</span> <span class="ow">is</span> <span class="n">compatible</span> <span class="k">with</span> <span class="n">Linux</span> <span class="n">systems</span> <span class="n">before</span> <span class="n">you</span> <span class="n">are</span> <span class="n">able</span> <span class="n">to</span> <span class="n">mount</span> <span class="n">it</span><span class="o">.</span>
 </pre></div>
 </div>
-<p>Note: You will need to format the external drive so that it is compatible with Linux systems before you are able to mount it.</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">sudo</span> <span class="n">mkfs</span><span class="o">.</span><span class="n">ext4</span> <span class="o">/</span><span class="n">dev</span><span class="o">/</span><span class="n">sda1</span> <span class="o">-</span><span class="n">L</span> <span class="n">cluster_files</span>
 </pre></div>
 </div>
 <p>Since the NFS will be an external drive, the exports file will be a bit different. We will have to specify the access for each of the nodes:</p>
+</li>
+</ul>
 <p>Note: If you had already edited the exports file as we had shown in the <a class="reference internal" href="#nfs"><span class="std std-ref">Mount Network File System</span></a> section then remove the line you had added and then replace it with the following lines at the end of the file. If not, then simply add these to the end of the file:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">sudo</span> <span class="n">nano</span> <span class="o">/</span><span class="n">etc</span><span class="o">/</span><span class="n">exports</span>
+<blockquote>
+<div><div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">sudo</span> <span class="n">nano</span> <span class="o">/</span><span class="n">etc</span><span class="o">/</span><span class="n">exports</span>
 </pre></div>
 </div>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="o">/</span><span class="n">media</span><span class="o">/</span><span class="n">cluster_files</span> <span class="n">node1</span><span class="p">(</span><span class="n">rw</span><span class="p">,</span><span class="n">sync</span><span class="p">,</span><span class="n">no_root_squash</span><span class="p">,</span><span class="n">no_subtree_check</span><span class="p">)</span>
@@ -540,6 +589,7 @@ To do this run the following:</p>
 </pre></div>
 </div>
 <p>After the above steps you should now have the NFS mounted on the external drive. Please follow the rest of the steps in the <a class="reference internal" href="#nfs"><span class="std std-ref">Mount Network File System</span></a> section to complete the mounting.</p>
+</div></blockquote>
 <ul class="simple">
 <li>We recommend that you use the 4 Port HDMI and 4 Port USB switch because it makes it really convenient to switch to a different node without having to change the display HDMI or the USB jacks for the keyboard in the cluster. This is extremely helpful because we have to repeat several steps in each node of the cluster.</li>
 <li>The Raspberry Pi Boards act strangely when it comes to switching them on. If you want the board to connect to a display, you have to make sure that the HDMI is hooked up before you turn the power on. Otherwise you won’t be able to see desktop on the screen.</li>
@@ -570,7 +620,7 @@ To do this run the following:</p>
   <ul>
 <li><a class="reference internal" href="#">Building a Raspberry Pi Cluster</a><ul>
 <li><a class="reference internal" href="#materials-needed">Materials Needed</a></li>
-<li><a class="reference internal" href="#overview">Overview:</a></li>
+<li><a class="reference internal" href="#overview">Overview</a></li>
 <li><a class="reference internal" href="#setting-up-the-physical-cluster">Setting up the Physical Cluster</a></li>
 <li><a class="reference internal" href="#setting-up-rasbian-os">Setting up Rasbian OS</a></li>
 <li><a class="reference internal" href="#software-installation-and-wireless-setup">Software Installation and Wireless Setup</a></li>
