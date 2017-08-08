@@ -32,7 +32,7 @@ Source Code
 ************
 
 Please download all examples from this tarball:
-:download:`hybrid-MPI+OpenMP.tar.gz <../patternlets/hybrid-MPI+OpenMP.tar.gz>`
+:download:`hybrid-MPI+OpenMP.tgz <../patternlets/hybrid-MPI+OpenMP.tgz>`
 
 These C code examples use the Message Passing Interface (MPI) library and
 OpenMP pragmas. MPI is suitable for use on either a single multicore

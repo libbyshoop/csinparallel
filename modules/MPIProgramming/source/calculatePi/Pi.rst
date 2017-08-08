@@ -44,17 +44,17 @@ the circle and take the ratio of the areas.
 Code
 =========
 
-*file: MPI_examples/monteCarloPi/calcPi/calcPi.c*
+*file: MPI_examples/monteCarloPi/calcPiMPI/calcPiMPI.C*
 
-*Build inside calcPi directory:*
+*Build inside calcPiMPI directory:*
 ::
 
-  make calcPi
+  make calcPiMPI
 
-*Execute on the command line inside calcPi directory:*
+*Execute on the command line inside calcPiMPI directory:*
 ::
 
-  mpirun -np <N> ./calcPi <number of tosses>
+  mpirun -np <N> ./calcPiMPI <number of tosses>
 
 
 .. topic:: To do:
@@ -71,8 +71,8 @@ Code
 		speedup and efficiency of each combination and make corresponding speedup
 		and efficiency graphs.
 
-.. literalinclude:: ../MPI_examples/monteCarloPi/calcPi/calcPi.c
-    :language: c
+.. literalinclude:: ../MPI_examples/monteCarloPi/calcPiMPI/calcPiMPI.C
+    :language: C++
     :linenos:
 
 MPI Basics
@@ -103,9 +103,9 @@ In order to send the data from the master to all of the processes in the
 communicator, it is necessary to *broadcast*. During a broadcast, one process
 sends the same data to all of the processes.
 
-.. literalinclude:: ../MPI_examples/monteCarloPi/calcPi/calcPi.c
-    :language: c
-    :lines: 57-76
+.. literalinclude:: ../MPI_examples/monteCarloPi/calcPiMPI/calcPiMPI.C
+    :language: C++
+    :lines: 53-72
 
 Timing
 ==================
@@ -121,9 +121,9 @@ finished. To do so, *MPI_Reduce* is called on line 41 using the *MPI_MAX*
 operator. Thus, the largest process time in the loc_elapsed variable will
 be stored in the elapsed variable.
 
-.. literalinclude:: ../MPI_examples/monteCarloPi/calcPi/calcPi.c
-    :language: c
-    :lines: 39-44
+.. literalinclude:: ../MPI_examples/monteCarloPi/calcPiMPI/calcPiMPI.C
+    :language: C++
+    :lines: 36-41
 
 MPI Reduce
 =======================
@@ -138,6 +138,6 @@ line of code in which we reduce the number of points that landed in the circle
 in each process to a single value representing the total number of points that
 landed in the circle.
 
-.. literalinclude:: ../MPI_examples/monteCarloPi/calcPi/calcPi.c
-    :language: c
-    :lines: 46
+.. literalinclude:: ../MPI_examples/monteCarloPi/calcPiMPI/calcPiMPI.C
+    :language: C++
+    :lines: 43

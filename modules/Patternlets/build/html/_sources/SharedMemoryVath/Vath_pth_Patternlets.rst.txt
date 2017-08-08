@@ -44,7 +44,7 @@ Source Code
 ************
 
 Please download all examples from this tarball:
-:download:`Vath_pth.tar.gz <../patternlets/Vath_pth.tar.gz>`
+:download:`Vath_pth.tgz <../patternlets/Vath_pth.tgz>`
 
 A C++ code file and a Makefile for each example below can be found in
 subdirectories of the Vath_pth directory created by extracting the above tarball.

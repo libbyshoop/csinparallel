@@ -17,7 +17,7 @@ The following examples are used in the next few pages of this module.  You can d
 
 The first one is a complete tar and gzipped archive file of all of them. The rest are each individual files.
 
-Zip File: 
+Zip File:
 :download:`download dist_example_code.tgz <dist_example_code.tgz>`
 
 Simplest Hello World Example:
@@ -29,7 +29,7 @@ Hello World by Sending messages:
 **Activity 1, Computing pi as area under the curve:**
 
 
-:download:`download mpi_pi_todo.c <dist_example_code/mpi_pi_todo.c>`
+:download:`download seq_pi_done.c <dist_example_code/seq_pi_done.c>`
 
 :download:`download mpi_pi_done.c <dist_example_code/mpi_pi_done.c>`
 
@@ -51,7 +51,3 @@ Hello World by Sending messages:
 :download:`download matrix_multiplication_todo.c <dist_example_code/matrix_multiplication_todo.c>`
 
 :download:`download matrix_multiplication.c <dist_example_code/matrix_multiplication.c>`
-
-
-
-

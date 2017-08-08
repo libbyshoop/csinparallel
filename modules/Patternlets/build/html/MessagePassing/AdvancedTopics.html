@@ -5,12 +5,9 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    
     <title>Advanced Topics &#8212; Parallel Patternlets</title>
-    
     <link rel="stylesheet" href="../_static/csip.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-    
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
@@ -55,11 +52,11 @@
 <h2>20. Advanced Data Decomposition: on <em>equal-sized chunks</em> using parallel-for<a class="headerlink" href="#advanced-data-decomposition-on-equal-sized-chunks-using-parallel-for" title="Permalink to this headline">¶</a></h2>
 <p><em>file: patternlets/MPI/20.parallelLoopAdvanced/parallelLoopChunks.c</em></p>
 <p><em>Build inside 20.parallelLoopAdvanced directory:</em></p>
-<div class="highlight-default"><div class="highlight"><pre><span class="n">make</span> <span class="n">parallelLoopChunks</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">make</span> <span class="n">parallelLoopChunks</span>
 </pre></div>
 </div>
 <p><em>Execute on the command line inside 20.parallelLoopAdvanced directory:</em></p>
-<div class="highlight-default"><div class="highlight"><pre><span class="n">mpirun</span> <span class="o">-</span><span class="n">np</span> <span class="o">&lt;</span><span class="n">number</span> <span class="n">of</span> <span class="n">processes</span><span class="o">&gt;</span> <span class="o">./</span><span class="n">parallelLoopChunks</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">mpirun</span> <span class="o">-</span><span class="n">np</span> <span class="o">&lt;</span><span class="n">number</span> <span class="n">of</span> <span class="n">processes</span><span class="o">&gt;</span> <span class="o">./</span><span class="n">parallelLoopChunks</span>
 </pre></div>
 </div>
 <p>This example is a continuation of example 2 which showed data decomposition on
@@ -139,7 +136,7 @@ the processes? Can you explain this in terms of chunkSize1 and chunkSize2?</p>
 61
 62
 63
-64</pre></div></td><td class="code"><div class="highlight"><pre><span class="cm">/* parallelLoopChunks.c</span>
+64</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="cm">/* parallelLoopChunks.c</span>
 <span class="cm"> *</span>
 <span class="cm"> *  illustrates the parallel for loop pattern in MPI</span>
 <span class="cm"> *	in which processes perform the loop&#39;s iterations in &#39;chunks&#39;</span>
@@ -210,11 +207,11 @@ the processes? Can you explain this in terms of chunkSize1 and chunkSize2?</p>
 <h2>21. Advanced Broadcast and Data Decomposition<a class="headerlink" href="#advanced-broadcast-and-data-decomposition" title="Permalink to this headline">¶</a></h2>
 <p><em>file: patternlets/MPI/21.broadcast+ParallelLoop/broadcastLoop.c</em></p>
 <p><em>Build inside 21.broadcast+ParallelLoop directory:</em></p>
-<div class="highlight-default"><div class="highlight"><pre><span class="n">make</span> <span class="n">broadcastLoop</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">make</span> <span class="n">broadcastLoop</span>
 </pre></div>
 </div>
 <p><em>Execute on the command line inside 21.broadcast+ParallelLoop directory:</em></p>
-<div class="highlight-default"><div class="highlight"><pre><span class="n">mpirun</span> <span class="o">-</span><span class="n">np</span> <span class="o">&lt;</span><span class="n">number</span> <span class="n">of</span> <span class="n">processes</span><span class="o">&gt;</span> <span class="o">./</span><span class="n">broadcastLoop</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">mpirun</span> <span class="o">-</span><span class="n">np</span> <span class="o">&lt;</span><span class="n">number</span> <span class="n">of</span> <span class="n">processes</span><span class="o">&gt;</span> <span class="o">./</span><span class="n">broadcastLoop</span>
 </pre></div>
 </div>
 <p>We once again expand upon example 2 on data decomposition using parallel-for
@@ -378,7 +375,7 @@ instances in which we want to be able to access the initial array after working 
 145
 146
 147
-148</pre></div></td><td class="code"><div class="highlight"><pre><span class="cm">/* broadcastLoop.c</span>
+148</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="cm">/* broadcastLoop.c</span>
 <span class="cm">* ... illustrates the use of MPI_Bcast() for arrays</span>
 <span class="cm">* combined with data decomposition pattern using a parallel-for loop with</span>
 <span class="cm">* equal chunks. Wraps up with a gather so that completed work is back in</span>
@@ -574,7 +571,7 @@ instances in which we want to be able to access the initial array after working 
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright This work is licensed under a Creative Commons Attribution-ShareAlike 3.0 Unported License.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.2.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.3.
     </div>
   </body>
 </html>

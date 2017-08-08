@@ -5,12 +5,9 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    
     <title>Running the examples on your cluster &#8212; Parallel Patternlets</title>
-    
     <link rel="stylesheet" href="../_static/csip.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-    
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
@@ -69,11 +66,12 @@ are typically installed on most clusters:</p>
 This means that there will be some variation in just exactly how to run
 your code on your cluster (or your multicore machine).
 This document provides some basic instructions for unix machines.</p>
-<p>You should note that you will need information specific to your cluster-
-a file that lists the names of the nodes in your particular cluster, and that its format
-will be different depending on whether you have MPICH or OpenMPI installed.
-You can also run MPI on a multicore machine; in this case you will not need
-the aforementioned file of nodes, since you are not running on a cluster.</p>
+<p>You should note that you will need information specific to your cluster- a file
+that lists the names of the nodes in your particular cluster, and that its
+format will be different depending on whether you have MPICH or OpenMPI
+installed. You can also run MPI on a multicore machine; in this case you will
+not need the aforementioned file of nodes, since you are not running on a
+cluster.</p>
 </div>
 <div class="section" id="basic-command-for-running-mpi-programs-multicore-system">
 <h2>Basic command for running MPI programs : multicore system<a class="headerlink" href="#basic-command-for-running-mpi-programs-multicore-system" title="Permalink to this headline">¶</a></h2>
@@ -82,16 +80,16 @@ On most installations, these two programs are the same- one is an alias to the o
 We will use <cite>mpirun</cite> in our examples below.</p>
 <p>On a <em>multicore machine</em>, you can run <cite>your_program</cite>, an executable file created from
 the mpicc compiler, as follows:</p>
-<div class="highlight-default"><div class="highlight"><pre><span class="n">mpirun</span> <span class="o">-</span><span class="n">np</span> <span class="o">&lt;</span><span class="n">number</span> <span class="n">of</span> <span class="n">processes</span><span class="o">&gt;</span> <span class="o">./</span><span class="n">your_program</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">mpirun</span> <span class="o">-</span><span class="n">np</span> <span class="o">&lt;</span><span class="n">number</span> <span class="n">of</span> <span class="n">processes</span><span class="o">&gt;</span> <span class="o">./</span><span class="n">your_program</span>
 </pre></div>
 </div>
 </div>
 <div class="section" id="running-mpi-on-a-cluster-of-computers">
 <h2>Running MPI on a cluster of computers<a class="headerlink" href="#running-mpi-on-a-cluster-of-computers" title="Permalink to this headline">¶</a></h2>
-<p>Running MPI jobs on a cluster of computers requires an additional command-line flag
-so that you can specify the names of the nodes to run the processes on. The format
-for running your MPI executable called <cite>your_program</cite> becomes:</p>
-<div class="highlight-default"><div class="highlight"><pre><span class="n">mpirun</span> <span class="o">-</span><span class="n">np</span> <span class="o">&lt;</span><span class="n">number</span> <span class="n">of</span> <span class="n">processes</span><span class="o">&gt;</span> <span class="o">-</span><span class="n">hostfile</span> <span class="o">&lt;</span><span class="n">path</span> <span class="n">to</span> <span class="n">file</span> <span class="n">of</span> <span class="n">hosts</span><span class="o">&gt;</span> <span class="o">./</span><span class="n">your_program</span>
+<p>Running MPI jobs on a cluster of computers requires an additional command-line
+flag so that you can specify the names of the nodes to run the processes on.
+The format for running your MPI executable called <cite>your_program</cite> becomes:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">mpirun</span> <span class="o">-</span><span class="n">np</span> <span class="o">&lt;</span><span class="n">number</span> <span class="n">of</span> <span class="n">processes</span><span class="o">&gt;</span> <span class="o">-</span><span class="n">hostfile</span> <span class="o">&lt;</span><span class="n">path</span> <span class="n">to</span> <span class="n">file</span> <span class="n">of</span> <span class="n">hosts</span><span class="o">&gt;</span> <span class="o">./</span><span class="n">your_program</span>
 </pre></div>
 </div>
 <div class="section" id="the-hostfile-mpich">
@@ -99,22 +97,62 @@ for running your MPI executable called <cite>your_program</cite> becomes:</p>
 <p>If you have MPICH installed, the format of the hostfile listing your nodes
 most commonly will look like this, with simply the names of the machines
 in your cluster that you want to use:</p>
-<div class="highlight-default"><div class="highlight"><pre><span class="n">head</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">head</span>
 <span class="n">node1</span>
 <span class="n">node2</span>
 <span class="n">node3</span>
 </pre></div>
 </div>
-<p>Where each line contains the name of a machine in your cluster.
-In this example were are assuming we have a cluster with a machine called head, and three more
+<p>Where each line contains the name of a machine in your cluster. In this example
+were are assuming we have a cluster with a machine called head, and three more
 called node1, node2, and node3.</p>
 <p>Using a file like this with the -hostfile option, mpirun will start processes
-in a round-robin fashion, one
-process per node, using each node once, then starting again, until a total of the
-number of processes given with the -np flag have been started.</p>
+in a round-robin fashion, one process per node, using each node once, then
+starting again, until a total of the number of processes given with the -np
+flag have been started. This is typically called the <cite>by node</cite> option of
+scheduling.</p>
+<p>There are other variations in the format of these files that result in
+different ways of assigning processes to nodes. This is the simplest
+way to get started with a cluster using mpich.</p>
 </div>
 <div class="section" id="the-hostfile-openmpi">
 <h3>The hostfile: OpenMPI<a class="headerlink" href="#the-hostfile-openmpi" title="Permalink to this headline">¶</a></h3>
+<p>The hostfile for OpenMPI’s version of mpirun needs a different format. A
+typical file will look something like this:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">head</span> <span class="n">slots</span><span class="o">=</span><span class="mi">3</span> <span class="nb">max</span><span class="o">-</span><span class="n">slots</span><span class="o">=</span><span class="mi">3</span>
+<span class="n">node1</span> <span class="n">slots</span><span class="o">=</span><span class="mi">4</span> <span class="nb">max</span><span class="o">-</span><span class="n">slots</span><span class="o">=</span><span class="mi">4</span>
+<span class="n">node2</span> <span class="n">slots</span><span class="o">=</span><span class="mi">4</span> <span class="nb">max</span><span class="o">-</span><span class="n">slots</span><span class="o">=</span><span class="mi">4</span>
+<span class="n">node3</span> <span class="n">slots</span><span class="o">=</span><span class="mi">4</span> <span class="nb">max</span><span class="o">-</span><span class="n">slots</span><span class="o">=</span><span class="mi">4</span>
+</pre></div>
+</div>
+<p>The <cite>slots</cite> setting for each node indicates the number of cores on that node
+that you wish to have processes assigned to. In the above example, we were
+choosing to set aside one of our cores on the quad core head node so that it
+would not be used, so we designated that it had 3 slots available. The
+<cite>max-slots</cite> setting indicates the maximum number of processes that can be
+assigned to that node. In the above example, we are indicating that we do
+not want to oversubscribe any of the nodes beyond the cores available on them.</p>
+<p>The default mode of running OpenMPI jobs is <cite>by slot</cite> on each node. For example,
+using the above hostfile called <em>cluster_nodes</em> and running this command:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">mpirun</span> <span class="o">-</span><span class="n">np</span> <span class="mi">4</span> <span class="o">--</span><span class="n">hostfile</span> <span class="n">cluster_nodes</span> <span class="n">hostanme</span>
+</pre></div>
+</div>
+<p>Would result in output that would look like this (though the ordering may be
+different):</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">head</span>
+<span class="n">head</span>
+<span class="n">head</span>
+<span class="n">node1</span>
+</pre></div>
+</div>
+<p>In this <cite>by slot</cite> mode, the maximum number of slots on the first node  listed
+in the file were used before a slot in the next node was used to assign a
+process. To use the <cite>by node</cite>, round-robin behavior you can run OpenMPI
+programs like this:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">mpirun</span> <span class="o">-</span><span class="n">np</span> <span class="mi">4</span> <span class="o">--</span><span class="nb">map</span><span class="o">-</span><span class="n">by</span> <span class="n">node</span> <span class="o">--</span><span class="n">hostfile</span> <span class="n">cluster_hosts</span> <span class="n">hostname</span>
+</pre></div>
+</div>
+<p>This would result in all nodes being used once.</p>
 </div>
 </div>
 </div>
@@ -167,7 +205,7 @@ number of processes given with the -np flag have been started.</p>
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright This work is licensed under a Creative Commons Attribution-ShareAlike 3.0 Unported License.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.2.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.3.
     </div>
   </body>
 </html>

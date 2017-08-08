@@ -5,12 +5,9 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    
     <title>Compiling and First Two Activites &#8212; Distributed Computing Fundamentals</title>
-    
     <link rel="stylesheet" href="../_static/csip.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-    
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
@@ -100,7 +97,7 @@ file called machines that describes your system:</p>
 </div>
 <p>Depending on how many other people are using your cluster and how big it is, you can try
 different numbers of processes by changing the 3 above.</p>
-<p>Once that seems to be working for you, try the exammple 2, which uses sends and receives.</p>
+<p>Once that seems to be working for you, try the example 2, which uses sends and receives.</p>
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
 <p class="last">The procedure for compiling and running all of your mpi code will follow this format.</p>
@@ -108,10 +105,11 @@ different numbers of processes by changing the 3 above.</p>
 </div>
 <div class="section" id="activity-1-computing">
 <h2>Activity 1: Computing <img class="math" src="../_images/math/da689decc8cdc781c5175e2efefa73c1226bc56b.png" alt="{\pi}"/> ?<a class="headerlink" href="#activity-1-computing" title="Permalink to this headline">¶</a></h2>
-<p>Download the source code to do this activity:
-<a class="reference download internal" href="../_downloads/mpi_pi_todo.c" download=""><code class="xref download docutils literal"><span class="pre">download</span> <span class="pre">mpi_pi_todo.c</span></code></a></p>
-<p>Have it open in an editor so that you can work on it.  Or at a minimum use your browser and right-click on the link above and choose to open it in a new browser window.</p>
-<p>In this activity, we are going to compute <img class="math" src="../_images/math/da689decc8cdc781c5175e2efefa73c1226bc56b.png" alt="{\pi}"/> using integration. We have formula:</p>
+<p>Download the source code to do this activity (originally from www.mcs.anl.gov [1]):
+:download: <a class="reference download internal" href="../_downloads/seq_pi_done.c" download=""><code class="xref download docutils literal"><span class="pre">download</span> <span class="pre">seq_pi_done.c</span></code></a> and <cite>download mpi_pi_done.c &lt;mpi_pi_done.c&gt;</cite></p>
+<p>Have it open in an editor so that you can follow along.  Or at a minimum use your browser and right-click on the link above and choose to open it in a new browser window.</p>
+<p>In this activity, we are going to analyze speedup and efficiency of a program that
+computes <img class="math" src="../_images/math/da689decc8cdc781c5175e2efefa73c1226bc56b.png" alt="{\pi}"/> using integration. We have formula:</p>
 <div class="math">
 <p><img src="../_images/math/63c8d34992aa78d0b76be721c376542efc7cd73a.png" alt="\int_0^1 \frac{4}{1 + x^2} dx = {\pi}"/></p>
 </div><p>Therefore, we can compute the area under the curve to get the value of the integral.</p>
@@ -122,13 +120,11 @@ different numbers of processes by changing the 3 above.</p>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Comments:</th><td class="field-body"><ul class="first last">
-<li><p class="first">We can split the area under the curve into bins. The idea is to group the bins into smaller chunks, and so we can use each process to calculate each chunk, and then combine the result into one value. Remember, that we can get a more accurate result if you split the area under the curve into more number of bins.</p>
+<li><p class="first">We can split the area under the curve into bins. The idea is to group the bins into smaller chunks so we can use each process to calculate each chunk, and then combine the result into one value. Remember, we can get a more accurate result if you split the area under the curve into more number of bins. We will walk you through the code step by step.</p>
 </li>
-<li><p class="first">In this activity, we also want you to time your computation by using MPI_Wtime() function. We provide you some parts of the code, and would like you to complete <strong>TO DO</strong>, and then you can experiment with the different number of bins you are using. Moreover,  we want you to execute your program with different number of processes, and compare your timings. We will walk you through the code step by step.</p>
+<li><p class="first">First, we initialize the MPI execution environment, define the size of communicator, and define the rank of each process.</p>
 </li>
-<li><p class="first">First, you need to initialize the MPI execution environment, define the size of communicator, and define the rank of each process. This should be straight forward for you. You are asked to complete this task.</p>
-</li>
-<li><p class="first">Then you want to let each process know the <strong>number of bins</strong> you are using. Therefore, you need to broadcast the <strong>number of bins</strong> to all processes in our MPI_COMM_WORLD. You should use <strong>MPI_Bcast</strong> to broadcast the <strong>number of bins</strong>. You are asked to complete this part of the code.</p>
+<li><p class="first">Then we let each process know the <strong>number of bins</strong> we are using. Therefore, we broadcast the <strong>number of bins</strong> to all processes in our MPI_COMM_WORLD.</p>
 </li>
 <li><p class="first">Now we are ready to ask each process compute their task. We want to evaluate the integral of <img class="math" src="../_images/math/71722ba9289cb139de3dd24164601e5f0612c3d9.png" alt="\frac {4}{1 + x^2}"/> from <em>0</em> to <em>1</em>, and we can do so by finding the sum of all bins from <em>0</em> to <em>1</em>. Each bin is approximately <img class="math" src="../_images/math/6309dca75044198a23f6dc3d3508d83f782cc37f.png" alt="\frac {1}{n} * \frac {4}{1 + x^2}"/> (<strong>n</strong> is the number of bins). We are iterating over the number of bins, and we start from <em>0</em>; therefore, to find the center of each bin, we need to add <em>+ 0.5</em> to variable <em>i</em>. Moreover, in the <strong>for loop</strong>, we ask the rank <em>0</em> to compute the first bin, the (nprocs) bin, and so on, rank <em>1</em> to compute the second bin, the (nprocs + 1) bin, and so on, …, as long as value of <em>i</em> is less than <strong>n</strong>. Suppose that there are <em>p</em> processes, then these <em>p</em> processes will take the first <em>p</em> bins, where process whose rank is 0 takes <em>1st</em> bin, process whose rank is 1 takes <em>2nd</em> bin, and so on. If there are any bins left, process whose rank is 1 takes <em>pth</em> bin, and so on. This can be done by using the following piece of code:</p>
 <div class="highlight-c"><div class="highlight"><pre><span></span><span class="cm">/* Calculating for each process */</span>
@@ -143,15 +139,32 @@ different numbers of processes by changing the 3 above.</p>
 </pre></div>
 </div>
 </li>
-<li><p class="first">When all processes have finished their computations, their results are stored in <strong>mypi</strong>. Therefore, we can reduce all their results into one result, which is the value of <img class="math" src="../_images/math/da689decc8cdc781c5175e2efefa73c1226bc56b.png" alt="{\pi}"/>. Your task is to complete this part by using MPI_Reduce.</p>
+<li><p class="first">When all processes have finished their computations, their results are stored in <strong>mypi</strong>. Therefore, we can reduce all their results into one result, which is the value of <img class="math" src="../_images/math/da689decc8cdc781c5175e2efefa73c1226bc56b.png" alt="{\pi}"/>.</p>
 </li>
 </ul>
 </td>
 </tr>
 </tbody>
 </table>
-<p>If you get stuck and want to move on, download the entire source code (originally from www.mcs.anl.gov [1]):
-<a class="reference download internal" href="../_downloads/mpi_pi_done.c" download=""><code class="xref download docutils literal"><span class="pre">download</span> <span class="pre">mpi_pi_done.c</span></code></a></p>
+<div class="topic">
+<p class="topic-title first">To do:</p>
+<p>In this activity, we want to time the computation. This is done using
+the MPI_Wtime() function. You can experiment using different number of
+bins and different number of processes.</p>
+<p>We want to time several combinations of bin sizes and number of processes
+to calculate the speedup and efficiency of the program. Compile and run the
+sequential program using 125 million, 250 million, 500 million, 1 billion and
+2 billion for the number of bins. Make a copy of the template provided at
+<a class="reference external" href="https://docs.google.com/spreadsheets/d/1ff1yFkz4cMheYPaZIiA29J_GzCFNW4tKAMoDjPQu130/edit?usp=sharing.">this link</a> and
+record the execution times.</p>
+<p>Next, compile and run the MPI program using 2, 4, 8, 12 and 16 processes
+with the number of bins listed above. Continue to record these execution times
+in same table. The speedup and efficiency for each combination is computed for
+you. You should now see graphs corresponding to speedup and efficiency. At what
+number of threads do you notice both speedup and efficiency begin to decrease?
+What does this tell us about the number of processes we should use for this
+parallel program?</p>
+</div>
 </div>
 <div class="section" id="activity-2-vector-matrix-multiplication">
 <h2>Activity 2: Vector Matrix Multiplication<a class="headerlink" href="#activity-2-vector-matrix-multiplication" title="Permalink to this headline">¶</a></h2>
@@ -270,7 +283,7 @@ different numbers of processes by changing the 3 above.</p>
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright This work is licensed under a Creative Commons Attribution-ShareAlike 3.0 Unported License.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.2.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.3.
     </div>
   </body>
 </html>
