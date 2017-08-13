@@ -39,8 +39,8 @@
             
   <div class="section" id="building-a-raspberry-pi-cluster">
 <h1>Building a Raspberry Pi Cluster<a class="headerlink" href="#building-a-raspberry-pi-cluster" title="Permalink to this headline">¶</a></h1>
-<p><strong>Last Updated:</strong> 2017-08-08</p>
-<p>This module acts as a tutorial to help users build a cluster of Raspberry Pis for Parallel Programming and Distributed Processing. The guide is a step by step procedure to build a simple 4-node Raspberry Pi 3 cluster with a shared network file system. Note that clusters can be of any length n≥2.</p>
+<p><strong>Last Updated:</strong> 2017-08-13</p>
+<p>This module acts as a tutorial to help users build a cluster of Raspberry Pis for Parallel Programming and Distributed Processing. The guide is a step by step procedure to build a simple 4-node Raspberry Pi 3 cluster with a shared network file system. Note that clusters can be of any length n≥2. Basic knowledge of Linux Terminal will be helpful.</p>
 <a class="reference internal image-reference" href="_images/RPiCluster.jpg"><img alt="_images/RPiCluster.jpg" src="_images/RPiCluster.jpg" style="width: 1200px;" /></a>
 <div class="section" id="materials-needed">
 <h2>Materials Needed<a class="headerlink" href="#materials-needed" title="Permalink to this headline">¶</a></h2>
@@ -184,7 +184,8 @@ Before we begin we want to assign names to each of the nodes. To do this we chan
 </div>
 <p>The hostname file will contain the name of the local host i.e. the name of that node. We called the head node “head” and the worker nodes ‘node1’, ‘node2’ and “node3’ respectively.</p>
 <p>Next,
-In the hosts file we will be removing the IPv6 confiurations by commenting them out using the # sign. We will then add the static IP addresses of the nodes in the hosts file.</p>
+In the hosts file we will be re
+the IPv6 confiurations by commenting them out using the # sign. We will then add the static IP addresses of the nodes in the hosts file.</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">sudo</span> <span class="n">nano</span> <span class="o">/</span><span class="n">etc</span><span class="o">/</span><span class="n">hosts</span>
 </pre></div>
 </div>
@@ -263,7 +264,7 @@ If you wish to mount an external drive as your file system please have a look at
 <span class="n">sudo</span> <span class="n">mkdir</span> <span class="n">cluster_files</span>
 </pre></div>
 </div>
-<p>Moving forward, we will have change the /etc/exports file on the head node in order for the above directory be accessible by the worker nodes</p>
+<p>Moving forward, we will have to change the /etc/exports file on the head node in order for the above directory be accessible by the worker nodes</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">sudo</span> <span class="n">nano</span> <span class="o">/</span><span class="n">etc</span><span class="o">/</span><span class="n">exports</span>
 </pre></div>
 </div>
@@ -550,10 +551,9 @@ Note: You can simply copy the bcast.sh and shutdown_cluster file instead of typi
 </li>
 <li><p class="first">If you wish to mount an external hard disk/pen drive with a higher storage capacity as your network file system it is possible to do that too. In order to do this we will need to create the mount point on the head node. Make sure that the mount point is not in the home directory of the user.</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">sudo</span> <span class="n">mkdir</span> <span class="o">/</span><span class="n">media</span><span class="o">/</span><span class="n">cluster_files</span>
-
-<span class="n">Note</span><span class="p">:</span> <span class="n">You</span> <span class="n">will</span> <span class="n">need</span> <span class="n">to</span> <span class="nb">format</span> <span class="n">the</span> <span class="n">external</span> <span class="n">drive</span> <span class="n">so</span> <span class="n">that</span> <span class="n">it</span> <span class="ow">is</span> <span class="n">compatible</span> <span class="k">with</span> <span class="n">Linux</span> <span class="n">systems</span> <span class="n">before</span> <span class="n">you</span> <span class="n">are</span> <span class="n">able</span> <span class="n">to</span> <span class="n">mount</span> <span class="n">it</span><span class="o">.</span>
 </pre></div>
 </div>
+<p>Note: You will need to format the external drive so that it is compatible with Linux systems before you are able to mount it.</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">sudo</span> <span class="n">mkfs</span><span class="o">.</span><span class="n">ext4</span> <span class="o">/</span><span class="n">dev</span><span class="o">/</span><span class="n">sda1</span> <span class="o">-</span><span class="n">L</span> <span class="n">cluster_files</span>
 </pre></div>
 </div>

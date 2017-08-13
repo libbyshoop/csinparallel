@@ -8,7 +8,7 @@ Building a Raspberry Pi Cluster
 ***********************************
 **Last Updated:** |date|
 
-This module acts as a tutorial to help users build a cluster of Raspberry Pis for Parallel Programming and Distributed Processing. The guide is a step by step procedure to build a simple 4-node Raspberry Pi 3 cluster with a shared network file system. Note that clusters can be of any length n≥2.
+This module acts as a tutorial to help users build a cluster of Raspberry Pis for Parallel Programming and Distributed Processing. The guide is a step by step procedure to build a simple 4-node Raspberry Pi 3 cluster with a shared network file system. Note that clusters can be of any length n≥2. Basic knowledge of Linux Terminal will be helpful.
 
 .. image:: images/RPiCluster.jpg
   :width: 1200
@@ -166,7 +166,8 @@ Before we begin we want to assign names to each of the nodes. To do this we chan
 The hostname file will contain the name of the local host i.e. the name of that node. We called the head node “head” and the worker nodes ‘node1’, ‘node2’ and “node3’ respectively.
 
 Next,
-In the hosts file we will be removing the IPv6 confiurations by commenting them out using the # sign. We will then add the static IP addresses of the nodes in the hosts file.
+In the hosts file we will be re
+the IPv6 confiurations by commenting them out using the # sign. We will then add the static IP addresses of the nodes in the hosts file.
 ::
 
   sudo nano /etc/hosts
@@ -252,7 +253,7 @@ If you wish to mount an external drive as your file system please have a look at
     cd
     sudo mkdir cluster_files
 
-Moving forward, we will have change the /etc/exports file on the head node in order for the above directory be accessible by the worker nodes
+Moving forward, we will have to change the /etc/exports file on the head node in order for the above directory be accessible by the worker nodes
 
 ::
 
@@ -558,7 +559,7 @@ Helpful Ideas and Notes
 
     sudo mkdir /media/cluster_files
 
-    Note: You will need to format the external drive so that it is compatible with Linux systems before you are able to mount it.
+  Note: You will need to format the external drive so that it is compatible with Linux systems before you are able to mount it.
   ::
 
     sudo mkfs.ext4 /dev/sda1 -L cluster_files
