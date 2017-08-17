@@ -1,0 +1,5 @@
+/media/cluster_files tegra2(rw,sync,no_root_squash,no_subtree_check)
+/media/cluster_files tegra3(rw,sync,no_root_squash,no_subtree_check)
+/media/cluster_files tegra4(rw,sync,no_root_squash,no_subtree_check)
+/media/cluster_files tegra5(rw,sync,no_root_squash,no_subtree_check)
+/media/cluster_files tegra6(rw,sync,no_root_squash,no_subtree_check)

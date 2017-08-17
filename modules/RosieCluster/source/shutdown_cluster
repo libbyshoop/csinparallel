@@ -1,0 +1,11 @@
+#!/bin/bash
+
+DHOSTS="tegra6 tegra5 tegra4 tegra3 tegra2";
+
+for DHOST in $DHOSTS;
+do
+    echo "Sending '"shutdown command"' to $DHOST";
+    echo "waiting"
+    sleep 1
+    ssh $DHOST "sudo /sbin/shutdown -h now";
+done

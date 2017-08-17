@@ -1,0 +1,653 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Shared Memory Program Structure and Coordination Patterns &#8212; Building a Raspberry Pi Cluster</title>
+    <link rel="stylesheet" href="../_static/csip.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+    <link rel="search" title="Search" href="../search.html" /> 
+  </head>
+  <body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="nav-item nav-item-0"><a href="../index.html">Building a Raspberry Pi Cluster</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="shared-memory-program-structure-and-coordination-patterns">
+<h1>Shared Memory Program Structure and Coordination Patterns<a class="headerlink" href="#shared-memory-program-structure-and-coordination-patterns" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="program-structure-implementation-strategy-the-basic-fork-join-pattern">
+<h2>0. Program Structure Implementation Strategy: The basic fork-join pattern<a class="headerlink" href="#program-structure-implementation-strategy-the-basic-fork-join-pattern" title="Permalink to this headline">¶</a></h2>
+<p><em>file: Vath_pth/00.forkJoin/forkJoin.C</em></p>
+<p><em>Build inside 00.forkJoin directory:</em></p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">make</span> <span class="n">forkJoin</span>
+</pre></div>
+</div>
+<p><em>Execute on the command line inside 00.forkJoin directory:</em></p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="o">./</span><span class="n">forkJoin</span>
+</pre></div>
+</div>
+<p>The <em>SPool TH()</em> constructor on line 20, tells the compiler to create a team of two worker threads.
+The <em>Dispatch()</em> function activates the set of threads to execute the thread function passed as an argument.
+The <em>WaitForIdle()</em> function joins the threads after all worker threads have completed their task. Notice that
+unlike OpenMP, the join is explicit. You can conceptualize how this works using the following diagram,
+where time is moving from left to right:</p>
+<a class="reference internal image-reference" href="../_images/ForkJoin1.png"><img alt="../_images/ForkJoin1.png" src="../_images/ForkJoin1.png" style="width: 800px;" /></a>
+<p>Observe what happens on the machine where you are running this code.</p>
+<div class="highlight-c++"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="cm">/*</span>
+<span class="cm"> * forkJoin.C</span>
+<span class="cm"> *</span>
+<span class="cm"> * Using Victor Alessandrini&#39;s vath_pth library</span>
+<span class="cm"> * ... illustrates the fork-join pattern</span>
+<span class="cm"> *</span>
+<span class="cm"> * Modeled from code provided by Joel Adams, Calvin College, November 2009.</span>
+<span class="cm"> * Hannah Sonsalla, Macalester College, 2017.</span>
+<span class="cm"> *</span>
+<span class="cm"> * Usage: ./forkJoin</span>
+<span class="cm"> *</span>
+<span class="cm"> * Exercise:</span>
+<span class="cm"> * - Compile &amp; run</span>
+<span class="cm"> */</span>
+
+<span class="cp">#include</span> <span class="cpf">&lt;stdlib.h&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;stdio.h&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;SPool.h&gt;</span><span class="cp"></span>
+
+<span class="n">SPool</span> <span class="nf">TH</span><span class="p">(</span><span class="mi">2</span><span class="p">);</span>    <span class="c1">// initialize threads, global</span>
+
+<span class="kt">void</span> <span class="nf">thread_fct</span><span class="p">(</span><span class="kt">void</span> <span class="o">*</span><span class="n">P</span><span class="p">)</span>  <span class="p">{</span>
+    <span class="n">printf</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\n</span><span class="s"> During... </span><span class="se">\n</span><span class="s">&quot;</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span> <span class="o">**</span><span class="n">argv</span><span class="p">)</span>  <span class="p">{</span>
+
+    <span class="n">printf</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\n</span><span class="s"> Before... </span><span class="se">\n</span><span class="s">&quot;</span><span class="p">);</span>
+    <span class="c1">// -------------------------------------------------------</span>
+    <span class="n">TH</span><span class="p">.</span><span class="n">Dispatch</span><span class="p">(</span><span class="n">thread_fct</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">);</span> <span class="c1">// activates worker threads</span>
+    <span class="n">TH</span><span class="p">.</span><span class="n">WaitForIdle</span><span class="p">();</span>   <span class="c1">// joins all worker threads</span>
+    <span class="c1">// -------------------------------------------------------</span>
+    <span class="n">printf</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\n</span><span class="s"> After... </span><span class="se">\n\n</span><span class="s">&quot;</span><span class="p">);</span>
+
+    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</td></tr></table></div>
+</div>
+<div class="section" id="program-structure-implementation-strategy-fork-join-with-setting-the-number-of-threads">
+<h2>1. Program Structure Implementation Strategy: Fork-join with setting the number of threads<a class="headerlink" href="#program-structure-implementation-strategy-fork-join-with-setting-the-number-of-threads" title="Permalink to this headline">¶</a></h2>
+<p><em>file Vath_pth/01.forkJoin2/forkJoin2.C</em></p>
+<p><em>Build inside 01.forkJoin2 directory:</em></p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">make</span> <span class="n">forkJoin2</span>
+</pre></div>
+</div>
+<p><em>Execute on the command line inside 01.forkJoin2 directory:</em></p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="o">./</span><span class="n">forkJoin2</span>
+</pre></div>
+</div>
+<p>This code illustrates that one program can fork and join more than once.
+Programmers can set the number of threads to use when creating the team of worker threads.</p>
+<p>Note on line 22 there is a vath library SPool utility function called <em>Spool TH()</em> that takes
+the number of threads as an argument. Follow the instructions in the header of the
+code file to understand how constructing SPool objects, and forking and joining threads repeatedly works.</p>
+<div class="highlight-c++"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="cm">/*</span>
+<span class="cm"> * forkJoin2.C</span>
+<span class="cm"> *</span>
+<span class="cm"> * Using Victor Alessandrini&#39;s vath_pth library.</span>
+<span class="cm"> * ... illustrates the fork-join pattern and setting number of threads.</span>
+<span class="cm"> *</span>
+<span class="cm"> * Modeled from code provided by Joel Adams, Calvin College, November 2009.</span>
+<span class="cm"> * Hannah Sonsalla, Macalester College, 2017.</span>
+<span class="cm"> *</span>
+<span class="cm"> * Usage: ./forkJoin2</span>
+<span class="cm"> *</span>
+<span class="cm"> * Exercise:</span>
+<span class="cm"> * - Compile &amp; run</span>
+<span class="cm"> * - Rebuild and rerun using 2, 3, 4 threads</span>
+<span class="cm"> * - What do you notice about the number of times statements are printed?</span>
+<span class="cm"> */</span>
+
+<span class="cp">#include</span> <span class="cpf">&lt;stdlib.h&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;stdio.h&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;SPool.h&gt;</span><span class="cp"></span>
+
+<span class="n">SPool</span> <span class="nf">TH</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>    <span class="c1">// initialize threads, global</span>
+
+<span class="kt">void</span> <span class="nf">thread_fct</span><span class="p">(</span><span class="kt">void</span> <span class="o">*</span><span class="n">P</span><span class="p">)</span>  <span class="p">{</span>
+    <span class="n">printf</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\n</span><span class="s">  Part Completed&quot;</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="nf">runWorkerThreads</span><span class="p">(</span><span class="kt">int</span> <span class="n">n</span><span class="p">)</span>  <span class="p">{</span>
+    <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">n</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">){</span>
+      <span class="n">TH</span><span class="p">.</span><span class="n">Dispatch</span><span class="p">(</span><span class="n">thread_fct</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">);</span>
+      <span class="n">TH</span><span class="p">.</span><span class="n">WaitForIdle</span><span class="p">();</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span> <span class="o">**</span><span class="n">argv</span><span class="p">)</span>  <span class="p">{</span>
+
+    <span class="n">printf</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\n</span><span class="s"> Beginning&quot;</span><span class="p">);</span>
+    <span class="c1">// -------------------------------------------------------</span>
+    <span class="n">runWorkerThreads</span><span class="p">(</span><span class="mi">2</span><span class="p">);</span>
+    <span class="c1">// -------------------------------------------------------</span>
+    <span class="n">printf</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\n</span><span class="s"> Between I and II... &quot;</span><span class="p">);</span>
+    <span class="n">runWorkerThreads</span><span class="p">(</span><span class="mi">3</span><span class="p">);</span>
+    <span class="c1">// -------------------------------------------------------</span>
+    <span class="n">printf</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\n</span><span class="s"> Between II and III... &quot;</span><span class="p">);</span>
+    <span class="n">runWorkerThreads</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+    <span class="c1">// -------------------------------------------------------</span>
+    <span class="n">printf</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\n</span><span class="s"> End </span><span class="se">\n</span><span class="s">&quot;</span><span class="p">);</span>
+
+    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</td></tr></table></div>
+</div>
+<div class="section" id="program-structure-implementation-strategy-single-program-multiple-data">
+<h2>2. Program Structure Implementation Strategy: Single Program, multiple data<a class="headerlink" href="#program-structure-implementation-strategy-single-program-multiple-data" title="Permalink to this headline">¶</a></h2>
+<p><em>file: Vath_pth/02.spmd/spmd.C</em></p>
+<p><em>Build inside 02.spmd directory:</em></p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">make</span> <span class="n">spmd</span>
+</pre></div>
+</div>
+<p><em>Execute on the command line inside 02.spmd directory:</em></p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="o">./</span><span class="n">spmd</span>
+</pre></div>
+</div>
+<p>Note how there is a SPool utility function <em>GetRank()</em> to
+obtain a thread number. We have one program, but multiple threads executing
+the thread function, each with a copy of the rank variable.
+Programmers write one program, but write it in such a way that
+each thread has its own data values for particular variables.
+This is why this is called the <em>single program, multiple data</em> (SPMD) pattern.</p>
+<p>Most parallel programs use this SPMD pattern as writing one program
+is ultimately the most efficient method for programmers. It does require you
+as a programmer to understand how this works, however. Each thread executing in
+parallel has its own set of variables. Conceptually, it looks like this,
+where each thread has its own memory for the variable rank:</p>
+<a class="reference internal image-reference" href="../_images/SPMD.png"><img alt="../_images/SPMD.png" src="../_images/SPMD.png" style="width: 800px;" /></a>
+<p>When you execute the code, what do you observe about the order of the printed lines?
+Run the program multiple times–does the ordering change? This illustrates an
+important point about threaded programs: <em>the ordering of execution of statements
+between threads is not guaranteed.</em> This is also illustrated in the diagram above.</p>
+<div class="highlight-c++"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="cm">/*</span>
+<span class="cm"> * spmd.C</span>
+<span class="cm"> *</span>
+<span class="cm"> * Using Victor Alessandrini&#39;s vath_pth library.</span>
+<span class="cm"> * ... illustrates the single-program-multiple-data (SPMD) pattern</span>
+<span class="cm"> *</span>
+<span class="cm"> * Modeled from code provided by Joel Adams, Calvin College, November 2009.</span>
+<span class="cm"> * Hannah Sonsalla, Macalester College, 2017.</span>
+<span class="cm"> *</span>
+<span class="cm"> * Usage: ./spmd</span>
+<span class="cm"> *</span>
+<span class="cm"> * Exercise:</span>
+<span class="cm"> * - Compile &amp; run multiple times - what do you observe about the</span>
+<span class="cm"> *   order of the printed lines?</span>
+<span class="cm"> */</span>
+
+<span class="cp">#include</span> <span class="cpf">&lt;stdlib.h&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;stdio.h&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;SPool.h&gt;</span><span class="cp"></span>
+
+<span class="n">SPool</span> <span class="nf">TH</span><span class="p">(</span><span class="mi">8</span><span class="p">);</span>
+
+<span class="kt">void</span> <span class="nf">thread_fct</span><span class="p">(</span><span class="kt">void</span> <span class="o">*</span><span class="n">P</span><span class="p">)</span>  <span class="p">{</span>
+
+    <span class="kt">int</span> <span class="n">rank</span> <span class="o">=</span> <span class="n">TH</span><span class="p">.</span><span class="n">GetRank</span><span class="p">();</span>
+    <span class="n">printf</span><span class="p">(</span><span class="s">&quot;Hello from thread %d </span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">rank</span><span class="p">);</span>
+
+<span class="p">}</span>
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span> <span class="o">**</span><span class="n">argv</span><span class="p">)</span>  <span class="p">{</span>
+
+    <span class="n">TH</span><span class="p">.</span><span class="n">Dispatch</span><span class="p">(</span><span class="n">thread_fct</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">);</span>
+    <span class="n">TH</span><span class="p">.</span><span class="n">WaitForIdle</span><span class="p">();</span>
+
+    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</td></tr></table></div>
+</div>
+<div class="section" id="program-structure-implementation-strategy-single-program-multiple-data-with-user-defined-number-of-threads">
+<h2>3. Program Structure Implementation Strategy: Single Program, multiple data with user-defined number of threads<a class="headerlink" href="#program-structure-implementation-strategy-single-program-multiple-data-with-user-defined-number-of-threads" title="Permalink to this headline">¶</a></h2>
+<p><em>file: Vath_pth/03.spmd2/spmd2.C</em></p>
+<p><em>Build inside 03.spmd2 directory:</em></p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">make</span> <span class="n">spmd2</span>
+</pre></div>
+</div>
+<p><em>Execute on the command line inside 03.spmd2 directory:</em></p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="o">./</span><span class="n">spmd2</span> <span class="mi">4</span>
+<span class="n">Replace</span> <span class="mi">4</span> <span class="k">with</span> <span class="n">other</span> <span class="n">values</span> <span class="k">for</span> <span class="n">the</span> <span class="n">number</span> <span class="n">of</span> <span class="n">threads</span>
+</pre></div>
+</div>
+<p>Here we enter the number of threads to use on the command line. This is a useful way to
+make your code versatile so that you can use as many threads as you would like. In this case,
+a global pointer to a SPool object is declared and it is later initialized by main().</p>
+<div class="highlight-c++"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="cm">/*</span>
+<span class="cm"> * spmd2.C</span>
+<span class="cm"> *</span>
+<span class="cm"> * Using Victor Alessandrini&#39;s vath_pth library.</span>
+<span class="cm"> * ... illustrates the single-program-multiple-data (SPMD)</span>
+<span class="cm"> *     using command line arguments to control the</span>
+<span class="cm"> *     number of threads.</span>
+<span class="cm"> *</span>
+<span class="cm"> * Modeled from code provided by Joel Adams, Calvin College, November 2009.</span>
+<span class="cm"> * Hannah Sonsalla, Macalester College, 2017.</span>
+<span class="cm"> *</span>
+<span class="cm"> * Usage: ./spmd2 [numThreads]</span>
+<span class="cm"> *</span>
+<span class="cm"> * Exercise:</span>
+<span class="cm"> * - Compile &amp; run with no commandline args</span>
+<span class="cm"> * - Rerun with different commandline arg 4, 10, 20, etc.</span>
+<span class="cm"> *</span>
+<span class="cm"> */</span>
+
+<span class="cp">#include</span> <span class="cpf">&lt;stdlib.h&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;stdio.h&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;SPool.h&gt;</span><span class="cp"></span>
+
+<span class="n">SPool</span> <span class="o">*</span><span class="n">TH</span><span class="p">;</span>
+
+<span class="kt">void</span> <span class="nf">thread_fct</span><span class="p">(</span><span class="kt">void</span> <span class="o">*</span><span class="n">P</span><span class="p">)</span>  <span class="p">{</span>
+
+    <span class="kt">int</span> <span class="n">rank</span> <span class="o">=</span> <span class="n">TH</span><span class="o">-&gt;</span><span class="n">GetRank</span><span class="p">();</span>
+    <span class="n">printf</span><span class="p">(</span><span class="s">&quot;Hello from thread %d </span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">rank</span><span class="p">);</span>
+
+<span class="p">}</span>
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span> <span class="o">**</span><span class="n">argv</span><span class="p">)</span>  <span class="p">{</span>
+    <span class="kt">int</span> <span class="n">numThreads</span><span class="p">;</span>
+
+    <span class="k">if</span><span class="p">(</span><span class="n">argc</span><span class="o">==</span><span class="mi">2</span><span class="p">)</span> <span class="n">numThreads</span> <span class="o">=</span> <span class="n">atoi</span><span class="p">(</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">]);</span>
+    <span class="k">else</span> <span class="n">numThreads</span> <span class="o">=</span> <span class="mi">4</span><span class="p">;</span>     <span class="c1">// default number of threads</span>
+
+    <span class="c1">// Create worker threads</span>
+    <span class="c1">// -----------------------------</span>
+    <span class="n">TH</span> <span class="o">=</span> <span class="k">new</span> <span class="n">SPool</span><span class="p">(</span><span class="n">numThreads</span><span class="p">);</span>
+
+    <span class="c1">// Launch worker threads</span>
+    <span class="c1">// -----------------------------</span>
+    <span class="n">TH</span><span class="o">-&gt;</span><span class="n">Dispatch</span><span class="p">(</span><span class="n">thread_fct</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">);</span>
+    <span class="n">TH</span><span class="o">-&gt;</span><span class="n">WaitForIdle</span><span class="p">();</span>
+
+    <span class="k">delete</span> <span class="n">TH</span><span class="p">;</span>
+    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</td></tr></table></div>
+</div>
+<div class="section" id="coordination-synchronization-with-a-barrier">
+<h2>4. Coordination: Synchronization with a Barrier<a class="headerlink" href="#coordination-synchronization-with-a-barrier" title="Permalink to this headline">¶</a></h2>
+<p><em>file: Vath_pth/04.barrier/barrier.C</em></p>
+<p><em>Build inside 04.barrier directory:</em></p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">make</span> <span class="n">barrier</span>
+</pre></div>
+</div>
+<p><em>Execute on the command line inside 04.barrier directory:</em></p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="o">./</span><span class="n">barrier</span> <span class="mi">4</span>
+<span class="n">Replace</span> <span class="mi">4</span> <span class="k">with</span> <span class="n">other</span> <span class="n">values</span> <span class="k">for</span> <span class="n">the</span> <span class="n">number</span> <span class="n">of</span> <span class="n">threads</span>
+</pre></div>
+</div>
+<p>The barrier pattern is used in parallel programs to ensure that all threads complete
+a parallel section of code before execution continues. This can be necessary when
+threads are generating computed data (in an array, for example) that needs to be
+completed for use in another computation.</p>
+<p>Conceptually, the running code is executing like this:</p>
+<a class="reference internal image-reference" href="../_images/Barrier.png"><img alt="../_images/Barrier.png" src="../_images/Barrier.png" style="width: 800px;" /></a>
+<p>Note what happens with and without the commented barrier function on line 42.</p>
+<div class="highlight-c++"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="cm">/*</span>
+<span class="cm"> * barrier.c</span>
+<span class="cm"> *</span>
+<span class="cm"> * AUTHOR: Victor Alessandrini, 2015</span>
+<span class="cm"> * Example in book &quot;Shared Memory Application Programming&quot;</span>
+<span class="cm"> * Edited by Hannah Sonsalla, Macalester College, 2017.</span>
+<span class="cm"> *</span>
+<span class="cm"> * ... illustrates the use of the barrier command,</span>
+<span class="cm"> * 	   using the commandline to control the number of threads...</span>
+<span class="cm"> *</span>
+<span class="cm"> * Shows how to construct Barrier synchronization using the Pthreads</span>
+<span class="cm"> * idle wait protocol. All threads write &quot;before&quot; message, wait</span>
+<span class="cm"> * on the barrier, write &quot;after&quot; message, and exit.</span>
+<span class="cm"> *</span>
+<span class="cm"> * Usage: ./barrier [numThreads]</span>
+<span class="cm"> *</span>
+<span class="cm"> * Exercise:</span>
+<span class="cm"> * - Compile &amp; run several times, noting interleaving of outputs.</span>
+<span class="cm"> * - Uncomment the BarrierWait function on line A, recompile, rerun,</span>
+<span class="cm"> *    and note the change in the outputs.</span>
+<span class="cm"> */</span>
+
+<span class="cp">#include</span> <span class="cpf">&lt;stdlib.h&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;stdio.h&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;SPool.h&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;pthread.h&gt;</span><span class="cp"></span>
+
+<span class="cp">#include</span> <span class="cpf">&quot;pthreadBarrier.h&quot;</span><span class="cp"></span>
+
+<span class="kt">int</span> <span class="n">numThreads</span><span class="p">;</span>
+<span class="n">SPool</span> <span class="o">*</span><span class="n">TH</span><span class="p">;</span>
+
+<span class="c1">// -------------------</span>
+<span class="c1">// Worker threads code</span>
+<span class="c1">// -------------------</span>
+
+<span class="kt">void</span> <span class="nf">thread_fct</span><span class="p">(</span><span class="kt">void</span> <span class="o">*</span><span class="n">idp</span><span class="p">)</span>  <span class="p">{</span>
+
+    <span class="kt">int</span> <span class="n">rank</span> <span class="o">=</span> <span class="n">TH</span><span class="o">-&gt;</span><span class="n">GetRank</span><span class="p">();</span>
+    <span class="n">printf</span><span class="p">(</span><span class="s">&quot;Thread %d of %d is BEFORE barrier</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">rank</span><span class="p">,</span> <span class="n">numThreads</span><span class="p">);</span>
+    <span class="c1">//BarrierWait(rank);                                // A</span>
+    <span class="n">printf</span><span class="p">(</span><span class="s">&quot;Thread %d of %d is AFTER barrier</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">rank</span><span class="p">,</span> <span class="n">numThreads</span><span class="p">);</span>
+
+<span class="p">}</span>
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span> <span class="o">**</span><span class="n">argv</span><span class="p">)</span>  <span class="p">{</span>
+
+    <span class="k">if</span><span class="p">(</span><span class="n">argc</span><span class="o">==</span><span class="mi">2</span><span class="p">)</span> <span class="n">numThreads</span> <span class="o">=</span> <span class="n">atoi</span><span class="p">(</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">]);</span>
+    <span class="k">else</span> <span class="n">numThreads</span> <span class="o">=</span> <span class="mi">2</span><span class="p">;</span>
+    <span class="n">count</span> <span class="o">=</span> <span class="n">numThreads</span><span class="p">;</span>
+
+    <span class="c1">// Create worker threads</span>
+    <span class="c1">// ------------------------------</span>
+    <span class="n">TH</span> <span class="o">=</span> <span class="k">new</span> <span class="n">SPool</span><span class="p">(</span><span class="n">numThreads</span><span class="p">);</span>
+
+    <span class="c1">// Launch worker threads</span>
+    <span class="c1">// -----------------------------</span>
+    <span class="n">TH</span><span class="o">-&gt;</span><span class="n">Dispatch</span><span class="p">(</span><span class="n">thread_fct</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">);</span>
+    <span class="n">TH</span><span class="o">-&gt;</span><span class="n">WaitForIdle</span><span class="p">();</span>
+    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+
+<span class="p">}</span>
+</pre></div>
+</td></tr></table></div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../index.html">
+              <img class="logo" src="../_static/CSInParallel200wide.png" alt="Logo"/>
+            </a></p>
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Shared Memory Program Structure and Coordination Patterns</a><ul>
+<li><a class="reference internal" href="#program-structure-implementation-strategy-the-basic-fork-join-pattern">0. Program Structure Implementation Strategy: The basic fork-join pattern</a></li>
+<li><a class="reference internal" href="#program-structure-implementation-strategy-fork-join-with-setting-the-number-of-threads">1. Program Structure Implementation Strategy: Fork-join with setting the number of threads</a></li>
+<li><a class="reference internal" href="#program-structure-implementation-strategy-single-program-multiple-data">2. Program Structure Implementation Strategy: Single Program, multiple data</a></li>
+<li><a class="reference internal" href="#program-structure-implementation-strategy-single-program-multiple-data-with-user-defined-number-of-threads">3. Program Structure Implementation Strategy: Single Program, multiple data with user-defined number of threads</a></li>
+<li><a class="reference internal" href="#coordination-synchronization-with-a-barrier">4. Coordination: Synchronization with a Barrier</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="nav-item nav-item-0"><a href="../index.html">Building a Raspberry Pi Cluster</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright This work is licensed under a Creative Commons Attribution-ShareAlike 3.0 Unported License.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.3.
+    </div>
+  </body>
+</html>

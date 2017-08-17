@@ -1,0 +1,476 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Building a Nvidia Jetson TK1 Cluster &#8212; Building a Raspberry Pi Cluster</title>
+    <link rel="stylesheet" href="_static/csip.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="shortcut icon" href="_static/favicon.ico"/>
+    <link rel="search" title="Search" href="search.html" /> 
+  </head>
+  <body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="nav-item nav-item-0"><a href="#">Building a Raspberry Pi Cluster</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="building-a-nvidia-jetson-tk1-cluster">
+<h1>Building a Nvidia Jetson TK1 Cluster<a class="headerlink" href="#building-a-nvidia-jetson-tk1-cluster" title="Permalink to this headline">¶</a></h1>
+<p><strong>Last Updated:</strong> 2017-08-16</p>
+<p>This module acts as a tutorial to help users build a cluster of Nvidia Jetson TK1 cluster for Parallel Programming and Distributed Processing. The guide is a step by step procedure to build a 6 Node TK1 cluster with a shared network file system. Note that clusters can be of any length n≥2. Basic knowledge of Linux Terminal will be helpful.</p>
+<div class="section" id="materials-needed">
+<h2>Materials Needed<a class="headerlink" href="#materials-needed" title="Permalink to this headline">¶</a></h2>
+<ol class="arabic simple">
+<li>6 x <a class="reference external" href="https://www.amazon.com/NVIDIA-Jetson-TK1-Development-Kit/dp/B00L7AWOEC/ref=sr_1_1?ie=UTF8&amp;qid=1502920391&amp;sr=8-1&amp;keywords=nvidia+tegra+k1">Tegra TK1</a></li>
+<li>1 x <a class="reference external" href="https://www.amazon.com/Seagate-BarraCuda-3-5-Inch-Internal-ST1000DM010/dp/B01LNJBA2I/ref=sr_1_3?s=electronics&amp;ie=UTF8&amp;qid=1502928646&amp;sr=1-3&amp;keywords=1Tb+hdd">HDD</a> (Preferably 128 GB) with <a class="reference external" href="https://www.amazon.com/RELPER-Long-Cable-Double-Locking/dp/B00V037086/ref=sr_1_28?s=electronics&amp;ie=UTF8&amp;qid=1502925892&amp;sr=1-28&amp;keywords=1+pc+sata+data+cable">SATA Data</a> (1 ft.), <a class="reference external" href="https://www.amazon.com/Nippon-Labs-SATA-15PF2-4PM-1FT-12-Inch-Female/dp/B00N7OJ1H4/ref=sr_1_28?s=electronics&amp;ie=UTF8&amp;qid=1502925628&amp;sr=1-28&amp;keywords=sata+cable+12+inch">Power Cable</a> (1 ft.).</li>
+<li>6 x <a class="reference external" href="https://www.amazon.com/Cable-Matters-5-Pack-Snagless-Ethernet/dp/B00C4U030G/ref=sr_1_1?s=electronics&amp;ie=UTF8&amp;qid=1499808595&amp;sr=1-1&amp;keywords=ethernet+cable+1ft">Ethernet Cable</a> (Preferably 1 ft. long)</li>
+<li>1 x <a class="reference external" href="https://www.amazon.com/gp/product/B01N3ASWZ0/ref=ox_sc_act_title_2?smid=A325274ZEF9XYZ&amp;psc=1">12V 12.5A Battery Power Supply</a></li>
+<li>1 x <a class="reference external" href="https://www.amazon.com/Anker-Charger-PowerPort-Multi-Port-Samsung/dp/B00VH8ZW02/ref=sr_1_1?s=electronics&amp;ie=UTF8&amp;qid=1502920716&amp;sr=1-1-spons&amp;keywords=anker+5+port+usb+charger&amp;psc=1">5 Port USB Battery Charger</a></li>
+<li>1 x <a class="reference external" href="https://www.amazon.com/TRENDnet-Unmanaged-GREENnet-Switching-TEG-S80G/dp/B001QUA6RA/ref=sr_1_2?s=electronics&amp;ie=UTF8&amp;qid=1502920782&amp;sr=1-2-spons&amp;keywords=greennet+8+port+switch&amp;psc=1">8 Port Ethernet Switch</a></li>
+<li>1 x <a class="reference external" href="https://www.amazon.com/GeChic-2501C-Portable-Monitor-Inputs/dp/B00H4MWMWQ/ref=sr_1_1?s=electronics&amp;ie=UTF8&amp;qid=1499809271&amp;sr=1-1-spons&amp;keywords=portable+monitor&amp;psc=1">Monitor</a>, <a class="reference external" href="https://www.amazon.com/Keyboard-Jelly-Comb-Rechargeable-Wireless/dp/B01NCW2JR9/ref=sr_1_4?s=electronics&amp;ie=UTF8&amp;qid=1499809455&amp;sr=1-4&amp;keywords=jelly+comb+keyboard+mouse+combo">Keyboard and Mouse</a></li>
+<li>1 x <a class="reference external" href="https://www.amazon.com/Anker-4-Port-Macbook-Surface-Notebook/dp/B00XMD7KPU/ref=sr_1_1?s=electronics&amp;ie=UTF8&amp;qid=1502925193&amp;sr=1-1&amp;keywords=anker+usb+hub">USB Hub</a></li>
+<li>1 x <a class="reference external" href="https://www.amazon.com/AmazonBasics-1000-Gigabit-Ethernet-Adapter/dp/B00M77HMU0/ref=sr_1_3?s=electronics&amp;ie=UTF8&amp;qid=1502925248&amp;sr=1-3&amp;keywords=ethernet+to+usb+adapter">Ethernet to USB Adapter</a></li>
+<li>2 x <a class="reference external" href="https://www.amazon.com/Adafruit-line-switch-barrel-ADA1125/dp/B00KLDPX8U/ref=sr_1_1?s=electronics&amp;ie=UTF8&amp;qid=1502925374&amp;sr=1-1&amp;keywords=barrel+switch">Barrel On-Off Switch</a></li>
+<li>1 X <a class="reference external" href="https://www.amazon.com/Pro-Power-DC-5-5x2-1mm-Splitter/dp/B072N1513Q/ref=sr_1_7?s=electronics&amp;ie=UTF8&amp;qid=1498423822&amp;sr=1-7&amp;keywords=DC+JACK+6-way+splitter">1 Female to 6 Male 2.1 mm Barrel Splitter</a></li>
+<li>1 x <a class="reference external" href="https://www.amazon.com/Pro-Power-DC-5-5x2-1mm-Splitter/dp/B072N1513Q/ref=sr_1_7?s=electronics&amp;ie=UTF8&amp;qid=1498423822&amp;sr=1-7&amp;keywords=DC+JACK+6-way+splitter">1 Female to 6 Male 2.1 mm Barrel Splitter</a></li>
+</ol>
+</div>
+<div class="section" id="overview">
+<h2>Overview<a class="headerlink" href="#overview" title="Permalink to this headline">¶</a></h2>
+<p>Before you begin please read <a class="reference internal" href="#ideas-and-notes"><span class="std std-ref">Helpful Ideas and Notes</span></a> so that you can configure this cluster as you want it to be.</p>
+<ul class="simple">
+<li><a class="reference internal" href="#physical-cluster-set-up"><span class="std std-ref">Setting up the Physical Cluster</span></a></li>
+<li><a class="reference internal" href="#ubuntu-os-setup"><span class="std std-ref">Setting up Ubuntu OS</span></a></li>
+<li><a class="reference internal" href="#software"><span class="std std-ref">Software Installation</span></a></li>
+<li><a class="reference internal" href="#cluster-network"><span class="std std-ref">Creating a Cluster Network</span></a></li>
+<li><a class="reference internal" href="#ssh"><span class="std std-ref">SSH Remote Login Setup</span></a></li>
+<li><a class="reference internal" href="#nfs"><span class="std std-ref">Mount Network File System</span></a></li>
+<li><a class="reference internal" href="#bcast-sh-and-shutdown"><span class="std std-ref">Broadcasting and Shutting Down</span></a></li>
+<li><a class="reference internal" href="#time-sync"><span class="std std-ref">Time and Date Synchronization</span></a></li>
+<li><a class="reference internal" href="#ideas-and-notes"><span class="std std-ref">Helpful Ideas and Notes</span></a></li>
+<li><a class="reference internal" href="#references"><span class="std std-ref">References</span></a></li>
+</ul>
+</div>
+<div class="section" id="setting-up-the-physical-cluster">
+<span id="physical-cluster-set-up"></span><h2>Setting up the Physical Cluster<a class="headerlink" href="#setting-up-the-physical-cluster" title="Permalink to this headline">¶</a></h2>
+<a class="reference internal image-reference" href="_images/1.jpg"><img alt="_images/1.jpg" src="_images/1.jpg" style="width: 800px;" /></a>
+<a class="reference internal image-reference" href="_images/2.jpg"><img alt="_images/2.jpg" src="_images/2.jpg" style="width: 800px;" /></a>
+<a class="reference internal image-reference" href="_images/3.jpg"><img alt="_images/3.jpg" src="_images/3.jpg" style="width: 800px;" /></a>
+<a class="reference internal image-reference" href="_images/4.jpg"><img alt="_images/4.jpg" src="_images/4.jpg" style="width: 800px;" /></a>
+<a class="reference internal image-reference" href="_images/5.jpg"><img alt="_images/5.jpg" src="_images/5.jpg" style="width: 800px;" /></a>
+<a class="reference internal image-reference" href="_images/6.jpg"><img alt="_images/6.jpg" src="_images/6.jpg" style="width: 800px;" /></a>
+<p>We built a wooden structure to put together the 6-node cluster and made it as compact as possible as shown in the pictures above. All the six cluster nodes are powered through a single power supply. In order to do this we connected the 5 worker nodes to the 6 to 1 Barrel Splitter (We couldn’t find a 5 to 1). The Female end of 5 to 1 splitter is then connected to the male end of a Barrel On/Off Switch. The head node is directly connected to another Barrel Switch. The two switches are then connected to a 2 to 1 Barrel Splitter and this is then connected to the Power Supply. This eliminates the need for having 6 different power supplies for the 6 Tegra Boards. We use a 8 Port Ethernet Switch to connect all the nodes of the cluster in a network using ethernet cables. The 5 Port Battery charger is used to power the Ethernet Switch and the Monitor. The USB Hub and HDD is connected to the Head Node. Since these boards do not have Wifi on them we also used a Ethernet to USB Adapter on the head node for it to connect to the Internet through a External ethernet connection.</p>
+</div>
+<div class="section" id="setting-up-ubuntu-os">
+<span id="ubuntu-os-setup"></span><h2>Setting up Ubuntu OS<a class="headerlink" href="#setting-up-ubuntu-os" title="Permalink to this headline">¶</a></h2>
+<p>The Jetson TK1 boards do not support Ubuntu 16.04 and hence we will be flashing Ubuntu 14.04 on them.</p>
+<p>To set up the OS we will need a Ubuntu 14.04 host machine. On the Host Machine we will be downloading <a class="reference external" href="https://developer.nvidia.com/embedded/downloads">JetPack Installer</a>. In this link download the file which says “JetPack” only. You will need to create a free account on Nvidia’s website to do so. Follow this <a class="reference external" href="http://docs.nvidia.com/jetpack-l4t/3.1/index.html#developertools/mobile/jetpack/l4t/3.1/jetpack_l4t_install.htm">installation guide</a> to install the JetPack on the host machine and flash each TK1 board. You may select what Nvidia Software you want to install on the Boards but it is recommended to do a full install. This is a time consuming process and may take upto 45 minutes to Flash each TK1 Board.</p>
+<p>Each node will have a user ‘ubuntu’ and a password ‘ubuntu’. Have a look at <a class="reference internal" href="#ideas-and-notes"><span class="std std-ref">Helpful Ideas and Notes</span></a> for user account management and password.</p>
+</div>
+<div class="section" id="software-installation">
+<span id="software"></span><h2>Software Installation<a class="headerlink" href="#software-installation" title="Permalink to this headline">¶</a></h2>
+<p>To begin we will connect the ethernet switch to the wall in order for all the nodes to have access to the Internet in order to run updates, upgrades and install software.</p>
+<p>On a regular terminal we will run the following commands to upgrade Ubuntu 14.04.1 to 14.04.5.</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">sudo</span> <span class="n">apt</span><span class="o">-</span><span class="n">get</span> <span class="n">update</span>
+<span class="n">sudo</span> <span class="n">apt</span><span class="o">-</span><span class="n">get</span> <span class="n">upgrade</span>
+</pre></div>
+</div>
+<p>Then we will install nano (a terminal text editor), SSH (Secure Shell) which will be required for remote login and NTP (Network Time Protocol) which we will need to synchronize date and time across the cluster:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">sudo</span> <span class="n">apt</span><span class="o">-</span><span class="n">get</span> <span class="n">install</span> <span class="n">nano</span>
+<span class="n">sudo</span> <span class="n">apt</span><span class="o">-</span><span class="n">get</span> <span class="n">install</span> <span class="n">openssh</span><span class="o">-</span><span class="n">server</span>
+<span class="n">sudo</span> <span class="n">apt</span><span class="o">-</span><span class="n">get</span> <span class="n">install</span> <span class="n">ntp</span>
+</pre></div>
+</div>
+<p>Next, on the head node we will need install NFS kernel server.:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">sudo</span> <span class="n">apt</span><span class="o">-</span><span class="n">get</span> <span class="n">install</span> <span class="n">nfs</span><span class="o">-</span><span class="n">kernel</span><span class="o">-</span><span class="n">server</span>
+</pre></div>
+</div>
+<p>And on the worker nodes we will be installing NFS Common:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">sudo</span> <span class="n">apt</span><span class="o">-</span><span class="n">get</span> <span class="n">install</span> <span class="n">nfs</span><span class="o">-</span><span class="n">common</span>
+</pre></div>
+</div>
+<p>With this we have installed all the required software for us to run MPI Code on the cluster. If you wish to install any other software then you should install it now because we will be removing internet from the worker nodes and setting up an external ethernet connection directly to the wall only on the head node.</p>
+</div>
+<div class="section" id="creating-a-cluster-network">
+<span id="cluster-network"></span><h2>Creating a Cluster Network<a class="headerlink" href="#creating-a-cluster-network" title="Permalink to this headline">¶</a></h2>
+<p>In order for us to establish a network between the cluster through ethernet cables we will need to assign static ip addresses to each of the nodes. To do this, we need to edit the interfaces file on each node. This can be done by doing the following:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">cd</span> <span class="o">/</span><span class="n">etc</span><span class="o">/</span><span class="n">network</span>
+<span class="n">sudo</span> <span class="n">nano</span> <span class="n">interfaces</span>
+</pre></div>
+</div>
+<p>The interfaces file on each node should look like the following:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="c1"># interfaces(5) file used by ifup(8) and ifdown(8)</span>
+<span class="c1"># Include files from /etc/network/interfaces.d:</span>
+<span class="n">source</span><span class="o">-</span><span class="n">directory</span> <span class="o">/</span><span class="n">etc</span><span class="o">/</span><span class="n">network</span><span class="o">/</span><span class="n">interfaces</span><span class="o">.</span><span class="n">d</span>
+
+<span class="n">auto</span> <span class="n">eth0</span>
+<span class="n">iface</span> <span class="n">eth0</span> <span class="n">inet</span> <span class="n">static</span>
+<span class="n">address</span> <span class="mf">192.168</span><span class="o">.</span><span class="mf">1.10</span>
+<span class="n">gateway</span> <span class="mf">192.168</span><span class="o">.</span><span class="mf">1.1</span>
+<span class="n">netmask</span> <span class="mf">255.255</span><span class="o">.</span><span class="mf">255.0</span>
+</pre></div>
+</div>
+<p>Note: the ip address will change according to the order of the 6 nodes, i.e. the 2nd node will have the address 192.168.1.11, the 3rd will have 192.168.1.12 and so on, as its address.</p>
+<p>We will need to reboot the entire cluster for this change to take place.</p>
+</div>
+<div class="section" id="ssh-remote-login-setup">
+<span id="ssh"></span><h2>SSH Remote Login Setup<a class="headerlink" href="#ssh-remote-login-setup" title="Permalink to this headline">¶</a></h2>
+<p>Secure Shell Remote Login is service that provides a secure channel to establish a client-server relationship, and helps a client access a server remotely.
+Before we begin we want to assign names to each of the nodes. To do this we changed the hostname and hosts file.</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">sudo</span> <span class="n">nano</span> <span class="o">/</span><span class="n">etc</span><span class="o">/</span><span class="n">hostname</span>
+</pre></div>
+</div>
+<p>The hostname file will contain the name of the local host i.e. the name of that node. We gave each node a number by calling them ‘tegra1’, ‘tegra2’, …, ‘tegra6’. tegra1 will be our head node in the cluster and tegra2 through tegra6 will be our worker nodes</p>
+<p>Next,
+In the hosts file we will add the static IP addresses of all the nodes in the hosts file in each of the nodes.</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">sudo</span> <span class="n">nano</span> <span class="o">/</span><span class="n">etc</span><span class="o">/</span><span class="n">hosts</span>
+</pre></div>
+</div>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="mf">192.168</span><span class="o">.</span><span class="mf">1.10</span> <span class="n">tegra1</span>
+<span class="mf">192.168</span><span class="o">.</span><span class="mf">1.11</span> <span class="n">tegra2</span>
+<span class="mf">192.168</span><span class="o">.</span><span class="mf">1.12</span> <span class="n">tegra3</span>
+<span class="mf">192.168</span><span class="o">.</span><span class="mf">1.13</span> <span class="n">tegra4</span>
+<span class="mf">192.168</span><span class="o">.</span><span class="mf">1.14</span> <span class="n">tegra5</span>
+<span class="mf">192.168</span><span class="o">.</span><span class="mf">1.15</span> <span class="n">tegra6</span>
+</pre></div>
+</div>
+<p>All of the above processes has to be repeated on all 6 nodes.</p>
+<p>Since we want the cluster nodes to communicate with each other without having to ask for permission each time we will set up SSH (Secure Shell) remote login. In order to do this, we will generate 2048 bit RSA key-pair on the head node and then copy the SSH ID.</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">ssh</span><span class="o">-</span><span class="n">keygen</span> <span class="o">-</span><span class="n">t</span> <span class="n">rsa</span> <span class="o">-</span><span class="n">b</span> <span class="mi">2048</span>
+</pre></div>
+</div>
+<p>Note: The ssh key should be stored in the .ssh folder and need not require a pass phrase. While generating the keys the user will be prompted for destination folder and a pass phrase. The user can just hit return thrice.</p>
+<p>Now, we will copy the SSH ID to all the nodes including the head node.</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">ssh</span><span class="o">-</span><span class="n">copy</span><span class="o">-</span><span class="nb">id</span> <span class="n">tegra1</span>
+<span class="n">ssh</span><span class="o">-</span><span class="n">copy</span><span class="o">-</span><span class="nb">id</span> <span class="n">tegra2</span>
+<span class="n">ssh</span><span class="o">-</span><span class="n">copy</span><span class="o">-</span><span class="nb">id</span> <span class="n">tegra3</span>
+<span class="n">ssh</span><span class="o">-</span><span class="n">copy</span><span class="o">-</span><span class="nb">id</span> <span class="n">tegra4</span>
+<span class="n">ssh</span><span class="o">-</span><span class="n">copy</span><span class="o">-</span><span class="nb">id</span> <span class="n">tegra5</span>
+<span class="n">ssh</span><span class="o">-</span><span class="n">copy</span><span class="o">-</span><span class="nb">id</span> <span class="n">tegra6</span>
+</pre></div>
+</div>
+<p>Next, we will need to build the known_hosts file in the .ssh directory. The known_hosts holds id of all the nodes in the cluster and allows password-less access to and from all the nodes in the cluster. To do this we will need to create file with the name of all nodes in the .ssh folder and then use ssh keyscan to generate the known_hosts file.</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">cd</span> <span class="o">.</span><span class="n">ssh</span>
+<span class="n">sudo</span> <span class="n">nano</span> <span class="n">name_of_hosts</span>
+</pre></div>
+</div>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">tegra1</span>
+<span class="n">tegra2</span>
+<span class="n">tegra3</span>
+<span class="n">tegra4</span>
+<span class="n">tegra5</span>
+<span class="n">tegra6</span>
+</pre></div>
+</div>
+<p>We will save this file and then change its permissions in order for ssh-keyscan to be able to read the file.</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">cd</span>
+<span class="n">sudo</span> <span class="n">chmod</span> <span class="mi">666</span> <span class="o">~/.</span><span class="n">ssh</span><span class="o">/</span><span class="n">name_of_hosts</span>
+</pre></div>
+</div>
+<p>The following command will then generate the known_hosts file:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">ssh</span><span class="o">-</span><span class="n">keyscan</span> <span class="o">-</span><span class="n">t</span> <span class="n">rsa</span> <span class="o">-</span><span class="n">f</span> <span class="o">~/.</span><span class="n">ssh</span><span class="o">/</span><span class="n">name_of_hosts</span> <span class="o">&gt;~/.</span><span class="n">ssh</span><span class="o">/</span><span class="n">known_hosts</span>
+</pre></div>
+</div>
+<p>Our last step for this setup will be to copy known_hosts, id_rsa public and private keys from the .ssh folder in the head node to the .ssh folder of all the other nodes. We can do this using secure copy.</p>
+<p>We use the following steps on the head node to do this:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">cd</span> <span class="o">.</span><span class="n">ssh</span>
+</pre></div>
+</div>
+<p>Run the following commands:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">scp</span> <span class="n">known_hosts</span> <span class="n">id_rsa</span> <span class="n">id_rsa</span><span class="o">.</span><span class="n">pub</span> <span class="n">ubuntu</span><span class="nd">@tegra1</span><span class="p">:</span><span class="o">.</span><span class="n">ssh</span>
+<span class="n">scp</span> <span class="n">known_hosts</span> <span class="n">id_rsa</span> <span class="n">id_rsa</span><span class="o">.</span><span class="n">pub</span> <span class="n">ubuntu</span><span class="nd">@tegra2</span><span class="p">:</span><span class="o">.</span><span class="n">ssh</span>
+<span class="n">scp</span> <span class="n">known_hosts</span> <span class="n">id_rsa</span> <span class="n">id_rsa</span><span class="o">.</span><span class="n">pub</span> <span class="n">ubuntu</span><span class="nd">@tegra3</span><span class="p">:</span><span class="o">.</span><span class="n">ssh</span>
+<span class="n">scp</span> <span class="n">known_hosts</span> <span class="n">id_rsa</span> <span class="n">id_rsa</span><span class="o">.</span><span class="n">pub</span> <span class="n">ubuntu</span><span class="nd">@tegra4</span><span class="p">:</span><span class="o">.</span><span class="n">ssh</span>
+<span class="n">scp</span> <span class="n">known_hosts</span> <span class="n">id_rsa</span> <span class="n">id_rsa</span><span class="o">.</span><span class="n">pub</span> <span class="n">ubuntu</span><span class="nd">@tegra5</span><span class="p">:</span><span class="o">.</span><span class="n">ssh</span>
+<span class="n">scp</span> <span class="n">known_hosts</span> <span class="n">id_rsa</span> <span class="n">id_rsa</span><span class="o">.</span><span class="n">pub</span> <span class="n">ubuntu</span><span class="nd">@tegra6</span><span class="p">:</span><span class="o">.</span><span class="n">ssh</span>
+</pre></div>
+</div>
+<p>After this we will be able SSH to and from any node in the Cluster.</p>
+</div>
+<div class="section" id="mount-network-file-system">
+<span id="nfs"></span><h2>Mount Network File System<a class="headerlink" href="#mount-network-file-system" title="Permalink to this headline">¶</a></h2>
+<p>The Network File System (NFS) mounting is crucial part of the cluster set up in order for all the nodes to have one common working directory. We will be taking advantage of the nfs-kernel-server and nfs-common which we had installed earlier. In order to do this we will need to create the mount point for the HDD on the head node. Make sure that the mount point is not in the home directory of the user.</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">sudo</span> <span class="n">mkdir</span> <span class="o">/</span><span class="n">media</span><span class="o">/</span><span class="n">cluster_files</span>
+</pre></div>
+</div>
+<p>Note: You will need to format the HDD so that it is compatible with Linux systems before you are able to mount it.</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">sudo</span> <span class="n">mkfs</span><span class="o">.</span><span class="n">ext4</span> <span class="o">/</span><span class="n">dev</span><span class="o">/</span><span class="n">sda1</span> <span class="o">-</span><span class="n">L</span> <span class="n">cluster_files</span>
+</pre></div>
+</div>
+<p>Next, we will edit the exports file on the head node. This file will contain the information as to where we will be exporting the cluster_files directory on the worker nodes.</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">sudo</span> <span class="n">nano</span> <span class="o">/</span><span class="n">etc</span><span class="o">/</span><span class="n">exports</span>
+</pre></div>
+</div>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="o">/</span><span class="n">media</span><span class="o">/</span><span class="n">cluster_files</span> <span class="n">tegra2</span><span class="p">(</span><span class="n">rw</span><span class="p">,</span><span class="n">sync</span><span class="p">,</span><span class="n">no_root_squash</span><span class="p">,</span><span class="n">no_subtree_check</span><span class="p">)</span>
+<span class="o">/</span><span class="n">media</span><span class="o">/</span><span class="n">cluster_files</span> <span class="n">tegra3</span><span class="p">(</span><span class="n">rw</span><span class="p">,</span><span class="n">sync</span><span class="p">,</span><span class="n">no_root_squash</span><span class="p">,</span><span class="n">no_subtree_check</span><span class="p">)</span>
+<span class="o">/</span><span class="n">media</span><span class="o">/</span><span class="n">cluster_files</span> <span class="n">tegra4</span><span class="p">(</span><span class="n">rw</span><span class="p">,</span><span class="n">sync</span><span class="p">,</span><span class="n">no_root_squash</span><span class="p">,</span><span class="n">no_subtree_check</span><span class="p">)</span>
+<span class="o">/</span><span class="n">media</span><span class="o">/</span><span class="n">cluster_files</span> <span class="n">tegra5</span><span class="p">(</span><span class="n">rw</span><span class="p">,</span><span class="n">sync</span><span class="p">,</span><span class="n">no_root_squash</span><span class="p">,</span><span class="n">no_subtree_check</span><span class="p">)</span>
+<span class="o">/</span><span class="n">media</span><span class="o">/</span><span class="n">cluster_files</span> <span class="n">tegra6</span><span class="p">(</span><span class="n">rw</span><span class="p">,</span><span class="n">sync</span><span class="p">,</span><span class="n">no_root_squash</span><span class="p">,</span><span class="n">no_subtree_check</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Next, we will need to permanently mount the external drive on the head node so that it automatically mounts itself in /media/cluster_files when the system is rebooted. To do this we will edit the fstab file on the head node by adding the following line at the end:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">sudo</span> <span class="n">nano</span> <span class="o">/</span><span class="n">etc</span><span class="o">/</span><span class="n">fstab</span>
+</pre></div>
+</div>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="o">/</span><span class="n">dev</span><span class="o">/</span><span class="n">sda1</span> <span class="o">/</span><span class="n">media</span><span class="o">/</span><span class="n">cluster_files</span> <span class="n">ext4</span> <span class="n">defaults</span> <span class="mi">0</span> <span class="mi">0</span>
+</pre></div>
+</div>
+<p>Now we are ready to mount the external drive on the head node permanently.</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">sudo</span> <span class="n">umount</span> <span class="c1">#Path where the Hard Drive was originally mounted. It can be found using the &#39;df&#39; command</span>
+<span class="n">sudo</span> <span class="n">mount</span> <span class="o">/</span><span class="n">dev</span><span class="o">/</span><span class="n">sda1</span> <span class="o">/</span><span class="n">media</span><span class="o">/</span><span class="n">cluster_files</span>
+</pre></div>
+</div>
+<p>The worker nodes will now need to mount this external drive and we will need to make the cluster_files directory and edit the fstab file on each of the worker nodes:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">sudo</span> <span class="n">mkdir</span> <span class="o">/</span><span class="n">media</span><span class="o">/</span><span class="n">cluster_files</span>
+<span class="n">sudo</span> <span class="n">nano</span> <span class="o">/</span><span class="n">etc</span><span class="o">/</span><span class="n">fstab</span>
+</pre></div>
+</div>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">tegra1</span><span class="p">:</span><span class="o">/</span><span class="n">media</span><span class="o">/</span><span class="n">cluster_files</span> <span class="o">/</span><span class="n">media</span><span class="o">/</span><span class="n">cluster_files</span> <span class="n">nfs</span> <span class="n">rsize</span><span class="o">=</span><span class="mi">8192</span><span class="p">,</span><span class="n">wsize</span><span class="o">=</span><span class="mi">8192</span><span class="p">,</span><span class="n">timeo</span><span class="o">=</span><span class="mi">14</span><span class="p">,</span><span class="n">intr</span>
+</pre></div>
+</div>
+<p>Now our NFS mounting should be complete. In order to check this we will first restart our cluster. Once the cluster is restarted we will simply create a file using the touch command in the cluster_files directory and see if it can be accessed through the worker nodes. Follow the steps below to do this:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">cd</span> <span class="n">cluster_files</span>
+<span class="n">touch</span> <span class="n">foo</span>
+</pre></div>
+</div>
+<p>Now, we will ssh into any worker node and see if the file ‘foo’ is present or not</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">ssh</span> <span class="n">tegra2</span>
+<span class="n">cd</span> <span class="n">cluster_files</span>
+<span class="n">ls</span>
+</pre></div>
+</div>
+<p>We notice that the file ‘foo’ is in fact present. Now if we remove the file in the cluster_files directory in tegra2, it should automatically be removed from the head node. Let’s try this:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">cd</span> <span class="n">cluster_files</span>
+<span class="n">rm</span> <span class="n">foo</span>
+<span class="n">exit</span>
+</pre></div>
+</div>
+<p>Now we are back to the head node. If we check the cluster_files directory on the head node now, the file ‘foo’ will not be there.</p>
+<p>Congratulations, you have a working Nvidia Jetson TK1 Cluster!</p>
+</div>
+<div class="section" id="broadcasting-and-shutting-down">
+<span id="bcast-sh-and-shutdown"></span><h2>Broadcasting and Shutting Down<a class="headerlink" href="#broadcasting-and-shutting-down" title="Permalink to this headline">¶</a></h2>
+<p>If you wish to run a specific command to all the nodes without having to type it on each node individually, we can create a simple shell script for broadcasting commands to all the nodes.</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">cd</span>
+<span class="n">sudo</span> <span class="n">nano</span> <span class="n">bcast</span><span class="o">.</span><span class="n">sh</span>
+</pre></div>
+</div>
+<div class="highlight-default"><div class="highlight"><pre><span></span>#!/bin/bash
+#
+# This script helps me send commands to all nodes in the system
+DHOSTS=&quot;tegra6 tegra5 tegra4 tegra3 tegra2&quot;;
+
+for DHOST in $DHOSTS;
+do
+    echo &quot;Sending &#39;&quot;$@&quot;&#39; to $DHOST&quot;;
+    ssh $DHOST &quot;$@&quot;;
+done
+</pre></div>
+</div>
+<p>We save this file and then make it executable.</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">sudo</span> <span class="n">chmod</span> <span class="o">+</span><span class="n">x</span> <span class="n">bcast</span><span class="o">.</span><span class="n">sh</span>
+</pre></div>
+</div>
+<p>Now we can simply use this script by running the following command:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="o">./</span><span class="n">bcast</span><span class="o">.</span><span class="n">sh</span> <span class="c1">#YourCommand</span>
+</pre></div>
+</div>
+<p>For example, “./bcast.sh date” will give you the date and time across all the nodes of the cluster. But in order to run sudo commands we will need to edit the sudoers file on each node. To do this we will need to run the following command:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">sudo</span> <span class="n">visudo</span>
+</pre></div>
+</div>
+<p>and add the following line:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">ubuntu</span> <span class="n">ALL</span><span class="o">=</span><span class="p">(</span><span class="n">ALL</span><span class="p">)</span> <span class="n">NOPASSWD</span><span class="p">:</span> <span class="n">ALL</span>
+</pre></div>
+</div>
+<p>Unfortunately, you cannot shutdown the cluster using the ./bcast.sh command because the Tegras cannot cannot communicate back to the head node that it actually did shut down. To solve this you can make another similar shell script for shutting down the cluster.</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">cd</span>
+<span class="n">sudo</span> <span class="n">nano</span> <span class="n">shutdown_cluster</span>
+</pre></div>
+</div>
+<div class="highlight-default"><div class="highlight"><pre><span></span>#!/bin/bash
+
+DHOSTS=&quot;tegra6 tegra5 tegra4 tegra3 tegra2&quot;;
+
+for DHOST in $DHOSTS;
+do
+    echo &quot;Sending &#39;&quot;shutdown command&quot;&#39; to $DHOST&quot;;
+    echo &quot;waiting&quot;
+    sleep 1
+    ssh $DHOST &quot;sudo /sbin/shutdown -h now&quot;;
+done
+</pre></div>
+</div>
+<p>Again, we save this file and then make it executable.</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">sudo</span> <span class="n">chmod</span> <span class="o">+</span><span class="n">x</span> <span class="n">shutdown_cluster</span>
+</pre></div>
+</div>
+<p>Now, to shutdown we can simply type the following:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="o">./</span><span class="n">shutdown_cluster</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="time-and-date-synchronization">
+<span id="time-sync"></span><h2>Time and Date Synchronization<a class="headerlink" href="#time-and-date-synchronization" title="Permalink to this headline">¶</a></h2>
+<p>We can synchronize the date and time across each node of the cluster to the head node. To do this first, we will need to reconfigure timezone data on each node
+To do this run the following:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">sudo</span> <span class="n">dpkg</span><span class="o">-</span><span class="n">reconfigure</span> <span class="n">tzdata</span>
+</pre></div>
+</div>
+<p>Follow the instructions to select your timezone on each node.</p>
+<p>Next, we will need to edit the ntp.conf file on the head node which will act as our server node:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">sudo</span> <span class="n">nano</span> <span class="o">/</span><span class="n">etc</span><span class="o">/</span><span class="n">ntp</span><span class="o">.</span><span class="n">conf</span>
+</pre></div>
+</div>
+<p>Once the file is open, add the following line to the end of the file.</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">server</span> <span class="mf">127.127</span><span class="o">.</span><span class="mf">1.0</span>
+<span class="n">fudge</span> <span class="mf">127.127</span><span class="o">.</span><span class="mf">1.0</span> <span class="n">stratum</span> <span class="mi">10</span>
+</pre></div>
+</div>
+<p>Now, restart NTP:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">sudo</span> <span class="o">/</span><span class="n">etc</span><span class="o">/</span><span class="n">init</span><span class="o">.</span><span class="n">d</span><span class="o">/</span><span class="n">ntp</span> <span class="n">restart</span>
+</pre></div>
+</div>
+<p>Now on each of the worker nodes, we will set the time server as the head node. To do this you simply SSH into each of the worker nodes and edit the ntp configuration file as follows:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">sudo</span> <span class="n">nano</span> <span class="o">/</span><span class="n">etc</span><span class="o">/</span><span class="n">ntp</span><span class="o">.</span><span class="n">conf</span>
+</pre></div>
+</div>
+<p>Now add the following line to the end of the file:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">server</span> <span class="n">tegra1</span> <span class="n">iburst</span>
+</pre></div>
+</div>
+<p>Now remove the following lines from the above file by commenting out with a # character at the beginning of the line as follows:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="c1">#server 0.ubuntu.pool.ntp.org iburst</span>
+<span class="c1">#server 1.ubuntu.pool.ntp.org iburst</span>
+<span class="c1">#server 2.ubuntu.pool.ntp.org iburst</span>
+<span class="c1">#server 3.ubuntu.pool.ntp.org iburst</span>
+</pre></div>
+</div>
+<p>Lastly, we will need to restart the NTP like we did for the head node:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">sudo</span> <span class="o">/</span><span class="n">etc</span><span class="o">/</span><span class="n">init</span><span class="o">.</span><span class="n">d</span><span class="o">/</span><span class="n">ntp</span> <span class="n">restart</span>
+</pre></div>
+</div>
+<p>Now you should have the time synchronized across all the nodes.</p>
+</div>
+<div class="section" id="helpful-ideas-and-notes">
+<span id="ideas-and-notes"></span><h2>Helpful Ideas and Notes<a class="headerlink" href="#helpful-ideas-and-notes" title="Permalink to this headline">¶</a></h2>
+<ul>
+<li><p class="first">If you intend on building a cluster containing many nodes you can use a pen drive to store all the files we have edited in the head and one of the worker nodes and simply copy and replace them in the rest of the nodes making sure to change the static ip address and the hostname.</p>
+</li>
+<li><p class="first">Having ‘ubuntu’ as the password for the ‘ubuntu’ user is not safe. Hence , it is recommended that you should it to a password of your choice. This can be done using the following command.</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">sudo</span> <span class="n">passwd</span> <span class="n">ubuntu</span>
+</pre></div>
+</div>
+<p>This will prompt you for a new password for you to choose.</p>
+</li>
+<li><p class="first">If you wish to have another user altogether then you can do that too. you will need to run the command given below on each node:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">sudo</span> <span class="n">adduser</span> <span class="c1">#username</span>
+</pre></div>
+</div>
+<p>After you enter your password and set up the new account You will need to make this new user a sudo user. This can be done by running the following command on an existing sudo user i.e. the ‘ubuntu’ user.</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">sudo</span> <span class="n">usermod</span> <span class="o">-</span><span class="n">aG</span> <span class="n">sudo</span> <span class="c1">#username</span>
+</pre></div>
+</div>
+<p>After this is done we will need to repeat two things for the new user that we did for the ‘ubuntu’ user.</p>
+<ol class="arabic">
+<li><p class="first">Repeat <a class="reference internal" href="#ssh"><span class="std std-ref">SSH Remote Login Setup</span></a>
+Note: You will only need to begin this from the step where we generate the ssh public and private key pair.</p>
+</li>
+<li><p class="first">Repeat <a class="reference internal" href="#bcast-sh-and-shutdown"><span class="std std-ref">Broadcasting and Shutting Down</span></a>
+Note: You can simply copy the bcast.sh and shutdown_cluster file instead of typing it over. This can be done by running the following command on the new user.</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">cd</span>
+<span class="n">sudo</span> <span class="n">cp</span> <span class="o">/</span><span class="n">home</span><span class="o">/</span><span class="n">ubuntu</span><span class="o">/</span><span class="n">bcast</span><span class="o">.</span><span class="n">sh</span> <span class="o">.</span>
+<span class="n">sudo</span> <span class="n">cp</span> <span class="o">/</span><span class="n">home</span><span class="o">/</span><span class="n">ubuntu</span><span class="o">/</span><span class="n">shutdown_cluster</span> <span class="o">.</span>
+<span class="n">sudo</span> <span class="n">chmod</span> <span class="o">+</span><span class="n">x</span> <span class="n">bcast</span><span class="o">.</span><span class="n">sh</span> <span class="n">shutdown_cluster</span>
+</pre></div>
+</div>
+</li>
+</ol>
+<blockquote>
+<div><p>Lastly, while adding this user to the sudoers list make sure to change the username from ‘ubuntu’ to whatever your new username is.</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="c1">#username ALL=(ALL) NOPASSWD: ALL</span>
+</pre></div>
+</div>
+</div></blockquote>
+</li>
+<li><p class="first">We recommend that you use this <a class="reference external" href="https://www.amazon.com/dp/B00N8RV8CG/ref=asc_df_B00N8RV8CG5125580/?tag=hyprod-20&amp;creative=395033&amp;creativeASIN=B00N8RV8CG&amp;linkCode=df0&amp;hvadid=167146065113&amp;hvpos=1o1&amp;hvnetw=g&amp;hvrand=8715045344514970788&amp;hvpone=&amp;hvptwo=&amp;hvqmt=&amp;hvdev=c&amp;hvdvcmdl=&amp;hvlocint=&amp;hvlocphy=9019537&amp;hvtargid=pla-307290782301">HDMI Switch</a> and this <a class="reference external" href="https://www.amazon.com/VOTRON-Adapter-Independent-Indicator-Windows/dp/B01N5A0VDT/ref=sr_1_1?s=electronics&amp;ie=UTF8&amp;qid=1502933236&amp;sr=1-1-spons&amp;keywords=8+port+usb+switch&amp;psc=1">USB Switch</a> because it makes it really convenient to switch to a different node without having to change the display HDMI or the USB jacks for the keyboard in the cluster. This is extremely helpful because we have to repeat several steps in each node of the cluster.</p>
+</li>
+</ul>
+</div>
+<div class="section" id="references">
+<span id="id1"></span><h2>References<a class="headerlink" href="#references" title="Permalink to this headline">¶</a></h2>
+<p>To build and understand the entire procedure of configuring the above cluster I had to do a lot of research and received help and support from my Professor Libby Shoop. I faced a lot of issues and errors in almost each of the above sections and had to experiment a lot of things in order to understand how the Linux operating system works.</p>
+<p><a class="reference external" href="https://drive.google.com/file/d/0B0XIvAg85dhhN3JydWo2R3dNSE0/view">Nikola: The Raspberry Pi Cluster</a> by a Maclester College alum, Guillermo Vera, is a paper on building a Raspberry Pi Cluster that helped me understand basic procedures for building and configuring a cluster.</p>
+<p>This <a class="reference external" href="http://makezine.com/projects/build-a-compact-4-node-raspberry-pi-cluster/">Raspberry Pi project</a> helped me understand the procedure to mount an external drive as the Network File System.</p>
+<div class="toctree-wrapper compound">
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="#">
+              <img class="logo" src="_static/CSInParallel200wide.png" alt="Logo"/>
+            </a></p>
+  <h3><a href="#">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Building a Nvidia Jetson TK1 Cluster</a><ul>
+<li><a class="reference internal" href="#materials-needed">Materials Needed</a></li>
+<li><a class="reference internal" href="#overview">Overview</a></li>
+<li><a class="reference internal" href="#setting-up-the-physical-cluster">Setting up the Physical Cluster</a></li>
+<li><a class="reference internal" href="#setting-up-ubuntu-os">Setting up Ubuntu OS</a></li>
+<li><a class="reference internal" href="#software-installation">Software Installation</a></li>
+<li><a class="reference internal" href="#creating-a-cluster-network">Creating a Cluster Network</a></li>
+<li><a class="reference internal" href="#ssh-remote-login-setup">SSH Remote Login Setup</a></li>
+<li><a class="reference internal" href="#mount-network-file-system">Mount Network File System</a></li>
+<li><a class="reference internal" href="#broadcasting-and-shutting-down">Broadcasting and Shutting Down</a></li>
+<li><a class="reference internal" href="#time-and-date-synchronization">Time and Date Synchronization</a></li>
+<li><a class="reference internal" href="#helpful-ideas-and-notes">Helpful Ideas and Notes</a></li>
+<li><a class="reference internal" href="#references">References</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="nav-item nav-item-0"><a href="#">Building a Raspberry Pi Cluster</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright This work is licensed under a Creative Commons Attribution-ShareAlike 3.0 Unported License.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.3.
+    </div>
+  </body>
+</html>

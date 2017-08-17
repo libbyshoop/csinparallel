@@ -1,0 +1,1 @@
+tegra1:/media/cluster_files /media/cluster_files nfs rsize=8192,wsize=8192,timeo=14,intr
