@@ -13,20 +13,26 @@ This module acts as a tutorial to help users build a cluster of Nvidia Jetson TK
 Materials Needed
 #################
 1.  6 x `Tegra TK1`_
-2.  1 x `HDD`_ (Preferably 128 GB) with `SATA Data`_ (1 ft.), `Power Cable`_ (1 ft.).
-3.  6 x `Ethernet Cable`_ (Preferably 1 ft. long)
-4.  1 x `12V 12.5A Battery Power Supply`_
-5.  1 x `5 Port USB Battery Charger`_
-6.  1 x `8 Port Ethernet Switch`_
-7.  1 x `Monitor`_, `Keyboard and Mouse`_
-8.  1 x `USB Hub`_
-9.  1 x `Ethernet to USB Adapter`_
-10. 2 x `Barrel On-Off Switch`_
-11. 1 X `1 Female to 6 Male 2.1 mm Barrel Splitter`_
-12. 1 x `1 Female to 6 Male 2.1 mm Barrel Splitter`_
+2. 20 x `M3 brass standoff, 31mm long`_
+3.  4 x `M3 brass standoff, 50mm long`_
+4.  1 x `HDD`_ (Preferably 128 GB) with `SATA Data`_ (1 ft.), `Power Cable`_ (1 ft.).
+5.  6 x `Ethernet Cable`_ (Preferably 1 ft. long)
+6.  1 x `12V 12.5A Battery Power Supply`_
+7.  1 x `5 Port USB Battery Charger`_
+8.  1 x `8 Port Ethernet Switch`_
+9.  1 x `Monitor`_, `Keyboard and Mouse`_
+10.  1 x `USB Hub`_
+11.  1 x `Ethernet to USB Adapter`_
+12. 2 x `Barrel On-Off Switch`_
+13. 1 x `1 Female to 6 Male 2.1 mm Barrel Splitter`_
+14. 1 x `1 Female to 6 Male 2.1 mm Barrel Splitter`_
 
 
 .. _Tegra TK1: https://www.amazon.com/NVIDIA-Jetson-TK1-Development-Kit/dp/B00L7AWOEC/ref=sr_1_1?ie=UTF8&qid=1502920391&sr=8-1&keywords=nvidia+tegra+k1
+
+.. _M3 brass standoff, 31mm long: https://www.amazon.com/gp/product/B00AO4370M/ref=oh_aui_detailpage_o04_s00?ie=UTF8&psc=1
+
+.. _M3 brass standoff, 50mm long: https://www.amazon.com/gp/product/B00AO4332O/ref=oh_aui_detailpage_o00_s00?ie=UTF8&psc=1
 
 .. _HDD: https://www.amazon.com/Seagate-BarraCuda-3-5-Inch-Internal-ST1000DM010/dp/B01LNJBA2I/ref=sr_1_3?s=electronics&ie=UTF8&qid=1502928646&sr=1-3&keywords=1Tb+hdd
 
@@ -34,7 +40,7 @@ Materials Needed
 
 .. _SATA Data: https://www.amazon.com/RELPER-Long-Cable-Double-Locking/dp/B00V037086/ref=sr_1_28?s=electronics&ie=UTF8&qid=1502925892&sr=1-28&keywords=1+pc+sata+data+cable
 
-.. _Ethernet Cable: https://www.amazon.com/Cable-Matters-5-Pack-Snagless-Ethernet/dp/B00C4U030G/ref=sr_1_1?s=electronics&ie=UTF8&qid=1499808595&sr=1-1&keywords=ethernet+cable+1ft
+.. _Ethernet Cable: https://www.amazon.com/Cable-Matters-5-Pack-Snagless-Ethernet/dp/B00C4U030G/ref=sr_1_1?s=electronics&ie=UTF8&qid=1499808595&sr=1-1&keywords=Ethernet+cable+1ft
 
 .. _12V 12.5A Battery Power Supply: https://www.amazon.com/gp/product/B01N3ASWZ0/ref=ox_sc_act_title_2?smid=A325274ZEF9XYZ&psc=1
 
@@ -48,7 +54,7 @@ Materials Needed
 
 .. _USB Hub: https://www.amazon.com/Anker-4-Port-Macbook-Surface-Notebook/dp/B00XMD7KPU/ref=sr_1_1?s=electronics&ie=UTF8&qid=1502925193&sr=1-1&keywords=anker+usb+hub
 
-.. _Ethernet to USB Adapter: https://www.amazon.com/AmazonBasics-1000-Gigabit-Ethernet-Adapter/dp/B00M77HMU0/ref=sr_1_3?s=electronics&ie=UTF8&qid=1502925248&sr=1-3&keywords=ethernet+to+usb+adapter
+.. _Ethernet to USB Adapter: https://www.amazon.com/AmazonBasics-1000-Gigabit-Ethernet-Adapter/dp/B00M77HMU0/ref=sr_1_3?s=electronics&ie=UTF8&qid=1502925248&sr=1-3&keywords=Ethernet+to+usb+adapter
 
 .. _Barrel On-Off Switch: https://www.amazon.com/Adafruit-line-switch-barrel-ADA1125/dp/B00KLDPX8U/ref=sr_1_1?s=electronics&ie=UTF8&qid=1502925374&sr=1-1&keywords=barrel+switch
 
@@ -94,7 +100,26 @@ Setting up the Physical Cluster
 .. image:: images/6.jpg
       :width: 800
 
-We built a wooden structure to put together the 6-node cluster and made it as compact as possible as shown in the pictures above. All the six cluster nodes are powered through a single power supply. In order to do this we connected the 5 worker nodes to the 6 to 1 Barrel Splitter (We couldn't find a 5 to 1). The Female end of 5 to 1 splitter is then connected to the male end of a Barrel On/Off Switch. The head node is directly connected to another Barrel Switch. The two switches are then connected to a 2 to 1 Barrel Splitter and this is then connected to the Power Supply. This eliminates the need for having 6 different power supplies for the 6 Tegra Boards. We use a 8 Port Ethernet Switch to connect all the nodes of the cluster in a network using ethernet cables. The 5 Port Battery charger is used to power the Ethernet Switch and the Monitor. The USB Hub and HDD is connected to the Head Node. Since these boards do not have Wifi on them we also used a Ethernet to USB Adapter on the head node for it to connect to the Internet through a External ethernet connection.
+We built a wooden structure to put together the 6-node cluster and made it as
+compact as possible as shown in the pictures above. You do not strictly need
+the wooden frame; we originally built this without it, just using the
+standoffs. If you build a frame of some sort like ours, you will also need
+small M3 standoffs and possibly the other pieces you see in the pictures above.
+
+Even though each node comes with its own power supply, we chose to
+have all six cluster nodes powered through a single power supply. In order to
+do this we connected the 5 worker nodes to the 6 to 1 Barrel Splitter (We
+couldn't find a 5 to 1). The Female end of 5 to 1 splitter is then connected to
+the male end of a Barrel On/Off Switch. The head node is directly connected to
+another Barrel Switch. The two switches are then connected to a 2 to 1 Barrel
+Splitter and this is then connected to the Power Supply. This eliminates the
+need for having 6 different power supplies for the 6 Tegra Boards. We use a 8
+Port Ethernet Switch to connect all the nodes of the cluster in a network using
+Ethernet cables. The 5 Port USB charger is used to power the Ethernet Switch
+and the Monitor. The USB Hub and HDD are connected to the Head Node. Since
+these boards do not have Wifi on them we also used a Ethernet to USB Adapter on
+the head node for it to connect to the Internet through an external Ethernet
+connection.
 
 .. _Ubuntu-OS-Setup:
 
@@ -114,7 +139,7 @@ Each node will have a user 'ubuntu' and a password ‘ubuntu’. Have a look at 
 
 Software Installation
 #########################################
-To begin we will connect the ethernet switch to the wall in order for all the nodes to have access to the Internet in order to run updates, upgrades and install software.
+To begin we will connect the Ethernet switch to the wall in order for all the nodes to have access to the Internet in order to run updates, upgrades and install software.
 
 On a regular terminal we will run the following commands to upgrade Ubuntu 14.04.1 to 14.04.5.
 ::
@@ -136,13 +161,13 @@ And on the worker nodes we will be installing NFS Common::
 
   sudo apt-get install nfs-common
 
-With this we have installed all the required software for us to run MPI Code on the cluster. If you wish to install any other software then you should install it now because we will be removing internet from the worker nodes and setting up an external ethernet connection directly to the wall only on the head node.
+With this we have installed all the required software for us to run MPI Code on the cluster. If you wish to install any other software then you should install it now because we will be removing internet from the worker nodes and setting up an external Ethernet connection directly to the wall only on the head node.
 
 .. _Cluster-Network:
 
 Creating a Cluster Network
 ############################
-In order for us to establish a network between the cluster through ethernet cables we will need to assign static ip addresses to each of the nodes. To do this, we need to edit the interfaces file on each node. This can be done by doing the following:
+In order for us to establish a network between the cluster through Ethernet cables we will need to assign static ip addresses to each of the nodes. To do this, we need to edit the interfaces file on each node. This can be done by doing the following:
 
 ::
 
@@ -240,14 +265,14 @@ Run the following commands: ::
     scp known_hosts id_rsa id_rsa.pub ubuntu@tegra6:.ssh
 
 
-After this we will be able SSH to and from any node in the Cluster.
+After this we will be able SSH to and from any node in the cluster without a password. This is needed for running MPI programs.
 
 .. _NFS:
 
 Mount Network File System
 ##########################
 
-The Network File System (NFS) mounting is crucial part of the cluster set up in order for all the nodes to have one common working directory. We will be taking advantage of the nfs-kernel-server and nfs-common which we had installed earlier. In order to do this we will need to create the mount point for the HDD on the head node. Make sure that the mount point is not in the home directory of the user.
+The Network File System (NFS) mounting is crucial part of the cluster set up in order for all the nodes to have one common working directory. We will be taking advantage of the nfs-kernel-server and nfs-common which we had installed earlier. In order to do this we will need to create the mount point for the HDD on the head node. Make sure that the mount point is not in the home directory of the ubuntu user. We chose to put it in / as follows:
 
 ::
 

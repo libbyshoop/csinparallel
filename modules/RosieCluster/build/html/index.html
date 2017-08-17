@@ -39,22 +39,24 @@
             
   <div class="section" id="building-a-nvidia-jetson-tk1-cluster">
 <h1>Building a Nvidia Jetson TK1 Cluster<a class="headerlink" href="#building-a-nvidia-jetson-tk1-cluster" title="Permalink to this headline">¶</a></h1>
-<p><strong>Last Updated:</strong> 2017-08-16</p>
+<p><strong>Last Updated:</strong> 2017-08-17</p>
 <p>This module acts as a tutorial to help users build a cluster of Nvidia Jetson TK1 cluster for Parallel Programming and Distributed Processing. The guide is a step by step procedure to build a 6 Node TK1 cluster with a shared network file system. Note that clusters can be of any length n≥2. Basic knowledge of Linux Terminal will be helpful.</p>
 <div class="section" id="materials-needed">
 <h2>Materials Needed<a class="headerlink" href="#materials-needed" title="Permalink to this headline">¶</a></h2>
 <ol class="arabic simple">
 <li>6 x <a class="reference external" href="https://www.amazon.com/NVIDIA-Jetson-TK1-Development-Kit/dp/B00L7AWOEC/ref=sr_1_1?ie=UTF8&amp;qid=1502920391&amp;sr=8-1&amp;keywords=nvidia+tegra+k1">Tegra TK1</a></li>
+<li>20 x <a class="reference external" href="https://www.amazon.com/gp/product/B00AO4370M/ref=oh_aui_detailpage_o04_s00?ie=UTF8&amp;psc=1">M3 brass standoff, 31mm long</a></li>
+<li>4 x <a class="reference external" href="https://www.amazon.com/gp/product/B00AO4332O/ref=oh_aui_detailpage_o00_s00?ie=UTF8&amp;psc=1">M3 brass standoff, 50mm long</a></li>
 <li>1 x <a class="reference external" href="https://www.amazon.com/Seagate-BarraCuda-3-5-Inch-Internal-ST1000DM010/dp/B01LNJBA2I/ref=sr_1_3?s=electronics&amp;ie=UTF8&amp;qid=1502928646&amp;sr=1-3&amp;keywords=1Tb+hdd">HDD</a> (Preferably 128 GB) with <a class="reference external" href="https://www.amazon.com/RELPER-Long-Cable-Double-Locking/dp/B00V037086/ref=sr_1_28?s=electronics&amp;ie=UTF8&amp;qid=1502925892&amp;sr=1-28&amp;keywords=1+pc+sata+data+cable">SATA Data</a> (1 ft.), <a class="reference external" href="https://www.amazon.com/Nippon-Labs-SATA-15PF2-4PM-1FT-12-Inch-Female/dp/B00N7OJ1H4/ref=sr_1_28?s=electronics&amp;ie=UTF8&amp;qid=1502925628&amp;sr=1-28&amp;keywords=sata+cable+12+inch">Power Cable</a> (1 ft.).</li>
-<li>6 x <a class="reference external" href="https://www.amazon.com/Cable-Matters-5-Pack-Snagless-Ethernet/dp/B00C4U030G/ref=sr_1_1?s=electronics&amp;ie=UTF8&amp;qid=1499808595&amp;sr=1-1&amp;keywords=ethernet+cable+1ft">Ethernet Cable</a> (Preferably 1 ft. long)</li>
+<li>6 x <a class="reference external" href="https://www.amazon.com/Cable-Matters-5-Pack-Snagless-Ethernet/dp/B00C4U030G/ref=sr_1_1?s=electronics&amp;ie=UTF8&amp;qid=1499808595&amp;sr=1-1&amp;keywords=Ethernet+cable+1ft">Ethernet Cable</a> (Preferably 1 ft. long)</li>
 <li>1 x <a class="reference external" href="https://www.amazon.com/gp/product/B01N3ASWZ0/ref=ox_sc_act_title_2?smid=A325274ZEF9XYZ&amp;psc=1">12V 12.5A Battery Power Supply</a></li>
 <li>1 x <a class="reference external" href="https://www.amazon.com/Anker-Charger-PowerPort-Multi-Port-Samsung/dp/B00VH8ZW02/ref=sr_1_1?s=electronics&amp;ie=UTF8&amp;qid=1502920716&amp;sr=1-1-spons&amp;keywords=anker+5+port+usb+charger&amp;psc=1">5 Port USB Battery Charger</a></li>
 <li>1 x <a class="reference external" href="https://www.amazon.com/TRENDnet-Unmanaged-GREENnet-Switching-TEG-S80G/dp/B001QUA6RA/ref=sr_1_2?s=electronics&amp;ie=UTF8&amp;qid=1502920782&amp;sr=1-2-spons&amp;keywords=greennet+8+port+switch&amp;psc=1">8 Port Ethernet Switch</a></li>
 <li>1 x <a class="reference external" href="https://www.amazon.com/GeChic-2501C-Portable-Monitor-Inputs/dp/B00H4MWMWQ/ref=sr_1_1?s=electronics&amp;ie=UTF8&amp;qid=1499809271&amp;sr=1-1-spons&amp;keywords=portable+monitor&amp;psc=1">Monitor</a>, <a class="reference external" href="https://www.amazon.com/Keyboard-Jelly-Comb-Rechargeable-Wireless/dp/B01NCW2JR9/ref=sr_1_4?s=electronics&amp;ie=UTF8&amp;qid=1499809455&amp;sr=1-4&amp;keywords=jelly+comb+keyboard+mouse+combo">Keyboard and Mouse</a></li>
 <li>1 x <a class="reference external" href="https://www.amazon.com/Anker-4-Port-Macbook-Surface-Notebook/dp/B00XMD7KPU/ref=sr_1_1?s=electronics&amp;ie=UTF8&amp;qid=1502925193&amp;sr=1-1&amp;keywords=anker+usb+hub">USB Hub</a></li>
-<li>1 x <a class="reference external" href="https://www.amazon.com/AmazonBasics-1000-Gigabit-Ethernet-Adapter/dp/B00M77HMU0/ref=sr_1_3?s=electronics&amp;ie=UTF8&amp;qid=1502925248&amp;sr=1-3&amp;keywords=ethernet+to+usb+adapter">Ethernet to USB Adapter</a></li>
+<li>1 x <a class="reference external" href="https://www.amazon.com/AmazonBasics-1000-Gigabit-Ethernet-Adapter/dp/B00M77HMU0/ref=sr_1_3?s=electronics&amp;ie=UTF8&amp;qid=1502925248&amp;sr=1-3&amp;keywords=Ethernet+to+usb+adapter">Ethernet to USB Adapter</a></li>
 <li>2 x <a class="reference external" href="https://www.amazon.com/Adafruit-line-switch-barrel-ADA1125/dp/B00KLDPX8U/ref=sr_1_1?s=electronics&amp;ie=UTF8&amp;qid=1502925374&amp;sr=1-1&amp;keywords=barrel+switch">Barrel On-Off Switch</a></li>
-<li>1 X <a class="reference external" href="https://www.amazon.com/Pro-Power-DC-5-5x2-1mm-Splitter/dp/B072N1513Q/ref=sr_1_7?s=electronics&amp;ie=UTF8&amp;qid=1498423822&amp;sr=1-7&amp;keywords=DC+JACK+6-way+splitter">1 Female to 6 Male 2.1 mm Barrel Splitter</a></li>
+<li>1 x <a class="reference external" href="https://www.amazon.com/Pro-Power-DC-5-5x2-1mm-Splitter/dp/B072N1513Q/ref=sr_1_7?s=electronics&amp;ie=UTF8&amp;qid=1498423822&amp;sr=1-7&amp;keywords=DC+JACK+6-way+splitter">1 Female to 6 Male 2.1 mm Barrel Splitter</a></li>
 <li>1 x <a class="reference external" href="https://www.amazon.com/Pro-Power-DC-5-5x2-1mm-Splitter/dp/B072N1513Q/ref=sr_1_7?s=electronics&amp;ie=UTF8&amp;qid=1498423822&amp;sr=1-7&amp;keywords=DC+JACK+6-way+splitter">1 Female to 6 Male 2.1 mm Barrel Splitter</a></li>
 </ol>
 </div>
@@ -82,7 +84,25 @@
 <a class="reference internal image-reference" href="_images/4.jpg"><img alt="_images/4.jpg" src="_images/4.jpg" style="width: 800px;" /></a>
 <a class="reference internal image-reference" href="_images/5.jpg"><img alt="_images/5.jpg" src="_images/5.jpg" style="width: 800px;" /></a>
 <a class="reference internal image-reference" href="_images/6.jpg"><img alt="_images/6.jpg" src="_images/6.jpg" style="width: 800px;" /></a>
-<p>We built a wooden structure to put together the 6-node cluster and made it as compact as possible as shown in the pictures above. All the six cluster nodes are powered through a single power supply. In order to do this we connected the 5 worker nodes to the 6 to 1 Barrel Splitter (We couldn’t find a 5 to 1). The Female end of 5 to 1 splitter is then connected to the male end of a Barrel On/Off Switch. The head node is directly connected to another Barrel Switch. The two switches are then connected to a 2 to 1 Barrel Splitter and this is then connected to the Power Supply. This eliminates the need for having 6 different power supplies for the 6 Tegra Boards. We use a 8 Port Ethernet Switch to connect all the nodes of the cluster in a network using ethernet cables. The 5 Port Battery charger is used to power the Ethernet Switch and the Monitor. The USB Hub and HDD is connected to the Head Node. Since these boards do not have Wifi on them we also used a Ethernet to USB Adapter on the head node for it to connect to the Internet through a External ethernet connection.</p>
+<p>We built a wooden structure to put together the 6-node cluster and made it as
+compact as possible as shown in the pictures above. You do not strictly need
+the wooden frame; we originally built this without it, just using the
+standoffs. If you build a frame of some sort like ours, you will also need
+small M3 standoffs and possibly the other pieces you see in the pictures above.</p>
+<p>Even though each node comes with its own power supply, we chose to
+have all six cluster nodes powered through a single power supply. In order to
+do this we connected the 5 worker nodes to the 6 to 1 Barrel Splitter (We
+couldn’t find a 5 to 1). The Female end of 5 to 1 splitter is then connected to
+the male end of a Barrel On/Off Switch. The head node is directly connected to
+another Barrel Switch. The two switches are then connected to a 2 to 1 Barrel
+Splitter and this is then connected to the Power Supply. This eliminates the
+need for having 6 different power supplies for the 6 Tegra Boards. We use a 8
+Port Ethernet Switch to connect all the nodes of the cluster in a network using
+Ethernet cables. The 5 Port USB charger is used to power the Ethernet Switch
+and the Monitor. The USB Hub and HDD are connected to the Head Node. Since
+these boards do not have Wifi on them we also used a Ethernet to USB Adapter on
+the head node for it to connect to the Internet through an external Ethernet
+connection.</p>
 </div>
 <div class="section" id="setting-up-ubuntu-os">
 <span id="ubuntu-os-setup"></span><h2>Setting up Ubuntu OS<a class="headerlink" href="#setting-up-ubuntu-os" title="Permalink to this headline">¶</a></h2>
@@ -92,7 +112,7 @@
 </div>
 <div class="section" id="software-installation">
 <span id="software"></span><h2>Software Installation<a class="headerlink" href="#software-installation" title="Permalink to this headline">¶</a></h2>
-<p>To begin we will connect the ethernet switch to the wall in order for all the nodes to have access to the Internet in order to run updates, upgrades and install software.</p>
+<p>To begin we will connect the Ethernet switch to the wall in order for all the nodes to have access to the Internet in order to run updates, upgrades and install software.</p>
 <p>On a regular terminal we will run the following commands to upgrade Ubuntu 14.04.1 to 14.04.5.</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">sudo</span> <span class="n">apt</span><span class="o">-</span><span class="n">get</span> <span class="n">update</span>
 <span class="n">sudo</span> <span class="n">apt</span><span class="o">-</span><span class="n">get</span> <span class="n">upgrade</span>
@@ -112,11 +132,11 @@
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">sudo</span> <span class="n">apt</span><span class="o">-</span><span class="n">get</span> <span class="n">install</span> <span class="n">nfs</span><span class="o">-</span><span class="n">common</span>
 </pre></div>
 </div>
-<p>With this we have installed all the required software for us to run MPI Code on the cluster. If you wish to install any other software then you should install it now because we will be removing internet from the worker nodes and setting up an external ethernet connection directly to the wall only on the head node.</p>
+<p>With this we have installed all the required software for us to run MPI Code on the cluster. If you wish to install any other software then you should install it now because we will be removing internet from the worker nodes and setting up an external Ethernet connection directly to the wall only on the head node.</p>
 </div>
 <div class="section" id="creating-a-cluster-network">
 <span id="cluster-network"></span><h2>Creating a Cluster Network<a class="headerlink" href="#creating-a-cluster-network" title="Permalink to this headline">¶</a></h2>
-<p>In order for us to establish a network between the cluster through ethernet cables we will need to assign static ip addresses to each of the nodes. To do this, we need to edit the interfaces file on each node. This can be done by doing the following:</p>
+<p>In order for us to establish a network between the cluster through Ethernet cables we will need to assign static ip addresses to each of the nodes. To do this, we need to edit the interfaces file on each node. This can be done by doing the following:</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">cd</span> <span class="o">/</span><span class="n">etc</span><span class="o">/</span><span class="n">network</span>
 <span class="n">sudo</span> <span class="n">nano</span> <span class="n">interfaces</span>
 </pre></div>
@@ -208,11 +228,11 @@ In the hosts file we will add the static IP addresses of all the nodes in the ho
 <span class="n">scp</span> <span class="n">known_hosts</span> <span class="n">id_rsa</span> <span class="n">id_rsa</span><span class="o">.</span><span class="n">pub</span> <span class="n">ubuntu</span><span class="nd">@tegra6</span><span class="p">:</span><span class="o">.</span><span class="n">ssh</span>
 </pre></div>
 </div>
-<p>After this we will be able SSH to and from any node in the Cluster.</p>
+<p>After this we will be able SSH to and from any node in the cluster without a password. This is needed for running MPI programs.</p>
 </div>
 <div class="section" id="mount-network-file-system">
 <span id="nfs"></span><h2>Mount Network File System<a class="headerlink" href="#mount-network-file-system" title="Permalink to this headline">¶</a></h2>
-<p>The Network File System (NFS) mounting is crucial part of the cluster set up in order for all the nodes to have one common working directory. We will be taking advantage of the nfs-kernel-server and nfs-common which we had installed earlier. In order to do this we will need to create the mount point for the HDD on the head node. Make sure that the mount point is not in the home directory of the user.</p>
+<p>The Network File System (NFS) mounting is crucial part of the cluster set up in order for all the nodes to have one common working directory. We will be taking advantage of the nfs-kernel-server and nfs-common which we had installed earlier. In order to do this we will need to create the mount point for the HDD on the head node. Make sure that the mount point is not in the home directory of the ubuntu user. We chose to put it in / as follows:</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">sudo</span> <span class="n">mkdir</span> <span class="o">/</span><span class="n">media</span><span class="o">/</span><span class="n">cluster_files</span>
 </pre></div>
 </div>
